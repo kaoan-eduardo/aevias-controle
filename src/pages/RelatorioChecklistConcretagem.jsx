@@ -26,6 +26,9 @@ export default function RelatorioChecklistConcretagemPage() {
 
       const checklistData = await base44.entities.ChecklistConcretagem.get(id);
       setChecklist(checklistData);
+      
+      // Abre automaticamente o diálogo de impressão
+      setTimeout(() => window.print(), 500);
     } catch (error) {
       console.error("Erro ao carregar checklist:", error);
       alert("Erro ao carregar checklist");

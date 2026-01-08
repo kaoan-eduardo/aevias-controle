@@ -48,6 +48,9 @@ export default function RelatorioSondagem() {
           setProject({...projectData, faixa_especificada: faixaData.nome});
         }
       }
+      
+      // Abre automaticamente o diálogo de impressão
+      setTimeout(() => window.print(), 500);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       setError("Erro ao carregar dados do relatório");
