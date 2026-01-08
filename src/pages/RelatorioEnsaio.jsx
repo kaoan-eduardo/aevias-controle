@@ -6,7 +6,6 @@ import { EnsaioDensidade } from '@/entities/EnsaioDensidade';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
 import { User } from '@/entities/User';
-import RelatorioMarshall from '../components/relatorios/RelatorioMarshall';
 import RelatorioDensidade from '../components/relatorios/RelatorioDensidade';
 
 export default function RelatorioEnsaio() {
@@ -30,16 +29,14 @@ export default function RelatorioEnsaio() {
 
       const user = await User.me();
       
-      const [ensaiosMarshall, ensaiosDensidade, obras, projects] = await Promise.all([
-        EnsaioExtracaoGranMarshall.list(),
+      const [ensaiosDensidade, obras, projects] = await Promise.all([
         EnsaioDensidade.list(),
         Obra.list(),
         Project.list()
       ]);
 
       let record;
-      if (tipo === 'marshall') record = ensaiosMarshall.find(r => r.id === id);
-      else if (tipo === 'densidade') record = ensaiosDensidade.find(r => r.id === id);
+      if (tipo === 'densidade') record = ensaiosDensidade.find(r => r.id === id);
 
       // Note: 'diario' type is now handled by a separate dedicated page/component.
       // If 'tipo' is 'diario' here, 'record' will remain undefined, and the
@@ -83,8 +80,6 @@ export default function RelatorioEnsaio() {
     if (!state.data) return null;
     const { tipo, record, obra, project, user } = state.data;
     switch (tipo) {
-      case 'marshall':
-        return <RelatorioMarshall ensaio={record} obra={obra} project={project} user={user} />;
       case 'densidade':
         return <RelatorioDensidade ensaio={record} obra={obra} project={project} user={user} />;
       default:
@@ -93,7 +88,6 @@ export default function RelatorioEnsaio() {
   };
 
   const getTipoRelatorioNome = () => {
-    if (state.data?.tipo === 'marshall') return 'Extração + Gran + Marshall';
     if (state.data?.tipo === 'densidade') return 'Densidade CP Extraído';
     return 'Relatório de Ensaio';
   };
@@ -116,7 +110,7 @@ export default function RelatorioEnsaio() {
         {renderReport()}
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @media screen {
           .report-content-container {
             max-width: 210mm; /* A4 width */
