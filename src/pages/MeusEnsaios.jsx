@@ -834,10 +834,10 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-sm">
               <thead className="bg-black/5 border-b border-white/10">
                 <tr>
-                  <th className="text-center px-2 py-3 font-medium text-[#00233B]" style={{ width: '40px' }}>
+                  <th className="text-center px-1 py-2 font-medium text-[#00233B]" style={{ width: '30px' }}>
                     <input
                       type="checkbox"
                       checked={selectedEnsaios.length === filteredEnsaios.length && filteredEnsaios.length > 0}
@@ -845,7 +845,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       className="cursor-pointer"
                     />
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Tipo</span>
                       <SelectColumnFilter
@@ -856,16 +856,16 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={toggleSortOrder}
                         className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors"
                       >
                         <span>Data</span>
-                        {sortOrder === 'desc' && <ArrowDown className="w-4 h-4" />}
-                        {sortOrder === 'asc' && <ArrowUp className="w-4 h-4" />}
-                        {!sortOrder && <ArrowUpDown className="w-4 h-4" />}
+                        {sortOrder === 'desc' && <ArrowDown className="w-3 h-3" />}
+                        {sortOrder === 'asc' && <ArrowUp className="w-3 h-3" />}
+                        {!sortOrder && <ArrowUpDown className="w-3 h-3" />}
                       </button>
                       <DateRangePicker
                         startDate={dataInicioFilter}
@@ -875,7 +875,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Obra</span>
                       <TextColumnFilter
@@ -885,9 +885,9 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
-                      <span>Laboratorista</span>
+                      <span>Lab.</span>
                       <TextColumnFilter
                         value={nomeFilter}
                         onChange={setNomeFilter}
@@ -895,8 +895,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">Local</th>
-                  <th className="text-left px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Projeto</span>
                       <TextColumnFilter
@@ -906,7 +906,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-center px-4 py-3 font-medium text-[#00233B]">
+                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center justify-center gap-1">
                       <span>Status</span>
                       <SelectColumnFilter
@@ -917,7 +917,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-center px-4 py-3 font-medium text-[#00233B]">Ações</th>
+                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '120px' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -935,7 +935,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
                   return (
                     <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
-                      <td className="px-2 py-3 text-center">
+                      <td className="px-1 py-2 text-center">
                         <input
                           type="checkbox"
                           checked={selectedEnsaios.includes(ensaio.id)}
@@ -943,15 +943,16 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                           className="cursor-pointer"
                         />
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-[#00233B] flex items-center gap-1">
-                          <TypeIcon className="w-4 h-4 text-[#BFCF99]" /> {name}
+                      <td className="px-2 py-2">
+                        <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
+                          <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
+                          <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           {(() => {
                             const naoConformidades = getNaoConformidades(ensaio);
                             if (naoConformidades.length > 0) {
                               return (
                                 <span 
-                                  className="text-red-600 cursor-help ml-1" 
+                                  className="text-red-600 cursor-help" 
                                   title={`Não conformidades:\n${naoConformidades.join('\n')}`}
                                 >
                                   ⚠️
@@ -961,69 +962,60 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                             return null;
                           })()}
                         </div>
-                        {ensaio.sample_id && <div className="text-xs text-[#00233B]/70">{ensaio.sample_id}</div>}
                       </td>
-                      <td className="px-4 py-3 text-[#00233B]/90">{dataFormatted}</td>
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-[#00233B]">{obra?.name || 'Não encontrada'}</div>
-                        <div className="text-xs text-[#00233B]/70">{obra?.code}</div>
+                      <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
+                      <td className="px-2 py-2">
+                        <div className="font-medium text-[#00233B] text-xs truncate max-w-[140px]" title={obra?.name}>{obra?.name || 'N/A'}</div>
+                        <div className="text-[10px] text-[#00233B]/70">{obra?.code}</div>
                       </td>
-                      <td className="px-4 py-3 text-[#00233B]/90">{laboratorista}</td>
-                      <td className="px-4 py-3">
-                        <div className="text-[#00233B]/90">{localInfo.tipo}</div>
-                        <div className="text-xs text-[#00233B]/70">{localInfo.detalhes}</div>
+                      <td className="px-2 py-2 text-[#00233B]/90 text-xs truncate max-w-[100px]" title={laboratorista}>{laboratorista}</td>
+                      <td className="px-2 py-2">
+                        <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
+                        <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         {projeto ? (
-                          <div className="text-[#00233B]/90 text-sm">{projeto.name}</div>
+                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
                         ) : (
-                          <div className="text-[#00233B]/50 text-center">-</div>
+                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-center">
-                        <Badge className={`${status.className} gap-1`}>
+                      <td className="px-2 py-2 text-center">
+                        <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
                           <status.icon className="w-3 h-3" />
                           {status.text}
                         </Badge>
-                        {ensaio.rejection_reason && (
-                          <div className="mt-1 text-xs text-[#800020]" title={ensaio.rejection_reason}>
-                            Motivo: {ensaio.rejection_reason.substring(0, 30)}...
-                          </div>
-                        )}
-                        {ensaio.client_signature?.signed_by && (
-                          <div className="mt-1 text-xs text-[#00233B]" title={`Assinado por ${ensaio.client_signature.engineer_name} em ${new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR')}`}>
-                            Eng. {ensaio.client_signature.engineer_name.split(' ')[0]}
-                          </div>
-                        )}
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors flex-1">
+                      <td className="px-2 py-2">
+                        <div className="flex items-center gap-1">
+                          <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
                             <Link to={reportUrl} target="_blank">
-                              <FileText className="w-4 h-4 mr-1" /> PDF
+                              <FileText className="w-3 h-3" />
                             </Link>
                           </Button>
 
                           {canApprove && (
-                            <div className="flex flex-col gap-1">
+                            <div className="flex gap-1">
                               {(ensaio.approved === null || ensaio.approved === false) && (
                                 <Button
-                                  size="xs"
+                                  size="sm"
                                   style={{ backgroundColor: '#566E3D' }}
-                                  className="text-white hover:opacity-90 transition-opacity whitespace-nowrap"
+                                  className="text-white hover:opacity-90 transition-opacity h-7 px-2"
                                   onClick={() => handleApprove(ensaio)}
+                                  title="Aprovar"
                                 >
-                                  <CheckCircle className="w-3 h-3 mr-1" /> Aprovar
+                                  <CheckCircle className="w-3 h-3" />
                                 </Button>
                               )}
                               {ensaio.approved === null && (
                                 <Button
-                                  size="xs"
+                                  size="sm"
                                   style={{ backgroundColor: '#800020' }}
-                                  className="text-white hover:opacity-90 transition-opacity whitespace-nowrap"
+                                  className="text-white hover:opacity-90 transition-opacity h-7 px-2"
                                   onClick={() => setReprovingEnsaio(ensaio)}
+                                  title="Reprovar"
                                 >
-                                  <XCircle className="w-3 h-3 mr-1" /> Reprovar
+                                  <XCircle className="w-3 h-3" />
                                 </Button>
                               )}
                             </div>
