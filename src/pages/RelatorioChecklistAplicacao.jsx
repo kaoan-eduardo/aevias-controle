@@ -95,7 +95,7 @@ export default function RelatorioChecklistAplicacaoPage() {
         )}
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @media screen {
           .report-content-container {
             max-width: 210mm;

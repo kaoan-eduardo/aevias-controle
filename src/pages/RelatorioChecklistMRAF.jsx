@@ -103,7 +103,7 @@ export default function RelatorioChecklistMRAFPage() {
         )}
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @media screen {
           .report-content-container {
             max-width: 210mm;
