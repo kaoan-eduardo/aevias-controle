@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { EnsaioExtracaoGranMarshall } from '@/entities/EnsaioExtracaoGranMarshall';
 import { EnsaioDensidade } from '@/entities/EnsaioDensidade';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
