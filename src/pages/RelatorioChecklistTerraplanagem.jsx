@@ -26,9 +26,6 @@ export default function RelatorioChecklistTerraplanamemPage() {
 
       const checklist = await base44.entities.ChecklistTerraplanagem.get(checklistId);
       setReportData(checklist);
-      
-      // Abre automaticamente o diálogo de impressão
-      setTimeout(() => window.print(), 500);
     } catch (error) {
       console.error("Erro ao carregar dados do relatório:", error);
       setError("Erro ao carregar dados do relatório");

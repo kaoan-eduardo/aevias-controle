@@ -39,9 +39,6 @@ export default function RelatorioTaxaPinturaImprimacaoPage() {
           setRegional(regionalData);
         }
       }
-      
-      // Abre automaticamente o diálogo de impressão
-      setTimeout(() => window.print(), 500);
     } catch (error) {
       console.error("Erro ao carregar dados do relatório:", error);
       alert("Erro ao carregar dados do relatório.");

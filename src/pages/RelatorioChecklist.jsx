@@ -52,9 +52,6 @@ export default function RelatorioChecklistPage() {
           error: null,
           data: { checklist, obra, regional, project, user }
         });
-        
-        // Abre automaticamente o diálogo de impressão
-        setTimeout(() => window.print(), 500);
       } catch (error) {
         console.error('Erro ao carregar relatório do checklist:', error);
         setState({ loading: false, error: error.message, data: null });
