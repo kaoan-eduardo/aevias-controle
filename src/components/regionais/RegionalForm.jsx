@@ -64,7 +64,7 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
         status: regional?.status || "ativa",
         project_ids: regional?.project_ids || [],
         laboratoristas_responsaveis: regional?.laboratoristas_responsaveis || [],
-        gestores_contrato_responsaveis: regional?.gestores_contrato_responsaveis || regional?.gestor_contrato_responsavel ? [regional.gestor_contrato_responsavel] : [],
+        gestores_contrato_responsaveis: regional?.gestores_contrato_responsaveis?.length > 0 ? regional.gestores_contrato_responsaveis : (regional?.gestor_contrato_responsavel ? [regional.gestor_contrato_responsavel] : []),
         salas_tecnicas_responsaveis: regional?.salas_tecnicas_responsaveis || [],
         clientes_responsaveis: regional?.clientes_responsaveis || [],
         descricao: regional?.descricao || "",
