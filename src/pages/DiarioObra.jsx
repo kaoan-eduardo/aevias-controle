@@ -485,8 +485,18 @@ export default function DiarioObraPage() {
     }
 
     const dataToSave = {
-      ...formData,
-      temperatura: formData.temperatura === "" ? null : Number(formData.temperatura),
+      obra_id: formData.obra_id,
+      data: formData.data || new Date().toISOString().split('T')[0],
+      tipo_local: formData.tipo_local || "campo",
+      condicoes_climaticas: formData.condicoes_climaticas || "ensolarado",
+      rodovia: formData.rodovia || "",
+      trecho: formData.trecho || "",
+      usina_selecionada: formData.usina_selecionada || "",
+      temperatura: formData.temperatura === "" ? null : (formData.temperatura ? Number(formData.temperatura) : null),
+      atividades_realizadas: formData.atividades_realizadas || "",
+      ocorrencias: formData.ocorrencias || "",
+      observacoes: formData.observacoes || "",
+      fotos: formData.fotos || [],
       created_by: user?.email,
       laboratorista_name: user?.full_name
     };
