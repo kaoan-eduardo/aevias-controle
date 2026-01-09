@@ -1076,7 +1076,8 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const isEngenheiro = isCliente && user?.position?.toLowerCase().includes('engenheiro');
 
   const podeVerPDF = ensaio.approved === true || ensaio.client_signature?.signed_by;
-  const podeEditar = ensaio.approved === false && ensaio.created_by === user?.email && !isCliente;
+  // Pode editar se: está em rascunho OU foi reprovado
+  const podeEditar = ensaio.created_by === user?.email && !isCliente && (ensaio.status === 'rascunho' || ensaio.approved === false);
   const podeAssinar = isEngenheiro && ensaio.approved === true && !ensaio.client_signature?.signed_by;
   const jaAssinado = ensaio.client_signature?.signed_by === user?.email;
 
