@@ -488,7 +488,7 @@ export default function DiarioObraPage() {
       return;
     }
 
-    const dataToSave = {
+    const { status_preenchimento, approved, approved_by, approved_date, rejection_reason, ...dataToSave } = {
       ...formData,
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura),
       created_by: user?.email,
@@ -498,7 +498,7 @@ export default function DiarioObraPage() {
     try {
       const newId = await saveRecord(dataToSave, false); // false = em_execucao
       if (newId && !editingDiarioOriginal?.id) {
-        setEditingDiarioOriginal({ id: newId }); // Update so subsequent saves update instead of create
+        setEditingDiarioOriginal({ id: newId });
       }
       alert("Registro salvo com sucesso! Você pode continuar editando ou fechar o app quando quiser.");
     } catch (error) {
