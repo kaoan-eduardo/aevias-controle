@@ -1480,8 +1480,14 @@ export default function MeusEnsaios() {
       setUser(currentUser);
       
       // Carregar todos os usuários para mapear nomes corretamente
-      const todosUsuarios = await base44.entities.User.list();
-      setAllUsers(todosUsuarios);
+      try {
+        const todosUsuarios = await base44.entities.User.list();
+        setAllUsers(todosUsuarios);
+      } catch (error) {
+        console.error("Erro ao carregar lista de usuários:", error);
+        // Se falhar ao carregar todos os usuários, usar apenas o usuário atual
+        setAllUsers([currentUser]);
+      }
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
