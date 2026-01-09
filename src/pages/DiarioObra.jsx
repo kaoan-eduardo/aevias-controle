@@ -347,6 +347,8 @@ export default function DiarioObraPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  
+  const { saveRecord, isSaving } = useAutoSaveRecord(DiarioObraEntity, editingDiarioOriginal?.id);
 
   // Unified handleChange for all form fields
   const handleChange = (name, value) => {
