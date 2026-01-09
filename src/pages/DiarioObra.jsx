@@ -62,6 +62,16 @@ const DiarioForm = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {status === 'rascunho' && (
+        <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+            <div>
+                <p className="font-semibold text-blue-800">Em Rascunho</p>
+                <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+            </div>
+        </div>
+      )}
+
       {rejectionReason && (
           <div className="mt-4 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
               <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
