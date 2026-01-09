@@ -1273,8 +1273,13 @@ EnsaioCard.displayName = 'EnsaioCard';
 const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
+  const emExecucao = useMemo(() =>
+    ensaios.filter((e) => e.status === 'rascunho'),
+    [ensaios]
+  );
+
   const pendentes = useMemo(() =>
-    ensaios.filter((e) => e.approved === null || e.approved === false),
+    ensaios.filter((e) => e.status === 'finalizado' && (e.approved === null || e.approved === false)),
     [ensaios]
   );
 
