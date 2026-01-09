@@ -313,9 +313,9 @@ const DiarioForm = ({
                type="button" 
                variant="outline"
                disabled={loadingUpload}
-               onClick={(e) => {
+               onClick={async (e) => {
                  e.preventDefault();
-                 handleSubmit({ ...e, target: { ...e.target } }, 'rascunho');
+                 await handleSubmit(e, 'rascunho');
                }}
                className="border-blue-500 text-blue-600 hover:bg-blue-50"
              >
