@@ -1319,15 +1319,47 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
         </div>
       )}
       
-      <Tabs defaultValue="pendentes" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 bg-white/20 backdrop-blur-lg border border-white/20">
+      <Tabs defaultValue="emExecucao" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20">
+        <TabsTrigger value="emExecucao" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
+          Em Execução <Badge className="ml-2">{emExecucao.length}</Badge>
+        </TabsTrigger>
         <TabsTrigger value="pendentes" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
-          Pendentes e Reprovados <Badge className="ml-2">{pendentes.length}</Badge>
+          Pendentes <Badge className="ml-2">{pendentes.length}</Badge>
         </TabsTrigger>
         <TabsTrigger value="aprovados" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
           Aprovados <Badge className="ml-2">{aprovados.length}</Badge>
         </TabsTrigger>
       </TabsList>
+
+      <TabsContent value="emExecucao" className="mt-4 space-y-4">
+        {emExecucao.length > 0 ?
+          emExecucao.map((ensaio) => (
+            <div key={ensaio.id} className="flex gap-2 items-start">
+              <input
+                type="checkbox"
+                checked={selectedEnsaios.includes(ensaio.id)}
+                onChange={() => toggleSelectEnsaio(ensaio.id)}
+                className="cursor-pointer mt-4"
+              />
+              <div className="flex-1">
+                <EnsaioCard
+                  ensaio={ensaio}
+                  obra={obras.find((o) => o.id === ensaio.obra_id)}
+                  user={user}
+                  allUsers={allUsers} />
+              </div>
+            </div>
+          )) :
+          <div className="text-center py-12 text-[#00233B]/70">
+            <FileText className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-[#00233B] mb-2">
+              Nenhum registro em execução
+            </h3>
+            <p>Comece criando um novo registro ou finalize os em rascunho.</p>
+          </div>
+        }
+      </TabsContent>
 
       <TabsContent value="pendentes" className="mt-4 space-y-4">
         {pendentes.length > 0 ?
