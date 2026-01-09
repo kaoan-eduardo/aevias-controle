@@ -478,6 +478,35 @@ export default function DiarioObraPage() {
     }));
   };
 
+  const handleSaveProgresso = async () => {
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra.");
+      return;
+    }
+    if (!formData.atividades_realizadas) {
+      alert("Por favor, preencha as atividades realizadas.");
+      return;
+    }
+
+    const dataToSave = {
+      ...formData,
+      temperatura: formData.temperatura === "" ? null : Number(formData.temperatura),
+      created_by: user?.email,
+      laboratorista_name: user?.full_name
+    };
+
+    try {
+      const newId = await saveRecord(dataToSave, false); // false = em_execucao
+      if (newId && !editingDiarioOriginal?.id) {
+        setEditingDiarioOriginal({ id: newId }); // Update so subsequent saves update instead of create
+      }
+      alert("Registro salvo com sucesso! Você pode continuar editando ou fechar o app quando quiser.");
+    } catch (error) {
+      console.error("Erro ao salvar progresso:", error);
+      alert("Erro ao salvar: " + error.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.obra_id) {
@@ -504,14 +533,14 @@ export default function DiarioObraPage() {
           updateData.approved_date = null;
           
           await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário atualizado com sucesso! O registro voltará para análise do administrador.");
+          alert("Diário finalizado com sucesso! O registro voltará para análise do administrador.");
         } else {
           await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário atualizado com sucesso!");
+          alert("Diário finalizado com sucesso!");
         }
       } else { // Creating new diario
         await DiarioObraEntity.create({ ...dataToSave, created_by: user?.email, laboratorista_name: user?.full_name });
-        alert("Diário criado com sucesso!");
+        alert("Diário criado e finalizado com sucesso!");
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
