@@ -180,9 +180,19 @@ const getLocalInfo = (ensaio) => {
   }
 };
 
-const getLaboratoristaInfo = (ensaio) => {
-  // Sempre tenta usar laboratorista_name primeiro, independente do tipo de ensaio
-  return ensaio.laboratorista_name || ensaio.created_by?.split('@')[0] || "Não identificado";
+const getLaboratoristaInfo = (ensaio, allUsers) => {
+  // Sempre tenta usar laboratorista_name primeiro
+  if (ensaio.laboratorista_name) return ensaio.laboratorista_name;
+  
+  // Se não tiver laboratorista_name, buscar pelo created_by
+  if (ensaio.created_by && allUsers) {
+    const user = allUsers.find(u => u.email?.toLowerCase() === ensaio.created_by?.toLowerCase());
+    if (user) {
+      return user.laboratorista_name || user.full_name || ensaio.created_by.split('@')[0];
+    }
+  }
+  
+  return ensaio.created_by?.split('@')[0] || "Não identificado";
 };
 
 const getResponsavelInfo = (ensaio) => {
@@ -447,7 +457,7 @@ const SelectColumnFilter = React.memo(({ value, onChange, options, placeholder }
 SelectColumnFilter.displayName = 'SelectColumnFilter';
 
 // Componente para interface de administrador (tabela) - Memoizado
-const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReject, user, canApprove, canCreate, canEdit }) => {
+const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReject, user, canApprove, canCreate, canEdit, allUsers }) => {
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState(''); // New filter state
@@ -513,7 +523,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
     if (nomeFilter) {
       filtered = filtered.filter((ensaio) => {
-        const laboratorista = getLaboratoristaInfo(ensaio);
+        const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
         return laboratorista.toLowerCase().includes(nomeFilter.toLowerCase());
       });
     }
@@ -927,7 +937,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                   const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
                   const reportUrl = getReportLink(ensaio);
                   const localInfo = getLocalInfo(ensaio);
-                  const laboratorista = getLaboratoristaInfo(ensaio);
+                  const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
                   const dataFormatted = getDataFormatted(ensaio);
 
                   // Buscar projeto se existir project_id
@@ -1052,12 +1062,12 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 AdminInterface.displayName = 'AdminInterface';
 
 // Componente EnsaioCard memoizado
-const EnsaioCard = React.memo(({ ensaio, obra, user }) => {
+const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const status = getStatusInfo(ensaio);
   const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
   const reportUrl = getReportLink(ensaio);
   const localInfo = getLocalInfo(ensaio);
-  const laboratorista = getLaboratoristaInfo(ensaio);
+  const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
   const dataFormatted = getDataFormatted(ensaio);
 
   const editLink = createPageUrl(`${ensaio.entityType}?editId=${ensaio.id}`);
@@ -1260,7 +1270,7 @@ const EnsaioCard = React.memo(({ ensaio, obra, user }) => {
 EnsaioCard.displayName = 'EnsaioCard';
 
 // Componente para laboratoristas (cards) - Memoizado
-const LaboratoristaInterface = React.memo(({ ensaios, obras, user }) => {
+const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
   const pendentes = useMemo(() =>
@@ -1377,7 +1387,7 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user }) => {
 LaboratoristaInterface.displayName = 'LaboratoristaInterface';
 
 // Componente para clientes - apenas ensaios aprovados sem abas
-const ClienteInterface = React.memo(({ ensaios, obras, user }) => {
+const ClienteInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
@@ -1424,7 +1434,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, user }) => {
               <EnsaioCard
                 ensaio={ensaio}
                 obra={obras.find((o) => o.id === ensaio.obra_id)}
-                user={user} />
+                user={user}
+                allUsers={allUsers} />
             </div>
           </div>
         )) :
@@ -1465,7 +1476,10 @@ export default function MeusEnsaios() {
     try {
       const currentUser = await User.me();
       setUser(currentUser);
-      setAllUsers([currentUser]);
+      
+      // Carregar todos os usuários para mapear nomes corretamente
+      const todosUsuarios = await base44.entities.User.list();
+      setAllUsers(todosUsuarios);
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
@@ -1704,18 +1718,21 @@ export default function MeusEnsaios() {
               onReject={handleReject}
               user={user}
               canApprove={canApprove}
-              canCreate={canCreate} />
+              canCreate={canCreate}
+              allUsers={allUsers} />
             :
             isCliente ?
               <ClienteInterface
                 ensaios={ensaios}
                 obras={obras}
-                user={user} />
+                user={user}
+                allUsers={allUsers} />
               :
               <LaboratoristaInterface
                 ensaios={ensaios}
                 obras={obras}
-                user={user} />
+                user={user}
+                allUsers={allUsers} />
         }
       </div>
     </div>
