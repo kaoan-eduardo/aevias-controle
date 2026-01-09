@@ -615,9 +615,10 @@ export default function RegionaisPage() {
 
       if (currentUserAccessLevel === 'gestor_contrato') {
         // Gestor vê apenas as regionais onde é o gestor responsável
-        regionaisFiltradas = regionaisData.filter(regional => 
-          regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase()
-        );
+        regionaisFiltradas = regionaisData.filter(regional => {
+          const gestores = regional.gestores_contrato_responsaveis || [regional.gestor_contrato_responsavel].filter(Boolean);
+          return gestores.some(email => email?.toLowerCase() === userData.email.toLowerCase());
+        });
       } else if (currentUserAccessLevel === 'sala_tecnica_afirmaevias') {
         // Sala técnica vê apenas as regionais onde está vinculada
         regionaisFiltradas = regionaisData.filter(regional => {
