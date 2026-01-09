@@ -5,6 +5,7 @@ import { DiarioObra } from '@/entities/DiarioObra';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
 import { User } from '@/entities/User';
+import { base44 } from '@/api/base44Client';
 import RelatorioDiarioComponent from '../components/relatorios/RelatorioDiario';
 
 export default function RelatorioDiarioPage() {
