@@ -480,40 +480,47 @@ export default function DiarioObraPage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
-    if (!formData.obra_id) {
-      alert("Por favor, selecione uma obra.");
-      return;
+    
+    // Validações obrigatórias apenas quando finalizando
+    if (saveStatus === 'finalizado') {
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        return;
+      }
+      if (!formData.atividades_realizadas) {
+        alert("Por favor, preencha as atividades realizadas.");
+        return;
+      }
+    } else {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        return;
+      }
     }
-    if (!formData.atividades_realizadas) {
-      alert("Por favor, preencha as atividades realizadas.");
-      return;
-    }
+    
     const dataToSave = {
       ...formData,
+      status: saveStatus,
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura)
     };
     
     try {
-      if (editingDiarioOriginal?.id) { // Check if we are editing an existing diario
+      if (editingDiarioOriginal?.id) {
         const updateData = { ...dataToSave };
-        // If it was rejected, mark as pending again upon editing
         if (editingDiarioOriginal.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
-          
-          await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário atualizado com sucesso! O registro voltará para análise do administrador.");
-        } else {
-          await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário atualizado com sucesso!");
         }
-      } else { // Creating new diario
+        await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário finalizado com sucesso!");
+      } else {
         await DiarioObraEntity.create({ ...dataToSave, created_by: user?.email, laboratorista_name: user?.full_name });
-        alert("Diário criado com sucesso!");
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário criado com sucesso!");
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
