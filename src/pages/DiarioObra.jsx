@@ -300,9 +300,27 @@ const DiarioForm = ({
           Cancelar
         </Button>
         {isEditable && !isApproved && (
-          <Button type="submit" disabled={loadingUpload}>
-            <Save className="mr-2 h-4 w-4" /> Salvar
-          </Button>
+          <>
+            <Button 
+              type="button"
+              onClick={onSaveProgresso}
+              disabled={loadingUpload || isSaving}
+              className="bg-[#566E3D] hover:bg-[#566E3D]/90 text-white"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
+                </>
+              )}
+            </Button>
+            <Button type="submit" disabled={loadingUpload || isSaving}>
+              <CheckCircle className="mr-2 h-4 w-4" /> Finalizar e Enviar
+            </Button>
+          </>
         )}
         {isApproved && (
           <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
