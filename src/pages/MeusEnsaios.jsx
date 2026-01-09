@@ -1338,7 +1338,8 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
                 <EnsaioCard
                   ensaio={ensaio}
                   obra={obras.find((o) => o.id === ensaio.obra_id)}
-                  user={user} />
+                  user={user}
+                  allUsers={allUsers} />
               </div>
             </div>
           )) :
@@ -1366,7 +1367,8 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
                 <EnsaioCard
                   ensaio={ensaio}
                   obra={obras.find((o) => o.id === ensaio.obra_id)}
-                  user={user} />
+                  user={user}
+                  allUsers={allUsers} />
               </div>
             </div>
           )) :
@@ -1719,6 +1721,7 @@ export default function MeusEnsaios() {
               user={user}
               canApprove={canApprove}
               canCreate={canCreate}
+              canEdit={canEdit}
               allUsers={allUsers} />
             :
             isCliente ?
