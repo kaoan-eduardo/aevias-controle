@@ -479,7 +479,12 @@ export default function DiarioObraPage() {
   };
 
   const handleSaveProgresso = async () => {
-    const { status_preenchimento, approved, approved_by, approved_date, rejection_reason, ...dataToSave } = {
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra.");
+      return;
+    }
+
+    const dataToSave = {
       ...formData,
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura),
       created_by: user?.email,
