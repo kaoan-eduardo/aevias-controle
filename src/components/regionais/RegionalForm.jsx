@@ -64,7 +64,7 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
         status: regional?.status || "ativa",
         project_ids: regional?.project_ids || [],
         laboratoristas_responsaveis: regional?.laboratoristas_responsaveis || [],
-        gestor_contrato_responsavel: regional?.gestor_contrato_responsavel || "",
+        gestores_contrato_responsaveis: regional?.gestores_contrato_responsaveis || regional?.gestor_contrato_responsavel ? [regional.gestor_contrato_responsavel] : [],
         salas_tecnicas_responsaveis: regional?.salas_tecnicas_responsaveis || [],
         clientes_responsaveis: regional?.clientes_responsaveis || [],
         descricao: regional?.descricao || "",
@@ -122,27 +122,25 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <Label>Laboratoristas Responsáveis</Label>
-                     <MultiSelect
-                        options={userOptions.filter(u => users.find(user => user.email === u.value && user.access_level === 'user'))}
-                        selected={formData.laboratoristas_responsaveis}
-                        onSelectedChange={(value) => handleMultiSelectChange('laboratoristas_responsaveis', value)}
-                        placeholder="Selecione os laboratoristas"
-                    />
-                </div>
                  <div>
-                    <Label>Gestor de Contrato</Label>
-                    <Select value={formData.gestor_contrato_responsavel} onValueChange={(value) => setFormData({ ...formData, gestor_contrato_responsavel: value })}>
-                        <SelectTrigger><SelectValue placeholder="Selecione o gestor" /></SelectTrigger>
-                        <SelectContent>
-                            {userOptions.filter(u => users.find(user => user.email === u.value && user.access_level === 'gestor_contrato')).map(opt => (
-                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
+                     <Label>Laboratoristas Responsáveis</Label>
+                      <MultiSelect
+                         options={userOptions.filter(u => users.find(user => user.email === u.value && user.access_level === 'user'))}
+                         selected={formData.laboratoristas_responsaveis}
+                         onSelectedChange={(value) => handleMultiSelectChange('laboratoristas_responsaveis', value)}
+                         placeholder="Selecione os laboratoristas"
+                     />
+                 </div>
+                  <div>
+                     <Label>Gestores de Contrato</Label>
+                     <MultiSelect
+                         options={userOptions.filter(u => users.find(user => user.email === u.value && user.access_level === 'gestor_contrato'))}
+                         selected={formData.gestores_contrato_responsaveis}
+                         onSelectedChange={(value) => handleMultiSelectChange('gestores_contrato_responsaveis', value)}
+                         placeholder="Selecione os gestores"
+                     />
+                 </div>
+             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
