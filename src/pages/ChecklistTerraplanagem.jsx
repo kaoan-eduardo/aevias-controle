@@ -334,13 +334,21 @@ export default function ChecklistTerraplanagem() {
           temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
         })),
         ensaios_empreiteira: Object.fromEntries(
-          Object.entries(formData.ensaios_empreiteira).map(([key, value]) => [
-            key,
-            {
-              ...value,
-              quantidade: value.quantidade ? parseInt(value.quantidade) : null
+          Object.entries(formData.ensaios_empreiteira).map(([key, value]) => {
+            // Se o valor é null, undefined ou não é um objeto, retorna como está
+            if (!value || typeof value !== 'object') {
+              return [key, value];
             }
-          ])
+            
+            // Se é um objeto, processa a quantidade
+            return [
+              key,
+              {
+                ...value,
+                quantidade: value.quantidade ? parseInt(value.quantidade) : null
+              }
+            ];
+          })
         )
       };
 
