@@ -25,10 +25,23 @@ export default function RelatorioDiarioPage() {
 
       if (!id) throw new Error('ID do diário é obrigatório na URL');
 
-      const user = await User.me();
-      const diario = await DiarioObra.get(id);
+      const [user, diario, allUsers] = await Promise.all([
+        User.me(),
+        DiarioObra.get(id),
+        base44.entities.User.list()
+      ]);
 
       if (!diario) throw new Error(`Diário com ID ${id} não encontrado`);
+
+      // Se o diário não tiver laboratorista_name ou tiver apenas o username do email, buscar pelo created_by
+      if (!diario.laboratorista_name || diario.laboratorista_name === diario.created_by?.split('@')[0]) {
+        if (diario.created_by) {
+          const creator = allUsers.find(u => u.email?.toLowerCase() === diario.created_by?.toLowerCase());
+          if (creator) {
+            diario.laboratorista_name = creator.laboratorista_name || creator.full_name;
+          }
+        }
+      }
 
       let obra = null;
       let project = null;
