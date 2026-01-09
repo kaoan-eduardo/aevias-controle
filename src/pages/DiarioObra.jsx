@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import { User } from "@/entities/User";
 import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useAutoSaveRecord } from "@/components/hooks/useAutoSaveRecord";
 
 
 
