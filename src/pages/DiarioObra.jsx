@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,6 @@ import { User } from "@/entities/User";
 import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useAutoSaveRecord } from "@/components/hooks/useAutoSaveRecord";
 
 
 
@@ -44,19 +44,17 @@ const DiarioForm = ({
   handleFileChange,
   handleRemovePhoto,
   handleSubmit,
-  onSaveProgresso,
   onCancel,
   obras,
   regionais,
-  user,
+  user, // user prop might be needed for permission display or client-side logic
   loadingUpload,
   selectedFileNames,
   uploadProgress,
   isEditable,
   isApproved,
   rejectionReason,
-  isCreatingNew,
-  isSaving
+  isCreatingNew
 }) => {
   // Calculate selected obra and regional here for display purposes
   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
@@ -300,27 +298,9 @@ const DiarioForm = ({
           Cancelar
         </Button>
         {isEditable && !isApproved && (
-          <>
-            <Button 
-              type="button"
-              onClick={onSaveProgresso}
-              disabled={loadingUpload || isSaving}
-              className="bg-[#566E3D] hover:bg-[#566E3D]/90 text-white"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Salvando...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                </>
-              )}
-            </Button>
-            <Button type="submit" disabled={loadingUpload || isSaving}>
-              <CheckCircle className="mr-2 h-4 w-4" /> Finalizar e Enviar
-            </Button>
-          </>
+          <Button type="submit" disabled={loadingUpload}>
+            <Save className="mr-2 h-4 w-4" /> Salvar
+          </Button>
         )}
         {isApproved && (
           <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
@@ -347,8 +327,6 @@ export default function DiarioObraPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const { saveRecord, isSaving } = useAutoSaveRecord(DiarioObraEntity, editingDiarioOriginal?.id);
 
   // Unified handleChange for all form fields
   const handleChange = (name, value) => {
@@ -478,41 +456,6 @@ export default function DiarioObraPage() {
     }));
   };
 
-  const handleSaveProgresso = async () => {
-    if (!formData.obra_id) {
-      alert("Por favor, selecione uma obra.");
-      return;
-    }
-
-    const dataToSave = {
-      obra_id: formData.obra_id,
-      data: formData.data || new Date().toISOString().split('T')[0],
-      tipo_local: formData.tipo_local || "campo",
-      condicoes_climaticas: formData.condicoes_climaticas || "ensolarado",
-      rodovia: formData.rodovia || "",
-      trecho: formData.trecho || "",
-      usina_selecionada: formData.usina_selecionada || "",
-      temperatura: formData.temperatura === "" ? null : (formData.temperatura ? Number(formData.temperatura) : null),
-      atividades_realizadas: formData.atividades_realizadas || "",
-      ocorrencias: formData.ocorrencias || "",
-      observacoes: formData.observacoes || "",
-      fotos: formData.fotos || [],
-      created_by: user?.email,
-      laboratorista_name: user?.full_name
-    };
-
-    try {
-      const newId = await saveRecord(dataToSave, false); // false = em_execucao
-      if (newId && !editingDiarioOriginal?.id) {
-        setEditingDiarioOriginal({ id: newId });
-      }
-      alert("Registro salvo com sucesso! Você pode visualizá-lo em 'Ensaios Realizados' para continuar editando.");
-    } catch (error) {
-      console.error("Erro ao salvar progresso:", error);
-      alert("Erro ao salvar: " + error.message);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.obra_id) {
@@ -539,14 +482,14 @@ export default function DiarioObraPage() {
           updateData.approved_date = null;
           
           await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário finalizado com sucesso! O registro voltará para análise do administrador.");
+          alert("Diário atualizado com sucesso! O registro voltará para análise do administrador.");
         } else {
           await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-          alert("Diário finalizado com sucesso!");
+          alert("Diário atualizado com sucesso!");
         }
       } else { // Creating new diario
         await DiarioObraEntity.create({ ...dataToSave, created_by: user?.email, laboratorista_name: user?.full_name });
-        alert("Diário criado e finalizado com sucesso!");
+        alert("Diário criado com sucesso!");
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
@@ -674,10 +617,9 @@ export default function DiarioObraPage() {
               handleFileChange={handleFileChange}
               handleRemovePhoto={handleRemovePhoto}
               handleSubmit={handleSubmit}
-              onSaveProgresso={handleSaveProgresso}
               onCancel={() => navigate(createPageUrl('MeusEnsaios'))}
               obras={obras}
-              regionais={regionais}
+              regionais={regionais} // Pass regionais
               user={user}
               loadingUpload={loadingUpload}
               selectedFileNames={selectedFileNames}
@@ -686,7 +628,6 @@ export default function DiarioObraPage() {
               isApproved={isApproved}
               rejectionReason={formData.rejection_reason}
               isCreatingNew={isCreatingNew}
-              isSaving={isSaving}
             />
           </CardContent>
         </Card>
