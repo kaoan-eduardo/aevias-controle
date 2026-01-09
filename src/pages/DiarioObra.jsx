@@ -479,15 +479,6 @@ export default function DiarioObraPage() {
   };
 
   const handleSaveProgresso = async () => {
-    if (!formData.obra_id) {
-      alert("Por favor, selecione uma obra.");
-      return;
-    }
-    if (!formData.atividades_realizadas) {
-      alert("Por favor, preencha as atividades realizadas.");
-      return;
-    }
-
     const { status_preenchimento, approved, approved_by, approved_date, rejection_reason, ...dataToSave } = {
       ...formData,
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura),
@@ -500,7 +491,7 @@ export default function DiarioObraPage() {
       if (newId && !editingDiarioOriginal?.id) {
         setEditingDiarioOriginal({ id: newId });
       }
-      alert("Registro salvo com sucesso! Você pode continuar editando ou fechar o app quando quiser.");
+      alert("Registro salvo com sucesso! Você pode visualizá-lo em 'Ensaios Realizados' para continuar editando.");
     } catch (error) {
       console.error("Erro ao salvar progresso:", error);
       alert("Erro ao salvar: " + error.message);
