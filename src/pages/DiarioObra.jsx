@@ -668,9 +668,10 @@ export default function DiarioObraPage() {
               handleFileChange={handleFileChange}
               handleRemovePhoto={handleRemovePhoto}
               handleSubmit={handleSubmit}
+              onSaveProgresso={handleSaveProgresso}
               onCancel={() => navigate(createPageUrl('MeusEnsaios'))}
               obras={obras}
-              regionais={regionais} // Pass regionais
+              regionais={regionais}
               user={user}
               loadingUpload={loadingUpload}
               selectedFileNames={selectedFileNames}
@@ -679,6 +680,7 @@ export default function DiarioObraPage() {
               isApproved={isApproved}
               rejectionReason={formData.rejection_reason}
               isCreatingNew={isCreatingNew}
+              isSaving={isSaving}
             />
           </CardContent>
         </Card>
