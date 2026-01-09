@@ -46,14 +46,15 @@ const DiarioForm = ({
   onCancel,
   obras,
   regionais,
-  user, // user prop might be needed for permission display or client-side logic
+  user,
   loadingUpload,
   selectedFileNames,
   uploadProgress,
   isEditable,
   isApproved,
   rejectionReason,
-  isCreatingNew
+  isCreatingNew,
+  status
 }) => {
   // Calculate selected obra and regional here for display purposes
   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
