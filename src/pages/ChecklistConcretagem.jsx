@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Loader2, XCircle, Plus, Trash2 } from "lucide-react";
+import { Save, Loader2, XCircle, Plus, Trash2, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
@@ -70,7 +70,8 @@ export default function ChecklistConcretagem() {
       }
     ],
     observacoes_gerais: "",
-    fotos: []
+    fotos: [],
+    status: "rascunho"
   });
 
   useEffect(() => {
@@ -511,61 +512,70 @@ export default function ChecklistConcretagem() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     setSaving(true);
 
     try {
-      // Validações adicionais
-      if (!formData.empreiteira?.trim()) {
-        alert("Por favor, preencha o campo Empreiteira.");
-        setSaving(false);
-        return;
-      }
+      // Validações obrigatórias apenas quando finalizando
+      if (saveStatus === 'finalizado') {
+        if (!formData.empreiteira?.trim()) {
+          alert("Por favor, preencha o campo Empreiteira.");
+          setSaving(false);
+          return;
+        }
 
-      if (!formData.rodovia?.trim()) {
-        alert("Por favor, preencha o campo Rodovia.");
-        setSaving(false);
-        return;
-      }
+        if (!formData.rodovia?.trim()) {
+          alert("Por favor, preencha o campo Rodovia.");
+          setSaving(false);
+          return;
+        }
 
-      if (!formData.trecho?.trim()) {
-        alert("Por favor, preencha o campo Trecho.");
-        setSaving(false);
-        return;
-      }
+        if (!formData.trecho?.trim()) {
+          alert("Por favor, preencha o campo Trecho.");
+          setSaving(false);
+          return;
+        }
 
-      if (!formData.estrutura?.trim()) {
-        alert("Por favor, preencha o campo Estrutura.");
-        setSaving(false);
-        return;
-      }
+        if (!formData.estrutura?.trim()) {
+          alert("Por favor, preencha o campo Estrutura.");
+          setSaving(false);
+          return;
+        }
 
-      // Validar temperaturas dos períodos climáticos
-      for (let i = 0; i < formData.periodos_clima.length; i++) {
-        const periodo = formData.periodos_clima[i];
-        if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
-          alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : periodo.periodo === 'tarde' ? 'Tarde' : 'Noite'}.`);
+        // Validar temperaturas dos períodos climáticos
+        for (let i = 0; i < formData.periodos_clima.length; i++) {
+          const periodo = formData.periodos_clima[i];
+          if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
+            alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : periodo.periodo === 'tarde' ? 'Tarde' : 'Noite'}.`);
+            setSaving(false);
+            return;
+          }
+        }
+
+        // Validar moldagem para fiscalização
+        for (let i = 0; i < formData.cargas_concreto.length; i++) {
+          const carga = formData.cargas_concreto[i];
+          if (carga.moldado_fiscalizacao) {
+            if (!carga.corpos_prova || carga.corpos_prova.length === 0) {
+              alert(`Por favor, configure ao menos 1 corpo de prova para a Carga ${carga.numero_carga}.`);
+              setSaving(false);
+              return;
+            }
+          }
+        }
+      } else {
+        // Para salvar progresso, apenas obra é obrigatória
+        if (!formData.obra_id) {
+          alert("Por favor, selecione uma obra.");
           setSaving(false);
           return;
         }
       }
 
-      // Validar moldagem para fiscalização
-      for (let i = 0; i < formData.cargas_concreto.length; i++) {
-        const carga = formData.cargas_concreto[i];
-        if (carga.moldado_fiscalizacao) {
-          // Se marcou moldado, deve ter pelo menos 1 CP
-          if (!carga.corpos_prova || carga.corpos_prova.length === 0) {
-            alert(`Por favor, configure ao menos 1 corpo de prova para a Carga ${carga.numero_carga}.`);
-            setSaving(false);
-            return;
-          }
-        }
-      }
-
       const dataToSave = {
         ...formData,
+        status: saveStatus,
         fck: formData.fck ? parseFloat(formData.fck) : null,
         volume: formData.volume ? parseFloat(formData.volume) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
@@ -590,7 +600,7 @@ export default function ChecklistConcretagem() {
       };
 
       await base44.entities.ChecklistConcretagem.create(dataToSave);
-      alert("Checklist de Concretagem salvo com sucesso!");
+      alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem salvo com sucesso!");
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -617,6 +627,15 @@ export default function ChecklistConcretagem() {
           <CardHeader>
             <CardTitle>Novo Checklist de Concretagem</CardTitle>
             <CardDescription>Controle Tecnológico de Concreto</CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-blue-800">Em Rascunho</p>
+                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
           </CardHeader>
           <CardContent className="overflow-hidden">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -1276,6 +1295,18 @@ export default function ChecklistConcretagem() {
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  disabled={saving || uploadingPhotos}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleSubmit(e, 'rascunho');
+                  }}
+                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
+                </Button>
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos || !formData.obra_id || !formData.data || !formData.concreteira}
@@ -1289,7 +1320,7 @@ export default function ChecklistConcretagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Salvar Checklist
+                      Finalizar
                     </>
                   )}
                 </Button>
