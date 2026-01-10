@@ -26,6 +26,12 @@ export default function RelatorioDiarioPage() {
 
       if (!id) throw new Error('ID do diário é obrigatório na URL');
 
+      // Verificar autenticação
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        throw new Error('Você precisa estar autenticado para visualizar este relatório');
+      }
+
       const user = await User.me();
       const diario = await DiarioObra.get(id);
 

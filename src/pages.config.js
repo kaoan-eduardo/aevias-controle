@@ -13,7 +13,6 @@ import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
-import MigracaoDados from './pages/MigracaoDados';
 import NaoConformidades from './pages/NaoConformidades';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
@@ -33,6 +32,7 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import MigracaoDados from './pages/MigracaoDados';
 import __Layout from './Layout.jsx';
 
 
@@ -52,7 +52,6 @@ export const PAGES = {
     "FaixasGranulometricas": FaixasGranulometricas,
     "Home": Home,
     "MeusEnsaios": MeusEnsaios,
-    "MigracaoDados": MigracaoDados,
     "NaoConformidades": NaoConformidades,
     "Projects": Projects,
     "Regionais": Regionais,
@@ -72,6 +71,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "MigracaoDados": MigracaoDados,
 }
 
 export const pagesConfig = {
