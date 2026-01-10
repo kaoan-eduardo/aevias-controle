@@ -160,42 +160,42 @@ export default function ChecklistConcretagem() {
           const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
           if (regional && regional.gestor_contrato_responsavel) {
             try {
-              // Buscar todos os usuários e encontrar o gestor
+              // Tentar buscar usuários (pode falhar se o usuário não tiver permissão)
               const allUsersData = await base44.entities.User.list();
               const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
 
               if (gestor) {
                 const gestorName = gestor.laboratorista_name || gestor.full_name;
-                console.log("✅ Gestor encontrado:", gestorName);
                 setFormData(prev => ({
                   ...prev,
                   engenheiro_responsavel: gestorName
                 }));
               } else {
-                console.log("⚠️ Gestor não encontrado para o email:", regional.gestor_contrato_responsavel);
+                // Gestor não encontrado - usar o email como fallback
                 setFormData(prev => ({
-                    ...prev,
-                    engenheiro_responsavel: ""
+                  ...prev,
+                  engenheiro_responsavel: regional.gestor_contrato_responsavel
                 }));
               }
             } catch (error) {
-              console.error("Erro ao buscar gestor:", error);
+              // Sem permissão para listar usuários - usar o email como fallback
+              console.warn("⚠️ Sem permissão para listar usuários, usando email do gestor");
               setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: ""
+                ...prev,
+                engenheiro_responsavel: regional.gestor_contrato_responsavel || ""
               }));
             }
           } else {
-              setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: ""
-              }));
+            setFormData(prev => ({
+              ...prev,
+              engenheiro_responsavel: ""
+            }));
           }
         } else {
-            setFormData(prev => ({
-                ...prev,
-                engenheiro_responsavel: ""
-            }));
+          setFormData(prev => ({
+            ...prev,
+            engenheiro_responsavel: ""
+          }));
         }
       }
     };
@@ -542,8 +542,21 @@ export default function ChecklistConcretagem() {
     setSaving(true);
 
     try {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        setSaving(false);
+        return;
+      }
+
       // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
+        if (!formData.concreteira?.trim()) {
+          alert("Por favor, preencha o campo Concreteira.");
+          setSaving(false);
+          return;
+        }
+
         if (!formData.empreiteira?.trim()) {
           alert("Por favor, preencha o campo Empreiteira.");
           setSaving(false);
@@ -589,13 +602,6 @@ export default function ChecklistConcretagem() {
               return;
             }
           }
-        }
-      } else {
-        // Para salvar progresso, apenas obra é obrigatória
-        if (!formData.obra_id) {
-          alert("Por favor, selecione uma obra.");
-          setSaving(false);
-          return;
         }
       }
 
