@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Checkmark = ({ checked }) => {
@@ -357,7 +356,12 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   <td className="border border-slate-300 px-0.5 py-0.5">
                     <XMark checked={checklist.acompanhamento_aplicacao?.taxa_aplicacao?.realizado} />
                   </td>
-                  <td className="border border-slate-300 px-0.5 py-0.5">{checklist.acompanhamento_aplicacao?.taxa_aplicacao?.resultado || '-'}</td>
+                  <td className={`border border-slate-300 px-0.5 py-0.5 ${
+                    checklist.acompanhamento_aplicacao?.taxa_aplicacao?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
+                    {checklist.acompanhamento_aplicacao?.taxa_aplicacao?.resultado || '-'}
+                    {checklist.acompanhamento_aplicacao?.taxa_aplicacao?.conforme === false && ' ⚠️'}
+                  </td>
                   <td className="border border-slate-300 px-0.5 py-0.5">8 kg/m² a 16 kg/m²</td>
                 </tr>
                 <tr>
@@ -368,7 +372,12 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   <td className="border border-slate-300 px-0.5 py-0.5">
                     <XMark checked={checklist.acompanhamento_aplicacao?.residuo_emulsao?.realizado} />
                   </td>
-                  <td className="border border-slate-300 px-0.5 py-0.5">{checklist.acompanhamento_aplicacao?.residuo_emulsao?.resultado || '-'}</td>
+                  <td className={`border border-slate-300 px-0.5 py-0.5 ${
+                    checklist.acompanhamento_aplicacao?.residuo_emulsao?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
+                    {checklist.acompanhamento_aplicacao?.residuo_emulsao?.resultado || '-'}
+                    {checklist.acompanhamento_aplicacao?.residuo_emulsao?.conforme === false && ' ⚠️'}
+                  </td>
                   <td className="border border-slate-300 px-0.5 py-0.5">6,5% a 12,0%</td>
                 </tr>
                 <tr>
@@ -379,7 +388,12 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   <td className="border border-slate-300 px-0.5 py-0.5">
                     <XMark checked={checklist.acompanhamento_aplicacao?.espessura_camada?.realizado} />
                   </td>
-                  <td className="border border-slate-300 px-0.5 py-0.5">{checklist.acompanhamento_aplicacao?.espessura_camada?.resultado || '-'}</td>
+                  <td className={`border border-slate-300 px-0.5 py-0.5 ${
+                    checklist.acompanhamento_aplicacao?.espessura_camada?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
+                    {checklist.acompanhamento_aplicacao?.espessura_camada?.resultado || '-'}
+                    {checklist.acompanhamento_aplicacao?.espessura_camada?.conforme === false && ' ⚠️'}
+                  </td>
                   <td className="border border-slate-300 px-0.5 py-0.5">6 mm a 20 mm</td>
                 </tr>
               </tbody>
