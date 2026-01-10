@@ -21,6 +21,7 @@ export default function ChecklistConcretagem() {
   const [regionais, setRegionais] = useState([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
+  const [editingChecklist, setEditingChecklist] = useState(null);
 
   const [formData, setFormData] = useState({
     obra_id: "",
@@ -154,29 +155,35 @@ export default function ChecklistConcretagem() {
           const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
           if (regional && regional.gestor_contrato_responsavel) {
             try {
-              // Buscar todos os usuários e encontrar o gestor
-              const allUsersData = await base44.entities.User.list();
-              const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
+              // Apenas admin e sala técnica podem listar usuários
+              if (user && (user.role === 'admin' || user.access_level === 'sala_tecnica_afirmaevias')) {
+                const allUsersData = await base44.entities.User.list();
+                const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
 
-              if (gestor) {
-                const gestorName = gestor.laboratorista_name || gestor.full_name;
-                console.log("✅ Gestor encontrado:", gestorName);
+                if (gestor) {
+                  const gestorName = gestor.laboratorista_name || gestor.full_name;
+                  setFormData(prev => ({
+                    ...prev,
+                    engenheiro_responsavel: gestorName
+                  }));
+                } else {
+                  setFormData(prev => ({
+                    ...prev,
+                    engenheiro_responsavel: regional.gestor_contrato_responsavel
+                  }));
+                }
+              } else {
+                // Para laboratoristas, usar o email do gestor diretamente
                 setFormData(prev => ({
                   ...prev,
-                  engenheiro_responsavel: gestorName
-                }));
-              } else {
-                console.log("⚠️ Gestor não encontrado para o email:", regional.gestor_contrato_responsavel);
-                setFormData(prev => ({
-                    ...prev,
-                    engenheiro_responsavel: ""
+                  engenheiro_responsavel: regional.gestor_contrato_responsavel
                 }));
               }
             } catch (error) {
-              console.error("Erro ao buscar gestor:", error);
+              console.warn("Sem permissão para listar usuários, usando email:", error);
               setFormData(prev => ({
                   ...prev,
-                  engenheiro_responsavel: ""
+                  engenheiro_responsavel: regional.gestor_contrato_responsavel || ""
               }));
             }
           } else {
@@ -195,7 +202,7 @@ export default function ChecklistConcretagem() {
     };
 
     loadEngenheiroResponsavel();
-  }, [formData.obra_id, obras, regionais]);
+  }, [formData.obra_id, obras, regionais, user]);
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -244,6 +251,43 @@ export default function ChecklistConcretagem() {
         inspetor_campo: userData.laboratorista_name || userData.full_name,
         laboratorista_name: userData.laboratorista_name || userData.full_name
       }));
+
+      // Verificar se está editando um registro
+      const params = new URLSearchParams(window.location.search);
+      const editId = params.get('editId');
+
+      if (editId) {
+        const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
+        if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+          setEditingChecklist(checklistToEdit);
+          setFormData({
+            ...checklistToEdit,
+            data: checklistToEdit.data ? new Date(checklistToEdit.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            cargas_concreto: checklistToEdit.cargas_concreto || [
+              {
+                numero_carga: 1,
+                nota_fiscal: "",
+                placa_betoneira: "",
+                horario_inicio: "",
+                horario_termino: "",
+                jornada: "",
+                slump_test: { realizado: false, resultado: null, limite: "", conforme: null },
+                espessura_camada: { realizado: false, resultado: null, limite: "", conforme: null },
+                equipamento_lancamento: "",
+                superficie_tratada_limpa: null,
+                adensamento_realizado: null,
+                observacoes_lancamento: "",
+                moldado_fiscalizacao: false,
+                corpos_prova: []
+              }
+            ],
+            fotos: checklistToEdit.fotos || []
+          });
+        } else {
+          alert("Você não tem permissão para editar este registro.");
+          navigate(createPageUrl('MeusEnsaios'));
+        }
+      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados iniciais.");
@@ -620,8 +664,20 @@ export default function ChecklistConcretagem() {
         }))
       };
 
-      await base44.entities.ChecklistConcretagem.create(dataToSave);
-      alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem salvo com sucesso!");
+      if (editingChecklist) {
+        const updateData = { ...dataToSave };
+        if (editingChecklist.approved === false) {
+          updateData.approved = null;
+          updateData.rejection_reason = null;
+          updateData.approved_by = null;
+          updateData.approved_date = null;
+        }
+        await base44.entities.ChecklistConcretagem.update(editingChecklist.id, updateData);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem atualizado com sucesso!");
+      } else {
+        await base44.entities.ChecklistConcretagem.create(dataToSave);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem salvo com sucesso!");
+      }
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -646,7 +702,7 @@ export default function ChecklistConcretagem() {
       <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Novo Checklist de Concretagem</CardTitle>
+            <CardTitle>{editingChecklist ? 'Editar Checklist de Concretagem' : 'Novo Checklist de Concretagem'}</CardTitle>
             <CardDescription>Controle Tecnológico de Concreto</CardDescription>
             {formData.status === 'rascunho' && (
               <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -654,6 +710,15 @@ export default function ChecklistConcretagem() {
                 <div>
                   <p className="font-semibold text-blue-800">Em Rascunho</p>
                   <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
+            {editingChecklist?.rejection_reason && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-red-50/50 border border-red-200/50 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-red-800">Motivo da Reprovação:</p>
+                  <p className="text-sm text-red-700">{editingChecklist.rejection_reason}</p>
                 </div>
               </div>
             )}
