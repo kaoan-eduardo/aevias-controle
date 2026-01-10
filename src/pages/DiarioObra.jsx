@@ -519,7 +519,7 @@ export default function DiarioObraPage() {
         await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário finalizado com sucesso!");
       } else {
-        await DiarioObraEntity.create({ ...dataToSave, created_by: user?.email, laboratorista_name: user?.full_name });
+        await DiarioObraEntity.create({ ...dataToSave, created_by: user?.email, laboratorista_name: user?.laboratorista_name || user?.full_name });
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário criado com sucesso!");
       }
       navigate(createPageUrl('MeusEnsaios'));
