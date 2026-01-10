@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,11 @@ const EnsaioForm = ({ ensaio, obras, projects, onSave, onCancel }) => {
         onSave(formData);
     };
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onKeyDown={(e) => {
+          if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+            e.preventDefault();
+          }
+        }}>
             {/* Form fields will be rendered here based on the entity schema */}
             <div className="flex justify-end gap-2 mt-4">
                 <Button type="button" variant="outline" onClick={onCancel} className="hover:bg-black/10">Cancelar</Button>
