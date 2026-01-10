@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,22 +11,10 @@ import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 
-export default function ChecklistConcretagem() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [user, setUser] = useState(null);
-  const [obras, setObras] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [allProjects, setAllProjects] = useState([]); // Store all projects
-  const [regionais, setRegionais] = useState([]);
-  const [uploadingPhotos, setUploadingPhotos] = useState(false);
-  const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
-  const [editingChecklist, setEditingChecklist] = useState(null);
-    obra_id: "",
-    project_id: "",
-    data: new Date().toISOString().split('T')[0],
+const getInitialFormData = () => ({
+  obra_id: "",
+  project_id: "",
+  data: new Date().toISOString().split('T')[0],
     concreteira: "",
     rodovia: "",
     trecho: "",
@@ -75,6 +63,19 @@ export default function ChecklistConcretagem() {
     status: "rascunho"
   });
 
+export default function ChecklistConcretagem() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [user, setUser] = useState(null);
+  const [obras, setObras] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
+  const [regionais, setRegionais] = useState([]);
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
+  const [editingChecklist, setEditingChecklist] = useState(null);
   const [formData, setFormData] = useState(getInitialFormData());
 
   const { clearSavedData } = useFormPersistence('checklist_concretagem', formData, setFormData, !!editingChecklist);
