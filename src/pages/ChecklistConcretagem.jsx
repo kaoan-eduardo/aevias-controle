@@ -613,28 +613,36 @@ export default function ChecklistConcretagem() {
       const dataToSave = {
         ...formData,
         status: saveStatus,
-        fck: formData.fck ? parseFloat(formData.fck) : null,
-        volume: formData.volume ? parseFloat(formData.volume) : null,
+        fck: formData.fck && formData.fck !== "" ? parseFloat(formData.fck) : null,
+        volume: formData.volume && formData.volume !== "" ? parseFloat(formData.volume) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
           ...p,
-          temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
+          temperatura_ambiente: p.temperatura_ambiente && p.temperatura_ambiente !== "" ? parseFloat(p.temperatura_ambiente) : null
         })),
         cargas_concreto: cargasAtualizadas.map(c => ({
           ...c,
           slump_test: {
             ...c.slump_test,
-            resultado: c.slump_test.resultado !== null && c.slump_test.resultado !== "" ? parseFloat(c.slump_test.resultado) : null
+            realizado: c.slump_test.realizado || false,
+            resultado: c.slump_test.resultado && c.slump_test.resultado !== "" ? parseFloat(c.slump_test.resultado) : null,
+            limite: c.slump_test.limite || "",
+            conforme: c.slump_test.conforme
           },
           espessura_camada: {
             ...c.espessura_camada,
-            resultado: c.espessura_camada.resultado !== null && c.espessura_camada.resultado !== "" ? parseFloat(c.espessura_camada.resultado) : null
+            realizado: c.espessura_camada.realizado || false,
+            resultado: c.espessura_camada.resultado && c.espessura_camada.resultado !== "" ? parseFloat(c.espessura_camada.resultado) : null,
+            limite: c.espessura_camada.limite || "",
+            conforme: c.espessura_camada.conforme
           },
-          corpos_prova: c.corpos_prova.map(cp => ({
-            ...cp,
-            dias_ruptura: cp.dias_ruptura !== null && cp.dias_ruptura !== "" ? parseInt(cp.dias_ruptura) : null
-          }))
+          corpos_prova: Array.isArray(c.corpos_prova) ? c.corpos_prova.map(cp => ({
+            dias_ruptura: typeof cp.dias_ruptura === 'number' ? cp.dias_ruptura : (cp.dias_ruptura && cp.dias_ruptura !== "" ? parseInt(cp.dias_ruptura) : null),
+            tipo_ruptura: cp.tipo_ruptura || "compressao_axial"
+          })) : []
         }))
       };
+
+      console.log("🔍 Dados antes de salvar:", JSON.stringify(dataToSave, null, 2));
 
       if (editingChecklist) {
         const updateData = { ...dataToSave };
