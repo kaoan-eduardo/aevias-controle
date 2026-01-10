@@ -533,26 +533,28 @@ export default function ChecklistConcretagem() {
     setSaving(true);
 
     try {
-      // Calcular conformidades antes de salvar
-      const cargasAtualizadas = formData.cargas_concreto.map(carga => {
-        const cargaAtualizada = { ...carga };
-        
-        // Calcular conformidade do slump test se tiver projeto selecionado
-        if (carga.slump_test.resultado !== null && formData.project_id) {
-          const selectedProject = projects.find(p => p.id === formData.project_id);
-          if (selectedProject?.slump_minimo != null && selectedProject?.slump_maximo != null) {
-            const val = parseFloat(carga.slump_test.resultado);
-            cargaAtualizada.slump_test = {
-              ...carga.slump_test,
-              conforme: val >= selectedProject.slump_minimo && val <= selectedProject.slump_maximo
-            };
+      // Calcular conformidades APENAS ao finalizar (não ao salvar progresso)
+      let cargasAtualizadas = formData.cargas_concreto;
+      
+      if (saveStatus === 'finalizado') {
+        cargasAtualizadas = formData.cargas_concreto.map(carga => {
+          const cargaAtualizada = { ...carga };
+          
+          // Calcular conformidade do slump test se tiver projeto selecionado
+          if (carga.slump_test.resultado !== null && formData.project_id) {
+            const selectedProject = projects.find(p => p.id === formData.project_id);
+            if (selectedProject?.slump_minimo != null && selectedProject?.slump_maximo != null) {
+              const val = parseFloat(carga.slump_test.resultado);
+              cargaAtualizada.slump_test = {
+                ...carga.slump_test,
+                conforme: val >= selectedProject.slump_minimo && val <= selectedProject.slump_maximo
+              };
+            }
           }
-        }
 
-        // Espessura - conformidade manual já definida pelo usuário
-
-        return cargaAtualizada;
-      });
+          return cargaAtualizada;
+        });
+      }
 
       // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
