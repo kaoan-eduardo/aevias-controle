@@ -29,9 +29,9 @@ const getInitialFormData = () => ({
   inspetor_campo: "",
   engenheiro_responsavel: "",
   controle_agregados: [],
-  equivalente_areia_status: null, // Can be 'realizado', 'nao_realizado', or null
-  equivalente_areia_quantidade: 0, // New field for quantity of tests (derived from results array length)
-  equivalente_areia_resultados: [], // New field for results
+  equivalente_areia_status: null,
+  equivalente_areia_quantidade: 0,
+  equivalente_areia_resultados: [],
   observacoes_agregados: "",
   rodadas_producao: [
     {
@@ -51,7 +51,7 @@ const getInitialFormData = () => ({
   controle_cauq: {
     extracao_ligante_rotarex: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     extracao_ligante_soxhlet: { realizado: false, quantidade: 0, resultados: [], conforme: null },
-    granulometria: { realizado: false, quantidade: 0, resultados: [], conforme: null }, // Now has manual conformity selection
+    granulometria: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     densidade_rice: { realizado: false, quantidade: 0, resultados: [] },
     densidade_aparente: { realizado: false, quantidade: 0, resultados: [] },
     volume_vazios: { realizado: false, quantidade: 0, resultados: [], conforme: null },
@@ -62,6 +62,7 @@ const getInitialFormData = () => ({
   },
   observacoes: "",
   fotos: [],
+  status: "rascunho",
   approved: null,
   rejection_reason: null
 });
@@ -505,31 +506,45 @@ export default function ChecklistUsinaPage() {
     });
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     
-    if (!formData.obra_id || !formData.usina) {
-      alert("Por favor, preencha a obra e a usina.");
-      return;
+    // Validações obrigatórias apenas quando finalizando
+    if (saveStatus === 'finalizado') {
+      if (!formData.obra_id || !formData.usina) {
+        alert("Por favor, preencha a obra e a usina.");
+        return;
+      }
+    } else {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        return;
+      }
     }
+
+    const dataToSave = {
+      ...formData,
+      status: saveStatus
+    };
 
     try {
       if (editingChecklist?.id) {
-        const updateData = { ...formData };
+        const updateData = { ...dataToSave };
         if (editingChecklist.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
           await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
-          alert("Checklist atualizado com sucesso! O registro voltará para análise do administrador.");
+          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.");
         } else {
           await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
-          alert("Checklist atualizado com sucesso!");
+          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!");
         }
       } else {
-        await ChecklistUsinaEntity.create({ ...formData, laboratorista_name: user?.laboratorista_name || user?.full_name });
-        alert("Checklist criado com sucesso!");
+        await ChecklistUsinaEntity.create({ ...dataToSave, laboratorista_name: user?.laboratorista_name || user?.full_name });
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
       }
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
@@ -769,6 +784,15 @@ export default function ChecklistUsinaPage() {
             <CardDescription>
               {editingChecklist?.id ? `Editando checklist de ${new Date(editingChecklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}` : "Controle tecnológico de usinagem - DNIT 031/2024"}
             </CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-blue-800">Em Rascunho</p>
+                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
             {editingChecklist?.rejection_reason && (
               <div className="mt-4 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
@@ -1483,9 +1507,23 @@ export default function ChecklistUsinaPage() {
                   Cancelar
                 </Button>
                 {isEditable && !isApproved && (
-                  <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700">
-                    <Save className="mr-2 h-4 w-4" /> Salvar Checklist
-                  </Button>
+                  <>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      disabled={loadingUpload}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        await handleSubmit(e, 'rascunho');
+                      }}
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                    >
+                      <Save className="mr-2 h-4 w-4" /> Salvar Progresso
+                    </Button>
+                    <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700">
+                      <Save className="mr-2 h-4 w-4" /> Finalizar
+                    </Button>
+                  </>
                 )}
                 {isApproved && (
                   <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
