@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,18 +31,6 @@ export default function MigracaoDados() {
     }
   };
 
-  const handleCorrigirNomesDiario = async () => {
-    if (window.confirm("Deseja corrigir os nomes dos laboratoristas nos diários de obra?")) {
-      try {
-        const { data } = await base44.functions.invoke('corrigirNomesDiarioObra');
-        alert(`Correção concluída! ${data.atualizados} diários atualizados.`);
-      } catch (error) {
-        console.error("Erro na correção:", error);
-        alert(`Erro ao executar a correção: ${error.message}`);
-      }
-    }
-  };
-
   return (
     <div className="p-6 space-y-6 bg-transparent min-h-screen">
       <div className="max-w-4xl mx-auto">
@@ -68,21 +57,6 @@ export default function MigracaoDados() {
                 Limpar Dados de Peneiras (CUIDADO)
               </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-          <CardHeader>
-            <CardTitle className="text-[#00233B]">Corrigir Nomes de Laboratoristas</CardTitle>
-            <CardDescription className="text-[#00233B]/80">
-              Atualiza os nomes dos laboratoristas nos diários de obra, substituindo usernames de email pelos nomes completos.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={handleCorrigirNomesDiario} className="w-full sm:w-auto bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">
-              <DatabaseZap className="w-4 h-4 mr-2 text-[#BFCF99]" />
-              Corrigir Nomes nos Diários
-            </Button>
           </CardContent>
         </Card>
       </div>
