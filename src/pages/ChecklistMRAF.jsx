@@ -15,6 +15,7 @@ import { FaixaGranulometrica } from "@/entities/FaixaGranulometrica";
 import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 
 // The original global SectionTitle component is replaced by a local one and CardTitle for some sections.
 
@@ -68,6 +69,7 @@ const getInitialFormData = () => ({
   },
   observacoes_gerais: "",
   fotos: [],
+  status: "rascunho",
   approved: null,
   rejection_reason: null
 });
@@ -88,6 +90,8 @@ export default function ChecklistMRAFPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { clearSavedData } = useFormPersistence('checklist_mraf', formData, setFormData, !!editingChecklist);
 
   const selectedProject = useMemo(() => 
     projects.find(p => p.id === formData.project_id),
@@ -228,32 +232,49 @@ export default function ChecklistMRAFPage() {
     }));
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     
-    if (!formData.obra_id || !formData.rodovia || !formData.trecho) {
-      alert("Por favor, preencha os campos obrigatórios: obra, rodovia e trecho.");
-      return;
+    // Validações obrigatórias apenas quando finalizando
+    if (saveStatus === 'finalizado') {
+      if (!formData.obra_id || !formData.rodovia || !formData.trecho) {
+        alert("Por favor, preencha os campos obrigatórios: obra, rodovia e trecho.");
+        return;
+      }
+    } else {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        return;
+      }
     }
 
     try {
+      const dataToSave = {
+        ...formData,
+        status: saveStatus,
+        laboratorista_name: user?.laboratorista_name || user?.full_name
+      };
+
       if (editingChecklist?.id) {
-        const updateData = { ...formData };
+        const updateData = { ...dataToSave };
+        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
+
         if (editingChecklist.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
-          await ChecklistMRAFEntity.update(editingChecklist.id, updateData);
-          alert("Checklist atualizado com sucesso! O registro voltará para análise do administrador.");
-        } else {
-          await ChecklistMRAFEntity.update(editingChecklist.id, updateData);
-          alert("Checklist atualizado com sucesso!");
+          successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
         }
+        
+        await ChecklistMRAFEntity.update(editingChecklist.id, updateData);
+        alert(successMessage);
       } else {
-        await ChecklistMRAFEntity.create({ ...formData, laboratorista_name: user?.laboratorista_name || user?.full_name });
-        alert("Checklist criado com sucesso!");
+        await ChecklistMRAFEntity.create(dataToSave);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
       }
+      clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -409,6 +430,15 @@ export default function ChecklistMRAFPage() {
             <CardDescription className="text-base">
               {editingChecklist?.id ? `Editando checklist de ${new Date(editingChecklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}` : "Controle tecnológico de aplicação de MRAF - DNIT 035/2018"}
             </CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-blue-800">Em Rascunho</p>
+                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
             {editingChecklist?.rejection_reason && (
               <div className="mt-4 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
@@ -1321,13 +1351,30 @@ export default function ChecklistMRAFPage() {
 
               {/* BOTÕES */}
               <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-200">
-                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))} className="h-11 px-6 text-base">
+                <Button type="button" variant="outline" onClick={() => {
+                  clearSavedData();
+                  navigate(createPageUrl('MeusEnsaios'));
+                }} className="h-11 px-6 text-base">
                   Cancelar
                 </Button>
                 {isEditable && !isApproved && (
-                  <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700 h-11 px-6 text-base">
-                    <Save className="mr-2 h-5 w-5" /> Salvar Checklist
-                  </Button>
+                  <>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      disabled={loadingUpload}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        await handleSubmit(e, 'rascunho');
+                      }}
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50 h-11 px-6 text-base"
+                    >
+                      <Save className="mr-2 h-5 w-5" /> Salvar Progresso
+                    </Button>
+                    <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700 h-11 px-6 text-base">
+                      <Save className="mr-2 h-5 w-5" /> Finalizar
+                    </Button>
+                  </>
                 )}
                 {isApproved && (
                   <Badge className="bg-green-500 hover:bg-green-500 px-6 py-3 text-base">
