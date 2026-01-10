@@ -1,23 +1,6 @@
 import React from 'react';
 
-export default function RelatorioDiario({ diario, obra, project, user }) {
-  // Hooks devem ser chamados sempre no início, antes de qualquer condicional
-  const [regional, setRegional] = React.useState(null);
-
-  React.useEffect(() => {
-    const loadRegional = async () => {
-      if (obra?.regional_id) {
-        try {
-          const { Regional } = await import('@/entities/Regional');
-          const regionalData = await Regional.get(obra.regional_id);
-          setRegional(regionalData);
-        } catch (error) {
-          console.error("Erro ao carregar regional:", error);
-        }
-      }
-    };
-    loadRegional();
-  }, [obra?.regional_id]);
+export default function RelatorioDiario({ diario, obra, project, user, regional }) {
 
   // Agora sim podemos fazer verificações condicionais
   if (!diario) {
