@@ -141,7 +141,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
               {/* Laboratorista - sempre na coluna 1 da próxima linha */}
               <div className={tipoLocal === "usina" ? "col-start-1" : ""}>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
-                <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
+                <p className="text-gray-800">{diario.laboratorista_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
               </div>
             </div>
           </section>
