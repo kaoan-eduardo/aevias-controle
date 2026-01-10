@@ -15,53 +15,53 @@ const getInitialFormData = () => ({
   obra_id: "",
   project_id: "",
   data: new Date().toISOString().split('T')[0],
-    concreteira: "",
-    rodovia: "",
-    trecho: "",
-    fck: "",
-    volume: "",
-    inspetor_campo: "",
-    laboratorista_name: "",
-    empreiteira: "",
-    estrutura: "",
-    engenheiro_responsavel: "",
-    periodos_clima: [
-      { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
-      { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" },
-      { periodo: "noite", temperatura_ambiente: "", condicoes_climaticas: "bom" }
-    ],
-    cargas_concreto: [
-      {
-        numero_carga: 1,
-        nota_fiscal: "",
-        placa_betoneira: "",
-        horario_inicio: "",
-        horario_termino: "",
-        jornada: "", // Moved from root formData
-        slump_test: {
-          realizado: false,
-          resultado: null,
-          limite: "",
-          conforme: null
-        },
-        espessura_camada: {
-          realizado: false,
-          resultado: null,
-          limite: "",
-          conforme: null
-        },
-        equipamento_lancamento: "",
-        superficie_tratada_limpa: null,
-        adensamento_realizado: null,
-        observacoes_lancamento: "",
-        moldado_fiscalizacao: false,
-        corpos_prova: [] // Nova estrutura: array de {dias_ruptura: number, tipo_ruptura: string}
-      }
-    ],
-    observacoes_gerais: "",
-    fotos: [],
-    status: "rascunho"
-  });
+  concreteira: "",
+  rodovia: "",
+  trecho: "",
+  fck: "",
+  volume: "",
+  inspetor_campo: "",
+  laboratorista_name: "",
+  empreiteira: "",
+  estrutura: "",
+  engenheiro_responsavel: "",
+  periodos_clima: [
+    { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
+    { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" },
+    { periodo: "noite", temperatura_ambiente: "", condicoes_climaticas: "bom" }
+  ],
+  cargas_concreto: [
+    {
+      numero_carga: 1,
+      nota_fiscal: "",
+      placa_betoneira: "",
+      horario_inicio: "",
+      horario_termino: "",
+      jornada: "",
+      slump_test: {
+        realizado: false,
+        resultado: null,
+        limite: "",
+        conforme: null
+      },
+      espessura_camada: {
+        realizado: false,
+        resultado: null,
+        limite: "",
+        conforme: null
+      },
+      equipamento_lancamento: "",
+      superficie_tratada_limpa: null,
+      adensamento_realizado: null,
+      observacoes_lancamento: "",
+      moldado_fiscalizacao: false,
+      corpos_prova: []
+    }
+  ],
+  observacoes_gerais: "",
+  fotos: [],
+  status: "rascunho"
+});
 
 export default function ChecklistConcretagem() {
   const navigate = useNavigate();
@@ -735,47 +735,43 @@ export default function ChecklistConcretagem() {
                     </div>
 
                     <div>
-                      <Label htmlFor="concreteira">Concreteira *</Label>
+                      <Label htmlFor="concreteira">Concreteira</Label>
                       <Input
                         id="concreteira"
                         value={formData.concreteira}
                         onChange={(e) => setFormData({ ...formData, concreteira: e.target.value })}
-                        required
                         placeholder="Nome da concreteira"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="empreiteira">Empreiteira *</Label>
+                      <Label htmlFor="empreiteira">Empreiteira</Label>
                       <Input
                         id="empreiteira"
                         value={formData.empreiteira}
                         onChange={(e) => setFormData({ ...formData, empreiteira: e.target.value })}
-                        required
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="rodovia">Rodovia *</Label>
+                      <Label htmlFor="rodovia">Rodovia</Label>
                       <Input
                         id="rodovia"
                         value={formData.rodovia}
                         onChange={(e) => setFormData({ ...formData, rodovia: e.target.value })}
                         placeholder="Nome da rodovia"
-                        required
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="trecho">Trecho *</Label>
+                      <Label htmlFor="trecho">Trecho</Label>
                       <Input
                         id="trecho"
                         value={formData.trecho}
                         onChange={(e) => setFormData({ ...formData, trecho: e.target.value })}
                         placeholder="Descrição do trecho"
-                        required
                       />
                     </div>
 
@@ -805,12 +801,11 @@ export default function ChecklistConcretagem() {
                     </div>
 
                     <div>
-                      <Label htmlFor="estrutura">Estrutura *</Label>
+                      <Label htmlFor="estrutura">Estrutura</Label>
                       <Input
                         id="estrutura"
                         value={formData.estrutura}
                         onChange={(e) => setFormData({ ...formData, estrutura: e.target.value })}
-                        required
                       />
                     </div>
 
@@ -850,7 +845,7 @@ export default function ChecklistConcretagem() {
                         </CardHeader>
                         <CardContent className="space-y-3">
                           <div>
-                            <Label className="text-sm">Temperatura (°C) *</Label>
+                            <Label className="text-sm">Temperatura (°C)</Label>
                             <Input
                               type="number"
                               step="0.1"
@@ -860,11 +855,10 @@ export default function ChecklistConcretagem() {
                                 newPeriodos[index].temperatura_ambiente = e.target.value;
                                 setFormData({ ...formData, periodos_clima: newPeriodos });
                               }}
-                              required
                             />
                           </div>
                           <div>
-                            <Label className="text-sm">Condições *</Label>
+                            <Label className="text-sm">Condições</Label>
                             <select
                               value={periodo.condicoes_climaticas}
                               onChange={(e) => {
@@ -873,7 +867,6 @@ export default function ChecklistConcretagem() {
                                 setFormData({ ...formData, periodos_clima: newPeriodos });
                               }}
                               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                              required
                             >
                               <option value="bom">Bom</option>
                               <option value="instavel">Instável</option>
