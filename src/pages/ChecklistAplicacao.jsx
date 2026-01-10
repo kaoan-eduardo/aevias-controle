@@ -11,6 +11,7 @@ import { AlertTriangle, Save, Eye, Upload, X, Loader2 } from "lucide-react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -24,7 +25,7 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
-  engenheiro_responsavel: "", // NEW FIELD
+  engenheiro_responsavel: "",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: null, condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: null, condicoes_climaticas: "bom" },
@@ -52,12 +53,13 @@ const getInitialFormData = () => ({
     lado_final: "direito",
     quantidade_aplicada_cargas: null,
     quantidade_aplicada_toneladas: null,
-    temp_aplicacao_cargas: { realizado: false, quantidade: 0, conforme: null }, // Removed 'resultados'
-    espessura_camada: { realizado: false, quantidade: 0, conforme: null }, // Removed 'resultados'
+    temp_aplicacao_cargas: { realizado: false, quantidade: 0, conforme: null },
+    espessura_camada: { realizado: false, quantidade: 0, conforme: null },
     observacoes: ""
   },
   observacoes_gerais: "",
-  fotos: []
+  fotos: [],
+  status: "rascunho"
 });
 
 export default function ChecklistAplicacaoPage() {
@@ -76,6 +78,8 @@ export default function ChecklistAplicacaoPage() {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { clearSavedData } = useFormPersistence('checklist_aplicacao', formData, setFormData, !!editingChecklist);
 
   const isApproved = editingChecklist?.approved === true;
   const isEditable = !isApproved;
@@ -480,40 +484,51 @@ export default function ChecklistAplicacaoPage() {
     }));
   }, []);
 
-  const handleSubmit = useCallback(async (e) => {
+  const handleSubmit = useCallback(async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     
-    if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id) {
-      alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho).");
-      return;
+    // Validações obrigatórias apenas quando finalizando
+    if (saveStatus === 'finalizado') {
+      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id) {
+        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho).");
+        return;
+      }
+    } else {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        return;
+      }
     }
 
     setSaving(true);
     try {
       const dataToSave = {
         ...formData,
+        status: saveStatus,
         laboratorista_name: user?.laboratorista_name || user?.full_name,
         inspetor_campo: user?.laboratorista_name || user?.full_name
       };
 
       if (editingChecklist) {
         const updateData = { ...dataToSave };
-        let successMessage = "Checklist atualizado com sucesso!";
+        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
 
         if (editingChecklist.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
-          successMessage = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
+          successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
         }
         
         await base44.entities.ChecklistAplicacao.update(editingChecklist.id, updateData);
         alert(successMessage);
       } else {
         await base44.entities.ChecklistAplicacao.create(dataToSave);
-        alert("Checklist criado com sucesso!");
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
       }
+      clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -521,7 +536,7 @@ export default function ChecklistAplicacaoPage() {
     } finally {
       setSaving(false);
     }
-  }, [formData, editingChecklist, user, navigate]);
+  }, [formData, editingChecklist, user, navigate, clearSavedData]);
 
   if (loading) {
     return (
@@ -557,6 +572,15 @@ export default function ChecklistAplicacaoPage() {
                 </Link>
               )}
             </div>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-blue-800">Em Rascunho</p>
+                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
             {editingChecklist?.rejection_reason && (
               <div className="mt-4 flex items-start gap-2 p-3 bg-red-50/50 border border-red-200/50 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
@@ -1276,29 +1300,46 @@ export default function ChecklistAplicacaoPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate(createPageUrl('MeusEnsaios'))}
+                  onClick={() => {
+                    clearSavedData();
+                    navigate(createPageUrl('MeusEnsaios'));
+                  }}
                   className="hover:bg-black/10"
                 >
                   Cancelar
                 </Button>
                 {isEditable && (
-                  <Button
-                    type="submit"
-                    disabled={saving}
-                    className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Salvando...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2 text-[#BFCF99]" />
-                        Salvar Checklist
-                      </>
-                    )}
-                  </Button>
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={saving}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        await handleSubmit(e, 'rascunho');
+                      }}
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                    >
+                      <Save className="mr-2 h-4 w-4" /> Salvar Progresso
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={saving}
+                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
+                    >
+                      {saving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Salvando...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4 mr-2 text-[#BFCF99]" />
+                          Finalizar
+                        </>
+                      )}
+                    </Button>
+                  </>
                 )}
               </div>
             </form>
