@@ -1260,7 +1260,7 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 </Link>
               </Button>
             )}
-            {ensaio.approved === null && !isCliente && (
+            {ensaio.status === 'finalizado' && ensaio.approved === null && !isCliente && (
               <p className="text-sm text-[#00233B]/70 italic">
                 Aguardando aprovação do administrador.
               </p>
