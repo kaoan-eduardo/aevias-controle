@@ -1622,18 +1622,22 @@ export default function MeusEnsaios() {
     try {
       const currentUser = await User.me();
       setUser(currentUser);
-      
-      // Carregar todos os usuários para mapear nomes corretamente
-      try {
-        const todosUsuarios = await base44.entities.User.list();
-        setAllUsers(todosUsuarios);
-      } catch (error) {
-        console.error("Erro ao carregar lista de usuários:", error);
-        // Se falhar ao carregar todos os usuários, usar apenas o usuário atual
-        setAllUsers([currentUser]);
-      }
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
+
+      // Apenas admin, sala técnica e gestores podem listar todos os usuários
+      if (currentUserAccessLevel === 'admin' || currentUserAccessLevel === 'sala_tecnica_afirmaevias' || currentUserAccessLevel === 'gestor_contrato') {
+        try {
+          const todosUsuarios = await base44.entities.User.list();
+          setAllUsers(todosUsuarios);
+        } catch (error) {
+          console.error("Erro ao carregar lista de usuários:", error);
+          setAllUsers([currentUser]);
+        }
+      } else {
+        // Para laboratoristas, usar apenas o usuário atual
+        setAllUsers([currentUser]);
+      }
 
       // Carregar dados em paralelo
       const [
