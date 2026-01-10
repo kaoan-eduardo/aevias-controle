@@ -804,7 +804,11 @@ export default function ChecklistUsinaPage() {
             )}
           </CardHeader>
           <CardContent className="overflow-hidden">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+                e.preventDefault();
+              }
+            }} className="space-y-6">
               {/* DADOS DA OBRA */}
               <Card className="bg-slate-50">
                 <CardHeader>

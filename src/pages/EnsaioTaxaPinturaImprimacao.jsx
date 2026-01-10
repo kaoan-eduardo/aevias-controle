@@ -325,7 +325,11 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
             )}
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+                e.preventDefault();
+              }
+            }} className="space-y-6">
               {/* Dados da Obra */}
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Dados da Obra</h3>

@@ -477,7 +477,11 @@ export default function EnsaioSondagem() {
             )}
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+                e.preventDefault();
+              }
+            }} className="space-y-6">
               {/* Método de Ensaio - PRIMEIRO CAMPO */}
               <Card className="bg-blue-50 border-2 border-blue-300">
                 <CardHeader>
