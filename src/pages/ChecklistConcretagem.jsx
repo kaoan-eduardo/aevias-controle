@@ -13,6 +13,7 @@ import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 
 export default function ChecklistConcretagem() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState(null);
@@ -23,8 +24,6 @@ export default function ChecklistConcretagem() {
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
-
-  const getInitialFormData = () => ({
     obra_id: "",
     project_id: "",
     data: new Date().toISOString().split('T')[0],
@@ -245,11 +244,30 @@ export default function ChecklistConcretagem() {
       // Projects will be filtered dynamically when an obra is selected
       setProjects([]);
 
-      setFormData(prev => ({
-        ...prev,
-        inspetor_campo: userData.laboratorista_name || userData.full_name,
-        laboratorista_name: userData.laboratorista_name || userData.full_name
-      }));
+      // Verificar se está editando um checklist existente
+      const params = new URLSearchParams(location.search);
+      const editId = params.get('editId');
+
+      if (editId) {
+        const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
+        
+        // Permitir edição apenas se for admin ou se for o criador e não estiver aprovado
+        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+          setEditingChecklist(checklistToEdit);
+          setFormData(checklistToEdit);
+        } else {
+          alert("Você não tem permissão para editar este registro.");
+          navigate(createPageUrl('MeusEnsaios'));
+          return;
+        }
+      } else {
+        // Novo checklist
+        setFormData(prev => ({
+          ...prev,
+          inspetor_campo: userData.laboratorista_name || userData.full_name,
+          laboratorista_name: userData.laboratorista_name || userData.full_name
+        }));
+      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados iniciais.");
@@ -638,8 +656,10 @@ export default function ChecklistConcretagem() {
       <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Novo Checklist de Concretagem</CardTitle>
-            <CardDescription>Controle Tecnológico de Concreto</CardDescription>
+            <CardTitle>{editingChecklist ? 'Editar Checklist de Concretagem' : 'Novo Checklist de Concretagem'}</CardTitle>
+            <CardDescription>
+              {editingChecklist ? `Editando checklist de ${new Date(editingChecklist.data).toLocaleDateString('pt-BR')}` : 'Controle Tecnológico de Concreto'}
+            </CardDescription>
             {formData.status === 'rascunho' && (
               <div className="mt-4 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
@@ -671,6 +691,7 @@ export default function ChecklistConcretagem() {
                         value={formData.obra_id}
                         onChange={(e) => setFormData({ ...formData, obra_id: e.target.value })}
                         required
+                        disabled={!!editingChecklist?.id}
                         className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                       >
                         <option value="">Selecione a obra</option>
