@@ -642,13 +642,21 @@ export default function DiarioObraPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="overflow-hidden">
+            <form onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
+                e.preventDefault();
+              }
+            }}>
             <DiarioForm
               formData={formData}
               handleChange={handleChange}
               handleFileChange={handleFileChange}
               handleRemovePhoto={handleRemovePhoto}
               handleSubmit={handleSubmit}
-              onCancel={() => navigate(createPageUrl('MeusEnsaios'))}
+              onCancel={() => {
+                clearSavedData();
+                navigate(createPageUrl('MeusEnsaios'));
+              }}
               obras={obras}
               regionais={regionais}
               user={user}
@@ -660,8 +668,9 @@ export default function DiarioObraPage() {
               rejectionReason={formData.rejection_reason}
               isCreatingNew={isCreatingNew}
               status={formData.status}
-            />
-          </CardContent>
+              />
+              </form>
+              </CardContent>
         </Card>
       </div>
     </div>
