@@ -149,56 +149,23 @@ export default function ChecklistConcretagem() {
   // Carregar engenheiro responsável quando obra é selecionada
   useEffect(() => {
     const loadEngenheiroResponsavel = async () => {
-      if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-        const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-        if (obraSelecionada && obraSelecionada.regional_id) {
-          const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-          if (regional && regional.gestor_contrato_responsavel) {
-            try {
-              // Apenas admin e sala técnica podem listar usuários
-              if (user && (user.role === 'admin' || user.access_level === 'sala_tecnica_afirmaevias')) {
-                const allUsersData = await base44.entities.User.list();
-                const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
+      // Só executar se user já foi carregado
+      if (!user || !formData.obra_id || obras.length === 0 || regionais.length === 0) return;
 
-                if (gestor) {
-                  const gestorName = gestor.laboratorista_name || gestor.full_name;
-                  setFormData(prev => ({
-                    ...prev,
-                    engenheiro_responsavel: gestorName
-                  }));
-                } else {
-                  setFormData(prev => ({
-                    ...prev,
-                    engenheiro_responsavel: regional.gestor_contrato_responsavel
-                  }));
-                }
-              } else {
-                // Para laboratoristas, usar o email do gestor diretamente
-                setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: regional.gestor_contrato_responsavel
-                }));
-              }
-            } catch (error) {
-              console.warn("Sem permissão para listar usuários, usando email:", error);
-              setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: regional.gestor_contrato_responsavel || ""
-              }));
-            }
-          } else {
-              setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: ""
-              }));
-          }
-        } else {
-            setFormData(prev => ({
-                ...prev,
-                engenheiro_responsavel: ""
-            }));
-        }
+      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+      if (!obraSelecionada?.regional_id) return;
+
+      const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
+      if (!regional?.gestor_contrato_responsavel) {
+        setFormData(prev => ({ ...prev, engenheiro_responsavel: "" }));
+        return;
       }
+
+      // Para laboratoristas (sem permissão de listar usuários), usar email direto
+      setFormData(prev => ({
+        ...prev,
+        engenheiro_responsavel: regional.gestor_contrato_responsavel
+      }));
     };
 
     loadEngenheiroResponsavel();
