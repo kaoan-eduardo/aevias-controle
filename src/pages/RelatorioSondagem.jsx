@@ -533,13 +533,13 @@ export default function RelatorioSondagem() {
                       <td className="border border-slate-400 px-1 py-1 text-center">{formatDate(cp.data_execucao)}</td>
                       <td className="border border-slate-400 px-1 py-1 text-center font-semibold">{cp.media_espessura || '-'}</td>
                       <td className="border border-slate-400 px-1 py-1 text-center font-semibold">{cp.densidade ? parseFloat(cp.densidade).toFixed(3) : '-'}</td>
-                      <td className={`border border-slate-400 px-1 py-1 text-center font-bold ${isForaLimites(cp.gc_dens_projeto) ? 'text-red-600' : 'text-blue-700'}`}>
+                      <td className={`border border-slate-400 px-1 py-1 text-center font-bold ${cp.gc_dens_projeto_conforme === false ? 'text-red-600' : 'text-blue-700'}`}>
                         {cp.gc_dens_projeto ? parseFloat(cp.gc_dens_projeto).toFixed(1) : '-'}
                       </td>
                       <td className={`border border-slate-400 px-1 py-1 text-center font-bold ${isForaLimitesRice(cp.gc_dens_rice_dia) ? 'text-red-600' : 'text-blue-700'}`}>
                         {cp.gc_dens_rice_dia ? parseFloat(cp.gc_dens_rice_dia).toFixed(1) : '-'}
                       </td>
-                      <td className="border border-slate-400 px-1 py-1 text-center font-semibold">{cp.rtcd_25c || '-'}</td>
+                      <td className={`border border-slate-400 px-1 py-1 text-center font-semibold ${cp.rtcd_conforme === false ? 'text-red-600' : ''}`}>{cp.rtcd_25c || '-'}</td>
                     </tr>
                   ))}
                 </tbody>

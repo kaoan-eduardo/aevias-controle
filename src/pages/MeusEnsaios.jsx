@@ -168,6 +168,18 @@ const getNaoConformidades = (ensaio) => {
       }
     });
   }
+
+  if (ensaio.entityType === "EnsaioDensidadeInSitu") {
+    const furos = ensaio.furos || [];
+    furos.forEach((furo, idx) => {
+      if (furo.desvio_umidade_conforme === false) {
+        naoConformidades.push(`Desvio de Umidade (Furo ${idx + 1})`);
+      }
+      if (furo.grau_compactacao_conforme === false) {
+        naoConformidades.push(`Grau de Compactação (Furo ${idx + 1})`);
+      }
+    });
+  }
   
   return naoConformidades;
 };
