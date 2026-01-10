@@ -48,35 +48,50 @@ const getStatusInfo = (ensaio) => {
 };
 
 const getNaoConformidades = (ensaio) => {
-  if (ensaio.entityType !== "ChecklistUsina") return [];
-  
   const naoConformidades = [];
-  const controle = ensaio.controle_cauq || {};
   
-  // Verificar cada ensaio se está marcado como não conforme
-  if (controle.granulometria?.conforme === false) {
-    naoConformidades.push("Granulometria");
+  if (ensaio.entityType === "ChecklistUsina") {
+    const controle = ensaio.controle_cauq || {};
+    
+    // Verificar cada ensaio se está marcado como não conforme
+    if (controle.granulometria?.conforme === false) {
+      naoConformidades.push("Granulometria");
+    }
+    if (controle.volume_vazios?.conforme === false) {
+      naoConformidades.push("Volume de Vazios");
+    }
+    if (controle.rbv?.conforme === false) {
+      naoConformidades.push("RBV");
+    }
+    if (controle.rtcd_25c?.conforme === false) {
+      naoConformidades.push("RTCD a 25°C");
+    }
+    if (controle.estabilidade?.conforme === false) {
+      naoConformidades.push("Estabilidade");
+    }
+    if (controle.fluencia?.conforme === false) {
+      naoConformidades.push("Fluência");
+    }
+    if (controle.extracao_ligante_rotarex?.conforme === false) {
+      naoConformidades.push("Extração Ligante (Rotarex)");
+    }
+    if (controle.extracao_ligante_soxhlet?.conforme === false) {
+      naoConformidades.push("Extração Ligante (Soxhlet)");
+    }
   }
-  if (controle.volume_vazios?.conforme === false) {
-    naoConformidades.push("Volume de Vazios");
-  }
-  if (controle.rbv?.conforme === false) {
-    naoConformidades.push("RBV");
-  }
-  if (controle.rtcd_25c?.conforme === false) {
-    naoConformidades.push("RTCD a 25°C");
-  }
-  if (controle.estabilidade?.conforme === false) {
-    naoConformidades.push("Estabilidade");
-  }
-  if (controle.fluencia?.conforme === false) {
-    naoConformidades.push("Fluência");
-  }
-  if (controle.extracao_ligante_rotarex?.conforme === false) {
-    naoConformidades.push("Extração Ligante (Rotarex)");
-  }
-  if (controle.extracao_ligante_soxhlet?.conforme === false) {
-    naoConformidades.push("Extração Ligante (Soxhlet)");
+  
+  if (ensaio.entityType === "ChecklistMRAF") {
+    const acomp = ensaio.acompanhamento_aplicacao || {};
+    
+    if (acomp.taxa_aplicacao?.conforme === false) {
+      naoConformidades.push("Taxa de Aplicação");
+    }
+    if (acomp.residuo_emulsao?.conforme === false) {
+      naoConformidades.push("Resíduo da Emulsão");
+    }
+    if (acomp.espessura_camada?.conforme === false) {
+      naoConformidades.push("Espessura da Camada");
+    }
   }
   
   return naoConformidades;

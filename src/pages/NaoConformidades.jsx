@@ -243,6 +243,28 @@ export default function NaoConformidadesPage() {
       }
     }
 
+    if (tipo === 'ChecklistMRAF') {
+      // Verificar acompanhamento de aplicação
+      if (checklist.acompanhamento_aplicacao) {
+        const ensaios = [
+          { key: 'taxa_aplicacao', label: 'Taxa de Aplicação', unidade: 'kg/m²', limites: '8 a 16' },
+          { key: 'residuo_emulsao', label: 'Resíduo da Emulsão', unidade: '%', limites: '6,5% a 12,0%' },
+          { key: 'espessura_camada', label: 'Espessura da Camada', unidade: 'mm', limites: '6 a 20' }
+        ];
+
+        ensaios.forEach(ensaio => {
+          const dados = checklist.acompanhamento_aplicacao[ensaio.key];
+          if (dados?.realizado && dados.conforme === false) {
+            naoConformidadesEncontradas.push({
+              tipo: 'Acompanhamento Aplicação MRAF',
+              campo: ensaio.label,
+              valor: `${dados.resultado} ${ensaio.unidade} (Limite: ${ensaio.limites})`
+            });
+          }
+        });
+      }
+    }
+
     return naoConformidadesEncontradas;
   };
 

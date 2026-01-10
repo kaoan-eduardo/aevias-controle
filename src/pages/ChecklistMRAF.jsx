@@ -54,9 +54,9 @@ const getInitialFormData = () => ({
   },
   acompanhamento_aplicacao: {
     tempo_rompimento_cura: { realizado: null, resultado: "" },
-    taxa_aplicacao: { realizado: null, resultado: null },
-    residuo_emulsao: { realizado: null, resultado: null },
-    espessura_camada: { realizado: null, resultado: null },
+    taxa_aplicacao: { realizado: null, resultado: null, conforme: null },
+    residuo_emulsao: { realizado: null, resultado: null, conforme: null },
+    espessura_camada: { realizado: null, resultado: null, conforme: null },
     observacoes: ""
   },
   controle_aplicacao: {
@@ -250,8 +250,30 @@ export default function ChecklistMRAFPage() {
     }
 
     try {
+      // Calcular conformidade antes de salvar
+      const acompanhamentoAtualizado = { ...formData.acompanhamento_aplicacao };
+      
+      // Taxa de Aplicação: 8 a 16 kg/m²
+      if (acompanhamentoAtualizado.taxa_aplicacao.realizado && acompanhamentoAtualizado.taxa_aplicacao.resultado !== null) {
+        const resultado = acompanhamentoAtualizado.taxa_aplicacao.resultado;
+        acompanhamentoAtualizado.taxa_aplicacao.conforme = resultado >= 8 && resultado <= 16;
+      }
+
+      // Resíduo da Emulsão: 6.5% a 12.0%
+      if (acompanhamentoAtualizado.residuo_emulsao.realizado && acompanhamentoAtualizado.residuo_emulsao.resultado !== null) {
+        const resultado = acompanhamentoAtualizado.residuo_emulsao.resultado;
+        acompanhamentoAtualizado.residuo_emulsao.conforme = resultado >= 6.5 && resultado <= 12.0;
+      }
+
+      // Espessura da Camada: 6 a 20 mm
+      if (acompanhamentoAtualizado.espessura_camada.realizado && acompanhamentoAtualizado.espessura_camada.resultado !== null) {
+        const resultado = acompanhamentoAtualizado.espessura_camada.resultado;
+        acompanhamentoAtualizado.espessura_camada.conforme = resultado >= 6 && resultado <= 20;
+      }
+
       const dataToSave = {
         ...formData,
+        acompanhamento_aplicacao: acompanhamentoAtualizado,
         status: saveStatus,
         laboratorista_name: user?.laboratorista_name || user?.full_name
       };
@@ -1027,24 +1049,39 @@ export default function ChecklistMRAFPage() {
                         />
                       </td>
                       <td className="border border-slate-300 px-4 py-3">
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={formData.acompanhamento_aplicacao.taxa_aplicacao.resultado || ''}
-                          onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            acompanhamento_aplicacao: {
-                              ...prev.acompanhamento_aplicacao,
-                              taxa_aplicacao: {
-                                ...prev.acompanhamento_aplicacao.taxa_aplicacao,
-                                resultado: e.target.value ? parseFloat(e.target.value) : null
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={formData.acompanhamento_aplicacao.taxa_aplicacao.resultado || ''}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              acompanhamento_aplicacao: {
+                                ...prev.acompanhamento_aplicacao,
+                                taxa_aplicacao: {
+                                  ...prev.acompanhamento_aplicacao.taxa_aplicacao,
+                                  resultado: e.target.value ? parseFloat(e.target.value) : null
+                                }
                               }
-                            }
-                          }))}
-                          disabled={!isEditable || isApproved}
-                          placeholder="kg/m²"
-                          className="bg-white border-slate-200 text-slate-700 h-10 text-base"
-                        />
+                            }))}
+                            disabled={!isEditable || isApproved || formData.acompanhamento_aplicacao.taxa_aplicacao.realizado === false}
+                            placeholder="kg/m²"
+                            className={`bg-white border-slate-200 h-10 text-base ${
+                              formData.acompanhamento_aplicacao.taxa_aplicacao.realizado && 
+                              formData.acompanhamento_aplicacao.taxa_aplicacao.resultado !== null &&
+                              (formData.acompanhamento_aplicacao.taxa_aplicacao.resultado < 8 || 
+                               formData.acompanhamento_aplicacao.taxa_aplicacao.resultado > 16)
+                                ? 'text-red-600 font-bold'
+                                : 'text-slate-700'
+                            }`}
+                          />
+                          {formData.acompanhamento_aplicacao.taxa_aplicacao.realizado && 
+                           formData.acompanhamento_aplicacao.taxa_aplicacao.resultado !== null &&
+                           (formData.acompanhamento_aplicacao.taxa_aplicacao.resultado < 8 || 
+                            formData.acompanhamento_aplicacao.taxa_aplicacao.resultado > 16) && (
+                            <span className="text-red-600 text-xl" title="Fora dos parâmetros">⚠️</span>
+                          )}
+                        </div>
                       </td>
                       <td className="border border-slate-300 px-4 py-3 text-center">
                         <span className="text-slate-600 text-base">8 kg/m² a 16 kg/m²</span>
@@ -1089,24 +1126,39 @@ export default function ChecklistMRAFPage() {
                         />
                       </td>
                       <td className="border border-slate-300 px-4 py-3">
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={formData.acompanhamento_aplicacao.residuo_emulsao.resultado || ''}
-                          onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            acompanhamento_aplicacao: {
-                              ...prev.acompanhamento_aplicacao,
-                              residuo_emulsao: {
-                                ...prev.acompanhamento_aplicacao.residuo_emulsao,
-                                resultado: e.target.value ? parseFloat(e.target.value) : null
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={formData.acompanhamento_aplicacao.residuo_emulsao.resultado || ''}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              acompanhamento_aplicacao: {
+                                ...prev.acompanhamento_aplicacao,
+                                residuo_emulsao: {
+                                  ...prev.acompanhamento_aplicacao.residuo_emulsao,
+                                  resultado: e.target.value ? parseFloat(e.target.value) : null
+                                }
                               }
-                            }
-                          }))}
-                          disabled={!isEditable || isApproved}
-                          placeholder="%"
-                          className="bg-white border-slate-200 text-slate-700 h-10 text-base"
-                        />
+                            }))}
+                            disabled={!isEditable || isApproved || formData.acompanhamento_aplicacao.residuo_emulsao.realizado === false}
+                            placeholder="%"
+                            className={`bg-white border-slate-200 h-10 text-base ${
+                              formData.acompanhamento_aplicacao.residuo_emulsao.realizado && 
+                              formData.acompanhamento_aplicacao.residuo_emulsao.resultado !== null &&
+                              (formData.acompanhamento_aplicacao.residuo_emulsao.resultado < 6.5 || 
+                               formData.acompanhamento_aplicacao.residuo_emulsao.resultado > 12.0)
+                                ? 'text-red-600 font-bold'
+                                : 'text-slate-700'
+                            }`}
+                          />
+                          {formData.acompanhamento_aplicacao.residuo_emulsao.realizado && 
+                           formData.acompanhamento_aplicacao.residuo_emulsao.resultado !== null &&
+                           (formData.acompanhamento_aplicacao.residuo_emulsao.resultado < 6.5 || 
+                            formData.acompanhamento_aplicacao.residuo_emulsao.resultado > 12.0) && (
+                            <span className="text-red-600 text-xl" title="Fora dos parâmetros">⚠️</span>
+                          )}
+                        </div>
                       </td>
                       <td className="border border-slate-300 px-4 py-3 text-center">
                         <span className="text-slate-600 text-base">6,5% a 12,0%</span>
@@ -1151,24 +1203,39 @@ export default function ChecklistMRAFPage() {
                         />
                       </td>
                       <td className="border border-slate-300 px-4 py-3">
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={formData.acompanhamento_aplicacao.espessura_camada.resultado || ''}
-                          onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            acompanhamento_aplicacao: {
-                              ...prev.acompanhamento_aplicacao,
-                              espessura_camada: {
-                                ...prev.acompanhamento_aplicacao.espessura_camada,
-                                resultado: e.target.value ? parseFloat(e.target.value) : null
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={formData.acompanhamento_aplicacao.espessura_camada.resultado || ''}
+                            onChange={(e) => setFormData(prev => ({
+                              ...prev,
+                              acompanhamento_aplicacao: {
+                                ...prev.acompanhamento_aplicacao,
+                                espessura_camada: {
+                                  ...prev.acompanhamento_aplicacao.espessura_camada,
+                                  resultado: e.target.value ? parseFloat(e.target.value) : null
+                                }
                               }
-                            }
-                          }))}
-                          disabled={!isEditable || isApproved}
-                          placeholder="mm"
-                          className="bg-white border-slate-200 text-slate-700 h-10 text-base"
-                        />
+                            }))}
+                            disabled={!isEditable || isApproved || formData.acompanhamento_aplicacao.espessura_camada.realizado === false}
+                            placeholder="mm"
+                            className={`bg-white border-slate-200 h-10 text-base ${
+                              formData.acompanhamento_aplicacao.espessura_camada.realizado && 
+                              formData.acompanhamento_aplicacao.espessura_camada.resultado !== null &&
+                              (formData.acompanhamento_aplicacao.espessura_camada.resultado < 6 || 
+                               formData.acompanhamento_aplicacao.espessura_camada.resultado > 20)
+                                ? 'text-red-600 font-bold'
+                                : 'text-slate-700'
+                            }`}
+                          />
+                          {formData.acompanhamento_aplicacao.espessura_camada.realizado && 
+                           formData.acompanhamento_aplicacao.espessura_camada.resultado !== null &&
+                           (formData.acompanhamento_aplicacao.espessura_camada.resultado < 6 || 
+                            formData.acompanhamento_aplicacao.espessura_camada.resultado > 20) && (
+                            <span className="text-red-600 text-xl" title="Fora dos parâmetros">⚠️</span>
+                          )}
+                        </div>
                       </td>
                       <td className="border border-slate-300 px-4 py-3 text-center">
                         <span className="text-slate-600 text-base">6 mm a 20 mm</span>
