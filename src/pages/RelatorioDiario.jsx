@@ -48,17 +48,22 @@ export default function RelatorioDiarioPage() {
 
       let obra = null;
       let project = null;
+      let regional = null;
       if (diario.obra_id) {
         obra = await Obra.get(diario.obra_id);
         if (obra && obra.project_id) {
           project = await Project.get(obra.project_id);
+        }
+        if (obra && obra.regional_id) {
+          const { Regional } = await import('@/entities/Regional');
+          regional = await Regional.get(obra.regional_id);
         }
       }
 
       setState({
         loading: false,
         error: null,
-        data: { diario, obra, project, user }
+        data: { diario, obra, project, user, regional }
       });
     } catch (error) {
       console.error('Erro ao carregar relatório do diário:', error);
