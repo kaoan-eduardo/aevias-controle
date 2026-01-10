@@ -357,7 +357,7 @@ export default function EnsaioSondagem() {
     }));
   };
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validar se todos os CPs criados têm os dados essenciais preenchidos
@@ -396,14 +396,13 @@ export default function EnsaioSondagem() {
     try {
       const dataToSave = {
         ...formData,
-        status: saveStatus,
         fator_correcao_prensa: parseFloat(formData.fator_correcao_prensa),
         dens_agua_25c: parseFloat(formData.dens_agua_25c),
         volume_vazios_projeto: formData.volume_vazios_projeto ? parseFloat(formData.volume_vazios_projeto) : null,
         dens_aparente_projeto: formData.dens_aparente_projeto ? parseFloat(formData.dens_aparente_projeto) : null,
         dens_rice_projeto: formData.dens_rice_projeto ? parseFloat(formData.dens_rice_projeto) : null,
         espessura_projeto: formData.espessura_projeto ? parseFloat(formData.espessura_projeto) : null,
-        corpos_prova: corposProvaAtualizados.map(cp => ({
+        corpos_prova: formData.corpos_prova.map(cp => ({
           ...cp,
           numero: parseInt(cp.numero),
           medidas_espessura: cp.medidas_espessura.map(m => m ? parseFloat(m) : null).filter(m => m !== null),
@@ -931,18 +930,6 @@ export default function EnsaioSondagem() {
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline"
-                  disabled={saving || uploadingPhotos}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await handleSubmit(e, 'rascunho');
-                  }}
-                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                >
-                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                </Button>
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos}
@@ -956,7 +943,7 @@ export default function EnsaioSondagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Finalizar
+                      Salvar Ensaio
                     </>
                   )}
                 </Button>

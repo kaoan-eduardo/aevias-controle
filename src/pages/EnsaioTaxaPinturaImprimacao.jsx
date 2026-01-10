@@ -253,50 +253,38 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
     }
   }, [formData.ensaios.length]);
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validações obrigatórias apenas quando finalizando
-    if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.data_ensaio) {
-        alert("Preencha todos os campos obrigatórios (Obra, Data).");
-        return;
-      }
-    } else {
-      // Para salvar progresso, apenas obra é obrigatória
-      if (!formData.obra_id) {
-        alert("Por favor, selecione uma obra.");
-        return;
-      }
+    if (!formData.obra_id || !formData.data_ensaio) {
+      alert("Preencha todos os campos obrigatórios (Obra, Data).");
+      return;
     }
 
     setSaving(true);
     try {
-      // Não há limites específicos para calcular conformidade neste ensaio
-      // Os resultados são informativos
       const dataToSave = {
         ...formData,
-        status: saveStatus,
         laboratorista_name: user?.laboratorista_name || user?.full_name
       };
 
       if (editingEnsaio) {
         const updateData = { ...dataToSave };
-        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio atualizado com sucesso!";
+        let successMessage = "Ensaio atualizado com sucesso!";
 
         if (editingEnsaio.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
-          successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio atualizado com sucesso! O registro voltará para análise do administrador.";
+          successMessage = "Ensaio atualizado com sucesso! O registro voltará para análise do administrador.";
         }
         
         await base44.entities.EnsaioTaxaPinturaImprimacao.update(editingEnsaio.id, updateData);
         alert(successMessage);
       } else {
         await base44.entities.EnsaioTaxaPinturaImprimacao.create(dataToSave);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio criado com sucesso!");
+        alert("Ensaio criado com sucesso!");
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
@@ -726,37 +714,23 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
                   Cancelar
                 </Button>
                 {isEditable && (
-                  <>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      disabled={saving}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handleSubmit(e, 'rascunho');
-                      }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Save className="w-4 h-4 mr-2" /> Salvar Progresso
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={saving}
-                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Salvando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4 mr-2" />
-                          Finalizar
-                        </>
-                      )}
-                    </Button>
-                  </>
+                  <Button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar Ensaio
+                      </>
+                    )}
+                  </Button>
                 )}
               </div>
             </form>

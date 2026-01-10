@@ -102,8 +102,7 @@ export default function ChecklistTerraplanagem() {
       grau_compactacao_conforme: null
     },
     observacoes_gerais: "",
-    fotos: [],
-    status: "rascunho"
+    fotos: []
   });
 
   // Cálculos automáticos
@@ -312,25 +311,15 @@ export default function ChecklistTerraplanagem() {
     }));
   };
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
 
     try {
-      // Validações obrigatórias apenas quando finalizando
-      if (saveStatus === 'finalizado') {
-        for (let i = 0; i < formData.periodos_clima.length; i++) {
-          const periodo = formData.periodos_clima[i];
-          if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
-            alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : 'Tarde'}.`);
-            setSaving(false);
-            return;
-          }
-        }
-      } else {
-        // Para salvar progresso, apenas obra é obrigatória
-        if (!formData.obra_id) {
-          alert("Por favor, selecione uma obra.");
+      for (let i = 0; i < formData.periodos_clima.length; i++) {
+        const periodo = formData.periodos_clima[i];
+        if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
+          alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : 'Tarde'}.`);
           setSaving(false);
           return;
         }
@@ -338,7 +327,6 @@ export default function ChecklistTerraplanagem() {
 
       const dataToSave = {
         ...formData,
-        status: saveStatus,
         umidade_otima_proctor: formData.umidade_otima_proctor ? parseFloat(formData.umidade_otima_proctor) : null,
         umidade_in_situ: formData.umidade_in_situ ? parseFloat(formData.umidade_in_situ) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
@@ -347,10 +335,12 @@ export default function ChecklistTerraplanagem() {
         })),
         ensaios_empreiteira: Object.fromEntries(
           Object.entries(formData.ensaios_empreiteira).map(([key, value]) => {
+            // Se o valor é null, undefined ou não é um objeto, retorna como está
             if (!value || typeof value !== 'object') {
               return [key, value];
             }
             
+            // Se é um objeto, processa a quantidade
             return [
               key,
               {
@@ -363,7 +353,7 @@ export default function ChecklistTerraplanagem() {
       };
 
       await base44.entities.ChecklistTerraplanagem.create(dataToSave);
-      alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Terraplanagem salvo com sucesso!");
+      alert("Checklist de Terraplanagem salvo com sucesso!");
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -420,15 +410,6 @@ export default function ChecklistTerraplanagem() {
           <CardHeader>
             <CardTitle>Novo Checklist de Terraplanagem</CardTitle>
             <CardDescription>Controle Tecnológico de Terraplanagem</CardDescription>
-            {formData.status === 'rascunho' && (
-              <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-semibold text-blue-800">Em Rascunho</p>
-                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
-                </div>
-              </div>
-            )}
           </CardHeader>
           <CardContent className="overflow-hidden">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -1114,18 +1095,6 @@ export default function ChecklistTerraplanagem() {
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline"
-                  disabled={saving || uploadingPhotos}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await handleSubmit(e, 'rascunho');
-                  }}
-                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                >
-                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                </Button>
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos}
@@ -1139,7 +1108,7 @@ export default function ChecklistTerraplanagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Finalizar
+                      Salvar Checklist
                     </>
                   )}
                 </Button>

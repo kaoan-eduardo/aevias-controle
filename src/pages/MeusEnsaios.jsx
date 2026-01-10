@@ -53,6 +53,7 @@ const getNaoConformidades = (ensaio) => {
   if (ensaio.entityType === "ChecklistUsina") {
     const controle = ensaio.controle_cauq || {};
     
+    // Verificar cada ensaio se está marcado como não conforme
     if (controle.granulometria?.conforme === false) {
       naoConformidades.push("Granulometria");
     }
@@ -102,83 +103,6 @@ const getNaoConformidades = (ensaio) => {
     if (pintura.taxa_pintura_residual?.conforme === false) {
       naoConformidades.push("Taxa de Pintura Residual");
     }
-  }
-
-  if (ensaio.entityType === "ChecklistConcretagem") {
-    const cargas = ensaio.cargas_concreto || [];
-    cargas.forEach((carga, idx) => {
-      if (carga.slump_test?.conforme === false) {
-        naoConformidades.push(`Slump Test (Carga ${idx + 1})`);
-      }
-      if (carga.espessura_camada?.conforme === false) {
-        naoConformidades.push(`Espessura da Camada (Carga ${idx + 1})`);
-      }
-    });
-  }
-
-  if (ensaio.entityType === "ChecklistTerraplanagem") {
-    const ensaios_emp = ensaio.ensaios_empreiteira || {};
-    
-    if (ensaios_emp.variacao_umidade_conforme === false) {
-      naoConformidades.push("Variação de Umidade");
-    }
-    if (ensaios_emp.grau_compactacao_conforme === false) {
-      naoConformidades.push("Grau de Compactação");
-    }
-    if (ensaios_emp.granulometria?.conforme === false) {
-      naoConformidades.push("Granulometria");
-    }
-  }
-
-  if (ensaio.entityType === "EnsaioCAUQ") {
-    if (ensaio.teor_ligante_conforme === false) {
-      naoConformidades.push("Teor de Ligante");
-    }
-    const cps = ensaio.corpos_prova_marshall || [];
-    cps.forEach((cp, idx) => {
-      if (cp.volume_vazios_conforme === false) {
-        naoConformidades.push(`Volume de Vazios (CP ${idx + 1})`);
-      }
-      if (cp.rbv_conforme === false) {
-        naoConformidades.push(`RBV (CP ${idx + 1})`);
-      }
-      if (cp.rtcd_conforme === false) {
-        naoConformidades.push(`RTCD (CP ${idx + 1})`);
-      }
-      if (cp.estabilidade_conforme === false) {
-        naoConformidades.push(`Estabilidade (CP ${idx + 1})`);
-      }
-      if (cp.fluencia_conforme === false) {
-        naoConformidades.push(`Fluência (CP ${idx + 1})`);
-      }
-    });
-  }
-
-  if (ensaio.entityType === "EnsaioSondagem") {
-    const cps = ensaio.corpos_prova || [];
-    cps.forEach((cp, idx) => {
-      if (cp.volume_vazios_conforme === false) {
-        naoConformidades.push(`Volume de Vazios (CP ${idx + 1})`);
-      }
-      if (cp.rtcd_conforme === false) {
-        naoConformidades.push(`RTCD (CP ${idx + 1})`);
-      }
-      if (cp.gc_dens_projeto_conforme === false) {
-        naoConformidades.push(`GC Dens. Projeto (CP ${idx + 1})`);
-      }
-    });
-  }
-
-  if (ensaio.entityType === "EnsaioDensidadeInSitu") {
-    const furos = ensaio.furos || [];
-    furos.forEach((furo, idx) => {
-      if (furo.desvio_umidade_conforme === false) {
-        naoConformidades.push(`Desvio de Umidade (Furo ${idx + 1})`);
-      }
-      if (furo.grau_compactacao_conforme === false) {
-        naoConformidades.push(`Grau de Compactação (Furo ${idx + 1})`);
-      }
-    });
   }
   
   return naoConformidades;
@@ -1622,22 +1546,18 @@ export default function MeusEnsaios() {
     try {
       const currentUser = await User.me();
       setUser(currentUser);
-
-      const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
-
-      // Apenas admin, sala técnica e gestores podem listar todos os usuários
-      if (currentUserAccessLevel === 'admin' || currentUserAccessLevel === 'sala_tecnica_afirmaevias' || currentUserAccessLevel === 'gestor_contrato') {
-        try {
-          const todosUsuarios = await base44.entities.User.list();
-          setAllUsers(todosUsuarios);
-        } catch (error) {
-          console.error("Erro ao carregar lista de usuários:", error);
-          setAllUsers([currentUser]);
-        }
-      } else {
-        // Para laboratoristas, usar apenas o usuário atual
+      
+      // Carregar todos os usuários para mapear nomes corretamente
+      try {
+        const todosUsuarios = await base44.entities.User.list();
+        setAllUsers(todosUsuarios);
+      } catch (error) {
+        console.error("Erro ao carregar lista de usuários:", error);
+        // Se falhar ao carregar todos os usuários, usar apenas o usuário atual
         setAllUsers([currentUser]);
       }
+
+      const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
       // Carregar dados em paralelo
       const [

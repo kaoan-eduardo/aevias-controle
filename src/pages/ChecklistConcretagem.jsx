@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Loader2, XCircle, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Save, Loader2, XCircle, Plus, Trash2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
@@ -21,7 +21,6 @@ export default function ChecklistConcretagem() {
   const [regionais, setRegionais] = useState([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
-  const [editingChecklist, setEditingChecklist] = useState(null);
 
   const [formData, setFormData] = useState({
     obra_id: "",
@@ -71,8 +70,7 @@ export default function ChecklistConcretagem() {
       }
     ],
     observacoes_gerais: "",
-    fotos: [],
-    status: "rascunho"
+    fotos: []
   });
 
   useEffect(() => {
@@ -149,117 +147,102 @@ export default function ChecklistConcretagem() {
   // Carregar engenheiro responsável quando obra é selecionada
   useEffect(() => {
     const loadEngenheiroResponsavel = async () => {
-      // Só executar se user já foi carregado
-      if (!user || !formData.obra_id || obras.length === 0 || regionais.length === 0) return;
+      if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
+        const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+        if (obraSelecionada && obraSelecionada.regional_id) {
+          const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
+          if (regional && regional.gestor_contrato_responsavel) {
+            try {
+              // Buscar todos os usuários e encontrar o gestor
+              const allUsersData = await base44.entities.User.list();
+              const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
 
-      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-      if (!obraSelecionada?.regional_id) return;
-
-      const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-      if (!regional?.gestor_contrato_responsavel) {
-        setFormData(prev => ({ ...prev, engenheiro_responsavel: "" }));
-        return;
+              if (gestor) {
+                const gestorName = gestor.laboratorista_name || gestor.full_name;
+                console.log("✅ Gestor encontrado:", gestorName);
+                setFormData(prev => ({
+                  ...prev,
+                  engenheiro_responsavel: gestorName
+                }));
+              } else {
+                console.log("⚠️ Gestor não encontrado para o email:", regional.gestor_contrato_responsavel);
+                setFormData(prev => ({
+                    ...prev,
+                    engenheiro_responsavel: ""
+                }));
+              }
+            } catch (error) {
+              console.error("Erro ao buscar gestor:", error);
+              setFormData(prev => ({
+                  ...prev,
+                  engenheiro_responsavel: ""
+              }));
+            }
+          } else {
+              setFormData(prev => ({
+                  ...prev,
+                  engenheiro_responsavel: ""
+              }));
+          }
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                engenheiro_responsavel: ""
+            }));
+        }
       }
-
-      // Para laboratoristas (sem permissão de listar usuários), usar email direto
-      setFormData(prev => ({
-        ...prev,
-        engenheiro_responsavel: regional.gestor_contrato_responsavel
-      }));
     };
 
     loadEngenheiroResponsavel();
-  }, [formData.obra_id, obras, regionais, user]);
+  }, [formData.obra_id, obras, regionais]);
 
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const userData = await base44.auth.me();
+      const [userData, obrasData, projectsData, regionaisData] = await Promise.all([
+        base44.auth.me(),
+        base44.entities.Obra.list(),
+        Project.list(),
+        base44.entities.Regional.list()
+      ]);
+
       setUser(userData);
+      setRegionais(regionaisData);
+      setAllProjects(projectsData); // Store all projects
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
-      // Carregar apenas dados essenciais
-      let obrasData, regionaisData;
-      
       if (userAccessLevel === 'user') {
-        // Laboratorista: carregar apenas sua regional
-        const allRegionais = await base44.entities.Regional.list();
-        const regionalDoLab = allRegionais.find(r => 
-          (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
-        );
-        
-        if (regionalDoLab) {
-          regionaisData = [regionalDoLab];
-          const allObras = await base44.entities.Obra.list();
-          obrasData = allObras.filter(o => 
-            o.regional_id === regionalDoLab.id && 
-            o.status === 'em_andamento' &&
-            o.tipo_obra === 'supervisao'
+        const regionalDoLaboratorista = regionaisData.find(regional => {
+          const laboratoristas = regional.laboratoristas_responsaveis || [];
+          return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
+        });
+
+        if (regionalDoLaboratorista) {
+          const obrasRegional = obrasData.filter(obra =>
+            obra.regional_id === regionalDoLaboratorista.id &&
+            obra.status === 'em_andamento' &&
+            obra.tipo_obra === 'supervisao'
           );
+          setObras(obrasRegional);
         } else {
-          regionaisData = [];
-          obrasData = [];
+          setObras([]);
         }
       } else {
-        // Admin/Gestor: carregar tudo
-        [obrasData, regionaisData] = await Promise.all([
-          base44.entities.Obra.list(),
-          base44.entities.Regional.list()
-        ]);
-        obrasData = obrasData.filter(o => o.tipo_obra === 'supervisao');
+        const obrasSupervisao = obrasData.filter(obra =>
+          obra.status === 'em_andamento' && obra.tipo_obra === 'supervisao'
+        );
+        setObras(obrasSupervisao);
       }
 
-      setObras(obrasData);
-      setRegionais(regionaisData);
-      
-      // Carregar todos os projetos uma única vez (serão filtrados depois)
-      const allProjectsData = await base44.entities.Project.list();
-      setAllProjects(allProjectsData);
-      setProjects([]); // Projects filtrados virão no useEffect
+      // Projects will be filtered dynamically when an obra is selected
+      setProjects([]);
 
       setFormData(prev => ({
         ...prev,
         inspetor_campo: userData.laboratorista_name || userData.full_name,
         laboratorista_name: userData.laboratorista_name || userData.full_name
       }));
-
-      // Verificar se está editando um registro
-      const params = new URLSearchParams(window.location.search);
-      const editId = params.get('editId');
-
-      if (editId) {
-        const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
-        if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
-          setEditingChecklist(checklistToEdit);
-          setFormData({
-            ...checklistToEdit,
-            data: checklistToEdit.data ? new Date(checklistToEdit.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-            cargas_concreto: checklistToEdit.cargas_concreto || [
-              {
-                numero_carga: 1,
-                nota_fiscal: "",
-                placa_betoneira: "",
-                horario_inicio: "",
-                horario_termino: "",
-                jornada: "",
-                slump_test: { realizado: false, resultado: null, limite: "", conforme: null },
-                espessura_camada: { realizado: false, resultado: null, limite: "", conforme: null },
-                equipamento_lancamento: "",
-                superficie_tratada_limpa: null,
-                adensamento_realizado: null,
-                observacoes_lancamento: "",
-                moldado_fiscalizacao: false,
-                corpos_prova: []
-              }
-            ],
-            fotos: checklistToEdit.fotos || []
-          });
-        } else {
-          alert("Você não tem permissão para editar este registro.");
-          navigate(createPageUrl('MeusEnsaios'));
-        }
-      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados iniciais.");
@@ -528,138 +511,86 @@ export default function ChecklistConcretagem() {
     }));
   };
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
 
     try {
-      // Calcular conformidades APENAS ao finalizar (não ao salvar progresso)
-      let cargasAtualizadas = formData.cargas_concreto;
-      
-      if (saveStatus === 'finalizado') {
-        cargasAtualizadas = formData.cargas_concreto.map(carga => {
-          const cargaAtualizada = { ...carga };
-          
-          // Calcular conformidade do slump test se tiver projeto selecionado
-          if (carga.slump_test.resultado !== null && formData.project_id) {
-            const selectedProject = projects.find(p => p.id === formData.project_id);
-            if (selectedProject?.slump_minimo != null && selectedProject?.slump_maximo != null) {
-              const val = parseFloat(carga.slump_test.resultado);
-              cargaAtualizada.slump_test = {
-                ...carga.slump_test,
-                conforme: val >= selectedProject.slump_minimo && val <= selectedProject.slump_maximo
-              };
-            }
-          }
-
-          return cargaAtualizada;
-        });
+      // Validações adicionais
+      if (!formData.empreiteira?.trim()) {
+        alert("Por favor, preencha o campo Empreiteira.");
+        setSaving(false);
+        return;
       }
 
-      // Validações obrigatórias apenas quando finalizando
-      if (saveStatus === 'finalizado') {
-        if (!formData.empreiteira?.trim()) {
-          alert("Por favor, preencha o campo Empreiteira.");
+      if (!formData.rodovia?.trim()) {
+        alert("Por favor, preencha o campo Rodovia.");
+        setSaving(false);
+        return;
+      }
+
+      if (!formData.trecho?.trim()) {
+        alert("Por favor, preencha o campo Trecho.");
+        setSaving(false);
+        return;
+      }
+
+      if (!formData.estrutura?.trim()) {
+        alert("Por favor, preencha o campo Estrutura.");
+        setSaving(false);
+        return;
+      }
+
+      // Validar temperaturas dos períodos climáticos
+      for (let i = 0; i < formData.periodos_clima.length; i++) {
+        const periodo = formData.periodos_clima[i];
+        if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
+          alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : periodo.periodo === 'tarde' ? 'Tarde' : 'Noite'}.`);
           setSaving(false);
           return;
         }
+      }
 
-        if (!formData.rodovia?.trim()) {
-          alert("Por favor, preencha o campo Rodovia.");
-          setSaving(false);
-          return;
-        }
-
-        if (!formData.trecho?.trim()) {
-          alert("Por favor, preencha o campo Trecho.");
-          setSaving(false);
-          return;
-        }
-
-        if (!formData.estrutura?.trim()) {
-          alert("Por favor, preencha o campo Estrutura.");
-          setSaving(false);
-          return;
-        }
-
-        // Validar temperaturas dos períodos climáticos
-        for (let i = 0; i < formData.periodos_clima.length; i++) {
-          const periodo = formData.periodos_clima[i];
-          if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
-            alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : periodo.periodo === 'tarde' ? 'Tarde' : 'Noite'}.`);
+      // Validar moldagem para fiscalização
+      for (let i = 0; i < formData.cargas_concreto.length; i++) {
+        const carga = formData.cargas_concreto[i];
+        if (carga.moldado_fiscalizacao) {
+          // Se marcou moldado, deve ter pelo menos 1 CP
+          if (!carga.corpos_prova || carga.corpos_prova.length === 0) {
+            alert(`Por favor, configure ao menos 1 corpo de prova para a Carga ${carga.numero_carga}.`);
             setSaving(false);
             return;
           }
-        }
-
-        // Validar moldagem para fiscalização
-        for (let i = 0; i < formData.cargas_concreto.length; i++) {
-          const carga = formData.cargas_concreto[i];
-          if (carga.moldado_fiscalizacao) {
-            if (!carga.corpos_prova || carga.corpos_prova.length === 0) {
-              alert(`Por favor, configure ao menos 1 corpo de prova para a Carga ${carga.numero_carga}.`);
-              setSaving(false);
-              return;
-            }
-          }
-        }
-      } else {
-        // Para salvar progresso, apenas obra é obrigatória
-        if (!formData.obra_id) {
-          alert("Por favor, selecione uma obra.");
-          setSaving(false);
-          return;
         }
       }
 
       const dataToSave = {
         ...formData,
-        status: saveStatus,
-        fck: formData.fck && formData.fck !== "" ? parseFloat(formData.fck) : null,
-        volume: formData.volume && formData.volume !== "" ? parseFloat(formData.volume) : null,
+        fck: formData.fck ? parseFloat(formData.fck) : null,
+        volume: formData.volume ? parseFloat(formData.volume) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
           ...p,
-          temperatura_ambiente: p.temperatura_ambiente && p.temperatura_ambiente !== "" ? parseFloat(p.temperatura_ambiente) : null
+          temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
         })),
-        cargas_concreto: cargasAtualizadas.map(c => ({
+        cargas_concreto: formData.cargas_concreto.map(c => ({
           ...c,
           slump_test: {
             ...c.slump_test,
-            realizado: c.slump_test.realizado || false,
-            resultado: c.slump_test.resultado && c.slump_test.resultado !== "" ? parseFloat(c.slump_test.resultado) : null,
-            limite: c.slump_test.limite || "",
-            conforme: c.slump_test.conforme
+            resultado: c.slump_test.resultado !== null && c.slump_test.resultado !== "" ? parseFloat(c.slump_test.resultado) : null
           },
           espessura_camada: {
             ...c.espessura_camada,
-            realizado: c.espessura_camada.realizado || false,
-            resultado: c.espessura_camada.resultado && c.espessura_camada.resultado !== "" ? parseFloat(c.espessura_camada.resultado) : null,
-            limite: c.espessura_camada.limite || "",
-            conforme: c.espessura_camada.conforme
+            resultado: c.espessura_camada.resultado !== null && c.espessura_camada.resultado !== "" ? parseFloat(c.espessura_camada.resultado) : null
           },
-          corpos_prova: Array.isArray(c.corpos_prova) ? c.corpos_prova.map(cp => ({
-            dias_ruptura: typeof cp.dias_ruptura === 'number' ? cp.dias_ruptura : (cp.dias_ruptura && cp.dias_ruptura !== "" ? parseInt(cp.dias_ruptura) : null),
-            tipo_ruptura: cp.tipo_ruptura || "compressao_axial"
-          })) : []
+          corpos_prova: c.corpos_prova.map(cp => ({
+            ...cp,
+            dias_ruptura: cp.dias_ruptura !== null && cp.dias_ruptura !== "" ? parseInt(cp.dias_ruptura) : null
+          }))
         }))
       };
 
-      console.log("🔍 Dados antes de salvar:", JSON.stringify(dataToSave, null, 2));
-
-      if (editingChecklist) {
-        const updateData = { ...dataToSave };
-        if (editingChecklist.approved === false) {
-          updateData.approved = null;
-          updateData.rejection_reason = null;
-          updateData.approved_by = null;
-          updateData.approved_date = null;
-        }
-        await base44.entities.ChecklistConcretagem.update(editingChecklist.id, updateData);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem atualizado com sucesso!");
-      } else {
-        await base44.entities.ChecklistConcretagem.create(dataToSave);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist de Concretagem salvo com sucesso!");
-      }
+      await base44.entities.ChecklistConcretagem.create(dataToSave);
+      alert("Checklist de Concretagem salvo com sucesso!");
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -684,26 +615,8 @@ export default function ChecklistConcretagem() {
       <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>{editingChecklist ? 'Editar Checklist de Concretagem' : 'Novo Checklist de Concretagem'}</CardTitle>
+            <CardTitle>Novo Checklist de Concretagem</CardTitle>
             <CardDescription>Controle Tecnológico de Concreto</CardDescription>
-            {formData.status === 'rascunho' && (
-              <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-semibold text-blue-800">Em Rascunho</p>
-                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
-                </div>
-              </div>
-            )}
-            {editingChecklist?.rejection_reason && (
-              <div className="mt-4 flex items-start gap-2 p-3 bg-red-50/50 border border-red-200/50 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-semibold text-red-800">Motivo da Reprovação:</p>
-                  <p className="text-sm text-red-700">{editingChecklist.rejection_reason}</p>
-                </div>
-              </div>
-            )}
           </CardHeader>
           <CardContent className="overflow-hidden">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -1363,18 +1276,6 @@ export default function ChecklistConcretagem() {
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline"
-                  disabled={saving || uploadingPhotos}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await handleSubmit(e, 'rascunho');
-                  }}
-                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                >
-                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                </Button>
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos || !formData.obra_id || !formData.data || !formData.concreteira}
@@ -1388,7 +1289,7 @@ export default function ChecklistConcretagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Finalizar
+                      Salvar Checklist
                     </>
                   )}
                 </Button>

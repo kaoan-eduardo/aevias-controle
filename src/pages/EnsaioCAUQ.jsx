@@ -398,97 +398,34 @@ export default function EnsaioCAUQPage() {
     });
   }, []);
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validações obrigatórias apenas quando finalizando
-    if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.data_ensaio) {
-        alert("Por favor, preencha os campos obrigatórios.");
-        return;
-      }
-    } else {
-      // Para salvar progresso, apenas obra é obrigatória
-      if (!formData.obra_id) {
-        alert("Por favor, selecione uma obra.");
-        return;
-      }
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra.");
+      return;
     }
 
     try {
-      // Calcular conformidades dos corpos de prova Marshall
-      const corposProvaAtualizados = formData.corpos_prova_marshall.map(cp => {
-        const cpAtualizado = { ...cp };
-        
-        if (!selectedProject) return cpAtualizado;
-
-        // Volume de Vazios: min a max
-        if (cp.volume_vazios !== null && selectedProject.volume_vazios?.min != null && selectedProject.volume_vazios?.max != null) {
-          const val = parseFloat(cp.volume_vazios);
-          cpAtualizado.volume_vazios_conforme = val >= selectedProject.volume_vazios.min && val <= selectedProject.volume_vazios.max;
-        }
-
-        // RBV: min a max
-        if (cp.rbv !== null && selectedProject.rbv?.min != null && selectedProject.rbv?.max != null) {
-          const val = parseFloat(cp.rbv);
-          cpAtualizado.rbv_conforme = val >= selectedProject.rbv.min && val <= selectedProject.rbv.max;
-        }
-
-        // RTCD: > min
-        if (cp.rtcd_valor !== null && selectedProject.rtcd?.min != null) {
-          const val = parseFloat(cp.rtcd_valor);
-          cpAtualizado.rtcd_conforme = val > selectedProject.rtcd.min;
-        }
-
-        // Estabilidade: > min
-        if (cp.estabilidade_corrigida !== null && selectedProject.estabilidade?.min != null) {
-          const val = parseFloat(cp.estabilidade_corrigida);
-          cpAtualizado.estabilidade_conforme = val > selectedProject.estabilidade.min;
-        }
-
-        // Fluência: min a max
-        if (cp.fluencia !== null && selectedProject.fluencia?.min != null && selectedProject.fluencia?.max != null) {
-          const val = parseFloat(cp.fluencia);
-          cpAtualizado.fluencia_conforme = val >= selectedProject.fluencia.min && val <= selectedProject.fluencia.max;
-        }
-
-        return cpAtualizado;
-      });
-
-      // Calcular conformidade do teor de ligante
-      let teorLiganteConforme = null;
-      if (formData.extracao_ligante.teor_ligante_real !== null && selectedProject?.teor_ligante?.min != null && selectedProject?.teor_ligante?.max != null) {
-        const val = parseFloat(formData.extracao_ligante.teor_ligante_real);
-        teorLiganteConforme = val >= selectedProject.teor_ligante.min && val <= selectedProject.teor_ligante.max;
-      }
-
-      const dataToSave = {
-        ...formData,
-        status: saveStatus,
-        corpos_prova_marshall: corposProvaAtualizados,
-        teor_ligante_conforme: teorLiganteConforme
-      };
-
-      // ... rest of submit logic ...
       if (editingEnsaio?.id) {
-        const updateData = { ...dataToSave };
+        const updateData = { ...formData };
         if (editingEnsaio.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
           await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, updateData);
-          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio atualizado com sucesso! O registro voltará para análise.");
+          alert("Ensaio atualizado com sucesso! O registro voltará para análise.");
         } else {
           await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, updateData);
-          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio atualizado com sucesso!");
+          alert("Ensaio atualizado com sucesso!");
         }
       } else {
         await base44.entities.EnsaioCAUQ.create({
-          ...dataToSave,
+          ...formData,
           laboratorista_name: user?.laboratorista_name || user?.full_name
         });
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Ensaio criado com sucesso!");
+        alert("Ensaio criado com sucesso!");
       }
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
@@ -1487,22 +1424,9 @@ export default function EnsaioCAUQPage() {
                   Cancelar
                 </Button>
                 {isEditable && !isApproved && (
-                  <>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handleSubmit(e, 'rascunho');
-                      }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                    </Button>
-                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                      <Save className="mr-2 h-4 w-4" /> Finalizar
-                    </Button>
-                  </>
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                    <Save className="mr-2 h-4 w-4" /> Salvar Ensaio
+                  </Button>
                 )}
                 {isApproved && (
                   <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
