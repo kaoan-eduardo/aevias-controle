@@ -1149,7 +1149,6 @@ export default function ChecklistAplicacaoPage() {
                           <Input
                             type="number"
                             min="0"
-                            max="10"
                             value={formData.controle_aplicacao.temp_aplicacao_cargas.quantidade || ''}
                             onChange={(e) => {
                               const qtde = e.target.value ? parseInt(e.target.value) : 0;
@@ -1187,7 +1186,6 @@ export default function ChecklistAplicacaoPage() {
                           <Input
                             type="number"
                             min="0"
-                            max="10"
                             value={formData.controle_aplicacao.espessura_camada.quantidade || ''}
                             onChange={(e) => {
                               const qtde = e.target.value ? parseInt(e.target.value) : 0;
