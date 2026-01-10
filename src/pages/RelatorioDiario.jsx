@@ -103,7 +103,8 @@ export default function RelatorioDiarioPage() {
             diario={state.data.diario} 
             obra={state.data.obra} 
             project={state.data.project} 
-            user={state.data.user} 
+            user={state.data.user}
+            regional={state.data.regional}
           />
         )}
       </div>
