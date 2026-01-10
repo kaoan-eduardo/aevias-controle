@@ -398,7 +398,7 @@ export default function EnsaioCAUQPage() {
     });
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
 
     if (!formData.obra_id) {

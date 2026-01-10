@@ -314,7 +314,7 @@ export default function EnsaioDensidadeInSituPage() {
     }));
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     
     if (!formData.obra_id || !formData.data_ensaio) {

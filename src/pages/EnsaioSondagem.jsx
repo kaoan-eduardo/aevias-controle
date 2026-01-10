@@ -357,7 +357,7 @@ export default function EnsaioSondagem() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
 
     // Validar se todos os CPs criados têm os dados essenciais preenchidos
@@ -396,6 +396,7 @@ export default function EnsaioSondagem() {
     try {
       const dataToSave = {
         ...formData,
+        status: saveStatus,
         fator_correcao_prensa: parseFloat(formData.fator_correcao_prensa),
         dens_agua_25c: parseFloat(formData.dens_agua_25c),
         volume_vazios_projeto: formData.volume_vazios_projeto ? parseFloat(formData.volume_vazios_projeto) : null,
