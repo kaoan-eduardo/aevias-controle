@@ -174,44 +174,49 @@ export default function ChecklistConcretagem() {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [userData, obrasData, projectsData, regionaisData] = await Promise.all([
-        base44.auth.me(),
-        base44.entities.Obra.list(),
-        Project.list(),
-        base44.entities.Regional.list()
-      ]);
-
+      const userData = await base44.auth.me();
       setUser(userData);
-      setRegionais(regionaisData);
-      setAllProjects(projectsData); // Store all projects
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
+      // Carregar apenas dados essenciais
+      let obrasData, regionaisData;
+      
       if (userAccessLevel === 'user') {
-        const regionalDoLaboratorista = regionaisData.find(regional => {
-          const laboratoristas = regional.laboratoristas_responsaveis || [];
-          return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-        });
-
-        if (regionalDoLaboratorista) {
-          const obrasRegional = obrasData.filter(obra =>
-            obra.regional_id === regionalDoLaboratorista.id &&
-            obra.status === 'em_andamento' &&
-            obra.tipo_obra === 'supervisao'
+        // Laboratorista: carregar apenas sua regional
+        const allRegionais = await base44.entities.Regional.list();
+        const regionalDoLab = allRegionais.find(r => 
+          (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
+        );
+        
+        if (regionalDoLab) {
+          regionaisData = [regionalDoLab];
+          const allObras = await base44.entities.Obra.list();
+          obrasData = allObras.filter(o => 
+            o.regional_id === regionalDoLab.id && 
+            o.status === 'em_andamento' &&
+            o.tipo_obra === 'supervisao'
           );
-          setObras(obrasRegional);
         } else {
-          setObras([]);
+          regionaisData = [];
+          obrasData = [];
         }
       } else {
-        const obrasSupervisao = obrasData.filter(obra =>
-          obra.status === 'em_andamento' && obra.tipo_obra === 'supervisao'
-        );
-        setObras(obrasSupervisao);
+        // Admin/Gestor: carregar tudo
+        [obrasData, regionaisData] = await Promise.all([
+          base44.entities.Obra.list(),
+          base44.entities.Regional.list()
+        ]);
+        obrasData = obrasData.filter(o => o.tipo_obra === 'supervisao');
       }
 
-      // Projects will be filtered dynamically when an obra is selected
-      setProjects([]);
+      setObras(obrasData);
+      setRegionais(regionaisData);
+      
+      // Carregar todos os projetos uma única vez (serão filtrados depois)
+      const allProjectsData = await base44.entities.Project.list();
+      setAllProjects(allProjectsData);
+      setProjects([]); // Projects filtrados virão no useEffect
 
       setFormData(prev => ({
         ...prev,
