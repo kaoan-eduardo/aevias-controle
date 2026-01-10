@@ -541,6 +541,8 @@ export default function ChecklistConcretagem() {
     e.preventDefault();
     setSaving(true);
 
+    console.log("💾 [DEBUG] Salvando checklist com status:", saveStatus);
+
     try {
       // Para salvar progresso, apenas obra é obrigatória
       if (!formData.obra_id) {

@@ -1552,7 +1552,7 @@ export default function MeusEnsaios() {
         const todosUsuarios = await base44.entities.User.list();
         setAllUsers(todosUsuarios);
       } catch (error) {
-        console.error("Erro ao carregar lista de usuários:", error);
+        console.warn("⚠️ Sem permissão para listar usuários - usando fallback");
         // Se falhar ao carregar todos os usuários, usar apenas o usuário atual
         setAllUsers([currentUser]);
       }
