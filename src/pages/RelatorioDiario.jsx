@@ -31,21 +31,6 @@ export default function RelatorioDiarioPage() {
 
       if (!diario) throw new Error(`Diário com ID ${id} não encontrado`);
 
-      // Tentar buscar e corrigir laboratorista_name se necessário
-      if (!diario.laboratorista_name || diario.laboratorista_name === diario.created_by?.split('@')[0]) {
-        if (diario.created_by) {
-          try {
-            const allUsers = await base44.entities.User.list();
-            const creator = allUsers.find(u => u.email?.toLowerCase() === diario.created_by?.toLowerCase());
-            if (creator) {
-              diario.laboratorista_name = creator.laboratorista_name || creator.full_name;
-            }
-          } catch (error) {
-            console.log('Não foi possível buscar lista de usuários, usando nome do diário');
-          }
-        }
-      }
-
       let obra = null;
       let project = null;
       let regional = null;
