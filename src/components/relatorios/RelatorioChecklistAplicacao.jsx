@@ -340,8 +340,11 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   <td className="border border-slate-300 p-0.5 text-center">
                     <CheckmarkColumn value={checklist.pintura_ligacao?.taxa_pintura?.realizado} isYesColumn={false} />
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className={`border border-slate-300 p-0.5 text-center ${
+                    checklist.pintura_ligacao?.taxa_pintura?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
                     {checklist.pintura_ligacao?.taxa_pintura?.resultado || '-'}
+                    {checklist.pintura_ligacao?.taxa_pintura?.conforme === false && ' ⚠️'}
                   </td>
                   <td className="border border-slate-300 p-0.5 text-center" style={{ fontSize: '8px' }}>0,8 l/m² a 1,0 l/m²</td>
                 </tr>
@@ -366,8 +369,11 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   <td className="border border-slate-300 p-0.5 text-center">
                     <CheckmarkColumn value={checklist.pintura_ligacao?.taxa_pintura_residual?.realizado} isYesColumn={false} />
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className={`border border-slate-300 p-0.5 text-center ${
+                    checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
                     {checklist.pintura_ligacao?.taxa_pintura_residual?.resultado || '-'}
+                    {checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === false && ' ⚠️'}
                   </td>
                   <td className="border border-slate-300 p-0.5 text-center" style={{ fontSize: '8px' }}>0,3 l/m² a 0,4 l/m²</td>
                 </tr>

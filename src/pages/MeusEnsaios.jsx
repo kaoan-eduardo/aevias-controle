@@ -93,6 +93,17 @@ const getNaoConformidades = (ensaio) => {
       naoConformidades.push("Espessura da Camada");
     }
   }
+
+  if (ensaio.entityType === "ChecklistAplicacao") {
+    const pintura = ensaio.pintura_ligacao || {};
+    
+    if (pintura.taxa_pintura?.conforme === false) {
+      naoConformidades.push("Taxa de Pintura");
+    }
+    if (pintura.taxa_pintura_residual?.conforme === false) {
+      naoConformidades.push("Taxa de Pintura Residual");
+    }
+  }
   
   return naoConformidades;
 };

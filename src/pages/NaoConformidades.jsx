@@ -173,6 +173,26 @@ export default function NaoConformidadesPage() {
     }
 
     if (tipo === 'ChecklistAplicacao') {
+      // Taxa de Pintura
+      if (checklist.pintura_ligacao?.taxa_pintura?.realizado && 
+          checklist.pintura_ligacao.taxa_pintura.conforme === false) {
+        naoConformidadesEncontradas.push({
+          tipo: 'Pintura de Ligação',
+          campo: 'Taxa de Pintura',
+          valor: `${checklist.pintura_ligacao.taxa_pintura.resultado} l/m² (Limite: 0,8 a 1,0 l/m²)`
+        });
+      }
+
+      // Taxa de Pintura Residual
+      if (checklist.pintura_ligacao?.taxa_pintura_residual?.realizado && 
+          checklist.pintura_ligacao.taxa_pintura_residual.conforme === false) {
+        naoConformidadesEncontradas.push({
+          tipo: 'Pintura de Ligação',
+          campo: 'Taxa de Pintura Residual',
+          valor: `${checklist.pintura_ligacao.taxa_pintura_residual.resultado} l/m² (Limite: 0,3 a 0,4 l/m²)`
+        });
+      }
+
       // Temperatura de aplicação
       if (checklist.controle_aplicacao?.temp_aplicacao_cargas?.realizado && 
           checklist.controle_aplicacao.temp_aplicacao_cargas.conforme === false) {
