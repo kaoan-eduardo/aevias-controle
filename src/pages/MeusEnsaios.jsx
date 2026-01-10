@@ -53,7 +53,6 @@ const getNaoConformidades = (ensaio) => {
   if (ensaio.entityType === "ChecklistUsina") {
     const controle = ensaio.controle_cauq || {};
     
-    // Verificar cada ensaio se está marcado como não conforme
     if (controle.granulometria?.conforme === false) {
       naoConformidades.push("Granulometria");
     }
@@ -102,6 +101,32 @@ const getNaoConformidades = (ensaio) => {
     }
     if (pintura.taxa_pintura_residual?.conforme === false) {
       naoConformidades.push("Taxa de Pintura Residual");
+    }
+  }
+
+  if (ensaio.entityType === "ChecklistConcretagem") {
+    const cargas = ensaio.cargas_concreto || [];
+    cargas.forEach((carga, idx) => {
+      if (carga.slump_test?.conforme === false) {
+        naoConformidades.push(`Slump Test (Carga ${idx + 1})`);
+      }
+      if (carga.espessura_camada?.conforme === false) {
+        naoConformidades.push(`Espessura da Camada (Carga ${idx + 1})`);
+      }
+    });
+  }
+
+  if (ensaio.entityType === "ChecklistTerraplanagem") {
+    const ensaios_emp = ensaio.ensaios_empreiteira || {};
+    
+    if (ensaios_emp.variacao_umidade_conforme === false) {
+      naoConformidades.push("Variação de Umidade");
+    }
+    if (ensaios_emp.grau_compactacao_conforme === false) {
+      naoConformidades.push("Grau de Compactação");
+    }
+    if (ensaios_emp.granulometria?.conforme === false) {
+      naoConformidades.push("Granulometria");
     }
   }
   
