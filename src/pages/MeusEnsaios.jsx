@@ -1005,30 +1005,34 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                           </Button>
 
                           {canApprove && (
-                            <div className="flex gap-1">
-                              {(ensaio.approved === null || ensaio.approved === false) && (
-                                <Button
-                                  size="sm"
-                                  style={{ backgroundColor: '#566E3D' }}
-                                  className="text-white hover:opacity-90 transition-opacity h-7 px-2"
-                                  onClick={() => handleApprove(ensaio)}
-                                  title="Aprovar"
-                                >
-                                  <CheckCircle className="w-3 h-3" />
-                                </Button>
-                              )}
-                              {ensaio.approved === null && (
-                                <Button
-                                  size="sm"
-                                  style={{ backgroundColor: '#800020' }}
-                                  className="text-white hover:opacity-90 transition-opacity h-7 px-2"
-                                  onClick={() => setReprovingEnsaio(ensaio)}
-                                  title="Reprovar"
-                                >
-                                  <XCircle className="w-3 h-3" />
-                                </Button>
-                              )}
-                            </div>
+                            ensaio.status === 'rascunho' ? (
+                              <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
+                            ) : (
+                              <div className="flex gap-1">
+                                {(ensaio.approved === null || ensaio.approved === false) && (
+                                  <Button
+                                    size="sm"
+                                    style={{ backgroundColor: '#566E3D' }}
+                                    className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                                    onClick={() => handleApprove(ensaio)}
+                                    title="Aprovar"
+                                  >
+                                    <CheckCircle className="w-3 h-3" />
+                                  </Button>
+                                )}
+                                {ensaio.approved === null && (
+                                  <Button
+                                    size="sm"
+                                    style={{ backgroundColor: '#800020' }}
+                                    className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                                    onClick={() => setReprovingEnsaio(ensaio)}
+                                    title="Reprovar"
+                                  >
+                                    <XCircle className="w-3 h-3" />
+                                  </Button>
+                                )}
+                              </div>
+                            )
                           )}
                         </div>
                       </td>
