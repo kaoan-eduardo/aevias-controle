@@ -517,6 +517,27 @@ export default function ChecklistConcretagem() {
     setSaving(true);
 
     try {
+      // Calcular conformidades antes de salvar
+      const cargasAtualizadas = formData.cargas_concreto.map(carga => {
+        const cargaAtualizada = { ...carga };
+        
+        // Calcular conformidade do slump test se tiver projeto selecionado
+        if (carga.slump_test.resultado !== null && formData.project_id) {
+          const selectedProject = projects.find(p => p.id === formData.project_id);
+          if (selectedProject?.slump_minimo != null && selectedProject?.slump_maximo != null) {
+            const val = parseFloat(carga.slump_test.resultado);
+            cargaAtualizada.slump_test = {
+              ...carga.slump_test,
+              conforme: val >= selectedProject.slump_minimo && val <= selectedProject.slump_maximo
+            };
+          }
+        }
+
+        // Espessura - conformidade manual já definida pelo usuário
+
+        return cargaAtualizada;
+      });
+
       // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
         if (!formData.empreiteira?.trim()) {
@@ -582,7 +603,7 @@ export default function ChecklistConcretagem() {
           ...p,
           temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
         })),
-        cargas_concreto: formData.cargas_concreto.map(c => ({
+        cargas_concreto: cargasAtualizadas.map(c => ({
           ...c,
           slump_test: {
             ...c.slump_test,
