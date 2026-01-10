@@ -1607,7 +1607,18 @@ export default function MeusEnsaios() {
             default: return ensaio.created_date;
           }
         };
-        return new Date(getRelevantDate(b)) - new Date(getRelevantDate(a));
+        
+        // Ordenar por data do ensaio (decrescente) e, em caso de empate, por updated_date (decrescente)
+        const dateA = new Date(getRelevantDate(a));
+        const dateB = new Date(getRelevantDate(b));
+        const dateDiff = dateB.getTime() - dateA.getTime();
+        
+        if (dateDiff !== 0) return dateDiff;
+        
+        // Critério de desempate: updated_date
+        const updatedA = new Date(a.updated_date);
+        const updatedB = new Date(b.updated_date);
+        return updatedB.getTime() - updatedA.getTime();
       });
 
       console.log("📊 [DEBUG] Total combinado:", combinedEnsaios.length);
