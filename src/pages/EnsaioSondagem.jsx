@@ -403,7 +403,7 @@ export default function EnsaioSondagem() {
         dens_aparente_projeto: formData.dens_aparente_projeto ? parseFloat(formData.dens_aparente_projeto) : null,
         dens_rice_projeto: formData.dens_rice_projeto ? parseFloat(formData.dens_rice_projeto) : null,
         espessura_projeto: formData.espessura_projeto ? parseFloat(formData.espessura_projeto) : null,
-        corpos_prova: formData.corpos_prova.map(cp => ({
+        corpos_prova: corposProvaAtualizados.map(cp => ({
           ...cp,
           numero: parseInt(cp.numero),
           medidas_espessura: cp.medidas_espessura.map(m => m ? parseFloat(m) : null).filter(m => m !== null),
@@ -931,6 +931,18 @@ export default function EnsaioSondagem() {
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  disabled={saving || uploadingPhotos}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleSubmit(e, 'rascunho');
+                  }}
+                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
+                </Button>
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos}
@@ -944,7 +956,7 @@ export default function EnsaioSondagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Salvar Ensaio
+                      Finalizar
                     </>
                   )}
                 </Button>

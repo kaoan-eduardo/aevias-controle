@@ -129,6 +129,45 @@ const getNaoConformidades = (ensaio) => {
       naoConformidades.push("Granulometria");
     }
   }
+
+  if (ensaio.entityType === "EnsaioCAUQ") {
+    if (ensaio.teor_ligante_conforme === false) {
+      naoConformidades.push("Teor de Ligante");
+    }
+    const cps = ensaio.corpos_prova_marshall || [];
+    cps.forEach((cp, idx) => {
+      if (cp.volume_vazios_conforme === false) {
+        naoConformidades.push(`Volume de Vazios (CP ${idx + 1})`);
+      }
+      if (cp.rbv_conforme === false) {
+        naoConformidades.push(`RBV (CP ${idx + 1})`);
+      }
+      if (cp.rtcd_conforme === false) {
+        naoConformidades.push(`RTCD (CP ${idx + 1})`);
+      }
+      if (cp.estabilidade_conforme === false) {
+        naoConformidades.push(`Estabilidade (CP ${idx + 1})`);
+      }
+      if (cp.fluencia_conforme === false) {
+        naoConformidades.push(`Fluência (CP ${idx + 1})`);
+      }
+    });
+  }
+
+  if (ensaio.entityType === "EnsaioSondagem") {
+    const cps = ensaio.corpos_prova || [];
+    cps.forEach((cp, idx) => {
+      if (cp.volume_vazios_conforme === false) {
+        naoConformidades.push(`Volume de Vazios (CP ${idx + 1})`);
+      }
+      if (cp.rtcd_conforme === false) {
+        naoConformidades.push(`RTCD (CP ${idx + 1})`);
+      }
+      if (cp.gc_dens_projeto_conforme === false) {
+        naoConformidades.push(`GC Dens. Projeto (CP ${idx + 1})`);
+      }
+    });
+  }
   
   return naoConformidades;
 };

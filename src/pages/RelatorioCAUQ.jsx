@@ -752,11 +752,16 @@ export default function RelatorioCAUQ() {
                   <tr className="bg-slate-50">
                     <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">VOLUME DE VAZIOS</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">%</td>
-                    {[0, 1, 2, 3, 4, 5].map(idx => (
-                      <td key={idx} className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">
-                        {cpsValidos[idx]?.volume_vazios || '-'}
-                      </td>
-                    ))}
+                    {[0, 1, 2, 3, 4, 5].map(idx => {
+                      const cp = cpsValidos[idx];
+                      const valor = cp?.volume_vazios;
+                      const isNaoConforme = cp?.volume_vazios_conforme === false;
+                      return (
+                        <td key={idx} className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${isNaoConforme ? 'text-red-600' : ''}`}>
+                          {valor || '-'}
+                        </td>
+                      );
+                    })}
                     <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('volume_vazios')}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.volume_vazios?.min ? parseFloat(project.volume_vazios.min).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.volume_vazios?.max ? parseFloat(project.volume_vazios.max).toFixed(1) : '-'}</td>
@@ -794,11 +799,16 @@ export default function RelatorioCAUQ() {
                   <tr className="bg-white">
                     <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">R.B.V.</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">%</td>
-                    {[0, 1, 2, 3, 4, 5].map(idx => (
-                      <td key={idx} className="border border-slate-400 px-0 py-0 text-center text-[7px]">
-                        {cpsValidos[idx]?.rbv || '-'}
-                      </td>
-                    ))}
+                    {[0, 1, 2, 3, 4, 5].map(idx => {
+                      const cp = cpsValidos[idx];
+                      const valor = cp?.rbv;
+                      const isNaoConforme = cp?.rbv_conforme === false;
+                      return (
+                        <td key={idx} className={`border border-slate-400 px-0 py-0 text-center text-[7px] ${isNaoConforme ? 'text-red-600' : ''}`}>
+                          {valor || '-'}
+                        </td>
+                      );
+                    })}
                     <td className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">-</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rbv?.projeto ? parseFloat(project.rbv.projeto).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rbv?.min ? parseFloat(project.rbv.min).toFixed(1) : '-'}</td>
@@ -858,11 +868,16 @@ export default function RelatorioCAUQ() {
                             <tr className="bg-white">
                               <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">RTCD</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">MPa</td>
-                              {[0, 1, 2, 3, 4, 5].map(idx => (
-                                <td key={idx} className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">
-                                  {cpsValidos[idx]?.rtcd_valor || '-'}
-                                </td>
-                              ))}
+                              {[0, 1, 2, 3, 4, 5].map(idx => {
+                                const cp = cpsValidos[idx];
+                                const valor = cp?.rtcd_valor;
+                                const isNaoConforme = cp?.rtcd_conforme === false;
+                                return (
+                                  <td key={idx} className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${isNaoConforme ? 'text-red-600' : ''}`}>
+                                    {valor || '-'}
+                                  </td>
+                                );
+                              })}
                               <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('rtcd_valor')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">-</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rtcd?.min ? parseFloat(project.rtcd.min).toFixed(1) : '-'}</td>
@@ -905,11 +920,16 @@ export default function RelatorioCAUQ() {
                             <tr className="bg-white">
                               <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">ESTABILIDADE CORRIG.</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">Kgf/cm²</td>
-                              {[0, 1, 2, 3, 4, 5].map(idx => (
-                                <td key={idx} className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">
-                                  {cpsValidos[idx]?.estabilidade_corrigida || '-'}
-                                </td>
-                              ))}
+                              {[0, 1, 2, 3, 4, 5].map(idx => {
+                                const cp = cpsValidos[idx];
+                                const valor = cp?.estabilidade_corrigida;
+                                const isNaoConforme = cp?.estabilidade_conforme === false;
+                                return (
+                                  <td key={idx} className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${isNaoConforme ? 'text-red-600' : ''}`}>
+                                    {valor || '-'}
+                                  </td>
+                                );
+                              })}
                               <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('estabilidade_corrigida')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.estabilidade?.projeto ? parseFloat(project.estabilidade.projeto).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.estabilidade?.min ? parseFloat(project.estabilidade.min).toFixed(1) : '-'}</td>
@@ -919,11 +939,16 @@ export default function RelatorioCAUQ() {
                             <tr className="bg-slate-50">
                               <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">FLUÊNCIA</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">mm</td>
-                              {[0, 1, 2, 3, 4, 5].map(idx => (
-                                <td key={idx} className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">
-                                  {cpsValidos[idx]?.fluencia || '-'}
-                                </td>
-                              ))}
+                              {[0, 1, 2, 3, 4, 5].map(idx => {
+                                const cp = cpsValidos[idx];
+                                const valor = cp?.fluencia;
+                                const isNaoConforme = cp?.fluencia_conforme === false;
+                                return (
+                                  <td key={idx} className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${isNaoConforme ? 'text-red-600' : ''}`}>
+                                    {valor || '-'}
+                                  </td>
+                                );
+                              })}
                               <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('fluencia')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.fluencia?.projeto ? parseFloat(project.fluencia.projeto).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.fluencia?.min ? parseFloat(project.fluencia.min).toFixed(1) : '-'}</td>
