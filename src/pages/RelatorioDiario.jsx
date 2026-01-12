@@ -5,7 +5,6 @@ import { DiarioObra } from '@/entities/DiarioObra';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
 import { User } from '@/entities/User';
-import { Regional } from '@/entities/Regional';
 import { base44 } from '@/api/base44Client';
 import RelatorioDiarioComponent from '../components/relatorios/RelatorioDiario';
 
@@ -41,31 +40,27 @@ export default function RelatorioDiarioPage() {
       let obra = null;
       let project = null;
       let regional = null;
-      
       if (diario.obra_id) {
         try {
           obra = await Obra.get(diario.obra_id);
-          console.log("✅ Obra carregada:", obra);
         } catch (err) {
-          console.warn("⚠️ Obra não encontrada:", diario.obra_id, err);
+          console.warn("Obra não encontrada:", diario.obra_id);
         }
         
         if (obra && obra.project_id) {
           try {
             project = await Project.get(obra.project_id);
-            console.log("✅ Projeto carregado:", project);
           } catch (err) {
-            console.warn("⚠️ Projeto não encontrado:", obra.project_id, err);
+            console.warn("Projeto não encontrado:", obra.project_id);
           }
         }
         
         if (obra && obra.regional_id) {
           try {
+            const { Regional } = await import('@/entities/Regional');
             regional = await Regional.get(obra.regional_id);
-            console.log("✅ Regional carregada:", regional);
-            console.log("✅ Cliente da regional:", regional?.cliente);
           } catch (err) {
-            console.warn("⚠️ Regional não encontrada:", obra.regional_id, err);
+            console.warn("Regional não encontrada:", obra.regional_id);
           }
         }
       }
