@@ -61,6 +61,13 @@ const DiarioForm = ({
   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
   const regionalSelecionada = obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null;
 
+  // Effect to auto-fill cliente when obra changes
+  React.useEffect(() => {
+    if (regionalSelecionada && regionalSelecionada.cliente !== formData.cliente) {
+      handleChange('cliente', regionalSelecionada.cliente || "");
+    }
+  }, [obraSelecionada?.id, regionalSelecionada?.cliente]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {status === 'rascunho' && (
