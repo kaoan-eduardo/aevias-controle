@@ -1305,14 +1305,43 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
   const emExecucao = useMemo(() => {
-    const filtered = ensaios.filter((e) => e.status === 'rascunho');
-    console.log("📋 [DEBUG] Em Execução:", filtered.length, filtered.map(e => ({ type: e.entityType, status: e.status, approved: e.approved })));
+    console.log("🔵 [MEUS ENSAIOS] Filtrando 'Em Execução'...");
+    console.log("🔵 [MEUS ENSAIOS] Total de ensaios antes do filtro:", ensaios.length);
+
+    const filtered = ensaios.filter((e) => {
+      const isRascunho = e.status === 'rascunho';
+      if (e.entityType === 'ChecklistConcretagem') {
+        console.log(`🔵 [CHECKLIST CONCRETAGEM] ID: ${e.id}, Status: ${e.status}, É Rascunho: ${isRascunho}`);
+      }
+      return isRascunho;
+    });
+
+    console.log("🔵 [MEUS ENSAIOS] Em Execução (filtrados):", filtered.length);
+    console.log("🔵 [MEUS ENSAIOS] Detalhes:", filtered.map(e => ({ 
+      id: e.id, 
+      type: e.entityType, 
+      status: e.status, 
+      approved: e.approved 
+    })));
+
     return filtered;
   }, [ensaios]);
 
   const pendentes = useMemo(() => {
-    const filtered = ensaios.filter((e) => e.status === 'finalizado' && (e.approved === null || e.approved === false));
-    console.log("📋 [DEBUG] Pendentes:", filtered.length, filtered.map(e => ({ type: e.entityType, status: e.status, approved: e.approved })));
+    console.log("🟡 [MEUS ENSAIOS] Filtrando 'Pendentes'...");
+
+    const filtered = ensaios.filter((e) => {
+      const isFinalizado = e.status === 'finalizado';
+      const isPendente = e.approved === null || e.approved === false;
+      const match = isFinalizado && isPendente;
+
+      if (e.entityType === 'ChecklistConcretagem') {
+        console.log(`🟡 [CHECKLIST CONCRETAGEM] ID: ${e.id}, Status: ${e.status}, Approved: ${e.approved}, Match: ${match}`);
+      }
+      return match;
+    });
+
+    console.log("🟡 [MEUS ENSAIOS] Pendentes (filtrados):", filtered.length);
     return filtered;
   }, [ensaios]);
 
@@ -1600,8 +1629,10 @@ export default function MeusEnsaios() {
       setProjects(projectsData);
 
       console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
-      checklistsAplicacaoData.forEach(ca => {
-        console.log("  - ChecklistAplicacao ID:", ca.id, "Obra ID:", ca.obra_id, "Data:", ca.data, "Approved:", ca.approved);
+
+      console.log("📊 [DEBUG] ChecklistConcretagem carregados:", checklistsConcretagemData.length);
+      checklistsConcretagemData.forEach(cc => {
+        console.log("  - ChecklistConcretagem ID:", cc.id, "Status:", cc.status, "Approved:", cc.approved, "Data:", cc.data);
       });
       console.log("📊 [DEBUG] Obras carregadas:", obrasData.length);
       obrasData.forEach(o => console.log("  - Obra:", o.id, o.name, "Regional:", o.regional_id));

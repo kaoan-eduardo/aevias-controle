@@ -541,7 +541,9 @@ export default function ChecklistConcretagem() {
     e.preventDefault();
     setSaving(true);
 
-    console.log("💾 [DEBUG] Salvando checklist com status:", saveStatus);
+    console.log("🟢 [CHECKLIST CONCRETAGEM] Iniciando salvamento...");
+    console.log("🟢 [CHECKLIST CONCRETAGEM] Status solicitado:", saveStatus);
+    console.log("🟢 [CHECKLIST CONCRETAGEM] É edição?", !!editingChecklist?.id);
 
     try {
       // Para salvar progresso, apenas obra é obrigatória
@@ -633,11 +635,20 @@ export default function ChecklistConcretagem() {
         }))
       };
 
+      console.log("🟢 [CHECKLIST CONCRETAGEM] Dados que serão salvos:", {
+        id: editingChecklist?.id,
+        status: dataToSave.status,
+        obra_id: dataToSave.obra_id,
+        data: dataToSave.data
+      });
+
       if (editingChecklist?.id) {
-        await base44.entities.ChecklistConcretagem.update(editingChecklist.id, dataToSave);
+        const result = await base44.entities.ChecklistConcretagem.update(editingChecklist.id, dataToSave);
+        console.log("🟢 [CHECKLIST CONCRETAGEM] Atualizado com sucesso!", result);
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!");
       } else {
-        await base44.entities.ChecklistConcretagem.create(dataToSave);
+        const result = await base44.entities.ChecklistConcretagem.create(dataToSave);
+        console.log("🟢 [CHECKLIST CONCRETAGEM] Criado com sucesso!", result);
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
       }
       clearSavedData();
