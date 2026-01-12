@@ -1304,20 +1304,23 @@ EnsaioCard.displayName = 'EnsaioCard';
 const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
-  const emExecucao = useMemo(() =>
-    ensaios.filter((e) => e.status === 'rascunho'),
-    [ensaios]
-  );
+  const emExecucao = useMemo(() => {
+    const filtered = ensaios.filter((e) => e.status === 'rascunho');
+    console.log("📋 [DEBUG] Em Execução:", filtered.length, filtered.map(e => ({ type: e.entityType, status: e.status, approved: e.approved })));
+    return filtered;
+  }, [ensaios]);
 
-  const pendentes = useMemo(() =>
-    ensaios.filter((e) => e.status === 'finalizado' && (e.approved === null || e.approved === false)),
-    [ensaios]
-  );
+  const pendentes = useMemo(() => {
+    const filtered = ensaios.filter((e) => e.status === 'finalizado' && (e.approved === null || e.approved === false));
+    console.log("📋 [DEBUG] Pendentes:", filtered.length, filtered.map(e => ({ type: e.entityType, status: e.status, approved: e.approved })));
+    return filtered;
+  }, [ensaios]);
 
-  const aprovados = useMemo(() =>
-    ensaios.filter((e) => e.approved === true || e.client_signature?.signed_by),
-    [ensaios]
-  );
+  const aprovados = useMemo(() => {
+    const filtered = ensaios.filter((e) => e.approved === true || e.client_signature?.signed_by);
+    console.log("📋 [DEBUG] Aprovados:", filtered.length, filtered.map(e => ({ type: e.entityType, status: e.status, approved: e.approved })));
+    return filtered;
+  }, [ensaios]);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
     setSelectedEnsaios(prev => 
