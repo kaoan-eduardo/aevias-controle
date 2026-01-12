@@ -103,7 +103,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
               {/* Coluna 1 */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Cliente</p>
-                <p className="text-gray-800">{regional?.cliente || 'N/A'}</p>
+                <p className="text-gray-800">{diario.cliente || regional?.cliente || 'N/A'}</p>
               </div>
               
               {/* Coluna 2 */}
