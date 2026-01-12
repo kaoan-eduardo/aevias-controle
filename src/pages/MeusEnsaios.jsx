@@ -1703,6 +1703,10 @@ export default function MeusEnsaios() {
         });
         
         console.log("📊 [DEBUG] User - Ensaios filtrados (email OU nome):", ensaiosForUser.length);
+        console.log("📊 [DEBUG] Detalhes dos ensaios filtrados:");
+        ensaiosForUser.forEach((e, i) => {
+          console.log(`  ${i+1}. Tipo: ${e.entityType}, Status: ${e.status}, Approved: ${e.approved}, Created by: ${e.created_by}, Lab name: ${e.laboratorista_name}`);
+        });
       } else {
         console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
       }
