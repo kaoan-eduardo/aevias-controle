@@ -1030,10 +1030,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                             </Link>
                           </Button>
 
-                          {canApprove && (
-                            ensaio.status === 'rascunho' ? (
-                              <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
-                            ) : (
+                          {canApprove && ensaio.status !== 'rascunho' && (
                               <div className="flex gap-1">
                                 {(ensaio.approved === null || ensaio.approved === false) && (
                                   <Button
@@ -1057,9 +1054,11 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                                     <XCircle className="w-3 h-3" />
                                   </Button>
                                 )}
-                              </div>
-                            )
-                          )}
+                                </div>
+                                )}
+                                {canApprove && ensaio.status === 'rascunho' && (
+                                <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
+                                )}
                         </div>
                       </td>
                     </tr>

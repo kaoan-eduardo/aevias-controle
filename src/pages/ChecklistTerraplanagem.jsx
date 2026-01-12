@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Loader2, XCircle } from "lucide-react";
+import { Save, Loader2, XCircle, AlertTriangle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
+import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 
 // Helper component for section titles
 const SectionTitle = ({ children }) => (
@@ -19,6 +20,7 @@ const SectionTitle = ({ children }) => (
 
 export default function ChecklistTerraplanagem() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState(null);
@@ -28,6 +30,7 @@ export default function ChecklistTerraplanagem() {
   const [regionais, setRegionais] = useState([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
+  const [editingChecklist, setEditingChecklist] = useState(null);
 
   const [formData, setFormData] = useState({
     obra_id: "",
@@ -42,6 +45,7 @@ export default function ChecklistTerraplanagem() {
     engenheiro_responsavel: "",
     umidade_otima_proctor: "",
     umidade_in_situ: "",
+    status: "rascunho",
     periodos_clima: [
       { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
       { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" }
@@ -102,8 +106,11 @@ export default function ChecklistTerraplanagem() {
       grau_compactacao_conforme: null
     },
     observacoes_gerais: "",
-    fotos: []
+    fotos: [],
+    status: "rascunho"
   });
+
+  const { clearSavedData } = useFormPersistence('checklist_terraplanagem', formData, setFormData, !!editingChecklist);
 
   // Cálculos automáticos
   const variacaoUmidade = (() => {
@@ -201,10 +208,28 @@ export default function ChecklistTerraplanagem() {
 
       setProjects([]);
 
-      setFormData(prev => ({
-        ...prev,
-        inspetor_fiscal: userData.laboratorista_name || userData.full_name
-      }));
+      // Verificar se está editando
+      const params = new URLSearchParams(location.search);
+      const editId = params.get('editId');
+
+      if (editId) {
+        const checklistToEdit = await base44.entities.ChecklistTerraplanagem.get(editId);
+        
+        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+          setEditingChecklist(checklistToEdit);
+          setFormData(checklistToEdit);
+        } else {
+          alert("Você não tem permissão para editar este registro.");
+          navigate(createPageUrl('MeusEnsaios'));
+          return;
+        }
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          inspetor_fiscal: userData.laboratorista_name || userData.full_name,
+          laboratorista_name: userData.laboratorista_name || userData.full_name
+        }));
+      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados iniciais.");
@@ -311,15 +336,29 @@ export default function ChecklistTerraplanagem() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     setSaving(true);
 
+    console.log("🟢 [CHECKLIST TERRAPLANAGEM] Iniciando salvamento...");
+    console.log("🟢 [CHECKLIST TERRAPLANAGEM] Status solicitado:", saveStatus);
+    console.log("🟢 [CHECKLIST TERRAPLANAGEM] É edição?", !!editingChecklist?.id);
+
     try {
-      for (let i = 0; i < formData.periodos_clima.length; i++) {
-        const periodo = formData.periodos_clima[i];
-        if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
-          alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : 'Tarde'}.`);
+      // Validações obrigatórias apenas quando finalizando
+      if (saveStatus === 'finalizado') {
+        for (let i = 0; i < formData.periodos_clima.length; i++) {
+          const periodo = formData.periodos_clima[i];
+          if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
+            alert(`Por favor, preencha a temperatura do período ${periodo.periodo === 'manha' ? 'Manhã' : 'Tarde'}.`);
+            setSaving(false);
+            return;
+          }
+        }
+      } else {
+        // Para salvar progresso, apenas obra é obrigatória
+        if (!formData.obra_id) {
+          alert("Por favor, selecione uma obra.");
           setSaving(false);
           return;
         }
@@ -327,6 +366,7 @@ export default function ChecklistTerraplanagem() {
 
       const dataToSave = {
         ...formData,
+        status: saveStatus,
         umidade_otima_proctor: formData.umidade_otima_proctor ? parseFloat(formData.umidade_otima_proctor) : null,
         umidade_in_situ: formData.umidade_in_situ ? parseFloat(formData.umidade_in_situ) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
@@ -352,8 +392,23 @@ export default function ChecklistTerraplanagem() {
         )
       };
 
-      await base44.entities.ChecklistTerraplanagem.create(dataToSave);
-      alert("Checklist de Terraplanagem salvo com sucesso!");
+      console.log("🟢 [CHECKLIST TERRAPLANAGEM] Dados que serão salvos:", {
+        id: editingChecklist?.id,
+        status: dataToSave.status,
+        obra_id: dataToSave.obra_id,
+        data: dataToSave.data
+      });
+
+      if (editingChecklist?.id) {
+        const result = await base44.entities.ChecklistTerraplanagem.update(editingChecklist.id, dataToSave);
+        console.log("🟢 [CHECKLIST TERRAPLANAGEM] Atualizado com sucesso!", result);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!");
+      } else {
+        const result = await base44.entities.ChecklistTerraplanagem.create(dataToSave);
+        console.log("🟢 [CHECKLIST TERRAPLANAGEM] Criado com sucesso!", result);
+        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
+      }
+      clearSavedData();
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
       console.error("Erro ao salvar checklist:", error);
@@ -408,11 +463,31 @@ export default function ChecklistTerraplanagem() {
       <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Novo Checklist de Terraplanagem</CardTitle>
-            <CardDescription>Controle Tecnológico de Terraplanagem</CardDescription>
+            <CardTitle>{editingChecklist ? 'Editar Checklist de Terraplanagem' : 'Novo Checklist de Terraplanagem'}</CardTitle>
+            <CardDescription>
+              {editingChecklist ? `Editando checklist de ${new Date(editingChecklist.data).toLocaleDateString('pt-BR')}` : 'Controle Tecnológico de Terraplanagem'}
+            </CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-blue-800">Em Rascunho</p>
+                  <p className="text-sm text-blue-700">Este registro ainda está em edição e não será visível aos gestores até que você o finalize.</p>
+                </div>
+              </div>
+            )}
+            {formData.approved === false && formData.rejection_reason && (
+              <div className="mt-4 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <XCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-red-800">Registro Reprovado</p>
+                  <p className="text-sm text-red-700">{formData.rejection_reason}</p>
+                </div>
+              </div>
+            )}
           </CardHeader>
           <CardContent className="overflow-hidden">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e) => handleSubmit(e, 'finalizado')} className="space-y-6">
 
               {/* DADOS DA OBRA */}
               <Card className="bg-slate-50">
@@ -428,6 +503,7 @@ export default function ChecklistTerraplanagem() {
                         value={formData.obra_id}
                         onChange={(e) => setFormData({ ...formData, obra_id: e.target.value })}
                         required
+                        disabled={!!editingChecklist?.id}
                         className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                       >
                         <option value="">Selecione a obra</option>
@@ -1092,8 +1168,23 @@ export default function ChecklistTerraplanagem() {
 
               {/* BOTÕES */}
               <div className="flex justify-end gap-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
+                <Button type="button" variant="outline" onClick={() => {
+                  clearSavedData();
+                  navigate(createPageUrl('MeusEnsaios'));
+                }}>
                   Cancelar
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={saving || uploadingPhotos}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleSubmit(e, 'rascunho');
+                  }}
+                  className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Salvar Progresso
                 </Button>
                 <Button
                   type="submit"
@@ -1108,7 +1199,7 @@ export default function ChecklistTerraplanagem() {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      Salvar Checklist
+                      Finalizar
                     </>
                   )}
                 </Button>
