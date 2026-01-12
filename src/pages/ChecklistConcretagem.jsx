@@ -680,7 +680,7 @@ export default function ChecklistConcretagem() {
             )}
           </CardHeader>
           <CardContent className="overflow-hidden">
-            <form onSubmit={handleSubmit} onKeyDown={(e) => {
+            <form onSubmit={(e) => handleSubmit(e, 'finalizado')} onKeyDown={(e) => {
               if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'submit') {
                 e.preventDefault();
               }
