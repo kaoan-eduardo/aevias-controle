@@ -1664,9 +1664,14 @@ export default function MeusEnsaios() {
         ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
         console.log("📊 [DEBUG] Sala Técnica - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel === 'gestor_contrato') {
-        const regionaisDoUsuario = regionaisData.filter((regional) =>
-          regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase()
-        );
+        const regionaisDoUsuario = regionaisData.filter((regional) => {
+          // Verifica tanto o campo antigo quanto o novo array
+          const gestorAntigo = regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase();
+          const gestorNovo = (regional.gestores_contrato_responsaveis || []).some(
+            (email) => email.toLowerCase() === currentUser.email.toLowerCase()
+          );
+          return gestorAntigo || gestorNovo;
+        });
         console.log("📊 [DEBUG] Gestor - Regionais do usuário:", regionaisDoUsuario);
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
         console.log("📊 [DEBUG] Gestor - IDs das regionais:", regionaisIds);
