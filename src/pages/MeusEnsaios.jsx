@@ -1689,12 +1689,26 @@ export default function MeusEnsaios() {
       } else if (currentUserAccessLevel !== 'admin') {
         console.log("📊 [DEBUG] User email:", currentUser.email);
         console.log("📊 [DEBUG] Total combinedEnsaios antes do filtro:", combinedEnsaios.length);
-        console.log("📊 [DEBUG] Primeiros 5 created_by:", combinedEnsaios.slice(0, 5).map(e => ({ type: e.entityType, created_by: e.created_by })));
         
-        ensaiosForUser = combinedEnsaios.filter((e) => 
+        // Verificar quantos registros existem deste usuário
+        const registrosDoUsuario = combinedEnsaios.filter((e) => 
           e.created_by?.toLowerCase() === currentUser.email?.toLowerCase()
         );
-        console.log("📊 [DEBUG] User - Ensaios filtrados (case-insensitive):", ensaiosForUser.length);
+        
+        console.log("📊 [DEBUG] Registros do usuário (match exato):", registrosDoUsuario.length);
+        
+        // Verificar emails únicos de created_by
+        const uniqueEmails = [...new Set(combinedEnsaios.map(e => e.created_by))];
+        console.log("📊 [DEBUG] Emails únicos encontrados nos registros:", uniqueEmails);
+        
+        // Verificar se existe algum created_by similar
+        const similarEmails = uniqueEmails.filter(email => 
+          email && email.toLowerCase().includes(currentUser.email.split('@')[0].toLowerCase())
+        );
+        console.log("📊 [DEBUG] Emails similares ao usuário:", similarEmails);
+        
+        ensaiosForUser = registrosDoUsuario;
+        console.log("📊 [DEBUG] User - Ensaios filtrados final:", ensaiosForUser.length);
       } else {
         console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
       }
