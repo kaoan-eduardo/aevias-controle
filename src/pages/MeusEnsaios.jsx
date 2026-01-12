@@ -1688,27 +1688,18 @@ export default function MeusEnsaios() {
         console.log("📊 [DEBUG] Cliente - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel !== 'admin') {
         console.log("📊 [DEBUG] User email:", currentUser.email);
+        console.log("📊 [DEBUG] User laboratorista_name:", currentUser.laboratorista_name);
         console.log("📊 [DEBUG] Total combinedEnsaios antes do filtro:", combinedEnsaios.length);
         
-        // Verificar quantos registros existem deste usuário
-        const registrosDoUsuario = combinedEnsaios.filter((e) => 
-          e.created_by?.toLowerCase() === currentUser.email?.toLowerCase()
-        );
+        // Filtrar por created_by OU laboratorista_name
+        ensaiosForUser = combinedEnsaios.filter((e) => {
+          const emailMatch = e.created_by?.toLowerCase() === currentUser.email?.toLowerCase();
+          const nameMatch = currentUser.laboratorista_name && 
+                           e.laboratorista_name?.toLowerCase() === currentUser.laboratorista_name?.toLowerCase();
+          return emailMatch || nameMatch;
+        });
         
-        console.log("📊 [DEBUG] Registros do usuário (match exato):", registrosDoUsuario.length);
-        
-        // Verificar emails únicos de created_by
-        const uniqueEmails = [...new Set(combinedEnsaios.map(e => e.created_by))];
-        console.log("📊 [DEBUG] Emails únicos encontrados nos registros:", uniqueEmails);
-        
-        // Verificar se existe algum created_by similar
-        const similarEmails = uniqueEmails.filter(email => 
-          email && email.toLowerCase().includes(currentUser.email.split('@')[0].toLowerCase())
-        );
-        console.log("📊 [DEBUG] Emails similares ao usuário:", similarEmails);
-        
-        ensaiosForUser = registrosDoUsuario;
-        console.log("📊 [DEBUG] User - Ensaios filtrados final:", ensaiosForUser.length);
+        console.log("📊 [DEBUG] User - Ensaios filtrados (email OU nome):", ensaiosForUser.length);
       } else {
         console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
       }
