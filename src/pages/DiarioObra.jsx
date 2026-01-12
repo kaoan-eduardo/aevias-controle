@@ -31,6 +31,7 @@ const getInitialFormData = () => ({
   ocorrencias: "",
   observacoes: "",
   fotos: [],
+  cliente: "",
   approved: null,
   rejection_reason: null,
   created_by: "", // Placeholder, actual created_by is set on save/backend
