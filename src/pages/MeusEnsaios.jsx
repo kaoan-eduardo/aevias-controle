@@ -1687,8 +1687,14 @@ export default function MeusEnsaios() {
         );
         console.log("📊 [DEBUG] Cliente - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel !== 'admin') {
-        ensaiosForUser = combinedEnsaios.filter((e) => e.created_by === currentUser.email);
-        console.log("📊 [DEBUG] User - Ensaios filtrados:", ensaiosForUser.length);
+        console.log("📊 [DEBUG] User email:", currentUser.email);
+        console.log("📊 [DEBUG] Total combinedEnsaios antes do filtro:", combinedEnsaios.length);
+        console.log("📊 [DEBUG] Primeiros 5 created_by:", combinedEnsaios.slice(0, 5).map(e => ({ type: e.entityType, created_by: e.created_by })));
+        
+        ensaiosForUser = combinedEnsaios.filter((e) => 
+          e.created_by?.toLowerCase() === currentUser.email?.toLowerCase()
+        );
+        console.log("📊 [DEBUG] User - Ensaios filtrados (case-insensitive):", ensaiosForUser.length);
       } else {
         console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
       }
