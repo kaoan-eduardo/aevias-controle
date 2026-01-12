@@ -41,13 +41,27 @@ export default function RelatorioDiarioPage() {
       let project = null;
       let regional = null;
       if (diario.obra_id) {
-        obra = await Obra.get(diario.obra_id);
-        if (obra && obra.project_id) {
-          project = await Project.get(obra.project_id);
+        try {
+          obra = await Obra.get(diario.obra_id);
+        } catch (err) {
+          console.warn("Obra não encontrada:", diario.obra_id);
         }
+        
+        if (obra && obra.project_id) {
+          try {
+            project = await Project.get(obra.project_id);
+          } catch (err) {
+            console.warn("Projeto não encontrado:", obra.project_id);
+          }
+        }
+        
         if (obra && obra.regional_id) {
-          const { Regional } = await import('@/entities/Regional');
-          regional = await Regional.get(obra.regional_id);
+          try {
+            const { Regional } = await import('@/entities/Regional');
+            regional = await Regional.get(obra.regional_id);
+          } catch (err) {
+            console.warn("Regional não encontrada:", obra.regional_id);
+          }
         }
       }
 
