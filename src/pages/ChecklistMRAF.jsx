@@ -31,7 +31,6 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "", // Mantém no formData mas não será exibido
-  engenheiro_responsavel: "", // Mantém no formData mas não será exibido
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: null, condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: null, condicoes_climaticas: "bom" }
@@ -112,7 +111,6 @@ export default function ChecklistMRAFPage() {
       ...prev,
       obra_id: obraId,
       project_id: "",
-      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
     }));
   }, [obras, regionais, allUsers]);
 

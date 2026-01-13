@@ -25,7 +25,6 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
-  engenheiro_responsavel: "",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: null, condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: null, condicoes_climaticas: "bom" },
@@ -216,7 +215,7 @@ export default function ChecklistAplicacaoPage() {
               const gestor = allUsersData.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
               gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
             }
-            
+
             setFormData(prev => ({
               ...prev,
               obra_id: primeiraObra.id,
@@ -224,8 +223,7 @@ export default function ChecklistAplicacaoPage() {
               projeto_utilizado: chosenProject?.name || "",
               faixa_especificada: faixaName,
               ligante: liganteTipo,
-              pedreira: pedreiras,
-              engenheiro_responsavel: gestorName
+              pedreira: pedreiras
             }));
             setSelectedProject(chosenProject);
           }
@@ -331,7 +329,6 @@ export default function ChecklistAplicacaoPage() {
                 faixa_especificada: faixaName,
                 ligante: liganteTipo,
                 pedreira: pedreiras,
-                engenheiro_responsavel: gestorName
               };
               console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
               return newData;
@@ -724,20 +721,6 @@ export default function ChecklistAplicacaoPage() {
                       readOnly={!!selectedProject}
                       className={selectedProject ? "bg-slate-100" : ""}
                       placeholder="Nome da pedreira"
-                    />
-                  </div>
-
-                  {/* NEW FIELD: Engenheiro Responsável */}
-                  <div>
-                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                    <Input
-                      id="engenheiro_responsavel"
-                      value={formData.engenheiro_responsavel}
-                      onChange={(e) => handleInputChange('engenheiro_responsavel', e.target.value)}
-                      disabled={!isEditable}
-                      readOnly // This field is derived, so it should be read-only
-                      className="bg-slate-100" 
-                      placeholder="Engenheiro responsável pelo contrato"
                     />
                   </div>
                 </div>
