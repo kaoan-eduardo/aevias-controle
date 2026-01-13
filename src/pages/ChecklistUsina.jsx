@@ -592,13 +592,17 @@ export default function ChecklistUsinaPage() {
           // Continuar sem as faixas - não é crítico para o funcionamento
         }
 
-        // Carregar sempre User.list() para filtrar gestores (laboratoristas precisam)
-        dataPromises.push(User.list());
+        // Tentar carregar usuários - se falhar por permissões, continuar sem eles
+        let allUsersData = [];
+        try {
+          allUsersData = await User.list();
+        } catch (usersError) {
+          console.warn("⚠️ Sem permissão para listar usuários, continuando sem eles:", usersError.message);
+          // Laboratoristas não têm permissão, mas o hook useGestoresRegional carregará os gestores quando necessário
+          allUsersData = [];
+        }
 
-        const loadedData = await Promise.all(dataPromises);
-        
-        // Destructure based on the order pushed into dataPromises
-        const [obrasData, regionaisData, projectsData, allUsersData] = loadedData;
+        const [obrasData, regionaisData, projectsData] = await Promise.all(dataPromises);
         
         setRegionais(regionaisData);
         setProjects(projectsData);
