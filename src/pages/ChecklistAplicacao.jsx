@@ -568,7 +568,7 @@ export default function ChecklistAplicacaoPage() {
 
   return (
     <div className="p-6 space-y-6 bg-transparent min-h-screen">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
           <CardHeader>
             <div className="flex justify-between items-start">
@@ -617,7 +617,7 @@ export default function ChecklistAplicacaoPage() {
               {/* Dados da Obra */}
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Dados da Obra</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
                     <Label htmlFor="obra_id">Obra *</Label>
                     <Select value={formData.obra_id} onValueChange={(value) => handleInputChange('obra_id', value)} disabled={!isEditable || obras.length === 0}>
@@ -805,7 +805,7 @@ export default function ChecklistAplicacaoPage() {
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Acompanhamento da Fresagem e Preparação da Superfície</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="flex items-center justify-between p-3 bg-black/5 rounded-lg">
                       <Label htmlFor="superficie_limpa" className="cursor-pointer">
                         A superfície foi limpa após a fresagem?
@@ -1088,7 +1088,7 @@ export default function ChecklistAplicacaoPage() {
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Controle de Aplicação</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="km_estaca_inicial">Km/Estaca Inicial</Label>
                       <Input
