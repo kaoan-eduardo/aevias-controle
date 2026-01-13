@@ -245,6 +245,7 @@ export default function ChecklistAplicacaoPage() {
 
       try {
         // Tentar primeiro com user.list() (funciona para admin)
+        const { base44 } = await import('@/api/base44Client');
         const allUsersData = await base44.entities.User.list();
         const gestores = [];
         

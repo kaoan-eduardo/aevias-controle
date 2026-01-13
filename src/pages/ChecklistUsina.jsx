@@ -109,6 +109,7 @@ export default function ChecklistUsinaPage() {
       }
 
       try {
+        const { base44 } = await import('@/api/base44Client');
         const allUsersData = await base44.entities.User.list();
         const gestores = [];
         
