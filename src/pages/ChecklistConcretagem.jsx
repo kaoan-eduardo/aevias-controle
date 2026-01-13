@@ -24,7 +24,6 @@ const getInitialFormData = () => ({
   laboratorista_name: "",
   empreiteira: "",
   estrutura: "",
-  engenheiro_responsavel: "",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" },
@@ -151,57 +150,7 @@ export default function ChecklistConcretagem() {
     }
   }, [formData.obra_id, obras, allProjects, regionais, projects]); // Added 'projects' to dependency array for projectStillAvailable check.
 
-  // Carregar engenheiro responsável quando obra é selecionada
-  useEffect(() => {
-    const loadEngenheiroResponsavel = async () => {
-      if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-        const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-        if (obraSelecionada && obraSelecionada.regional_id) {
-          const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-          if (regional && regional.gestor_contrato_responsavel) {
-            try {
-              // Tentar buscar usuários (pode falhar se o usuário não tiver permissão)
-              const allUsersData = await base44.entities.User.list();
-              const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
 
-              if (gestor) {
-                const gestorName = gestor.laboratorista_name || gestor.full_name;
-                setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: gestorName
-                }));
-              } else {
-                // Gestor não encontrado - usar o email como fallback
-                setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: regional.gestor_contrato_responsavel
-                }));
-              }
-            } catch (error) {
-              // Sem permissão para listar usuários - usar o email como fallback
-              console.warn("⚠️ Sem permissão para listar usuários, usando email do gestor");
-              setFormData(prev => ({
-                ...prev,
-                engenheiro_responsavel: regional.gestor_contrato_responsavel || ""
-              }));
-            }
-          } else {
-            setFormData(prev => ({
-              ...prev,
-              engenheiro_responsavel: ""
-            }));
-          }
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            engenheiro_responsavel: ""
-          }));
-        }
-      }
-    };
-
-    loadEngenheiroResponsavel();
-  }, [formData.obra_id, obras, regionais]);
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -832,24 +781,14 @@ export default function ChecklistConcretagem() {
                     </div>
 
                     <div>
-                      <Label htmlFor="estrutura">Estrutura</Label>
-                      <Input
-                        id="estrutura"
-                        value={formData.estrutura}
-                        onChange={(e) => setFormData({ ...formData, estrutura: e.target.value })}
-                      />
+                       <Label htmlFor="estrutura">Estrutura</Label>
+                       <Input
+                         id="estrutura"
+                         value={formData.estrutura}
+                         onChange={(e) => setFormData({ ...formData, estrutura: e.target.value })}
+                       />
+                     </div>
                     </div>
-
-                    <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                      <Input
-                        id="engenheiro_responsavel"
-                        value={formData.engenheiro_responsavel}
-                        onChange={(e) => setFormData({ ...formData, engenheiro_responsavel: e.target.value })}
-                        placeholder="Preenchido automaticamente"
-                      />
-                    </div>
-                  </div>
 
                   <div>
                     <Label htmlFor="inspetor_campo">Inspetor Campo</Label>
