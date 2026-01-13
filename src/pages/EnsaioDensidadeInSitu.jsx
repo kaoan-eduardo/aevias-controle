@@ -62,12 +62,46 @@ export default function EnsaioDensidadeInSituPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [editingEnsaio, setEditingEnsaio] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const isApproved = editingEnsaio?.approved === true;
   const isEditable = !isApproved;
+
+  const gestoresDisponiveis = useMemo(() => {
+    const obra = obras.find(o => o.id === formData.obra_id);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    
+    if (!regional || !allUsers || allUsers.length === 0) return [];
+    
+    const gestores = [];
+    
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+        if (gestor && !gestores.find(g => g.email === gestor.email)) {
+          gestores.push({
+            email: gestor.email,
+            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+          });
+        }
+      });
+    }
+    
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
+      }
+    }
+    
+    return gestores;
+  }, [formData.obra_id, obras, regionais, allUsers]);
 
   useEffect(() => {
     loadInitialData();
@@ -79,11 +113,14 @@ export default function EnsaioDensidadeInSituPage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [obrasData, projectsData, regionaisData] = await Promise.all([
+      const [obrasData, projectsData, regionaisData, allUsersData] = await Promise.all([
         base44.entities.Obra.list(),
         base44.entities.Project.list(),
-        base44.entities.Regional.list()
+        base44.entities.Regional.list(),
+        base44.entities.User.list().catch(() => [currentUser])
       ]);
+
+      setAllUsers(allUsersData);
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
       
@@ -132,24 +169,9 @@ export default function EnsaioDensidadeInSituPage() {
         }
       } else {
         if (availableObras.length > 0) {
-          const primeiraObra = availableObras[0];
-          const regional = regionaisData.find(r => r.id === primeiraObra.regional_id);
-          
-          let gestorName = "";
-          if (regional?.gestor_contrato_responsavel) {
-            try {
-              const allUsers = await base44.entities.User.list();
-              const gestor = allUsers.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
-              gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
-            } catch (error) {
-              console.warn("Sem permissão para listar usuários");
-            }
-          }
-          
           setFormData(prev => ({
             ...prev,
-            obra_id: primeiraObra.id,
-            engenheiro_responsavel: gestorName
+            obra_id: availableObras[0].id
           }));
         }
       }
@@ -317,8 +339,8 @@ export default function EnsaioDensidadeInSituPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.obra_id || !formData.data_ensaio) {
-      alert("Preencha todos os campos obrigatórios (Obra, Data).");
+    if (!formData.obra_id || !formData.data_ensaio || !formData.engenheiro_responsavel) {
+      alert("Preencha todos os campos obrigatórios (Obra, Data, Engenheiro Responsável).");
       return;
     }
 
@@ -419,23 +441,11 @@ export default function EnsaioDensidadeInSituPage() {
                       id="obra_id"
                       value={formData.obra_id}
                       onChange={(e) => {
-                        const obraId = e.target.value;
-                        const obra = obras.find(o => o.id === obraId);
-                        const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-                        
-                        setFormData(prev => ({ ...prev, obra_id: obraId }));
-                        
-                        if (regional?.gestor_contrato_responsavel) {
-                          base44.entities.User.list().then(allUsers => {
-                            const gestor = allUsers.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
-                            if (gestor) {
-                              setFormData(prev => ({
-                                ...prev,
-                                engenheiro_responsavel: gestor.laboratorista_name || gestor.full_name
-                              }));
-                            }
-                          }).catch(() => {});
-                        }
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          obra_id: e.target.value,
+                          engenheiro_responsavel: ""
+                        }));
                       }}
                       disabled={!isEditable}
                       required
@@ -538,15 +548,22 @@ export default function EnsaioDensidadeInSituPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                    <Input
+                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
+                    <select
                       id="engenheiro_responsavel"
                       value={formData.engenheiro_responsavel}
                       onChange={(e) => setFormData({ ...formData, engenheiro_responsavel: e.target.value })}
-                      disabled={!isEditable}
-                      readOnly
-                      className="bg-slate-100"
-                    />
+                      disabled={!isEditable || gestoresDisponiveis.length === 0}
+                      required
+                      className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="">Selecione o engenheiro</option>
+                      {gestoresDisponiveis.map((gestor) => (
+                        <option key={gestor.email} value={gestor.nome}>
+                          {gestor.nome}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
