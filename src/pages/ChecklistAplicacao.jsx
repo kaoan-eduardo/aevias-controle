@@ -1064,6 +1064,7 @@ export default function ChecklistAplicacaoPage() {
                       </tr>
                     </tbody>
                   </table>
+                  </div>
 
                   <div>
                     <Label htmlFor="pintura_observacoes">Observações</Label>
