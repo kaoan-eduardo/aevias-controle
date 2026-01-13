@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,7 @@ export default function Projects() {
 
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      if (userAccessLevel !== 'admin') {
+      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
             const clientes = regional.clientes_responsaveis || [];
@@ -53,14 +54,7 @@ export default function Projects() {
             const salas = regional.salas_tecnicas_responsaveis || [];
             return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
           } else if (userAccessLevel === 'gestor_contrato') {
-            const gestorAntigo = regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
-            const gestorNovo = (regional.gestores_contrato_responsaveis || []).some(
-              email => email.toLowerCase() === userData.email.toLowerCase()
-            );
-            return gestorAntigo || gestorNovo;
-          } else if (userAccessLevel === 'user') {
-            const laboratoristas = regional.laboratoristas_responsaveis || [];
-            return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
+            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
           }
           return false;
         });
@@ -72,6 +66,7 @@ export default function Projects() {
           }
         });
 
+        // Agora também filtrar por regional_id direto
         const regionalIdsPermitidos = new Set(regionaisDoUsuario.map(r => r.id));
         const projectsFiltrados = projectsData.filter(p => 
           projectIdsPermitidos.has(p.id) || 
@@ -95,29 +90,11 @@ export default function Projects() {
 
   const handleSaveProject = useCallback(async (projectData) => {
     try {
-      let savedProject;
       if (editingProject) {
         await Project.update(editingProject.id, projectData);
-        savedProject = { ...editingProject, ...projectData };
       } else {
-        savedProject = await Project.create(projectData);
+        await Project.create(projectData);
       }
-
-      // Se o projeto tem regional_id, vincular à regional
-      if (savedProject.regional_id) {
-        const regional = regionais.find(r => r.id === savedProject.regional_id);
-        if (regional) {
-          const currentProjectIds = regional.project_ids || [];
-          
-          // Adicionar o projeto à regional se ainda não estiver lá
-          if (!currentProjectIds.includes(savedProject.id)) {
-            await Regional.update(regional.id, {
-              project_ids: [...currentProjectIds, savedProject.id]
-            });
-          }
-        }
-      }
-
       setIsFormOpen(false);
       setEditingProject(null);
       loadData();
@@ -125,7 +102,7 @@ export default function Projects() {
       console.error("Erro ao salvar projeto:", error);
       alert(`Erro ao salvar: ${error.message || 'Erro desconhecido'}`);
     }
-  }, [editingProject, loadData, regionais]);
+  }, [editingProject, loadData]);
 
   const handleEdit = useCallback((project) => {
     setEditingProject(project);

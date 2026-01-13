@@ -197,15 +197,11 @@ export default function ChecklistConcretagem() {
         base44.entities.Regional.list(),
         base44.entities.User.list().catch(() => [])
       ]);
-      
-      console.log("🔍 [LOADDATA] Obras:", obrasData.length);
-      console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-      console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
 
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
-      setAllUsers(allUsersData);
+      setAllUsers(allUsersData.length > 0 ? allUsersData : [userData]);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 

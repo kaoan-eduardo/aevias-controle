@@ -103,27 +103,11 @@ export default function ChecklistAplicacaoPage() {
   }, [obraSelecionada]);
 
   const projetosDisponiveis = useMemo(() => {
-    console.log("🔍 [PROJETOS] Calculando projetos disponíveis");
-    console.log("🔍 [PROJETOS] Regional:", regional);
-    console.log("🔍 [PROJETOS] Total de projects:", projects?.length);
-    
-    if (!regional || !projects) {
-      console.log("⚠️ [PROJETOS] Regional ou projects não disponível");
-      return [];
-    }
-    
+    console.log("🔍 [DEBUG] Calculando projetos disponíveis. Regional:", regional, "Projects:", projects);
+    if (!regional || !projects) return [];
     const regionalProjectIds = regional.project_ids || [];
-    console.log("🔍 [PROJETOS] IDs de projetos da regional:", regionalProjectIds);
-    
-    const disponiveis = projects.filter(p => {
-      const match = regionalProjectIds.includes(p.id) && p.status === 'ativo';
-      if (match) {
-        console.log("✅ [PROJETOS] Projeto disponível:", p.name, p.id);
-      }
-      return match;
-    });
-    
-    console.log("✅ [PROJETOS] Total de projetos disponíveis:", disponiveis.length);
+    const disponiveis = projects.filter(p => regionalProjectIds.includes(p.id) && p.status === 'ativo');
+    console.log("🔍 [DEBUG] Projetos disponíveis:", disponiveis);
     return disponiveis;
   }, [regional, projects]);
 
@@ -134,22 +118,18 @@ export default function ChecklistAplicacaoPage() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
 
-        const [obrasData, regionaisData] = await Promise.all([
-          base44.entities.Obra.list(),
-          base44.entities.Regional.list()
-        ]);
+        let obrasData = await base44.entities.Obra.list();
+        const projectsData = await base44.entities.Project.list();
+        const regionaisData = await base44.entities.Regional.list();
         
-        // Buscar projetos e usuários via backend (ignora RLS)
-        const formDataResponse = await base44.functions.invoke('getLaboratoristaFormData', {});
-        
-        const projectsData = formDataResponse.data.projects || [];
-        const allUsersData = formDataResponse.data.users || [];
-        
-        console.log("🔍 [LOADDATA] Obras:", obrasData.length);
-        console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-        console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
-        
-        setAllUsers(allUsersData);
+        let allUsersData = [];
+        try {
+          allUsersData = await base44.entities.User.list();
+          setAllUsers(allUsersData);
+        } catch (userError) {
+          console.warn("⚠️ Sem permissão para listar usuários, campo engenheiro não será preenchido automaticamente");
+          setAllUsers([]);
+        }
 
         let faixasData = [];
         try {
@@ -254,65 +234,34 @@ export default function ChecklistAplicacaoPage() {
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
   const gestoresDisponiveis = useMemo(() => {
-    console.log("🔍 [GESTORES] Regional:", regional);
-    console.log("🔍 [GESTORES] AllUsers length:", allUsers?.length);
-    
-    if (!regional) {
-      console.log("⚠️ [GESTORES] Regional não encontrada");
-      return [];
-    }
+    if (!regional || !allUsers || allUsers.length === 0) return [];
     
     const gestores = [];
     
-    // IMPORTANTE: Se não temos allUsers (laboratorista sem permissão), usar os emails direto
-    if (!allUsers || allUsers.length === 0) {
-      console.log("⚠️ [GESTORES] Sem dados de usuários - usando emails da regional");
-      
-      // Adicionar gestores do array novo (só email, sem nome completo)
-      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-        regional.gestores_contrato_responsaveis.forEach(email => {
-          if (email && !gestores.find(g => g.email === email)) {
-            gestores.push({
-              email: email,
-              nome: email.split('@')[0] // Usar parte antes do @ como nome
-            });
-          }
-        });
-      }
-      
-      // Adicionar gestor do campo legado
-      if (regional.gestor_contrato_responsavel && !gestores.find(g => g.email === regional.gestor_contrato_responsavel)) {
-        gestores.push({
-          email: regional.gestor_contrato_responsavel,
-          nome: regional.gestor_contrato_responsavel.split('@')[0]
-        });
-      }
-    } else {
-      // Temos allUsers, usar nomes completos
-      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-        regional.gestores_contrato_responsaveis.forEach(email => {
-          const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-          if (gestor && !gestores.find(g => g.email === gestor.email)) {
-            gestores.push({
-              email: gestor.email,
-              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-            });
-          }
-        });
-      }
-      
-      if (regional.gestor_contrato_responsavel) {
-        const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+    // Adicionar gestores do array novo
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
         if (gestor && !gestores.find(g => g.email === gestor.email)) {
           gestores.push({
             email: gestor.email,
             nome: gestor.laboratorista_name || gestor.full_name || gestor.email
           });
         }
+      });
+    }
+    
+    // Adicionar gestor do campo legado se existir e não estiver no array
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
       }
     }
     
-    console.log("✅ [GESTORES] Gestores disponíveis:", gestores);
     return gestores;
   }, [regional, allUsers]);
 

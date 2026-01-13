@@ -106,63 +106,32 @@ export default function ChecklistMRAFPage() {
     const obra = obras.find(o => o.id === formData.obra_id);
     const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
     
-    console.log("🔍 [GESTORES] Obra:", obra);
-    console.log("🔍 [GESTORES] Regional:", regional);
-    console.log("🔍 [GESTORES] AllUsers length:", allUsers?.length);
-    
-    if (!regional) {
-      console.log("⚠️ [GESTORES] Regional não encontrada");
-      return [];
-    }
+    if (!regional || !allUsers || allUsers.length === 0) return [];
     
     const gestores = [];
     
-    // Se não temos allUsers, usar emails direto
-    if (!allUsers || allUsers.length === 0) {
-      console.log("⚠️ [GESTORES] Sem dados de usuários - usando emails da regional");
-      
-      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-        regional.gestores_contrato_responsaveis.forEach(email => {
-          if (email && !gestores.find(g => g.email === email)) {
-            gestores.push({
-              email: email,
-              nome: email.split('@')[0]
-            });
-          }
-        });
-      }
-      
-      if (regional.gestor_contrato_responsavel && !gestores.find(g => g.email === regional.gestor_contrato_responsavel)) {
-        gestores.push({
-          email: regional.gestor_contrato_responsavel,
-          nome: regional.gestor_contrato_responsavel.split('@')[0]
-        });
-      }
-    } else {
-      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-        regional.gestores_contrato_responsaveis.forEach(email => {
-          const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-          if (gestor && !gestores.find(g => g.email === gestor.email)) {
-            gestores.push({
-              email: gestor.email,
-              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-            });
-          }
-        });
-      }
-      
-      if (regional.gestor_contrato_responsavel) {
-        const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
         if (gestor && !gestores.find(g => g.email === gestor.email)) {
           gestores.push({
             email: gestor.email,
             nome: gestor.laboratorista_name || gestor.full_name || gestor.email
           });
         }
+      });
+    }
+    
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
       }
     }
     
-    console.log("✅ [GESTORES] Gestores disponíveis:", gestores);
     return gestores;
   }, [formData.obra_id, obras, regionais, allUsers]);
 
@@ -367,28 +336,13 @@ export default function ChecklistMRAFPage() {
   const obraSelecionada = useMemo(() => obras.find(o => o.id === formData.obra_id), [obras, formData.obra_id]);
   const regionalSelecionada = useMemo(() => obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null, [obraSelecionada, regionais]);
   const projetosDisponiveis = useMemo(() => {
-    console.log("🔍 [PROJETOS] Calculando projetos MRAF disponíveis");
-    console.log("🔍 [PROJETOS] Regional:", regionalSelecionada);
-    console.log("🔍 [PROJETOS] Total projects:", projects?.length);
-    
-    if (!regionalSelecionada || !projects) {
-      console.log("⚠️ [PROJETOS] Regional ou projects não disponível");
-      return [];
-    }
-    
+    if (!regionalSelecionada || !projects) return [];
     const regionalProjectIds = regionalSelecionada.project_ids || [];
-    console.log("🔍 [PROJETOS] IDs da regional:", regionalProjectIds);
-    
-    const disponiveis = projects.filter(p => {
-      const match = regionalProjectIds.includes(p.id) && p.status === 'ativo' && p.tipo_projeto === 'MRAF';
-      if (match) {
-        console.log("✅ [PROJETOS] Projeto MRAF disponível:", p.name, p.id, p.tipo_projeto);
-      }
-      return match;
-    });
-    
-    console.log("✅ [PROJETOS] Total MRAF disponíveis:", disponiveis.length);
-    return disponiveis;
+    return projects.filter(p => 
+      regionalProjectIds.includes(p.id) && 
+      p.status === 'ativo' &&
+      p.tipo_projeto === 'MRAF'
+    );
   }, [regionalSelecionada, projects]);
 
   useEffect(() => {
@@ -403,7 +357,8 @@ export default function ChecklistMRAFPage() {
 
         const dataPromises = [
           Obra.list(),
-          Regional.list()
+          Regional.list(),
+          Project.list()
         ];
 
         let faixasData = [];
@@ -418,28 +373,12 @@ export default function ChecklistMRAFPage() {
         }
 
         const loadedData = await Promise.all(dataPromises);
-        const [obrasData, regionaisData, allUsersDataFetchedIfAdmin] = loadedData;
-        
-        // Buscar projetos e usuários via backend (ignora RLS)
-        const formDataBackendResponse = await base44.functions.invoke('getLaboratoristaFormData', {});
-        
-        const projectsData = formDataBackendResponse.data.projects || [];
-        const allUsersDataFromBackend = formDataBackendResponse.data.users || [];
-        
-        console.log("🔍 [LOADDATA] Obras:", obrasData.length);
-        console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-        console.log("🔍 [LOADDATA] Usuários:", allUsersDataFromBackend.length);
+        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
-        
-        // Usar usuários do backend se disponível
-        if (isAdmin && allUsersDataFetchedIfAdmin) {
-          setAllUsers(allUsersDataFetchedIfAdmin);
-        } else {
-          setAllUsers(allUsersDataFromBackend);
-        }
+        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
 
         let availableObras = obrasData;
         

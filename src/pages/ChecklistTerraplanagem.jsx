@@ -175,27 +175,18 @@ export default function ChecklistTerraplanagem() {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const userData = await base44.auth.me();
-      
-      const [obrasData, regionaisData] = await Promise.all([
+      const [userData, obrasData, projectsData, regionaisData, allUsersData] = await Promise.all([
+        base44.auth.me(),
         base44.entities.Obra.list(),
-        base44.entities.Regional.list()
+        Project.list(),
+        base44.entities.Regional.list(),
+        base44.entities.User.list().catch(() => [])
       ]);
-      
-      // Buscar projetos e usuários via backend (ignora RLS)
-      const formDataResponse = await base44.functions.invoke('getLaboratoristaFormData', {});
-      
-      const projectsData = formDataResponse.data.projects || [];
-      const allUsersData = formDataResponse.data.users || [];
-      
-      console.log("🔍 [LOADDATA] Obras:", obrasData.length);
-      console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-      console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
 
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
-      setAllUsers(allUsersData);
+      setAllUsers(allUsersData.length > 0 ? allUsersData : [userData]);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
