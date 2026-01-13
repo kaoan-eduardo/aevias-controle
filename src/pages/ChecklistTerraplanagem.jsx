@@ -42,7 +42,6 @@ export default function ChecklistTerraplanagem() {
     camada: "",
     inspetor_fiscal: "",
     material: "",
-    engenheiro_responsavel: "",
     umidade_otima_proctor: "",
     umidade_in_situ: "",
     status: "rascunho",
@@ -136,36 +135,7 @@ export default function ChecklistTerraplanagem() {
     loadInitialData();
   }, []);
 
-  useEffect(() => {
-    if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-      if (obraSelecionada && obraSelecionada.regional_id) {
-        const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-        if (regional && regional.gestor_contrato_responsavel) {
-          loadEngenheiroResponsavel(regional.gestor_contrato_responsavel);
-        }
-      }
-    }
-  }, [formData.obra_id, obras, regionais]);
 
-  const loadEngenheiroResponsavel = async (gestorEmail) => {
-    try {
-      const allUsers = await base44.entities.User.list();
-      const gestor = allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-      if (gestor) {
-        const gestorName = gestor.laboratorista_name || gestor.full_name;
-        console.log("✅ ChecklistTerraplanagem - Gestor encontrado:", gestorName);
-        setFormData(prev => ({
-          ...prev,
-          engenheiro_responsavel: gestorName
-        }));
-      } else {
-        console.log("⚠️ ChecklistTerraplanagem - Gestor não encontrado para:", gestorEmail);
-      }
-    } catch (error) {
-      console.error("❌ ChecklistTerraplanagem - Erro ao buscar gestor:", error);
-    }
-  };
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -607,17 +577,7 @@ export default function ChecklistTerraplanagem() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                    <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                      <Input
-                        id="engenheiro_responsavel"
-                        value={formData.engenheiro_responsavel}
-                        onChange={(e) => setFormData({ ...formData, engenheiro_responsavel: e.target.value })}
-                        placeholder="Preenchido automaticamente"
-                      />
-                    </div>
-                  </div>
+
                 </CardContent>
               </Card>
 
