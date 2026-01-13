@@ -46,7 +46,7 @@ const getStatusInfo = (ensaio) => {
   }
   // Pendente com indicador de re-submissão após reprovação
   if (ensaio.was_rejected === true) {
-    return { text: "Pendente (Re-análise)", icon: Clock, className: "bg-orange-100/80 text-orange-800 border border-orange-300/50 hover:bg-orange-200/80 hover:border-orange-400/50 transition-colors", wasRejected: true };
+    return { text: "Pendente", icon: Clock, className: "bg-orange-100/80 text-orange-800 border border-orange-300/50 hover:bg-orange-200/80 hover:border-orange-400/50 transition-colors", wasRejected: true };
   }
   return { text: "Pendente", icon: Clock, className: "bg-[#FBBF24]/10 text-[#854d0e] border border-[#FBBF24]/30 hover:bg-[#FBBF24]/20 hover:border-[#FBBF24]/40 transition-colors" };
 };
