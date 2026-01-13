@@ -887,7 +887,7 @@ export default function ChecklistUsinaPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="faixa_especificada">Faixa Especificada</Label>
                       <Input
@@ -910,6 +910,24 @@ export default function ChecklistUsinaPage() {
                         className={selectedProject ? "bg-slate-100" : ""}
                         placeholder="Ex: CAP 50/70"
                       />
+                    </div>
+                    <div>
+                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
+                      <select
+                        id="engenheiro_responsavel"
+                        value={formData.engenheiro_responsavel}
+                        onChange={(e) => handleChange('engenheiro_responsavel', e.target.value)}
+                        required
+                        disabled={!isEditable || isApproved || !formData.obra_id}
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="">Selecione um gestor</option>
+                        {gestores.map(gestor => (
+                          <option key={gestor.email} value={gestor.laboratorista_name || gestor.full_name}>
+                            {gestor.laboratorista_name || gestor.full_name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 </CardContent>
