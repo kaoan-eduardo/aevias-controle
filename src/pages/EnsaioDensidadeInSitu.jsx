@@ -113,8 +113,7 @@ export default function EnsaioDensidadeInSituPage() {
       } catch (error) {
         console.log("Usando função backend para buscar gestores...");
         try {
-          const { getGestoresRegional } = await import('@/functions/getGestoresRegional');
-          const response = await getGestoresRegional({ regional_id: regional.id });
+          const response = await base44.functions.invoke('getGestoresRegional', { regional_id: regional.id });
           setGestoresDisponiveis(response.data.gestores || []);
         } catch (backendError) {
           console.error("Erro ao buscar gestores:", backendError);
