@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Save, AlertTriangle, Loader2, CheckCircle, Plus, Trash2 } from "lucide-react";
+import { Save, AlertTriangle, Loader2, CheckCircle, Plus, Trash2, Clock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
@@ -79,6 +79,7 @@ const getInitialFormData = () => ({
   },
   corpos_prova_marshall: [],
   observacoes: "",
+  status: "rascunho",
   approved: null,
   rejection_reason: null
 });
@@ -91,6 +92,7 @@ export default function EnsaioCAUQPage() {
   const [user, setUser] = useState(null);
   const [editingEnsaio, setEditingEnsaio] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState(getInitialFormData());
 
   const location = useLocation();
@@ -398,6 +400,37 @@ export default function EnsaioCAUQPage() {
     });
   }, []);
 
+  const handleSaveProgress = async () => {
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra para salvar o progresso.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const dataToSave = {
+        ...formData,
+        status: "rascunho",
+        laboratorista_name: user?.laboratorista_name || user?.full_name
+      };
+
+      if (editingEnsaio?.id) {
+        await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, dataToSave);
+        alert("Progresso salvo com sucesso!");
+      } else {
+        const newEnsaio = await base44.entities.EnsaioCAUQ.create(dataToSave);
+        setEditingEnsaio(newEnsaio);
+        alert("Progresso salvo com sucesso!");
+      }
+      clearSavedData();
+    } catch (error) {
+      console.error("Erro ao salvar progresso:", error);
+      alert("Erro ao salvar progresso.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -406,32 +439,43 @@ export default function EnsaioCAUQPage() {
       return;
     }
 
+    if (!formData.data_ensaio) {
+      alert("Por favor, informe a data do ensaio.");
+      return;
+    }
+
+    setSaving(true);
     try {
+      const dataToSave = {
+        ...formData,
+        status: "finalizado",
+        laboratorista_name: user?.laboratorista_name || user?.full_name
+      };
+
       if (editingEnsaio?.id) {
-        const updateData = { ...formData };
+        const updateData = { ...dataToSave };
         if (editingEnsaio.approved === false) {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
           await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, updateData);
-          alert("Ensaio atualizado com sucesso! O registro voltará para análise.");
+          alert("Ensaio finalizado com sucesso! O registro voltará para análise.");
         } else {
           await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, updateData);
-          alert("Ensaio atualizado com sucesso!");
+          alert("Ensaio finalizado com sucesso!");
         }
       } else {
-        await base44.entities.EnsaioCAUQ.create({
-          ...formData,
-          laboratorista_name: user?.laboratorista_name || user?.full_name
-        });
-        alert("Ensaio criado com sucesso!");
+        await base44.entities.EnsaioCAUQ.create(dataToSave);
+        alert("Ensaio criado e finalizado com sucesso!");
       }
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao salvar ensaio:", error);
-      alert("Erro ao salvar ensaio.");
+      console.error("Erro ao finalizar ensaio:", error);
+      alert("Erro ao finalizar ensaio.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -504,7 +548,7 @@ export default function EnsaioCAUQPage() {
           const ensaioToEdit = await base44.entities.EnsaioCAUQ.get(editId);
           setEditingEnsaio(ensaioToEdit);
 
-          if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true)) {
+          if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true && ensaioToEdit.status !== 'finalizado')) {
             setFormData({
               ...getInitialFormData(),
               ...ensaioToEdit,
@@ -543,7 +587,7 @@ export default function EnsaioCAUQPage() {
   }, [location.search, navigate]);
 
   const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && formData.approved !== true);
+  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && formData.approved !== true && formData.status !== 'finalizado');
   const isEditable = !editingEnsaio?.id || userCanEdit;
 
   if (loading) {
@@ -559,6 +603,15 @@ export default function EnsaioCAUQPage() {
             <CardDescription>
               {editingEnsaio?.id ? `Editando ensaio de ${new Date(editingEnsaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}` : "Extração, Granulometria e Marshall"}
             </CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg">
+                <Clock className="w-5 h-5 text-[#566E3D] mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-[#566E3D]">Registro em Rascunho</p>
+                  <p className="text-sm text-[#00233B]/70">Este ensaio está salvo como rascunho. Clique em "Finalizar Registro" quando estiver completo.</p>
+                </div>
+              </div>
+            )}
             {editingEnsaio?.rejection_reason && (
               <div className="mt-4 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
@@ -642,9 +695,9 @@ export default function EnsaioCAUQPage() {
                         type="date"
                         value={formData.data_ensaio}
                         onChange={(e) => handleChange('data_ensaio', e.target.value)}
-                        required
+                        required={formData.status === 'finalizado'}
                         disabled={!isEditable || isApproved}
-                      />
+                        />
                     </div>
 
                     <div>
@@ -843,26 +896,26 @@ export default function EnsaioCAUQPage() {
                     )}
 
                     <div>
-                      <Label>Amostra com Ligante (g) *</Label>
+                      <Label>Amostra com Ligante (g) {formData.status === 'finalizado' && '*'}</Label>
                       <Input
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_com_ligante || ''}
                         onChange={(e) => handleNestedChange('extracao_ligante.amostra_com_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
-                        required
+                        required={formData.status === 'finalizado'}
                       />
                     </div>
 
                     <div>
-                      <Label>Amostra sem Ligante (g) *</Label>
+                      <Label>Amostra sem Ligante (g) {formData.status === 'finalizado' && '*'}</Label>
                       <Input
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_sem_ligante || ''}
                         onChange={(e) => handleNestedChange('extracao_ligante.amostra_sem_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
-                        required
+                        required={formData.status === 'finalizado'}
                       />
                     </div>
 
@@ -1420,13 +1473,30 @@ export default function EnsaioCAUQPage() {
                 <Button type="button" variant="outline" onClick={() => {
                   clearSavedData();
                   navigate(createPageUrl('MeusEnsaios'));
-                }}>
+                }} disabled={saving}>
                   Cancelar
                 </Button>
                 {isEditable && !isApproved && (
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                    <Save className="mr-2 h-4 w-4" /> Salvar Ensaio
-                  </Button>
+                  <>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={handleSaveProgress}
+                      disabled={saving || !formData.obra_id}
+                      className="border-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/10"
+                    >
+                      {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                      Salvar Progresso
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="bg-blue-600 hover:bg-blue-700"
+                      disabled={saving}
+                    >
+                      {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
+                      Finalizar Registro
+                    </Button>
+                  </>
                 )}
                 {isApproved && (
                   <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
