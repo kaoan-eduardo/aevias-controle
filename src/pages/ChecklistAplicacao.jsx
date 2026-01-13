@@ -169,7 +169,7 @@ export default function ChecklistAplicacaoPage() {
 
         if (editId) {
           const checklistToEdit = await base44.entities.ChecklistAplicacao.get(editId);
-          if (currentUser.role === 'admin' || (checklistToEdit.created_by === currentUser.email && checklistToEdit.approved !== true)) {
+          if (currentUser.role === 'admin' || (checklistToEdit.created_by === currentUser.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
             setEditingChecklist(checklistToEdit);
             setFormData(checklistToEdit);
             
