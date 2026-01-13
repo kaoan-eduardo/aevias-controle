@@ -879,7 +879,8 @@ export default function ChecklistAplicacaoPage() {
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Acompanhamento da Pintura de Ligação</h3>
                 <div className="space-y-4">
-                  <table className="w-full border-collapse border border-slate-300 text-sm">
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-slate-300 text-sm min-w-[600px]">
                     <thead className="bg-black/5">
                       <tr>
                         <th className="border border-slate-300 px-2 py-2 text-left">Serviço</th>
@@ -1063,6 +1064,7 @@ export default function ChecklistAplicacaoPage() {
                       </tr>
                     </tbody>
                   </table>
+                  </div>
 
                   <div>
                     <Label htmlFor="pintura_observacoes">Observações</Label>
