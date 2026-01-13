@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FileText, Edit, Clock, CheckCircle, XCircle, MessageSquare, Loader2, MapPin, User as UserIconSmall, Building, Filter, PlusCircle, FlaskConical, Gauge, ClipboardList, Book, ArrowUpDown, ArrowUp, ArrowDown, Download } from "lucide-react";
+import { FileText, Edit, Clock, CheckCircle, XCircle, MessageSquare, Loader2, MapPin, User as UserIconSmall, Building, Filter, PlusCircle, FlaskConical, Gauge, ClipboardList, Book, ArrowUpDown, ArrowUp, ArrowDown, Download, Trash2 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -339,6 +339,62 @@ const ReprovacaoModal = React.memo(({ ensaio, isOpen, onClose, onReprove }) => {
 });
 
 ReprovacaoModal.displayName = 'ReprovacaoModal';
+
+// Modal para excluir ensaio - Memoizado
+const ExclusaoModal = React.memo(({ ensaio, isOpen, onClose, onDelete }) => {
+  const [confirmacao, setConfirmacao] = useState('');
+  const textoConfirmacao = 'EXCLUIR';
+
+  const handleDelete = useCallback(async () => {
+    if (confirmacao !== textoConfirmacao) {
+      alert(`Por favor, digite "${textoConfirmacao}" para confirmar a exclusão.`);
+      return;
+    }
+
+    await onDelete(ensaio);
+    setConfirmacao('');
+  }, [ensaio, confirmacao, onDelete, textoConfirmacao]);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="bg-[#F2F1EF]/80 backdrop-blur-lg border-white/20 text-[#00233B]">
+        <DialogHeader>
+          <DialogTitle className="text-red-600">Excluir Registro</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-sm text-red-800 font-semibold mb-2">⚠️ Atenção: Esta ação é irreversível!</p>
+            <p className="text-sm text-red-700">
+              Você está prestes a excluir permanentemente este registro. Todos os dados serão perdidos.
+            </p>
+          </div>
+          <div>
+            <Label htmlFor="confirmacao">Digite "{textoConfirmacao}" para confirmar *</Label>
+            <Input
+              id="confirmacao"
+              value={confirmacao}
+              onChange={(e) => setConfirmacao(e.target.value)}
+              placeholder={textoConfirmacao}
+              className="mt-1"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button 
+            variant="destructive" 
+            onClick={handleDelete}
+            disabled={confirmacao !== textoConfirmacao}
+          >
+            Excluir Permanentemente
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+});
+
+ExclusaoModal.displayName = 'ExclusaoModal';
 
 // Componente de Date Range Picker compacto
 const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndChange }) => {
@@ -694,6 +750,11 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     await onReject(ensaio, motivo);
     setReprovingEnsaio(null);
   }, [canApprove, onReject]);
+
+  const handleDelete = useCallback(async (ensaio) => {
+    await onDelete(ensaio);
+    setDeletingEnsaio(null);
+  }, [onDelete]);
 
   const clearFilters = useCallback(() => {
     setNomeFilter('');
@@ -1063,6 +1124,17 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                                 {canApprove && ensaio.status === 'rascunho' && (
                                 <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
                                 )}
+                                {canApprove && (
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="h-7 px-2"
+                                    onClick={() => setDeletingEnsaio(ensaio)}
+                                    title="Excluir"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                )}
                         </div>
                       </td>
                     </tr>
@@ -1088,11 +1160,18 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         onClose={() => setReprovingEnsaio(null)}
         onReprove={handleReject}
       />
-    </div>
-  );
-});
 
-AdminInterface.displayName = 'AdminInterface';
+      <ExclusaoModal
+        ensaio={deletingEnsaio}
+        isOpen={!!deletingEnsaio}
+        onClose={() => setDeletingEnsaio(null)}
+        onDelete={handleDelete}
+      />
+      </div>
+      );
+      });
+
+      AdminInterface.displayName = 'AdminInterface';
 
 // Componente EnsaioCard memoizado
 const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
@@ -2189,6 +2268,37 @@ export default function MeusEnsaios() {
     }
   }, [canApprove, user, loadData]);
 
+  const handleDeleteEnsaio = useCallback(async (ensaio) => {
+    if (!canApprove) {
+      alert('Você não tem permissão para excluir registros.');
+      return;
+    }
+    try {
+      const entityMap = {
+        "DiarioObra": DiarioObra,
+        "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+        "EnsaioDensidade": EnsaioDensidade,
+        "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+        "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+        "ChecklistUsina": ChecklistUsina,
+        "ChecklistAplicacao": ChecklistAplicacao,
+        "ChecklistMRAF": ChecklistMRAF,
+        "ChecklistConcretagem": ChecklistConcretagem,
+        "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+        "EnsaioSondagem": base44.entities.EnsaioSondagem
+      };
+
+      const Entity = entityMap[ensaio.entityType];
+      await Entity.delete(ensaio.id);
+
+      loadData();
+      alert('Registro excluído com sucesso!');
+    } catch (error) {
+      console.error("Erro ao excluir:", error);
+      alert('Erro ao excluir registro.');
+    }
+  }, [canApprove, loadData]);
+
   return (
     <div className="p-6 space-y-6 bg-transparent min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -2217,6 +2327,7 @@ export default function MeusEnsaios() {
               projects={projects}
               onApprove={handleApprove}
               onReject={handleReject}
+              onDelete={handleDeleteEnsaio}
               user={user}
               canApprove={canApprove}
               canCreate={canCreate}
