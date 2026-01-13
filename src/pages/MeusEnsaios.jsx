@@ -1106,8 +1106,8 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const editLink = createPageUrl(`${ensaio.entityType}?editId=${ensaio.id}`);
 
   const isCliente = user?.access_level === 'cliente';
-  // Cliente pode assinar se tiver CREA cadastrado
-  const podeAssinarCliente = isCliente && user?.crea_number && ensaio.approved === true && !ensaio.client_signature?.signed_by;
+  // Cliente pode assinar registros aprovados
+  const podeAssinarCliente = isCliente && ensaio.approved === true && !ensaio.client_signature?.signed_by;
 
   const podeVerPDF = ensaio.approved === true || ensaio.client_signature?.signed_by;
   // Pode editar se: está em rascunho OU foi reprovado
@@ -1117,11 +1117,6 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
 
   const handleAssinar = useCallback(async () => {
     try {
-      if (!user?.crea_number) {
-        alert('Para assinar o registro, é necessário ter um número de CREA cadastrado. Entre em contato com o administrador para atualizar seu perfil.');
-        return;
-      }
-
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
         const entityMap = {
             "DiarioObra": DiarioObra,
@@ -1143,8 +1138,8 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
           client_signature: {
             signed_by: user.email,
             signed_date: new Date().toISOString(),
-            engineer_name: user.laboratorista_name || user.full_name, // Changed this line
-            crea_number: user.crea_number
+            engineer_name: user.laboratorista_name || user.full_name,
+            crea_number: user.crea_number || ''
           }
         };
 
