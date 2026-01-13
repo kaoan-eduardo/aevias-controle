@@ -134,25 +134,23 @@ export default function ChecklistAplicacaoPage() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
 
-        const [obrasData, projectsData, regionaisData] = await Promise.all([
+        const [obrasData, regionaisData] = await Promise.all([
           base44.entities.Obra.list(),
-          base44.entities.Project.list(),
           base44.entities.Regional.list()
         ]);
         
-        console.log("🔍 [LOADDATA] Obras carregadas:", obrasData.length);
-        console.log("🔍 [LOADDATA] Projetos carregados:", projectsData.length);
-        console.log("🔍 [LOADDATA] Regionais carregadas:", regionaisData.length);
+        // Buscar projetos e usuários via backend (ignora RLS)
+        const { getLaboratoristaFormData } = await import('@/functions/getLaboratoristaFormData');
+        const formDataResponse = await getLaboratoristaFormData({});
         
-        // Sempre tentar carregar usuários (RLS do User bloqueia não-admin)
-        try {
-          const allUsersData = await base44.entities.User.list();
-          setAllUsers(allUsersData);
-          console.log("🔍 [LOADDATA] Usuários carregados:", allUsersData.length);
-        } catch (userError) {
-          console.warn("⚠️ Sem permissão para listar usuários (esperado para não-admin)");
-          setAllUsers([currentUser]);
-        }
+        const projectsData = formDataResponse.data.projects || [];
+        const allUsersData = formDataResponse.data.users || [];
+        
+        console.log("🔍 [LOADDATA] Obras:", obrasData.length);
+        console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
+        console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
+        
+        setAllUsers(allUsersData);
 
         let faixasData = [];
         try {

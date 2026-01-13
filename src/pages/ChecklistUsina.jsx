@@ -677,30 +677,26 @@ export default function ChecklistUsinaPage() {
         
         const [obrasData, regionaisData, allUsersDataFetchedIfAdmin] = loadedData;
         
-        // Carregar projetos
-        const projectsData = await base44.entities.Project.list();
+        // Buscar projetos e usuários via backend (ignora RLS)
+        const { getLaboratoristaFormData } = await import('@/functions/getLaboratoristaFormData');
+        const formDataResponse = await getLaboratoristaFormData({});
+        
+        const projectsData = formDataResponse.data.projects || [];
+        const allUsersDataFromBackend = formDataResponse.data.users || [];
         
         console.log("🔍 [LOADDATA] Obras:", obrasData.length);
         console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-        console.log("🔍 [LOADDATA] Regionais:", regionaisData.length);
+        console.log("🔍 [LOADDATA] Usuários:", allUsersDataFromBackend.length);
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
         
-        // Carregar usuários
+        // Usar usuários do backend se disponível, senão usar dados do admin
         if (isAdmin && allUsersDataFetchedIfAdmin) {
           setAllUsers(allUsersDataFetchedIfAdmin);
-          console.log("🔍 [LOADDATA] Usuários (admin):", allUsersDataFetchedIfAdmin.length);
         } else {
-          try {
-            const usersData = await base44.entities.User.list();
-            setAllUsers(usersData);
-            console.log("🔍 [LOADDATA] Usuários carregados:", usersData.length);
-          } catch (error) {
-            console.warn("⚠️ Sem permissão para listar usuários (esperado para não-admin)");
-            setAllUsers([userData]);
-          }
+          setAllUsers(allUsersDataFromBackend);
         }
 
         let availableObras = obrasData;

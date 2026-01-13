@@ -133,23 +133,7 @@ export default function EnsaioDensidadeInSituPage() {
         }
       }
 
-      if (allUsersData.length > 0) {
-        setAllUsers(allUsersData);
-      } else {
-        try {
-          const usersData = await base44.entities.User.list();
-          setAllUsers(usersData);
-        } catch (error) {
-          console.warn("Sem permissão para listar usuários - tentando service role");
-          try {
-            const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
-            setAllUsers(usersViaServiceRole);
-          } catch (serviceRoleError) {
-            console.error("Falha ao carregar usuários:", serviceRoleError);
-            setAllUsers([currentUser]);
-          }
-        }
-      }
+      setAllUsers(allUsersData.length > 0 ? allUsersData : [currentUser]);
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
       
