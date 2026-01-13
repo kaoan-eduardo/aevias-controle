@@ -186,7 +186,19 @@ export default function ChecklistTerraplanagem() {
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
-      setAllUsers(allUsersData.length > 0 ? allUsersData : [userData]);
+      
+      // Sempre tentar carregar mais usuários se possível
+      if (allUsersData.length > 0) {
+        setAllUsers(allUsersData);
+      } else {
+        try {
+          const usersData = await base44.entities.User.list();
+          setAllUsers(usersData);
+        } catch (error) {
+          console.warn("Sem permissão para listar usuários - usando apenas usuário atual");
+          setAllUsers([userData]);
+        }
+      }
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 

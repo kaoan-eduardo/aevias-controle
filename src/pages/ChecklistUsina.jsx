@@ -636,8 +636,18 @@ export default function ChecklistUsinaPage() {
         setProjects(projectsData);
         setFaixas(faixasData);
         
-        // Se não for admin, usar apenas o usuário atual na lista
-        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
+        // Carregar usuários: admin vê todos, outros tentam carregar mas podem não ter permissão
+        if (isAdmin && allUsersDataFetchedIfAdmin) {
+          setAllUsers(allUsersDataFetchedIfAdmin);
+        } else {
+          try {
+            const usersData = await base44.entities.User.list();
+            setAllUsers(usersData);
+          } catch (error) {
+            console.warn("Sem permissão para listar usuários - fallback para lista vazia");
+            setAllUsers([userData]);
+          }
+        }
 
         let availableObras = obrasData;
         

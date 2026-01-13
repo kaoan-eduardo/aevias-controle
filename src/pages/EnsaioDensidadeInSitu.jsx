@@ -117,10 +117,20 @@ export default function EnsaioDensidadeInSituPage() {
         base44.entities.Obra.list(),
         base44.entities.Project.list(),
         base44.entities.Regional.list(),
-        base44.entities.User.list().catch(() => [currentUser])
+        base44.entities.User.list().catch(() => [])
       ]);
 
-      setAllUsers(allUsersData);
+      if (allUsersData.length > 0) {
+        setAllUsers(allUsersData);
+      } else {
+        try {
+          const usersData = await base44.entities.User.list();
+          setAllUsers(usersData);
+        } catch (error) {
+          console.warn("Sem permissão para listar usuários - usando apenas usuário atual");
+          setAllUsers([currentUser]);
+        }
+      }
 
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
       
