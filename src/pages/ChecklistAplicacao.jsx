@@ -535,6 +535,7 @@ export default function ChecklistAplicacaoPage() {
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
+          updateData.was_rejected = true;
           successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
         }
         

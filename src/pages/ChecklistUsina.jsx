@@ -536,6 +536,7 @@ export default function ChecklistUsinaPage() {
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
+          updateData.was_rejected = true;
           await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
           alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.");
         } else {
