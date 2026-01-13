@@ -102,38 +102,63 @@ export default function ChecklistMRAFPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const gestoresDisponiveis = useMemo(() => {
-    const obra = obras.find(o => o.id === formData.obra_id);
-    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-    
-    if (!regional || !allUsers || allUsers.length === 0) return [];
-    
-    const gestores = [];
-    
-    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-      regional.gestores_contrato_responsaveis.forEach(email => {
-        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-        if (gestor && !gestores.find(g => g.email === gestor.email)) {
-          gestores.push({
-            email: gestor.email,
-            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+  const [gestoresDisponiveis, setGestoresDisponiveis] = useState([]);
+
+  // Carregar gestores quando obra mudar
+  useEffect(() => {
+    const loadGestores = async () => {
+      const obra = obras.find(o => o.id === formData.obra_id);
+      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+
+      if (!regional?.id) {
+        setGestoresDisponiveis([]);
+        return;
+      }
+
+      try {
+        const allUsersData = await base44.entities.User.list();
+        const gestores = [];
+        
+        if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+          regional.gestores_contrato_responsaveis.forEach(email => {
+            const gestor = allUsersData.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+            if (gestor && !gestores.find(g => g.email === gestor.email)) {
+              gestores.push({
+                email: gestor.email,
+                nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+              });
+            }
           });
         }
-      });
-    }
-    
-    if (regional.gestor_contrato_responsavel) {
-      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-      if (gestor && !gestores.find(g => g.email === gestor.email)) {
-        gestores.push({
-          email: gestor.email,
-          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-        });
+        
+        if (regional.gestor_contrato_responsavel) {
+          const gestor = allUsersData.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+          if (gestor && !gestores.find(g => g.email === gestor.email)) {
+            gestores.push({
+              email: gestor.email,
+              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+            });
+          }
+        }
+        
+        setGestoresDisponiveis(gestores);
+      } catch (error) {
+        console.log("Usando função backend para buscar gestores...");
+        try {
+          const { getGestoresRegional } = await import('@/functions/getGestoresRegional');
+          const response = await getGestoresRegional({ regional_id: regional.id });
+          setGestoresDisponiveis(response.data.gestores || []);
+        } catch (backendError) {
+          console.error("Erro ao buscar gestores:", backendError);
+          setGestoresDisponiveis([]);
+        }
       }
+    };
+
+    if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
+      loadGestores();
     }
-    
-    return gestores;
-  }, [formData.obra_id, obras, regionais, allUsers]);
+  }, [formData.obra_id, obras, regionais]);
 
   const handleObraChange = useCallback((obraId) => {
     setFormData(prev => ({

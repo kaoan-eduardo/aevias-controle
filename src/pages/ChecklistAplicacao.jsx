@@ -233,37 +233,60 @@ export default function ChecklistAplicacaoPage() {
     loadInitialData();
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
-  const gestoresDisponiveis = useMemo(() => {
-    if (!regional || !allUsers || allUsers.length === 0) return [];
-    
-    const gestores = [];
-    
-    // Adicionar gestores do array novo
-    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-      regional.gestores_contrato_responsaveis.forEach(email => {
-        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-        if (gestor && !gestores.find(g => g.email === gestor.email)) {
-          gestores.push({
-            email: gestor.email,
-            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+  const [gestoresDisponiveis, setGestoresDisponiveis] = useState([]);
+
+  // Carregar gestores quando regional mudar
+  useEffect(() => {
+    const loadGestores = async () => {
+      if (!regional?.id) {
+        setGestoresDisponiveis([]);
+        return;
+      }
+
+      try {
+        // Tentar primeiro com user.list() (funciona para admin)
+        const allUsersData = await base44.entities.User.list();
+        const gestores = [];
+        
+        if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+          regional.gestores_contrato_responsaveis.forEach(email => {
+            const gestor = allUsersData.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+            if (gestor && !gestores.find(g => g.email === gestor.email)) {
+              gestores.push({
+                email: gestor.email,
+                nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+              });
+            }
           });
         }
-      });
-    }
-    
-    // Adicionar gestor do campo legado se existir e não estiver no array
-    if (regional.gestor_contrato_responsavel) {
-      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-      if (gestor && !gestores.find(g => g.email === gestor.email)) {
-        gestores.push({
-          email: gestor.email,
-          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-        });
+        
+        if (regional.gestor_contrato_responsavel) {
+          const gestor = allUsersData.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+          if (gestor && !gestores.find(g => g.email === gestor.email)) {
+            gestores.push({
+              email: gestor.email,
+              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+            });
+          }
+        }
+        
+        setGestoresDisponiveis(gestores);
+      } catch (error) {
+        // Se falhar (laboratorista sem permissão), usar função backend
+        console.log("Usando função backend para buscar gestores...");
+        try {
+          const { getGestoresRegional } = await import('@/functions/getGestoresRegional');
+          const response = await getGestoresRegional({ regional_id: regional.id });
+          setGestoresDisponiveis(response.data.gestores || []);
+        } catch (backendError) {
+          console.error("Erro ao buscar gestores:", backendError);
+          setGestoresDisponiveis([]);
+        }
       }
-    }
-    
-    return gestores;
-  }, [regional, allUsers]);
+    };
+
+    loadGestores();
+  }, [regional]);
 
   const handleInputChange = useCallback((field, value) => {
     console.log("🔍 [DEBUG] handleInputChange chamado. Field:", field, "Value:", value);
