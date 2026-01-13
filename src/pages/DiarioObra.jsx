@@ -525,14 +525,19 @@ export default function DiarioObraPage() {
     try {
       if (editingDiarioOriginal?.id) {
         const updateData = { ...dataToSave };
-        if (editingDiarioOriginal.approved === false) {
+        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário finalizado com sucesso!";
+
+        if (editingDiarioOriginal.approved === false && saveStatus === 'finalizado') {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
+          updateData.was_rejected = true;
+          successMessage = "Diário atualizado com sucesso! O registro voltará para análise do administrador.";
         }
+
         await DiarioObraEntity.update(editingDiarioOriginal.id, updateData);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário finalizado com sucesso!");
+        alert(successMessage);
       } else {
         await DiarioObraEntity.create({ ...dataToSave, created_by: user.email, laboratorista_name: user.laboratorista_name || user.full_name });
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Diário criado com sucesso!");
