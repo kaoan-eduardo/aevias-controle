@@ -95,16 +95,19 @@ export default function ChecklistUsinaPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const { gestores } = useGestoresRegional(formData.obra_id, obras, allUsers);
-
   const handleObraChange = useCallback((obraId) => {
+    const obra = obras.find(o => o.id === obraId);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    const gestorEmail = regional?.gestor_contrato_responsavel;
+    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+
     setFormData(prev => ({
       ...prev,
       obra_id: obraId,
       project_id: "", // Reset project on obra change
-      engenheiro_responsavel: "", // Reset engineer on obra change
+      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
     }));
-  }, []);
+  }, [obras, regionais, allUsers]);
 
   const checkConformidadeAutomatica = useCallback((testKey, resultado, project) => {
     if (!project || resultado === null || resultado === undefined || resultado === '') return null;
@@ -508,8 +511,8 @@ export default function ChecklistUsinaPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.usina || !formData.engenheiro_responsavel) {
-        alert("Por favor, preencha a obra, a usina e selecione o engenheiro responsável.");
+      if (!formData.obra_id || !formData.usina) {
+        alert("Por favor, preencha a obra e a usina.");
         return;
       }
     } else {
@@ -591,12 +594,22 @@ export default function ChecklistUsinaPage() {
           // Continuar sem as faixas - não é crítico para o funcionamento
         }
 
-        const [obrasData, regionaisData, projectsData] = await Promise.all(dataPromises);
+        // Adicionar User.list() apenas se for admin
+        if (isAdmin) {
+          dataPromises.push(User.list());
+        }
+
+        const loadedData = await Promise.all(dataPromises);
+        
+        // Destructure based on the order pushed into dataPromises
+        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
-        setAllUsers([]);
+        
+        // Se não for admin, usar apenas o usuário atual na lista
+        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
 
         let availableObras = obrasData;
         
@@ -738,7 +751,23 @@ export default function ChecklistUsinaPage() {
     loadData();
   }, [location.search, navigate]);
   
-
+  useEffect(() => {
+    if (!editingChecklist && formData.obra_id && allUsers.length > 0 && obras.length > 0 && regionais.length > 0) {
+      const obra = obras.find(o => o.id === formData.obra_id);
+      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+      const gestorEmail = regional?.gestor_contrato_responsavel;
+      const gestor = gestorEmail ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+      
+      if (gestor && formData.engenheiro_responsavel === "") {
+        const gestorName = gestor.laboratorista_name || gestor.full_name;
+        console.log("✅ ChecklistUsina - Gestor encontrado:", gestorName);
+        setFormData(prev => ({
+          ...prev,
+          engenheiro_responsavel: gestorName
+        }));
+      }
+    }
+  }, [editingChecklist, formData.obra_id, obras, regionais, allUsers, formData.engenheiro_responsavel]);
 
   const isApproved = formData.approved === true;
   const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
@@ -880,7 +909,7 @@ export default function ChecklistUsinaPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="faixa_especificada">Faixa Especificada</Label>
                       <Input
@@ -902,17 +931,6 @@ export default function ChecklistUsinaPage() {
                         readOnly={!!selectedProject}
                         className={selectedProject ? "bg-slate-100" : ""}
                         placeholder="Ex: CAP 50/70"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
-                      <Input
-                        id="engenheiro_responsavel"
-                        value={formData.engenheiro_responsavel}
-                        onChange={(e) => handleChange('engenheiro_responsavel', e.target.value)}
-                        required
-                        disabled={!isEditable || isApproved}
-                        placeholder="Nome do engenheiro responsável"
                       />
                     </div>
                   </div>
