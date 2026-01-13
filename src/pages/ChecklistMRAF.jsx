@@ -378,7 +378,25 @@ export default function ChecklistMRAFPage() {
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
-        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
+        
+        // Carregar usuários: admin vê todos, outros tentam carregar
+        if (isAdmin && allUsersDataFetchedIfAdmin) {
+          setAllUsers(allUsersDataFetchedIfAdmin);
+        } else {
+          try {
+            const usersData = await base44.entities.User.list();
+            setAllUsers(usersData);
+          } catch (error) {
+            console.warn("Sem permissão para listar usuários - tentando service role");
+            try {
+              const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
+              setAllUsers(usersViaServiceRole);
+            } catch (serviceRoleError) {
+              console.error("Falha ao carregar usuários:", serviceRoleError);
+              setAllUsers([userData]);
+            }
+          }
+        }
 
         let availableObras = obrasData;
         
