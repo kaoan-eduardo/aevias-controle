@@ -1106,12 +1106,13 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const editLink = createPageUrl(`${ensaio.entityType}?editId=${ensaio.id}`);
 
   const isCliente = user?.access_level === 'cliente';
-  const isEngenheiro = isCliente && user?.position?.toLowerCase().includes('engenheiro');
+  // Cliente pode assinar se tiver CREA cadastrado
+  const podeAssinarCliente = isCliente && user?.crea_number && ensaio.approved === true && !ensaio.client_signature?.signed_by;
 
   const podeVerPDF = ensaio.approved === true || ensaio.client_signature?.signed_by;
   // Pode editar se: está em rascunho OU foi reprovado
   const podeEditar = ensaio.created_by === user?.email && !isCliente && (ensaio.status === 'rascunho' || ensaio.approved === false);
-  const podeAssinar = isEngenheiro && ensaio.approved === true && !ensaio.client_signature?.signed_by;
+  const podeAssinar = podeAssinarCliente;
   const jaAssinado = ensaio.client_signature?.signed_by === user?.email;
 
   const handleAssinar = useCallback(async () => {

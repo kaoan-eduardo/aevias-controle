@@ -1,18 +1,15 @@
-import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
 import ChecklistUsina from './pages/ChecklistUsina';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
-import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import Home from './pages/Home';
-import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import NaoConformidades from './pages/NaoConformidades';
 import Projects from './pages/Projects';
@@ -33,25 +30,25 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import ChecklistAplicacao from './pages/ChecklistAplicacao';
+import MeusEnsaios from './pages/MeusEnsaios';
+import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "ChecklistAplicacao": ChecklistAplicacao,
     "ChecklistConcretagem": ChecklistConcretagem,
     "ChecklistMRAF": ChecklistMRAF,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
     "ChecklistUsina": ChecklistUsina,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
-    "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "FaixasGranulometricas": FaixasGranulometricas,
     "Home": Home,
-    "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "NaoConformidades": NaoConformidades,
     "Projects": Projects,
@@ -72,6 +69,9 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "ChecklistAplicacao": ChecklistAplicacao,
+    "MeusEnsaios": MeusEnsaios,
+    "EnsaioCAUQ": EnsaioCAUQ,
 }
 
 export const pagesConfig = {
