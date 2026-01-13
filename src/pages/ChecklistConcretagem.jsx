@@ -252,8 +252,8 @@ export default function ChecklistConcretagem() {
       if (editId) {
         const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
         
-        // Permitir edição apenas se for admin ou se for o criador e não estiver aprovado
-        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+        // Permitir edição apenas se for admin ou se for o criador e (está em rascunho OU foi reprovado)
+        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
           setEditingChecklist(checklistToEdit);
           setFormData(checklistToEdit);
         } else {

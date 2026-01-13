@@ -215,7 +215,7 @@ export default function ChecklistTerraplanagem() {
       if (editId) {
         const checklistToEdit = await base44.entities.ChecklistTerraplanagem.get(editId);
         
-        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
           setEditingChecklist(checklistToEdit);
           setFormData(checklistToEdit);
         } else {
