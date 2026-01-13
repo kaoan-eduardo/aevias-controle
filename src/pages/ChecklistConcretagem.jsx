@@ -643,9 +643,21 @@ export default function ChecklistConcretagem() {
       });
 
       if (editingChecklist?.id) {
-        const result = await base44.entities.ChecklistConcretagem.update(editingChecklist.id, dataToSave);
+        const updateData = { ...dataToSave };
+        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
+
+        if (editingChecklist.approved === false && saveStatus === 'finalizado') {
+          updateData.approved = null;
+          updateData.rejection_reason = null;
+          updateData.approved_by = null;
+          updateData.approved_date = null;
+          updateData.was_rejected = true;
+          successMessage = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
+        }
+
+        const result = await base44.entities.ChecklistConcretagem.update(editingChecklist.id, updateData);
         console.log("🟢 [CHECKLIST CONCRETAGEM] Atualizado com sucesso!", result);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!");
+        alert(successMessage);
       } else {
         const result = await base44.entities.ChecklistConcretagem.create(dataToSave);
         console.log("🟢 [CHECKLIST CONCRETAGEM] Criado com sucesso!", result);
