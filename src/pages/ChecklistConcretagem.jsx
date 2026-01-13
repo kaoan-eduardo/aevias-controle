@@ -202,22 +202,18 @@ export default function ChecklistConcretagem() {
       setRegionais(regionaisData);
       setAllProjects(projectsData);
       
-      // Sempre tentar carregar mais usuários se possível
+      // Carregar usuários
       if (allUsersData.length > 0) {
         setAllUsers(allUsersData);
+        console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
       } else {
         try {
           const usersData = await base44.entities.User.list();
           setAllUsers(usersData);
+          console.log("🔍 [LOADDATA] Usuários carregados:", usersData.length);
         } catch (error) {
-          console.warn("Sem permissão para listar usuários - tentando service role");
-          try {
-            const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
-            setAllUsers(usersViaServiceRole);
-          } catch (serviceRoleError) {
-            console.error("Falha ao carregar usuários:", serviceRoleError);
-            setAllUsers([userData]);
-          }
+          console.warn("⚠️ Sem permissão para listar usuários (esperado para não-admin)");
+          setAllUsers([userData]);
         }
       }
 

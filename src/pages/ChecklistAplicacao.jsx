@@ -103,11 +103,27 @@ export default function ChecklistAplicacaoPage() {
   }, [obraSelecionada]);
 
   const projetosDisponiveis = useMemo(() => {
-    console.log("🔍 [DEBUG] Calculando projetos disponíveis. Regional:", regional, "Projects:", projects);
-    if (!regional || !projects) return [];
+    console.log("🔍 [PROJETOS] Calculando projetos disponíveis");
+    console.log("🔍 [PROJETOS] Regional:", regional);
+    console.log("🔍 [PROJETOS] Total de projects:", projects?.length);
+    
+    if (!regional || !projects) {
+      console.log("⚠️ [PROJETOS] Regional ou projects não disponível");
+      return [];
+    }
+    
     const regionalProjectIds = regional.project_ids || [];
-    const disponiveis = projects.filter(p => regionalProjectIds.includes(p.id) && p.status === 'ativo');
-    console.log("🔍 [DEBUG] Projetos disponíveis:", disponiveis);
+    console.log("🔍 [PROJETOS] IDs de projetos da regional:", regionalProjectIds);
+    
+    const disponiveis = projects.filter(p => {
+      const match = regionalProjectIds.includes(p.id) && p.status === 'ativo';
+      if (match) {
+        console.log("✅ [PROJETOS] Projeto disponível:", p.name, p.id);
+      }
+      return match;
+    });
+    
+    console.log("✅ [PROJETOS] Total de projetos disponíveis:", disponiveis.length);
     return disponiveis;
   }, [regional, projects]);
 
@@ -118,45 +134,24 @@ export default function ChecklistAplicacaoPage() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
 
-        let obrasData, projectsData, regionaisData;
+        const [obrasData, projectsData, regionaisData] = await Promise.all([
+          base44.entities.Obra.list(),
+          base44.entities.Project.list(),
+          base44.entities.Regional.list()
+        ]);
         
-        try {
-          [obrasData, regionaisData] = await Promise.all([
-            base44.entities.Obra.list(),
-            base44.entities.Regional.list()
-          ]);
-        } catch (error) {
-          console.error("Erro ao carregar obras/regionais:", error);
-          throw error;
-        }
+        console.log("🔍 [LOADDATA] Obras carregadas:", obrasData.length);
+        console.log("🔍 [LOADDATA] Projetos carregados:", projectsData.length);
+        console.log("🔍 [LOADDATA] Regionais carregadas:", regionaisData.length);
         
-        // Carregar projetos com fallback para service role
-        try {
-          projectsData = await base44.entities.Project.list();
-        } catch (error) {
-          console.warn("Sem permissão para listar projetos - tentando service role");
-          try {
-            projectsData = await base44.asServiceRole.entities.Project.list();
-          } catch (serviceRoleError) {
-            console.error("Falha ao carregar projetos:", serviceRoleError);
-            projectsData = [];
-          }
-        }
-        
-        // Sempre tentar carregar usuários
+        // Sempre tentar carregar usuários (RLS do User bloqueia não-admin)
         try {
           const allUsersData = await base44.entities.User.list();
           setAllUsers(allUsersData);
+          console.log("🔍 [LOADDATA] Usuários carregados:", allUsersData.length);
         } catch (userError) {
-          console.warn("⚠️ Sem permissão para listar todos usuários - usando asServiceRole");
-          // Fallback: tentar usar service role para buscar usuários
-          try {
-            const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
-            setAllUsers(usersViaServiceRole);
-          } catch (serviceRoleError) {
-            console.error("❌ Falha ao carregar usuários via service role:", serviceRoleError);
-            setAllUsers([currentUser]);
-          }
+          console.warn("⚠️ Sem permissão para listar usuários (esperado para não-admin)");
+          setAllUsers([currentUser]);
         }
 
         let faixasData = [];
@@ -262,34 +257,65 @@ export default function ChecklistAplicacaoPage() {
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
   const gestoresDisponiveis = useMemo(() => {
-    if (!regional || !allUsers || allUsers.length === 0) return [];
+    console.log("🔍 [GESTORES] Regional:", regional);
+    console.log("🔍 [GESTORES] AllUsers length:", allUsers?.length);
+    
+    if (!regional) {
+      console.log("⚠️ [GESTORES] Regional não encontrada");
+      return [];
+    }
     
     const gestores = [];
     
-    // Adicionar gestores do array novo
-    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-      regional.gestores_contrato_responsaveis.forEach(email => {
-        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+    // IMPORTANTE: Se não temos allUsers (laboratorista sem permissão), usar os emails direto
+    if (!allUsers || allUsers.length === 0) {
+      console.log("⚠️ [GESTORES] Sem dados de usuários - usando emails da regional");
+      
+      // Adicionar gestores do array novo (só email, sem nome completo)
+      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+        regional.gestores_contrato_responsaveis.forEach(email => {
+          if (email && !gestores.find(g => g.email === email)) {
+            gestores.push({
+              email: email,
+              nome: email.split('@')[0] // Usar parte antes do @ como nome
+            });
+          }
+        });
+      }
+      
+      // Adicionar gestor do campo legado
+      if (regional.gestor_contrato_responsavel && !gestores.find(g => g.email === regional.gestor_contrato_responsavel)) {
+        gestores.push({
+          email: regional.gestor_contrato_responsavel,
+          nome: regional.gestor_contrato_responsavel.split('@')[0]
+        });
+      }
+    } else {
+      // Temos allUsers, usar nomes completos
+      if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+        regional.gestores_contrato_responsaveis.forEach(email => {
+          const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+          if (gestor && !gestores.find(g => g.email === gestor.email)) {
+            gestores.push({
+              email: gestor.email,
+              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+            });
+          }
+        });
+      }
+      
+      if (regional.gestor_contrato_responsavel) {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
         if (gestor && !gestores.find(g => g.email === gestor.email)) {
           gestores.push({
             email: gestor.email,
             nome: gestor.laboratorista_name || gestor.full_name || gestor.email
           });
         }
-      });
-    }
-    
-    // Adicionar gestor do campo legado se existir e não estiver no array
-    if (regional.gestor_contrato_responsavel) {
-      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-      if (gestor && !gestores.find(g => g.email === gestor.email)) {
-        gestores.push({
-          email: gestor.email,
-          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-        });
       }
     }
     
+    console.log("✅ [GESTORES] Gestores disponíveis:", gestores);
     return gestores;
   }, [regional, allUsers]);
 
