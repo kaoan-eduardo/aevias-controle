@@ -636,7 +636,7 @@ export default function ChecklistUsinaPage() {
         setProjects(projectsData);
         setFaixas(faixasData);
         
-        // Carregar usuários: admin vê todos, outros tentam carregar mas podem não ter permissão
+        // Carregar usuários: admin vê todos, outros tentam carregar
         if (isAdmin && allUsersDataFetchedIfAdmin) {
           setAllUsers(allUsersDataFetchedIfAdmin);
         } else {
@@ -644,8 +644,14 @@ export default function ChecklistUsinaPage() {
             const usersData = await base44.entities.User.list();
             setAllUsers(usersData);
           } catch (error) {
-            console.warn("Sem permissão para listar usuários - fallback para lista vazia");
-            setAllUsers([userData]);
+            console.warn("Sem permissão para listar usuários - tentando service role");
+            try {
+              const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
+              setAllUsers(usersViaServiceRole);
+            } catch (serviceRoleError) {
+              console.error("Falha ao carregar usuários:", serviceRoleError);
+              setAllUsers([userData]);
+            }
           }
         }
 
