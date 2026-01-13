@@ -1464,9 +1464,118 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
 
 LaboratoristaInterface.displayName = 'LaboratoristaInterface';
 
-// Componente para clientes - apenas ensaios aprovados sem abas
-const ClienteInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
+// Componente para clientes - tabela com filtros similar ao gestor
+const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers }) => {
+  const [nomeFilter, setNomeFilter] = useState('');
+  const [obraFilter, setObraFilter] = useState('');
+  const [projetoFilter, setProjetoFilter] = useState('');
+  const [dataInicioFilter, setDataInicioFilter] = useState('');
+  const [dataFimFilter, setDataFimFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
+  const [filteredEnsaios, setFilteredEnsaios] = useState([]);
+
+  const getDataEnsaio = useCallback((ensaio) => {
+    const entityType = ensaio.entityType;
+    switch (entityType) {
+      case "DiarioObra": return ensaio.data;
+      case "EnsaioCAUQ": return ensaio.data_ensaio;
+      case "EnsaioDensidade": return ensaio.extraction_date;
+      case "EnsaioDensidadeInSitu": return ensaio.data_ensaio;
+      case "EnsaioTaxaPinturaImprimacao": return ensaio.data_ensaio;
+      case "ChecklistUsina": return ensaio.data;
+      case "ChecklistAplicacao": return ensaio.data;
+      case "ChecklistMRAF": return ensaio.data;
+      case "ChecklistConcretagem": return ensaio.data;
+      case "ChecklistTerraplanagem": return ensaio.data;
+      case "EnsaioSondagem": return ensaio.data;
+      default: return ensaio.created_date;
+    }
+  }, []);
+
+  const toggleSortOrder = useCallback(() => {
+    setSortOrder(prev => {
+      if (prev === 'desc') return 'asc';
+      if (prev === 'asc') return null;
+      return 'desc';
+    });
+  }, []);
+
+  useEffect(() => {
+    let filtered = ensaios;
+
+    if (nomeFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
+        return laboratorista.toLowerCase().includes(nomeFilter.toLowerCase());
+      });
+    }
+
+    if (obraFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const obra = obras.find((o) => o.id === ensaio.obra_id);
+        return obra?.name?.toLowerCase().includes(obraFilter.toLowerCase()) ||
+          obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
+      });
+    }
+
+    if (projetoFilter) {
+      filtered = filtered.filter((ensaio) => {
+        if (!ensaio.project_id) return false;
+        const projeto = projects.find((p) => p.id === ensaio.project_id);
+        return projeto?.name?.toLowerCase().includes(projetoFilter.toLowerCase());
+      });
+    }
+
+    if (dataInicioFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const dataEnsaio = getDataEnsaio(ensaio);
+        if (!dataEnsaio) return false;
+        const ensaioDate = new Date(dataEnsaio);
+        ensaioDate.setHours(0, 0, 0, 0);
+        const startFilterDate = new Date(dataInicioFilter);
+        startFilterDate.setHours(0, 0, 0, 0);
+        return ensaioDate >= startFilterDate;
+      });
+    }
+
+    if (dataFimFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const dataEnsaio = getDataEnsaio(ensaio);
+        if (!dataEnsaio) return false;
+        const ensaioDate = new Date(dataEnsaio);
+        ensaioDate.setHours(0, 0, 0, 0);
+        const endFilterDate = new Date(dataFimFilter);
+        endFilterDate.setHours(23, 59, 59, 999);
+        return ensaioDate <= endFilterDate;
+      });
+    }
+
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter((ensaio) => {
+        if (statusFilter === 'approved') return ensaio.approved === true && !ensaio.client_signature?.signed_by;
+        if (statusFilter === 'signed') return ensaio.client_signature?.signed_by;
+        return true;
+      });
+    }
+
+    if (typeFilter !== 'all') {
+      filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
+    }
+
+    if (sortOrder) {
+      filtered = [...filtered].sort((a, b) => {
+        const dateA = new Date(getDataEnsaio(a));
+        const dateB = new Date(getDataEnsaio(b));
+        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
+        return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+      });
+    }
+
+    setFilteredEnsaios(filtered);
+  }, [ensaios, nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
     setSelectedEnsaios(prev => 
@@ -1475,6 +1584,14 @@ const ClienteInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
         : [...prev, ensaioId]
     );
   }, []);
+
+  const toggleSelectAll = useCallback(() => {
+    if (selectedEnsaios.length === filteredEnsaios.length) {
+      setSelectedEnsaios([]);
+    } else {
+      setSelectedEnsaios(filteredEnsaios.map(e => e.id));
+    }
+  }, [selectedEnsaios, filteredEnsaios]);
 
   const handleGerarPDFConsolidado = useCallback(() => {
     if (selectedEnsaios.length === 0) {
@@ -1485,10 +1602,113 @@ const ClienteInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
     window.open(createPageUrl(`RelatorioConsolidado?ids=${idsParam}`), '_blank');
   }, [selectedEnsaios]);
 
+  const clearFilters = useCallback(() => {
+    setNomeFilter('');
+    setObraFilter('');
+    setProjetoFilter('');
+    setDataInicioFilter('');
+    setDataFimFilter('');
+    setStatusFilter('all');
+    setTypeFilter('all');
+    setSortOrder('desc');
+  }, []);
+
+  const isAnyFilterActive = useMemo(() => {
+    return (
+      nomeFilter !== '' ||
+      obraFilter !== '' ||
+      projetoFilter !== '' ||
+      dataInicioFilter !== '' ||
+      dataFimFilter !== '' ||
+      statusFilter !== 'all' ||
+      typeFilter !== 'all'
+    );
+  }, [nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
+
+  const handleAssinar = useCallback(async (ensaio) => {
+    try {
+      if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
+        const entityMap = {
+          "DiarioObra": DiarioObra,
+          "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+          "EnsaioDensidade": EnsaioDensidade,
+          "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+          "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+          "ChecklistUsina": ChecklistUsina,
+          "ChecklistAplicacao": ChecklistAplicacao,
+          "ChecklistMRAF": ChecklistMRAF,
+          "ChecklistConcretagem": ChecklistConcretagem,
+          "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+          "EnsaioSondagem": base44.entities.EnsaioSondagem
+        };
+
+        const Entity = entityMap[ensaio.entityType];
+
+        const signatureData = {
+          client_signature: {
+            signed_by: user.email,
+            signed_date: new Date().toISOString(),
+            engineer_name: user.laboratorista_name || user.full_name,
+            crea_number: user.crea_number || ''
+          }
+        };
+
+        await Entity.update(ensaio.id, signatureData);
+        
+        alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Erro ao assinar registro:", error);
+      alert(`Erro ao assinar registro: ${error.message || 'Erro desconhecido'}. Por favor, tente novamente ou contate o administrador.`);
+    }
+  }, [user]);
+
+  const typeOptions = [
+    { value: 'all', label: 'Todos os tipos' },
+    { value: 'DiarioObra', label: 'Diário de Obra' },
+    { value: 'EnsaioCAUQ', label: 'Ensaio de CAUQ' },
+    { value: 'EnsaioDensidade', label: 'Densidade CP' },
+    { value: 'EnsaioDensidadeInSitu', label: 'Densidade In Situ' },
+    { value: 'EnsaioTaxaPinturaImprimacao', label: 'Taxa Pintura/Imprimação' },
+    { value: 'ChecklistUsina', label: 'Checklist Usina' },
+    { value: 'ChecklistAplicacao', label: 'Checklist Aplicação' },
+    { value: 'ChecklistMRAF', label: 'Checklist MRAF' },
+    { value: 'ChecklistConcretagem', label: 'Checklist Concretagem' },
+    { value: 'ChecklistTerraplanagem', label: 'Checklist Terraplanagem' },
+    { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
+  ];
+
+  const statusOptions = [
+    { value: 'all', label: 'Todos os status' },
+    { value: 'approved', label: 'Aprovados (não assinados)' },
+    { value: 'signed', label: 'Assinados' },
+  ];
+
   return (
-    <div className="space-y-4">
-      {selectedEnsaios.length > 0 && (
-        <div className="flex justify-end">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
+            <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
+            {selectedEnsaios.length > 0 && (
+              <Badge className="bg-[#BFCF99] text-[#00233B]">
+                {selectedEnsaios.length} selecionado(s)
+              </Badge>
+            )}
+            {isAnyFilterActive && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="h-7 text-xs text-[#00233B]/80 hover:bg-black/10"
+              >
+                Limpar todos os filtros
+              </Button>
+            )}
+          </div>
+        </div>
+        {selectedEnsaios.length > 0 && (
           <Button
             onClick={handleGerarPDFConsolidado}
             className="bg-[#566E3D] text-white hover:bg-[#566E3D]/90"
@@ -1496,35 +1716,199 @@ const ClienteInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
             <Download className="w-4 h-4 mr-2" />
             Gerar PDF Consolidado ({selectedEnsaios.length})
           </Button>
-        </div>
-      )}
-      
-      {ensaios.length > 0 ?
-        ensaios.map((ensaio) => (
-          <div key={ensaio.id} className="flex gap-2 items-start">
-            <input
-              type="checkbox"
-              checked={selectedEnsaios.includes(ensaio.id)}
-              onChange={() => toggleSelectEnsaio(ensaio.id)}
-              className="cursor-pointer mt-4"
-            />
-            <div className="flex-1">
-              <EnsaioCard
-                ensaio={ensaio}
-                obra={obras.find((o) => o.id === ensaio.obra_id)}
-                user={user}
-                allUsers={allUsers} />
-            </div>
+        )}
+      </div>
+
+      <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-black/5 border-b border-white/10">
+                <tr>
+                  <th className="text-center px-1 py-2 font-medium text-[#00233B]" style={{ width: '30px' }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedEnsaios.length === filteredEnsaios.length && filteredEnsaios.length > 0}
+                      onChange={toggleSelectAll}
+                      className="cursor-pointer"
+                    />
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Tipo</span>
+                      <SelectColumnFilter
+                        value={typeFilter}
+                        onChange={setTypeFilter}
+                        options={typeOptions}
+                        placeholder="Filtrar por tipo"
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={toggleSortOrder}
+                        className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors"
+                      >
+                        <span>Data</span>
+                        {sortOrder === 'desc' && <ArrowDown className="w-3 h-3" />}
+                        {sortOrder === 'asc' && <ArrowUp className="w-3 h-3" />}
+                        {!sortOrder && <ArrowUpDown className="w-3 h-3" />}
+                      </button>
+                      <DateRangePicker
+                        startDate={dataInicioFilter}
+                        endDate={dataFimFilter}
+                        onStartChange={setDataInicioFilter}
+                        onEndChange={setDataFimFilter}
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Obra</span>
+                      <TextColumnFilter
+                        value={obraFilter}
+                        onChange={setObraFilter}
+                        placeholder="Filtrar por obra..."
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Lab.</span>
+                      <TextColumnFilter
+                        value={nomeFilter}
+                        onChange={setNomeFilter}
+                        placeholder="Filtrar por nome..."
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Projeto</span>
+                      <TextColumnFilter
+                        value={projetoFilter}
+                        onChange={setProjetoFilter}
+                        placeholder="Filtrar por projeto..."
+                      />
+                    </div>
+                  </th>
+                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
+                    <div className="flex items-center justify-center gap-1">
+                      <span>Status</span>
+                      <SelectColumnFilter
+                        value={statusFilter}
+                        onChange={setStatusFilter}
+                        options={statusOptions}
+                        placeholder="Filtrar por status"
+                      />
+                    </div>
+                  </th>
+                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '120px' }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredEnsaios.map((ensaio, index) => {
+                  const obra = obras.find((o) => o.id === ensaio.obra_id);
+                  const status = getStatusInfo(ensaio);
+                  const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
+                  const reportUrl = getReportLink(ensaio);
+                  const localInfo = getLocalInfo(ensaio);
+                  const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
+                  const dataFormatted = getDataFormatted(ensaio);
+                  const projeto = ensaio.project_id ? projects.find(p => p.id === ensaio.project_id) : null;
+                  const podeAssinar = ensaio.approved === true && !ensaio.client_signature?.signed_by;
+
+                  return (
+                    <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
+                      <td className="px-1 py-2 text-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedEnsaios.includes(ensaio.id)}
+                          onChange={() => toggleSelectEnsaio(ensaio.id)}
+                          className="cursor-pointer"
+                        />
+                      </td>
+                      <td className="px-2 py-2">
+                        <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
+                          <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
+                          <span className="truncate max-w-[120px]" title={name}>{name}</span>
+                          {(() => {
+                            const naoConformidades = getNaoConformidades(ensaio);
+                            if (naoConformidades.length > 0) {
+                              return (
+                                <span 
+                                  className="text-red-600 cursor-help" 
+                                  title={`Não conformidades:\n${naoConformidades.join('\n')}`}
+                                >
+                                  ⚠️
+                                </span>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
+                      </td>
+                      <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
+                      <td className="px-2 py-2">
+                        <div className="font-medium text-[#00233B] text-xs truncate max-w-[140px]" title={obra?.name}>{obra?.name || 'N/A'}</div>
+                        <div className="text-[10px] text-[#00233B]/70">{obra?.code}</div>
+                      </td>
+                      <td className="px-2 py-2 text-[#00233B]/90 text-xs truncate max-w-[100px]" title={laboratorista}>{laboratorista}</td>
+                      <td className="px-2 py-2">
+                        <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
+                        <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
+                      </td>
+                      <td className="px-2 py-2">
+                        {projeto ? (
+                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
+                        ) : (
+                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        )}
+                      </td>
+                      <td className="px-2 py-2 text-center">
+                        <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
+                          <status.icon className="w-3 h-3" />
+                          {status.text}
+                        </Badge>
+                      </td>
+                      <td className="px-2 py-2">
+                        <div className="flex items-center gap-1">
+                          <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
+                            <Link to={reportUrl} target="_blank">
+                              <FileText className="w-3 h-3" />
+                            </Link>
+                          </Button>
+                          {podeAssinar && (
+                            <Button 
+                              size="sm" 
+                              style={{ backgroundColor: '#566E3D' }}
+                              className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                              onClick={() => handleAssinar(ensaio)}
+                              title="Assinar"
+                            >
+                              <MessageSquare className="w-3 h-3" />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {filteredEnsaios.length === 0 && (
+              <div className="text-center py-12 text-[#00233B]/70">
+                <FileText className="w-12 h-12 text-[#00233B]/30 mx-auto mb-4" />
+                <h3 className="font-medium text-[#00233B] mb-2">Nenhum registro encontrado</h3>
+                <p>Ajuste os filtros ou aguarde novos registros aprovados.</p>
+              </div>
+            )}
           </div>
-        )) :
-        <div className="text-center py-12 text-[#00233B]/70">
-          <CheckCircle className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-[#00233B] mb-2">
-            Nenhum registro aprovado
-          </h3>
-          <p>Não há registros aprovados disponíveis para visualização no momento.</p>
-        </div>
-      }
+        </CardContent>
+      </Card>
     </div>
   );
 });
@@ -1843,6 +2227,7 @@ export default function MeusEnsaios() {
               <ClienteInterface
                 ensaios={ensaios}
                 obras={obras}
+                projects={projects}
                 user={user}
                 allUsers={allUsers} />
               :
