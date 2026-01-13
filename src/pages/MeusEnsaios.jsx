@@ -543,7 +543,7 @@ const SelectColumnFilter = React.memo(({ value, onChange, options, placeholder }
 SelectColumnFilter.displayName = 'SelectColumnFilter';
 
 // Componente para interface de administrador (tabela) - Memoizado
-const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReject, user, canApprove, canCreate, canEdit, allUsers }) => {
+const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReject, onDelete, user, canApprove, canCreate, canEdit, allUsers }) => {
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState(''); // New filter state
@@ -553,6 +553,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusObraFilter, setStatusObraFilter] = useState('all');
   const [reprovingEnsaio, setReprovingEnsaio] = useState(null);
+  const [deletingEnsaio, setDeletingEnsaio] = useState(null);
   const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc', or null
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   
