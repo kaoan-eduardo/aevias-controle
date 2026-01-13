@@ -567,7 +567,7 @@ export default function ChecklistAplicacaoPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6 bg-transparent min-h-screen">
+    <div className="p-6 space-y-6 bg-transparent min-h-screen">
       <div className="max-w-6xl mx-auto">
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
           <CardHeader>
@@ -616,8 +616,8 @@ export default function ChecklistAplicacaoPage() {
             }} className="space-y-8">
               {/* Dados da Obra */}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-[#00233B] mb-4">Dados da Obra e Projeto</h3>
-                <div className="grid grid-cols-1 gap-4">
+                <h3 className="text-lg font-semibold text-[#00233B] mb-4">Dados da Obra</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="obra_id">Obra *</Label>
                     <Select value={formData.obra_id} onValueChange={(value) => handleInputChange('obra_id', value)} disabled={!isEditable || obras.length === 0}>
@@ -747,8 +747,8 @@ export default function ChecklistAplicacaoPage() {
 
               {/* Condições Climáticas */}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-[#00233B] mb-4">Condições Climáticas</h3>
-                <div className="grid grid-cols-1 gap-4">
+                <h3 className="text-lg font-semibold text-[#00233B] mb-4">Condições Climáticas</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {formData.periodos_clima.map((periodo, index) => (
                     <Card key={index} className="bg-black/5 border-white/20">
                       <CardHeader className="pb-3">
@@ -803,9 +803,9 @@ export default function ChecklistAplicacaoPage() {
 
               {/* Fresagem e Preparação */}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-[#00233B] mb-4">Fresagem e Preparação</h3>
+                <h3 className="text-lg font-semibold text-[#00233B] mb-4">Acompanhamento da Fresagem e Preparação da Superfície</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center justify-between p-3 bg-black/5 rounded-lg">
                       <Label htmlFor="superficie_limpa" className="cursor-pointer">
                         A superfície foi limpa após a fresagem?
@@ -877,10 +877,9 @@ export default function ChecklistAplicacaoPage() {
 
               {/* Pintura de Ligação */}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-[#00233B] mb-4">Pintura de Ligação</h3>
+                <h3 className="text-lg font-semibold text-[#00233B] mb-4">Acompanhamento da Pintura de Ligação</h3>
                 <div className="space-y-4">
-                  <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-                    <table className="w-full border-collapse border border-slate-300 text-xs md:text-sm min-w-[600px]">
+                  <table className="w-full border-collapse border border-slate-300 text-sm">
                     <thead className="bg-black/5">
                       <tr>
                         <th className="border border-slate-300 px-2 py-2 text-left">Serviço</th>
@@ -1064,7 +1063,6 @@ export default function ChecklistAplicacaoPage() {
                       </tr>
                     </tbody>
                   </table>
-                  </div>
 
                   <div>
                     <Label htmlFor="pintura_observacoes">Observações</Label>
@@ -1088,9 +1086,9 @@ export default function ChecklistAplicacaoPage() {
 
               {/* Controle de Aplicação */}
               <div>
-                <h3 className="text-base md:text-lg font-semibold text-[#00233B] mb-4">Controle de Aplicação</h3>
+                <h3 className="text-lg font-semibold text-[#00233B] mb-4">Controle de Aplicação</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                       <Label htmlFor="km_estaca_inicial">Km/Estaca Inicial</Label>
                       <Input
@@ -1175,8 +1173,7 @@ export default function ChecklistAplicacaoPage() {
                     </div>
                   </div>
 
-                  <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-                    <table className="w-full border-collapse border border-slate-300 text-xs md:text-sm min-w-[600px]">
+                  <table className="w-full border-collapse border border-slate-300 text-sm">
                     <thead className="bg-black/5">
                       <tr>
                         <th className="border border-slate-300 px-2 py-2 text-left">Ensaio</th>
@@ -1263,7 +1260,6 @@ export default function ChecklistAplicacaoPage() {
                       </tr>
                     </tbody>
                   </table>
-                  </div>
 
                   <div>
                     <Label htmlFor="controle_observacoes">Observações</Label>
@@ -1349,7 +1345,7 @@ export default function ChecklistAplicacaoPage() {
               </div>
 
               {/* Botões de ação */}
-              <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <div className="flex justify-end gap-3">
                 <Button
                   type="button"
                   variant="outline"
@@ -1357,7 +1353,7 @@ export default function ChecklistAplicacaoPage() {
                     clearSavedData();
                     navigate(createPageUrl('MeusEnsaios'));
                   }}
-                  className="hover:bg-black/10 w-full sm:w-auto"
+                  className="hover:bg-black/10"
                 >
                   Cancelar
                 </Button>
@@ -1371,14 +1367,14 @@ export default function ChecklistAplicacaoPage() {
                         e.preventDefault();
                         await handleSubmit(e, 'rascunho');
                       }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
+                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
                     >
                       <Save className="mr-2 h-4 w-4" /> Salvar Progresso
                     </Button>
                     <Button
                       type="submit"
                       disabled={saving}
-                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 w-full sm:w-auto"
+                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
                     >
                       {saving ? (
                         <>
