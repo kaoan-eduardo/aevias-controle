@@ -1030,7 +1030,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                             </Link>
                           </Button>
 
-                          {canApprove && ensaio.status === 'finalizado' && (
+                          {canApprove && ensaio.status !== 'rascunho' && (
                               <div className="flex gap-1">
                                 {(ensaio.approved === null || ensaio.approved === false) && (
                                   <Button
