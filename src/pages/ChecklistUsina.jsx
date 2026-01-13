@@ -16,6 +16,7 @@ import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import { useGestoresRegional } from "@/components/hooks/useGestoresRegional";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -95,19 +96,16 @@ export default function ChecklistUsinaPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleObraChange = useCallback((obraId) => {
-    const obra = obras.find(o => o.id === obraId);
-    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-    const gestorEmail = regional?.gestor_contrato_responsavel;
-    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+  const { gestores } = useGestoresRegional(formData.obra_id, obras);
 
+  const handleObraChange = useCallback((obraId) => {
     setFormData(prev => ({
       ...prev,
       obra_id: obraId,
       project_id: "", // Reset project on obra change
-      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
+      engenheiro_responsavel: "", // Reset engineer on obra change
     }));
-  }, [obras, regionais, allUsers]);
+  }, []);
 
   const checkConformidadeAutomatica = useCallback((testKey, resultado, project) => {
     if (!project || resultado === null || resultado === undefined || resultado === '') return null;
@@ -511,8 +509,8 @@ export default function ChecklistUsinaPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.usina) {
-        alert("Por favor, preencha a obra e a usina.");
+      if (!formData.obra_id || !formData.usina || !formData.engenheiro_responsavel) {
+        alert("Por favor, preencha a obra, a usina e selecione o engenheiro responsável.");
         return;
       }
     } else {
@@ -594,22 +592,18 @@ export default function ChecklistUsinaPage() {
           // Continuar sem as faixas - não é crítico para o funcionamento
         }
 
-        // Adicionar User.list() apenas se for admin
-        if (isAdmin) {
-          dataPromises.push(User.list());
-        }
+        // Carregar sempre User.list() para filtrar gestores (laboratoristas precisam)
+        dataPromises.push(User.list());
 
         const loadedData = await Promise.all(dataPromises);
         
         // Destructure based on the order pushed into dataPromises
-        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
+        const [obrasData, regionaisData, projectsData, allUsersData] = loadedData;
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
-        
-        // Se não for admin, usar apenas o usuário atual na lista
-        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
+        setAllUsers(allUsersData);
 
         let availableObras = obrasData;
         
@@ -751,23 +745,7 @@ export default function ChecklistUsinaPage() {
     loadData();
   }, [location.search, navigate]);
   
-  useEffect(() => {
-    if (!editingChecklist && formData.obra_id && allUsers.length > 0 && obras.length > 0 && regionais.length > 0) {
-      const obra = obras.find(o => o.id === formData.obra_id);
-      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-      const gestorEmail = regional?.gestor_contrato_responsavel;
-      const gestor = gestorEmail ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
-      
-      if (gestor && formData.engenheiro_responsavel === "") {
-        const gestorName = gestor.laboratorista_name || gestor.full_name;
-        console.log("✅ ChecklistUsina - Gestor encontrado:", gestorName);
-        setFormData(prev => ({
-          ...prev,
-          engenheiro_responsavel: gestorName
-        }));
-      }
-    }
-  }, [editingChecklist, formData.obra_id, obras, regionais, allUsers, formData.engenheiro_responsavel]);
+
 
   const isApproved = formData.approved === true;
   const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
