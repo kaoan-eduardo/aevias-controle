@@ -16,7 +16,6 @@ import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
-import { useGestoresRegional } from "@/components/hooks/useGestoresRegional";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -592,22 +591,12 @@ export default function ChecklistUsinaPage() {
           // Continuar sem as faixas - não é crítico para o funcionamento
         }
 
-        // Tentar carregar usuários - se falhar por permissões, continuar sem eles
-        let allUsersData = [];
-        try {
-          allUsersData = await User.list();
-        } catch (usersError) {
-          console.warn("⚠️ Sem permissão para listar usuários, continuando sem eles:", usersError.message);
-          // Laboratoristas não têm permissão, mas o hook useGestoresRegional carregará os gestores quando necessário
-          allUsersData = [];
-        }
-
         const [obrasData, regionaisData, projectsData] = await Promise.all(dataPromises);
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
-        setAllUsers(allUsersData);
+        setAllUsers([]);
 
         let availableObras = obrasData;
         
@@ -917,21 +906,14 @@ export default function ChecklistUsinaPage() {
                     </div>
                     <div>
                       <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
-                      <select
+                      <Input
                         id="engenheiro_responsavel"
                         value={formData.engenheiro_responsavel}
                         onChange={(e) => handleChange('engenheiro_responsavel', e.target.value)}
                         required
-                        disabled={!isEditable || isApproved || !formData.obra_id}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione um gestor</option>
-                        {gestores.map(gestor => (
-                          <option key={gestor.email} value={gestor.laboratorista_name || gestor.full_name}>
-                            {gestor.laboratorista_name || gestor.full_name}
-                          </option>
-                        ))}
-                      </select>
+                        disabled={!isEditable || isApproved}
+                        placeholder="Nome do engenheiro responsável"
+                      />
                     </div>
                   </div>
                 </CardContent>
