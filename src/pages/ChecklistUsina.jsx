@@ -678,8 +678,7 @@ export default function ChecklistUsinaPage() {
         const [obrasData, regionaisData, allUsersDataFetchedIfAdmin] = loadedData;
         
         // Buscar projetos e usuários via backend (ignora RLS)
-        const { getLaboratoristaFormData } = await import('@/functions/getLaboratoristaFormData');
-        const formDataResponse = await getLaboratoristaFormData({});
+        const formDataResponse = await base44.functions.invoke('getLaboratoristaFormData', {});
         
         const projectsData = formDataResponse.data.projects || [];
         const allUsersDataFromBackend = formDataResponse.data.users || [];
