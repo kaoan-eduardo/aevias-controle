@@ -1314,7 +1314,8 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
 
   const emExecucao = useMemo(() => {
     const filtered = ensaios.filter((e) => {
-      return e.status === 'rascunho' && e.approved !== true && !e.client_signature?.signed_by;
+      // Em execução = status rascunho E não aprovado E não assinado E não rejeitado (ou seja, nunca finalizou)
+      return e.status === 'rascunho' && e.approved === null && !e.client_signature?.signed_by;
     });
     return filtered;
   }, [ensaios]);
