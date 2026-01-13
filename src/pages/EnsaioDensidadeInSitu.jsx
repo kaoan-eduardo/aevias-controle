@@ -113,12 +113,25 @@ export default function EnsaioDensidadeInSituPage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [obrasData, projectsData, regionaisData, allUsersData] = await Promise.all([
+      const [obrasData, regionaisData, allUsersData] = await Promise.all([
         base44.entities.Obra.list(),
-        base44.entities.Project.list(),
         base44.entities.Regional.list(),
         base44.entities.User.list().catch(() => [])
       ]);
+      
+      // Carregar projetos com fallback para service role
+      let projectsData = [];
+      try {
+        projectsData = await base44.entities.Project.list();
+      } catch (error) {
+        console.warn("Sem permissão para listar projetos - tentando service role");
+        try {
+          projectsData = await base44.asServiceRole.entities.Project.list();
+        } catch (serviceRoleError) {
+          console.error("Falha ao carregar projetos:", serviceRoleError);
+          projectsData = [];
+        }
+      }
 
       if (allUsersData.length > 0) {
         setAllUsers(allUsersData);

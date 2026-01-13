@@ -357,8 +357,7 @@ export default function ChecklistMRAFPage() {
 
         const dataPromises = [
           Obra.list(),
-          Regional.list(),
-          Project.list()
+          Regional.list()
         ];
 
         let faixasData = [];
@@ -373,7 +372,21 @@ export default function ChecklistMRAFPage() {
         }
 
         const loadedData = await Promise.all(dataPromises);
-        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
+        const [obrasData, regionaisData, allUsersDataFetchedIfAdmin] = loadedData;
+        
+        // Carregar projetos com fallback para service role
+        let projectsData = [];
+        try {
+          projectsData = await base44.entities.Project.list();
+        } catch (error) {
+          console.warn("Sem permissão para listar projetos - tentando service role");
+          try {
+            projectsData = await base44.asServiceRole.entities.Project.list();
+          } catch (serviceRoleError) {
+            console.error("Falha ao carregar projetos:", serviceRoleError);
+            projectsData = [];
+          }
+        }
         
         setRegionais(regionaisData);
         setProjects(projectsData);

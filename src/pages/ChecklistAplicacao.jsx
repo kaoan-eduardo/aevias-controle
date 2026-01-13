@@ -118,9 +118,30 @@ export default function ChecklistAplicacaoPage() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
 
-        let obrasData = await base44.entities.Obra.list();
-        const projectsData = await base44.entities.Project.list();
-        const regionaisData = await base44.entities.Regional.list();
+        let obrasData, projectsData, regionaisData;
+        
+        try {
+          [obrasData, regionaisData] = await Promise.all([
+            base44.entities.Obra.list(),
+            base44.entities.Regional.list()
+          ]);
+        } catch (error) {
+          console.error("Erro ao carregar obras/regionais:", error);
+          throw error;
+        }
+        
+        // Carregar projetos com fallback para service role
+        try {
+          projectsData = await base44.entities.Project.list();
+        } catch (error) {
+          console.warn("Sem permissão para listar projetos - tentando service role");
+          try {
+            projectsData = await base44.asServiceRole.entities.Project.list();
+          } catch (serviceRoleError) {
+            console.error("Falha ao carregar projetos:", serviceRoleError);
+            projectsData = [];
+          }
+        }
         
         // Sempre tentar carregar usuários
         try {
