@@ -282,13 +282,13 @@ export default function ChecklistMRAFPage() {
         const updateData = { ...dataToSave };
         let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
 
-        if (editingChecklist.approved === false) {
+        if (editingChecklist.approved === false && saveStatus === 'finalizado') {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
           updateData.was_rejected = true;
-          successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
+          successMessage = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
         }
         
         await ChecklistMRAFEntity.update(editingChecklist.id, updateData);

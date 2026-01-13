@@ -44,6 +44,10 @@ const getStatusInfo = (ensaio) => {
   if (ensaio.approved === false) {
     return { text: "Reprovado", icon: XCircle, className: "bg-[#800020]/10 text-[#800020] border border-[#800020]/30 hover:bg-[#800020]/20 hover:border-[#800020]/40 transition-colors" };
   }
+  // Pendente com indicador de re-submissão após reprovação
+  if (ensaio.was_rejected === true) {
+    return { text: "Pendente (Re-análise)", icon: Clock, className: "bg-orange-100/80 text-orange-800 border border-orange-300/50 hover:bg-orange-200/80 hover:border-orange-400/50 transition-colors", wasRejected: true };
+  }
   return { text: "Pendente", icon: Clock, className: "bg-[#FBBF24]/10 text-[#854d0e] border border-[#FBBF24]/30 hover:bg-[#FBBF24]/20 hover:border-[#FBBF24]/40 transition-colors" };
 };
 
@@ -1017,10 +1021,15 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                         )}
                       </td>
                       <td className="px-2 py-2 text-center">
-                        <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
-                          <status.icon className="w-3 h-3" />
-                          {status.text}
-                        </Badge>
+                       <div className="flex flex-col items-center gap-1">
+                         <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
+                           <status.icon className="w-3 h-3" />
+                           {status.text}
+                         </Badge>
+                         {status.wasRejected && (
+                           <span className="text-[9px] text-orange-700 italic">Editado após reprovação</span>
+                         )}
+                       </div>
                       </td>
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-1">
@@ -1186,6 +1195,11 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 <status.icon className="w-3 h-3" />
                 {status.text}
               </Badge>
+              {status.wasRejected && (
+                <Badge className="bg-orange-100/80 text-orange-800 border border-orange-300/50 text-xs">
+                  🔄 Editado após reprovação
+                </Badge>
+              )}
               {jaAssinado && (
                 <Badge className="bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 text-xs">
                   ✍️ Assinado por você

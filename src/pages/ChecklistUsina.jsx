@@ -531,18 +531,19 @@ export default function ChecklistUsinaPage() {
     try {
       if (editingChecklist?.id) {
         const updateData = { ...dataToSave };
-        if (editingChecklist.approved === false) {
+        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
+        
+        if (editingChecklist.approved === false && saveStatus === 'finalizado') {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
           updateData.was_rejected = true;
-          await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
-          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso! O registro voltará para análise do administrador.");
-        } else {
-          await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
-          alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!");
+          successMessage = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
         }
+        
+        await ChecklistUsinaEntity.update(editingChecklist.id, updateData);
+        alert(successMessage);
       } else {
         await ChecklistUsinaEntity.create({ ...dataToSave, laboratorista_name: user?.laboratorista_name || user?.full_name });
         alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
