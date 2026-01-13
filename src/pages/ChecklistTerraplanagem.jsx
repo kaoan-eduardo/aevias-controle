@@ -31,6 +31,7 @@ export default function ChecklistTerraplanagem() {
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
 
   const [formData, setFormData] = useState({
     obra_id: "",
@@ -112,6 +113,39 @@ export default function ChecklistTerraplanagem() {
 
   const { clearSavedData } = useFormPersistence('checklist_terraplanagem', formData, setFormData, !!editingChecklist);
 
+  const gestoresDisponiveis = React.useMemo(() => {
+    const obra = obras.find(o => o.id === formData.obra_id);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    
+    if (!regional || !allUsers || allUsers.length === 0) return [];
+    
+    const gestores = [];
+    
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+        if (gestor && !gestores.find(g => g.email === gestor.email)) {
+          gestores.push({
+            email: gestor.email,
+            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+          });
+        }
+      });
+    }
+    
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
+      }
+    }
+    
+    return gestores;
+  }, [formData.obra_id, obras, regionais, allUsers]);
+
   // Cálculos automáticos
   const variacaoUmidade = (() => {
     const uOtima = parseFloat(formData.umidade_otima_proctor);
@@ -136,50 +170,23 @@ export default function ChecklistTerraplanagem() {
     loadInitialData();
   }, []);
 
-  useEffect(() => {
-    if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-      if (obraSelecionada && obraSelecionada.regional_id) {
-        const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-        if (regional && regional.gestor_contrato_responsavel) {
-          loadEngenheiroResponsavel(regional.gestor_contrato_responsavel);
-        }
-      }
-    }
-  }, [formData.obra_id, obras, regionais]);
 
-  const loadEngenheiroResponsavel = async (gestorEmail) => {
-    try {
-      const allUsers = await base44.entities.User.list();
-      const gestor = allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-      if (gestor) {
-        const gestorName = gestor.laboratorista_name || gestor.full_name;
-        console.log("✅ ChecklistTerraplanagem - Gestor encontrado:", gestorName);
-        setFormData(prev => ({
-          ...prev,
-          engenheiro_responsavel: gestorName
-        }));
-      } else {
-        console.log("⚠️ ChecklistTerraplanagem - Gestor não encontrado para:", gestorEmail);
-      }
-    } catch (error) {
-      console.error("❌ ChecklistTerraplanagem - Erro ao buscar gestor:", error);
-    }
-  };
 
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [userData, obrasData, projectsData, regionaisData] = await Promise.all([
+      const [userData, obrasData, projectsData, regionaisData, allUsersData] = await Promise.all([
         base44.auth.me(),
         base44.entities.Obra.list(),
         Project.list(),
-        base44.entities.Regional.list()
+        base44.entities.Regional.list(),
+        base44.entities.User.list().catch(() => [])
       ]);
 
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
+      setAllUsers(allUsersData.length > 0 ? allUsersData : [userData]);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
@@ -347,6 +354,12 @@ export default function ChecklistTerraplanagem() {
     try {
       // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
+        if (!formData.engenheiro_responsavel?.trim()) {
+          alert("Por favor, selecione o Engenheiro Responsável.");
+          setSaving(false);
+          return;
+        }
+
         for (let i = 0; i < formData.periodos_clima.length; i++) {
           const periodo = formData.periodos_clima[i];
           if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
@@ -609,13 +622,22 @@ export default function ChecklistTerraplanagem() {
 
                   <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                     <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                      <Input
+                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
+                      <select
                         id="engenheiro_responsavel"
                         value={formData.engenheiro_responsavel}
                         onChange={(e) => setFormData({ ...formData, engenheiro_responsavel: e.target.value })}
-                        placeholder="Preenchido automaticamente"
-                      />
+                        disabled={gestoresDisponiveis.length === 0}
+                        required
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="">Selecione o engenheiro</option>
+                        {gestoresDisponiveis.map((gestor) => (
+                          <option key={gestor.email} value={gestor.nome}>
+                            {gestor.nome}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 </CardContent>

@@ -77,8 +77,42 @@ export default function ChecklistConcretagem() {
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
   const [formData, setFormData] = useState(getInitialFormData());
+  const [allUsers, setAllUsers] = useState([]);
 
   const { clearSavedData } = useFormPersistence('checklist_concretagem', formData, setFormData, !!editingChecklist);
+
+  const gestoresDisponiveis = React.useMemo(() => {
+    const obra = obras.find(o => o.id === formData.obra_id);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    
+    if (!regional || !allUsers || allUsers.length === 0) return [];
+    
+    const gestores = [];
+    
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+        if (gestor && !gestores.find(g => g.email === gestor.email)) {
+          gestores.push({
+            email: gestor.email,
+            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+          });
+        }
+      });
+    }
+    
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
+      }
+    }
+    
+    return gestores;
+  }, [formData.obra_id, obras, regionais, allUsers]);
 
   useEffect(() => {
     loadInitialData();
@@ -151,71 +185,23 @@ export default function ChecklistConcretagem() {
     }
   }, [formData.obra_id, obras, allProjects, regionais, projects]); // Added 'projects' to dependency array for projectStillAvailable check.
 
-  // Carregar engenheiro responsável quando obra é selecionada
-  useEffect(() => {
-    const loadEngenheiroResponsavel = async () => {
-      if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-        const obraSelecionada = obras.find(o => o.id === formData.obra_id);
-        if (obraSelecionada && obraSelecionada.regional_id) {
-          const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
-          if (regional && regional.gestor_contrato_responsavel) {
-            try {
-              // Tentar buscar usuários (pode falhar se o usuário não tiver permissão)
-              const allUsersData = await base44.entities.User.list();
-              const gestor = allUsersData.find(u => u.email.toLowerCase() === regional.gestor_contrato_responsavel.toLowerCase());
 
-              if (gestor) {
-                const gestorName = gestor.laboratorista_name || gestor.full_name;
-                setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: gestorName
-                }));
-              } else {
-                // Gestor não encontrado - usar o email como fallback
-                setFormData(prev => ({
-                  ...prev,
-                  engenheiro_responsavel: regional.gestor_contrato_responsavel
-                }));
-              }
-            } catch (error) {
-              // Sem permissão para listar usuários - usar o email como fallback
-              console.warn("⚠️ Sem permissão para listar usuários, usando email do gestor");
-              setFormData(prev => ({
-                ...prev,
-                engenheiro_responsavel: regional.gestor_contrato_responsavel || ""
-              }));
-            }
-          } else {
-            setFormData(prev => ({
-              ...prev,
-              engenheiro_responsavel: ""
-            }));
-          }
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            engenheiro_responsavel: ""
-          }));
-        }
-      }
-    };
-
-    loadEngenheiroResponsavel();
-  }, [formData.obra_id, obras, regionais]);
 
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [userData, obrasData, projectsData, regionaisData] = await Promise.all([
+      const [userData, obrasData, projectsData, regionaisData, allUsersData] = await Promise.all([
         base44.auth.me(),
         base44.entities.Obra.list(),
         Project.list(),
-        base44.entities.Regional.list()
+        base44.entities.Regional.list(),
+        base44.entities.User.list().catch(() => [])
       ]);
 
       setUser(userData);
       setRegionais(regionaisData);
-      setAllProjects(projectsData); // Store all projects
+      setAllProjects(projectsData);
+      setAllUsers(allUsersData.length > 0 ? allUsersData : [userData]);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
@@ -585,6 +571,12 @@ export default function ChecklistConcretagem() {
           return;
         }
 
+        if (!formData.engenheiro_responsavel?.trim()) {
+          alert("Por favor, selecione o Engenheiro Responsável.");
+          setSaving(false);
+          return;
+        }
+
         // Validar temperaturas dos períodos climáticos
         for (let i = 0; i < formData.periodos_clima.length; i++) {
           const periodo = formData.periodos_clima[i];
@@ -841,13 +833,22 @@ export default function ChecklistConcretagem() {
                     </div>
 
                     <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                      <Input
+                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
+                      <select
                         id="engenheiro_responsavel"
                         value={formData.engenheiro_responsavel}
                         onChange={(e) => setFormData({ ...formData, engenheiro_responsavel: e.target.value })}
-                        placeholder="Preenchido automaticamente"
-                      />
+                        disabled={gestoresDisponiveis.length === 0}
+                        required
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="">Selecione o engenheiro</option>
+                        {gestoresDisponiveis.map((gestor) => (
+                          <option key={gestor.email} value={gestor.nome}>
+                            {gestor.nome}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
