@@ -197,25 +197,15 @@ export default function ChecklistConcretagem() {
         base44.entities.Regional.list(),
         base44.entities.User.list().catch(() => [])
       ]);
+      
+      console.log("🔍 [LOADDATA] Obras:", obrasData.length);
+      console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
+      console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
 
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
-      
-      // Carregar usuários
-      if (allUsersData.length > 0) {
-        setAllUsers(allUsersData);
-        console.log("🔍 [LOADDATA] Usuários:", allUsersData.length);
-      } else {
-        try {
-          const usersData = await base44.entities.User.list();
-          setAllUsers(usersData);
-          console.log("🔍 [LOADDATA] Usuários carregados:", usersData.length);
-        } catch (error) {
-          console.warn("⚠️ Sem permissão para listar usuários (esperado para não-admin)");
-          setAllUsers([userData]);
-        }
-      }
+      setAllUsers(allUsersData);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 

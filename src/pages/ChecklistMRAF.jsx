@@ -420,34 +420,25 @@ export default function ChecklistMRAFPage() {
         const loadedData = await Promise.all(dataPromises);
         const [obrasData, regionaisData, allUsersDataFetchedIfAdmin] = loadedData;
         
-        // Carregar projetos
-        const projectsData = await base44.entities.Project.list();
+        // Buscar projetos e usuários via backend (ignora RLS)
+        const formDataBackendResponse = await base44.functions.invoke('getLaboratoristaFormData', {});
+        
+        const projectsData = formDataBackendResponse.data.projects || [];
+        const allUsersDataFromBackend = formDataBackendResponse.data.users || [];
         
         console.log("🔍 [LOADDATA] Obras:", obrasData.length);
         console.log("🔍 [LOADDATA] Projetos:", projectsData.length);
-        console.log("🔍 [LOADDATA] Regionais:", regionaisData.length);
+        console.log("🔍 [LOADDATA] Usuários:", allUsersDataFromBackend.length);
         
         setRegionais(regionaisData);
         setProjects(projectsData);
         setFaixas(faixasData);
         
-        // Carregar usuários: admin vê todos, outros tentam carregar
+        // Usar usuários do backend se disponível
         if (isAdmin && allUsersDataFetchedIfAdmin) {
           setAllUsers(allUsersDataFetchedIfAdmin);
         } else {
-          try {
-            const usersData = await base44.entities.User.list();
-            setAllUsers(usersData);
-          } catch (error) {
-            console.warn("Sem permissão para listar usuários - tentando service role");
-            try {
-              const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
-              setAllUsers(usersViaServiceRole);
-            } catch (serviceRoleError) {
-              console.error("Falha ao carregar usuários:", serviceRoleError);
-              setAllUsers([userData]);
-            }
-          }
+          setAllUsers(allUsersDataFromBackend);
         }
 
         let availableObras = obrasData;
