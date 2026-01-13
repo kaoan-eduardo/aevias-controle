@@ -1021,15 +1021,10 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                         )}
                       </td>
                       <td className="px-2 py-2 text-center">
-                       <div className="flex flex-col items-center gap-1">
-                         <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
-                           <status.icon className="w-3 h-3" />
-                           {status.text}
-                         </Badge>
-                         {status.wasRejected && (
-                           <span className="text-[9px] text-orange-700 italic">Editado após reprovação</span>
-                         )}
-                       </div>
+                       <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
+                         <status.icon className="w-3 h-3" />
+                         {status.text}
+                       </Badge>
                       </td>
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-1">
