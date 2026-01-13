@@ -27,7 +27,6 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
-  engenheiro_responsavel: "",
   controle_agregados: [],
   equivalente_areia_status: null,
   equivalente_areia_quantidade: 0,
@@ -105,7 +104,6 @@ export default function ChecklistUsinaPage() {
       ...prev,
       obra_id: obraId,
       project_id: "", // Reset project on obra change
-      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
     }));
   }, [obras, regionais, allUsers]);
 
@@ -751,23 +749,7 @@ export default function ChecklistUsinaPage() {
     loadData();
   }, [location.search, navigate]);
   
-  useEffect(() => {
-    if (!editingChecklist && formData.obra_id && allUsers.length > 0 && obras.length > 0 && regionais.length > 0) {
-      const obra = obras.find(o => o.id === formData.obra_id);
-      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-      const gestorEmail = regional?.gestor_contrato_responsavel;
-      const gestor = gestorEmail ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
-      
-      if (gestor && formData.engenheiro_responsavel === "") {
-        const gestorName = gestor.laboratorista_name || gestor.full_name;
-        console.log("✅ ChecklistUsina - Gestor encontrado:", gestorName);
-        setFormData(prev => ({
-          ...prev,
-          engenheiro_responsavel: gestorName
-        }));
-      }
-    }
-  }, [editingChecklist, formData.obra_id, obras, regionais, allUsers, formData.engenheiro_responsavel]);
+
 
   const isApproved = formData.approved === true;
   const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
@@ -921,7 +903,7 @@ export default function ChecklistUsinaPage() {
                         className="bg-slate-100"
                       />
                     </div>
-                     <div>
+                    <div>
                       <Label htmlFor="ligante">Ligante Asfáltico</Label>
                       <Input
                         id="ligante"
