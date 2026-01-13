@@ -209,6 +209,14 @@ export default function ChecklistAplicacaoPage() {
               liganteTipo = chosenProject.ligante?.tipo || "";
             }
 
+            // Encontrar o engenheiro responsável
+            const gestorEmail = regional?.gestor_contrato_responsavel;
+            let gestorName = "";
+            if (gestorEmail && allUsersData.length > 0) {
+              const gestor = allUsersData.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
+              gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
+            }
+            
             setFormData(prev => ({
               ...prev,
               obra_id: primeiraObra.id,
@@ -216,7 +224,8 @@ export default function ChecklistAplicacaoPage() {
               projeto_utilizado: chosenProject?.name || "",
               faixa_especificada: faixaName,
               ligante: liganteTipo,
-              pedreira: pedreiras
+              pedreira: pedreiras,
+              engenheiro_responsavel: gestorName
             }));
             setSelectedProject(chosenProject);
           }
@@ -233,61 +242,6 @@ export default function ChecklistAplicacaoPage() {
     loadInitialData();
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
-  const [gestoresDisponiveis, setGestoresDisponiveis] = useState([]);
-
-  // Carregar gestores quando regional mudar
-  useEffect(() => {
-    const loadGestores = async () => {
-      if (!regional?.id) {
-        setGestoresDisponiveis([]);
-        return;
-      }
-
-      try {
-        // Tentar primeiro com user.list() (funciona para admin)
-        const { base44 } = await import('@/api/base44Client');
-        const allUsersData = await base44.entities.User.list();
-        const gestores = [];
-        
-        if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-          regional.gestores_contrato_responsaveis.forEach(email => {
-            const gestor = allUsersData.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-            if (gestor && !gestores.find(g => g.email === gestor.email)) {
-              gestores.push({
-                email: gestor.email,
-                nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-              });
-            }
-          });
-        }
-        
-        if (regional.gestor_contrato_responsavel) {
-          const gestor = allUsersData.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-          if (gestor && !gestores.find(g => g.email === gestor.email)) {
-            gestores.push({
-              email: gestor.email,
-              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-            });
-          }
-        }
-        
-        setGestoresDisponiveis(gestores);
-      } catch (error) {
-        // Se falhar (laboratorista sem permissão), usar função backend
-        console.log("Usando função backend para buscar gestores...");
-        try {
-          const response = await base44.functions.invoke('getGestoresRegional', { regional_id: regional.id });
-          setGestoresDisponiveis(response.data.gestores || []);
-        } catch (backendError) {
-          console.error("Erro ao buscar gestores:", backendError);
-          setGestoresDisponiveis([]);
-        }
-      }
-    };
-
-    loadGestores();
-  }, [regional]);
-
   const handleInputChange = useCallback((field, value) => {
     console.log("🔍 [DEBUG] handleInputChange chamado. Field:", field, "Value:", value);
     
@@ -302,6 +256,15 @@ export default function ChecklistAplicacaoPage() {
           const currentRegional = regionaisData.find(r => r.id === obra.regional_id);
           console.log("🔍 [DEBUG] Regional da obra:", currentRegional);
           
+          // Buscar gestor de contrato usando a lista de usuários carregada globalmente
+          const gestorEmail = currentRegional?.gestor_contrato_responsavel;
+          let gestorName = "";
+          if (gestorEmail && allUsers.length > 0) {
+            const gestor = allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
+            gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
+          }
+          console.log("🔍 [DEBUG] Gestor do contrato:", gestorName);
+            
           if (currentRegional) {
             const projectsFromCurrentRegional = projects.filter(p => currentRegional.project_ids?.includes(p.id));
             console.log("🔍 [DEBUG] Projetos da regional:", projectsFromCurrentRegional);
@@ -360,18 +323,18 @@ export default function ChecklistAplicacaoPage() {
             }
               
             setFormData(current => {
-            const newData = {
-              ...current,
-              obra_id: value,
-              project_id: chosenProject?.id || "",
-              projeto_utilizado: chosenProject?.name || "",
-              faixa_especificada: faixaName,
-              ligante: liganteTipo,
-              pedreira: pedreiras,
-              engenheiro_responsavel: ""
-            };
-            console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
-            return newData;
+              const newData = {
+                ...current,
+                obra_id: value,
+                project_id: chosenProject?.id || "",
+                projeto_utilizado: chosenProject?.name || "",
+                faixa_especificada: faixaName,
+                ligante: liganteTipo,
+                pedreira: pedreiras,
+                engenheiro_responsavel: gestorName
+              };
+              console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
+              return newData;
             });
             setSelectedProject(chosenProject);
           } else {
@@ -384,7 +347,7 @@ export default function ChecklistAplicacaoPage() {
               faixa_especificada: "",
               ligante: "",
               pedreira: "",
-              engenheiro_responsavel: ""
+              engenheiro_responsavel: "" // Reset engineer field
             }));
             setSelectedProject(null);
           }
@@ -399,7 +362,7 @@ export default function ChecklistAplicacaoPage() {
           faixa_especificada: "",
           ligante: "",
           pedreira: "",
-          engenheiro_responsavel: ""
+          engenheiro_responsavel: "" // Reset engineer field
         }));
         setSelectedProject(null);
       }
@@ -526,8 +489,8 @@ export default function ChecklistAplicacaoPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id || !formData.engenheiro_responsavel) {
-        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho, Engenheiro Responsável).");
+      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id) {
+        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho).");
         return;
       }
     } else {
@@ -764,24 +727,18 @@ export default function ChecklistAplicacaoPage() {
                     />
                   </div>
 
+                  {/* NEW FIELD: Engenheiro Responsável */}
                   <div>
-                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
-                    <Select
+                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
+                    <Input
+                      id="engenheiro_responsavel"
                       value={formData.engenheiro_responsavel}
-                      onValueChange={(value) => handleInputChange('engenheiro_responsavel', value)}
-                      disabled={!isEditable || gestoresDisponiveis.length === 0}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o engenheiro" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {gestoresDisponiveis.map((gestor) => (
-                          <SelectItem key={gestor.email} value={gestor.nome}>
-                            {gestor.nome}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onChange={(e) => handleInputChange('engenheiro_responsavel', e.target.value)}
+                      disabled={!isEditable}
+                      readOnly // This field is derived, so it should be read-only
+                      className="bg-slate-100" 
+                      placeholder="Engenheiro responsável pelo contrato"
+                    />
                   </div>
                 </div>
               </div>

@@ -102,72 +102,19 @@ export default function ChecklistMRAFPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const [gestoresDisponiveis, setGestoresDisponiveis] = useState([]);
-
-  // Carregar gestores quando obra mudar
-  useEffect(() => {
-    const loadGestores = async () => {
-      const obra = obras.find(o => o.id === formData.obra_id);
-      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-
-      if (!regional?.id) {
-        setGestoresDisponiveis([]);
-        return;
-      }
-
-      try {
-        const { base44 } = await import('@/api/base44Client');
-        const allUsersData = await base44.entities.User.list();
-        const gestores = [];
-        
-        if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-          regional.gestores_contrato_responsaveis.forEach(email => {
-            const gestor = allUsersData.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-            if (gestor && !gestores.find(g => g.email === gestor.email)) {
-              gestores.push({
-                email: gestor.email,
-                nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-              });
-            }
-          });
-        }
-        
-        if (regional.gestor_contrato_responsavel) {
-          const gestor = allUsersData.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-          if (gestor && !gestores.find(g => g.email === gestor.email)) {
-            gestores.push({
-              email: gestor.email,
-              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-            });
-          }
-        }
-        
-        setGestoresDisponiveis(gestores);
-      } catch (error) {
-        console.log("Usando função backend para buscar gestores...");
-        try {
-          const response = await base44.functions.invoke('getGestoresRegional', { regional_id: regional.id });
-          setGestoresDisponiveis(response.data.gestores || []);
-        } catch (backendError) {
-          console.error("Erro ao buscar gestores:", backendError);
-          setGestoresDisponiveis([]);
-        }
-      }
-    };
-
-    if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-      loadGestores();
-    }
-  }, [formData.obra_id, obras, regionais]);
-
   const handleObraChange = useCallback((obraId) => {
+    const obra = obras.find(o => o.id === obraId);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    const gestorEmail = regional?.gestor_contrato_responsavel;
+    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+
     setFormData(prev => ({
       ...prev,
       obra_id: obraId,
       project_id: "",
-      engenheiro_responsavel: ""
+      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
     }));
-  }, []);
+  }, [obras, regionais, allUsers]);
 
   const handleProjectChange = useCallback((projectId) => {
     const project = projects.find(p => p.id === projectId);
@@ -290,8 +237,8 @@ export default function ChecklistMRAFPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.rodovia || !formData.trecho || !formData.engenheiro_responsavel) {
-        alert("Por favor, preencha os campos obrigatórios: obra, rodovia, trecho e engenheiro responsável.");
+      if (!formData.obra_id || !formData.rodovia || !formData.trecho) {
+        alert("Por favor, preencha os campos obrigatórios: obra, rodovia e trecho.");
         return;
       }
     } else {
@@ -453,10 +400,21 @@ export default function ChecklistMRAFPage() {
           }
         } else {
           const initialNewFormData = getInitialFormData();
+          // Preencher automaticamente inspetor_campo e engenheiro_responsavel (mas não exibir os campos)
           initialNewFormData.inspetor_campo = userData.laboratorista_name || userData.full_name;
-
+          
           if (availableObras.length > 0) {
             initialNewFormData.obra_id = availableObras[0].id;
+            
+            // Tentar buscar o engenheiro responsável da regional
+            const primeiraObra = availableObras[0];
+            const regionalDaObra = regionaisData.find(r => r.id === primeiraObra.regional_id);
+            if (regionalDaObra && regionalDaObra.gestor_contrato_responsavel && allUsersDataFetchedIfAdmin?.length > 0) {
+              const gestor = allUsersDataFetchedIfAdmin.find(u => u.email.toLowerCase() === regionalDaObra.gestor_contrato_responsavel.toLowerCase());
+              if (gestor) {
+                initialNewFormData.engenheiro_responsavel = gestor.laboratorista_name || gestor.full_name;
+              }
+            }
           }
           
           setFormData(initialNewFormData);
@@ -655,25 +613,6 @@ export default function ChecklistMRAFPage() {
                         className={selectedProject ? "bg-slate-100 h-11 text-base" : "bg-white border-slate-200 text-slate-700 h-11 text-base"}
                         placeholder="Ex: Emulsão RL-1C"
                       />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="engenheiro_responsavel" className="text-base">Engenheiro Responsável *</Label>
-                      <select
-                        id="engenheiro_responsavel"
-                        value={formData.engenheiro_responsavel}
-                        onChange={(e) => handleChange('engenheiro_responsavel', e.target.value)}
-                        disabled={!isEditable || isApproved || gestoresDisponiveis.length === 0}
-                        required
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
-                      >
-                        <option value="">Selecione o engenheiro</option>
-                        {gestoresDisponiveis.map((gestor) => (
-                          <option key={gestor.email} value={gestor.nome}>
-                            {gestor.nome}
-                          </option>
-                        ))}
-                      </select>
                     </div>
                   </div>
                 </CardContent>

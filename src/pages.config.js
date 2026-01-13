@@ -1,7 +1,13 @@
+import ChecklistAplicacao from './pages/ChecklistAplicacao';
+import ChecklistConcretagem from './pages/ChecklistConcretagem';
+import ChecklistMRAF from './pages/ChecklistMRAF';
+import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
+import ChecklistUsina from './pages/ChecklistUsina';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
+import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
@@ -9,6 +15,7 @@ import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import NaoConformidades from './pages/NaoConformidades';
+import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
 import RelatorioCAUQ from './pages/RelatorioCAUQ';
 import RelatorioChecklist from './pages/RelatorioChecklist';
@@ -26,21 +33,20 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import ChecklistMRAF from './pages/ChecklistMRAF';
-import ChecklistAplicacao from './pages/ChecklistAplicacao';
-import ChecklistConcretagem from './pages/ChecklistConcretagem';
-import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
-import ChecklistUsina from './pages/ChecklistUsina';
-import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
-import Projects from './pages/Projects';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ChecklistAplicacao": ChecklistAplicacao,
+    "ChecklistConcretagem": ChecklistConcretagem,
+    "ChecklistMRAF": ChecklistMRAF,
+    "ChecklistTerraplanagem": ChecklistTerraplanagem,
+    "ChecklistUsina": ChecklistUsina,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
+    "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "FaixasGranulometricas": FaixasGranulometricas,
@@ -48,6 +54,7 @@ export const PAGES = {
     "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "NaoConformidades": NaoConformidades,
+    "Projects": Projects,
     "Regionais": Regionais,
     "RelatorioCAUQ": RelatorioCAUQ,
     "RelatorioChecklist": RelatorioChecklist,
@@ -65,13 +72,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "ChecklistMRAF": ChecklistMRAF,
-    "ChecklistAplicacao": ChecklistAplicacao,
-    "ChecklistConcretagem": ChecklistConcretagem,
-    "ChecklistTerraplanagem": ChecklistTerraplanagem,
-    "ChecklistUsina": ChecklistUsina,
-    "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
-    "Projects": Projects,
 }
 
 export const pagesConfig = {

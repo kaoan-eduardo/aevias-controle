@@ -95,72 +95,19 @@ export default function ChecklistUsinaPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const [gestoresDisponiveis, setGestoresDisponiveis] = useState([]);
-
-  // Carregar gestores quando obra mudar
-  useEffect(() => {
-    const loadGestores = async () => {
-      const obra = obras.find(o => o.id === formData.obra_id);
-      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-
-      if (!regional?.id) {
-        setGestoresDisponiveis([]);
-        return;
-      }
-
-      try {
-        const { base44 } = await import('@/api/base44Client');
-        const allUsersData = await base44.entities.User.list();
-        const gestores = [];
-        
-        if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-          regional.gestores_contrato_responsaveis.forEach(email => {
-            const gestor = allUsersData.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-            if (gestor && !gestores.find(g => g.email === gestor.email)) {
-              gestores.push({
-                email: gestor.email,
-                nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-              });
-            }
-          });
-        }
-        
-        if (regional.gestor_contrato_responsavel) {
-          const gestor = allUsersData.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
-          if (gestor && !gestores.find(g => g.email === gestor.email)) {
-            gestores.push({
-              email: gestor.email,
-              nome: gestor.laboratorista_name || gestor.full_name || gestor.email
-            });
-          }
-        }
-        
-        setGestoresDisponiveis(gestores);
-      } catch (error) {
-        console.log("Usando função backend para buscar gestores...");
-        try {
-          const response = await base44.functions.invoke('getGestoresRegional', { regional_id: regional.id });
-          setGestoresDisponiveis(response.data.gestores || []);
-        } catch (backendError) {
-          console.error("Erro ao buscar gestores:", backendError);
-          setGestoresDisponiveis([]);
-        }
-      }
-    };
-
-    if (formData.obra_id && obras.length > 0 && regionais.length > 0) {
-      loadGestores();
-    }
-  }, [formData.obra_id, obras, regionais]);
-
   const handleObraChange = useCallback((obraId) => {
+    const obra = obras.find(o => o.id === obraId);
+    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+    const gestorEmail = regional?.gestor_contrato_responsavel;
+    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+
     setFormData(prev => ({
       ...prev,
       obra_id: obraId,
-      project_id: "",
-      engenheiro_responsavel: ""
+      project_id: "", // Reset project on obra change
+      engenheiro_responsavel: gestor ? (gestor.laboratorista_name || gestor.full_name) : "",
     }));
-  }, []);
+  }, [obras, regionais, allUsers]);
 
   const checkConformidadeAutomatica = useCallback((testKey, resultado, project) => {
     if (!project || resultado === null || resultado === undefined || resultado === '') return null;
@@ -564,8 +511,8 @@ export default function ChecklistUsinaPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.usina || !formData.engenheiro_responsavel) {
-        alert("Por favor, preencha a obra, a usina e o engenheiro responsável.");
+      if (!formData.obra_id || !formData.usina) {
+        alert("Por favor, preencha a obra e a usina.");
         return;
       }
     } else {
@@ -804,7 +751,23 @@ export default function ChecklistUsinaPage() {
     loadData();
   }, [location.search, navigate]);
   
-
+  useEffect(() => {
+    if (!editingChecklist && formData.obra_id && allUsers.length > 0 && obras.length > 0 && regionais.length > 0) {
+      const obra = obras.find(o => o.id === formData.obra_id);
+      const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
+      const gestorEmail = regional?.gestor_contrato_responsavel;
+      const gestor = gestorEmail ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
+      
+      if (gestor && formData.engenheiro_responsavel === "") {
+        const gestorName = gestor.laboratorista_name || gestor.full_name;
+        console.log("✅ ChecklistUsina - Gestor encontrado:", gestorName);
+        setFormData(prev => ({
+          ...prev,
+          engenheiro_responsavel: gestorName
+        }));
+      }
+    }
+  }, [editingChecklist, formData.obra_id, obras, regionais, allUsers, formData.engenheiro_responsavel]);
 
   const isApproved = formData.approved === true;
   const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
@@ -969,25 +932,6 @@ export default function ChecklistUsinaPage() {
                         className={selectedProject ? "bg-slate-100" : ""}
                         placeholder="Ex: CAP 50/70"
                       />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
-                      <select
-                        id="engenheiro_responsavel"
-                        value={formData.engenheiro_responsavel}
-                        onChange={(e) => handleChange('engenheiro_responsavel', e.target.value)}
-                        disabled={!isEditable || isApproved || gestoresDisponiveis.length === 0}
-                        required
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione o engenheiro</option>
-                        {gestoresDisponiveis.map((gestor) => (
-                          <option key={gestor.email} value={gestor.nome}>
-                            {gestor.nome}
-                          </option>
-                        ))}
-                      </select>
                     </div>
                   </div>
                 </CardContent>
