@@ -459,6 +459,7 @@ export default function EnsaioCAUQPage() {
           updateData.rejection_reason = null;
           updateData.approved_by = null;
           updateData.approved_date = null;
+          updateData.was_rejected = true;
           await base44.entities.EnsaioCAUQ.update(editingEnsaio.id, updateData);
           alert("Ensaio finalizado com sucesso! O registro voltará para análise.");
         } else {
