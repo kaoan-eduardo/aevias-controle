@@ -25,34 +25,24 @@ Deno.serve(async (req) => {
     }
 
     // Coletar emails dos gestores (array novo + campo legado)
-    const gestoresEmails = [];
-
-    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
-      gestoresEmails.push(...regional.gestores_contrato_responsaveis);
-    }
-
-    if (regional.gestor_contrato_responsavel && !gestoresEmails.includes(regional.gestor_contrato_responsavel)) {
-      gestoresEmails.push(regional.gestor_contrato_responsavel);
-    }
-
-    // Buscar detalhes dos gestores usando service role
     const gestores = [];
 
-    for (const email of gestoresEmails) {
-      try {
-        // Buscar usuários com filtro por email usando service role
-        const usuarios = await base44.asServiceRole.entities.User.filter({ email: email });
-        
-        if (usuarios && usuarios.length > 0) {
-          const gestor = usuarios[0];
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        if (email && !gestores.find(g => g.email === email)) {
           gestores.push({
-            email: gestor.email,
-            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+            email: email,
+            nome: email.split('@')[0] // Usar parte antes do @ como nome
           });
         }
-      } catch (error) {
-        console.error(`Erro ao buscar gestor ${email}:`, error);
-      }
+      });
+    }
+
+    if (regional.gestor_contrato_responsavel && !gestores.find(g => g.email === regional.gestor_contrato_responsavel)) {
+      gestores.push({
+        email: regional.gestor_contrato_responsavel,
+        nome: regional.gestor_contrato_responsavel.split('@')[0]
+      });
     }
 
     return Response.json({ gestores });
