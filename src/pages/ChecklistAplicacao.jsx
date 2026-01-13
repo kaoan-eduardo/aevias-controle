@@ -617,7 +617,7 @@ export default function ChecklistAplicacaoPage() {
               {/* Dados da Obra */}
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Dados da Obra</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   <div>
                     <Label htmlFor="obra_id">Obra *</Label>
                     <Select value={formData.obra_id} onValueChange={(value) => handleInputChange('obra_id', value)} disabled={!isEditable || obras.length === 0}>
@@ -748,7 +748,7 @@ export default function ChecklistAplicacaoPage() {
               {/* Condições Climáticas */}
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Condições Climáticas</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {formData.periodos_clima.map((periodo, index) => (
                     <Card key={index} className="bg-black/5 border-white/20">
                       <CardHeader className="pb-3">
@@ -805,7 +805,7 @@ export default function ChecklistAplicacaoPage() {
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Acompanhamento da Fresagem e Preparação da Superfície</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center justify-between p-3 bg-black/5 rounded-lg">
                       <Label htmlFor="superficie_limpa" className="cursor-pointer">
                         A superfície foi limpa após a fresagem?
@@ -1088,7 +1088,7 @@ export default function ChecklistAplicacaoPage() {
               <div>
                 <h3 className="text-lg font-semibold text-[#00233B] mb-4">Controle de Aplicação</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="km_estaca_inicial">Km/Estaca Inicial</Label>
                       <Input
@@ -1173,7 +1173,8 @@ export default function ChecklistAplicacaoPage() {
                     </div>
                   </div>
 
-                  <table className="w-full border-collapse border border-slate-300 text-sm">
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-slate-300 text-sm min-w-[700px]">
                     <thead className="bg-black/5">
                       <tr>
                         <th className="border border-slate-300 px-2 py-2 text-left">Ensaio</th>
@@ -1260,6 +1261,7 @@ export default function ChecklistAplicacaoPage() {
                       </tr>
                     </tbody>
                   </table>
+                  </div>
 
                   <div>
                     <Label htmlFor="controle_observacoes">Observações</Label>
