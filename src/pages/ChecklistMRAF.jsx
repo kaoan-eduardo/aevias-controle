@@ -431,7 +431,7 @@ export default function ChecklistMRAFPage() {
   }, [location.search, navigate]);
 
   const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && formData.approved !== true);
+  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
   const isEditable = !editingChecklist?.id || userCanEdit;
 
   // Local SectionTitle component for sections not wrapped in a Card with CardTitle

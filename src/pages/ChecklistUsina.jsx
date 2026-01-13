@@ -768,7 +768,7 @@ export default function ChecklistUsinaPage() {
   }, [editingChecklist, formData.obra_id, obras, regionais, allUsers, formData.engenheiro_responsavel]);
 
   const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && formData.approved !== true);
+  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
   const isEditable = !editingChecklist?.id || userCanEdit;
 
   if (loading) {
