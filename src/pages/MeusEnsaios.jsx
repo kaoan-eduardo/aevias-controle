@@ -1019,7 +1019,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '120px' }}>Ações</th>
+                  <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '140px' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
