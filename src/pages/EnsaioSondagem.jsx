@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Loader2, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Obra } from "@/entities/Obra";
@@ -43,7 +43,8 @@ export default function EnsaioSondagem() {
     espessura_projeto: "",
     corpos_prova: [],
     observacoes: "",
-    fotos: []
+    fotos: [],
+    status: "rascunho"
   });
 
   useEffect(() => {
@@ -129,7 +130,7 @@ export default function EnsaioSondagem() {
 
       if (editId) {
         const ensaioToEdit = await base44.entities.EnsaioSondagem.get(editId);
-        if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true)) {
+        if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true && ensaioToEdit.status !== 'finalizado')) {
           setEditingEnsaio(ensaioToEdit);
           setFormData(ensaioToEdit);
         } else {
@@ -357,8 +358,70 @@ export default function EnsaioSondagem() {
     }));
   };
 
+  const handleSaveProgress = async () => {
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra para salvar o progresso.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const dataToSave = {
+        ...formData,
+        status: "rascunho",
+        fator_correcao_prensa: parseFloat(formData.fator_correcao_prensa),
+        dens_agua_25c: parseFloat(formData.dens_agua_25c),
+        volume_vazios_projeto: formData.volume_vazios_projeto ? parseFloat(formData.volume_vazios_projeto) : null,
+        dens_aparente_projeto: formData.dens_aparente_projeto ? parseFloat(formData.dens_aparente_projeto) : null,
+        dens_rice_projeto: formData.dens_rice_projeto ? parseFloat(formData.dens_rice_projeto) : null,
+        espessura_projeto: formData.espessura_projeto ? parseFloat(formData.espessura_projeto) : null,
+        corpos_prova: formData.corpos_prova.map(cp => ({
+          ...cp,
+          numero: parseInt(cp.numero),
+          medidas_espessura: cp.medidas_espessura.map(m => m ? parseFloat(m) : null).filter(m => m !== null),
+          media_espessura: cp.media_espessura ? parseFloat(cp.media_espessura) : null,
+          peso_ao_ar: cp.peso_ao_ar ? parseFloat(cp.peso_ao_ar) : null,
+          peso_imerso: cp.peso_imerso ? parseFloat(cp.peso_imerso) : null,
+          peso_saturado: cp.peso_saturado ? parseFloat(cp.peso_saturado) : null,
+          volume: cp.volume ? parseFloat(cp.volume) : null,
+          densidade: cp.densidade ? parseFloat(cp.densidade) : null,
+          gc_dens_projeto: cp.gc_dens_projeto ? parseFloat(cp.gc_dens_projeto) : null,
+          dens_rice_do_dia: cp.dens_rice_do_dia ? parseFloat(cp.dens_rice_do_dia) : null,
+          gc_dens_rice_dia: cp.gc_dens_rice_dia ? parseFloat(cp.gc_dens_rice_dia) : null,
+          volume_vazios: cp.volume_vazios ? parseFloat(cp.volume_vazios) : null,
+          leitura: cp.leitura ? parseFloat(cp.leitura) : null,
+          rtcd_25c: cp.rtcd_25c ? parseFloat(cp.rtcd_25c) : null
+        }))
+      };
+
+      if (editingEnsaio) {
+        await base44.entities.EnsaioSondagem.update(editingEnsaio.id, dataToSave);
+        alert("Progresso salvo com sucesso!");
+      } else {
+        const newEnsaio = await base44.entities.EnsaioSondagem.create(dataToSave);
+        setEditingEnsaio(newEnsaio);
+        alert("Progresso salvo com sucesso!");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar progresso:", error);
+      alert("Erro ao salvar progresso.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra.");
+      return;
+    }
+
+    if (!formData.data || !formData.rodovia || !formData.trecho) {
+      alert("Por favor, preencha todos os campos obrigatórios: Data, Rodovia e Trecho.");
+      return;
+    }
 
     // Validar se todos os CPs criados têm os dados essenciais preenchidos
     if (formData.corpos_prova.length > 0) {
@@ -396,6 +459,7 @@ export default function EnsaioSondagem() {
     try {
       const dataToSave = {
         ...formData,
+        status: "finalizado",
         fator_correcao_prensa: parseFloat(formData.fator_correcao_prensa),
         dens_agua_25c: parseFloat(formData.dens_agua_25c),
         volume_vazios_projeto: formData.volume_vazios_projeto ? parseFloat(formData.volume_vazios_projeto) : null,
@@ -466,6 +530,15 @@ export default function EnsaioSondagem() {
             <CardDescription>
               Determinação da Densidade Relativa Aparente - DNIT 428-ME
             </CardDescription>
+            {formData.status === 'rascunho' && (
+              <div className="mt-4 flex items-start gap-2 p-3 bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg">
+                <Clock className="w-5 h-5 text-[#566E3D] mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-[#566E3D]">Registro em Rascunho</p>
+                  <p className="text-sm text-[#00233B]/70">Este ensaio está salvo como rascunho. Clique em "Finalizar Registro" quando estiver completo.</p>
+                </div>
+              </div>
+            )}
             {editingEnsaio?.rejection_reason && (
               <div className="mt-4 flex items-start gap-2 p-3 bg-red-50/50 border border-red-200/50 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
@@ -556,34 +629,34 @@ export default function EnsaioSondagem() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="data">Data *</Label>
+                      <Label htmlFor="data">Data {formData.status === 'finalizado' && '*'}</Label>
                       <Input
                         type="date"
                         id="data"
                         value={formData.data}
                         onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                        required
+                        required={formData.status === 'finalizado'}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="rodovia">Rodovia *</Label>
+                      <Label htmlFor="rodovia">Rodovia {formData.status === 'finalizado' && '*'}</Label>
                       <Input
                         id="rodovia"
                         value={formData.rodovia}
                         onChange={(e) => setFormData({ ...formData, rodovia: e.target.value })}
-                        required
+                        required={formData.status === 'finalizado'}
                         placeholder="Nome da rodovia"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="trecho">Trecho *</Label>
+                      <Label htmlFor="trecho">Trecho {formData.status === 'finalizado' && '*'}</Label>
                       <Input
                         id="trecho"
                         value={formData.trecho}
                         onChange={(e) => setFormData({ ...formData, trecho: e.target.value })}
-                        required
+                        required={formData.status === 'finalizado'}
                         placeholder="Descrição do trecho"
                       />
                     </div>
@@ -927,8 +1000,18 @@ export default function EnsaioSondagem() {
 
               {/* Botões */}
               <div className="flex justify-end gap-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
+                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))} disabled={saving}>
                   Cancelar
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={handleSaveProgress}
+                  disabled={saving || uploadingPhotos || !formData.obra_id}
+                  className="border-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/10"
+                >
+                  {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Salvar Progresso
                 </Button>
                 <Button
                   type="submit"
@@ -942,8 +1025,8 @@ export default function EnsaioSondagem() {
                     </>
                   ) : (
                     <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Salvar Ensaio
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Finalizar Registro
                     </>
                   )}
                 </Button>
