@@ -377,7 +377,7 @@ export default function ChecklistMRAFPage() {
           const checklistToEdit = await ChecklistMRAFEntity.get(editId);
           setEditingChecklist(checklistToEdit);
 
-          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
             const initialForm = getInitialFormData();
             const loadedFormData = {
               ...initialForm,

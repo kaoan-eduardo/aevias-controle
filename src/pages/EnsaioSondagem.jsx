@@ -130,7 +130,7 @@ export default function EnsaioSondagem() {
 
       if (editId) {
         const ensaioToEdit = await base44.entities.EnsaioSondagem.get(editId);
-        if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true && ensaioToEdit.status !== 'finalizado')) {
+        if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && (ensaioToEdit.status === 'rascunho' || ensaioToEdit.approved === false))) {
           setEditingEnsaio(ensaioToEdit);
           setFormData(ensaioToEdit);
         } else {

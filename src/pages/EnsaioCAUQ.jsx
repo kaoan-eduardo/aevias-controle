@@ -548,7 +548,7 @@ export default function EnsaioCAUQPage() {
           const ensaioToEdit = await base44.entities.EnsaioCAUQ.get(editId);
           setEditingEnsaio(ensaioToEdit);
 
-          if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && ensaioToEdit.approved !== true && ensaioToEdit.status !== 'finalizado')) {
+          if (userData.role === 'admin' || (ensaioToEdit.created_by === userData.email && (ensaioToEdit.status === 'rascunho' || ensaioToEdit.approved === false))) {
             setFormData({
               ...getInitialFormData(),
               ...ensaioToEdit,
@@ -587,7 +587,7 @@ export default function EnsaioCAUQPage() {
   }, [location.search, navigate]);
 
   const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && formData.approved !== true && formData.status !== 'finalizado');
+  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
   const isEditable = !editingEnsaio?.id || userCanEdit;
 
   if (loading) {

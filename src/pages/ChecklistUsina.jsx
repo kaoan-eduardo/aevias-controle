@@ -635,7 +635,7 @@ export default function ChecklistUsinaPage() {
           const checklistToEdit = await ChecklistUsinaEntity.get(editId); // Corrected entity name
           setEditingChecklist(checklistToEdit);
 
-          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && checklistToEdit.approved !== true)) {
+          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
             const initialForm = getInitialFormData();
             let loadedFormData = {
               ...initialForm,
