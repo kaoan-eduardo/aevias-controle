@@ -209,14 +209,6 @@ export default function ChecklistAplicacaoPage() {
               liganteTipo = chosenProject.ligante?.tipo || "";
             }
 
-            // Encontrar o engenheiro responsável
-            const gestorEmail = regional?.gestor_contrato_responsavel;
-            let gestorName = "";
-            if (gestorEmail && allUsersData.length > 0) {
-              const gestor = allUsersData.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-              gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
-            }
-            
             setFormData(prev => ({
               ...prev,
               obra_id: primeiraObra.id,
@@ -224,8 +216,7 @@ export default function ChecklistAplicacaoPage() {
               projeto_utilizado: chosenProject?.name || "",
               faixa_especificada: faixaName,
               ligante: liganteTipo,
-              pedreira: pedreiras,
-              engenheiro_responsavel: gestorName
+              pedreira: pedreiras
             }));
             setSelectedProject(chosenProject);
           }
@@ -242,6 +233,38 @@ export default function ChecklistAplicacaoPage() {
     loadInitialData();
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
+  const gestoresDisponiveis = useMemo(() => {
+    if (!regional || !allUsers || allUsers.length === 0) return [];
+    
+    const gestores = [];
+    
+    // Adicionar gestores do array novo
+    if (regional.gestores_contrato_responsaveis && Array.isArray(regional.gestores_contrato_responsaveis)) {
+      regional.gestores_contrato_responsaveis.forEach(email => {
+        const gestor = allUsers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+        if (gestor && !gestores.find(g => g.email === gestor.email)) {
+          gestores.push({
+            email: gestor.email,
+            nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+          });
+        }
+      });
+    }
+    
+    // Adicionar gestor do campo legado se existir e não estiver no array
+    if (regional.gestor_contrato_responsavel) {
+      const gestor = allUsers.find(u => u.email?.toLowerCase() === regional.gestor_contrato_responsavel?.toLowerCase());
+      if (gestor && !gestores.find(g => g.email === gestor.email)) {
+        gestores.push({
+          email: gestor.email,
+          nome: gestor.laboratorista_name || gestor.full_name || gestor.email
+        });
+      }
+    }
+    
+    return gestores;
+  }, [regional, allUsers]);
+
   const handleInputChange = useCallback((field, value) => {
     console.log("🔍 [DEBUG] handleInputChange chamado. Field:", field, "Value:", value);
     
@@ -256,15 +279,6 @@ export default function ChecklistAplicacaoPage() {
           const currentRegional = regionaisData.find(r => r.id === obra.regional_id);
           console.log("🔍 [DEBUG] Regional da obra:", currentRegional);
           
-          // Buscar gestor de contrato usando a lista de usuários carregada globalmente
-          const gestorEmail = currentRegional?.gestor_contrato_responsavel;
-          let gestorName = "";
-          if (gestorEmail && allUsers.length > 0) {
-            const gestor = allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-            gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
-          }
-          console.log("🔍 [DEBUG] Gestor do contrato:", gestorName);
-            
           if (currentRegional) {
             const projectsFromCurrentRegional = projects.filter(p => currentRegional.project_ids?.includes(p.id));
             console.log("🔍 [DEBUG] Projetos da regional:", projectsFromCurrentRegional);
@@ -323,18 +337,18 @@ export default function ChecklistAplicacaoPage() {
             }
               
             setFormData(current => {
-              const newData = {
-                ...current,
-                obra_id: value,
-                project_id: chosenProject?.id || "",
-                projeto_utilizado: chosenProject?.name || "",
-                faixa_especificada: faixaName,
-                ligante: liganteTipo,
-                pedreira: pedreiras,
-                engenheiro_responsavel: gestorName
-              };
-              console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
-              return newData;
+            const newData = {
+              ...current,
+              obra_id: value,
+              project_id: chosenProject?.id || "",
+              projeto_utilizado: chosenProject?.name || "",
+              faixa_especificada: faixaName,
+              ligante: liganteTipo,
+              pedreira: pedreiras,
+              engenheiro_responsavel: ""
+            };
+            console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
+            return newData;
             });
             setSelectedProject(chosenProject);
           } else {
@@ -347,7 +361,7 @@ export default function ChecklistAplicacaoPage() {
               faixa_especificada: "",
               ligante: "",
               pedreira: "",
-              engenheiro_responsavel: "" // Reset engineer field
+              engenheiro_responsavel: ""
             }));
             setSelectedProject(null);
           }
@@ -362,7 +376,7 @@ export default function ChecklistAplicacaoPage() {
           faixa_especificada: "",
           ligante: "",
           pedreira: "",
-          engenheiro_responsavel: "" // Reset engineer field
+          engenheiro_responsavel: ""
         }));
         setSelectedProject(null);
       }
@@ -489,8 +503,8 @@ export default function ChecklistAplicacaoPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id) {
-        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho).");
+      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id || !formData.engenheiro_responsavel) {
+        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho, Engenheiro Responsável).");
         return;
       }
     } else {
@@ -727,18 +741,24 @@ export default function ChecklistAplicacaoPage() {
                     />
                   </div>
 
-                  {/* NEW FIELD: Engenheiro Responsável */}
                   <div>
-                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável</Label>
-                    <Input
-                      id="engenheiro_responsavel"
+                    <Label htmlFor="engenheiro_responsavel">Engenheiro Responsável *</Label>
+                    <Select
                       value={formData.engenheiro_responsavel}
-                      onChange={(e) => handleInputChange('engenheiro_responsavel', e.target.value)}
-                      disabled={!isEditable}
-                      readOnly // This field is derived, so it should be read-only
-                      className="bg-slate-100" 
-                      placeholder="Engenheiro responsável pelo contrato"
-                    />
+                      onValueChange={(value) => handleInputChange('engenheiro_responsavel', value)}
+                      disabled={!isEditable || gestoresDisponiveis.length === 0}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o engenheiro" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {gestoresDisponiveis.map((gestor) => (
+                          <SelectItem key={gestor.email} value={gestor.nome}>
+                            {gestor.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
