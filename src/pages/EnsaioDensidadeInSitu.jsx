@@ -127,8 +127,14 @@ export default function EnsaioDensidadeInSituPage() {
           const usersData = await base44.entities.User.list();
           setAllUsers(usersData);
         } catch (error) {
-          console.warn("Sem permissão para listar usuários - usando apenas usuário atual");
-          setAllUsers([currentUser]);
+          console.warn("Sem permissão para listar usuários - tentando service role");
+          try {
+            const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
+            setAllUsers(usersViaServiceRole);
+          } catch (serviceRoleError) {
+            console.error("Falha ao carregar usuários:", serviceRoleError);
+            setAllUsers([currentUser]);
+          }
         }
       }
 

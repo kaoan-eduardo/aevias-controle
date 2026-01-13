@@ -122,13 +122,20 @@ export default function ChecklistAplicacaoPage() {
         const projectsData = await base44.entities.Project.list();
         const regionaisData = await base44.entities.Regional.list();
         
-        let allUsersData = [];
+        // Sempre tentar carregar usuários
         try {
-          allUsersData = await base44.entities.User.list();
+          const allUsersData = await base44.entities.User.list();
           setAllUsers(allUsersData);
         } catch (userError) {
-          console.warn("⚠️ Sem permissão para listar usuários, campo engenheiro não será preenchido automaticamente");
-          setAllUsers([]);
+          console.warn("⚠️ Sem permissão para listar todos usuários - usando asServiceRole");
+          // Fallback: tentar usar service role para buscar usuários
+          try {
+            const usersViaServiceRole = await base44.asServiceRole.entities.User.list();
+            setAllUsers(usersViaServiceRole);
+          } catch (serviceRoleError) {
+            console.error("❌ Falha ao carregar usuários via service role:", serviceRoleError);
+            setAllUsers([currentUser]);
+          }
         }
 
         let faixasData = [];
