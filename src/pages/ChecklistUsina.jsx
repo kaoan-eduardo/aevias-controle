@@ -96,7 +96,7 @@ export default function ChecklistUsinaPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const { gestores } = useGestoresRegional(formData.obra_id, obras);
+  const { gestores } = useGestoresRegional(formData.obra_id, obras, allUsers);
 
   const handleObraChange = useCallback((obraId) => {
     setFormData(prev => ({

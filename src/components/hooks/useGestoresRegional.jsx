@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Regional } from '@/entities/Regional';
 
-export const useGestoresRegional = (obraId, obras) => {
+export const useGestoresRegional = (obraId, obras, allUsers = []) => {
   const [gestores, setGestores] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,8 @@ export const useGestoresRegional = (obraId, obras) => {
         ];
 
         if (emailsGestores.length > 0) {
-          const todosUsuarios = await base44.entities.User.list();
+          // Se allUsers foi passado e não está vazio, usá-lo. Senão, carregar usuários
+          const todosUsuarios = allUsers.length > 0 ? allUsers : await base44.entities.User.list();
           const gestoresData = todosUsuarios.filter(u =>
             emailsGestores.some(email => email.toLowerCase() === u.email?.toLowerCase())
           );
@@ -45,7 +46,7 @@ export const useGestoresRegional = (obraId, obras) => {
     } finally {
       setLoading(false);
     }
-  }, [obraId, obras]);
+  }, [obraId, obras, allUsers]);
 
   useEffect(() => {
     loadGestores();
