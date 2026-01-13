@@ -5,7 +5,6 @@ import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
 import ChecklistUsina from './pages/ChecklistUsina';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
-import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
 import EnsaioSondagem from './pages/EnsaioSondagem';
@@ -33,6 +32,7 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import __Layout from './Layout.jsx';
 
 
@@ -44,7 +44,6 @@ export const PAGES = {
     "ChecklistUsina": ChecklistUsina,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
-    "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
     "EnsaioSondagem": EnsaioSondagem,
@@ -72,6 +71,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "EnsaioCAUQ": EnsaioCAUQ,
 }
 
 export const pagesConfig = {

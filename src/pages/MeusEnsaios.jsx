@@ -1313,21 +1313,55 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
   const emExecucao = useMemo(() => {
+    console.log("🔵 [EM EXECUÇÃO] Iniciando filtro...");
     const filtered = ensaios.filter((e) => {
-      return e.status === 'rascunho' && e.approved !== true && !e.client_signature?.signed_by;
+      const isRascunho = e.status === 'rascunho';
+      const notApproved = e.approved !== true;
+      const notSigned = !e.client_signature?.signed_by;
+      const shouldInclude = isRascunho && notApproved && notSigned;
+
+      if (e.entityType === 'EnsaioCAUQ') {
+        console.log(`🔵 [CAUQ] ID: ${e.id}, Status: "${e.status}", Approved: ${e.approved}, Signed: ${!!e.client_signature?.signed_by}, Include: ${shouldInclude}`);
+      }
+
+      return shouldInclude;
     });
+    console.log(`🔵 [EM EXECUÇÃO] Total filtrado: ${filtered.length}`);
     return filtered;
   }, [ensaios]);
 
   const pendentes = useMemo(() => {
+    console.log("🟡 [PENDENTES] Iniciando filtro...");
     const filtered = ensaios.filter((e) => {
-      return e.status === 'finalizado' && (e.approved === null || e.approved === false) && !e.client_signature?.signed_by;
+      const isFinalizado = e.status === 'finalizado';
+      const isPending = e.approved === null || e.approved === false;
+      const notSigned = !e.client_signature?.signed_by;
+      const shouldInclude = isFinalizado && isPending && notSigned;
+
+      if (e.entityType === 'EnsaioCAUQ') {
+        console.log(`🟡 [CAUQ] ID: ${e.id}, Status: "${e.status}", Approved: ${e.approved}, Signed: ${!!e.client_signature?.signed_by}, Include: ${shouldInclude}`);
+      }
+
+      return shouldInclude;
     });
+    console.log(`🟡 [PENDENTES] Total filtrado: ${filtered.length}`);
     return filtered;
   }, [ensaios]);
 
   const aprovados = useMemo(() => {
-    const filtered = ensaios.filter((e) => e.approved === true || e.client_signature?.signed_by);
+    console.log("🟢 [APROVADOS] Iniciando filtro...");
+    const filtered = ensaios.filter((e) => {
+      const isApproved = e.approved === true;
+      const isSigned = !!e.client_signature?.signed_by;
+      const shouldInclude = isApproved || isSigned;
+
+      if (e.entityType === 'EnsaioCAUQ') {
+        console.log(`🟢 [CAUQ] ID: ${e.id}, Status: "${e.status}", Approved: ${e.approved}, Signed: ${isSigned}, Include: ${shouldInclude}`);
+      }
+
+      return shouldInclude;
+    });
+    console.log(`🟢 [APROVADOS] Total filtrado: ${filtered.length}`);
     return filtered;
   }, [ensaios]);
 
