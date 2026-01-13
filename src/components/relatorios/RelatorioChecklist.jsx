@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Checkmark = ({ checked }) => {
@@ -183,10 +182,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p className="font-bold">FAIXA ESPECIFICADA:</p>
           <p>{checklist.faixa_especificada || 'N/A'}</p>
         </div>
-        <div>
-          <p className="font-bold">ENGENHEIRO RESPONSÁVEL:</p>
-          <p>{checklist.engenheiro_responsavel || 'N/A'}</p>
-        </div>
+
         
         <div>
           <p className="font-bold">INSPETOR DE CAMPO:</p>

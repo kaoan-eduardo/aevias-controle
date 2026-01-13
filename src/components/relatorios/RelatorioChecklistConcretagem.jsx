@@ -230,10 +230,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
           <p>{checklist.estrutura || 'N/A'}</p>
         </div>
 
-        <div>
-          <p className="font-bold">ENG. RESPONSÁVEL:</p>
-          <p>{checklist.engenheiro_responsavel || 'N/A'}</p>
-        </div>
+
         <div>
           <p className="font-bold">INSPETOR CAMPO:</p>
           <p>{checklist.inspetor_campo || 'N/A'}</p>

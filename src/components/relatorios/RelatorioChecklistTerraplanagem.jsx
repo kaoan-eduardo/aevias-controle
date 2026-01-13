@@ -235,10 +235,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                 <p className="font-bold">CAMADA:</p>
                 <p>{checklist.camada}</p>
               </div>
-              <div>
-                <p className="font-bold">ENG. RESPONSÁVEL:</p>
-                <p>{checklist.engenheiro_responsavel || 'N/A'}</p>
-              </div>
+
             </div>
 
             <SectionTitle>Condições Climáticas</SectionTitle>
