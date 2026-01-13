@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,11 +89,29 @@ export default function Projects() {
 
   const handleSaveProject = useCallback(async (projectData) => {
     try {
+      let savedProject;
       if (editingProject) {
         await Project.update(editingProject.id, projectData);
+        savedProject = { ...editingProject, ...projectData };
       } else {
-        await Project.create(projectData);
+        savedProject = await Project.create(projectData);
       }
+
+      // Se o projeto tem regional_id, vincular à regional
+      if (savedProject.regional_id) {
+        const regional = regionais.find(r => r.id === savedProject.regional_id);
+        if (regional) {
+          const currentProjectIds = regional.project_ids || [];
+          
+          // Adicionar o projeto à regional se ainda não estiver lá
+          if (!currentProjectIds.includes(savedProject.id)) {
+            await Regional.update(regional.id, {
+              project_ids: [...currentProjectIds, savedProject.id]
+            });
+          }
+        }
+      }
+
       setIsFormOpen(false);
       setEditingProject(null);
       loadData();
@@ -102,7 +119,7 @@ export default function Projects() {
       console.error("Erro ao salvar projeto:", error);
       alert(`Erro ao salvar: ${error.message || 'Erro desconhecido'}`);
     }
-  }, [editingProject, loadData]);
+  }, [editingProject, loadData, regionais]);
 
   const handleEdit = useCallback((project) => {
     setEditingProject(project);
