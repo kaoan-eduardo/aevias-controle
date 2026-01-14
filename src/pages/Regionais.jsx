@@ -180,8 +180,8 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
         </div>
       )}
 
-      {/* Usinas - apenas para Implantação e Conservação */}
-      {(formData.tipo_obra === "implantacao" || formData.tipo_obra === "conservacao") && (
+      {/* Usinas - para Supervisão, Implantação e Conservação */}
+      {(formData.tipo_obra === "supervisao" || formData.tipo_obra === "implantacao" || formData.tipo_obra === "conservacao") && (
         <div className="space-y-2">
           <Label>Usinas do Contrato</Label>
           <div className="flex gap-2">
@@ -514,7 +514,7 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                             </div>
                           </div>
                         )}
-                        {(obra.tipo_obra === "implantacao" || obra.tipo_obra === "conservacao") && obra.usinas && obra.usinas.length > 0 && (
+                        {obra.usinas && obra.usinas.length > 0 && (
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Usinas:</p>
                             <div className="flex flex-wrap gap-1">
