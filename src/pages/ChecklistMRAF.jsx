@@ -551,15 +551,21 @@ export default function ChecklistMRAFPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <Label htmlFor="rodovia" className="text-base">Rodovia *</Label>
-                      <Input
+                      <select
                         id="rodovia"
                         value={formData.rodovia}
                         onChange={(e) => handleChange('rodovia', e.target.value)}
                         required
-                        disabled={!isEditable || isApproved}
-                        placeholder="Nome da rodovia"
-                        className="bg-white border-slate-200 text-slate-700 h-11 text-base"
-                      />
+                        disabled={!isEditable || isApproved || !obraSelecionada}
+                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
+                      >
+                        <option value="">Selecione a rodovia</option>
+                        {(obraSelecionada?.rodovias || []).map((rodovia, idx) => (
+                          <option key={idx} value={rodovia}>
+                            {rodovia}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>

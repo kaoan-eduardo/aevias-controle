@@ -665,14 +665,23 @@ export default function ChecklistAplicacaoPage() {
 
                   <div>
                     <Label htmlFor="rodovia">Rodovia *</Label>
-                    <Input
-                      id="rodovia"
-                      value={formData.rodovia}
-                      onChange={(e) => handleInputChange('rodovia', e.target.value)}
-                      disabled={!isEditable}
-                      placeholder="Ex: BR-116"
+                    <Select 
+                      value={formData.rodovia} 
+                      onValueChange={(value) => handleInputChange('rodovia', value)} 
+                      disabled={!isEditable || !formData.obra_id}
                       required
-                    />
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a rodovia" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(obraSelecionada?.rodovias || []).map((rodovia, idx) => (
+                          <SelectItem key={idx} value={rodovia}>
+                            {rodovia}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
