@@ -400,13 +400,20 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
 
                   <div>
                     <Label htmlFor="rodovia">Rodovia</Label>
-                    <Input
+                    <select
                       id="rodovia"
                       value={formData.rodovia}
                       onChange={(e) => setFormData({ ...formData, rodovia: e.target.value })}
-                      disabled={!isEditable}
-                      placeholder="Ex: BR-116"
-                    />
+                      disabled={!isEditable || !formData.obra_id}
+                      className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="">Selecione a rodovia</option>
+                      {obras.find(o => o.id === formData.obra_id)?.rodovias?.map((rodovia, idx) => (
+                        <option key={idx} value={rodovia}>
+                          {rodovia}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
