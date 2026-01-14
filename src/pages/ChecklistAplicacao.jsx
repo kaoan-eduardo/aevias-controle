@@ -698,13 +698,22 @@ export default function ChecklistAplicacaoPage() {
 
                   <div>
                     <Label htmlFor="usina">Usina</Label>
-                    <Input
-                      id="usina"
-                      value={formData.usina}
-                      onChange={(e) => handleInputChange('usina', e.target.value)}
-                      disabled={!isEditable}
-                      placeholder="Nome da usina"
-                    />
+                    <Select 
+                      value={formData.usina} 
+                      onValueChange={(value) => handleInputChange('usina', value)} 
+                      disabled={!isEditable || !formData.obra_id}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a usina" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(obraSelecionada?.usinas || []).map((usina, idx) => (
+                          <SelectItem key={idx} value={usina}>
+                            {usina}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
