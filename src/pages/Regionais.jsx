@@ -34,11 +34,13 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
     tipo_obra: obra?.tipo_obra || "implantacao",
     status: obra?.status || "planejamento",
     empreiteiras: obra?.empreiteiras || [],
-    usinas: obra?.usinas || []
+    usinas: obra?.usinas || [],
+    rodovias: obra?.rodovias || []
   });
 
   const [novaEmpreiteira, setNovaEmpreiteira] = useState("");
   const [novaUsina, setNovaUsina] = useState("");
+  const [novaRodovia, setNovaRodovia] = useState("");
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
@@ -227,6 +229,54 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
           </div>
         </div>
       )}
+
+      {/* Rodovias - para todos os tipos de obra */}
+      <div className="space-y-2">
+        <Label>Rodovias da Obra</Label>
+        <div className="flex gap-2">
+          <Input
+            value={novaRodovia}
+            onChange={(e) => setNovaRodovia(e.target.value)}
+            placeholder="Nome da rodovia"
+            className="bg-white border-[#00233B]/20 text-[#00233B]"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (novaRodovia.trim()) {
+                  setFormData({ ...formData, rodovias: [...formData.rodovias, novaRodovia.trim()] });
+                  setNovaRodovia("");
+                }
+              }
+            }}
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              if (novaRodovia.trim()) {
+                setFormData({ ...formData, rodovias: [...formData.rodovias, novaRodovia.trim()] });
+                setNovaRodovia("");
+              }
+            }}
+            className="bg-[#566E3D] hover:bg-[#566E3D]/90 text-white"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.rodovias.map((rodovia, index) => (
+            <Badge key={index} variant="secondary" className="bg-purple-100 text-purple-800 flex items-center gap-1">
+              {rodovia}
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, rodovias: formData.rodovias.filter((_, i) => i !== index) })}
+                className="ml-1 hover:text-red-600"
+              >
+                ×
+              </button>
+            </Badge>
+          ))}
+        </div>
+      </div>
 
       <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={onCancel} className="border-[#00233B]/20 text-[#00233B] hover:bg-[#00233B]/5">
@@ -471,6 +521,18 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                               {obra.usinas.map((usina, idx) => (
                                 <Badge key={idx} variant="secondary" className="bg-green-100 text-green-800 text-xs">
                                   {usina}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {obra.rodovias && obra.rodovias.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-xs text-[#00233B]/60 mb-1">Rodovias:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {obra.rodovias.map((rodovia, idx) => (
+                                <Badge key={idx} variant="secondary" className="bg-purple-100 text-purple-800 text-xs">
+                                  {rodovia}
                                 </Badge>
                               ))}
                             </div>
