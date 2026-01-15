@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Loader2, XCircle, AlertTriangle } from "lucide-react";
+import { Save, Loader2, XCircle, AlertTriangle, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
@@ -279,16 +280,16 @@ export default function ChecklistTerraplanagem() {
     setSelectedFileNames(files.length === 1 ? files[0].name : `${files.length} ficheiros selecionados`);
 
     try {
-      const uploadPromises = files.map(file =>
-        base44.integrations.Core.UploadFile({ file })
-      );
-
-      const results = await Promise.all(uploadPromises);
-      const newPhotoUrls = results.map(result => result.file_url);
+      const uploadedUrls = [];
+      
+      for (const file of files) {
+        const result = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(result.file_url);
+      }
 
       setFormData(prev => ({
         ...prev,
-        fotos: [...prev.fotos, ...newPhotoUrls]
+        fotos: [...(prev.fotos || []), ...uploadedUrls]
       }));
     } catch (error) {
       console.error("Erro ao fazer upload das fotos:", error);
@@ -512,13 +513,23 @@ export default function ChecklistTerraplanagem() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="rodovia">Rodovia *</Label>
-                      <Input
-                        id="rodovia"
-                        value={formData.rodovia}
-                        onChange={(e) => setFormData({ ...formData, rodovia: e.target.value })}
+                      <Select 
+                        value={formData.rodovia} 
+                        onValueChange={(value) => setFormData({ ...formData, rodovia: value })} 
+                        disabled={!formData.obra_id}
                         required
-                        placeholder="Nome da rodovia"
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a rodovia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(obras.find(o => o.id === formData.obra_id)?.rodovias || []).map((rodovia, idx) => (
+                            <SelectItem key={idx} value={rodovia}>
+                              {rodovia}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
@@ -1114,7 +1125,7 @@ export default function ChecklistTerraplanagem() {
                 </div>
 
                 {uploadingPhotos && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mt-2">
+                  <div className="flex items-center gap-2 text-sm text-blue-600 mt-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     <span>Fazendo upload das fotos...</span>
                   </div>
