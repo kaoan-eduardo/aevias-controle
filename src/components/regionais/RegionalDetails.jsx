@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { FileText } from "lucide-react";
 
 const DetailItem = ({ label, value }) => {
     if (!value) return null;
@@ -88,15 +89,76 @@ export default function RegionalDetails({ regional, users, projects }) {
                 <DetailItem label="Gestor de Contrato" value={gestor?.laboratorista_name || regional.gestor_contrato_responsavel} />
 
                 {projetosVinculados.length > 0 && (
-                    <div>
-                        <p className="text-sm font-medium text-[#00233B]/80 mb-2">Projetos Vinculados</p>
-                        <div className="flex flex-wrap gap-2">
-                            {projetosVinculados.map((projeto) => (
-                                <Badge key={projeto.id} variant="secondary" className="bg-black/5 text-[#00233B]">
-                                    {projeto.name}
-                                </Badge>
-                            ))}
-                        </div>
+                    <div className="space-y-3">
+                        <p className="text-sm font-medium text-[#00233B]/80">Projetos Vinculados ({projetosVinculados.length})</p>
+                        
+                        {/* Projetos CAUQ */}
+                        {projetosVinculados.filter(p => p.tipo_projeto === 'CAUQ').length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-blue-600" />
+                                    <p className="text-sm font-medium text-blue-800">Projetos CAUQ</p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 ml-6">
+                                    {projetosVinculados.filter(p => p.tipo_projeto === 'CAUQ').map((projeto) => (
+                                        <Badge key={projeto.id} variant="secondary" className="bg-blue-100 text-blue-800">
+                                            {projeto.name}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Projetos MRAF */}
+                        {projetosVinculados.filter(p => p.tipo_projeto === 'MRAF').length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-purple-600" />
+                                    <p className="text-sm font-medium text-purple-800">Projetos MRAF</p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 ml-6">
+                                    {projetosVinculados.filter(p => p.tipo_projeto === 'MRAF').map((projeto) => (
+                                        <Badge key={projeto.id} variant="secondary" className="bg-purple-100 text-purple-800">
+                                            {projeto.name}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Projetos BGS */}
+                        {projetosVinculados.filter(p => p.tipo_projeto === 'BGS').length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-amber-600" />
+                                    <p className="text-sm font-medium text-amber-800">Projetos BGS</p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 ml-6">
+                                    {projetosVinculados.filter(p => p.tipo_projeto === 'BGS').map((projeto) => (
+                                        <Badge key={projeto.id} variant="secondary" className="bg-amber-100 text-amber-800">
+                                            {projeto.name}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Carta Traço de Concreto */}
+                        {projetosVinculados.filter(p => p.tipo_projeto === 'CARTA_TRACO_CONCRETO').length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FileText className="w-4 h-4 text-green-600" />
+                                    <p className="text-sm font-medium text-green-800">Cartas Traço de Concreto</p>
+                                </div>
+                                <div className="flex flex-wrap gap-2 ml-6">
+                                    {projetosVinculados.filter(p => p.tipo_projeto === 'CARTA_TRACO_CONCRETO').map((projeto) => (
+                                        <Badge key={projeto.id} variant="secondary" className="bg-green-100 text-green-800">
+                                            {projeto.name}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
                 
