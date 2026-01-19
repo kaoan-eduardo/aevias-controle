@@ -99,6 +99,13 @@ const ReportPrintHeader = ({ checklist, obra, regional }) => (
           <p className="font-bold">DATA:</p>
           <p>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
         </div>
+
+        {checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim && (
+          <div>
+            <p className="font-bold">JORNADA:</p>
+            <p>{checklist.jornada.horario_inicio} - {checklist.jornada.horario_fim}</p>
+          </div>
+        )}
       </div>
     </main>
   </div>
