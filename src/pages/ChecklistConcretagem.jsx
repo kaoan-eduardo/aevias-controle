@@ -15,6 +15,10 @@ const getInitialFormData = () => ({
   obra_id: "",
   project_id: "",
   data: new Date().toISOString().split('T')[0],
+  jornada: {
+    horario_inicio: "",
+    horario_fim: ""
+  },
   concreteira: "",
   rodovia: "",
   trecho: "",
@@ -714,6 +718,36 @@ export default function ChecklistConcretagem() {
                       />
                     </div>
 
+                    <div>
+                      <Label htmlFor="horario_inicio">Horário Início *</Label>
+                      <Input
+                        id="horario_inicio"
+                        type="time"
+                        value={formData.jornada?.horario_inicio || ""}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          jornada: { ...formData.jornada, horario_inicio: e.target.value } 
+                        })}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="horario_fim">Horário Fim *</Label>
+                      <Input
+                        id="horario_fim"
+                        type="time"
+                        value={formData.jornada?.horario_fim || ""}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          jornada: { ...formData.jornada, horario_fim: e.target.value } 
+                        })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="concreteira">Concreteira</Label>
                       <Input
