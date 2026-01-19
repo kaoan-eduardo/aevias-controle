@@ -17,6 +17,10 @@ const getInitialFormData = () => ({
   obra_id: "",
   project_id: "",
   data: new Date().toISOString().split('T')[0],
+  jornada: {
+    horario_inicio: "",
+    horario_fim: ""
+  },
   rodovia: "",
   trecho: "",
   usina: "",
@@ -658,6 +662,30 @@ export default function ChecklistAplicacaoPage() {
                       type="date"
                       value={formData.data}
                       onChange={(e) => handleInputChange('data', e.target.value)}
+                      disabled={!isEditable}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="horario_inicio">Horário Início *</Label>
+                    <Input
+                      id="horario_inicio"
+                      type="time"
+                      value={formData.jornada?.horario_inicio || ""}
+                      onChange={(e) => handleNestedChange('jornada.horario_inicio', e.target.value)}
+                      disabled={!isEditable}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="horario_fim">Horário Fim *</Label>
+                    <Input
+                      id="horario_fim"
+                      type="time"
+                      value={formData.jornada?.horario_fim || ""}
+                      onChange={(e) => handleNestedChange('jornada.horario_fim', e.target.value)}
                       disabled={!isEditable}
                       required
                     />
