@@ -37,6 +37,10 @@ export default function ChecklistTerraplanagem() {
     obra_id: "",
     project_id: "",
     data: new Date().toISOString().split('T')[0],
+    jornada: {
+      horario_inicio: "",
+      horario_fim: ""
+    },
     rodovia: "",
     empreiteira: "",
     estaca: "",
@@ -505,6 +509,34 @@ export default function ChecklistTerraplanagem() {
                         id="data"
                         value={formData.data}
                         onChange={(e) => setFormData({ ...formData, data: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="horario_inicio">Horário Início *</Label>
+                      <Input
+                        id="horario_inicio"
+                        type="time"
+                        value={formData.jornada?.horario_inicio || ""}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          jornada: { ...formData.jornada, horario_inicio: e.target.value } 
+                        })}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="horario_fim">Horário Fim *</Label>
+                      <Input
+                        id="horario_fim"
+                        type="time"
+                        value={formData.jornada?.horario_fim || ""}
+                        onChange={(e) => setFormData({ 
+                          ...formData, 
+                          jornada: { ...formData.jornada, horario_fim: e.target.value } 
+                        })}
                         required
                       />
                     </div>
