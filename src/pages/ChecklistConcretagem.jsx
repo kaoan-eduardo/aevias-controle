@@ -40,7 +40,6 @@ const getInitialFormData = () => ({
       placa_betoneira: "",
       horario_inicio: "",
       horario_termino: "",
-      jornada: "",
       slump_test: {
         realizado: false,
         resultado: null,
@@ -257,7 +256,6 @@ export default function ChecklistConcretagem() {
           placa_betoneira: "",
           horario_inicio: "",
           horario_termino: "",
-          jornada: "", // Added to new carga
           slump_test: {
             realizado: false,
             resultado: null,
@@ -947,14 +945,6 @@ export default function ChecklistConcretagem() {
                               type="time"
                               value={carga.horario_termino}
                               onChange={(e) => handleCargaChange(index, 'horario_termino', e.target.value)}
-                            />
-                          </div>
-                          {/* Jornada field for each carga */}
-                          <div>
-                            <Label>Jornada</Label>
-                            <Input
-                              value={carga.jornada}
-                              onChange={(e) => handleCargaChange(index, 'jornada', e.target.value)}
                             />
                           </div>
                         </div>
