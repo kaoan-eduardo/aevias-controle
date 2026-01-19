@@ -188,6 +188,13 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p className="font-bold">INSPETOR DE CAMPO:</p>
           <p>{checklist.inspetor_campo || 'N/A'}</p>
         </div>
+
+        {checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim && (
+          <div>
+            <p className="font-bold">JORNADA:</p>
+            <p>{checklist.jornada.horario_inicio} - {checklist.jornada.horario_fim}</p>
+          </div>
+        )}
       </div>
     </main>
   </div>
