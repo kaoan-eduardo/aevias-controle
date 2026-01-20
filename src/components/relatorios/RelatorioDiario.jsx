@@ -143,6 +143,14 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
                 <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
               </div>
+
+              {/* Jornada - se preenchida */}
+              {diario.jornada?.horario_inicio && diario.jornada?.horario_fim && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Jornada</p>
+                  <p className="text-gray-800">{diario.jornada.horario_inicio} - {diario.jornada.horario_fim}</p>
+                </div>
+              )}
             </div>
           </section>
 

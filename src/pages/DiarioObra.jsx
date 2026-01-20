@@ -21,6 +21,10 @@ import { createPageUrl } from "@/utils";
 const getInitialFormData = () => ({
   obra_id: "",
   data: new Date().toISOString().split('T')[0],
+  jornada: {
+    horario_inicio: "",
+    horario_fim: ""
+  },
   tipo_local: "campo",
   usina_selecionada: "",
   rodovia: "",
@@ -134,17 +138,39 @@ const DiarioForm = ({
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="data">Data *</Label>
-        <Input
-          id="data"
-          name="data"
-          type="date"
-          value={formData.data}
-          onChange={(e) => handleChange(e.target.name, e.target.value)}
-          required
-          disabled={!isEditable || isApproved}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="data">Data *</Label>
+          <Input
+            id="data"
+            name="data"
+            type="date"
+            value={formData.data}
+            onChange={(e) => handleChange(e.target.name, e.target.value)}
+            required
+            disabled={!isEditable || isApproved}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="horario_inicio">Horário Início</Label>
+          <Input
+            id="horario_inicio"
+            type="time"
+            value={formData.jornada?.horario_inicio || ""}
+            onChange={(e) => handleChange('jornada', { ...formData.jornada, horario_inicio: e.target.value })}
+            disabled={!isEditable || isApproved}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="horario_fim">Horário Fim</Label>
+          <Input
+            id="horario_fim"
+            type="time"
+            value={formData.jornada?.horario_fim || ""}
+            onChange={(e) => handleChange('jornada', { ...formData.jornada, horario_fim: e.target.value })}
+            disabled={!isEditable || isApproved}
+          />
+        </div>
       </div>
       
       <div className="space-y-2">
