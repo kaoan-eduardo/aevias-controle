@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, Loader2, XCircle, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
@@ -765,12 +766,21 @@ export default function ChecklistConcretagem() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="rodovia">Rodovia</Label>
-                      <Input
-                        id="rodovia"
+                      <Select
                         value={formData.rodovia}
-                        onChange={(e) => setFormData({ ...formData, rodovia: e.target.value })}
-                        placeholder="Nome da rodovia"
-                      />
+                        onValueChange={(value) => setFormData({ ...formData, rodovia: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a rodovia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {obras.find(o => o.id === formData.obra_id)?.rodovias?.map((rodovia, index) => (
+                            <SelectItem key={index} value={rodovia}>
+                              {rodovia}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
