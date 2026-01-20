@@ -32,7 +32,6 @@ const getInitialFormData = () => ({
   condicoes_climaticas: "ensolarado",
   temperatura: "",
   atividades_realizadas: "",
-  ocorrencias: "",
   observacoes: "",
   fotos: [],
   cliente: "",
@@ -233,19 +232,6 @@ const DiarioForm = ({
           placeholder="Descreva as atividades realizadas no dia."
           rows={4}
           required
-          disabled={!isEditable || isApproved}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="ocorrencias">Ocorrências</Label>
-        <Textarea
-          id="ocorrencias"
-          name="ocorrencias"
-          value={formData.ocorrencias}
-          onChange={(e) => handleChange(e.target.name, e.target.value)}
-          placeholder="Descreva quaisquer ocorrências ou problemas."
-          rows={3}
           disabled={!isEditable || isApproved}
         />
       </div>
