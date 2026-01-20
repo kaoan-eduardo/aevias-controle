@@ -551,36 +551,37 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="print:pt-8 print:pb-8 break-before-page">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-8 print:p-8 flex flex-col page-container min-h-screen">
-            <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
-              <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2">
+        <div key={pageIndex} className="print:pt-2 print:pb-3 break-before-page">
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3 flex flex-col">
+            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
               <div className="flex justify-start">
-                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-16" />
+                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-12" />
               </div>
               <div className="text-center">
-                <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico Terraplanagem</h1>
-                <p className="text-base print:text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+                <h1 className="text-base font-bold text-gray-800">Relatório Fotográfico</h1>
+                <p className="text-xs text-gray-600">Terraplanagem</p>
+                <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
               </div>
-              <div className="flex justify-end text-sm print:text-xs">
-                <div className="border border-gray-400 p-2 rounded-md">
-                  <p>{formatDate(checklist.data)}</p>
+              <div className="flex justify-end">
+                <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
+                  <p className="font-semibold text-gray-800">
+                    {formatDate(checklist.data)}
+                  </p>
                 </div>
               </div>
             </header>
-            <main className="flex-grow grid grid-cols-2 gap-4 mt-4" style={{ gridAutoRows: 'minmax(0, 1fr)' }}>
+            <main className="grid grid-cols-2 gap-3">
               {chunk.map((fotoUrl, fotoIndex) => (
-                <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
-                  <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
+                <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col">
+                  <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '280px' }}>
                     <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
                   </div>
-                  <p className="text-center text-base print:text-sm mt-2 font-medium">
+                  <p className="text-center text-sm mt-2 font-medium">
                     Foto {(pageIndex * 6) + fotoIndex + 1}
                   </p>
                 </div>
               ))}
             </main>
-            </div>
           </div>
         </div>
       ))}
