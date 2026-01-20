@@ -81,12 +81,6 @@ export default function RegionalDetails({ regional, users, projects }) {
                 <DetailItem label="Estado (UF)" value={regional.estado} />
                 <DetailItem label="Descrição" value={regional.descricao} />
                 <DetailItem label="Status" value={regional.status === 'ativa' ? 'Ativa' : 'Inativa'} />
-                {regional.jornada?.horario_inicio && regional.jornada?.horario_fim && (
-                    <DetailItem 
-                        label="Jornada de Trabalho" 
-                        value={`${regional.jornada.horario_inicio} - ${regional.jornada.horario_fim}`} 
-                    />
-                )}
             </div>
 
             <Separator className="bg-white/20" />
