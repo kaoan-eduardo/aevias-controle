@@ -239,6 +239,16 @@ const getResponsavelInfo = (ensaio) => {
   return null;
 };
 
+const getEmpireiteiraInfo = (ensaio) => {
+  const entityType = ensaio.entityType;
+  
+  if (entityType === "ChecklistAplicacao" || entityType === "ChecklistMRAF" || entityType === "ChecklistConcretagem" || entityType === "ChecklistTerraplanagem") {
+    return ensaio.empreiteira || null;
+  }
+  
+  return null;
+};
+
 const getRodoviaInfo = (ensaio) => {
   return ensaio.rodovia || null;
 };
@@ -1939,6 +1949,13 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <td className="px-2 py-2">
                         <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
                         <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
+                      </td>
+                      <td className="px-2 py-2">
+                        {getEmpireiteiraInfo(ensaio) ? (
+                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
+                        ) : (
+                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        )}
                       </td>
                       <td className="px-2 py-2">
                         {projeto ? (
