@@ -697,6 +697,29 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
     }
 
+    if (localFilter && localFilter !== 'all') {
+      filtered = filtered.filter((ensaio) => {
+        if (ensaio.entityType === "DiarioObra") {
+          if (ensaio.tipo_local === "usina") {
+            return ensaio.usina_selecionada === localFilter;
+          } else {
+            return ensaio.rodovia === localFilter;
+          }
+        } else if (ensaio.entityType === "ChecklistUsina") {
+          return ensaio.usina === localFilter;
+        } else {
+          return ensaio.rodovia === localFilter;
+        }
+      });
+    }
+
+    if (empreiteiraFilter && empreiteiraFilter !== 'all') {
+      filtered = filtered.filter((ensaio) => {
+        const empreiteira = getEmpireiteiraInfo(ensaio);
+        return empreiteira === empreiteiraFilter;
+      });
+    }
+
     if (statusObraFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
