@@ -557,6 +557,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState(''); // New filter state
+  const [localFilter, setLocalFilter] = useState('');
+  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('');
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -638,6 +640,22 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         if (!ensaio.project_id) return false;
         const projeto = projects.find((p) => p.id === ensaio.project_id);
         return projeto?.name?.toLowerCase().includes(projetoFilter.toLowerCase());
+      });
+    }
+
+    if (localFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const localInfo = getLocalInfo(ensaio);
+        return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
+          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+      });
+    }
+
+    if (empreiteiraFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const empreiteira = getEmpireiteiraInfo(ensaio);
+        if (!empreiteira) return false;
+        return empreiteira.toLowerCase().includes(empreiteiraFilter.toLowerCase());
       });
     }
 
@@ -771,6 +789,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     setNomeFilter('');
     setObraFilter('');
     setProjetoFilter(''); // Clear project filter
+    setLocalFilter('');
+    setEmpreiteiraFilter('');
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
@@ -809,13 +829,15 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       nomeFilter !== '' ||
       obraFilter !== '' ||
       projetoFilter !== '' || // Include project filter
+      localFilter !== '' ||
+      empreiteiraFilter !== '' ||
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
       typeFilter !== 'all' ||
       statusObraFilter !== 'all'
     );
-  }, [nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
+  }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
 
   const statusColors = useMemo(() => ({
     planejamento: "bg-blue-100 text-blue-800",
@@ -1567,6 +1589,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState('');
+  const [localFilter, setLocalFilter] = useState('');
+  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('');
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -1627,6 +1651,22 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       });
     }
 
+    if (localFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const localInfo = getLocalInfo(ensaio);
+        return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
+          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+      });
+    }
+
+    if (empreiteiraFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const empreiteira = getEmpireiteiraInfo(ensaio);
+        if (!empreiteira) return false;
+        return empreiteira.toLowerCase().includes(empreiteiraFilter.toLowerCase());
+      });
+    }
+
     if (dataInicioFilter) {
       filtered = filtered.filter((ensaio) => {
         const dataEnsaio = getDataEnsaio(ensaio);
@@ -1673,7 +1713,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     }
 
     setFilteredEnsaios(filtered);
-  }, [ensaios, nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
+  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
     setSelectedEnsaios(prev => 
@@ -1704,6 +1744,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     setNomeFilter('');
     setObraFilter('');
     setProjetoFilter('');
+    setLocalFilter('');
+    setEmpreiteiraFilter('');
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
@@ -1716,12 +1758,14 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       nomeFilter !== '' ||
       obraFilter !== '' ||
       projetoFilter !== '' ||
+      localFilter !== '' ||
+      empreiteiraFilter !== '' ||
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
       typeFilter !== 'all'
     );
-  }, [nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
+  }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
 
   const handleAssinar = useCallback(async (ensaio) => {
     try {
@@ -1881,8 +1925,26 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       />
                     </div>
                   </th>
-                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
-                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Empreiteira</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Local</span>
+                      <TextColumnFilter
+                        value={localFilter}
+                        onChange={setLocalFilter}
+                        placeholder="Filtrar por local..."
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Empreiteira</span>
+                      <TextColumnFilter
+                        value={empreiteiraFilter}
+                        onChange={setEmpreiteiraFilter}
+                        placeholder="Filtrar por empreiteira..."
+                      />
+                    </div>
+                  </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Projeto</span>
