@@ -83,23 +83,23 @@ export default function Dashboard() {
 
       // Carregar dados em paralelo para maior velocidade
       const loadPromises = [
-        base44.entities.Obra.list("-created_date", 100),
-        base44.entities.Project.list("-created_date", 50),
-        base44.entities.EnsaioCAUQ.list("-created_date", 100),
-        base44.entities.EnsaioDensidade.list("-created_date", 100),
-        base44.entities.DiarioObra.list("-created_date", 100),
-        base44.entities.ChecklistUsina.list("-created_date", 100),
-        base44.entities.ChecklistAplicacao.list("-created_date", 100),
-        base44.entities.ChecklistMRAF.list("-created_date", 100),
-        base44.entities.ChecklistConcretagem.list("-created_date", 100),
-        base44.entities.ChecklistTerraplanagem.list("-created_date", 100),
+        base44.entities.Obra.list("-created_date"),
+        base44.entities.Project.list("-created_date"),
+        base44.entities.EnsaioCAUQ.list("-created_date"),
+        base44.entities.EnsaioDensidade.list("-created_date"),
+        base44.entities.DiarioObra.list("-created_date"),
+        base44.entities.ChecklistUsina.list("-created_date"),
+        base44.entities.ChecklistAplicacao.list("-created_date"),
+        base44.entities.ChecklistMRAF.list("-created_date"),
+        base44.entities.ChecklistConcretagem.list("-created_date"),
+        base44.entities.ChecklistTerraplanagem.list("-created_date"),
       ];
 
       // Adicionar regionais e transferências apenas para clientes, gestores e salas técnicas
       if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
         loadPromises.push(base44.entities.Regional.list());
         if (isCliente) {
-          loadPromises.push(base44.entities.SolicitacaoTransferenciaRegional.list('-created_date', 50));
+          loadPromises.push(base44.entities.SolicitacaoTransferenciaRegional.list('-created_date'));
         }
       } else {
         loadPromises.push(Promise.resolve([]));
