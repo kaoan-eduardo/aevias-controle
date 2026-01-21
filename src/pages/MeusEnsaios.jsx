@@ -1059,20 +1059,22 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Local</span>
-                      <TextColumnFilter
+                      <SelectColumnFilter
                         value={localFilter}
                         onChange={setLocalFilter}
-                        placeholder="Filtrar por local..."
+                        options={localOptions}
+                        placeholder="Filtrar por local"
                       />
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Empreiteira</span>
-                      <TextColumnFilter
+                      <SelectColumnFilter
                         value={empreiteiraFilter}
                         onChange={setEmpreiteiraFilter}
-                        placeholder="Filtrar por empreiteira..."
+                        options={empreiteiraOptions}
+                        placeholder="Filtrar por empreiteira"
                       />
                     </div>
                   </th>
