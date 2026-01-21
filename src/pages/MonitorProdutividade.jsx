@@ -41,7 +41,7 @@ export default function MonitorProdutividade() {
         Obra.list(),
       ]);
 
-      // Carregar todos os registros
+      // Carregar todos os registros (mesmo limite do Dashboard)
       const [
         diariosData,
         ensaiosCAUQData,
@@ -55,17 +55,17 @@ export default function MonitorProdutividade() {
         checklistsTerraplanamemData,
         sondagemData
       ] = await Promise.all([
-        DiarioObra.list("-created_date", 500),
-        base44.entities.EnsaioCAUQ.list("-created_date", 500),
-        EnsaioDensidade.list("-created_date", 500),
-        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 500),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 500),
-        ChecklistUsina.list("-created_date", 500),
-        ChecklistAplicacao.list("-created_date", 500),
-        ChecklistMRAF.list("-created_date", 500),
-        ChecklistConcretagem.list("-created_date", 500),
-        base44.entities.ChecklistTerraplanagem.list("-created_date", 500),
-        base44.entities.EnsaioSondagem.list("-created_date", 500)
+        DiarioObra.list("-created_date", 100),
+        base44.entities.EnsaioCAUQ.list("-created_date", 100),
+        EnsaioDensidade.list("-created_date", 100),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 100),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 100),
+        ChecklistUsina.list("-created_date", 100),
+        ChecklistAplicacao.list("-created_date", 100),
+        ChecklistMRAF.list("-created_date", 100),
+        ChecklistConcretagem.list("-created_date", 100),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 100),
+        base44.entities.EnsaioSondagem.list("-created_date", 100)
       ]);
 
       const todosRegistros = [
