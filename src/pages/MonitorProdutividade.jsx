@@ -106,8 +106,8 @@ export default function MonitorProdutividade() {
         // Contar registros criados nas obras do gestor
         const registrosCriados = todosRegistros.filter(r => obrasIds.includes(r.obra_id));
 
-        // Contar registros aprovados pelo gestor
-        const registrosAprovados = todosRegistros.filter(r => 
+        // Contar registros aprovados pelo gestor (somente das obras dele)
+        const registrosAprovados = registrosCriados.filter(r => 
           r.approved === true && 
           r.approved_by?.toLowerCase() === gestor.email?.toLowerCase()
         );
