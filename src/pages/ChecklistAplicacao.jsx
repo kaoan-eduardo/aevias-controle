@@ -23,6 +23,7 @@ const getInitialFormData = () => ({
   },
   rodovia: "",
   trecho: "",
+  empreiteira: "",
   usina: "",
   projeto_utilizado: "",
   faixa_especificada: "",
@@ -722,6 +723,26 @@ export default function ChecklistAplicacaoPage() {
                       placeholder="Ex: km 10 ao km 25"
                       required
                     />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="empreiteira">Empreiteira</Label>
+                    <Select 
+                      value={formData.empreiteira} 
+                      onValueChange={(value) => handleInputChange('empreiteira', value)} 
+                      disabled={!isEditable || !formData.obra_id}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a empreiteira" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(obraSelecionada?.empreiteiras || []).map((empreiteira, idx) => (
+                          <SelectItem key={idx} value={empreiteira}>
+                            {empreiteira}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
