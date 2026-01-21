@@ -41,7 +41,7 @@ export default function MonitorProdutividade() {
         Obra.list(),
       ]);
 
-      // Carregar todos os registros (mesmo limite do Dashboard)
+      // Carregar todos os registros finalizados
       const [
         diariosData,
         ensaiosCAUQData,
@@ -55,31 +55,31 @@ export default function MonitorProdutividade() {
         checklistsTerraplanamemData,
         sondagemData
       ] = await Promise.all([
-        DiarioObra.list("-created_date", 100),
-        base44.entities.EnsaioCAUQ.list("-created_date", 100),
-        EnsaioDensidade.list("-created_date", 100),
-        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 100),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 100),
-        ChecklistUsina.list("-created_date", 100),
-        ChecklistAplicacao.list("-created_date", 100),
-        ChecklistMRAF.list("-created_date", 100),
-        ChecklistConcretagem.list("-created_date", 100),
-        base44.entities.ChecklistTerraplanagem.list("-created_date", 100),
-        base44.entities.EnsaioSondagem.list("-created_date", 100)
+        DiarioObra.list("-created_date"),
+        base44.entities.EnsaioCAUQ.list("-created_date"),
+        EnsaioDensidade.list("-created_date"),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date"),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date"),
+        ChecklistUsina.list("-created_date"),
+        ChecklistAplicacao.list("-created_date"),
+        ChecklistMRAF.list("-created_date"),
+        ChecklistConcretagem.list("-created_date"),
+        base44.entities.ChecklistTerraplanagem.list("-created_date"),
+        base44.entities.EnsaioSondagem.list("-created_date")
       ]);
 
       const todosRegistros = [
-        ...diariosData,
-        ...ensaiosCAUQData,
-        ...densidadeData,
-        ...densidadeInSituData,
-        ...taxaPinturaData,
-        ...checklistsData,
-        ...checklistsAplicacaoData,
-        ...checklistsMRAFData,
-        ...checklistsConcretagemData,
-        ...checklistsTerraplanamemData,
-        ...sondagemData
+        ...diariosData.filter(r => r.status === 'finalizado'),
+        ...ensaiosCAUQData.filter(r => r.status === 'finalizado'),
+        ...densidadeData.filter(r => r.status === 'finalizado'),
+        ...densidadeInSituData.filter(r => r.status === 'finalizado'),
+        ...taxaPinturaData.filter(r => r.status === 'finalizado'),
+        ...checklistsData.filter(r => r.status === 'finalizado'),
+        ...checklistsAplicacaoData.filter(r => r.status === 'finalizado'),
+        ...checklistsMRAFData.filter(r => r.status === 'finalizado'),
+        ...checklistsConcretagemData.filter(r => r.status === 'finalizado'),
+        ...checklistsTerraplanamemData.filter(r => r.status === 'finalizado'),
+        ...sondagemData.filter(r => r.status === 'finalizado')
       ];
 
       // Identificar gestores de contrato
