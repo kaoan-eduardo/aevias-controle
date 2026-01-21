@@ -19,7 +19,8 @@ import {
   AlertTriangle,
   Gauge,
   ArrowLeftRight,
-  BarChart3
+  BarChart3,
+  TrendingUp
 } from "lucide-react";
 import {
   Sidebar,
@@ -334,6 +335,7 @@ const AppLayout = ({ children }) => {
   const adminNavigation = useMemo(() => [
     { title: "Usuários", url: createPageUrl("Users"), icon: Users, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Migração de Dados", url: createPageUrl("MigracaoDados"), icon: Grid, allowedLevels: ['admin'] },
+    { title: "Monitor de Produtividade", url: createPageUrl("MonitorProdutividade"), icon: TrendingUp, allowedLevels: ['admin'] },
     { title: "Configurações", url: createPageUrl("Settings"), icon: Settings, allowedLevels: ['admin'] }
   ], []);
 
