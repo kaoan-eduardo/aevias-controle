@@ -755,11 +755,22 @@ export default function ChecklistConcretagem() {
 
                     <div>
                       <Label htmlFor="empreiteira">Empreiteira</Label>
-                      <Input
-                        id="empreiteira"
+                      <Select
                         value={formData.empreiteira}
-                        onChange={(e) => setFormData({ ...formData, empreiteira: e.target.value })}
-                      />
+                        onValueChange={(value) => setFormData({ ...formData, empreiteira: value })}
+                        disabled={!formData.obra_id}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a empreiteira" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(obras.find(o => o.id === formData.obra_id)?.empreiteiras || []).map((empreiteira, idx) => (
+                            <SelectItem key={idx} value={empreiteira}>
+                              {empreiteira}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
