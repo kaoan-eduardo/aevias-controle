@@ -566,13 +566,23 @@ export default function ChecklistTerraplanagem() {
 
                     <div>
                       <Label htmlFor="empreiteira">Empreiteira *</Label>
-                      <Input
-                        id="empreiteira"
-                        value={formData.empreiteira}
-                        onChange={(e) => setFormData({ ...formData, empreiteira: e.target.value })}
+                      <Select 
+                        value={formData.empreiteira} 
+                        onValueChange={(value) => setFormData({ ...formData, empreiteira: value })} 
+                        disabled={!formData.obra_id}
                         required
-                        placeholder="Nome da empreiteira"
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a empreiteira" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(obras.find(o => o.id === formData.obra_id)?.empreiteiras || []).map((empreiteira, idx) => (
+                            <SelectItem key={idx} value={empreiteira}>
+                              {empreiteira}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
