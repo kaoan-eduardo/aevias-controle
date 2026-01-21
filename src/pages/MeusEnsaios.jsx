@@ -557,8 +557,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState(''); // New filter state
-  const [localFilter, setLocalFilter] = useState('all');
-  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('all');
+  const [localFilter, setLocalFilter] = useState('');
+  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('');
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -697,29 +697,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
     }
 
-    if (localFilter && localFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => {
-        if (ensaio.entityType === "DiarioObra") {
-          if (ensaio.tipo_local === "usina") {
-            return ensaio.usina_selecionada === localFilter;
-          } else {
-            return ensaio.rodovia === localFilter;
-          }
-        } else if (ensaio.entityType === "ChecklistUsina") {
-          return ensaio.usina === localFilter;
-        } else {
-          return ensaio.rodovia === localFilter;
-        }
-      });
-    }
-
-    if (empreiteiraFilter && empreiteiraFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => {
-        const empreiteira = getEmpireiteiraInfo(ensaio);
-        return empreiteira === empreiteiraFilter;
-      });
-    }
-
     if (statusObraFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
@@ -812,8 +789,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     setNomeFilter('');
     setObraFilter('');
     setProjetoFilter(''); // Clear project filter
-    setLocalFilter('all');
-    setEmpreiteiraFilter('all');
+    setLocalFilter('');
+    setEmpreiteiraFilter('');
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
@@ -852,8 +829,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       nomeFilter !== '' ||
       obraFilter !== '' ||
       projetoFilter !== '' || // Include project filter
-      localFilter !== 'all' ||
-      empreiteiraFilter !== 'all' ||
+      localFilter !== '' ||
+      empreiteiraFilter !== '' ||
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
@@ -868,33 +845,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     concluida: "bg-slate-100 text-slate-800",
     pausada: "bg-[#FBBF24]/20 text-[#FBBF24] border border-[#FBBF24]/30"
   }), []);
-
-  // Gerar opções de locais (usinas e rodovias) das obras
-  const localOptions = useMemo(() => {
-    const locaisSet = new Set();
-    obras.forEach(obra => {
-      (obra.usinas || []).forEach(usina => locaisSet.add(usina));
-      (obra.rodovias || []).forEach(rodovia => locaisSet.add(rodovia));
-    });
-    const locais = Array.from(locaisSet).sort();
-    return [
-      { value: 'all', label: 'Todos os locais' },
-      ...locais.map(local => ({ value: local, label: local }))
-    ];
-  }, [obras]);
-
-  // Gerar opções de empreiteiras das obras
-  const empreiteiraOptions = useMemo(() => {
-    const empreiteirasSet = new Set();
-    obras.forEach(obra => {
-      (obra.empreiteiras || []).forEach(emp => empreiteirasSet.add(emp));
-    });
-    const empreiteiras = Array.from(empreiteirasSet).sort();
-    return [
-      { value: 'all', label: 'Todas as empreiteiras' },
-      ...empreiteiras.map(emp => ({ value: emp, label: emp }))
-    ];
-  }, [obras]);
 
   const typeOptions = [
     { value: 'all', label: 'Todos os tipos' },
@@ -1082,22 +1032,20 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Local</span>
-                      <SelectColumnFilter
+                      <TextColumnFilter
                         value={localFilter}
                         onChange={setLocalFilter}
-                        options={localOptions}
-                        placeholder="Filtrar por local"
+                        placeholder="Filtrar por local..."
                       />
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Empreiteira</span>
-                      <SelectColumnFilter
+                      <TextColumnFilter
                         value={empreiteiraFilter}
                         onChange={setEmpreiteiraFilter}
-                        options={empreiteiraOptions}
-                        placeholder="Filtrar por empreiteira"
+                        placeholder="Filtrar por empreiteira..."
                       />
                     </div>
                   </th>
@@ -1659,8 +1607,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [nomeFilter, setNomeFilter] = useState('');
   const [obraFilter, setObraFilter] = useState('');
   const [projetoFilter, setProjetoFilter] = useState('');
-  const [localFilter, setLocalFilter] = useState('all');
-  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('all');
+  const [localFilter, setLocalFilter] = useState('');
+  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('');
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -1814,8 +1762,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     setNomeFilter('');
     setObraFilter('');
     setProjetoFilter('');
-    setLocalFilter('all');
-    setEmpreiteiraFilter('all');
+    setLocalFilter('');
+    setEmpreiteiraFilter('');
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
@@ -1828,8 +1776,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       nomeFilter !== '' ||
       obraFilter !== '' ||
       projetoFilter !== '' ||
-      localFilter !== 'all' ||
-      empreiteiraFilter !== 'all' ||
+      localFilter !== '' ||
+      empreiteiraFilter !== '' ||
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
@@ -1875,33 +1823,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       alert(`Erro ao assinar registro: ${error.message || 'Erro desconhecido'}. Por favor, tente novamente ou contate o administrador.`);
     }
   }, [user]);
-
-  // Gerar opções de locais (usinas e rodovias) das obras
-  const localOptions = useMemo(() => {
-    const locaisSet = new Set();
-    obras.forEach(obra => {
-      (obra.usinas || []).forEach(usina => locaisSet.add(usina));
-      (obra.rodovias || []).forEach(rodovia => locaisSet.add(rodovia));
-    });
-    const locais = Array.from(locaisSet).sort();
-    return [
-      { value: 'all', label: 'Todos os locais' },
-      ...locais.map(local => ({ value: local, label: local }))
-    ];
-  }, [obras]);
-
-  // Gerar opções de empreiteiras das obras
-  const empreiteiraOptions = useMemo(() => {
-    const empreiteirasSet = new Set();
-    obras.forEach(obra => {
-      (obra.empreiteiras || []).forEach(emp => empreiteirasSet.add(emp));
-    });
-    const empreiteiras = Array.from(empreiteirasSet).sort();
-    return [
-      { value: 'all', label: 'Todas as empreiteiras' },
-      ...empreiteiras.map(emp => ({ value: emp, label: emp }))
-    ];
-  }, [obras]);
 
   const typeOptions = [
     { value: 'all', label: 'Todos os tipos' },
@@ -2025,22 +1946,20 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Local</span>
-                      <SelectColumnFilter
+                      <TextColumnFilter
                         value={localFilter}
                         onChange={setLocalFilter}
-                        options={localOptions}
-                        placeholder="Filtrar por local"
+                        placeholder="Filtrar por local..."
                       />
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Empreiteira</span>
-                      <SelectColumnFilter
+                      <TextColumnFilter
                         value={empreiteiraFilter}
                         onChange={setEmpreiteiraFilter}
-                        options={empreiteiraOptions}
-                        placeholder="Filtrar por empreiteira"
+                        placeholder="Filtrar por empreiteira..."
                       />
                     </div>
                   </th>
