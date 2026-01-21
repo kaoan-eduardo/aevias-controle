@@ -29,6 +29,7 @@ const getInitialFormData = () => ({
   },
   rodovia: "",
   trecho: "",
+  empreiteira: "",
   usina: "",
   projeto_utilizado: "",
   faixa_especificada: "",
@@ -617,6 +618,24 @@ export default function ChecklistMRAFPage() {
                         placeholder="Descrição do trecho"
                         className="bg-white border-slate-200 text-slate-700 h-11 text-base"
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="empreiteira" className="text-base">Empreiteira</Label>
+                      <select
+                        id="empreiteira"
+                        value={formData.empreiteira}
+                        onChange={(e) => handleChange('empreiteira', e.target.value)}
+                        disabled={!isEditable || isApproved || !obraSelecionada}
+                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
+                      >
+                        <option value="">Selecione a empreiteira</option>
+                        {(obraSelecionada?.empreiteiras || []).map((empreiteira, idx) => (
+                          <option key={idx} value={empreiteira}>
+                            {empreiteira}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div>

@@ -74,8 +74,8 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p>{checklist.pedreira || 'N/A'}</p>
         </div>
         <div>
-          <p className="font-bold">DATA:</p>
-          <p>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+          <p className="font-bold">EMPREITEIRA:</p>
+          <p>{checklist.empreiteira || 'N/A'}</p>
         </div>
 
         <div>
