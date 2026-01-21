@@ -1008,6 +1008,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Empreiteira</th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Projeto</span>
@@ -1084,6 +1085,13 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <td className="px-2 py-2">
                         <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
                         <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
+                      </td>
+                      <td className="px-2 py-2">
+                        {getEmpireiteiraInfo(ensaio) ? (
+                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
+                        ) : (
+                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        )}
                       </td>
                       <td className="px-2 py-2">
                         {projeto ? (
@@ -1874,6 +1882,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Empreiteira</th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Projeto</span>
