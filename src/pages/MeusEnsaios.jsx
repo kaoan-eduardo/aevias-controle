@@ -715,7 +715,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     }
 
     setFilteredEnsaios(filtered);
-  }, [ensaios, nomeFilter, obraFilter, projetoFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, getDataEnsaio, sortOrder]);
+  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
 
   const handleApprove = useCallback(async (ensaio) => {
     if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
@@ -1029,8 +1029,26 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       />
                     </div>
                   </th>
-                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Local</th>
-                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">Empreiteira</th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Local</span>
+                      <TextColumnFilter
+                        value={localFilter}
+                        onChange={setLocalFilter}
+                        placeholder="Filtrar por local..."
+                      />
+                    </div>
+                  </th>
+                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                    <div className="flex items-center gap-1">
+                      <span>Empreiteira</span>
+                      <TextColumnFilter
+                        value={empreiteiraFilter}
+                        onChange={setEmpreiteiraFilter}
+                        placeholder="Filtrar por empreiteira..."
+                      />
+                    </div>
+                  </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Projeto</span>
