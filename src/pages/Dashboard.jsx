@@ -83,16 +83,16 @@ export default function Dashboard() {
 
       // Carregar dados em paralelo para maior velocidade
       const loadPromises = [
-        base44.entities.Obra.list("-created_date"),
-        base44.entities.Project.list("-created_date"),
-        base44.entities.EnsaioCAUQ.list("-created_date"),
-        base44.entities.EnsaioDensidade.list("-created_date"),
-        base44.entities.DiarioObra.list("-created_date"),
-        base44.entities.ChecklistUsina.list("-created_date"),
-        base44.entities.ChecklistAplicacao.list("-created_date"),
-        base44.entities.ChecklistMRAF.list("-created_date"),
-        base44.entities.ChecklistConcretagem.list("-created_date"),
-        base44.entities.ChecklistTerraplanagem.list("-created_date"),
+        base44.entities.Obra.list("-created_date", 100),
+        base44.entities.Project.list("-created_date", 50),
+        base44.entities.EnsaioCAUQ.list("-created_date", 100),
+        base44.entities.EnsaioDensidade.list("-created_date", 100),
+        base44.entities.DiarioObra.list("-created_date", 100),
+        base44.entities.ChecklistUsina.list("-created_date", 100),
+        base44.entities.ChecklistAplicacao.list("-created_date", 100),
+        base44.entities.ChecklistMRAF.list("-created_date", 100),
+        base44.entities.ChecklistConcretagem.list("-created_date", 100),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 100),
       ];
 
       // Adicionar regionais e transferências apenas para clientes, gestores e salas técnicas
@@ -111,14 +111,14 @@ export default function Dashboard() {
       let obrasFiltradas = obras;
       let projectsFiltrados = projects;
       let allEnsaios = [
-        ...ensaiosCAUQ.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'EnsaioCAUQ'})),
-        ...ensaiosDensidade.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'EnsaioDensidade'})),
-        ...diariosObra.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'DiarioObra'})),
-        ...checklistsUsina.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'ChecklistUsina'})),
-        ...checklistsAplicacao.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'ChecklistAplicacao'})),
-        ...checklistsMRAF.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'ChecklistMRAF'})),
-        ...checklistsConcretagem.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'ChecklistConcretagem'})),
-        ...checklistsTerraplanagem.filter(e => e.status === 'finalizado').map(e => ({...e, entityType: 'ChecklistTerraplanagem'})),
+        ...ensaiosCAUQ.map(e => ({...e, entityType: 'EnsaioCAUQ'})),
+        ...ensaiosDensidade.map(e => ({...e, entityType: 'EnsaioDensidade'})),
+        ...diariosObra.map(e => ({...e, entityType: 'DiarioObra'})),
+        ...checklistsUsina.map(e => ({...e, entityType: 'ChecklistUsina'})),
+        ...checklistsAplicacao.map(e => ({...e, entityType: 'ChecklistAplicacao'})),
+        ...checklistsMRAF.map(e => ({...e, entityType: 'ChecklistMRAF'})),
+        ...checklistsConcretagem.map(e => ({...e, entityType: 'ChecklistConcretagem'})),
+        ...checklistsTerraplanagem.map(e => ({...e, entityType: 'ChecklistTerraplanagem'})),
       ];
 
       let regionalDoUsuario = null;
