@@ -249,6 +249,7 @@ const AppLayout = ({ children }) => {
   const [obrasDoUsuario, setObrasDoUsuario] = React.useState([]);
   const [isCreateEnsaioOpen, setIsCreateEnsaioOpen] = React.useState(false);
   const [loadingUser, setLoadingUser] = React.useState(true);
+  const [pendingTransfers, setPendingTransfers] = React.useState(0);
 
   useEffect(() => {
     // Desabilitar tradução automática
@@ -307,6 +308,33 @@ const AppLayout = ({ children }) => {
         // For admin, gestor, and sala_tecnica, show all types for creation
         setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
       }
+
+      // Carregar transferências pendentes para gestores
+      if (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+        const [regionaisData, transferenciaObra, transferenciaRegional] = await Promise.all([
+          Regional.list(),
+          base44.entities.SolicitacaoTransferenciaObra.list(),
+          base44.entities.SolicitacaoTransferenciaRegional.list()
+        ]);
+
+        const regionaisDoGestor = regionaisData.filter(r => 
+          r.gestor_contrato_responsavel?.toLowerCase() === userData.email?.toLowerCase() ||
+          (r.gestores_contrato_responsaveis || []).some(email => email.toLowerCase() === userData.email?.toLowerCase()) ||
+          (r.salas_tecnicas_responsaveis || []).some(email => email.toLowerCase() === userData.email?.toLowerCase())
+        );
+
+        const regionaisIds = regionaisDoGestor.map(r => r.id);
+
+        const obrasPendentes = transferenciaObra.filter(t => 
+          t.status === 'pendente' && regionaisIds.includes(t.obra_destino_id)
+        );
+
+        const regionaisPendentes = transferenciaRegional.filter(t => 
+          t.status === 'pendente' && regionaisIds.includes(t.regional_destino_id)
+        );
+
+        setPendingTransfers(obrasPendentes.length + regionaisPendentes.length);
+      }
     } catch (error) {
       console.error("Erro ao carregar usuário e obras:", error);
       setUser(null);
@@ -335,7 +363,7 @@ const AppLayout = ({ children }) => {
     { title: "Ensaios Realizados", url: createPageUrl("MeusEnsaios"), icon: FileText, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Não Conformidades", url: createPageUrl("NaoConformidades"), icon: AlertTriangle, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Resumos Personalizados", url: createPageUrl("ResumosPersonalizados"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
-    { title: "Transferências", url: createPageUrl("SolicitacoesTransferencia"), icon: ArrowLeftRight, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
+    { title: "Transferências", url: createPageUrl("SolicitacoesTransferencia"), icon: ArrowLeftRight, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'], showBadge: true },
     { title: "Faixas Granulométricas", url: createPageUrl("FaixasGranulometricas"), icon: Grid, adminOnly: true }
   ], []);
 
@@ -381,6 +409,7 @@ const AppLayout = ({ children }) => {
                     {mainNavigation.map((item) => {
                       const canViewAdminOnly = !item.adminOnly || canManageSystem;
                       const canViewAllowedLevels = !item.allowedLevels || item.allowedLevels.includes(userAccessLevel);
+                      const showNotification = item.showBadge && pendingTransfers > 0 && (isGestorContrato || isSalaTecnica);
 
                       return (canViewAdminOnly && canViewAllowedLevels) && (
                         <SidebarMenuItem key={item.title}>
@@ -388,9 +417,14 @@ const AppLayout = ({ children }) => {
                             asChild
                             className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === item.url ? 'bg-black/10' : ''}`}
                           >
-                            <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5">
+                            <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5 relative">
                               <item.icon className="w-5 h-5 text-[#BFCF99]" />
                               <span className="font-medium text-[#00233B]">{item.title}</span>
+                              {showNotification && (
+                                <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                                  {pendingTransfers}
+                                </Badge>
+                              )}
                             </Link>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
