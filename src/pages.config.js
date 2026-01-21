@@ -3,6 +3,7 @@ import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
 import ChecklistUsina from './pages/ChecklistUsina';
+import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
@@ -13,6 +14,7 @@ import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
+import MonitorProdutividade from './pages/MonitorProdutividade';
 import NaoConformidades from './pages/NaoConformidades';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
@@ -32,8 +34,6 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import Dashboard from './pages/Dashboard';
-import MonitorProdutividade from './pages/MonitorProdutividade';
 import __Layout from './Layout.jsx';
 
 
@@ -43,6 +43,7 @@ export const PAGES = {
     "ChecklistMRAF": ChecklistMRAF,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
     "ChecklistUsina": ChecklistUsina,
+    "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
@@ -53,6 +54,7 @@ export const PAGES = {
     "Home": Home,
     "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
+    "MonitorProdutividade": MonitorProdutividade,
     "NaoConformidades": NaoConformidades,
     "Projects": Projects,
     "Regionais": Regionais,
@@ -72,8 +74,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "Dashboard": Dashboard,
-    "MonitorProdutividade": MonitorProdutividade,
 }
 
 export const pagesConfig = {

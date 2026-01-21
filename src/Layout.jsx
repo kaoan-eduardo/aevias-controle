@@ -272,6 +272,13 @@ const AppLayout = ({ children }) => {
     setLoadingUser(true);
     try {
       const userData = await User.me();
+      
+      // Verificar se o usuário está inativo
+      if (userData && userData.is_active === false) {
+        await User.logout();
+        return;
+      }
+      
       setUser(userData);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
