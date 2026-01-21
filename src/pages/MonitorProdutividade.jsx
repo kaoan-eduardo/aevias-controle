@@ -169,69 +169,12 @@ export default function MonitorProdutividade() {
     );
   }
 
-  const totalRegistrosCriados = gestoresData.reduce((sum, g) => sum + g.registrosCriados, 0);
-  const totalRegistrosAprovados = gestoresData.reduce((sum, g) => sum + g.registrosAprovados, 0);
-  const mediaAprovacao = gestoresData.length > 0 
-    ? (gestoresData.reduce((sum, g) => sum + parseFloat(g.taxaAprovacao), 0) / gestoresData.length).toFixed(1)
-    : 0;
-
   return (
     <div className="p-6 min-h-screen bg-transparent">
       <div className="max-w-7xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-[#00233B]">Monitor de Produtividade</h1>
           <p className="text-[#00233B]/80 mt-1">Acompanhamento da produtividade dos Gestores de Contrato</p>
-        </div>
-
-        {/* Cards de resumo */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#BFCF99]" />
-                Gestores Ativos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#00233B]">{gestoresData.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#BFCF99]" />
-                Total de Registros
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#00233B]">{totalRegistrosCriados}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-[#566E3D]" />
-                Total Aprovados
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#566E3D]">{totalRegistrosAprovados}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#BFCF99]" />
-                Taxa Média
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#00233B]">{mediaAprovacao}%</div>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Lista de gestores */}
