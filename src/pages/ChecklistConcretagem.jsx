@@ -29,6 +29,7 @@ const getInitialFormData = () => ({
   laboratorista_name: "",
   empreiteira: "",
   estrutura: "",
+  ensaio_realizado_por: "Afirma Evias",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" },
@@ -837,6 +838,19 @@ export default function ChecklistConcretagem() {
                          onChange={(e) => setFormData({ ...formData, estrutura: e.target.value })}
                        />
                      </div>
+
+                    <div>
+                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                      <select
+                        id="ensaio_realizado_por"
+                        value={formData.ensaio_realizado_por}
+                        onChange={(e) => setFormData({ ...formData, ensaio_realizado_por: e.target.value })}
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="Afirma Evias">Afirma Evias</option>
+                        <option value="Empreiteira">Empreiteira</option>
+                      </select>
+                    </div>
                     </div>
 
                   <div>
