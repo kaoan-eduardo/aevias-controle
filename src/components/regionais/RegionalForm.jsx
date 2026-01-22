@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Check } from "lucide-react";
+import { Check, Loader2, Upload } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import { base44 } from "@/api/base44Client";
 
 const MultiSelect = ({ options, selected, onSelectedChange, placeholder }) => {
     const [open, setOpen] = useState(false);
@@ -68,13 +69,32 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
         salas_tecnicas_responsaveis: regional?.salas_tecnicas_responsaveis || [],
         clientes_responsaveis: regional?.clientes_responsaveis || [],
         descricao: regional?.descricao || "",
+        logo_url: regional?.logo_url || "",
     });
+
+    const [uploadingLogo, setUploadingLogo] = useState(false);
 
     const userOptions = users.map(u => ({ value: u.email, label: u.laboratorista_name || u.email }));
     const projectOptions = projects.map(p => ({ value: p.id, label: p.name }));
 
     const handleMultiSelectChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleLogoUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploadingLogo(true);
+        try {
+            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+            setFormData(prev => ({ ...prev, logo_url: file_url }));
+        } catch (error) {
+            console.error("Erro ao fazer upload da logo:", error);
+            alert("Erro ao fazer upload da logo. Tente novamente.");
+        } finally {
+            setUploadingLogo(false);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -109,6 +129,28 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
              <div>
                 <Label htmlFor="descricao">Descrição</Label>
                 <Textarea id="descricao" value={formData.descricao} onChange={(e) => setFormData({ ...formData, descricao: e.target.value })} />
+            </div>
+
+            <div>
+                <Label htmlFor="logo">Logo da Regional</Label>
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                        <Input 
+                            id="logo" 
+                            type="file" 
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            disabled={uploadingLogo}
+                            className="cursor-pointer"
+                        />
+                        {uploadingLogo && <Loader2 className="w-4 h-4 animate-spin" />}
+                    </div>
+                    {formData.logo_url && (
+                        <div className="border rounded-lg p-2 bg-gray-50">
+                            <img src={formData.logo_url} alt="Logo da Regional" className="h-16 object-contain" />
+                        </div>
+                    )}
+                </div>
             </div>
 
              <div>

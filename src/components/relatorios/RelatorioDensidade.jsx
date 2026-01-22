@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 
-export default function RelatorioDensidade({ ensaio, obra, project, laboratorista }) {
+export default function RelatorioDensidade({ ensaio, obra, project, laboratorista, regional }) {
   
   const calcularResultados = () => {
     const { peso_cp_seco_ar, peso_cp_imerso_agua, peso_cp_sss, densidade_maxima_teorica, fator_correcao_prensa = 1.0 } = ensaio.pesos;
@@ -27,7 +26,11 @@ export default function RelatorioDensidade({ ensaio, obra, project, laboratorist
       {/* Cabeçalho */}
       <header className="flex justify-between items-center pb-4 border-b-2 border-slate-900">
         <div className="w-1/3">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png" alt="Afirmaevias Logo" className="h-16"/>
+          <img 
+            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png"} 
+            alt="Logo Regional" 
+            className="h-16 object-contain"
+          />
         </div>
         <div className="w-2/3 text-center">
           <h1 className="text-2xl font-bold text-slate-900">Relatório de Ensaio</h1>

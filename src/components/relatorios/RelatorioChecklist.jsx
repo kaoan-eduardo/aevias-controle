@@ -136,7 +136,11 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
   <div>
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2">
       <div className="flex justify-start">
-        <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-16" />
+        <img 
+          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+          alt="Logo Regional" 
+          className="h-16 object-contain" 
+        />
       </div>
       <div className="text-center">
         <h1 className="text-xl font-bold text-gray-800">Controle Tecnológico de Usinagem</h1>
@@ -359,7 +363,11 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2">
                <div className="flex justify-start">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-16" />
+                  <img 
+                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                    alt="Logo Regional" 
+                    className="h-16 object-contain" 
+                  />
                 </div>
                 <div className="text-center">
                   <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico  Checklist</h1>
