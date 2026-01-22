@@ -87,6 +87,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Checklist de MRAF", url: createPageUrl("ChecklistMRAF"), icon: FileText },
         { title: "Checklist de Concretagem", url: createPageUrl("ChecklistConcretagem"), icon: FileText },
         { title: "Checklist de Terraplanagem", url: createPageUrl("ChecklistTerraplanagem"), icon: FileText },
+        { title: "Checklist de Reciclagem", url: createPageUrl("ChecklistReciclagem"), icon: FileText },
         { title: "Ensaio de CAUQ", url: createPageUrl("EnsaioCAUQ"), icon: FlaskConical },
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
@@ -570,7 +571,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ"], []);
+  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ"], []);
 
   if (reportPages.includes(currentPageName)) {
     return <>{children}</>;

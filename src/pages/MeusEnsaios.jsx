@@ -135,12 +135,14 @@ const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Checklist de Concretagem", icon: ClipboardList };
     case "ChecklistTerraplanagem":
       return { name: "Checklist de Terraplanagem", icon: ClipboardList };
+    case "ChecklistReciclagem":
+      return { name: "Checklist de Reciclagem", icon: ClipboardList };
     case "EnsaioSondagem":
       return { name: "Ensaio de Sondagem", icon: Gauge };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
-  }
-};
+    }
+    };
 
 const getReportLink = (ensaio) => {
   const entityType = ensaio.entityType;
@@ -165,12 +167,14 @@ const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioChecklistConcretagem?id=${ensaio.id}`);
     case "ChecklistTerraplanagem":
       return createPageUrl(`RelatorioChecklistTerraplanagem?id=${ensaio.id}`);
+    case "ChecklistReciclagem":
+      return createPageUrl(`RelatorioChecklistReciclagem?id=${ensaio.id}`);
     case "EnsaioSondagem":
       return createPageUrl(`RelatorioSondagem?id=${ensaio.id}`);
     default:
       return "#";
-  }
-};
+    }
+    };
 
 const getLocalInfo = (ensaio) => {
   const entityType = ensaio.entityType;
@@ -858,6 +862,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     { value: 'ChecklistMRAF', label: 'Checklist MRAF' },
     { value: 'ChecklistConcretagem', label: 'Checklist Concretagem' },
     { value: 'ChecklistTerraplanagem', label: 'Checklist Terraplanagem' },
+    { value: 'ChecklistReciclagem', label: 'Checklist Reciclagem' },
     { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
     ];
 
@@ -1267,8 +1272,9 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
             "ChecklistMRAF": ChecklistMRAF,
             "ChecklistConcretagem": ChecklistConcretagem,
             "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+            "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
             "EnsaioSondagem": base44.entities.EnsaioSondagem
-            };
+              };
 
           const Entity = entityMap[ensaio.entityType];
 
@@ -1630,9 +1636,10 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       case "ChecklistMRAF": return ensaio.data;
       case "ChecklistConcretagem": return ensaio.data;
       case "ChecklistTerraplanagem": return ensaio.data;
+      case "ChecklistReciclagem": return ensaio.data;
       case "EnsaioSondagem": return ensaio.data;
       default: return ensaio.created_date;
-    }
+      }
   }, []);
 
   const toggleSortOrder = useCallback(() => {
@@ -1799,8 +1806,9 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
           "ChecklistMRAF": ChecklistMRAF,
           "ChecklistConcretagem": ChecklistConcretagem,
           "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+          "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
           "EnsaioSondagem": base44.entities.EnsaioSondagem
-        };
+          };
 
         const Entity = entityMap[ensaio.entityType];
 
@@ -2152,6 +2160,7 @@ export default function MeusEnsaios() {
         checklistsMRAFData,
         checklistsConcretagemData,
         checklistsTerraplanamemData,
+        checklistsReciclagemData,
         sondagemData
         ] = await Promise.all([
           Obra.list(),
@@ -2167,6 +2176,7 @@ export default function MeusEnsaios() {
           ChecklistMRAF.list("-created_date", 200),
           ChecklistConcretagem.list("-created_date", 200),
           base44.entities.ChecklistTerraplanagem.list("-created_date", 200),
+          base44.entities.ChecklistReciclagem.list("-created_date", 200),
           base44.entities.EnsaioSondagem.list("-created_date", 200)
         ]);
 
@@ -2195,6 +2205,7 @@ export default function MeusEnsaios() {
         ...checklistsMRAFData.map((d) => ({ ...d, entityType: "ChecklistMRAF" })),
         ...checklistsConcretagemData.map((d) => ({ ...d, entityType: "ChecklistConcretagem" })),
         ...checklistsTerraplanamemData.map((d) => ({ ...d, entityType: "ChecklistTerraplanagem" })),
+        ...checklistsReciclagemData.map((d) => ({ ...d, entityType: "ChecklistReciclagem" })),
         ...sondagemData.map((d) => ({ ...d, entityType: "EnsaioSondagem" }))
       ].sort((a, b) => {
         const getRelevantDate = (ensaio) => {
