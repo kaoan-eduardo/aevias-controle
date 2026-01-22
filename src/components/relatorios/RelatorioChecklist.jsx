@@ -183,6 +183,11 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
         </div>
         
         <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+        </div>
+
+        <div>
           <p className="font-bold">FAIXA ESPECIFICADA:</p>
           <p>{checklist.faixa_especificada || 'N/A'}</p>
         </div>
