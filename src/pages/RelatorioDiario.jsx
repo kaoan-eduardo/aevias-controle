@@ -57,8 +57,7 @@ export default function RelatorioDiarioPage() {
         
         if (obra && obra.regional_id) {
           try {
-            const { Regional } = await import('@/entities/Regional');
-            regional = await Regional.get(obra.regional_id);
+            regional = await base44.entities.Regional.get(obra.regional_id);
           } catch (err) {
             console.warn("Regional não encontrada:", obra.regional_id);
           }
