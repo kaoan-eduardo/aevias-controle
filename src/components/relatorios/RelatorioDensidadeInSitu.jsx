@@ -25,9 +25,9 @@ export default function RelatorioDensidadeInSitu({ ensaio, obra, regional }) {
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
       <div className="flex justify-start">
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" 
-          alt="Logo Afirmaevias" 
-          className="h-12" 
+          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+          alt="Logo Regional" 
+          className="h-12 object-contain" 
         />
       </div>
       <div className="text-center">

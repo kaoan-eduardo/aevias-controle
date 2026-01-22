@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 export default function RelatorioChecklistConcretagem({ checklist }) {
   const [obra, setObra] = useState(null);
   const [project, setProject] = useState(null);
+  const [regional, setRegional] = useState(null);
 
   useEffect(() => {
     loadRelatedData();
@@ -14,6 +15,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       if (checklist.obra_id) {
         const obraData = await base44.entities.Obra.get(checklist.obra_id);
         setObra(obraData);
+        
+        if (obraData.regional_id) {
+          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+          setRegional(regionalData);
+        }
       }
       if (checklist.project_id) {
         const projectData = await base44.entities.Project.get(checklist.project_id);
@@ -103,7 +109,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
   const ReportHeader = ({ showDate = true }) => (
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
       <div className="flex justify-start">
-        <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-12" />
+        <img 
+          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+          alt="Logo Regional" 
+          className="h-12 object-contain" 
+        />
       </div>
       <div className="text-center">
         <h1 className="text-base font-bold text-gray-800">Controle Tecnológico de Concreto</h1>
@@ -548,7 +558,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
             <div className="w-full max-w-[190mm] mx-auto">
               <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-4">
                 <div className="flex justify-start">
-                  <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" alt="Logo Afirmaevias" className="h-16" />
+                  <img 
+                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                    alt="Logo Regional" 
+                    className="h-16 object-contain" 
+                  />
                 </div>
                 <div className="text-center">
                   <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico</h1>
