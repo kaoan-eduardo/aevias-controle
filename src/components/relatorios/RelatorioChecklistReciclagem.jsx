@@ -393,21 +393,42 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
       </div>
 
       {/* Páginas de Fotos */}
-      {photoChunks.map((chunk, chunkIndex) => (
-        <div key={chunkIndex} className="break-after-page">
-          <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+      {photoChunks.map((chunk, pageIndex) => (
+        <div key={pageIndex} className="break-after-page">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+            <div className="flex justify-start">
+              <img 
+                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                alt="Logo Regional" 
+                className="h-12 object-contain" 
+              />
+            </div>
+            <div className="text-center">
+              <h1 className="text-base font-bold text-gray-800">Relatório Fotográfico</h1>
+              <p className="text-xs text-gray-600">Reciclagem</p>
+              <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+            </div>
+            <div className="flex justify-end">
+              <div className="border border-gray-400 p-1 rounded-md text-sm bg-white">
+                <p className="font-semibold text-gray-800">
+                  {checklist.data ? new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''}
+                </p>
+              </div>
+            </div>
+          </header>
           
-          <SectionTitle>REGISTRO FOTOGRÁFICO - Parte {chunkIndex + 1}</SectionTitle>
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            {chunk.map((photo, photoIndex) => (
-              <div key={photoIndex} className="border border-slate-300 p-2">
-                <img src={photo} alt={`Foto ${chunkIndex * 6 + photoIndex + 1}`} className="w-full h-48 object-contain" />
-                <p className="text-center text-xs text-slate-600 mt-1">Foto {chunkIndex * 6 + photoIndex + 1}</p>
+          <main className="grid grid-cols-2 gap-3 mb-4">
+            {chunk.map((fotoUrl, fotoIndex) => (
+              <div key={fotoIndex} className="border border-slate-300 p-2 rounded-lg break-inside-avoid flex flex-col">
+                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '280px' }}>
+                  <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                </div>
+                <p className="text-center text-sm mt-2 font-medium">
+                  Foto {(pageIndex * 6) + fotoIndex + 1}
+                </p>
               </div>
             ))}
-          </div>
-
-          <ReportFooter checklist={checklist} pageNum={chunkIndex + 2} totalPages={totalPages} />
+          </main>
         </div>
       ))}
     </>
