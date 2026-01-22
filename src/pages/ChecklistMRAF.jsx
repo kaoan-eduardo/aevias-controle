@@ -36,6 +36,7 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "", // Mantém no formData mas não será exibido
+  ensaio_realizado_por: "Afirma Evias",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: null, condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: null, condicoes_climaticas: "bom" }
@@ -674,6 +675,20 @@ export default function ChecklistMRAFPage() {
                         className={selectedProject ? "bg-slate-100 h-11 text-base" : "bg-white border-slate-200 text-slate-700 h-11 text-base"}
                         placeholder="Ex: Emulsão RL-1C"
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ensaio_realizado_por" className="text-base">Ensaio realizado por:</Label>
+                      <select
+                        id="ensaio_realizado_por"
+                        value={formData.ensaio_realizado_por}
+                        onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
+                        disabled={!isEditable || isApproved}
+                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
+                      >
+                        <option value="Afirma Evias">Afirma Evias</option>
+                        <option value="Empreiteira">Empreiteira</option>
+                      </select>
                     </div>
                   </div>
                 </CardContent>
