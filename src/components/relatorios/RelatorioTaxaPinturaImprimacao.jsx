@@ -43,7 +43,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
       <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">
         DADOS DA OBRA
       </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-0 mb-0 text-[10px]">
+      <div className="grid grid-cols-3 gap-x-4 gap-y-0 mb-0 text-[10px]">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -52,16 +52,15 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
           <p className="font-bold text-gray-700">MATERIAL:</p>
           <p className="text-gray-900">{ensaio.material || ''}</p>
         </div>
-
-        <div>
-          <p className="font-bold text-gray-700">OBRA:</p>
-          <p className="text-gray-900">{obra?.name || 'N/A'}</p>
-        </div>
         <div>
           <p className="font-bold text-gray-700">PLACA CAMINHÃO:</p>
           <p className="text-gray-900">{ensaio.placa_caminhao || ''}</p>
         </div>
 
+        <div>
+          <p className="font-bold text-gray-700">OBRA:</p>
+          <p className="text-gray-900">{obra?.name || 'N/A'}</p>
+        </div>
         <div>
           <p className="font-bold text-gray-700">RODOVIA:</p>
           <p className="text-gray-900">{ensaio.rodovia || ''}</p>
@@ -79,7 +78,6 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
           <p className="font-bold text-gray-700">ENSAIO REALIZADO POR:</p>
           <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
         </div>
-
         <div>
           <p className="font-bold text-gray-700">LABORATORISTA:</p>
           <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
