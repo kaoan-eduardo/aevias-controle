@@ -239,13 +239,15 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                 <p className="font-bold">CAMADA:</p>
                 <p>{checklist.camada}</p>
               </div>
+              <div>
+                <p className="font-bold">JORNADA:</p>
+                <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
+              </div>
 
-              {checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim && (
-                <div>
-                  <p className="font-bold">JORNADA:</p>
-                  <p>{checklist.jornada.horario_inicio} - {checklist.jornada.horario_fim}</p>
-                </div>
-              )}
+              <div>
+                <p className="font-bold">ENSAIO REALIZADO POR:</p>
+                <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+              </div>
             </div>
 
             <SectionTitle>Condições Climáticas</SectionTitle>
