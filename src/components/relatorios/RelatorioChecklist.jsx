@@ -155,7 +155,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
     </header>
     <main className="text-base print:text-base mt-2">
       <SectionTitle>Dados da Obra e Projeto</SectionTitle>
-      <div className="grid grid-cols-3 gap-x-6 gap-y-2">
+      <div className="grid grid-cols-4 gap-x-4 gap-y-2">
         <div>
           <p className="font-bold">CLIENTE:</p>
           <p>{regional?.cliente || 'N/A'}</p>
@@ -167,6 +167,10 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
         <div>
           <p className="font-bold">USINA:</p>
           <p>{checklist.usina}</p>
+        </div>
+        <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
         </div>
 
         <div>
@@ -181,18 +185,11 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p className="font-bold">PEDREIRA:</p>
           <p>{checklist.pedreira || 'N/A'}</p>
         </div>
-        
-        <div>
-          <p className="font-bold">ENSAIO REALIZADO POR:</p>
-          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
-        </div>
-
         <div>
           <p className="font-bold">FAIXA ESPECIFICADA:</p>
           <p>{checklist.faixa_especificada || 'N/A'}</p>
         </div>
 
-        
         <div>
           <p className="font-bold">INSPETOR DE CAMPO:</p>
           <p>{checklist.inspetor_campo || 'N/A'}</p>
