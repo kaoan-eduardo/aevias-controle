@@ -200,10 +200,10 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
   const DadosObra = () => (
     <>
       <SectionTitle>Dados da Obra</SectionTitle>
-      <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 mb-1 p-1.5 rounded text-xs">
+      <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-1 p-1.5 rounded text-xs">
         <div>
           <p className="font-bold">CLIENTE:</p>
-          <p>{obra?.name || 'N/A'}</p>
+          <p>{regional?.cliente || obra?.name || 'N/A'}</p>
         </div>
         <div>
           <p className="font-bold">CONCRETEIRA:</p>
@@ -212,10 +212,6 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         <div>
           <p className="font-bold">EMPREITEIRA:</p>
           <p>{checklist.empreiteira || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">ENSAIO REALIZADO POR:</p>
-          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
         </div>
 
         <div>
@@ -230,11 +226,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
           <p className="font-bold">TRECHO:</p>
           <p>{checklist.trecho || 'N/A'}</p>
         </div>
+
         <div>
           <p className="font-bold">VOLUME (m³):</p>
           <p>{checklist.volume || 'N/A'}</p>
         </div>
-
         <div>
           <p className="font-bold">Fck (MPa):</p>
           <p>{checklist.fck || 'N/A'}</p>
@@ -243,17 +239,19 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
           <p className="font-bold">ESTRUTURA:</p>
           <p>{checklist.estrutura || 'N/A'}</p>
         </div>
+
         <div>
           <p className="font-bold">INSPETOR CAMPO:</p>
           <p>{checklist.inspetor_campo || 'N/A'}</p>
         </div>
-
-        {checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim && (
-          <div>
-            <p className="font-bold">JORNADA:</p>
-            <p>{checklist.jornada.horario_inicio} - {checklist.jornada.horario_fim}</p>
-          </div>
-        )}
+        <div>
+          <p className="font-bold">JORNADA:</p>
+          <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+        </div>
       </div>
     </>
   );
