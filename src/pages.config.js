@@ -2,7 +2,6 @@ import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
-import ChecklistUsina from './pages/ChecklistUsina';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
@@ -34,6 +33,7 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import ChecklistUsina from './pages/ChecklistUsina';
 import __Layout from './Layout.jsx';
 
 
@@ -42,7 +42,6 @@ export const PAGES = {
     "ChecklistConcretagem": ChecklistConcretagem,
     "ChecklistMRAF": ChecklistMRAF,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
-    "ChecklistUsina": ChecklistUsina,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
     "EnsaioCAUQ": EnsaioCAUQ,
@@ -74,6 +73,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "ChecklistUsina": ChecklistUsina,
 }
 
 export const pagesConfig = {

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Save, AlertTriangle, Loader2, XCircle, CheckCircle, Plus, Trash2 } from "lucide-react";
 import { ChecklistUsina as ChecklistUsinaEntity } from "@/entities/ChecklistUsina";
 import { Obra } from "@/entities/Obra";
@@ -31,6 +32,7 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
+  ensaio_realizado_por: "Afirma Evias",
   controle_agregados: [],
   equivalente_areia_status: null,
   equivalente_areia_quantidade: 0,
@@ -900,7 +902,7 @@ export default function ChecklistUsinaPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                       <Label htmlFor="usina">Usina *</Label>
                       <select
@@ -931,6 +933,34 @@ export default function ChecklistUsinaPage() {
                         className={selectedProject ? "bg-slate-100" : ""}
                         placeholder="Nome da pedreira"
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="jornada_field">Jornada</Label>
+                      <Input
+                        id="jornada_field"
+                        value={formData.jornada?.horario_inicio && formData.jornada?.horario_fim ? `${formData.jornada.horario_inicio} - ${formData.jornada.horario_fim}` : ""}
+                        disabled
+                        className="bg-slate-100"
+                        placeholder="Definida acima"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                      <Select 
+                        value={formData.ensaio_realizado_por} 
+                        onValueChange={(value) => handleChange('ensaio_realizado_por', value)} 
+                        disabled={!isEditable || isApproved}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
