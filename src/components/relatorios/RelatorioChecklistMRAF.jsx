@@ -42,7 +42,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
     </header>
     <main className="text-sm mt-0.5">
       <SectionTitle>Dados da Obra</SectionTitle>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-1" style={{ fontSize: '9px' }}>
+      <div className="grid grid-cols-4 gap-x-2 gap-y-1" style={{ fontSize: '9px' }}>
         <div>
           <p className="font-bold">CLIENTE:</p>
           <p>{regional?.cliente || 'N/A'}</p>
@@ -54,6 +54,10 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
         <div>
           <p className="font-bold">FAIXA ESPECIFICADA:</p>
           <p>{checklist.faixa_especificada || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
         </div>
 
         <div>
@@ -68,20 +72,19 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p className="font-bold">TRECHO:</p>
           <p>{checklist.trecho}</p>
         </div>
+        <div>
+          <p className="font-bold">PEDREIRA:</p>
+          <p>{checklist.pedreira || 'N/A'}</p>
+        </div>
 
         <div>
           <p className="font-bold">OBRA:</p>
           <p>{obra?.name || 'N/A'}</p>
         </div>
         <div>
-          <p className="font-bold">PEDREIRA:</p>
-          <p>{checklist.pedreira || 'N/A'}</p>
-        </div>
-        <div>
           <p className="font-bold">EMPREITEIRA:</p>
           <p>{checklist.empreiteira || 'N/A'}</p>
         </div>
-
         <div>
           <p className="font-bold">FISCAL DE CAMPO:</p>
           <p>{checklist.inspetor_campo || checklist.laboratorista_name || 'N/A'}</p>
