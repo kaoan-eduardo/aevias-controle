@@ -55,7 +55,7 @@ const UserForm = React.memo(({ user: editingUser, onSave, onCancel, currentUser,
           return;
         }
       } else {
-        const allowedDomains = ['afirmaevias.com.br', 'gmail.com','@grupoepr.com.br','@eprlpioneiro.com.br','@epriguacu.com.br'];
+        const allowedDomains = ['afirmaevias.com.br', 'gmail.com','grupoepr.com.br','eprlpioneiro.com.br','epriguacu.com.br','ecovias.com.br','ecorodovias.com.br','eco050.com.br'];
         if (!allowedDomains.includes(emailDomain)) {
           alert('Apenas emails dos domínios autorizados são permitidos: ' + allowedDomains.join(', '));
           return;
