@@ -6,6 +6,7 @@ import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
 import { User } from '@/entities/User';
 import RelatorioDensidade from '../components/relatorios/RelatorioDensidade';
+import { base44 } from "@/api/base44Client";
 
 export default function RelatorioEnsaio() {
   const [state, setState] = useState({
@@ -45,17 +46,22 @@ export default function RelatorioEnsaio() {
 
       let obra = null;
       let project = null;
+      let regional = null;
       if (record.obra_id) {
         obra = obras.find(o => o.id === record.obra_id);
         if (obra && obra.project_id) {
           project = projects.find(p => p.id === obra.project_id);
+        }
+        if (obra && obra.regional_id) {
+          const regionais = await base44.entities.Regional.list();
+          regional = regionais.find(r => r.id === obra.regional_id);
         }
       }
 
       setState({
         loading: false,
         error: null,
-        data: { tipo, record, obra, project, user }
+        data: { tipo, record, obra, project, user, regional }
       });
     } catch (error) {
       console.error('Erro ao carregar relatório:', error);
@@ -77,10 +83,10 @@ export default function RelatorioEnsaio() {
 
   const renderReport = () => {
     if (!state.data) return null;
-    const { tipo, record, obra, project, user } = state.data;
+    const { tipo, record, obra, project, user, regional } = state.data;
     switch (tipo) {
       case 'densidade':
-        return <RelatorioDensidade ensaio={record} obra={obra} project={project} user={user} />;
+        return <RelatorioDensidade ensaio={record} obra={obra} project={project} user={user} regional={regional} />;
       default:
         return <div>Tipo de relatório inválido</div>;
     }
