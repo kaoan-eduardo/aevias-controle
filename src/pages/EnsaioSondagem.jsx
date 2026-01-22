@@ -35,6 +35,7 @@ export default function EnsaioSondagem() {
     servico: "",
     rodovia: "",
     trecho: "",
+    ensaio_realizado_por: "Afirma Evias",
     fator_correcao_prensa: 1.0000,
     dens_agua_25c: 0.9971,
     volume_vazios_projeto: "",
@@ -670,7 +671,7 @@ export default function EnsaioSondagem() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="usina_fornecedora">Usina Fornecedora</Label>
                       <Input
@@ -692,6 +693,19 @@ export default function EnsaioSondagem() {
                         <option value="">Selecione o serviço</option>
                         <option value="Capa/Reperfilagem">Capa/Reperfilagem (GC: 97-101%)</option>
                         <option value="Remendos">Remendos (GC: 95-101%)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                      <select
+                        id="ensaio_realizado_por"
+                        value={formData.ensaio_realizado_por}
+                        onChange={(e) => setFormData({ ...formData, ensaio_realizado_por: e.target.value })}
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="Afirma Evias">Afirma Evias</option>
+                        <option value="Empreiteira">Empreiteira</option>
                       </select>
                     </div>
                   </div>
