@@ -79,6 +79,11 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
           <p className="font-bold text-gray-700">LABORATORISTA:</p>
           <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
         </div>
+
+        <div>
+          <p className="font-bold text-gray-700">ENSAIO REALIZADO POR:</p>
+          <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
+        </div>
       </div>
     </div>
   );

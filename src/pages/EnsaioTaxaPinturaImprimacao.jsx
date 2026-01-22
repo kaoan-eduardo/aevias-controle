@@ -40,6 +40,7 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
     material: "",
     placa_caminhao: "",
     tipo_servico: "imprimacao",
+    ensaio_realizado_por: "Afirma Evias",
     dimensoes_bandeja: {
       lado_1: null,
       lado_2: null,
@@ -447,6 +448,20 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
                       disabled={!isEditable}
                       placeholder="Ex: ABC-1234"
                     />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                    <select
+                      id="ensaio_realizado_por"
+                      value={formData.ensaio_realizado_por}
+                      onChange={(e) => setFormData({ ...formData, ensaio_realizado_por: e.target.value })}
+                      disabled={!isEditable}
+                      className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="Afirma Evias">Afirma Evias</option>
+                      <option value="Empreiteira">Empreiteira</option>
+                    </select>
                   </div>
 
                   <div>
