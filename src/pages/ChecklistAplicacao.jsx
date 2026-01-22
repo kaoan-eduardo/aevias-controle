@@ -30,6 +30,7 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
+  ensaio_realizado_por: "Afirma Evias",
   periodos_clima: [
     { periodo: "manha", temperatura_ambiente: null, condicoes_climaticas: "bom" },
     { periodo: "tarde", temperatura_ambiente: null, condicoes_climaticas: "bom" },
@@ -789,6 +790,23 @@ export default function ChecklistAplicacaoPage() {
                       className={selectedProject ? "bg-slate-100" : ""}
                       placeholder="Nome da pedreira"
                     />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                    <Select 
+                      value={formData.ensaio_realizado_por} 
+                      onValueChange={(value) => handleInputChange('ensaio_realizado_por', value)} 
+                      disabled={!isEditable}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                        <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
