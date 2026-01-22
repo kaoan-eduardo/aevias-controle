@@ -313,6 +313,12 @@ export default function RelatorioCAUQ() {
                 <p className="font-bold text-gray-700 mb-0">HORÁRIO:</p>
                 <p className="text-gray-900">{ensaio.horario || 'N/A'}</p>
               </div>
+
+              {/* Linha 4 */}
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">ENSAIO REALIZADO POR:</p>
+                <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
+              </div>
             </div>
 
             {/* DADOS DO ENSAIO - Granulometria e Extração */}

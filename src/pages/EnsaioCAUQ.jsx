@@ -52,6 +52,7 @@ const getInitialFormData = () => ({
   tipo_ligante: "",
   temperatura_cap: null,
   faixa_especificada: "",
+  ensaio_realizado_por: "Afirma Evias",
   realizar_ensaio_umidade: false,
   extracao_ligante: {
     amostra_umida: null,
@@ -808,7 +809,7 @@ export default function EnsaioCAUQPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <Label htmlFor="tipo_ligante">Tipo de Ligante</Label>
                       <Input
@@ -830,6 +831,20 @@ export default function EnsaioCAUQPage() {
                         onChange={(e) => handleChange('temperatura_cap', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                       />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                      <select
+                        id="ensaio_realizado_por"
+                        value={formData.ensaio_realizado_por}
+                        onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
+                        disabled={!isEditable || isApproved}
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="Afirma Evias">Afirma Evias</option>
+                        <option value="Empreiteira">Empreiteira</option>
+                      </select>
                     </div>
                   </div>
                 </CardContent>
