@@ -558,30 +558,6 @@ export default function ChecklistReciclagem() {
                     </div>
 
                     <div>
-                      <Label htmlFor="trecho">Trecho *</Label>
-                      <Input
-                        id="trecho"
-                        value={formData.trecho}
-                        onChange={(e) => setFormData({ ...formData, trecho: e.target.value })}
-                        required
-                        placeholder="Descrição do trecho"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="material">Material *</Label>
-                      <Input
-                        id="material"
-                        value={formData.material}
-                        onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                        required
-                        placeholder="Material utilizado"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
                       <Label htmlFor="empreiteira">Empreiteira *</Label>
                       <Select 
                         value={formData.empreiteira} 
@@ -612,6 +588,18 @@ export default function ChecklistReciclagem() {
                         placeholder="Ex: km 10+500"
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="trecho">Trecho</Label>
+                      <Input
+                        id="trecho"
+                        value={formData.trecho}
+                        onChange={(e) => setFormData({ ...formData, trecho: e.target.value })}
+                        placeholder="Descrição do trecho"
+                      />
+                    </div>
 
                     <div>
                       <Label htmlFor="faixa">Faixa</Label>
@@ -624,6 +612,19 @@ export default function ChecklistReciclagem() {
                     </div>
 
                     <div>
+                      <Label htmlFor="material">Material *</Label>
+                      <Input
+                        id="material"
+                        value={formData.material}
+                        onChange={(e) => setFormData({ ...formData, material: e.target.value })}
+                        required
+                        placeholder="Material utilizado"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
                       <Label htmlFor="inspetor_fiscal">Inspetor de Campo</Label>
                       <Input
                         id="inspetor_fiscal"
@@ -631,9 +632,7 @@ export default function ChecklistReciclagem() {
                         onChange={(e) => setFormData({ ...formData, inspetor_fiscal: e.target.value })}
                       />
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
                       <select
@@ -661,9 +660,7 @@ export default function ChecklistReciclagem() {
                     {formData.periodos_clima.map((periodo, index) => (
                       <Card key={index}>
                         <CardHeader className="pb-3">
-                          <CardTitle className="text-base capitalize">
-                            {periodo.periodo === 'manha' ? 'Manhã' : periodo.periodo === 'tarde' ? 'Tarde' : 'Noite'}
-                          </CardTitle>
+                          <CardTitle className="text-base capitalize">{periodo.periodo}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
                           <div>
