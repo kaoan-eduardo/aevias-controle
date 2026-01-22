@@ -100,6 +100,11 @@ const ReportPrintHeader = ({ checklist, obra, regional }) => (
           <p>{checklist.pedreira || 'N/A'}</p>
         </div>
         <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+        </div>
+
+        <div>
           <p className="font-bold">EMPREITEIRA:</p>
           <p>{checklist.empreiteira || 'N/A'}</p>
         </div>
