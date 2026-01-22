@@ -31,7 +31,6 @@ const getInitialFormData = () => ({
   ligante: "",
   pedreira: "",
   inspetor_campo: "",
-  ensaio_realizado_por: "Afirma Evias",
   controle_agregados: [],
   equivalente_areia_status: null,
   equivalente_areia_quantidade: 0,
@@ -932,20 +931,6 @@ export default function ChecklistUsinaPage() {
                         className={selectedProject ? "bg-slate-100" : ""}
                         placeholder="Nome da pedreira"
                       />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
-                      <select
-                        id="ensaio_realizado_por"
-                        value={formData.ensaio_realizado_por}
-                        onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="Afirma Evias">Afirma Evias</option>
-                        <option value="Empreiteira">Empreiteira</option>
-                      </select>
                     </div>
                   </div>
 
