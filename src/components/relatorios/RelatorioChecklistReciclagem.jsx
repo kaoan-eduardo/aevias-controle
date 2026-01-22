@@ -68,7 +68,6 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
   };
 
   const photoChunks = chunkArray(checklist.fotos, 6);
-  const totalPages = 1 + photoChunks.length;
 
   const ReportHeader = () => (
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
@@ -156,259 +155,250 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
       <div className="print:pt-2 print:pb-3">
         <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3">
           <ReportHeader />
-
-      <SectionTitle>DADOS DA OBRA</SectionTitle>
-      <div className="grid grid-cols-3 gap-x-3 gap-y-0.5 mb-1 p-1 rounded text-xs">
-        <div>
-          <p className="font-bold">CLIENTE:</p>
-          <p>{regional?.cliente || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">RODOVIA:</p>
-          <p>{checklist.rodovia || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">MATERIAL:</p>
-          <p>{checklist.material || 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">EMPREITEIRA:</p>
-          <p>{checklist.empreiteira || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">ESTACA:</p>
-          <p>{checklist.estaca || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">INSPETOR FISC:</p>
-          <p>{checklist.inspetor_fiscal || 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">OBRA:</p>
-          <p>{obra?.name || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">TRECHO:</p>
-          <p>{checklist.trecho || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">JORNADA:</p>
-          <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">ENSAIO REALIZADO POR:</p>
-          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-
           
           <main className="text-xs print:text-xs mt-0.5 mb-3">
-        <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+            <SectionTitle>DADOS DA OBRA</SectionTitle>
+            <div className="grid grid-cols-3 gap-x-3 gap-y-0.5 mb-1 p-1 rounded text-xs">
+              <div>
+                <p className="font-bold">CLIENTE:</p>
+                <p>{regional?.cliente || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">RODOVIA:</p>
+                <p>{checklist.rodovia || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">MATERIAL:</p>
+                <p>{checklist.material || 'N/A'}</p>
+              </div>
 
-        {/* CONDIÇÕES CLIMÁTICAS */}
-        <SectionTitle>Condições Climáticas</SectionTitle>
-        <div className="mb-1">
-          <table className="w-full border-collapse border border-slate-300">
-            <thead className="bg-white">
-              <tr>
-                {checklist.periodos_clima?.map((periodo, index) => (
-                  <th key={index} className="border border-slate-300 px-1 py-1 text-center font-bold uppercase text-xs">
-                    {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {checklist.periodos_clima?.map((periodo, index) => (
-                  <td key={index} className="border border-slate-300 px-1 py-1 text-center">
-                    <p className="font-medium mb-0.5 text-xs">
-                      Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
-                    </p>
-                    <p className="font-bold text-sm">
-                      {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
-                    </p>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <div>
+                <p className="font-bold">EMPREITEIRA:</p>
+                <p>{checklist.empreiteira || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">ESTACA:</p>
+                <p>{checklist.estaca || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">INSPETOR FISC:</p>
+                <p>{checklist.inspetor_fiscal || 'N/A'}</p>
+              </div>
 
-        {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
-        <SectionTitle>Acompanhamento Execução da Camada</SectionTitle>
-        <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
-          <thead className="bg-white">
-            <tr>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-left">Controle</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Sim</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Não</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">N/A</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado remoção de material existente?</td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="na" />
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Foi espalhado material novo para construção da camada?</td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="na" />
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">
-                A compactação da camada foi realizada em conformidade à energia de projeto?
-                <div className="flex gap-1 mt-0.5 ml-1" style={{ fontSize: '7px' }}>
-                  {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_pe_carneiro && (
-                    <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO PÉ DE CARNEIRO</span>
-                  )}
-                  {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_liso && (
-                    <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO LISO</span>
-                  )}
-                  {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_pneu && (
-                    <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO PNEU</span>
-                  )}
-                </div>
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="na" />
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="na" />
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Espessura Reciclada: {checklist.acompanhamento_execucao?.espessura_reciclada || '-'}</td>
-              <td className="border border-slate-300 px-1 py-1 text-center" colSpan="3">-</td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado teste de carga para liberação da camada?</td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="na" />
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-slate-300 px-1 py-1 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="sim" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="nao" />
-              </td>
-              <td className="border border-slate-300 px-1 py-1 text-center">
-                <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="na" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <div>
+                <p className="font-bold">OBRA:</p>
+                <p>{obra?.name || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">TRECHO:</p>
+                <p>{checklist.trecho || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">JORNADA:</p>
+                <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
+              </div>
 
-        {/* ENSAIOS DA EMPREITEIRA */}
-        <SectionTitle>Ensaios da Camada Realizados pela Empreiteira</SectionTitle>
-        <table className="w-full border-collapse border border-slate-300 mb-1">
-          <thead className="bg-white">
-            <tr>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-left text-xs">Ensaios</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14 text-xs">Realizado</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-10 text-xs">Qtde</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center text-xs">Resultados</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-16 text-xs">Conforme</th>
-              <th className="border border-slate-300 px-1 py-1 font-medium text-center w-20 text-xs">Não Conforme</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              { key: 'compactacao_proctor', label: 'Compactação - Proctor' },
-              { key: 'taxa_agregado', label: 'Taxa de agregado' },
-              { key: 'taxa_cimento', label: 'Taxa de cimento' },
-              { key: 'umidade_frigideira', label: 'Umidade pelo método expedito da "frigideira"' },
-              { key: 'massa_especifica_in_situ', label: 'Determinação da massa específica aparente seca "in situ"' },
-              { key: 'granulometria', label: 'Análise granulométrica por peneiramento' },
-              { key: 'moldagem_resistencia', label: 'Moldagem para resistência' },
-              { key: 'viga_benkelman', label: 'Viga Benkelman' },
-              { key: 'taxa_pintura_ligacao', label: 'Taxa de pintura de ligação' },
-              { key: 'finura_cimento', label: 'Determinação da finura do cimento' }
-            ].map(ensaioInfo => {
-              const ensaio = checklist.ensaios_empreiteira?.[ensaioInfo.key];
-              return (
-                <tr key={ensaioInfo.key}>
-                  <td className="border border-slate-300 px-1 py-1 bg-white text-xs">{ensaioInfo.label}</td>
+              <div>
+                <p className="font-bold">ENSAIO REALIZADO POR:</p>
+                <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+              </div>
+            </div>
+
+            {/* CONDIÇÕES CLIMÁTICAS */}
+            <SectionTitle>Condições Climáticas</SectionTitle>
+            <div className="mb-1">
+              <table className="w-full border-collapse border border-slate-300">
+                <thead className="bg-white">
+                  <tr>
+                    {checklist.periodos_clima?.map((periodo, index) => (
+                      <th key={index} className="border border-slate-300 px-1 py-1 text-center font-bold uppercase text-xs">
+                        {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {checklist.periodos_clima?.map((periodo, index) => (
+                      <td key={index} className="border border-slate-300 px-1 py-1 text-center">
+                        <p className="font-medium mb-0.5 text-xs">
+                          Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
+                        </p>
+                        <p className="font-bold text-sm">
+                          {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
+                        </p>
+                      </td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
+            <SectionTitle>Acompanhamento Execução da Camada</SectionTitle>
+            <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
+              <thead className="bg-white">
+                <tr>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-left">Controle</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Sim</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Não</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">N/A</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado remoção de material existente?</td>
                   <td className="border border-slate-300 px-1 py-1 text-center">
-                    {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center text-xs">
-                    {ensaio?.quantidade || '-'}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
-                    {ensaio?.resultados || '-'}
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="sim" />
                   </td>
                   <td className="border border-slate-300 px-1 py-1 text-center">
-                    {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="nao" />
                   </td>
                   <td className="border border-slate-300 px-1 py-1 text-center">
-                    {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="na" />
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi espalhado material novo para construção da camada?</td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="sim" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="nao" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="na" />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">
+                    A compactação da camada foi realizada em conformidade à energia de projeto?
+                    <div className="flex gap-1 mt-0.5 ml-1" style={{ fontSize: '7px' }}>
+                      {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_pe_carneiro && (
+                        <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO PÉ DE CARNEIRO</span>
+                      )}
+                      {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_liso && (
+                        <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO LISO</span>
+                      )}
+                      {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_pneu && (
+                        <span className="inline-block bg-blue-300 text-slate-700 px-1.5 py-0.5 rounded font-bold">✓ ROLO PNEU</span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="sim" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="nao" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="na" />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="sim" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="nao" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="na" />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Espessura Reciclada: {checklist.acompanhamento_execucao?.espessura_reciclada || '-'}</td>
+                  <td className="border border-slate-300 px-1 py-1 text-center" colSpan="3">-</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado teste de carga para liberação da camada?</td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="sim" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="nao" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="na" />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-300 px-1 py-1 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="sim" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="nao" />
+                  </td>
+                  <td className="border border-slate-300 px-1 py-1 text-center">
+                    <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="na" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-        {/* OBSERVAÇÕES GERAIS */}
-        <SectionTitle>Observações Gerais</SectionTitle>
-        <div className="text-xs mb-1 p-1 bg-white rounded border border-slate-300 h-16 overflow-hidden">
-          {checklist.observacoes_gerais || 'Sem observações'}
-        </div>
+            {/* ENSAIOS DA EMPREITEIRA */}
+            <SectionTitle>Ensaios da Camada Realizados pela Empreiteira</SectionTitle>
+            <table className="w-full border-collapse border border-slate-300 mb-1">
+              <thead className="bg-white">
+                <tr>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-left text-xs">Ensaios</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14 text-xs">Realizado</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-10 text-xs">Qtde</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center text-xs">Resultados</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-16 text-xs">Conforme</th>
+                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-20 text-xs">Não Conforme</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { key: 'compactacao_proctor', label: 'Compactação - Proctor' },
+                  { key: 'taxa_agregado', label: 'Taxa de agregado' },
+                  { key: 'taxa_cimento', label: 'Taxa de cimento' },
+                  { key: 'umidade_frigideira', label: 'Umidade pelo método expedito da "frigideira"' },
+                  { key: 'massa_especifica_in_situ', label: 'Determinação da massa específica aparente seca "in situ"' },
+                  { key: 'granulometria', label: 'Análise granulométrica por peneiramento' },
+                  { key: 'moldagem_resistencia', label: 'Moldagem para resistência' },
+                  { key: 'viga_benkelman', label: 'Viga Benkelman' },
+                  { key: 'taxa_pintura_ligacao', label: 'Taxa de pintura de ligação' },
+                  { key: 'finura_cimento', label: 'Determinação da finura do cimento' }
+                ].map(ensaioInfo => {
+                  const ensaio = checklist.ensaios_empreiteira?.[ensaioInfo.key];
+                  return (
+                    <tr key={ensaioInfo.key}>
+                      <td className="border border-slate-300 px-1 py-1 bg-white text-xs">{ensaioInfo.label}</td>
+                      <td className="border border-slate-300 px-1 py-1 text-center">
+                        {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-1 text-center text-xs">
+                        {ensaio?.quantidade || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                        {ensaio?.resultados || '-'}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-1 text-center">
+                        {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-1 text-center">
+                        {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
 
+            {/* OBSERVAÇÕES GERAIS */}
+            <SectionTitle>Observações Gerais</SectionTitle>
+            <div className="text-xs mb-1 p-1 bg-white rounded border border-slate-300 h-16 overflow-hidden">
+              {checklist.observacoes_gerais || 'Sem observações'}
+            </div>
           </main>
-
+          
           <ReportFooter />
-          </div>
-          </div>
+        </div>
+      </div>
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
