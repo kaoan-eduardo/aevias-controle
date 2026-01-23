@@ -1,7 +1,6 @@
 import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
-import ChecklistReciclagem from './pages/ChecklistReciclagem';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
 import ChecklistUsina from './pages/ChecklistUsina';
 import Dashboard from './pages/Dashboard';
@@ -25,7 +24,6 @@ import RelatorioChecklistAplicacao from './pages/RelatorioChecklistAplicacao';
 import RelatorioChecklistConcretagem from './pages/RelatorioChecklistConcretagem';
 import RelatorioChecklistMRAF from './pages/RelatorioChecklistMRAF';
 import RelatorioChecklistPage from './pages/RelatorioChecklistPage';
-import RelatorioChecklistReciclagem from './pages/RelatorioChecklistReciclagem';
 import RelatorioChecklistTerraplanagem from './pages/RelatorioChecklistTerraplanagem';
 import RelatorioConsolidado from './pages/RelatorioConsolidado';
 import RelatorioDensidadeInSitu from './pages/RelatorioDensidadeInSitu';
@@ -36,6 +34,8 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import RelatorioChecklistReciclagem from './pages/RelatorioChecklistReciclagem';
+import ChecklistReciclagem from './pages/ChecklistReciclagem';
 import __Layout from './Layout.jsx';
 
 
@@ -43,7 +43,6 @@ export const PAGES = {
     "ChecklistAplicacao": ChecklistAplicacao,
     "ChecklistConcretagem": ChecklistConcretagem,
     "ChecklistMRAF": ChecklistMRAF,
-    "ChecklistReciclagem": ChecklistReciclagem,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
     "ChecklistUsina": ChecklistUsina,
     "Dashboard": Dashboard,
@@ -67,7 +66,6 @@ export const PAGES = {
     "RelatorioChecklistConcretagem": RelatorioChecklistConcretagem,
     "RelatorioChecklistMRAF": RelatorioChecklistMRAF,
     "RelatorioChecklistPage": RelatorioChecklistPage,
-    "RelatorioChecklistReciclagem": RelatorioChecklistReciclagem,
     "RelatorioChecklistTerraplanagem": RelatorioChecklistTerraplanagem,
     "RelatorioConsolidado": RelatorioConsolidado,
     "RelatorioDensidadeInSitu": RelatorioDensidadeInSitu,
@@ -78,6 +76,8 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "RelatorioChecklistReciclagem": RelatorioChecklistReciclagem,
+    "ChecklistReciclagem": ChecklistReciclagem,
 }
 
 export const pagesConfig = {
