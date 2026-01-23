@@ -71,6 +71,16 @@ export default function RelatorioChecklistReciclagemPage() {
     );
   }
 
+  useEffect(() => {
+    // Disable Radix UI portal warnings in print context
+    const style = document.createElement('style');
+    style.textContent = `
+      [data-radix-portal] { display: none !important; }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
   return (
     <div className="bg-white min-h-screen">
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
@@ -78,10 +88,13 @@ export default function RelatorioChecklistReciclagemPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório - Checklist de Reciclagem
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
+          <button 
+            onClick={handlePrint} 
+            className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors bg-slate-800 text-white hover:bg-slate-700 h-9 px-4 py-2"
+          >
+            <Download className="w-4 h-4" />
             Gerar PDF
-          </Button>
+          </button>
         </div>
       </div>
 
