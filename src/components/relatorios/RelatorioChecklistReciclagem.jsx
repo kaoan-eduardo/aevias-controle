@@ -358,22 +358,20 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                 const dados = checklist.ensaios_empreiteira?.[ensaio.key] || {};
                 return (
                   <tr key={ensaio.key}>
-                    <td className="border border-slate-300 px-2 py-1 bg-white">{ensaio.label}</td>
-                    <td className="border border-slate-300 px-2 py-1 text-center">
-                      <Checkmark value={dados.realizado === true} />
+                    <td className="border border-slate-300 px-1 py-1 bg-white text-xs">{ensaio.label}</td>
+                    <td className="border border-slate-300 px-1 py-1 text-center">
+                      {dados.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                     </td>
-                    <td className="border border-slate-300 px-2 py-1 text-center">
-                      <Checkmark value={dados.realizado === false} />
+                    <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                    <td className="border border-slate-300 px-1 py-1 text-center text-xs">{dados.quantidade || '-'}</td>
+                    <td className="border border-slate-300 px-1 py-1 text-center">
+                      {dados.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
                     </td>
-                    <td className="border border-slate-300 px-2 py-1 text-center">{dados.quantidade || '-'}</td>
-                    <td className="border border-slate-300 px-2 py-1 text-center">
-                      <Checkmark value={dados.conforme === true} />
+                    <td className="border border-slate-300 px-1 py-1 text-center">
+                      {dados.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
                     </td>
-                    <td className="border border-slate-300 px-2 py-1 text-center">
-                      <Checkmark value={dados.conforme === false} />
-                    </td>
-                    <td className="border border-slate-300 px-2 py-1">{dados.resultados || '-'}</td>
-                    <td className="border border-slate-300 px-2 py-1">{dados.observacoes || '-'}</td>
+                    <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">{dados.resultados || '-'}</td>
+                    <td className="border border-slate-300 px-1 py-1 text-xs">{dados.observacoes || '-'}</td>
                   </tr>
                 );
               })}
