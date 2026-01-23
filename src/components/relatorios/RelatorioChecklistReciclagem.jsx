@@ -186,42 +186,6 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
 };
 
 export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project }) {
-  const [base64Images, setBase64Images] = React.useState({});
-  const [imagesLoaded, setImagesLoaded] = React.useState(false);
-
-  React.useEffect(() => {
-    const images = checklist.fotos || [];
-    if (images.length === 0) {
-      setImagesLoaded(true);
-      return;
-    }
-
-    const loadImagesAsBase64 = async () => {
-      const base64Map = {};
-      
-      for (const url of images) {
-        try {
-          const response = await fetch(url);
-          const blob = await response.blob();
-          const base64 = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-          });
-          base64Map[url] = base64;
-        } catch (error) {
-          console.error('Erro ao carregar imagem:', url, error);
-          base64Map[url] = url;
-        }
-      }
-      
-      setBase64Images(base64Map);
-      setImagesLoaded(true);
-    };
-
-    loadImagesAsBase64();
-  }, [checklist.fotos]);
-
   const getClimaEmoji = (clima) => {
     switch (clima) {
       case 'bom': return '☀️';
@@ -250,17 +214,6 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
   const photoChunks = chunkArray(checklist.fotos || [], 6);
   const totalPages = 1 + photoChunks.length;
-
-  if (!imagesLoaded) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando imagens...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -477,10 +430,9 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
               <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
                 <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '240px' }}>
                   <img 
-                    src={base64Images[fotoUrl] || fotoUrl} 
+                    src={fotoUrl} 
                     alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} 
                     className="max-h-full max-w-full object-contain"
-                    style={{ imageRendering: 'auto', WebkitPrintColorAdjust: 'exact', colorAdjust: 'exact' }}
                   />
                 </div>
                 <p className="text-center text-xs mt-1 font-medium">
