@@ -240,9 +240,9 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
         <SectionTitle>ACOMPANHAMENTO EXECUÇÃO DA CAMADA</SectionTitle>
         <div className="overflow-x-auto mb-3">
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-300 text-[10px]">
             <thead>
-              <tr className="bg-slate-200">
+              <tr className="bg-white">
                 <th className="border border-slate-300 px-2 py-1 text-left font-medium">Controle</th>
                 <th className="border border-slate-300 px-2 py-1 text-center font-medium w-16">Sim</th>
                 <th className="border border-slate-300 px-2 py-1 text-center font-medium w-16">Não</th>
