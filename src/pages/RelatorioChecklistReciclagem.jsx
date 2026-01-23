@@ -13,6 +13,24 @@ export default function RelatorioChecklistReciclagemPage() {
 
   useEffect(() => {
     loadData();
+    
+    // Suprimir erros de portal/window em contexto de relatório
+    const originalError = console.error;
+    console.error = (...args) => {
+      if (
+        typeof args[0] === 'string' && 
+        (args[0].includes('BuilderBridge') || 
+         args[0].includes('No parent window') ||
+         args[0].includes('Minified React error #310'))
+      ) {
+        return;
+      }
+      originalError.apply(console, args);
+    };
+    
+    return () => {
+      console.error = originalError;
+    };
   }, []);
 
   const loadData = async () => {
