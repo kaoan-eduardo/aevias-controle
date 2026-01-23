@@ -432,13 +432,13 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             </div>
           </header>
           
-          <main className="grid grid-cols-2 gap-2" style={{ height: '900px' }}>
+          <main className="grid grid-cols-2 gap-3 mb-4">
             {chunk.map((fotoUrl, fotoIndex) => (
-              <div key={fotoIndex} className="border border-slate-300 p-1 rounded-lg break-inside-avoid flex flex-col">
-                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1">
+              <div key={fotoIndex} className="border border-slate-300 p-2 rounded-lg break-inside-avoid flex flex-col">
+                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '280px' }}>
                   <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
                 </div>
-                <p className="text-center text-xs mt-1 font-medium">
+                <p className="text-center text-sm mt-2 font-medium">
                   Foto {(pageIndex * 6) + fotoIndex + 1}
                 </p>
               </div>
