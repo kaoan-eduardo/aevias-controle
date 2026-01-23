@@ -429,7 +429,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             {chunk.map((fotoUrl, fotoIndex) => (
               <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
                 <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '240px' }}>
-                  <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                  <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" crossOrigin="anonymous" />
                 </div>
                 <p className="text-center text-xs mt-1 font-medium">
                   Foto {(pageIndex * 6) + fotoIndex + 1}
