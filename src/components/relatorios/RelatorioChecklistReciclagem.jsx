@@ -222,19 +222,33 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
         {/* CONDIÇÕES CLIMÁTICAS */}
-        <div className="mb-2">
-          <div className="grid grid-cols-3 gap-2 text-xs">
-            {checklist.periodos_clima?.map((periodo, idx) => (
-              <div key={idx} className="border border-slate-300 py-1 px-2 rounded">
-                <p className="font-bold text-center mb-0.5 uppercase text-[10px]">{periodo.periodo}</p>
-                <p className="text-center text-[9px]">Temp. Ambiente (°C): {periodo.temperatura_ambiente || '-'}</p>
-                <div className="flex items-center justify-center gap-1 mt-0.5">
-                  <span className="text-sm">{getClimaEmoji(periodo.condicoes_climaticas)}</span>
-                  <span className="text-[9px]">{getClimaText(periodo.condicoes_climaticas)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <SectionTitle>Condições Climáticas</SectionTitle>
+        <div className="mb-3">
+          <table className="w-full border-collapse border border-slate-300">
+            <thead className="bg-white">
+              <tr>
+                {checklist.periodos_clima?.map((periodo, idx) => (
+                  <th key={idx} className="border border-slate-300 px-1 py-1 text-center font-bold uppercase text-xs">
+                    {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {checklist.periodos_clima?.map((periodo, idx) => (
+                  <td key={idx} className="border border-slate-300 px-1 py-1 text-center">
+                    <p className="font-medium mb-0.5 text-xs">
+                      Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
+                    </p>
+                    <p className="font-bold text-sm">
+                      {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
+                    </p>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
