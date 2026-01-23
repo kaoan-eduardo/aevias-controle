@@ -222,15 +222,15 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
         {/* CONDIÇÕES CLIMÁTICAS */}
-        <div className="mb-3">
+        <div className="mb-2">
           <div className="grid grid-cols-3 gap-2 text-xs">
             {checklist.periodos_clima?.map((periodo, idx) => (
-              <div key={idx} className="border border-slate-300 p-2 rounded">
-                <p className="font-bold text-center mb-1 uppercase">{periodo.periodo}</p>
-                <p className="text-center">Temp. Ambiente (°C): {periodo.temperatura_ambiente || '-'}</p>
-                <div className="flex items-center justify-center gap-2 mt-1">
-                  <span className="text-lg">{getClimaEmoji(periodo.condicoes_climaticas)}</span>
-                  <span>{getClimaText(periodo.condicoes_climaticas)}</span>
+              <div key={idx} className="border border-slate-300 py-1 px-2 rounded">
+                <p className="font-bold text-center mb-0.5 uppercase text-[10px]">{periodo.periodo}</p>
+                <p className="text-center text-[9px]">Temp. Ambiente (°C): {periodo.temperatura_ambiente || '-'}</p>
+                <div className="flex items-center justify-center gap-1 mt-0.5">
+                  <span className="text-sm">{getClimaEmoji(periodo.condicoes_climaticas)}</span>
+                  <span className="text-[9px]">{getClimaText(periodo.condicoes_climaticas)}</span>
                 </div>
               </div>
             ))}
