@@ -401,8 +401,8 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
       </div>
 
       {/* Páginas de Fotos */}
-      {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="break-after-page">
+      {photoChunks.length > 0 && photoChunks.map((chunk, pageIndex) => (
+        <div key={pageIndex} className={pageIndex < photoChunks.length - 1 ? "break-after-page" : ""}>
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
             <div className="flex justify-start">
               <img 
