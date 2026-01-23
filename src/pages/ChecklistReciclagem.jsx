@@ -905,7 +905,6 @@ export default function ChecklistReciclagem() {
                           <th className="border border-slate-300 px-2 py-2 text-center font-medium w-20">Qtde</th>
                           <th className="border border-slate-300 px-2 py-2 text-center font-medium w-32">Conformidade</th>
                           <th className="border border-slate-300 px-2 py-2 text-left font-medium">Resultado</th>
-                          <th className="border border-slate-300 px-2 py-2 text-left font-medium">Observações</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -973,15 +972,6 @@ export default function ChecklistReciclagem() {
                                 disabled={!formData.ensaios_empreiteira[ensaio.key].realizado}
                                 className="h-8 text-sm"
                                 placeholder="Resultado"
-                              />
-                            </td>
-                            <td className="border border-slate-300 px-1 py-1">
-                              <Input
-                                value={formData.ensaios_empreiteira[ensaio.key].observacoes}
-                                onChange={(e) => handleEnsaioChange(ensaio.key, 'observacoes', e.target.value)}
-                                disabled={!formData.ensaios_empreiteira[ensaio.key].realizado}
-                                className="h-8 text-sm"
-                                placeholder="Observações"
                               />
                             </td>
                           </tr>
