@@ -1080,7 +1080,7 @@ export default function ChecklistReciclagem() {
                 <Button
                   type="submit"
                   disabled={saving || uploadingPhotos}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-slate-600 hover:bg-slate-700"
                 >
                   {saving ? (
                     <>
