@@ -116,40 +116,45 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
 
   return (
     <footer className="mt-1 px-1 print:break-inside-avoid">
-      <div className="grid grid-cols-3 gap-1 items-end">
+      <div className="grid grid-cols-3 gap-2 items-end">
         <div className="text-center">
-          <div className="text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center">
-            {checklist.inspetor_fiscal && (
+          <div className="text-[9px] text-slate-600 mb-1.5 min-h-[48px] flex flex-col justify-end items-center">
+            {checklist.laboratorista_name && (
               <>
-                <p className="font-bold text-slate-600">{checklist.inspetor_fiscal}</p>
-                <p className="text-[10px]">{checklist.created_by}</p>
-                <p className="text-[10px]">em {formatDateBrasilia(checklist.created_date)}</p>
+                <span className="text-[10px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[10px] font-bold">{checklist.laboratorista_name}</span>
+                <span className="text-[9px] text-slate-600">{checklist.laboratorista_name?.toLowerCase().replace(' ', '.') || ''}@afirmaevias.com.br</span>
+                {checklist.created_date && (
+                  <span className="text-[9px] text-slate-600">em {formatDateBrasilia(checklist.created_date)}</span>
+                )}
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-            <p className="text-[8px] font-semibold">FISCAL DE CAMPO</p>
+          <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
+            <p className="text-[9px] font-semibold">FISCAL DE CAMPO</p>
           </div>
         </div>
 
         <div className="text-center">
           {checklist.approver_details ? (
             <>
-              <div className="text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center">
-                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                <p className="text-[10px]">{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p className="text-[10px]">CREA: {checklist.approver_details.crea_number}</p>}
-                <p className="text-[10px]">em {formatDateBrasilia(checklist.approved_date)}</p>
+              <div className="text-[9px] text-slate-600 mb-1.5 min-h-[48px] flex flex-col justify-end items-center">
+                <span className="text-[10px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[10px] font-bold">{checklist.approver_details.name}</span>
+                <span className="text-[9px] text-slate-600">{checklist.approved_by}</span>
+                {checklist.approved_date && (
+                  <span className="text-[9px] text-slate-600">em {formatDateBrasilia(checklist.approved_date)}</span>
+                )}
               </div>
-              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+              <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
+                <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
               </div>
             </>
           ) : (
             <>
-              <div className="min-h-[28px] mb-0"></div>
-              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+              <div className="min-h-[48px] mb-1.5"></div>
+              <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
+                <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
               </div>
             </>
           )}
@@ -158,21 +163,23 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
         <div className="text-center">
           {checklist.client_signature?.signed_by ? (
             <>
-              <div className="text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center">
-                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                <p className="text-[10px]">{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p className="text-[10px]">CREA: {checklist.client_signature.crea_number}</p>}
-                <p className="text-[10px]">em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+              <div className="text-[9px] text-slate-600 mb-1.5 min-h-[48px] flex flex-col justify-end items-center">
+                <span className="text-[10px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[10px] font-bold">{checklist.client_signature.engineer_name}</span>
+                <span className="text-[9px] text-slate-600">{checklist.client_signature.signed_by}</span>
+                {checklist.client_signature?.signed_date && (
+                  <span className="text-[9px] text-slate-600">em {formatDateBrasilia(checklist.client_signature.signed_date)}</span>
+                )}
               </div>
-              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">CLIENTE RESPONSÁVEL</p>
+              <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
+                <p className="text-[9px] font-semibold">CLIENTE RESPONSÁVEL</p>
               </div>
             </>
           ) : (
             <>
-              <div className="min-h-[28px] mb-0"></div>
-              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">CLIENTE RESPONSÁVEL</p>
+              <div className="min-h-[48px] mb-1.5"></div>
+              <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
+                <p className="text-[9px] font-semibold">CLIENTE RESPONSÁVEL</p>
               </div>
             </>
           )}
