@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import RelatorioChecklistReciclagem from "../components/relatorios/RelatorioChecklistReciclagem";
 
@@ -13,24 +14,6 @@ export default function RelatorioChecklistReciclagemPage() {
 
   useEffect(() => {
     loadData();
-    
-    // Suprimir erros de portal/window em contexto de relatório
-    const originalError = console.error;
-    console.error = (...args) => {
-      if (
-        typeof args[0] === 'string' && 
-        (args[0].includes('BuilderBridge') || 
-         args[0].includes('No parent window') ||
-         args[0].includes('Minified React error #310'))
-      ) {
-        return;
-      }
-      originalError.apply(console, args);
-    };
-    
-    return () => {
-      console.error = originalError;
-    };
   }, []);
 
   const loadData = async () => {
@@ -88,8 +71,6 @@ export default function RelatorioChecklistReciclagemPage() {
     );
   }
 
-
-
   return (
     <div className="bg-white min-h-screen">
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
@@ -97,13 +78,10 @@ export default function RelatorioChecklistReciclagemPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório - Checklist de Reciclagem
           </h2>
-          <button 
-            onClick={handlePrint} 
-            className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors bg-slate-800 text-white hover:bg-slate-700 h-9 px-4 py-2"
-          >
-            <Download className="w-4 h-4" />
+          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+            <Download className="w-4 h-4 mr-2" />
             Gerar PDF
-          </button>
+          </Button>
         </div>
       </div>
 
