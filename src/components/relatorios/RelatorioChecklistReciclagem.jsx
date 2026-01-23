@@ -409,8 +409,8 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="break-after-page">
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+        <div key={pageIndex} className="break-after-page flex flex-col h-screen">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2 flex-shrink-0">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
@@ -432,10 +432,10 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             </div>
           </header>
           
-          <main className="grid grid-cols-2 gap-2 mb-4 h-full">
+          <main className="grid grid-cols-2 grid-rows-3 gap-3 flex-1 px-2 pb-2">
             {chunk.map((fotoUrl, fotoIndex) => (
-              <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
-                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1" style={{ minHeight: '160px' }}>
+              <div key={fotoIndex} className="border border-slate-300 p-2 rounded flex flex-col">
+                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1">
                   <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
                 </div>
                 <p className="text-center text-xs mt-1 font-medium">
