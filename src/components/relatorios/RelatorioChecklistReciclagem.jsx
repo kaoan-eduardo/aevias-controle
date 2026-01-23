@@ -172,17 +172,17 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
                 )}
               </div>
               <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
-                <p className="text-[9px] font-semibold">CLIENTE RESPONSÁVEL</p>
+                <p className="text-[9px] font-semibold">Engenheiro Cliente</p>
               </div>
             </>
-          ) : (
+            ) : (
             <>
               <div className="min-h-[48px] mb-1.5"></div>
               <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
-                <p className="text-[9px] font-semibold">CLIENTE RESPONSÁVEL</p>
+                <p className="text-[9px] font-semibold">Engenheiro Cliente</p>
               </div>
             </>
-          )}
+            )}
         </div>
       </div>
       {pageNum && totalPages && (
