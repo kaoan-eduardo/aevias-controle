@@ -88,15 +88,7 @@ export default function RelatorioChecklistReciclagemPage() {
     );
   }
 
-  useEffect(() => {
-    // Disable Radix UI portal warnings in print context
-    const style = document.createElement('style');
-    style.textContent = `
-      [data-radix-portal] { display: none !important; }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
+
 
   return (
     <div className="bg-white min-h-screen">
