@@ -360,7 +360,6 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                 <th className="border border-slate-300 px-1 py-1 text-center font-medium w-14">Conforme</th>
                 <th className="border border-slate-300 px-1 py-1 text-center font-medium w-16">Não Conforme</th>
                 <th className="border border-slate-300 px-1 py-1 text-left font-medium">Resultado</th>
-                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Observações</th>
               </tr>
             </thead>
             <tbody>
@@ -392,7 +391,6 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                       {dados.conforme === false && <span className="text-red-600 font-bold text-sm">✗</span>}
                     </td>
                     <td className="border border-slate-300 px-1 py-1 text-[9px] font-medium text-center">{dados.resultados || '-'}</td>
-                    <td className="border border-slate-300 px-1 py-1 text-[9px]">{dados.observacoes || '-'}</td>
                   </tr>
                 );
               })}
