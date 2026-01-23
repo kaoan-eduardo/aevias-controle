@@ -131,7 +131,7 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
             )}
           </div>
           <div className="border-t-2 border-gray-700 pt-1 w-full mx-auto">
-            <p className="text-[9px] font-semibold">FISCAL DE CAMPO</p>
+            <p className="text-[9px] font-semibold">Fiscal</p>
           </div>
         </div>
 
