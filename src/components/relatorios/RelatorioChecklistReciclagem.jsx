@@ -14,7 +14,7 @@ const CheckmarkColumn = ({ isYes, isNo, isNA }) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <h2 className="text-[10px] print:text-[9px] font-bold text-center bg-slate-100 py-0 px-1 my-0 uppercase tracking-wide">{children}</h2>
+  <h2 className="text-[11px] print:text-[10px] font-bold text-center bg-slate-100 py-0 px-1 my-0 uppercase tracking-wide">{children}</h2>
 );
 
 const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
@@ -44,7 +44,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
       </header>
 
       <SectionTitle>DADOS DA OBRA</SectionTitle>
-      <div className="grid grid-cols-4 gap-x-1.5 gap-y-0 mb-0.5 text-[9px]">
+      <div className="grid grid-cols-4 gap-x-1.5 gap-y-0 mb-0.5 text-[10px]">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -235,7 +235,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             <thead className="bg-white">
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
-                  <th key={idx} className="border border-slate-300 px-0.5 py-0 text-center font-bold uppercase text-[9px]">
+                  <th key={idx} className="border border-slate-300 px-0.5 py-0 text-center font-bold uppercase text-[10px]">
                     {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
                   </th>
                 ))}
@@ -261,7 +261,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
         <SectionTitle>ACOMPANHAMENTO EXECUÇÃO DA CAMADA</SectionTitle>
         <div className="overflow-x-auto mb-1">
-          <table className="w-full border-collapse border border-slate-300 text-[9px]">
+          <table className="w-full border-collapse border border-slate-300 text-[10px]">
             <thead>
               <tr className="bg-white">
                 <th className="border border-slate-300 px-1 py-1 text-left font-medium">Controle</th>
@@ -350,7 +350,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {/* ENSAIOS DA EMPREITEIRA */}
         <SectionTitle>ACOMPANHAMENTO DOS ENSAIOS REALIZADOS PELA EMPREITEIRA</SectionTitle>
         <div className="overflow-x-auto mb-1">
-          <table className="w-full border-collapse border border-slate-300 text-[9px]">
+          <table className="w-full border-collapse border border-slate-300 text-[10px]">
             <thead>
               <tr className="bg-white">
                 <th className="border border-slate-300 px-1 py-1 text-left font-medium">ENSAIOS</th>
@@ -400,7 +400,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* OBSERVAÇÕES GERAIS */}
         <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-        <div className="border border-slate-300 p-0.5 min-h-[30px] text-[8px] mb-0.5">
+        <div className="border border-slate-300 p-0.5 min-h-[30px] text-[9px] mb-0.5">
           {checklist.observacoes_gerais || 'Nenhuma observação registrada.'}
         </div>
 
