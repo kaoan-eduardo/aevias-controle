@@ -228,7 +228,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             <thead className="bg-white">
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
-                  <th key={idx} className="border border-slate-300 px-2 py-1.5 text-center font-bold uppercase text-xs">
+                  <th key={idx} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase text-[10px]">
                     {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
                   </th>
                 ))}
@@ -237,11 +237,11 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             <tbody>
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
-                  <td key={idx} className="border border-slate-300 px-2 py-1.5 text-center">
-                    <p className="font-medium mb-1 text-xs">
+                  <td key={idx} className="border border-slate-300 px-1 py-0.5 text-center">
+                    <p className="font-medium mb-0 text-[10px]">
                       Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
                     </p>
-                    <p className="font-bold text-sm">
+                    <p className="font-bold text-xs">
                       {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
                     </p>
                   </td>
