@@ -41,7 +41,9 @@ const getInitialFormData = () => ({
   checklist_veiculo_ativo: false,
   checklist_veiculo: {
     nome_condutor: "",
+    tipo_veiculo: "passeio",
     veiculo: "",
+    placa: "",
     empresa: "",
     hodometro: "",
     areas_afetadas: "",
@@ -49,7 +51,8 @@ const getInitialFormData = () => ({
       limpeza_externa: "bom",
       limpeza_interna: "bom",
       pneus: "bom",
-      estepe: "bom"
+      estepe: "bom",
+      cacamba: "bom"
     },
     luzes_traseiras: {
       direita: { da_placa: "sim", luz: "sim", luz_re: "sim", luz_freio: "sim", seta: "sim" },
@@ -327,11 +330,38 @@ const DiarioForm = ({
                   />
                 </div>
                 <div>
-                  <Label>Veículo (Modelo/Placa) *</Label>
+                  <Label>Tipo de Veículo *</Label>
+                  <Select
+                    value={formData.checklist_veiculo?.tipo_veiculo || "passeio"}
+                    onValueChange={(value) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, tipo_veiculo: value })}
+                    disabled={!isEditable || isApproved}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="passeio">Veículo de Passeio</SelectItem>
+                      <SelectItem value="picape">Picape</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Veículo (Modelo) *</Label>
                   <Input
                     value={formData.checklist_veiculo?.veiculo || ""}
                     onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, veiculo: e.target.value })}
                     disabled={!isEditable || isApproved}
+                    placeholder="Ex: Toyota Corolla"
+                    required={formData.checklist_veiculo_ativo}
+                  />
+                </div>
+                <div>
+                  <Label>Placa *</Label>
+                  <Input
+                    value={formData.checklist_veiculo?.placa || ""}
+                    onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, placa: e.target.value })}
+                    disabled={!isEditable || isApproved}
+                    placeholder="Ex: ABC-1234"
                     required={formData.checklist_veiculo_ativo}
                   />
                 </div>
@@ -369,12 +399,13 @@ const DiarioForm = ({
 
               <div>
                 <Label className="font-semibold">Condições Gerais</Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-2">
                   {[
                     { key: 'limpeza_externa', label: 'Limpeza Externa' },
                     { key: 'limpeza_interna', label: 'Limpeza Interna' },
                     { key: 'pneus', label: 'Pneus' },
-                    { key: 'estepe', label: 'Estepe' }
+                    { key: 'estepe', label: 'Estepe' },
+                    ...(formData.checklist_veiculo?.tipo_veiculo === 'picape' ? [{ key: 'cacamba', label: 'Caçamba' }] : [])
                   ].map(item => (
                     <div key={item.key}>
                       <Label className="text-xs">{item.label}</Label>
