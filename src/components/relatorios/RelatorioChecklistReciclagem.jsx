@@ -44,7 +44,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
       </header>
 
       <SectionTitle>DADOS DA OBRA</SectionTitle>
-      <div className="grid grid-cols-4 gap-x-1.5 gap-y-0 mb-0.5 text-[10px]">
+      <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 mb-1 text-[10px]">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -230,7 +230,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* CONDIÇÕES CLIMÁTICAS */}
         <SectionTitle>Condições Climáticas</SectionTitle>
-        <div className="mb-0.5">
+        <div className="mb-1">
           <table className="w-full border-collapse border border-slate-300">
             <thead className="bg-white">
               <tr>
@@ -244,7 +244,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             <tbody>
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
-                  <td key={idx} className="border border-slate-300 px-0.5 py-0 text-center">
+                  <td key={idx} className="border border-slate-300 px-1 py-0.5 text-center">
                     <p className="font-medium mb-0 text-[9px]">
                       Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
                     </p>
@@ -264,34 +264,34 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
           <table className="w-full border-collapse border border-slate-300 text-[10px]">
             <thead>
               <tr className="bg-white">
-                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Controle</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-12">Sim</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-12">Não</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-12">N/A</th>
-                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Observações</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-left font-medium">Controle</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-12">Sim</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-12">Não</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-12">N/A</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-left font-medium">Observações</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado remoção de material existente?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.remocao_material_existente?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.remocao_material_existente?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.remocao_material_existente?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1">
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Foi realizado remoção de material existente?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.remocao_material_existente?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.remocao_material_existente?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.remocao_material_existente?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5">
                   KM DO BOTA FORA: {checklist.acompanhamento_execucao?.remocao_material_existente?.km_bota_fora || '-'}
                 </td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Foi espalhado material novo para construção da camada?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.espalhamento_material_novo?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.espalhamento_material_novo?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.espalhamento_material_novo?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1">
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Foi espalhado material novo para construção da camada?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.espalhamento_material_novo?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.espalhamento_material_novo?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.espalhamento_material_novo?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5">
                   TIPO DE MATERIAL: {checklist.acompanhamento_execucao?.espalhamento_material_novo?.tipo_material || '-'}
                 </td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">
                   A compactação da camada foi realizada em conformidade à energia de projeto?
                   <div className="flex gap-0.5 mt-1 ml-1" style={{ fontSize: '7px' }}>
                     {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_liso && (
@@ -305,37 +305,37 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                     )}
                   </div>
                 </td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1"></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5"></td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1"></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.ensaio_viga_benkelman?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5"></td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Espessura Reciclada?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center" colSpan="4">
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Espessura Reciclada?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center" colSpan="4">
                   {checklist.acompanhamento_execucao?.espessura_reciclada || '-'}
                 </td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado teste de carga para liberação da camada?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.teste_carga?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.teste_carga?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.teste_carga?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1"></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Foi realizado teste de carga para liberação da camada?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.teste_carga?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.teste_carga?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.teste_carga?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5"></td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.falha_compactacao?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.falha_compactacao?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.falha_compactacao?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1"></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.falha_compactacao?.sim} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.falha_compactacao?.nao} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.falha_compactacao?.na} /></td>
+                <td className="border border-slate-300 px-1.5 py-1.5"></td>
               </tr>
             </tbody>
           </table>
@@ -353,13 +353,13 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
           <table className="w-full border-collapse border border-slate-300 text-[10px]">
             <thead>
               <tr className="bg-white">
-                <th className="border border-slate-300 px-1 py-1 text-left font-medium">ENSAIOS</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-11">Sim</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-11">Não</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-11">Qtde</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-14">Conforme</th>
-                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-16">Não Conforme</th>
-                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Resultado</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-left font-medium">ENSAIOS</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-11">Sim</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-11">Não</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-11">Qtde</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-14">Conforme</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-center font-medium w-16">Não Conforme</th>
+                <th className="border border-slate-300 px-1.5 py-1.5 text-left font-medium">Resultado</th>
               </tr>
             </thead>
             <tbody>
@@ -378,19 +378,19 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                 const dados = checklist.ensaios_empreiteira?.[ensaio.key] || {};
                 return (
                   <tr key={ensaio.key}>
-                    <td className="border border-slate-300 px-1 py-1 bg-white text-[9px]">{ensaio.label}</td>
-                    <td className="border border-slate-300 px-1 py-1 text-center">
+                    <td className="border border-slate-300 px-1.5 py-1.5 bg-white text-[9px]">{ensaio.label}</td>
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-center">
                       {dados.realizado ? <span className="text-green-600 font-bold text-sm">✓</span> : <span className="text-slate-500">-</span>}
                     </td>
-                    <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                    <td className="border border-slate-300 px-1 py-1 text-center text-[9px]">{dados.quantidade || '-'}</td>
-                    <td className="border border-slate-300 px-1 py-1 text-center">
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-center">-</td>
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-center text-[9px]">{dados.quantidade || '-'}</td>
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-center">
                       {dados.conforme === true && <span className="text-green-600 font-bold text-sm">✓</span>}
                     </td>
-                    <td className="border border-slate-300 px-1 py-1 text-center">
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-center">
                       {dados.conforme === false && <span className="text-red-600 font-bold text-sm">✗</span>}
                     </td>
-                    <td className="border border-slate-300 px-1 py-1 text-[9px] font-medium text-center">{dados.resultados || '-'}</td>
+                    <td className="border border-slate-300 px-1.5 py-1.5 text-[9px] font-medium text-center">{dados.resultados || '-'}</td>
                   </tr>
                 );
               })}
@@ -400,7 +400,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* OBSERVAÇÕES GERAIS */}
         <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-        <div className="border border-slate-300 p-0.5 min-h-[30px] text-[9px] mb-0.5">
+        <div className="border border-slate-300 p-1 min-h-[35px] text-[9px] mb-1">
           {checklist.observacoes_gerais || 'Nenhuma observação registrada.'}
         </div>
 
