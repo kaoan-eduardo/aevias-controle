@@ -372,7 +372,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           <div className="grid grid-cols-2 gap-2.5 mt-3">
             {/* Luzes Traseiras */}
-            <table className="w-full border-collapse border border-slate-300 text-[8px]">
+            <table className="w-full border-collapse border border-slate-300 text-[9px]">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-1" colSpan="4">Luzes Traseiras</th>
@@ -422,7 +422,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </table>
 
             {/* Luzes Dianteiras */}
-            <table className="w-full border-collapse border border-slate-300 text-[8px]">
+            <table className="w-full border-collapse border border-slate-300 text-[9px]">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-1" colSpan="4">Luzes Dianteiras</th>
@@ -473,7 +473,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           <div className="grid grid-cols-2 gap-2.5 mt-2.5">
             {/* Segurança */}
-            <table className="w-full border-collapse border border-slate-300 text-[8px]">
+            <table className="w-full border-collapse border border-slate-300 text-[9px]">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-1" colSpan="4">Segurança</th>
@@ -513,7 +513,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </table>
 
             {/* Motor */}
-            <table className="w-full border-collapse border border-slate-300 text-[8px]">
+            <table className="w-full border-collapse border border-slate-300 text-[9px]">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-1" colSpan="4">Motor</th>
@@ -550,8 +550,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           {diario.checklist_veiculo?.observacoes && (
             <div className="mt-2">
-              <p className="font-bold text-[9px] mb-0.5">Observações:</p>
-              <div className="border border-slate-300 p-1.5 min-h-[30px] text-[8px] bg-gray-50">
+              <p className="font-bold text-[10px] mb-0.5">Observações:</p>
+              <div className="border border-slate-300 p-1.5 min-h-[30px] text-[9px] bg-gray-50">
                 {diario.checklist_veiculo.observacoes}
               </div>
             </div>
