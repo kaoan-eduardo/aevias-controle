@@ -193,7 +193,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         return;
       }
 
-      const compressImage = async (photoUrl) => {
+      const compressImage = async (photoUrl, isHighQuality = false) => {
         try {
           const img = new Image();
           img.crossOrigin = 'anonymous';
@@ -207,9 +207,9 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           
-          // Reduzir dimensões para 50% do original
-          const maxWidth = 800;
-          const maxHeight = 600;
+          // Dimensões diferentes para medições geométricas (maior qualidade)
+          const maxWidth = isHighQuality ? 1200 : 800;
+          const maxHeight = isHighQuality ? 900 : 600;
           let width = img.width;
           let height = img.height;
           
@@ -227,8 +227,9 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
           ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
           
-          // Comprimir com qualidade de 60%
-          return canvas.toDataURL('image/jpeg', 0.6);
+          // Qualidade maior para medições geométricas
+          const quality = isHighQuality ? 0.85 : 0.6;
+          return canvas.toDataURL('image/jpeg', quality);
         } catch (error) {
           console.error('Erro ao comprimir imagem:', error);
           return photoUrl; // Usar original se falhar
@@ -238,15 +239,15 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
       // Comprimir fotos
       if (hasFotos) {
         const compressedFotos = await Promise.all(
-          checklist.fotos.filter(photo => photo && photo.trim() !== '').map(compressImage)
+          checklist.fotos.filter(photo => photo && photo.trim() !== '').map(url => compressImage(url, false))
         );
         setCompressedPhotos(compressedFotos);
       }
 
-      // Comprimir medições geométricas
+      // Comprimir medições geométricas com maior qualidade
       if (hasMedicoes) {
         const compressedMed = await Promise.all(
-          checklist.medicoes_geometricas.filter(med => med && med.trim() !== '').map(compressImage)
+          checklist.medicoes_geometricas.filter(med => med && med.trim() !== '').map(url => compressImage(url, true))
         );
         setCompressedMedicoes(compressedMed);
       }
