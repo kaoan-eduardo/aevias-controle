@@ -280,10 +280,24 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
       {/* Página do Checklist de Veículo */}
       {hasChecklistVeiculo && (
-        <div className="break-before-page p-3 print:p-3">
-          <header className="text-center border-b-2 border-slate-900 pb-1 mb-2">
-            <h1 className="text-sm font-bold text-gray-800 uppercase">Checklist de {tituloVeiculo}</h1>
-            <p className="text-[10px] text-gray-600">AFIRMA - ENGENHARIA E PROJETOS LTDA.</p>
+        <div className="break-before-page p-4 print:p-4">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3">
+            <div className="flex justify-start">
+              <img 
+                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                alt="Logo Regional" 
+                className="h-12 object-contain" 
+              />
+            </div>
+            <div className="text-center">
+              <h1 className="text-base font-bold text-gray-800">Checklist de {tituloVeiculo}</h1>
+              <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+            </div>
+            <div className="flex justify-end">
+              <div className="border border-gray-400 p-1.5 rounded-md text-xs bg-white">
+                <p className="font-semibold text-gray-800">{formatDate(diario.data)}</p>
+              </div>
+            </div>
           </header>
 
           <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 mb-2 text-[10px]">
@@ -341,14 +355,14 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 ...(tipoVeiculo === 'picape' ? [{ key: 'cacamba', label: 'Caçamba' }] : [])
               ].map(item => (
                 <tr key={item.key} className="even:bg-gray-50">
-                  <td className="border border-slate-300 p-0.5">{item.label}</td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className="border border-slate-300 p-1">{item.label}</td>
+                  <td className="border border-slate-300 p-1 text-center">
                     {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'bom' && '☑'}
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className="border border-slate-300 p-1 text-center">
                     {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'medio' && '☑'}
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className="border border-slate-300 p-1 text-center">
                     {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'ruim' && '☑'}
                   </td>
                 </tr>
@@ -356,23 +370,23 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </tbody>
           </table>
 
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-2 gap-2.5 mt-3">
             {/* Luzes Traseiras */}
             <table className="w-full border-collapse border border-slate-300 text-[8px]">
-              <thead className="bg-slate-700 text-white">
+              <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
-                  <th className="border border-slate-300 p-0.5" colSpan="4">Luzes Traseiras</th>
+                  <th className="border border-slate-300 p-1" colSpan="4">Luzes Traseiras</th>
                 </tr>
-                <tr className="bg-slate-600">
-                  <th className="border border-slate-300 p-0.5"></th>
-                  <th className="border border-slate-300 p-0.5">Sim</th>
-                  <th className="border border-slate-300 p-0.5">Não</th>
-                  <th className="border border-slate-300 p-0.5">N/A</th>
+                <tr className="bg-[#f9fafb]">
+                  <th className="border border-slate-300 p-1"></th>
+                  <th className="border border-slate-300 p-1">Sim</th>
+                  <th className="border border-slate-300 p-1">Não</th>
+                  <th className="border border-slate-300 p-1">N/A</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-slate-500 text-white font-semibold">
-                  <td className="border border-slate-300 p-0.5" colSpan="4">Direita</td>
+                <tr className="bg-[#f9fafb] text-gray-800 font-semibold">
+                  <td className="border border-slate-300 p-1" colSpan="4">Direita</td>
                 </tr>
                 {[
                   { key: 'da_placa', label: 'Da placa' },
@@ -382,14 +396,14 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'seta', label: 'Seta' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
-                <tr className="bg-slate-500 text-white font-semibold">
-                  <td className="border border-slate-300 p-0.5" colSpan="4">Esquerda</td>
+                <tr className="bg-[#f9fafb] text-gray-800 font-semibold">
+                  <td className="border border-slate-300 p-1" colSpan="4">Esquerda</td>
                 </tr>
                 {[
                   { key: 'luz', label: 'Luz' },
@@ -398,10 +412,10 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'seta', label: 'Seta' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -409,20 +423,20 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
             {/* Luzes Dianteiras */}
             <table className="w-full border-collapse border border-slate-300 text-[8px]">
-              <thead className="bg-slate-700 text-white">
+              <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
-                  <th className="border border-slate-300 p-0.5" colSpan="4">Luzes Dianteiras</th>
+                  <th className="border border-slate-300 p-1" colSpan="4">Luzes Dianteiras</th>
                 </tr>
-                <tr className="bg-slate-600">
-                  <th className="border border-slate-300 p-0.5"></th>
-                  <th className="border border-slate-300 p-0.5">Sim</th>
-                  <th className="border border-slate-300 p-0.5">Não</th>
-                  <th className="border border-slate-300 p-0.5">N/A</th>
+                <tr className="bg-[#f9fafb]">
+                  <th className="border border-slate-300 p-1"></th>
+                  <th className="border border-slate-300 p-1">Sim</th>
+                  <th className="border border-slate-300 p-1">Não</th>
+                  <th className="border border-slate-300 p-1">N/A</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-slate-500 text-white font-semibold">
-                  <td className="border border-slate-300 p-0.5" colSpan="4">Direita</td>
+                <tr className="bg-[#f9fafb] text-gray-800 font-semibold">
+                  <td className="border border-slate-300 p-1" colSpan="4">Direita</td>
                 </tr>
                 {[
                   { key: 'farol_alto', label: 'Farol alto' },
@@ -431,14 +445,14 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'neblina', label: 'Neblina' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
-                <tr className="bg-slate-500 text-white font-semibold">
-                  <td className="border border-slate-300 p-0.5" colSpan="4">Esquerda</td>
+                <tr className="bg-[#f9fafb] text-gray-800 font-semibold">
+                  <td className="border border-slate-300 p-1" colSpan="4">Esquerda</td>
                 </tr>
                 {[
                   { key: 'farol_alto', label: 'Farol alto' },
@@ -447,28 +461,28 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'neblina', label: 'Neblina' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="grid grid-cols-2 gap-1.5 mt-1.5">
+          <div className="grid grid-cols-2 gap-2.5 mt-2.5">
             {/* Segurança */}
             <table className="w-full border-collapse border border-slate-300 text-[8px]">
-              <thead className="bg-slate-700 text-white">
+              <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
-                  <th className="border border-slate-300 p-0.5" colSpan="4">Segurança</th>
+                  <th className="border border-slate-300 p-1" colSpan="4">Segurança</th>
                 </tr>
-                <tr className="bg-slate-600">
-                  <th className="border border-slate-300 p-0.5"></th>
-                  <th className="border border-slate-300 p-0.5">Sim</th>
-                  <th className="border border-slate-300 p-0.5">Não</th>
-                  <th className="border border-slate-300 p-0.5">N/A</th>
+                <tr className="bg-[#f9fafb]">
+                  <th className="border border-slate-300 p-1"></th>
+                  <th className="border border-slate-300 p-1">Sim</th>
+                  <th className="border border-slate-300 p-1">Não</th>
+                  <th className="border border-slate-300 p-1">N/A</th>
                 </tr>
               </thead>
               <tbody>
@@ -489,10 +503,10 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'triangulo', label: 'Triângulo' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -500,15 +514,15 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
             {/* Motor */}
             <table className="w-full border-collapse border border-slate-300 text-[8px]">
-              <thead className="bg-slate-700 text-white">
+              <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
-                  <th className="border border-slate-300 p-0.5" colSpan="4">Motor</th>
+                  <th className="border border-slate-300 p-1" colSpan="4">Motor</th>
                 </tr>
-                <tr className="bg-slate-600">
-                  <th className="border border-slate-300 p-0.5"></th>
-                  <th className="border border-slate-300 p-0.5">Sim</th>
-                  <th className="border border-slate-300 p-0.5">Não</th>
-                  <th className="border border-slate-300 p-0.5">N/A</th>
+                <tr className="bg-[#f9fafb]">
+                  <th className="border border-slate-300 p-1"></th>
+                  <th className="border border-slate-300 p-1">Sim</th>
+                  <th className="border border-slate-300 p-1">Não</th>
+                  <th className="border border-slate-300 p-1">N/A</th>
                 </tr>
               </thead>
               <tbody>
@@ -524,10 +538,10 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   { key: 'tanque_partida', label: 'Tanque de partida' }
                 ].map(item => (
                   <tr key={item.key} className="even:bg-gray-50">
-                    <td className="border border-slate-300 p-0.5">{item.label}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'sim' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'nao' && '☑'}</td>
-                    <td className="border border-slate-300 p-0.5 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'na' && '☑'}</td>
+                    <td className="border border-slate-300 p-1">{item.label}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'sim' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'nao' && '☑'}</td>
+                    <td className="border border-slate-300 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'na' && '☑'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -535,9 +549,9 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </div>
 
           {diario.checklist_veiculo?.observacoes && (
-            <div className="mt-1.5">
+            <div className="mt-2">
               <p className="font-bold text-[9px] mb-0.5">Observações:</p>
-              <div className="border border-slate-300 p-1 min-h-[30px] text-[8px] bg-gray-50">
+              <div className="border border-slate-300 p-1.5 min-h-[30px] text-[8px] bg-gray-50">
                 {diario.checklist_veiculo.observacoes}
               </div>
             </div>
