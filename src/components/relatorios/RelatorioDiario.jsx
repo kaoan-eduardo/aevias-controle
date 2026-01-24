@@ -125,7 +125,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
   };
 
   const tipoVeiculo = diario.checklist_veiculo?.tipo_veiculo || 'passeio';
-  const tituloVeiculo = tipoVeiculo === 'picape' ? 'PICAPE' : 'VEÍCULO DE PASSEIO';
+  const tituloVeiculo = tipoVeiculo === 'picape' ? 'Picape' : 'Veículo de Passeio';
 
   return (
     <div className="bg-white font-sans">
