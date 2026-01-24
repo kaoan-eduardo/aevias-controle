@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,11 +89,52 @@ export default function Projects() {
 
   const handleSaveProject = useCallback(async (projectData) => {
     try {
+      let savedProject;
       if (editingProject) {
         await Project.update(editingProject.id, projectData);
+        savedProject = { ...editingProject, ...projectData };
+        
+        // Se mudou a regional, atualizar ambas
+        if (editingProject.regional_id !== projectData.regional_id) {
+          // Remover da regional antiga
+          if (editingProject.regional_id) {
+            const regionalAntiga = regionais.find(r => r.id === editingProject.regional_id);
+            if (regionalAntiga?.project_ids) {
+              const novosProjectIds = regionalAntiga.project_ids.filter(id => id !== editingProject.id);
+              await Regional.update(regionalAntiga.id, { project_ids: novosProjectIds });
+            }
+          }
+          
+          // Adicionar à nova regional
+          if (projectData.regional_id) {
+            const regionalNova = regionais.find(r => r.id === projectData.regional_id);
+            if (regionalNova) {
+              const projectIds = regionalNova.project_ids || [];
+              if (!projectIds.includes(editingProject.id)) {
+                await Regional.update(regionalNova.id, { 
+                  project_ids: [...projectIds, editingProject.id] 
+                });
+              }
+            }
+          }
+        }
       } else {
-        await Project.create(projectData);
+        savedProject = await Project.create(projectData);
+        
+        // Adicionar projeto à regional automaticamente
+        if (projectData.regional_id) {
+          const regional = regionais.find(r => r.id === projectData.regional_id);
+          if (regional) {
+            const projectIds = regional.project_ids || [];
+            if (!projectIds.includes(savedProject.id)) {
+              await Regional.update(regional.id, { 
+                project_ids: [...projectIds, savedProject.id] 
+              });
+            }
+          }
+        }
       }
+      
       setIsFormOpen(false);
       setEditingProject(null);
       loadData();
@@ -102,7 +142,7 @@ export default function Projects() {
       console.error("Erro ao salvar projeto:", error);
       alert(`Erro ao salvar: ${error.message || 'Erro desconhecido'}`);
     }
-  }, [editingProject, loadData]);
+  }, [editingProject, loadData, regionais]);
 
   const handleEdit = useCallback((project) => {
     setEditingProject(project);
@@ -145,14 +185,16 @@ export default function Projects() {
     CAUQ: "bg-[#00233B] text-white",
     MRAF: "bg-[#566E3D] text-white",
     BGS: "bg-purple-500 text-white",
-    CARTA_TRACO_CONCRETO: "bg-orange-500 text-white"
+    CARTA_TRACO_CONCRETO: "bg-orange-500 text-white",
+    CAMADAS_GRANULARES: "bg-amber-500 text-white"
   }), []);
 
   const tipoProjetoLabels = useMemo(() => ({
     CAUQ: "CAUQ",
     MRAF: "MRAF",
     BGS: "BGS",
-    CARTA_TRACO_CONCRETO: "CARTA TRAÇO"
+    CARTA_TRACO_CONCRETO: "CARTA TRAÇO",
+    CAMADAS_GRANULARES: "CAMADAS GRANULARES"
   }), []);
 
   const getRegionalNome = useCallback((regionalId) => {
