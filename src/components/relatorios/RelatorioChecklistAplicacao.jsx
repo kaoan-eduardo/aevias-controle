@@ -254,6 +254,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
   };
 
   const photoChunks = chunkArray(compressedPhotos, 6);
+  const hasMedicaoGeometrica = checklist?.medicao_geometrica_url && checklist.medicao_geometrica_url.trim() !== '';
 
   const formatDateBrasilia = (dateString) => {
     if (!dateString) return 'N/A';
@@ -264,7 +265,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const totalPages = 1 + photoChunks.length;
+  const totalPages = 1 + photoChunks.length + (hasMedicaoGeometrica ? 1 : 0);
 
   return (
     <div className="bg-white font-sans">
@@ -582,6 +583,41 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
           </div>
         </div>
       ))}
+
+      {hasMedicaoGeometrica && (
+        <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
+          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+            <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-4">
+              <div className="flex justify-start">
+                <img 
+                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                  alt="Logo Regional" 
+                  className="h-16 object-contain" 
+                />
+              </div>
+              <div className="text-center">
+                <h1 className="text-2xl print:text-xl font-bold text-gray-800">Medição Geométrica</h1>
+                <p className="text-base print:text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+              </div>
+              <div className="flex justify-end text-sm print:text-xs">
+                <div className="border border-gray-400 p-2 rounded-md">
+                  <p>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                </div>
+              </div>
+            </header>
+            <main className="flex-grow flex items-center justify-center">
+              <img 
+                src={checklist.medicao_geometrica_url} 
+                alt="Medição Geométrica" 
+                className="max-w-full max-h-full object-contain"
+              />
+            </main>
+            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-500 break-inside-avoid">
+              Página {totalPages} de {totalPages}
+            </footer>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

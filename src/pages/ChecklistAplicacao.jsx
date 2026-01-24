@@ -64,6 +64,7 @@ const getInitialFormData = () => ({
   },
   observacoes_gerais: "",
   fotos: [],
+  medicao_geometrica_url: "",
   status: "rascunho"
 });
 
@@ -484,6 +485,38 @@ export default function ChecklistAplicacaoPage() {
     setFormData(prev => ({
       ...prev,
       fotos: prev.fotos.filter((_, i) => i !== index)
+    }));
+  }, []);
+
+  const handleMedicaoUpload = useCallback(async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione apenas arquivos de imagem.');
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData(prev => ({
+        ...prev,
+        medicao_geometrica_url: file_url
+      }));
+      e.target.value = '';
+    } catch (error) {
+      console.error("Erro ao fazer upload da medição geométrica:", error);
+      alert("Erro ao fazer upload da imagem.");
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }, []);
+
+  const handleRemoveMedicao = useCallback(() => {
+    setFormData(prev => ({
+      ...prev,
+      medicao_geometrica_url: ""
     }));
   }, []);
 
@@ -1411,6 +1444,48 @@ export default function ChecklistAplicacaoPage() {
                           )}
                         </div>
                       ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <Label>Medição Geométrica</Label>
+                  <p className="text-xs text-[#00233B]/60 mb-2">Upload da imagem de medição geométrica (aparecerá na última página do relatório)</p>
+                  {isEditable && (
+                    <div className="mt-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleMedicaoUpload}
+                        className="hidden"
+                        disabled={uploadingPhoto}
+                        id="medicao-upload"
+                      />
+                      <label htmlFor="medicao-upload" className="cursor-pointer">
+                        <Button type="button" variant="outline" className="w-full" disabled={uploadingPhoto} onClick={(e) => {
+                          e.preventDefault();
+                          document.getElementById('medicao-upload').click();
+                        }}>
+                          <Upload className="w-4 h-4 mr-2" />
+                          {uploadingPhoto ? 'Enviando...' : 'Adicionar Medição Geométrica'}
+                        </Button>
+                      </label>
+                    </div>
+                  )}
+                  {formData.medicao_geometrica_url && (
+                    <div className="mt-4">
+                      <div className="relative group w-full max-w-md">
+                        <img src={formData.medicao_geometrica_url} alt="Medição Geométrica" className="w-full h-48 object-contain rounded-lg border-2 border-white/20 bg-black/5" />
+                        {isEditable && (
+                          <button
+                            type="button"
+                            onClick={handleRemoveMedicao}
+                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
