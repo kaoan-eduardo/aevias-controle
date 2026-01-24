@@ -585,34 +585,34 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
       ))}
 
       {hasMedicaoGeometrica && (
-        <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
-          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
-            <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-4">
+        <div className="break-before-page" style={{ width: '210mm', height: '297mm', margin: '0 auto', padding: '15mm', boxSizing: 'border-box' }}>
+          <div className="w-full h-full flex flex-col">
+            <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-3 shrink-0">
               <div className="flex justify-start">
                 <img 
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                   alt="Logo Regional" 
-                  className="h-16 object-contain" 
+                  className="h-12 object-contain" 
                 />
               </div>
               <div className="text-center">
-                <h1 className="text-2xl print:text-xl font-bold text-gray-800">Medição Geométrica</h1>
-                <p className="text-base print:text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica</h1>
+                <p className="text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
               </div>
-              <div className="flex justify-end text-sm print:text-xs">
-                <div className="border border-gray-400 p-2 rounded-md">
+              <div className="flex justify-end text-xs">
+                <div className="border border-gray-400 p-1 rounded-md">
                   <p>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                 </div>
               </div>
             </header>
-            <main className="flex-grow flex items-center justify-center">
+            <main className="flex-grow flex items-center justify-center overflow-hidden" style={{ minHeight: 0 }}>
               <img 
                 src={checklist.medicao_geometrica_url} 
                 alt="Medição Geométrica" 
                 className="max-w-full max-h-full object-contain"
               />
             </main>
-            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-500 break-inside-avoid">
+            <footer className="text-center text-xs text-gray-500 pt-2 shrink-0">
               Página {totalPages} de {totalPages}
             </footer>
           </div>
