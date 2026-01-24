@@ -300,7 +300,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </div>
           </header>
 
-          <div className="grid grid-cols-2 gap-x-3.5 gap-y-1 mb-3 text-xs">
+          <div className="grid grid-cols-2 gap-x-3.5 gap-y-1 mb-3 text-sm">
             <div>
               <span className="font-bold">Nome: </span>
               <span className="font-normal">{diario.checklist_veiculo?.nome_condutor || 'N/A'}</span>
@@ -324,13 +324,13 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </div>
 
           {diario.checklist_veiculo?.areas_afetadas && (
-            <div className="mb-2 p-1 bg-yellow-50 border border-yellow-300 rounded text-xs">
+            <div className="mb-2 p-1 bg-yellow-50 border border-yellow-300 rounded text-sm">
               <p className="font-bold text-yellow-800">Áreas Afetadas:</p>
               <p className="text-gray-700">{diario.checklist_veiculo.areas_afetadas}</p>
             </div>
           )}
 
-          <table className="w-full border-collapse border border-slate-300 mb-2 text-[10px]">
+          <table className="w-full border-collapse border border-slate-300 mb-2 text-xs">
             <thead className="bg-[#f9fafb] text-gray-800">
               <tr>
                 <th className="border border-slate-300 p-0.5" colSpan="4">Condições Gerais</th>
@@ -368,7 +368,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           <div className="grid grid-cols-2 gap-2 mt-3">
             {/* Luzes Traseiras */}
-            <table className="w-full border-collapse border border-slate-300 text-[10px]">
+            <table className="w-full border-collapse border border-slate-300 text-xs">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-0.5" colSpan="4">Luzes Traseiras</th>
@@ -418,7 +418,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </table>
 
             {/* Luzes Dianteiras */}
-            <table className="w-full border-collapse border border-slate-300 text-[10px]">
+            <table className="w-full border-collapse border border-slate-300 text-xs">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-0.5" colSpan="4">Luzes Dianteiras</th>
@@ -469,7 +469,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           <div className="grid grid-cols-2 gap-2 mt-2">
             {/* Segurança */}
-            <table className="w-full border-collapse border border-slate-300 text-[10px]">
+            <table className="w-full border-collapse border border-slate-300 text-xs">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-0.5" colSpan="4">Segurança</th>
@@ -509,7 +509,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </table>
 
             {/* Motor */}
-            <table className="w-full border-collapse border border-slate-300 text-[10px]">
+            <table className="w-full border-collapse border border-slate-300 text-xs">
               <thead className="bg-[#f9fafb] text-gray-800">
                 <tr>
                   <th className="border border-slate-300 p-0.5" colSpan="4">Motor</th>
@@ -546,8 +546,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           {diario.checklist_veiculo?.observacoes && (
             <div className="mt-2">
-              <p className="font-bold text-xs mb-0.5">Observações:</p>
-              <div className="border border-slate-300 p-1 min-h-[35px] text-[10px] bg-gray-50">
+              <p className="font-bold text-sm mb-0.5">Observações:</p>
+              <div className="border border-slate-300 p-1 min-h-[35px] text-xs bg-gray-50">
                 {diario.checklist_veiculo.observacoes}
               </div>
             </div>
