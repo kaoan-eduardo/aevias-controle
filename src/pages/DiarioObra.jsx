@@ -396,6 +396,224 @@ const DiarioForm = ({
                 </div>
               </div>
 
+              {/* Luzes Traseiras */}
+              <div className="space-y-3">
+                <Label className="font-semibold text-base">Luzes Traseiras</Label>
+                
+                {/* Direita */}
+                <div className="border rounded p-3 bg-blue-50">
+                  <Label className="font-semibold text-sm mb-2 block">Direita</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                    {[
+                      { key: 'da_placa', label: 'Da placa' },
+                      { key: 'luz', label: 'Luz' },
+                      { key: 'luz_re', label: 'Luz de ré' },
+                      { key: 'luz_freio', label: 'Luz de freio' },
+                      { key: 'seta', label: 'Seta' }
+                    ].map(item => (
+                      <div key={item.key}>
+                        <Label className="text-xs">{item.label}</Label>
+                        <select
+                          value={formData.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] || "sim"}
+                          onChange={(e) => handleChange('checklist_veiculo', {
+                            ...formData.checklist_veiculo,
+                            luzes_traseiras: { 
+                              ...formData.checklist_veiculo.luzes_traseiras, 
+                              direita: { ...formData.checklist_veiculo.luzes_traseiras.direita, [item.key]: e.target.value }
+                            }
+                          })}
+                          disabled={!isEditable || isApproved}
+                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                        >
+                          <option value="sim">Sim</option>
+                          <option value="nao">Não</option>
+                          <option value="na">N/A</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Esquerda */}
+                <div className="border rounded p-3 bg-blue-50">
+                  <Label className="font-semibold text-sm mb-2 block">Esquerda</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {[
+                      { key: 'luz', label: 'Luz' },
+                      { key: 'luz_re', label: 'Luz de ré' },
+                      { key: 'luz_freio', label: 'Luz de freio' },
+                      { key: 'seta', label: 'Seta' }
+                    ].map(item => (
+                      <div key={item.key}>
+                        <Label className="text-xs">{item.label}</Label>
+                        <select
+                          value={formData.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] || "sim"}
+                          onChange={(e) => handleChange('checklist_veiculo', {
+                            ...formData.checklist_veiculo,
+                            luzes_traseiras: { 
+                              ...formData.checklist_veiculo.luzes_traseiras, 
+                              esquerda: { ...formData.checklist_veiculo.luzes_traseiras.esquerda, [item.key]: e.target.value }
+                            }
+                          })}
+                          disabled={!isEditable || isApproved}
+                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                        >
+                          <option value="sim">Sim</option>
+                          <option value="nao">Não</option>
+                          <option value="na">N/A</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Luzes Dianteiras */}
+              <div className="space-y-3">
+                <Label className="font-semibold text-base">Luzes Dianteiras</Label>
+                
+                {/* Direita */}
+                <div className="border rounded p-3 bg-green-50">
+                  <Label className="font-semibold text-sm mb-2 block">Direita</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {[
+                      { key: 'farol_alto', label: 'Farol alto' },
+                      { key: 'farol_baixo', label: 'Farol baixo' },
+                      { key: 'seta', label: 'Seta' },
+                      { key: 'neblina', label: 'Neblina' }
+                    ].map(item => (
+                      <div key={item.key}>
+                        <Label className="text-xs">{item.label}</Label>
+                        <select
+                          value={formData.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] || "sim"}
+                          onChange={(e) => handleChange('checklist_veiculo', {
+                            ...formData.checklist_veiculo,
+                            luzes_dianteiras: { 
+                              ...formData.checklist_veiculo.luzes_dianteiras, 
+                              direita: { ...formData.checklist_veiculo.luzes_dianteiras.direita, [item.key]: e.target.value }
+                            }
+                          })}
+                          disabled={!isEditable || isApproved}
+                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                        >
+                          <option value="sim">Sim</option>
+                          <option value="nao">Não</option>
+                          <option value="na">N/A</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Esquerda */}
+                <div className="border rounded p-3 bg-green-50">
+                  <Label className="font-semibold text-sm mb-2 block">Esquerda</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {[
+                      { key: 'farol_alto', label: 'Farol alto' },
+                      { key: 'farol_baixo', label: 'Farol baixo' },
+                      { key: 'seta', label: 'Seta' },
+                      { key: 'neblina', label: 'Neblina' }
+                    ].map(item => (
+                      <div key={item.key}>
+                        <Label className="text-xs">{item.label}</Label>
+                        <select
+                          value={formData.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] || "sim"}
+                          onChange={(e) => handleChange('checklist_veiculo', {
+                            ...formData.checklist_veiculo,
+                            luzes_dianteiras: { 
+                              ...formData.checklist_veiculo.luzes_dianteiras, 
+                              esquerda: { ...formData.checklist_veiculo.luzes_dianteiras.esquerda, [item.key]: e.target.value }
+                            }
+                          })}
+                          disabled={!isEditable || isApproved}
+                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                        >
+                          <option value="sim">Sim</option>
+                          <option value="nao">Não</option>
+                          <option value="na">N/A</option>
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Segurança */}
+              <div>
+                <Label className="font-semibold text-base">Segurança</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                  {[
+                    { key: 'alarme', label: 'Alarme' },
+                    { key: 'buzina', label: 'Buzina' },
+                    { key: 'chave_roda', label: 'Chave de Roda' },
+                    { key: 'cintos', label: 'Cintos' },
+                    { key: 'documentos', label: 'Documentos' },
+                    { key: 'extintor', label: 'Extintor' },
+                    { key: 'limpadores', label: 'Limpadores' },
+                    { key: 'macaco', label: 'Macaco' },
+                    { key: 'painel', label: 'Painel' },
+                    { key: 'retrovisor_interno', label: 'Retrovisor Interno' },
+                    { key: 'retrovisor_direito', label: 'Retrovisor Direito' },
+                    { key: 'retrovisor_esquerdo', label: 'Retrovisor Esquerdo' },
+                    { key: 'travas', label: 'Travas' },
+                    { key: 'triangulo', label: 'Triângulo' }
+                  ].map(item => (
+                    <div key={item.key}>
+                      <Label className="text-xs">{item.label}</Label>
+                      <select
+                        value={formData.checklist_veiculo?.seguranca?.[item.key] || "sim"}
+                        onChange={(e) => handleChange('checklist_veiculo', {
+                          ...formData.checklist_veiculo,
+                          seguranca: { ...formData.checklist_veiculo.seguranca, [item.key]: e.target.value }
+                        })}
+                        disabled={!isEditable || isApproved}
+                        className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                      >
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                        <option value="na">N/A</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Motor */}
+              <div>
+                <Label className="font-semibold text-base">Motor</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                  {[
+                    { key: 'acelerador', label: 'Acelerador' },
+                    { key: 'agua_limpador', label: 'Água do limpador' },
+                    { key: 'agua_radiador', label: 'Água do radiador' },
+                    { key: 'embreagem', label: 'Embreagem' },
+                    { key: 'freio', label: 'Freio' },
+                    { key: 'freio_mao', label: 'Freio de mão' },
+                    { key: 'oleo_freio', label: 'Óleo do freio' },
+                    { key: 'oleo_moto', label: 'Óleo do moto' },
+                    { key: 'tanque_partida', label: 'Tanque de partida' }
+                  ].map(item => (
+                    <div key={item.key}>
+                      <Label className="text-xs">{item.label}</Label>
+                      <select
+                        value={formData.checklist_veiculo?.motor?.[item.key] || "sim"}
+                        onChange={(e) => handleChange('checklist_veiculo', {
+                          ...formData.checklist_veiculo,
+                          motor: { ...formData.checklist_veiculo.motor, [item.key]: e.target.value }
+                        })}
+                        disabled={!isEditable || isApproved}
+                        className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                      >
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                        <option value="na">N/A</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div>
                 <Label>Observações do Veículo</Label>
                 <Textarea
