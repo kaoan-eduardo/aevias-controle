@@ -254,7 +254,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
   };
 
   const photoChunks = chunkArray(compressedPhotos, 6);
-  const hasMedicaoGeometrica = checklist?.medicao_geometrica_url && checklist.medicao_geometrica_url.trim() !== '';
+  const medicoesGeometricas = (checklist?.medicoes_geometricas || []).filter(url => url && url.trim() !== '');
 
   const formatDateBrasilia = (dateString) => {
     if (!dateString) return 'N/A';
@@ -265,7 +265,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const totalPages = 1 + photoChunks.length + (hasMedicaoGeometrica ? 1 : 0);
+  const totalPages = 1 + photoChunks.length + medicoesGeometricas.length;
 
   return (
     <div className="bg-white font-sans">
@@ -584,8 +584,8 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         </div>
       ))}
 
-      {hasMedicaoGeometrica && (
-        <div className="break-before-page" style={{ width: '210mm', height: '297mm', margin: '0 auto', padding: '15mm', boxSizing: 'border-box' }}>
+      {medicoesGeometricas.map((medicaoUrl, medicaoIndex) => (
+        <div key={medicaoIndex} className="break-before-page" style={{ width: '210mm', height: '297mm', margin: '0 auto', padding: '15mm', boxSizing: 'border-box' }}>
           <div className="w-full h-full flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-3 shrink-0">
               <div className="flex justify-start">
@@ -596,7 +596,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                 />
               </div>
               <div className="text-center">
-                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica</h1>
+                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica {medicoesGeometricas.length > 1 ? `${medicaoIndex + 1}` : ''}</h1>
                 <p className="text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
               </div>
               <div className="flex justify-end text-xs">
@@ -607,17 +607,17 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
             </header>
             <main className="flex-grow flex items-center justify-center overflow-hidden" style={{ minHeight: 0 }}>
               <img 
-                src={checklist.medicao_geometrica_url} 
-                alt="Medição Geométrica" 
+                src={medicaoUrl} 
+                alt={`Medição Geométrica ${medicaoIndex + 1}`} 
                 className="max-w-full max-h-full object-contain"
               />
             </main>
             <footer className="text-center text-xs text-gray-500 pt-2 shrink-0">
-              Página {totalPages} de {totalPages}
+              Página {1 + photoChunks.length + medicaoIndex + 1} de {totalPages}
             </footer>
           </div>
         </div>
-      )}
+      ))}
     </div>
   );
 }

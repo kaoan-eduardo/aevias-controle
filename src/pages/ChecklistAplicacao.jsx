@@ -64,7 +64,7 @@ const getInitialFormData = () => ({
   },
   observacoes_gerais: "",
   fotos: [],
-  medicao_geometrica_url: "",
+  medicoes_geometricas: [],
   status: "rascunho"
 });
 
@@ -489,20 +489,33 @@ export default function ChecklistAplicacaoPage() {
   }, []);
 
   const handleMedicaoUpload = useCallback(async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    if (!file.type.startsWith('image/')) {
-      alert('Por favor, selecione apenas arquivos de imagem.');
+    const currentMedicoes = formData.medicoes_geometricas || [];
+    if (currentMedicoes.length + files.length > 2) {
+      alert('Você pode adicionar no máximo 2 imagens de medição geométrica.');
       return;
+    }
+
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione apenas arquivos de imagem.');
+        return;
+      }
     }
 
     setUploadingPhoto(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const uploadedUrls = [];
+      for (const file of files) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(file_url);
+      }
+      
       setFormData(prev => ({
         ...prev,
-        medicao_geometrica_url: file_url
+        medicoes_geometricas: [...(prev.medicoes_geometricas || []), ...uploadedUrls]
       }));
       e.target.value = '';
     } catch (error) {
@@ -511,12 +524,12 @@ export default function ChecklistAplicacaoPage() {
     } finally {
       setUploadingPhoto(false);
     }
-  }, []);
+  }, [formData.medicoes_geometricas]);
 
-  const handleRemoveMedicao = useCallback(() => {
+  const handleRemoveMedicao = useCallback((index) => {
     setFormData(prev => ({
       ...prev,
-      medicao_geometrica_url: ""
+      medicoes_geometricas: (prev.medicoes_geometricas || []).filter((_, i) => i !== index)
     }));
   }, []);
 
@@ -1449,12 +1462,13 @@ export default function ChecklistAplicacaoPage() {
                 </div>
 
                 <div>
-                  <Label>Medição Geométrica</Label>
-                  <p className="text-xs text-[#00233B]/60 mb-2">Upload da imagem de medição geométrica (aparecerá na última página do relatório)</p>
-                  {isEditable && (
+                  <Label>Medição Geométrica (Máximo 2 imagens)</Label>
+                  <p className="text-xs text-[#00233B]/60 mb-2">Upload de imagens de medição geométrica (cada uma aparecerá em uma página separada no relatório)</p>
+                  {isEditable && (formData.medicoes_geometricas || []).length < 2 && (
                     <div className="mt-2">
                       <input
                         type="file"
+                        multiple
                         accept="image/*"
                         onChange={handleMedicaoUpload}
                         className="hidden"
@@ -1467,25 +1481,28 @@ export default function ChecklistAplicacaoPage() {
                           document.getElementById('medicao-upload').click();
                         }}>
                           <Upload className="w-4 h-4 mr-2" />
-                          {uploadingPhoto ? 'Enviando...' : 'Adicionar Medição Geométrica'}
+                          {uploadingPhoto ? 'Enviando...' : `Adicionar Medição Geométrica (${(formData.medicoes_geometricas || []).length}/2)`}
                         </Button>
                       </label>
                     </div>
                   )}
-                  {formData.medicao_geometrica_url && (
-                    <div className="mt-4">
-                      <div className="relative group w-full max-w-md">
-                        <img src={formData.medicao_geometrica_url} alt="Medição Geométrica" className="w-full h-48 object-contain rounded-lg border-2 border-white/20 bg-black/5" />
-                        {isEditable && (
-                          <button
-                            type="button"
-                            onClick={handleRemoveMedicao}
-                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
+                  {formData.medicoes_geometricas && formData.medicoes_geometricas.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      {formData.medicoes_geometricas.map((medicaoUrl, index) => (
+                        <div key={index} className="relative group">
+                          <img src={medicaoUrl} alt={`Medição Geométrica ${index + 1}`} className="w-full h-48 object-contain rounded-lg border-2 border-white/20 bg-black/5" />
+                          {isEditable && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMedicao(index)}
+                              className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                          <p className="text-center text-xs text-[#00233B]/70 mt-1 font-medium">Medição {index + 1}</p>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
