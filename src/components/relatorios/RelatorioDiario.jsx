@@ -290,7 +290,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
               />
             </div>
             <div className="text-center">
-              <h1 className="text-base font-bold text-gray-800">Checklist de {tituloVeiculo}</h1>
+              <h1 className="text-lg font-bold text-gray-800">Checklist de Veículo de Passeio</h1>
               <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
             </div>
             <div className="flex justify-end">
