@@ -89,6 +89,12 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       tipo_cimento: "",
       concreteira: ""
     },
+    camadas_granulares: {
+      melhorador_utilizado: "",
+      umidade_otima: "",
+      densidade_otima: "",
+      resistencia_mpa: ""
+    },
     status: "ativo",
   });
 
@@ -158,6 +164,8 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     if (project) {
       const isCartaTraco = project.tipo_projeto === 'CARTA_TRACO_CONCRETO' || project._isCartaTraco === true;
       
+      const isCamadasGranularesEdit = project.tipo_projeto === "CAMADAS_GRANULARES";
+      
       setFormData({
         tipo_projeto: project.tipo_projeto || "CAUQ",
         regional_id: project.regional_id || "",
@@ -210,6 +218,17 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
           tipo_cimento: "",
           concreteira: ""
         },
+        camadas_granulares: isCamadasGranularesEdit ? {
+          melhorador_utilizado: project.melhorador_utilizado || "",
+          umidade_otima: project.umidade_otima || "",
+          densidade_otima: project.densidade_otima || "",
+          resistencia_mpa: project.resistencia_mpa || ""
+        } : {
+          melhorador_utilizado: "",
+          umidade_otima: "",
+          densidade_otima: "",
+          resistencia_mpa: ""
+        },
         status: project.status || "ativo",
       });
     }
@@ -259,6 +278,16 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       carta_traco_concreto: {
         ...prev.carta_traco_concreto,
         [field]: value === '' ? '' : (field === 'tipo_aditivo' || field === 'tipo_cimento' || field === 'concreteira' ? value : parseFloat(value)),
+      },
+    }));
+  };
+
+  const handleCamadasGranularesChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      camadas_granulares: {
+        ...prev.camadas_granulares,
+        [field]: value === '' ? '' : (field === 'melhorador_utilizado' ? value : parseFloat(value)),
       },
     }));
   };
@@ -331,6 +360,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     };
 
     const isCartaTraco = formData.tipo_projeto === 'CARTA_TRACO_CONCRETO';
+    const isCamadasGranularesSubmit = formData.tipo_projeto === 'CAMADAS_GRANULARES';
     
     if (isCartaTraco) {
       const dataToSave = {
@@ -352,6 +382,31 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       };
       
       console.log('📤 Salvando Carta Traço:', dataToSave);
+      onSave(dataToSave);
+    } else if (isCamadasGranularesSubmit) {
+      const sanitizedAgregados = formData.agregados.map(agregado => ({
+        ...agregado,
+        percentual_mistura: sanitizeNumber(agregado.percentual_mistura),
+        granulometria: sanitizeNestedNumbers(agregado.granulometria)
+      }));
+
+      const dataToSave = {
+        tipo_projeto: 'CAMADAS_GRANULARES',
+        regional_id: formData.regional_id || null,
+        name: formData.name,
+        client: formData.client,
+        location: formData.location || null,
+        description: formData.description || null,
+        status: formData.status,
+        faixa_granulometrica_id: formData.faixa_granulometrica_id || null,
+        agregados: sanitizedAgregados,
+        melhorador_utilizado: formData.camadas_granulares.melhorador_utilizado || null,
+        umidade_otima: sanitizeNumber(formData.camadas_granulares.umidade_otima),
+        densidade_otima: sanitizeNumber(formData.camadas_granulares.densidade_otima),
+        resistencia_mpa: sanitizeNumber(formData.camadas_granulares.resistencia_mpa)
+      };
+
+      console.log('📤 Salvando Camadas Granulares:', dataToSave);
       onSave(dataToSave);
     } else {
       // Para CAUQ/MRAF/BGS, salvar na estrutura original
@@ -409,6 +464,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
   const isMraf = formData.tipo_projeto === "MRAF";
   const isBgs = formData.tipo_projeto === "BGS";
   const isCartaTraco = formData.tipo_projeto === "CARTA_TRACO_CONCRETO";
+  const isCamadasGranulares = formData.tipo_projeto === "CAMADAS_GRANULARES";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
@@ -450,6 +506,12 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
                   <div className="flex items-center gap-2">
                     <Badge className="bg-orange-500">CARTA TRAÇO</Badge>
                     <span>Carta Traço de Concreto</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="CAMADAS_GRANULARES">
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-amber-500">CAMADAS GRANULARES</Badge>
+                    <span>Camadas Granulares</span>
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -669,11 +731,12 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
                       <SelectItem key={faixa.id} value={faixa.id}>
                         <div className="flex items-center gap-2">
                           <Badge className={
-                            faixa.tipo === 'CAUQ' ? 'bg-blue-500' :
-                            faixa.tipo === 'MRAF' ? 'bg-green-500' :
-                            'bg-purple-500'
+                           faixa.tipo === 'CAUQ' ? 'bg-blue-500' :
+                           faixa.tipo === 'MRAF' ? 'bg-green-500' :
+                           faixa.tipo === 'BGS' ? 'bg-purple-500' :
+                           'bg-amber-500'
                           }>
-                            {faixa.tipo}
+                           {faixa.tipo}
                           </Badge>
                           <span>{faixa.nome} ({faixa.orgao} - {faixa.especificacao})</span>
                         </div>
@@ -1621,6 +1684,228 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
                 </Card>
               </CardContent>
             </Card>
+          )}
+
+          {isCamadasGranulares && (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Especificação Granulométrica</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="faixa_granulometrica_id">Faixa de Referência (Especificação) *</Label>
+                    <Select 
+                      value={formData.faixa_granulometrica_id} 
+                      onValueChange={(value) => handleInputChange('faixa_granulometrica_id', value)} 
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a faixa granulométrica" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {faixasFiltradas?.map(faixa => (
+                          <SelectItem key={faixa.id} value={faixa.id}>
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-amber-500">
+                                {faixa.tipo}
+                              </Badge>
+                              <span>{faixa.nome} ({faixa.orgao} - {faixa.especificacao})</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {faixasFiltradas.length === 0 && (
+                      <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <p className="text-xs text-amber-800 font-medium">
+                          ⚠️ Nenhuma faixa granulométrica do tipo <Badge className="bg-amber-500 text-white">CAMADAS_GRANULARES</Badge> encontrada.
+                        </p>
+                        <p className="text-xs text-amber-700 mt-1">
+                          Crie uma faixa compatível na página de Faixas Granulométricas antes de continuar.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {faixaSelecionada && peneirasCarregadas && (
+                    <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                      <p className="text-sm font-semibold text-amber-900 mb-2">Limites de Especificação ({peneirasDisponiveis.length} peneiras):</p>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-xs">
+                          <thead className="bg-amber-100">
+                            <tr>
+                              <th className="px-2 py-1 text-left">ASTM</th>
+                              <th className="px-2 py-1 text-left">Abertura</th>
+                              <th className="px-2 py-1 text-center">Mín (%)</th>
+                              <th className="px-2 py-1 text-center">Máx (%)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {peneirasDisponiveis.map((peneira, idx) => (
+                              <tr key={idx} className="border-t border-amber-200">
+                                <td className="px-2 py-1 font-semibold">{peneira.astm}</td>
+                                <td className="px-2 py-1">{peneira.nome}</td>
+                                <td className="px-2 py-1 text-center">{peneira.especificacao_min}</td>
+                                <td className="px-2 py-1 text-center">{peneira.especificacao_max}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {peneirasCarregadas && (
+                <Card>
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <CardTitle>Agregados Utilizados</CardTitle>
+                      <Button type="button" onClick={adicionarAgregado} size="sm" className="bg-green-600 hover:bg-green-700">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Adicionar Agregado
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {formData.agregados.map((agregado, index) => (
+                      <div key={index} className="p-4 border rounded-lg bg-slate-50 space-y-4">
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-semibold">Agregado {index + 1}</h4>
+                          <Button
+                            type="button"
+                            onClick={() => removerAgregado(index)}
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-500"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <Label>Nome/Tipo</Label>
+                            <Input
+                              value={agregado.nome}
+                              onChange={(e) => handleAgregadoChange(index, 'nome', e.target.value)}
+                              placeholder="Ex: Brita 1"
+                            />
+                          </div>
+                          <div>
+                            <Label>Pedreira</Label>
+                            <Input
+                              value={agregado.pedreira}
+                              onChange={(e) => handleAgregadoChange(index, 'pedreira', e.target.value)}
+                              placeholder="Ex: Pedreira São José"
+                            />
+                          </div>
+                          <div>
+                            <Label>% na Mistura</Label>
+                            <Input
+                              type="number"
+                              step="0.1"
+                              value={agregado.percentual_mistura}
+                              onChange={(e) => handleAgregadoChange(index, 'percentual_mistura', e.target.value)}
+                              placeholder="Ex: 30"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label className="font-semibold mb-2 block">Granulometria Individual (% Passante)</Label>
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                            {peneirasDisponiveis.map(peneira => (
+                              <div key={peneira.key}>
+                                <Label className="text-xs font-semibold">{peneira.astm}</Label>
+                                <Label className="text-xs text-gray-500 block">{peneira.nome}</Label>
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={agregado.granulometria?.[peneira.key] ?? ""}
+                                  onChange={(e) => handleAgregadoGranChange(index, peneira.key, e.target.value)}
+                                  placeholder="0-100"
+                                  className="text-sm"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {formData.agregados.length === 0 && (
+                      <p className="text-center text-slate-500 py-4">
+                        Nenhum agregado adicionado.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Parâmetros Técnicos</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="melhorador_utilizado">Melhorador Utilizado *</Label>
+                    <Input
+                      id="melhorador_utilizado"
+                      value={formData.camadas_granulares.melhorador_utilizado}
+                      onChange={(e) => handleCamadasGranularesChange('melhorador_utilizado', e.target.value)}
+                      placeholder="Ex: Cimento Portland, Cal Hidratada"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="umidade_otima">Umidade Ótima (%) *</Label>
+                      <Input
+                        id="umidade_otima"
+                        type="number"
+                        step="0.1"
+                        value={formData.camadas_granulares.umidade_otima}
+                        onChange={(e) => handleCamadasGranularesChange('umidade_otima', e.target.value)}
+                        placeholder="Ex: 5.5"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="densidade_otima">Densidade Ótima (g/cm³) *</Label>
+                      <Input
+                        id="densidade_otima"
+                        type="number"
+                        step="0.001"
+                        value={formData.camadas_granulares.densidade_otima}
+                        onChange={(e) => handleCamadasGranularesChange('densidade_otima', e.target.value)}
+                        placeholder="Ex: 2.150"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="resistencia_mpa">Resistência (MPa) - Opcional</Label>
+                    <Input
+                      id="resistencia_mpa"
+                      type="number"
+                      step="0.01"
+                      value={formData.camadas_granulares.resistencia_mpa}
+                      onChange={(e) => handleCamadasGranularesChange('resistencia_mpa', e.target.value)}
+                      placeholder="Ex: 2.5"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">
+                      Resistência à compressão ou tração (quando aplicável)
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
           )}
         </>
       )}
