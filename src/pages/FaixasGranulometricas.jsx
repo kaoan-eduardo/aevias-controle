@@ -154,6 +154,12 @@ const FaixaForm = React.memo(({ faixa: editingFaixa, onSave, onCancel }) => {
                   <span>Brita Graduada Simples</span>
                 </div>
               </SelectItem>
+              <SelectItem value="CAMADAS_GRANULARES">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-orange-500">CAMADAS GRANULARES</Badge>
+                  <span>Camadas Granulares</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -269,7 +275,8 @@ const FaixaDetails = React.memo(({ faixa }) => {
   const tipoColors = useMemo(() => ({
     CAUQ: "bg-blue-500 text-white",
     MRAF: "bg-green-500 text-white",
-    BGS: "bg-purple-500 text-white"
+    BGS: "bg-purple-500 text-white",
+    CAMADAS_GRANULARES: "bg-orange-500 text-white"
   }), []);
 
   return (
@@ -440,7 +447,8 @@ export default function FaixasGranulometricasPage() {
   const tipoProjetoColors = useMemo(() => ({
     CAUQ: "bg-blue-500 text-white",
     MRAF: "bg-green-500 text-white",
-    BGS: "bg-purple-500 text-white"
+    BGS: "bg-purple-500 text-white",
+    CAMADAS_GRANULARES: "bg-orange-500 text-white"
   }), []);
 
   if (loading) {
@@ -523,6 +531,11 @@ export default function FaixasGranulometricasPage() {
                   <SelectItem value="BGS">
                     <div className="flex items-center gap-2">
                       <Badge className="bg-purple-500">BGS</Badge>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="CAMADAS_GRANULARES">
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-orange-500">CAMADAS GRANULARES</Badge>
                     </div>
                   </SelectItem>
                 </SelectContent>
