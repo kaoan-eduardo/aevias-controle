@@ -385,7 +385,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               {chunk.map((fotoUrl, fotoIndex) => (
                 <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
-                    <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                    <img 
+                      src={fotoUrl} 
+                      alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} 
+                      className="max-h-full max-w-full object-contain" 
+                      loading="lazy"
+                      style={{ imageRendering: 'auto', filter: 'contrast(0.95) brightness(1.02)' }}
+                    />
                   </div>
                   <p className="text-center text-base print:text-sm mt-2 font-medium">
                     Foto {(pageIndex * 6) + fotoIndex + 1}
