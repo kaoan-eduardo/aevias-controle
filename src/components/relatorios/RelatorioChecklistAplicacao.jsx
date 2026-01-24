@@ -180,61 +180,82 @@ const ReportFooter = ({ checklist, formatDateBrasilia, pageNumber, totalPages })
 
 export default function RelatorioChecklistAplicacao({ checklist, obra, regional, user }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
+  const [compressedMedicoes, setCompressedMedicoes] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
   React.useEffect(() => {
     const compressImages = async () => {
-      if (!checklist?.fotos || checklist.fotos.length === 0) {
+      const hasFotos = checklist?.fotos && checklist.fotos.length > 0;
+      const hasMedicoes = checklist?.medicoes_geometricas && checklist.medicoes_geometricas.length > 0;
+
+      if (!hasFotos && !hasMedicoes) {
         setIsCompressing(false);
         return;
       }
 
-      const compressed = await Promise.all(
-        checklist.fotos.filter(photo => photo && photo.trim() !== '').map(async (photoUrl) => {
-          try {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            
-            await new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-              img.src = photoUrl;
-            });
+      const compressImage = async (photoUrl) => {
+        try {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = photoUrl;
+          });
 
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Reduzir dimensões para 50% do original
-            const maxWidth = 800;
-            const maxHeight = 600;
-            let width = img.width;
-            let height = img.height;
-            
-            if (width > maxWidth || height > maxHeight) {
-              const ratio = Math.min(maxWidth / width, maxHeight / height);
-              width = width * ratio;
-              height = height * ratio;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Comprimir com qualidade de 50%
-            return canvas.toDataURL('image/jpeg', 0.5);
-          } catch (error) {
-            console.error('Erro ao comprimir imagem:', error);
-            return photoUrl; // Usar original se falhar
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Reduzir dimensões para 50% do original
+          const maxWidth = 800;
+          const maxHeight = 600;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = width * ratio;
+            height = height * ratio;
           }
-        })
-      );
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Desenhar com fundo branco
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Comprimir com qualidade de 60%
+          return canvas.toDataURL('image/jpeg', 0.6);
+        } catch (error) {
+          console.error('Erro ao comprimir imagem:', error);
+          return photoUrl; // Usar original se falhar
+        }
+      };
 
-      setCompressedPhotos(compressed);
+      // Comprimir fotos
+      if (hasFotos) {
+        const compressedFotos = await Promise.all(
+          checklist.fotos.filter(photo => photo && photo.trim() !== '').map(compressImage)
+        );
+        setCompressedPhotos(compressedFotos);
+      }
+
+      // Comprimir medições geométricas
+      if (hasMedicoes) {
+        const compressedMed = await Promise.all(
+          checklist.medicoes_geometricas.filter(med => med && med.trim() !== '').map(compressImage)
+        );
+        setCompressedMedicoes(compressedMed);
+      }
+
       setIsCompressing(false);
     };
 
     compressImages();
-  }, [checklist?.fotos]);
+  }, [checklist?.fotos, checklist?.medicoes_geometricas]);
 
   if (!checklist) {
     return <div className="p-8">Dados do checklist não encontrados.</div>;
@@ -254,7 +275,6 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
   };
 
   const photoChunks = chunkArray(compressedPhotos, 6);
-  const medicoesGeometricas = (checklist?.medicoes_geometricas || []).filter(url => url && url.trim() !== '');
 
   const formatDateBrasilia = (dateString) => {
     if (!dateString) return 'N/A';
@@ -265,7 +285,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const totalPages = 1 + photoChunks.length + medicoesGeometricas.length;
+  const totalPages = 1 + photoChunks.length + compressedMedicoes.length;
 
   return (
     <div className="bg-white font-sans">
@@ -584,7 +604,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         </div>
       ))}
 
-      {medicoesGeometricas.map((medicaoUrl, medicaoIndex) => (
+      {compressedMedicoes.map((medicaoUrl, medicaoIndex) => (
         <div key={medicaoIndex} className="break-before-page" style={{ width: '210mm', height: '297mm', margin: '0 auto', padding: '15mm', boxSizing: 'border-box' }}>
           <div className="w-full h-full flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-3 shrink-0">
@@ -596,7 +616,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                 />
               </div>
               <div className="text-center">
-                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica {medicoesGeometricas.length > 1 ? `${medicaoIndex + 1}` : ''}</h1>
+                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica {compressedMedicoes.length > 1 ? `${medicaoIndex + 1}` : ''}</h1>
                 <p className="text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
               </div>
               <div className="flex justify-end text-xs">
