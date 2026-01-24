@@ -28,6 +28,7 @@ export default function ChecklistReciclagem() {
   const [projects, setProjects] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
   const [regionais, setRegionais] = useState([]);
+  const [faixasGranulometricas, setFaixasGranulometricas] = useState([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
@@ -157,16 +158,18 @@ export default function ChecklistReciclagem() {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const [userData, obrasData, projectsData, regionaisData] = await Promise.all([
+      const [userData, obrasData, projectsData, regionaisData, faixasData] = await Promise.all([
         base44.auth.me(),
         base44.entities.Obra.list(),
         Project.list(),
-        base44.entities.Regional.list()
+        base44.entities.Regional.list(),
+        base44.entities.FaixaGranulometrica.list()
       ]);
 
       setUser(userData);
       setRegionais(regionaisData);
       setAllProjects(projectsData);
+      setFaixasGranulometricas(faixasData);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
@@ -193,6 +196,7 @@ export default function ChecklistReciclagem() {
         setObras(obrasSupervisao);
       }
 
+      // Projetos serão filtrados quando uma obra for selecionada
       setProjects([]);
 
       const params = new URLSearchParams(location.search);
@@ -477,22 +481,38 @@ export default function ChecklistReciclagem() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="obra_id">Obra *</Label>
-                      <select
-                        id="obra_id"
-                        value={formData.obra_id}
-                        onChange={(e) => setFormData({ ...formData, obra_id: e.target.value })}
-                        required
-                        disabled={!!editingChecklist?.id}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione a obra</option>
-                        {obras.map(obra => (
-                          <option key={obra.id} value={obra.id}>
-                            {obra.name} - {obra.code}
-                          </option>
-                        ))}
-                      </select>
+                     <Label htmlFor="obra_id">Obra *</Label>
+                     <select
+                       id="obra_id"
+                       value={formData.obra_id}
+                       onChange={(e) => {
+                         const obraId = e.target.value;
+                         const obraSelecionada = obras.find(o => o.id === obraId);
+
+                         // Filtrar projetos de CAMADAS_GRANULARES da regional da obra
+                         if (obraSelecionada?.regional_id) {
+                           const projetosFiltrados = allProjects.filter(p => 
+                             p.regional_id === obraSelecionada.regional_id && 
+                             p.tipo_projeto === 'CAMADAS_GRANULARES'
+                           );
+                           setProjects(projetosFiltrados);
+                         } else {
+                           setProjects([]);
+                         }
+
+                         setFormData({ ...formData, obra_id: obraId, project_id: "", faixa: "" });
+                       }}
+                       required
+                       disabled={!!editingChecklist?.id}
+                       className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                     >
+                       <option value="">Selecione a obra</option>
+                       {obras.map(obra => (
+                         <option key={obra.id} value={obra.id}>
+                           {obra.name} - {obra.code}
+                         </option>
+                       ))}
+                     </select>
                     </div>
 
                     <div>
@@ -592,6 +612,38 @@ export default function ChecklistReciclagem() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
+                      <Label htmlFor="project_id">Projeto</Label>
+                      <select
+                        id="project_id"
+                        value={formData.project_id}
+                        onChange={(e) => {
+                          const projectId = e.target.value;
+                          const projetoSelecionado = projects.find(p => p.id === projectId);
+                          
+                          // Preencher automaticamente a faixa com base no projeto
+                          let nomeFaixa = "";
+                          if (projetoSelecionado?.faixa_granulometrica_id) {
+                            const faixa = faixasGranulometricas.find(f => f.id === projetoSelecionado.faixa_granulometrica_id);
+                            if (faixa) {
+                              nomeFaixa = faixa.nome;
+                            }
+                          }
+                          
+                          setFormData({ ...formData, project_id: projectId, faixa: nomeFaixa });
+                        }}
+                        disabled={!formData.obra_id || projects.length === 0}
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="">Selecione o projeto</option>
+                        {projects.map(project => (
+                          <option key={project.id} value={project.id}>
+                            {project.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
                       <Label htmlFor="trecho">Trecho</Label>
                       <Input
                         id="trecho"
@@ -608,9 +660,13 @@ export default function ChecklistReciclagem() {
                         value={formData.faixa}
                         onChange={(e) => setFormData({ ...formData, faixa: e.target.value })}
                         placeholder="Faixa especificada"
+                        readOnly
+                        className="bg-slate-100"
                       />
                     </div>
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="material">Material *</Label>
                       <Input
