@@ -193,6 +193,71 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
 };
 
 export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project }) {
+  const [compressedPhotos, setCompressedPhotos] = React.useState([]);
+  const [isCompressing, setIsCompressing] = React.useState(true);
+
+  React.useEffect(() => {
+    const compressImages = async () => {
+      if (!checklist?.fotos || checklist.fotos.length === 0) {
+        setIsCompressing(false);
+        return;
+      }
+
+      const compressed = await Promise.all(
+        checklist.fotos.filter(photo => photo && photo.trim() !== '').map(async (photoUrl) => {
+          try {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = photoUrl;
+            });
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Reduzir dimensões mais agressivamente
+            const maxWidth = 600;
+            const maxHeight = 450;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth || height > maxHeight) {
+              const ratio = Math.min(maxWidth / width, maxHeight / height);
+              width = width * ratio;
+              height = height * ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Desenhar com fundo branco para evitar problemas com transparência
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Comprimir com qualidade de 60% (melhor compatibilidade)
+            return canvas.toDataURL('image/jpeg', 0.6);
+          } catch (error) {
+            console.error('Erro ao comprimir imagem:', error);
+            return photoUrl; // Usar original se falhar
+          }
+        })
+      );
+
+      setCompressedPhotos(compressed);
+      setIsCompressing(false);
+    };
+
+    compressImages();
+  }, [checklist?.fotos]);
+
+  if (isCompressing) {
+    return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
+  }
+
   const getClimaEmoji = (clima) => {
     switch (clima) {
       case 'bom': return '☀️';
@@ -219,7 +284,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
     return chunks;
   };
 
-  const photoChunks = chunkArray(checklist.fotos || [], 6);
+  const photoChunks = chunkArray(compressedPhotos, 6);
   const totalPages = 1 + photoChunks.length;
 
   return (
