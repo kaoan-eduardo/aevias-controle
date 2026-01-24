@@ -157,6 +157,67 @@ const ReportFooter = ({ checklist, formatDateBrasilia }) => (
 );
 
 export default function RelatorioChecklistMRAF({ checklist, obra, regional, project }) {
+  const [compressedPhotos, setCompressedPhotos] = React.useState([]);
+  const [isCompressing, setIsCompressing] = React.useState(true);
+
+  React.useEffect(() => {
+    const compressImages = async () => {
+      if (!checklist?.fotos || checklist.fotos.length === 0) {
+        setIsCompressing(false);
+        return;
+      }
+
+      const compressed = await Promise.all(
+        checklist.fotos.map(async (photoUrl) => {
+          try {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = reject;
+              img.src = photoUrl;
+            });
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Reduzir dimensões para 50% do original
+            const maxWidth = 800;
+            const maxHeight = 600;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth || height > maxHeight) {
+              const ratio = Math.min(maxWidth / width, maxHeight / height);
+              width = width * ratio;
+              height = height * ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Comprimir com qualidade de 50%
+            return canvas.toDataURL('image/jpeg', 0.5);
+          } catch (error) {
+            console.error('Erro ao comprimir imagem:', error);
+            return photoUrl; // Usar original se falhar
+          }
+        })
+      );
+
+      setCompressedPhotos(compressed);
+      setIsCompressing(false);
+    };
+
+    compressImages();
+  }, [checklist?.fotos]);
+
+  if (isCompressing) {
+    return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
+  }
+
   const formatDateBrasilia = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -165,9 +226,9 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
 
   // Agrupar fotos em páginas de 6 fotos cada
   const photosPerPage = 6;
-  const photoPages = checklist.fotos && checklist.fotos.length > 0 
-    ? Array.from({ length: Math.ceil(checklist.fotos.length / photosPerPage) }, (_, i) =>
-        checklist.fotos.slice(i * photosPerPage, (i + 1) * photosPerPage)
+  const photoPages = compressedPhotos.length > 0 
+    ? Array.from({ length: Math.ceil(compressedPhotos.length / photosPerPage) }, (_, i) =>
+        compressedPhotos.slice(i * photosPerPage, (i + 1) * photosPerPage)
       )
     : [];
 
