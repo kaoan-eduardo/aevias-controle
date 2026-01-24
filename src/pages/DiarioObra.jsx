@@ -37,7 +37,40 @@ const getInitialFormData = () => ({
   cliente: "",
   approved: null,
   rejection_reason: null,
-  created_by: "", // Placeholder, actual created_by is set on save/backend
+  created_by: "",
+  checklist_veiculo_ativo: false,
+  checklist_veiculo: {
+    nome_condutor: "",
+    veiculo: "",
+    empresa: "",
+    hodometro: "",
+    areas_afetadas: "",
+    condicoes_gerais: {
+      limpeza_externa: "bom",
+      limpeza_interna: "bom",
+      pneus: "bom",
+      estepe: "bom"
+    },
+    luzes_traseiras: {
+      direita: { da_placa: "sim", luz: "sim", luz_re: "sim", luz_freio: "sim", seta: "sim" },
+      esquerda: { luz: "sim", luz_re: "sim", luz_freio: "sim", seta: "sim" }
+    },
+    luzes_dianteiras: {
+      direita: { farol_alto: "sim", farol_baixo: "sim", seta: "sim", neblina: "sim" },
+      esquerda: { farol_alto: "sim", farol_baixo: "sim", seta: "sim", neblina: "sim" }
+    },
+    seguranca: {
+      alarme: "sim", buzina: "sim", chave_roda: "sim", cintos: "sim", documentos: "sim",
+      extintor: "sim", limpadores: "sim", macaco: "sim", painel: "sim",
+      retrovisor_interno: "sim", retrovisor_direito: "sim", retrovisor_esquerdo: "sim",
+      travas: "sim", triangulo: "sim"
+    },
+    motor: {
+      acelerador: "sim", agua_limpador: "sim", agua_radiador: "sim", embreagem: "sim",
+      freio: "sim", freio_mao: "sim", oleo_freio: "sim", oleo_moto: "sim", tanque_partida: "sim"
+    },
+    observacoes: ""
+  }
 });
 
 // DiarioForm is now a controlled component, receiving all data and handlers as props
@@ -248,6 +281,135 @@ const DiarioForm = ({
           disabled={!isEditable || isApproved}
         />
       </div>
+
+      {/* Checklist de Veículo */}
+      <Card className="bg-slate-50">
+        <CardHeader>
+          <CardTitle className="text-lg">Checklist de Veículo</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Preencher Checklist de Veículo? *</Label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input 
+                  type="radio" 
+                  checked={formData.checklist_veiculo_ativo === true}
+                  onChange={() => handleChange('checklist_veiculo_ativo', true)}
+                  disabled={!isEditable || isApproved}
+                  className="mr-2"
+                />
+                Sim
+              </label>
+              <label className="flex items-center">
+                <input 
+                  type="radio" 
+                  checked={formData.checklist_veiculo_ativo === false}
+                  onChange={() => handleChange('checklist_veiculo_ativo', false)}
+                  disabled={!isEditable || isApproved}
+                  className="mr-2"
+                />
+                Não
+              </label>
+            </div>
+          </div>
+
+          {formData.checklist_veiculo_ativo && (
+            <div className="space-y-4 mt-4 p-4 border-2 border-blue-200 rounded-lg bg-white">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Nome do Condutor *</Label>
+                  <Input
+                    value={formData.checklist_veiculo?.nome_condutor || ""}
+                    onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, nome_condutor: e.target.value })}
+                    disabled={!isEditable || isApproved}
+                    required={formData.checklist_veiculo_ativo}
+                  />
+                </div>
+                <div>
+                  <Label>Veículo (Modelo/Placa) *</Label>
+                  <Input
+                    value={formData.checklist_veiculo?.veiculo || ""}
+                    onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, veiculo: e.target.value })}
+                    disabled={!isEditable || isApproved}
+                    required={formData.checklist_veiculo_ativo}
+                  />
+                </div>
+                <div>
+                  <Label>Empresa *</Label>
+                  <Input
+                    value={formData.checklist_veiculo?.empresa || ""}
+                    onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, empresa: e.target.value })}
+                    disabled={!isEditable || isApproved}
+                    required={formData.checklist_veiculo_ativo}
+                  />
+                </div>
+                <div>
+                  <Label>Hodômetro *</Label>
+                  <Input
+                    value={formData.checklist_veiculo?.hodometro || ""}
+                    onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, hodometro: e.target.value })}
+                    disabled={!isEditable || isApproved}
+                    placeholder="Ex: 45.230 km"
+                    required={formData.checklist_veiculo_ativo}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label>Áreas Afetadas do Veículo</Label>
+                <Textarea
+                  value={formData.checklist_veiculo?.areas_afetadas || ""}
+                  onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, areas_afetadas: e.target.value })}
+                  disabled={!isEditable || isApproved}
+                  rows={2}
+                  placeholder="Descreva áreas com danos, amassados ou arranhões..."
+                />
+              </div>
+
+              <div>
+                <Label className="font-semibold">Condições Gerais</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                  {[
+                    { key: 'limpeza_externa', label: 'Limpeza Externa' },
+                    { key: 'limpeza_interna', label: 'Limpeza Interna' },
+                    { key: 'pneus', label: 'Pneus' },
+                    { key: 'estepe', label: 'Estepe' }
+                  ].map(item => (
+                    <div key={item.key}>
+                      <Label className="text-xs">{item.label}</Label>
+                      <select
+                        value={formData.checklist_veiculo?.condicoes_gerais?.[item.key] || "bom"}
+                        onChange={(e) => handleChange('checklist_veiculo', {
+                          ...formData.checklist_veiculo,
+                          condicoes_gerais: { ...formData.checklist_veiculo.condicoes_gerais, [item.key]: e.target.value }
+                        })}
+                        disabled={!isEditable || isApproved}
+                        className="flex h-9 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
+                      >
+                        <option value="bom">Bom</option>
+                        <option value="medio">Médio</option>
+                        <option value="ruim">Ruim</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label>Observações do Veículo</Label>
+                <Textarea
+                  value={formData.checklist_veiculo?.observacoes || ""}
+                  onChange={(e) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, observacoes: e.target.value })}
+                  disabled={!isEditable || isApproved}
+                  rows={3}
+                  placeholder="Observações adicionais sobre o veículo..."
+                />
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="space-y-2">
         <Label>Relatório Fotográfico</Label>

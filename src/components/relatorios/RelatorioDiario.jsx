@@ -290,6 +290,265 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
         </p>
       </div>
 
+      {/* Página do Checklist de Veículo */}
+      {hasChecklistVeiculo && (
+        <div className="break-before-page p-8 print:p-8">
+          <div className="max-w-[190mm] mx-auto">
+            <header className="text-center border-b-2 border-gray-800 pb-3 mb-4">
+              <h1 className="text-2xl font-bold text-gray-800">CHECKLIST DE VEÍCULO DE PASSEIO</h1>
+              <p className="text-sm text-gray-600 mt-1">AFIRMA - ENGENHARIA E PROJETOS LTDA.</p>
+            </header>
+
+            <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+              <div>
+                <p className="font-bold">Nome: <span className="font-normal">{diario.checklist_veiculo?.nome_condutor || 'N/A'}</span></p>
+              </div>
+              <div>
+                <p className="font-bold">Data: <span className="font-normal">{formatDate(diario.data)}</span></p>
+              </div>
+              <div>
+                <p className="font-bold">Veículo: <span className="font-normal">{diario.checklist_veiculo?.veiculo || 'N/A'}</span></p>
+              </div>
+              <div>
+                <p className="font-bold">Empresa: <span className="font-normal">{diario.checklist_veiculo?.empresa || 'N/A'}</span></p>
+              </div>
+              <div className="col-span-2">
+                <p className="font-bold">Hodômetro: <span className="font-normal">{diario.checklist_veiculo?.hodometro || 'N/A'}</span></p>
+              </div>
+            </div>
+
+            {diario.checklist_veiculo?.areas_afetadas && (
+              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-300 rounded text-sm">
+                <p className="font-bold text-yellow-800">Áreas Afetadas do Veículo:</p>
+                <p className="text-gray-700">{diario.checklist_veiculo.areas_afetadas}</p>
+              </div>
+            )}
+
+            <table className="w-full border-collapse border border-gray-800 mb-4 text-sm">
+              <thead className="bg-blue-900 text-white">
+                <tr>
+                  <th className="border border-gray-800 p-2" colSpan="4">Condições Gerais</th>
+                </tr>
+                <tr className="bg-blue-800">
+                  <th className="border border-gray-800 p-2">Item</th>
+                  <th className="border border-gray-800 p-2">Bom</th>
+                  <th className="border border-gray-800 p-2">Médio</th>
+                  <th className="border border-gray-800 p-2">Ruim</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { key: 'limpeza_externa', label: 'Limpeza Externa' },
+                  { key: 'limpeza_interna', label: 'Limpeza Interna' },
+                  { key: 'pneus', label: 'Pneus' },
+                  { key: 'estepe', label: 'Estepe' }
+                ].map(item => (
+                  <tr key={item.key} className="even:bg-gray-50">
+                    <td className="border border-gray-800 p-2">{item.label}</td>
+                    <td className="border border-gray-800 p-2 text-center">
+                      {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'bom' && '☑'}
+                    </td>
+                    <td className="border border-gray-800 p-2 text-center">
+                      {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'medio' && '☑'}
+                    </td>
+                    <td className="border border-gray-800 p-2 text-center">
+                      {diario.checklist_veiculo?.condicoes_gerais?.[item.key] === 'ruim' && '☑'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Luzes Traseiras */}
+              <table className="w-full border-collapse border border-gray-800 text-xs">
+                <thead className="bg-blue-900 text-white">
+                  <tr>
+                    <th className="border border-gray-800 p-1" colSpan="4">Luzes Traseiras</th>
+                  </tr>
+                  <tr className="bg-blue-800">
+                    <th className="border border-gray-800 p-1"></th>
+                    <th className="border border-gray-800 p-1">Sim</th>
+                    <th className="border border-gray-800 p-1">Não</th>
+                    <th className="border border-gray-800 p-1">N/A</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-blue-700 text-white font-semibold">
+                    <td className="border border-gray-800 p-1" colSpan="4">Direita</td>
+                  </tr>
+                  {[
+                    { key: 'da_placa', label: 'Da placa' },
+                    { key: 'luz', label: 'Luz' },
+                    { key: 'luz_re', label: 'Luz de ré' },
+                    { key: 'luz_freio', label: 'Luz de freio' },
+                    { key: 'seta', label: 'Seta' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-blue-700 text-white font-semibold">
+                    <td className="border border-gray-800 p-1" colSpan="4">Esquerda</td>
+                  </tr>
+                  {[
+                    { key: 'luz', label: 'Luz' },
+                    { key: 'luz_re', label: 'Luz de ré' },
+                    { key: 'luz_freio', label: 'Luz de freio' },
+                    { key: 'seta', label: 'Seta' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Luzes Dianteiras */}
+              <table className="w-full border-collapse border border-gray-800 text-xs">
+                <thead className="bg-blue-900 text-white">
+                  <tr>
+                    <th className="border border-gray-800 p-1" colSpan="4">Luzes Dianteiras</th>
+                  </tr>
+                  <tr className="bg-blue-800">
+                    <th className="border border-gray-800 p-1"></th>
+                    <th className="border border-gray-800 p-1">Sim</th>
+                    <th className="border border-gray-800 p-1">Não</th>
+                    <th className="border border-gray-800 p-1">N/A</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-blue-700 text-white font-semibold">
+                    <td className="border border-gray-800 p-1" colSpan="4">Direita</td>
+                  </tr>
+                  {[
+                    { key: 'farol_alto', label: 'Farol alto' },
+                    { key: 'farol_baixo', label: 'Farol baixo' },
+                    { key: 'seta', label: 'Seta' },
+                    { key: 'neblina', label: 'Neblina' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                  <tr className="bg-blue-700 text-white font-semibold">
+                    <td className="border border-gray-800 p-1" colSpan="4">Esquerda</td>
+                  </tr>
+                  {[
+                    { key: 'farol_alto', label: 'Farol alto' },
+                    { key: 'farol_baixo', label: 'Farol baixo' },
+                    { key: 'seta', label: 'Seta' },
+                    { key: 'neblina', label: 'Neblina' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              {/* Segurança */}
+              <table className="w-full border-collapse border border-gray-800 text-xs">
+                <thead className="bg-blue-900 text-white">
+                  <tr>
+                    <th className="border border-gray-800 p-1" colSpan="4">Segurança</th>
+                  </tr>
+                  <tr className="bg-blue-800">
+                    <th className="border border-gray-800 p-1"></th>
+                    <th className="border border-gray-800 p-1">Sim</th>
+                    <th className="border border-gray-800 p-1">Não</th>
+                    <th className="border border-gray-800 p-1">N/A</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { key: 'alarme', label: 'Alarme' },
+                    { key: 'buzina', label: 'Buzina' },
+                    { key: 'chave_roda', label: 'Chave de Roda' },
+                    { key: 'cintos', label: 'Cintos' },
+                    { key: 'documentos', label: 'Documentos' },
+                    { key: 'extintor', label: 'Extintor' },
+                    { key: 'limpadores', label: 'Limpadores' },
+                    { key: 'macaco', label: 'Macaco' },
+                    { key: 'painel', label: 'Painel' },
+                    { key: 'retrovisor_interno', label: 'Retrovisor Interno' },
+                    { key: 'retrovisor_direito', label: 'Retrovisor Direito' },
+                    { key: 'retrovisor_esquerdo', label: 'Retrovisor Esquerdo' },
+                    { key: 'travas', label: 'Travas' },
+                    { key: 'triangulo', label: 'Triângulo' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.seguranca?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Motor */}
+              <table className="w-full border-collapse border border-gray-800 text-xs">
+                <thead className="bg-blue-900 text-white">
+                  <tr>
+                    <th className="border border-gray-800 p-1" colSpan="4">Motor</th>
+                  </tr>
+                  <tr className="bg-blue-800">
+                    <th className="border border-gray-800 p-1"></th>
+                    <th className="border border-gray-800 p-1">Sim</th>
+                    <th className="border border-gray-800 p-1">Não</th>
+                    <th className="border border-gray-800 p-1">N/A</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { key: 'acelerador', label: 'Acelerador' },
+                    { key: 'agua_limpador', label: 'Água do limpador' },
+                    { key: 'agua_radiador', label: 'Água do radiador' },
+                    { key: 'embreagem', label: 'Embreagem' },
+                    { key: 'freio', label: 'Freio' },
+                    { key: 'freio_mao', label: 'Freio de mão' },
+                    { key: 'oleo_freio', label: 'Óleo do freio' },
+                    { key: 'oleo_moto', label: 'Óleo do moto' },
+                    { key: 'tanque_partida', label: 'Tanque de partida' }
+                  ].map(item => (
+                    <tr key={item.key} className="even:bg-gray-50">
+                      <td className="border border-gray-800 p-1">{item.label}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'sim' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'nao' && '☑'}</td>
+                      <td className="border border-gray-800 p-1 text-center">{diario.checklist_veiculo?.motor?.[item.key] === 'na' && '☑'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {diario.checklist_veiculo?.observacoes && (
+              <div className="mt-4">
+                <p className="font-bold text-sm mb-1">Observações:</p>
+                <div className="border border-gray-800 p-2 min-h-[60px] text-sm bg-gray-50">
+                  {diario.checklist_veiculo.observacoes}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
         <div key={pageIndex} className="break-before-page p-8 print:p-8 min-h-[29.7cm] flex flex-col">
