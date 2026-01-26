@@ -350,7 +350,7 @@ const AppLayout = ({ children }) => {
   }, []);
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-  const isAdmin = userAccessLevel === 'admin';
+  const isAdmin = userAccessLevel === 'admin' || user?.role === 'admin';
   const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
   const isGestorContrato = userAccessLevel === 'gestor_contrato';
   const isCliente = userAccessLevel === 'cliente';
