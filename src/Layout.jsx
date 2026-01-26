@@ -274,16 +274,21 @@ const AppLayout = ({ children }) => {
     setLoadingUser(true);
     try {
       const userData = await User.me();
+      console.log('[Layout] userData from User.me():', userData);
       
       // Buscar dados completos do usuário incluindo campos customizados
       const allUsers = await User.list();
+      console.log('[Layout] Total users from User.list():', allUsers.length);
+      
       const fullUserData = allUsers.find(u => u.email === userData.email);
+      console.log('[Layout] fullUserData encontrado:', fullUserData);
       
       // Mesclar dados built-in com customizados
       const completeUserData = {
         ...userData,
         ...fullUserData
       };
+      console.log('[Layout] completeUserData após merge:', completeUserData);
       
       // Verificar se o usuário está inativo
       if (completeUserData && completeUserData.is_active === false) {
