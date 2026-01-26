@@ -300,8 +300,40 @@ export default function ProdutividadePage() {
   };
 
   const userCanEdit = user?.access_level === 'admin' || 
-                      user?.access_level === 'gestor_contrato' || 
-                      user?.access_level === 'sala_tecnica_afirmaevias';
+                            user?.access_level === 'gestor_contrato' || 
+                            user?.access_level === 'sala_tecnica_afirmaevias';
+
+  const handleSaveCache = async () => {
+    if (Object.keys(cacheDias).length === 0) {
+      alert("Nenhuma alteração para salvar");
+      return;
+    }
+
+    try {
+      for (const [key, item] of Object.entries(cacheDias)) {
+        const existente = await base44.entities.ProdutividadeDiaria.filter({
+          laboratorista_email: item.laborista,
+          data: item.data
+        });
+
+        if (existente.length > 0) {
+          await base44.entities.ProdutividadeDiaria.update(existente[0].id, { status: item.status });
+        } else {
+          await base44.entities.ProdutividadeDiaria.create({
+            laboratorista_email: item.laborista,
+            data: item.data,
+            status: item.status
+          });
+        }
+      }
+
+      setCacheDias({});
+      alert("Dados salvos com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar cache:", error);
+      alert("Erro ao salvar dados");
+    }
+  };
 
   if (loading) {
     return (
