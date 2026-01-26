@@ -352,6 +352,15 @@ const AppLayout = ({ children }) => {
     await User.logout();
   }, []);
 
+  // Debug completo do objeto user
+  React.useEffect(() => {
+    if (user) {
+      console.log('[Layout] User object completo:', user);
+      console.log('[Layout] user.access_level:', user.access_level);
+      console.log('[Layout] user.role:', user.role);
+    }
+  }, [user]);
+
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isAdmin = userAccessLevel === 'admin';
   const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
