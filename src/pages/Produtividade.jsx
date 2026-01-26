@@ -17,6 +17,7 @@ export default function ProdutividadePage() {
   const [editDialog, setEditDialog] = useState({ open: false, registro: null });
   const [empreiteiras, setEmpreiteiras] = useState([]);
   const [diaDialog, setDiaDialog] = useState({ open: false, laborista: null, dia: null });
+  const [cacheDias, setCacheDias] = useState({});
 
   useEffect(() => {
     loadData();
