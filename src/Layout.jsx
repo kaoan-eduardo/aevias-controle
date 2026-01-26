@@ -275,13 +275,23 @@ const AppLayout = ({ children }) => {
     try {
       const userData = await User.me();
       
+      // Buscar dados completos do usuário incluindo campos customizados
+      const allUsers = await User.list();
+      const fullUserData = allUsers.find(u => u.email === userData.email);
+      
+      // Mesclar dados built-in com customizados
+      const completeUserData = {
+        ...userData,
+        ...fullUserData
+      };
+      
       // Verificar se o usuário está inativo
-      if (userData && userData.is_active === false) {
+      if (completeUserData && completeUserData.is_active === false) {
         await User.logout();
         return;
       }
       
-      setUser(userData);
+      setUser(completeUserData);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
