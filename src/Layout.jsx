@@ -355,9 +355,12 @@ const AppLayout = ({ children }) => {
   // Debug completo do objeto user
   React.useEffect(() => {
     if (user) {
-      console.log('[Layout] User object completo:', user);
+      console.log('[Layout] ========== DEBUG USER ==========');
+      console.log('[Layout] User email:', user.email);
+      console.log('[Layout] User object completo:', JSON.stringify(user, null, 2));
       console.log('[Layout] user.access_level:', user.access_level);
       console.log('[Layout] user.role:', user.role);
+      console.log('[Layout] =====================================');
     }
   }, [user]);
 
