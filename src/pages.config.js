@@ -17,6 +17,7 @@ import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import MonitorProdutividade from './pages/MonitorProdutividade';
 import NaoConformidades from './pages/NaoConformidades';
+import Produtividade from './pages/Produtividade';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
 import RelatorioCAUQ from './pages/RelatorioCAUQ';
@@ -36,7 +37,6 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import Produtividade from './pages/Produtividade';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +60,7 @@ export const PAGES = {
     "MigracaoDados": MigracaoDados,
     "MonitorProdutividade": MonitorProdutividade,
     "NaoConformidades": NaoConformidades,
+    "Produtividade": Produtividade,
     "Projects": Projects,
     "Regionais": Regionais,
     "RelatorioCAUQ": RelatorioCAUQ,
@@ -79,7 +80,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "Produtividade": Produtividade,
 }
 
 export const pagesConfig = {

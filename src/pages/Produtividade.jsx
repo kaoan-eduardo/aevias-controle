@@ -102,6 +102,9 @@ export default function ProdutividadePage() {
       const processarRegistros = (registros) => {
         registros.forEach(reg => {
           if (!reg.data) return;
+          // Apenas processar registros finalizados
+          if (reg.status !== 'finalizado') return;
+          
           const regDate = new Date(reg.data);
           if (regDate >= startDate && regDate <= endDate) {
             const day = regDate.getDate();
