@@ -358,13 +358,19 @@ const AppLayout = ({ children }) => {
       console.log('[Layout] ========== DEBUG USER ==========');
       console.log('[Layout] User email:', user.email);
       console.log('[Layout] User object completo:', JSON.stringify(user, null, 2));
-      console.log('[Layout] user.access_level:', user.access_level);
+      console.log('[Layout] user.access_level (raw):', user.access_level);
+      console.log('[Layout] typeof user.access_level:', typeof user.access_level);
+      console.log('[Layout] user.access_level === "gestor_contrato":', user.access_level === 'gestor_contrato');
       console.log('[Layout] user.role:', user.role);
       console.log('[Layout] =====================================');
     }
   }, [user]);
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+  
+  console.log('[Layout] Calculated userAccessLevel:', userAccessLevel);
+  console.log('[Layout] user?.access_level:', user?.access_level);
+  console.log('[Layout] user?.role:', user?.role);
   const isAdmin = userAccessLevel === 'admin';
   const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
   const isGestorContrato = userAccessLevel === 'gestor_contrato';
