@@ -350,7 +350,7 @@ export default function ProdutividadePage() {
                       {days.map(day => {
                         const registros = produtividade[lab.email]?.[day] || [];
                         const hasRegistros = registros.length > 0;
-                        
+
                         return (
                           <td
                             key={day}
@@ -376,8 +376,8 @@ export default function ProdutividadePage() {
                                 ))}
                               </div>
                             ) : (
-                              <div className="bg-blue-400 text-white text-[10px] px-1 py-1 rounded font-bold">
-                                N/A
+                              <div className="bg-yellow-400 text-[#00233B] text-xs px-1 py-1 rounded font-bold cursor-pointer hover:bg-yellow-500 transition-colors" title="Clique para marcar como N/A">
+                                -
                               </div>
                             )}
                           </td>
