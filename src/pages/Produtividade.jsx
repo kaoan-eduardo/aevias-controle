@@ -33,18 +33,6 @@ export default function ProdutividadePage() {
         base44.entities.Obra.list()
       ]);
 
-      // Coletar empreiteiras apenas das obras das regionais do gestor
-      const regionaisIds = regionaisDoGestor.map(r => r.id);
-      const obrasDoGestor = obras.filter(o => regionaisIds.includes(o.regional_id));
-      
-      const empresasSet = new Set();
-      obrasDoGestor.forEach(obra => {
-        if (obra.empreiteiras && Array.isArray(obra.empreiteiras)) {
-          obra.empreiteiras.forEach(emp => empresasSet.add(emp));
-        }
-      });
-      setEmpreiteiras(Array.from(empresasSet).sort());
-
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
 
       // Filtrar regionais baseado no usuário
