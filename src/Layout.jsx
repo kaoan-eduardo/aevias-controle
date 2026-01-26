@@ -360,6 +360,22 @@ const AppLayout = ({ children }) => {
   const canManageSystem = isAdmin;
   const canCreateRecords = !loadingUser && userAccessLevel === 'user';
 
+  // Debug: log para verificar permissões
+  useEffect(() => {
+    if (user) {
+      console.log('Layout - Permissões do usuário:', {
+        email: user.email,
+        userAccessLevel,
+        isAdmin,
+        isSalaTecnica,
+        isGestorContrato,
+        isCliente,
+        canManageSystem,
+        canCreateRecords
+      });
+    }
+  }, [user, userAccessLevel, isAdmin, isSalaTecnica, isGestorContrato, isCliente, canManageSystem, canCreateRecords]);
+
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
