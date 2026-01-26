@@ -274,29 +274,14 @@ const AppLayout = ({ children }) => {
     setLoadingUser(true);
     try {
       const userData = await User.me();
-      console.log('[Layout] userData from User.me():', userData);
-      
-      // Buscar dados completos do usuário incluindo campos customizados
-      const allUsers = await User.list();
-      console.log('[Layout] Total users from User.list():', allUsers.length);
-      
-      const fullUserData = allUsers.find(u => u.email === userData.email);
-      console.log('[Layout] fullUserData encontrado:', fullUserData);
-      
-      // Mesclar dados built-in com customizados
-      const completeUserData = {
-        ...userData,
-        ...fullUserData
-      };
-      console.log('[Layout] completeUserData após merge:', completeUserData);
       
       // Verificar se o usuário está inativo
-      if (completeUserData && completeUserData.is_active === false) {
+      if (userData && userData.is_active === false) {
         await User.logout();
         return;
       }
       
-      setUser(completeUserData);
+      setUser(userData);
 
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
@@ -320,12 +305,9 @@ const AppLayout = ({ children }) => {
         } else {
           setObrasDoUsuario([]);
         }
-      } else if (userAccessLevel === 'admin') {
-        // Only admin can create records - show all types for creation
-        setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
       } else {
-        // For sala_tecnica, gestor_contrato, and cliente - don't show create button
-        setObrasDoUsuario([]);
+        // For admin, gestor, and sala_tecnica, show all types for creation
+        setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
       }
 
       // Carregar transferências pendentes para gestores
@@ -367,47 +349,13 @@ const AppLayout = ({ children }) => {
     await User.logout();
   }, []);
 
-  // Debug completo do objeto user
-  React.useEffect(() => {
-    if (user) {
-      console.log('[Layout] ========== DEBUG USER ==========');
-      console.log('[Layout] User email:', user.email);
-      console.log('[Layout] User object completo:', JSON.stringify(user, null, 2));
-      console.log('[Layout] user.access_level (raw):', user.access_level);
-      console.log('[Layout] typeof user.access_level:', typeof user.access_level);
-      console.log('[Layout] user.access_level === "gestor_contrato":', user.access_level === 'gestor_contrato');
-      console.log('[Layout] user.role:', user.role);
-      console.log('[Layout] =====================================');
-    }
-  }, [user]);
-
-  const userAccessLevel = useMemo(() => {
-    const level = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-    console.log('[Layout] Recalculated userAccessLevel:', level, 'from user:', user);
-    return level;
-  }, [user]);
-
-  const isAdmin = useMemo(() => userAccessLevel === 'admin', [userAccessLevel]);
-  const isSalaTecnica = useMemo(() => userAccessLevel === 'sala_tecnica_afirmaevias', [userAccessLevel]);
-  const isGestorContrato = useMemo(() => userAccessLevel === 'gestor_contrato', [userAccessLevel]);
-  const isCliente = useMemo(() => userAccessLevel === 'cliente', [userAccessLevel]);
-  const canManageSystem = useMemo(() => isAdmin, [isAdmin]);
-  const canCreateRecords = useMemo(() => !loadingUser && userAccessLevel === 'user', [loadingUser, userAccessLevel]);
-  const showGestaoSection = useMemo(() => !canManageSystem && (isGestorContrato || isSalaTecnica || isCliente), [canManageSystem, isGestorContrato, isSalaTecnica, isCliente]);
-
-  // Debug seção Gestão
-  React.useEffect(() => {
-    console.log('[Layout] Debug Seção Gestão:', {
-      userAccessLevel,
-      isAdmin,
-      isSalaTecnica,
-      isGestorContrato,
-      isCliente,
-      canManageSystem,
-      showGestaoSection,
-      user_email: user?.email
-    });
-  }, [userAccessLevel, isAdmin, isSalaTecnica, isGestorContrato, isCliente, canManageSystem, showGestaoSection, user]);
+  const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+  const isAdmin = userAccessLevel === 'admin';
+  const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
+  const isGestorContrato = userAccessLevel === 'gestor_contrato';
+  const isCliente = userAccessLevel === 'cliente';
+  const canManageSystem = isAdmin;
+  const canCreateRecords = !loadingUser && (isAdmin || (!isSalaTecnica && !isGestorContrato && !isCliente));
 
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
@@ -516,7 +464,7 @@ const AppLayout = ({ children }) => {
                 </SidebarGroup>
               )}
 
-              {showGestaoSection && (
+              {!canManageSystem && (isGestorContrato || isSalaTecnica || isCliente) && (
                 <SidebarGroup>
                   <SidebarGroupLabel className="text-xs font-semibold text-[#00233B]/70 uppercase tracking-wider px-3 py-2">
                     Gestão

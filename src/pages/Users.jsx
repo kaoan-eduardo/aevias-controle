@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { User } from "@/entities/User";
 import { Regional } from "@/entities/Regional";
@@ -86,9 +87,7 @@ const UserForm = React.memo(({ user: editingUser, onSave, onCancel, currentUser,
     
     return regionais.find(regional => {
       if (currentUserAccessLevel === 'gestor_contrato') {
-        const gestores = regional.gestores_contrato_responsaveis || [];
-        return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase() ||
-               gestores.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
+        return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase();
       } else if (currentUserAccessLevel === 'sala_tecnica_afirmaevias') {
         const salas = regional.salas_tecnicas_responsaveis || [];
         return salas.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
@@ -266,19 +265,7 @@ export default function UsersPage() {
     setLoading(true);
     try {
       const currentUserData = await User.me();
-      
-      // Buscar dados completos do usuário
-      const allUsersList = await User.list();
-      const fullCurrentUserData = allUsersList.find(u => u.email === currentUserData.email);
-      
-      // Mesclar dados
-      const completeCurrentUserData = {
-        ...currentUserData,
-        ...fullCurrentUserData
-      };
-      
-      console.log('[Users Page] completeCurrentUserData:', completeCurrentUserData);
-      setCurrentUser(completeCurrentUserData);
+      setCurrentUser(currentUserData);
       
       const regionaisData = await Regional.list();
       setRegionais(regionaisData);
@@ -287,8 +274,7 @@ export default function UsersPage() {
       let allUsers = response.users || [];
       
       // Filtrar usuários baseado no nível de acesso
-      const currentAccessLevel = completeCurrentUserData.access_level || (completeCurrentUserData.role === 'admin' ? 'admin' : 'user');
-      console.log('[Users Page] currentAccessLevel calculado:', currentAccessLevel);
+      const currentAccessLevel = currentUserData.access_level || (currentUserData.role === 'admin' ? 'admin' : 'user');
       
       if (currentAccessLevel === 'sala_tecnica_afirmaevias' || currentAccessLevel === 'gestor_contrato' || currentAccessLevel === 'cliente') {
         // Encontrar regionais do usuário
@@ -297,9 +283,7 @@ export default function UsersPage() {
             const salas = regional.salas_tecnicas_responsaveis || [];
             return salas.some(email => email.toLowerCase() === currentUserData.email.toLowerCase());
           } else if (currentAccessLevel === 'gestor_contrato') {
-            const gestores = regional.gestores_contrato_responsaveis || [];
-            return regional.gestor_contrato_responsavel?.toLowerCase() === currentUserData.email.toLowerCase() ||
-                   gestores.some(email => email.toLowerCase() === currentUserData.email.toLowerCase());
+            return regional.gestor_contrato_responsavel?.toLowerCase() === currentUserData.email.toLowerCase();
           } else if (currentAccessLevel === 'cliente') {
             const clientes = regional.clientes_responsaveis || [];
             return clientes.some(email => email.toLowerCase() === currentUserData.email.toLowerCase());
@@ -315,12 +299,9 @@ export default function UsersPage() {
           if (regional.laboratoristas_responsaveis) {
             regional.laboratoristas_responsaveis.forEach(email => emailsPermitidos.add(email.toLowerCase()));
           }
-          // Adicionar gestores
+          // Adicionar gestor
           if (regional.gestor_contrato_responsavel) {
             emailsPermitidos.add(regional.gestor_contrato_responsavel.toLowerCase());
-          }
-          if (regional.gestores_contrato_responsaveis) {
-            regional.gestores_contrato_responsaveis.forEach(email => emailsPermitidos.add(email.toLowerCase()));
           }
           // Adicionar salas técnicas
           if (regional.salas_tecnicas_responsaveis) {
@@ -430,8 +411,6 @@ export default function UsersPage() {
                 laboratoristas_responsaveis: novosLaboratoristas
               });
             }
-          } else {
-            console.warn('Regional não encontrada para alocar o laboratorista automaticamente');
           }
         }
         
