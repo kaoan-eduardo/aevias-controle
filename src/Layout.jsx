@@ -358,7 +358,7 @@ const AppLayout = ({ children }) => {
   const isGestorContrato = userAccessLevel === 'gestor_contrato';
   const isCliente = userAccessLevel === 'cliente';
   const canManageSystem = isAdmin;
-  const canCreateRecords = !loadingUser && (isAdmin || (!isSalaTecnica && !isGestorContrato && !isCliente));
+  const canCreateRecords = !loadingUser && userAccessLevel === 'user';
 
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
