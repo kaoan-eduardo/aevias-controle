@@ -283,35 +283,20 @@ export default function ProdutividadePage() {
     }
   };
 
-  const handleSaveDiaStatus = async (status) => {
+  const handleSaveDiaStatus = (status) => {
     if (!diaDialog.laborista || !diaDialog.dia) return;
     
-    try {
-      const dataStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(diaDialog.dia).padStart(2, '0')}`;
-      const key = `${diaDialog.laborista.toLowerCase()}_${diaDialog.dia}`;
-      
-      // Verificar se já existe registro
-      const existente = await base44.entities.ProdutividadeDiaria.filter({
-        laboratorista_email: diaDialog.laborista,
-        data: dataStr
-      });
-      
-      if (existente.length > 0) {
-        await base44.entities.ProdutividadeDiaria.update(existente[0].id, { status });
-      } else {
-        await base44.entities.ProdutividadeDiaria.create({
-          laboratorista_email: diaDialog.laborista,
-          data: dataStr,
-          status
-        });
-      }
-      
-      setDiaDialog({ open: false, laborista: null, dia: null });
-      await loadData();
-    } catch (error) {
-      console.error("Erro ao salvar status do dia:", error);
-      alert("Erro ao salvar status");
-    }
+    const key = `${diaDialog.laborista.toLowerCase()}_${diaDialog.dia}`;
+    const dataStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(diaDialog.dia).padStart(2, '0')}`;
+    
+    const newCache = {
+      ...cacheDias,
+      [key]: { status, data: dataStr, laborista: diaDialog.laborista }
+    };
+    setCacheDias(newCache);
+    window.marcadoresDia[key] = status;
+    
+    setDiaDialog({ open: false, laborista: null, dia: null });
   };
 
   const userCanEdit = user?.access_level === 'admin' || 
