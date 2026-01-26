@@ -361,6 +361,20 @@ const AppLayout = ({ children }) => {
   const canCreateRecords = !loadingUser && userAccessLevel === 'user';
   const showGestaoSection = !canManageSystem && (isGestorContrato || isSalaTecnica || isCliente);
 
+  // Debug seção Gestão
+  React.useEffect(() => {
+    console.log('[Layout] Debug Seção Gestão:', {
+      userAccessLevel,
+      isAdmin,
+      isSalaTecnica,
+      isGestorContrato,
+      isCliente,
+      canManageSystem,
+      showGestaoSection,
+      user_email: user?.email
+    });
+  }, [userAccessLevel, isAdmin, isSalaTecnica, isGestorContrato, isCliente, canManageSystem, showGestaoSection, user]);
+
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
