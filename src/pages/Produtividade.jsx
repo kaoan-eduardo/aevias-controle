@@ -138,6 +138,21 @@ export default function ProdutividadePage() {
 
       // Processar produtividade
       const prodData = {};
+      const marcadoresDia = {};
+
+      // Carregar marcadores de dias
+      produtividadeDiaria.forEach(marc => {
+        const dateStr = marc.data;
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const marcDate = new Date(year, month - 1, day);
+
+        if (marcDate >= startDate && marcDate <= endDate) {
+          const dayOfMonth = marcDate.getDate();
+          const key = `${marc.laboratorista_email.toLowerCase()}_${dayOfMonth}`;
+          marcadoresDia[key] = marc.status;
+        }
+      });
+
       todosLabUsers.forEach(lab => {
         prodData[lab.email] = {};
       });
