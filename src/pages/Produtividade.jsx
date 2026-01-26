@@ -399,6 +399,8 @@ export default function ProdutividadePage() {
                       {days.map(day => {
                         const registros = produtividade[lab.email]?.[day] || [];
                         const hasRegistros = registros.length > 0;
+                        const markerKey = `${lab.email.toLowerCase()}_${day}`;
+                        const markedStatus = window.marcadoresDia?.[markerKey];
 
                         return (
                           <td
@@ -424,8 +426,12 @@ export default function ProdutividadePage() {
                                   </div>
                                 ))}
                               </div>
+                            ) : markedStatus ? (
+                              <div className={`text-white text-xs px-1 py-1 rounded font-bold ${markedStatus === 'N/A' ? 'bg-blue-400' : 'bg-green-500'} ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`} onClick={() => userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}>
+                                {markedStatus}
+                              </div>
                             ) : (
-                              <div className="bg-yellow-400 text-[#00233B] text-xs px-1 py-1 rounded font-bold cursor-pointer hover:bg-yellow-500 transition-colors" title="Clique para marcar como N/A">
+                              <div className="bg-yellow-400 text-[#00233B] text-xs px-1 py-1 rounded font-bold cursor-pointer hover:bg-yellow-500 transition-colors" onClick={() => userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}>
                                 -
                               </div>
                             )}
