@@ -10,6 +10,7 @@ export default function ProdutividadePage() {
   const [laboratoristas, setLaboratoristas] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [produtividade, setProdutividade] = useState({});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -18,14 +19,30 @@ export default function ProdutividadePage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [regionais, allUsers] = await Promise.all([
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+
+      const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
-        base44.entities.User.list()
+        base44.entities.User.list(),
+        base44.entities.Obra.list()
       ]);
 
-      // Coletar laboratoristas únicos de todas as regionais
+      const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
+
+      // Filtrar regionais baseado no usuário
+      let regionaisDoGestor = regionais;
+      if (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+        regionaisDoGestor = regionais.filter(r => 
+          r.gestor_contrato_responsavel?.toLowerCase() === currentUser.email?.toLowerCase() ||
+          (r.gestores_contrato_responsaveis || []).some(email => email.toLowerCase() === currentUser.email?.toLowerCase()) ||
+          (r.salas_tecnicas_responsaveis || []).some(email => email.toLowerCase() === currentUser.email?.toLowerCase())
+        );
+      }
+
+      // Coletar laboratoristas únicos das regionais filtradas
       const labEmails = new Set();
-      regionais.forEach(regional => {
+      regionaisDoGestor.forEach(regional => {
         const labs = regional.laboratoristas_responsaveis || [];
         labs.forEach(email => labEmails.add(email.toLowerCase()));
       });
@@ -37,28 +54,67 @@ export default function ProdutividadePage() {
 
       setLaboratoristas(labUsers);
 
-      // Aqui você pode buscar dados de produtividade (ensaios por dia)
-      // Por enquanto, gerando dados mock
-      const mockProdutividade = {};
+      // Buscar registros do mês
+      const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+      const [diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF, checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem] = await Promise.all([
+        base44.entities.DiarioObra.list(),
+        base44.entities.ChecklistUsina.list(),
+        base44.entities.ChecklistAplicacao.list(),
+        base44.entities.ChecklistMRAF.list(),
+        base44.entities.ChecklistConcretagem.list(),
+        base44.entities.ChecklistTerraplanagem.list(),
+        base44.entities.ChecklistReciclagem.list()
+      ]);
+
+      // Processar produtividade
+      const prodData = {};
       labUsers.forEach(lab => {
-        mockProdutividade[lab.email] = generateMockData();
+        prodData[lab.email] = {};
       });
-      setProdutividade(mockProdutividade);
+
+      const processarRegistros = (registros) => {
+        registros.forEach(reg => {
+          if (!reg.data) return;
+          const regDate = new Date(reg.data);
+          if (regDate >= startDate && regDate <= endDate) {
+            const day = regDate.getDate();
+            const email = reg.created_by?.toLowerCase();
+            
+            if (email && prodData[email]) {
+              if (!prodData[email][day]) {
+                prodData[email][day] = [];
+              }
+              
+              const obra = obras.find(o => o.id === reg.obra_id);
+              const empreiteira = reg.empreiteira || (obra?.empreiteiras?.[0]) || 'N/D';
+              
+              prodData[email][day].push({
+                tipo: reg.constructor?.name || 'Registro',
+                empreiteira: empreiteira,
+                status: reg.status || 'finalizado'
+              });
+            }
+          }
+        });
+      };
+
+      processarRegistros(diarios);
+      processarRegistros(checklistsUsina);
+      processarRegistros(checklistsAplicacao);
+      processarRegistros(checklistsMRAF);
+      processarRegistros(checklistsConcretagem);
+      processarRegistros(checklistsTerraplanagem);
+      processarRegistros(checklistsReciclagem);
+
+      setProdutividade(prodData);
 
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const generateMockData = () => {
-    const data = {};
-    const daysInMonth = getDaysInMonth(currentMonth);
-    for (let i = 1; i <= daysInMonth; i++) {
-      data[i] = Math.floor(Math.random() * 5); // 0-4 ensaios por dia
-    }
-    return data;
   };
 
   const getDaysInMonth = (date) => {
@@ -162,23 +218,31 @@ export default function ProdutividadePage() {
                         </div>
                       </td>
                       {days.map(day => {
-                        const count = produtividade[lab.email]?.[day] || 0;
+                        const registros = produtividade[lab.email]?.[day] || [];
+                        const hasRegistros = registros.length > 0;
+                        
                         return (
                           <td
                             key={day}
-                            className="border border-[#BFCF99]/20 p-1 text-center"
+                            className="border border-[#BFCF99]/20 p-1 text-center align-middle"
                           >
-                            {count > 0 ? (
-                              <Badge
-                                className={`
-                                  ${count >= 3 ? "bg-green-500" : count >= 2 ? "bg-yellow-500" : "bg-blue-500"}
-                                  text-white text-xs
-                                `}
-                              >
-                                {count}
-                              </Badge>
+                            {hasRegistros ? (
+                              <div className="flex flex-col gap-0.5">
+                                {registros.map((reg, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="bg-green-500 text-white text-[10px] px-1 py-0.5 rounded font-medium"
+                                    title={`${reg.tipo} - ${reg.empreiteira}`}
+                                  >
+                                    <div className="font-bold">OK</div>
+                                    <div className="truncate max-w-[60px]">{reg.empreiteira}</div>
+                                  </div>
+                                ))}
+                              </div>
                             ) : (
-                              <span className="text-gray-400 text-xs">-</span>
+                              <div className="bg-blue-400 text-white text-[10px] px-1 py-1 rounded font-bold">
+                                N/A
+                              </div>
                             )}
                           </td>
                         );
