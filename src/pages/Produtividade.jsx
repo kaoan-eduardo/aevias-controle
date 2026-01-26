@@ -142,23 +142,36 @@ export default function ProdutividadePage() {
 
       const processarRegistros = (registros, entityName) => {
         registros.forEach(reg => {
+          const email = reg.created_by?.toLowerCase();
+          
           // Apenas processar registros finalizados
-          if (reg.status !== 'finalizado') return;
+          if (reg.status !== 'finalizado') {
+            if (email) console.log(`[${entityName}] ${email}: Status "${reg.status}" (ignorado)`);
+            return;
+          }
           
           // Verificar se o registro é de uma obra do gestor
-          if (!obrasDoGestorIds.includes(reg.obra_id)) return;
+          if (!obrasDoGestorIds.includes(reg.obra_id)) {
+            if (email) console.log(`[${entityName}] ${email}: Obra ${reg.obra_id} não está nas obras do gestor (ignorado)`);
+            return;
+          }
           
           // Usar a data do registro (data de execução do trabalho)
           let regDateStr = reg.data;
-          if (!regDateStr) return;
+          if (!regDateStr) {
+            if (email) console.log(`[${entityName}] ${email}: Sem data (ignorado)`);
+            return;
+          }
           
           // Parsear data corretamente para evitar problemas de timezone
           const [year, month, day] = regDateStr.split('-').map(Number);
           const regDate = new Date(year, month - 1, day);
+          const dayOfMonth = regDate.getDate();
+          
+          console.log(`[${entityName}] ${email}: Data "${regDateStr}" → ${dayOfMonth}/${month}/${year} (${regDate.toLocaleDateString('pt-BR')})`);
           
           if (regDate >= startDate && regDate <= endDate) {
-            const dayOfMonth = regDate.getDate();
-            const email = reg.created_by?.toLowerCase();
+            console.log(`  ✓ Data dentro do intervalo (${startDate.toLocaleDateString('pt-BR')} a ${endDate.toLocaleDateString('pt-BR')})`);
             
             if (email && prodData[email]) {
               if (!prodData[email][dayOfMonth]) {
@@ -174,7 +187,13 @@ export default function ProdutividadePage() {
                 status: reg.status || 'finalizado',
                 entityName: entityName || 'DiarioObra'
               });
+              
+              console.log(`  → Registrado para ${email} no dia ${dayOfMonth} (empreiteira: "${empreiteira}")`);
+            } else {
+              console.log(`  ! Email não encontrado em prodData: ${email}`);
             }
+          } else {
+            console.log(`  ✗ Data fora do intervalo (${regDate.toLocaleDateString('pt-BR')})`);
           }
         });
       };
