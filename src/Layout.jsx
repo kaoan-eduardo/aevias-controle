@@ -305,9 +305,12 @@ const AppLayout = ({ children }) => {
         } else {
           setObrasDoUsuario([]);
         }
-      } else {
-        // For admin, gestor, and sala_tecnica, show all types for creation
+      } else if (userAccessLevel === 'admin') {
+        // Only admin can create records - show all types for creation
         setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
+      } else {
+        // For sala_tecnica, gestor_contrato, and cliente - don't show create button
+        setObrasDoUsuario([]);
       }
 
       // Carregar transferências pendentes para gestores
