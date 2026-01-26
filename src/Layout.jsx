@@ -361,6 +361,7 @@ const AppLayout = ({ children }) => {
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
     { title: "Projetos", url: createPageUrl("Projects"), icon: FolderOpen, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
+    { title: "Usuários", url: createPageUrl("Users"), icon: Users, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Ensaios Realizados", url: createPageUrl("MeusEnsaios"), icon: FileText, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Não Conformidades", url: createPageUrl("NaoConformidades"), icon: AlertTriangle, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Resumos Personalizados", url: createPageUrl("ResumosPersonalizados"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
@@ -369,7 +370,6 @@ const AppLayout = ({ children }) => {
   ], []);
 
   const adminNavigation = useMemo(() => [
-    { title: "Usuários", url: createPageUrl("Users"), icon: Users, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Migração de Dados", url: createPageUrl("MigracaoDados"), icon: Grid, allowedLevels: ['admin'] },
     { title: "Monitor de Produtividade", url: createPageUrl("MonitorProdutividade"), icon: TrendingUp, allowedLevels: ['admin'] },
     { title: "Configurações", url: createPageUrl("Settings"), icon: Settings, allowedLevels: ['admin'] }
