@@ -157,13 +157,13 @@ export default function ProdutividadePage() {
         });
       };
 
-      processarRegistros(diarios);
-      processarRegistros(checklistsUsina);
-      processarRegistros(checklistsAplicacao);
-      processarRegistros(checklistsMRAF);
-      processarRegistros(checklistsConcretagem);
-      processarRegistros(checklistsTerraplanagem);
-      processarRegistros(checklistsReciclagem);
+      processarRegistros(diarios, 'DiarioObra');
+      processarRegistros(checklistsUsina, 'ChecklistUsina');
+      processarRegistros(checklistsAplicacao, 'ChecklistAplicacao');
+      processarRegistros(checklistsMRAF, 'ChecklistMRAF');
+      processarRegistros(checklistsConcretagem, 'ChecklistConcretagem');
+      processarRegistros(checklistsTerraplanagem, 'ChecklistTerraplanagem');
+      processarRegistros(checklistsReciclagem, 'ChecklistReciclagem');
 
       setProdutividade(prodData);
 
