@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Loader2, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export default function ProdutividadePage() {
   const [loading, setLoading] = useState(true);
@@ -11,6 +14,8 @@ export default function ProdutividadePage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [produtividade, setProdutividade] = useState({});
   const [user, setUser] = useState(null);
+  const [editDialog, setEditDialog] = useState({ open: false, registro: null });
+  const [empreiteiras, setEmpreiteiras] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -27,6 +32,15 @@ export default function ProdutividadePage() {
         base44.entities.User.list(),
         base44.entities.Obra.list()
       ]);
+
+      // Coletar todas as empreiteiras únicas
+      const empresasSet = new Set();
+      obras.forEach(obra => {
+        if (obra.empreiteiras && Array.isArray(obra.empreiteiras)) {
+          obra.empreiteiras.forEach(emp => empresasSet.add(emp));
+        }
+      });
+      setEmpreiteiras(Array.from(empresasSet).sort());
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
 
@@ -88,12 +102,14 @@ export default function ProdutividadePage() {
               }
               
               const obra = obras.find(o => o.id === reg.obra_id);
-              const empreiteira = reg.empreiteira || (obra?.empreiteiras?.[0]) || 'N/D';
+              const empreiteira = reg.empreiteira || '';
               
               prodData[email][day].push({
+                id: reg.id,
                 tipo: reg.constructor?.name || 'Registro',
                 empreiteira: empreiteira,
-                status: reg.status || 'finalizado'
+                status: reg.status || 'finalizado',
+                entityName: reg.constructor?.name || 'DiarioObra'
               });
             }
           }
@@ -137,6 +153,31 @@ export default function ProdutividadePage() {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     return date.toLocaleDateString('pt-BR', { weekday: 'short' });
   };
+
+  const handleEditClick = (registro) => {
+    setEditDialog({ open: true, registro });
+  };
+
+  const handleSaveEmpreiteira = async (novaEmpreiteira) => {
+    if (!editDialog.registro) return;
+    
+    try {
+      const entityName = editDialog.registro.entityName;
+      await base44.entities[entityName].update(editDialog.registro.id, {
+        empreiteira: novaEmpreiteira
+      });
+      
+      setEditDialog({ open: false, registro: null });
+      await loadData(); // Recarregar dados
+    } catch (error) {
+      console.error("Erro ao salvar empreiteira:", error);
+      alert("Erro ao salvar empreiteira");
+    }
+  };
+
+  const userCanEdit = user?.access_level === 'admin' || 
+                      user?.access_level === 'gestor_contrato' || 
+                      user?.access_level === 'sala_tecnica_afirmaevias';
 
   if (loading) {
     return (
@@ -231,11 +272,17 @@ export default function ProdutividadePage() {
                                 {registros.map((reg, idx) => (
                                   <div
                                     key={idx}
-                                    className="bg-green-500 text-white text-[10px] px-1 py-0.5 rounded font-medium"
-                                    title={`${reg.tipo} - ${reg.empreiteira}`}
+                                    className={`${reg.empreiteira ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
+                                    title={`${reg.tipo}${reg.empreiteira ? ' - ' + reg.empreiteira : ' - Sem empreiteira'}`}
+                                    onClick={() => userCanEdit && handleEditClick(reg)}
                                   >
-                                    <div className="font-bold">OK</div>
-                                    <div className="truncate max-w-[60px]">{reg.empreiteira}</div>
+                                    <div className="font-bold flex items-center justify-center gap-1">
+                                      OK
+                                      {userCanEdit && !reg.empreiteira && <Edit2 className="w-2 h-2" />}
+                                    </div>
+                                    <div className="truncate max-w-[60px]">
+                                      {reg.empreiteira || 'Definir'}
+                                    </div>
                                   </div>
                                 ))}
                               </div>
@@ -260,6 +307,47 @@ export default function ProdutividadePage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialog para editar empreiteira */}
+      <Dialog open={editDialog.open} onOpenChange={(open) => !open && setEditDialog({ open: false, registro: null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Selecionar Empreiteira</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label>Empreiteira Atendida</Label>
+              <Select
+                defaultValue={editDialog.registro?.empreiteira || ""}
+                onValueChange={(value) => {
+                  if (editDialog.registro) {
+                    editDialog.registro.empreiteira = value;
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a empreiteira" />
+                </SelectTrigger>
+                <SelectContent>
+                  {empreiteiras.map(emp => (
+                    <SelectItem key={emp} value={emp}>
+                      {emp}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setEditDialog({ open: false, registro: null })}>
+                Cancelar
+              </Button>
+              <Button onClick={() => handleSaveEmpreiteira(editDialog.registro?.empreiteira)}>
+                Salvar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
