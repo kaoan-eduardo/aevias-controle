@@ -118,17 +118,20 @@ export default function ProdutividadePage() {
         prodData[lab.email] = {};
       });
 
-      const processarRegistros = (registros) => {
+      const processarRegistros = (registros, entityName) => {
         registros.forEach(reg => {
-          if (!reg.data) return;
           // Apenas processar registros finalizados
           if (reg.status !== 'finalizado') return;
           
           // Verificar se o registro é de uma obra do gestor
           if (!obrasDoGestorIds.includes(reg.obra_id)) return;
           
+          // Usar a data do registro (data de execução do trabalho)
+          let regDateStr = reg.data;
+          if (!regDateStr) return;
+          
           // Parsear data corretamente para evitar problemas de timezone
-          const [year, month, day] = reg.data.split('-').map(Number);
+          const [year, month, day] = regDateStr.split('-').map(Number);
           const regDate = new Date(year, month - 1, day);
           
           if (regDate >= startDate && regDate <= endDate) {
@@ -144,10 +147,10 @@ export default function ProdutividadePage() {
               
               prodData[email][dayOfMonth].push({
                 id: reg.id,
-                tipo: reg.constructor?.name || 'Registro',
+                tipo: entityName || 'Registro',
                 empreiteira: empreiteira,
                 status: reg.status || 'finalizado',
-                entityName: reg.constructor?.name || 'DiarioObra'
+                entityName: entityName || 'DiarioObra'
               });
             }
           }
