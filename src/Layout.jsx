@@ -381,18 +381,19 @@ const AppLayout = ({ children }) => {
     }
   }, [user]);
 
-  const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-  
-  console.log('[Layout] Calculated userAccessLevel:', userAccessLevel);
-  console.log('[Layout] user?.access_level:', user?.access_level);
-  console.log('[Layout] user?.role:', user?.role);
-  const isAdmin = userAccessLevel === 'admin';
-  const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
-  const isGestorContrato = userAccessLevel === 'gestor_contrato';
-  const isCliente = userAccessLevel === 'cliente';
-  const canManageSystem = isAdmin;
-  const canCreateRecords = !loadingUser && userAccessLevel === 'user';
-  const showGestaoSection = !canManageSystem && (isGestorContrato || isSalaTecnica || isCliente);
+  const userAccessLevel = useMemo(() => {
+    const level = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+    console.log('[Layout] Recalculated userAccessLevel:', level, 'from user:', user);
+    return level;
+  }, [user]);
+
+  const isAdmin = useMemo(() => userAccessLevel === 'admin', [userAccessLevel]);
+  const isSalaTecnica = useMemo(() => userAccessLevel === 'sala_tecnica_afirmaevias', [userAccessLevel]);
+  const isGestorContrato = useMemo(() => userAccessLevel === 'gestor_contrato', [userAccessLevel]);
+  const isCliente = useMemo(() => userAccessLevel === 'cliente', [userAccessLevel]);
+  const canManageSystem = useMemo(() => isAdmin, [isAdmin]);
+  const canCreateRecords = useMemo(() => !loadingUser && userAccessLevel === 'user', [loadingUser, userAccessLevel]);
+  const showGestaoSection = useMemo(() => !canManageSystem && (isGestorContrato || isSalaTecnica || isCliente), [canManageSystem, isGestorContrato, isSalaTecnica, isCliente]);
 
   // Debug seção Gestão
   React.useEffect(() => {
