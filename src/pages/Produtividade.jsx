@@ -65,8 +65,6 @@ export default function ProdutividadePage() {
 
       console.log('Laboratoristas encontrados:', labUsers.length);
 
-      setLaboratoristas(labUsers);
-
       // Coletar empreiteiras apenas das obras das regionais do gestor
       const regionaisIds = regionaisDoGestor.map(r => r.id);
       const obrasDoGestor = obras.filter(o => regionaisIds.includes(o.regional_id));
@@ -93,9 +91,30 @@ export default function ProdutividadePage() {
         base44.entities.ChecklistReciclagem.list()
       ]);
 
+      // Coletar todos os laboratoristas que criaram registros nas obras das regionais do gestor
+      const obrasDoGestorIds = obrasDoGestor.map(o => o.id);
+      const todosRegistros = [...diarios, ...checklistsUsina, ...checklistsAplicacao, ...checklistsMRAF, ...checklistsConcretagem, ...checklistsTerraplanagem, ...checklistsReciclagem];
+      
+      const labEmailsComRegistros = new Set();
+      todosRegistros.forEach(reg => {
+        if (obrasDoGestorIds.includes(reg.obra_id) && reg.created_by) {
+          labEmailsComRegistros.add(reg.created_by.toLowerCase());
+        }
+      });
+
+      // Combinar laboratoristas atuais com os que criaram registros
+      labEmails.forEach(email => labEmailsComRegistros.add(email));
+
+      // Buscar todos os laboratoristas (atuais e históricos)
+      const todosLabUsers = allUsers.filter(u => 
+        labEmailsComRegistros.has(u.email.toLowerCase())
+      );
+
+      setLaboratoristas(todosLabUsers);
+
       // Processar produtividade
       const prodData = {};
-      labUsers.forEach(lab => {
+      todosLabUsers.forEach(lab => {
         prodData[lab.email] = {};
       });
 
@@ -105,20 +124,25 @@ export default function ProdutividadePage() {
           // Apenas processar registros finalizados
           if (reg.status !== 'finalizado') return;
           
-          const regDate = new Date(reg.data);
+          // Verificar se o registro é de uma obra do gestor
+          if (!obrasDoGestorIds.includes(reg.obra_id)) return;
+          
+          // Parsear data corretamente para evitar problemas de timezone
+          const [year, month, day] = reg.data.split('-').map(Number);
+          const regDate = new Date(year, month - 1, day);
+          
           if (regDate >= startDate && regDate <= endDate) {
-            const day = regDate.getDate();
+            const dayOfMonth = regDate.getDate();
             const email = reg.created_by?.toLowerCase();
             
             if (email && prodData[email]) {
-              if (!prodData[email][day]) {
-                prodData[email][day] = [];
+              if (!prodData[email][dayOfMonth]) {
+                prodData[email][dayOfMonth] = [];
               }
               
-              const obra = obras.find(o => o.id === reg.obra_id);
               const empreiteira = reg.empreiteira || '';
               
-              prodData[email][day].push({
+              prodData[email][dayOfMonth].push({
                 id: reg.id,
                 tipo: reg.constructor?.name || 'Registro',
                 empreiteira: empreiteira,
