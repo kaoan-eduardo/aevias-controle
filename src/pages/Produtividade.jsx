@@ -57,6 +57,10 @@ export default function ProdutividadePage() {
         );
       }
 
+      console.log('User access level:', userAccessLevel);
+      console.log('Total regionais:', regionais.length);
+      console.log('Regionais do gestor:', regionaisDoGestor.length);
+
       // Coletar laboratoristas únicos das regionais filtradas
       const labEmails = new Set();
       regionaisDoGestor.forEach(regional => {
@@ -64,10 +68,14 @@ export default function ProdutividadePage() {
         labs.forEach(email => labEmails.add(email.toLowerCase()));
       });
 
+      console.log('Emails de laboratoristas encontrados:', Array.from(labEmails));
+
       // Buscar dados dos usuários laboratoristas
       const labUsers = allUsers.filter(u => 
         labEmails.has(u.email.toLowerCase())
       );
+
+      console.log('Laboratoristas encontrados:', labUsers.length);
 
       setLaboratoristas(labUsers);
 
