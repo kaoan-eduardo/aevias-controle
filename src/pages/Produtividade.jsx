@@ -82,22 +82,23 @@ export default function ProdutividadePage() {
       const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
       const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
 
-      const [diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF, checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem, ensaiosCAUQ, ensaiosDensidade, ensaiosDensidadeInSitu, ensaiosGranAreia, ensaiosSondagem, ensaiosTaxaPintura, acompanhamentoCarga] = await Promise.all([
-        base44.entities.DiarioObra.list(),
-        base44.entities.ChecklistUsina.list(),
-        base44.entities.ChecklistAplicacao.list(),
-        base44.entities.ChecklistMRAF.list(),
-        base44.entities.ChecklistConcretagem.list(),
-        base44.entities.ChecklistTerraplanagem.list(),
-        base44.entities.ChecklistReciclagem.list(),
-        base44.entities.EnsaioCAUQ.list(),
-        base44.entities.EnsaioDensidade.list(),
-        base44.entities.EnsaioDensidadeInSitu.list(),
-        base44.entities.EnsaioGranAreia.list(),
-        base44.entities.EnsaioSondagem.list(),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list(),
-        base44.entities.AcompanhamentoCarga.list()
-      ]);
+      const [diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF, checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem, ensaiosCAUQ, ensaiosDensidade, ensaiosDensidadeInSitu, ensaiosGranAreia, ensaiosSondagem, ensaiosTaxaPintura, acompanhamentoCarga, produtividadeDiaria] = await Promise.all([
+            base44.entities.DiarioObra.list(),
+            base44.entities.ChecklistUsina.list(),
+            base44.entities.ChecklistAplicacao.list(),
+            base44.entities.ChecklistMRAF.list(),
+            base44.entities.ChecklistConcretagem.list(),
+            base44.entities.ChecklistTerraplanagem.list(),
+            base44.entities.ChecklistReciclagem.list(),
+            base44.entities.EnsaioCAUQ.list(),
+            base44.entities.EnsaioDensidade.list(),
+            base44.entities.EnsaioDensidadeInSitu.list(),
+            base44.entities.EnsaioGranAreia.list(),
+            base44.entities.EnsaioSondagem.list(),
+            base44.entities.EnsaioTaxaPinturaImprimacao.list(),
+            base44.entities.AcompanhamentoCarga.list(),
+            base44.entities.ProdutividadeDiaria.list()
+          ]);
 
       // Coletar todos os laboratoristas que criaram registros nas obras das regionais do gestor
       const obrasDoGestorIds = obrasDoGestor.map(o => o.id);
