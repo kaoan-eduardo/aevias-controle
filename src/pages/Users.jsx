@@ -266,7 +266,19 @@ export default function UsersPage() {
     setLoading(true);
     try {
       const currentUserData = await User.me();
-      setCurrentUser(currentUserData);
+      
+      // Buscar dados completos do usuário
+      const allUsersList = await User.list();
+      const fullCurrentUserData = allUsersList.find(u => u.email === currentUserData.email);
+      
+      // Mesclar dados
+      const completeCurrentUserData = {
+        ...currentUserData,
+        ...fullCurrentUserData
+      };
+      
+      console.log('[Users Page] completeCurrentUserData:', completeCurrentUserData);
+      setCurrentUser(completeCurrentUserData);
       
       const regionaisData = await Regional.list();
       setRegionais(regionaisData);
@@ -275,7 +287,8 @@ export default function UsersPage() {
       let allUsers = response.users || [];
       
       // Filtrar usuários baseado no nível de acesso
-      const currentAccessLevel = currentUserData.access_level || (currentUserData.role === 'admin' ? 'admin' : 'user');
+      const currentAccessLevel = completeCurrentUserData.access_level || (completeCurrentUserData.role === 'admin' ? 'admin' : 'user');
+      console.log('[Users Page] currentAccessLevel calculado:', currentAccessLevel);
       
       if (currentAccessLevel === 'sala_tecnica_afirmaevias' || currentAccessLevel === 'gestor_contrato' || currentAccessLevel === 'cliente') {
         // Encontrar regionais do usuário
