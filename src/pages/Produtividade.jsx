@@ -100,7 +100,22 @@ export default function ProdutividadePage() {
 
       // Coletar todos os laboratoristas que criaram registros nas obras das regionais do gestor
       const obrasDoGestorIds = obrasDoGestor.map(o => o.id);
-      const todosRegistros = [...diarios, ...checklistsUsina, ...checklistsAplicacao, ...checklistsMRAF, ...checklistsConcretagem, ...checklistsTerraplanagem, ...checklistsReciclagem];
+      const todosRegistros = [
+        ...diarios, 
+        ...checklistsUsina, 
+        ...checklistsAplicacao, 
+        ...checklistsMRAF, 
+        ...checklistsConcretagem, 
+        ...checklistsTerraplanagem, 
+        ...checklistsReciclagem,
+        ...ensaiosCAUQ,
+        ...ensaiosDensidade,
+        ...ensaiosDensidadeInSitu,
+        ...ensaiosGranAreia,
+        ...ensaiosSondagem,
+        ...ensaiosTaxaPintura,
+        ...acompanhamentoCarga
+      ];
       
       const labEmailsComRegistros = new Set();
       todosRegistros.forEach(reg => {
