@@ -378,6 +378,14 @@ export default function ProdutividadePage() {
                 >
                   <ChevronRight className="w-4 h-4" />
                 </Button>
+                {Object.keys(cacheDias).length > 0 && userCanEdit && (
+                  <Button
+                    onClick={handleSaveCache}
+                    className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 ml-4"
+                  >
+                    Salvar {Object.keys(cacheDias).length} alterações
+                  </Button>
+                )}
               </div>
             </div>
           </CardHeader>
