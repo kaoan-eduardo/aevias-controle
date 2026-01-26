@@ -359,22 +359,7 @@ const AppLayout = ({ children }) => {
   const isCliente = userAccessLevel === 'cliente';
   const canManageSystem = isAdmin;
   const canCreateRecords = !loadingUser && userAccessLevel === 'user';
-
-  // Debug: log para verificar permissões
-  useEffect(() => {
-    if (user) {
-      console.log('Layout - Permissões do usuário:', {
-        email: user.email,
-        userAccessLevel,
-        isAdmin,
-        isSalaTecnica,
-        isGestorContrato,
-        isCliente,
-        canManageSystem,
-        canCreateRecords
-      });
-    }
-  }, [user, userAccessLevel, isAdmin, isSalaTecnica, isGestorContrato, isCliente, canManageSystem, canCreateRecords]);
+  const showGestaoSection = !canManageSystem && (isGestorContrato || isSalaTecnica || isCliente);
 
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
@@ -483,7 +468,7 @@ const AppLayout = ({ children }) => {
                 </SidebarGroup>
               )}
 
-              {!canManageSystem && (isGestorContrato || isSalaTecnica || isCliente) && (
+              {showGestaoSection && (
                 <SidebarGroup>
                   <SidebarGroupLabel className="text-xs font-semibold text-[#00233B]/70 uppercase tracking-wider px-3 py-2">
                     Gestão
