@@ -492,6 +492,31 @@ export default function ProdutividadePage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog para marcar dia como N/A ou OK */}
+      <Dialog open={diaDialog.open} onOpenChange={(open) => !open && setDiaDialog({ open: false, laborista: null, dia: null })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Marcar Dia {diaDialog.dia}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-gray-600">
+              Nenhum registro encontrado para este dia. Marque como:
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setDiaDialog({ open: false, laborista: null, dia: null })}>
+                Cancelar
+              </Button>
+              <Button variant="secondary" onClick={() => handleSaveDiaStatus('N/A')} className="bg-blue-400 hover:bg-blue-500 text-white">
+                N/A
+              </Button>
+              <Button onClick={() => handleSaveDiaStatus('OK')} className="bg-green-500 hover:bg-green-600 text-white">
+                OK
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
