@@ -231,6 +231,7 @@ export default function ProdutividadePage() {
       processarRegistros(acompanhamentoCarga, 'AcompanhamentoCarga');
 
       setProdutividade(prodData);
+      window.marcadoresDia = marcadoresDia;
 
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
