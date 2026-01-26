@@ -186,6 +186,13 @@ export default function ProdutividadePage() {
       processarRegistros(checklistsConcretagem, 'ChecklistConcretagem');
       processarRegistros(checklistsTerraplanagem, 'ChecklistTerraplanagem');
       processarRegistros(checklistsReciclagem, 'ChecklistReciclagem');
+      processarRegistros(ensaiosCAUQ, 'EnsaioCAUQ');
+      processarRegistros(ensaiosDensidade, 'EnsaioDensidade');
+      processarRegistros(ensaiosDensidadeInSitu, 'EnsaioDensidadeInSitu');
+      processarRegistros(ensaiosGranAreia, 'EnsaioGranAreia');
+      processarRegistros(ensaiosSondagem, 'EnsaioSondagem');
+      processarRegistros(ensaiosTaxaPintura, 'EnsaioTaxaPinturaImprimacao');
+      processarRegistros(acompanhamentoCarga, 'AcompanhamentoCarga');
 
       setProdutividade(prodData);
 
