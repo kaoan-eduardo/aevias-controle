@@ -2382,7 +2382,8 @@ export default function MeusEnsaios() {
         "ChecklistMRAF": ChecklistMRAF,
         "ChecklistConcretagem": ChecklistConcretagem,
         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-        "EnsaioSondagem": base44.entities.EnsaioSondagem
+        "EnsaioSondagem": base44.entities.EnsaioSondagem,
+        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual
       };
 
       const Entity = entityMap[ensaio.entityType];
