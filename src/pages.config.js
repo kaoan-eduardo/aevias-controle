@@ -9,6 +9,7 @@ import DiarioObra from './pages/DiarioObra';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
+import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
@@ -32,13 +33,12 @@ import RelatorioConsolidado from './pages/RelatorioConsolidado';
 import RelatorioDensidadeInSitu from './pages/RelatorioDensidadeInSitu';
 import RelatorioDiario from './pages/RelatorioDiario';
 import RelatorioEnsaio from './pages/RelatorioEnsaio';
+import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
 import RelatorioSondagem from './pages/RelatorioSondagem';
 import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual';
-import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +54,7 @@ export const PAGES = {
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
+    "EnsaioGranulometriaIndividual": EnsaioGranulometriaIndividual,
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "FaixasGranulometricas": FaixasGranulometricas,
@@ -77,13 +78,12 @@ export const PAGES = {
     "RelatorioDensidadeInSitu": RelatorioDensidadeInSitu,
     "RelatorioDiario": RelatorioDiario,
     "RelatorioEnsaio": RelatorioEnsaio,
+    "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
     "RelatorioSondagem": RelatorioSondagem,
     "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "EnsaioGranulometriaIndividual": EnsaioGranulometriaIndividual,
-    "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
 }
 
 export const pagesConfig = {

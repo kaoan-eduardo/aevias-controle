@@ -173,12 +173,58 @@ export default function EnsaioGranulometriaIndividualPage() {
   }, [formData.tipo_material, formData.obra_id, obras, regionais, projects]);
 
   useEffect(() => {
-    if (formData.project_id) {
-      const proj = projects.find(p => p.id === formData.project_id);
-      setSelectedProject(proj);
-    } else {
-      setSelectedProject(null);
-    }
+    const loadProjectData = async () => {
+      if (formData.project_id) {
+        const proj = projects.find(p => p.id === formData.project_id);
+        setSelectedProject(proj);
+
+        if (proj) {
+          // Preencher faixa granulométrica
+          if (proj.faixa_granulometrica_id) {
+            try {
+              const faixa = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
+              handleChange('faixa', faixa.nome);
+            } catch (error) {
+              console.error("Erro ao carregar faixa:", error);
+            }
+          }
+
+          // Preencher pedreira(s)
+          if (proj.agregados && proj.agregados.length > 0) {
+            const pedreiras = [...new Set(proj.agregados.map(a => a.pedreira).filter(Boolean))];
+            handleChange('pedreira', pedreiras.join(' + '));
+
+            // Preencher agregados
+            const novosAgregados = proj.agregados.map(agg => ({
+              nome: agg.nome || "",
+              peso_umido: "",
+              peso_seco: "",
+              agua: "",
+              umidade: "",
+              granulometria: {}
+            }));
+
+            // Adicionar agregado extra vazio se houver menos de 4
+            if (novosAgregados.length < 4) {
+              novosAgregados.push({
+                nome: "",
+                peso_umido: "",
+                peso_seco: "",
+                agua: "",
+                umidade: "",
+                granulometria: {}
+              });
+            }
+
+            setFormData(prev => ({ ...prev, agregados: novosAgregados }));
+          }
+        }
+      } else {
+        setSelectedProject(null);
+      }
+    };
+
+    loadProjectData();
   }, [formData.project_id, projects]);
 
   const handleChange = (name, value) => {
@@ -526,7 +572,7 @@ export default function EnsaioGranulometriaIndividualPage() {
                           <Input
                             value={agregado.nome}
                             onChange={(e) => handleAgregadoChange(index, 'nome', e.target.value)}
-                            disabled={!isEditable || isApproved}
+                            disabled={!isEditable || isApproved || (selectedProject?.agregados && index < selectedProject.agregados.length)}
                             placeholder="Ex: Brita 1"
                           />
                         </div>
