@@ -995,6 +995,38 @@ export default function DiarioObraPage() {
         alert("Por favor, selecione uma obra.");
         return;
       }
+      if (!formData.data) {
+        alert("Por favor, preencha a data.");
+        return;
+      }
+      if (!formData.jornada?.horario_inicio) {
+        alert("Por favor, preencha o horário de início.");
+        return;
+      }
+      if (!formData.jornada?.horario_fim) {
+        alert("Por favor, preencha o horário de fim.");
+        return;
+      }
+      if (formData.tipo_local === 'campo') {
+        if (!formData.rodovia) {
+          alert("Por favor, selecione a rodovia.");
+          return;
+        }
+        if (!formData.trecho) {
+          alert("Por favor, preencha o trecho.");
+          return;
+        }
+      } else {
+        if (!formData.usina_selecionada) {
+          alert("Por favor, preencha o nome da usina.");
+          return;
+        }
+      }
+      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+      if (obraSelecionada?.tipo_obra === 'supervisao' && obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 && !formData.empreiteira) {
+        alert("Por favor, selecione a empreiteira.");
+        return;
+      }
       if (!formData.atividades_realizadas) {
         alert("Por favor, preencha as atividades realizadas.");
         return;
