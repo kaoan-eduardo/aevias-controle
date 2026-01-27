@@ -188,22 +188,24 @@ const DiarioForm = ({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="horario_inicio">Horário Início</Label>
+          <Label htmlFor="horario_inicio">Horário Início *</Label>
           <Input
             id="horario_inicio"
             type="time"
             value={formData.jornada?.horario_inicio || ""}
             onChange={(e) => handleChange('jornada', { ...formData.jornada, horario_inicio: e.target.value })}
+            required
             disabled={!isEditable || isApproved}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="horario_fim">Horário Fim</Label>
+          <Label htmlFor="horario_fim">Horário Fim *</Label>
           <Input
             id="horario_fim"
             type="time"
             value={formData.jornada?.horario_fim || ""}
             onChange={(e) => handleChange('jornada', { ...formData.jornada, horario_fim: e.target.value })}
+            required
             disabled={!isEditable || isApproved}
           />
         </div>
