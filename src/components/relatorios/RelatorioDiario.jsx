@@ -167,6 +167,11 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
               </div>
 
               <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Empreiteira</p>
+                <p className="text-gray-800">{diario.empreiteira || 'N/A'}</p>
+              </div>
+
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Temperatura</p>
                 <p className="text-gray-800">{diario.temperatura ? `${diario.temperatura}°C` : 'N/A'}</p>
               </div>
