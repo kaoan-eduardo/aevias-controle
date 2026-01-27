@@ -225,9 +225,9 @@ const DiarioForm = ({
         </div>
       </div>
 
-      {/* Campo Empreiteira - Obrigatório */}
+      {/* Campo Empreiteira ou Usina - Obrigatório - depende do tipo de local */}
       <div className="space-y-2">
-        <Label htmlFor="empreiteira">Empreiteira *</Label>
+        <Label htmlFor="empreiteira">{formData.tipo_local === 'usina' ? 'Usina *' : 'Empreiteira *'}</Label>
         <Select
           value={formData.empreiteira || ""}
           onValueChange={(value) => handleChange('empreiteira', value)}
@@ -235,17 +235,29 @@ const DiarioForm = ({
           disabled={!isEditable || isApproved}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecione a empreiteira" />
+            <SelectValue placeholder={formData.tipo_local === 'usina' ? 'Selecione a usina' : 'Selecione a empreiteira'} />
           </SelectTrigger>
           <SelectContent>
-            {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
-              obraSelecionada.empreiteiras.map(emp => (
-                <SelectItem key={emp} value={emp}>
-                  {emp}
-                </SelectItem>
-              ))
+            {formData.tipo_local === 'usina' ? (
+              obraSelecionada?.usinas && obraSelecionada.usinas.length > 0 ? (
+                obraSelecionada.usinas.map(usina => (
+                  <SelectItem key={usina} value={usina}>
+                    {usina}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value={null} disabled>Nenhuma usina cadastrada</SelectItem>
+              )
             ) : (
-              <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
+              obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
+                obraSelecionada.empreiteiras.map(emp => (
+                  <SelectItem key={emp} value={emp}>
+                    {emp}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
+              )
             )}
           </SelectContent>
         </Select>
@@ -1009,7 +1021,7 @@ export default function DiarioObraPage() {
         return;
       }
       if (!formData.empreiteira) {
-        alert("Por favor, selecione uma empreiteira.");
+        alert(formData.tipo_local === 'usina' ? "Por favor, selecione uma usina." : "Por favor, selecione uma empreiteira.");
         return;
       }
       if (formData.tipo_local === 'campo' && (!formData.rodovia || !formData.trecho)) {
