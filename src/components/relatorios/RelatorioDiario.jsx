@@ -170,8 +170,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
               {/* Coluna 3 */}
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "usina" ? "Usina" : "Empreiteira"}</p>
-                <p className="text-gray-800">{tipoLocal === "usina" ? (diario.usina_selecionada || 'N/A') : (diario.empreiteira || 'N/A')}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Empreiteira</p>
+                <p className="text-gray-800">{diario.empreiteira || 'N/A'}</p>
               </div>
 
               {/* Coluna 1 */}
