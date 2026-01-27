@@ -778,17 +778,17 @@ export default function EnsaioGranulometriaIndividualPage() {
 
                   {/* OBSERVAÇÕES */}
                   <div>
-                <Label>Observações</Label>
-                <Textarea
+                  <Label>Observações</Label>
+                  <Textarea
                   value={formData.observacoes}
                   onChange={(e) => handleChange('observacoes', e.target.value)}
                   disabled={!isEditable || isApproved}
                   rows={3}
-                />
-              </div>
+                  />
+                  </div>
 
-              {/* Botões */}
-              <div className="flex justify-end gap-4">
+                  {/* Botões */}
+                  <div className="flex justify-end gap-4">
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
                 </Button>
@@ -815,9 +815,9 @@ export default function EnsaioGranulometriaIndividualPage() {
                   <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
                     <CheckCircle className="mr-2 h-4 w-4" /> Aprovado
                   </Badge>
-                )}
-              </div>
-            </form>
+                  )}
+                  </div>
+                  </form>
           </CardContent>
         </Card>
       </div>
