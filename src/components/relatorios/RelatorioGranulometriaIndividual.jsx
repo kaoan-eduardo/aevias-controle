@@ -1,4 +1,5 @@
 import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const PENEIRAS_MAP = {
   "peneira_75_0mm": { astm: "3\"", mm: "75,0" },
@@ -57,162 +58,111 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
     ? Object.keys(project.faixa_trabalho).filter(key => project.faixa_trabalho[key] !== null && project.faixa_trabalho[key] !== undefined)
     : Object.keys(PENEIRAS_MAP);
 
+  // Prepare data for chart
+  const chartData = peneirasVisiveis.map(pKey => {
+    const pInfo = PENEIRAS_MAP[pKey];
+    const mmValue = parseFloat(pInfo.mm);
+    const dataPoint = { mm: mmValue, astm: pInfo.astm };
+    ensaio.agregados?.forEach((agg, idx) => {
+      dataPoint[`Agregado ${idx + 1}`] = parseFloat(agg.granulometria?.[pKey]?.passante) || 0;
+    });
+    return dataPoint;
+  }).sort((a, b) => b.mm - a.mm);
+
+  const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
+
   return (
     <div className="bg-white font-sans p-8">
-      {/* Cabeçalho */}
-      <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
+      {/* Cabeçalho com Logo e Data */}
+      <header className="grid grid-cols-3 items-start gap-4 border-b-4 border-slate-700 pb-4 mb-6">
         <div className="flex justify-start">
           <img 
             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
             alt="Logo Regional" 
-            className="h-16 object-contain" 
+            className="h-14 object-contain" 
           />
         </div>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800">Granulometria Individual dos Agregados</h1>
-          <p className="text-sm text-slate-700">{obra?.name}</p>
+          <h1 className="text-lg font-bold text-gray-800 uppercase">Relatório de Granulometria Individual</h1>
+          <h2 className="text-sm text-gray-700">{obra?.name}</h2>
+          <p className="text-xs text-slate-600">Ensaio de Granulometria do Agregado</p>
         </div>
-        <div className="flex justify-end">
-          <div className="border border-gray-400 p-2 rounded-md">
-            <p className="text-sm font-semibold text-gray-800">{formatDate(ensaio.data_ensaio)}</p>
+        <div className="flex justify-end text-xs">
+          <div>
+            <p className="font-semibold text-gray-800">DATA:</p>
+            <p className="text-gray-700">{formatDate(ensaio.data_ensaio)}</p>
           </div>
         </div>
       </header>
 
-      {/* Dados da Obra */}
-      <section className="mb-6">
-        <div className="bg-[#BFCF99] p-2">
-          <h2 className="text-sm font-bold text-gray-800 uppercase">Dados da Obra</h2>
+      {/* Grid com Dados da Obra */}
+      <section className="mb-4">
+        <div className="bg-slate-700 text-white p-2">
+          <h2 className="text-xs font-bold uppercase">Dados da Obra e Ensaio</h2>
         </div>
-        <div className="grid grid-cols-3 gap-4 border border-gray-300 p-4 text-sm">
-          <div>
-            <p className="font-semibold">CLIENTE:</p>
-            <p>{regional?.cliente || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">PEDREIRA:</p>
-            <p>{ensaio.pedreira || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">HORÁRIO:</p>
-            <p>{ensaio.horario || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">OBRA:</p>
-            <p>{obra?.name || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">PROJETO:</p>
-            <p>{project?.name || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">LAB.:</p>
-            <p>{ensaio.laboratorista_name || user?.laboratorista_name || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">RODOVIA:</p>
-            <p>{ensaio.rodovia || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">FAIXA:</p>
-            <p>{ensaio.faixa || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="font-semibold">COLETA:</p>
-            <p>{ensaio.local_coleta || 'N/A'}</p>
-          </div>
+        <div className="grid grid-cols-6 gap-0 border border-gray-400">
+          {[
+            ['CLIENTE', regional?.cliente || 'N/A'],
+            ['RODOVIA', ensaio.rodovia || 'N/A'],
+            ['OBRA', obra?.name || 'N/A'],
+            ['FAIXA', ensaio.faixa || 'N/A'],
+            ['PEDREIRA', ensaio.pedreira || 'N/A'],
+            ['HORÁRIO', ensaio.horario || 'N/A'],
+            ['PROJETO', project?.name || 'N/A'],
+            ['LABORATORISTA', ensaio.laboratorista_name || 'N/A'],
+            ['LOCAL COLETA', ensaio.local_coleta || 'N/A'],
+            ['', ''],
+            ['', ''],
+            ['', ''],
+          ].map((item, idx) => (
+            <div key={idx} className={`border-r border-b border-gray-400 p-2 ${idx % 6 < 2 ? 'bg-gray-100' : ''}`}>
+              <p className="text-xs font-semibold text-gray-700">{item[0]}</p>
+              <p className="text-xs text-gray-600">{item[1]}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Dados do Ensaio */}
-      <section className="mb-6">
-        <div className="bg-[#BFCF99] p-2">
-          <h2 className="text-sm font-bold text-gray-800 uppercase">Dados do Ensaio</h2>
-        </div>
-        <p className="text-xs text-center mt-2 mb-2">MÉTODO DE ENSAIO DE GRANULOMETRIA - DNIT 412/2025-ME</p>
+      {/* Granulometria */}
+      <section className="mb-4">
+       <p className="text-xs text-center font-bold mb-2">MÉTODO DE ENSAIO DE GRANULOMETRIA - DNIT 412/2025-ME</p>
 
-        {/* Tabela de Agregados */}
-        <div className="overflow-x-auto">
+        {/* Tabela Compacta de Granulometria */}
+        <div className="overflow-x-auto mb-4">
           <table className="w-full border-collapse border border-gray-400 text-xs">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-400 p-1" rowSpan="2">PENEIRAS</th>
-                <th className="border border-gray-400 p-1" rowSpan="2"></th>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <th key={index} className="border border-gray-400 p-1" colSpan="2">
-                    {agregado.nome || `Agregado ${index + 1}`}
-                  </th>
-                ))}
-              </tr>
-              <tr className="bg-gray-100">
+            <thead className="bg-slate-700 text-white">
+              <tr>
+                <th className="border border-gray-400 p-1">PENEIRA</th>
                 <th className="border border-gray-400 p-1">ASTM</th>
                 <th className="border border-gray-400 p-1">mm</th>
-                {ensaio.agregados?.map((_, index) => (
-                  <React.Fragment key={index}>
-                    <th className="border border-gray-400 p-1">RETIDO (g)</th>
-                    <th className="border border-gray-400 p-1">% PASS.</th>
+                {ensaio.agregados?.map((agg, idx) => (
+                  <th key={idx} className="border border-gray-400 p-1" colSpan="2">{agg.nome || `Agg ${idx + 1}`}</th>
+                ))}
+              </tr>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-400 p-1"></th>
+                <th className="border border-gray-400 p-1"></th>
+                <th className="border border-gray-400 p-1"></th>
+                {ensaio.agregados?.map((_, idx) => (
+                  <React.Fragment key={idx}>
+                    <th className="border border-gray-400 p-1 text-xs">Ret (g)</th>
+                    <th className="border border-gray-400 p-1 text-xs">Pass %</th>
                   </React.Fragment>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {/* Info do Agregado */}
-              <tr className="bg-gray-50">
-                <td className="border border-gray-400 p-1 font-semibold" colSpan="2">AGREGADO:</td>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <td key={index} className="border border-gray-400 p-1 text-center" colSpan="2">
-                    {agregado.nome || '-'}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border border-gray-400 p-1 font-semibold" colSpan="2">PESO ÚMIDO (g):</td>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <td key={index} className="border border-gray-400 p-1 text-center" colSpan="2">
-                    {agregado.peso_umido || '-'}
-                  </td>
-                ))}
-              </tr>
-              <tr className="bg-gray-50">
-                <td className="border border-gray-400 p-1 font-semibold" colSpan="2">PESO SECO (g):</td>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <td key={index} className="border border-gray-400 p-1 text-center" colSpan="2">
-                    {agregado.peso_seco || '-'}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="border border-gray-400 p-1 font-semibold" colSpan="2">ÁGUA (g):</td>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <td key={index} className="border border-gray-400 p-1 text-center" colSpan="2">
-                    {agregado.agua || '-'}
-                  </td>
-                ))}
-              </tr>
-              <tr className="bg-gray-50">
-                <td className="border border-gray-400 p-1 font-semibold" colSpan="2">UMIDADE (%):</td>
-                {ensaio.agregados?.map((agregado, index) => (
-                  <td key={index} className="border border-gray-400 p-1 text-center" colSpan="2">
-                    {agregado.umidade || '-'}
-                  </td>
-                ))}
-              </tr>
-
-              {/* Peneiras */}
-              {peneirasVisiveis.map(peneiraKey => {
-                const peneiraInfo = PENEIRAS_MAP[peneiraKey];
+              {peneirasVisiveis.map((pKey, rowIdx) => {
+                const pInfo = PENEIRAS_MAP[pKey];
                 return (
-                  <tr key={peneiraKey}>
-                    <td className="border border-gray-400 p-1 text-center">{peneiraInfo.astm}</td>
-                    <td className="border border-gray-400 p-1 text-center">{peneiraInfo.mm}</td>
-                    {ensaio.agregados?.map((agregado, index) => (
-                      <React.Fragment key={index}>
-                        <td className="border border-gray-400 p-1 text-center">
-                          {agregado.granulometria?.[peneiraKey]?.retido || '-'}
-                        </td>
-                        <td className="border border-gray-400 p-1 text-center">
-                          {agregado.granulometria?.[peneiraKey]?.passante || '-'}
-                        </td>
+                  <tr key={pKey} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <td className="border border-gray-400 p-1 font-semibold">{pInfo.astm}</td>
+                    <td className="border border-gray-400 p-1 text-center">{pInfo.astm}</td>
+                    <td className="border border-gray-400 p-1 text-center">{pInfo.mm}</td>
+                    {ensaio.agregados?.map((agg, aggIdx) => (
+                      <React.Fragment key={aggIdx}>
+                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.retido || '-'}</td>
+                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.passante || '-'}</td>
                       </React.Fragment>
                     ))}
                   </tr>
@@ -221,58 +171,89 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
             </tbody>
           </table>
         </div>
+
+        {/* Gráfico de Granulometria */}
+        <div className="border border-gray-400 p-4 mb-4 bg-white">
+          <h3 className="text-xs font-bold text-center mb-2">GRANULOMETRIA DA AMOSTRA</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis 
+                dataKey="astm" 
+                tick={{ fontSize: 10 }} 
+                label={{ value: 'Peneiras', position: 'insideBottomRight', offset: -5 }}
+              />
+              <YAxis 
+                tick={{ fontSize: 10 }} 
+                label={{ value: '% Passante', angle: -90, position: 'insideLeft' }}
+              />
+              <Tooltip formatter={(value) => value.toFixed(2)} />
+              <Legend wrapperStyle={{ fontSize: '11px' }} />
+              {ensaio.agregados?.map((agg, idx) => (
+                <Line 
+                  key={idx}
+                  type="monotone" 
+                  dataKey={`Agregado ${idx + 1}`}
+                  stroke={colors[idx % colors.length]}
+                  dot={{ r: 3 }}
+                  isAnimationActive={false}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </section>
 
       {/* Equivalente de Areia */}
-      <section className="mb-6">
-        <p className="text-xs text-center mb-2">MÉTODO DE ENSAIO DE EQUIVALENTE DE AREIA - DNIT 450/2024</p>
+      <section className="mb-4">
+        <p className="text-xs text-center font-bold mb-2">MÉTODO DE ENSAIO DE EQUIVALENTE DE AREIA - DNIT 450/2024</p>
         <table className="w-full border-collapse border border-gray-400 text-xs">
-          <thead className="bg-gray-100">
+          <thead className="bg-slate-700 text-white">
             <tr>
-              <th className="border border-gray-400 p-2"></th>
-              <th className="border border-gray-400 p-2">Fórmula</th>
-              <th className="border border-gray-400 p-2">Unidade</th>
+              <th className="border border-gray-400 p-2 text-xs">Parâmetro</th>
+              <th className="border border-gray-400 p-2 text-xs">Fórmula</th>
+              <th className="border border-gray-400 p-2 text-xs">Unidade</th>
               {ensaio.equivalente_areia?.medicoes?.map((_, index) => (
-                <th key={index} className="border border-gray-400 p-2">Medição {index + 1}</th>
+                <th key={index} className="border border-gray-400 p-2 text-xs">Med. {index + 1}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="border border-gray-400 p-2 font-semibold">TOPO DE ARGILA</td>
-              <td className="border border-gray-400 p-2 text-center">H₁</td>
-              <td className="border border-gray-400 p-2 text-center">cm</td>
+            <tr className="bg-white">
+              <td className="border border-gray-400 p-2 font-semibold text-xs">Topo Argila</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">H₁</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">cm</td>
               {ensaio.equivalente_areia?.medicoes?.map((medicao, index) => (
-                <td key={index} className="border border-gray-400 p-2 text-center">
+                <td key={index} className="border border-gray-400 p-2 text-center text-xs">
                   {medicao.topo_argila || '-'}
                 </td>
               ))}
             </tr>
             <tr className="bg-gray-50">
-              <td className="border border-gray-400 p-2 font-semibold">TOPO DE AREIA</td>
-              <td className="border border-gray-400 p-2 text-center">H₂</td>
-              <td className="border border-gray-400 p-2 text-center">cm</td>
+              <td className="border border-gray-400 p-2 font-semibold text-xs">Topo Areia</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">H₂</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">cm</td>
               {ensaio.equivalente_areia?.medicoes?.map((medicao, index) => (
-                <td key={index} className="border border-gray-400 p-2 text-center">
+                <td key={index} className="border border-gray-400 p-2 text-center text-xs">
                   {medicao.topo_areia || '-'}
                 </td>
               ))}
             </tr>
-            <tr>
-              <td className="border border-gray-400 p-2 font-semibold">EQUIVALENTE DE AREIA</td>
-              <td className="border border-gray-400 p-2 text-center">EA = (H₂/H₁) × 100</td>
-              <td className="border border-gray-400 p-2 text-center">%</td>
+            <tr className="bg-white">
+              <td className="border border-gray-400 p-2 font-semibold text-xs">Equivalente Areia</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">(H₂/H₁)×100</td>
+              <td className="border border-gray-400 p-2 text-center text-xs">%</td>
               {ensaio.equivalente_areia?.medicoes?.map((medicao, index) => (
-                <td key={index} className="border border-gray-400 p-2 text-center">
+                <td key={index} className="border border-gray-400 p-2 text-center text-xs">
                   {medicao.equivalente || '-'}
                 </td>
               ))}
             </tr>
-            <tr className="bg-gray-50">
-              <td className="border border-gray-400 p-2 font-semibold">MÉDIA</td>
-              <td className="border border-gray-400 p-2 text-center">(média)</td>
-              <td className="border border-gray-400 p-2 text-center">%</td>
-              <td className="border border-gray-400 p-2 text-center font-bold" colSpan={ensaio.equivalente_areia?.medicoes?.length || 1}>
+            <tr className="bg-slate-100">
+              <td className="border border-gray-400 p-2 font-bold text-xs">Média</td>
+              <td className="border border-gray-400 p-2"></td>
+              <td className="border border-gray-400 p-2 text-center text-xs font-bold">%</td>
+              <td className="border border-gray-400 p-2 text-center font-bold text-xs" colSpan={ensaio.equivalente_areia?.medicoes?.length || 1}>
                 {ensaio.equivalente_areia?.media || '-'}
               </td>
             </tr>
@@ -282,10 +263,10 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
 
       {/* Observações */}
       {ensaio.observacoes && (
-        <section className="mb-6">
-          <div className="border border-gray-400 p-4">
-            <p className="font-semibold mb-2">OBS:</p>
-            <p className="text-sm whitespace-pre-wrap">{ensaio.observacoes}</p>
+        <section className="mb-4">
+          <div className="border border-gray-400 p-3 bg-gray-50">
+            <p className="font-semibold text-xs mb-2">OBSERVAÇÕES:</p>
+            <p className="text-xs whitespace-pre-wrap text-gray-700">{ensaio.observacoes}</p>
           </div>
         </section>
       )}
