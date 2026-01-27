@@ -36,6 +36,21 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
     );
   }
 
+  const handleDownloadPDF = () => {
+    const element = document.getElementById('report-content');
+    const opt = {
+      margin: 10,
+      filename: `Relatorio_Granulometria_${formatDate(ensaio.data_ensaio)}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    
+    if (window.html2pdf) {
+      window.html2pdf().set(opt).from(element).save();
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
@@ -72,7 +87,25 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
 
   return (
-    <div className="bg-white font-sans p-8">
+    <div className="bg-gray-100 min-h-screen p-6 font-sans">
+      {/* Header com Título e Botão de Download */}
+      <div className="flex justify-between items-center mb-6 px-6">
+        <h1 className="text-2xl font-bold text-gray-800">
+          Relatório - Granulometria Individual dos Agregados
+        </h1>
+        <button
+          onClick={handleDownloadPDF}
+          className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Gerar PDF
+        </button>
+      </div>
+
+      {/* Conteúdo Principal com Espaços Laterais */}
+      <div id="report-content" className="bg-white font-sans p-8 max-w-6xl mx-auto rounded-lg shadow-lg">
       {/* Cabeçalho com Logo e Data */}
       <header className="grid grid-cols-3 items-start gap-4 border-b-4 border-slate-700 pb-4 mb-6">
         <div className="flex justify-start">
@@ -335,6 +368,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 }
