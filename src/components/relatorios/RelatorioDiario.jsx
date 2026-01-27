@@ -155,7 +155,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
         <main className="flex-grow">
           <section className="mt-6">
             <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Informações Gerais</h2>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Cliente</p>
                 <p className="text-gray-800">{diario.cliente || regional?.cliente || 'N/A'}</p>
@@ -193,7 +193,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 </div>
               )}
 
-              <div className={tipoLocal === "usina" ? "col-start-1" : ""}>
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
                 <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
               </div>
