@@ -986,8 +986,10 @@ export default function DiarioObraPage() {
     }));
   };
 
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+  const handleSubmit = async (e, saveStatus = 'finalizado', obrasParam) => {
     e.preventDefault();
+    
+    const obrasToUse = obrasParam || obras;
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
