@@ -16,6 +16,7 @@ export default function ProdutividadePage() {
   const [user, setUser] = useState(null);
   const [editDialog, setEditDialog] = useState({ open: false, registro: null });
   const [empreiteiras, setEmpreiteiras] = useState([]);
+  const [usinas, setUsinas] = useState([]);
   const [diaDialog, setDiaDialog] = useState({ open: false, laborista: null, dia: null });
   const [cacheDias, setCacheDias] = useState({});
 
@@ -67,17 +68,22 @@ export default function ProdutividadePage() {
 
       console.log('Laboratoristas encontrados:', labUsers.length);
 
-      // Coletar empreiteiras apenas das obras das regionais do gestor
+      // Coletar empreiteiras e usinas apenas das obras das regionais do gestor
       const regionaisIds = regionaisDoGestor.map(r => r.id);
       const obrasDoGestor = obras.filter(o => regionaisIds.includes(o.regional_id));
       
       const empresasSet = new Set();
+      const usinasSet = new Set();
       obrasDoGestor.forEach(obra => {
         if (obra.empreiteiras && Array.isArray(obra.empreiteiras)) {
           obra.empreiteiras.forEach(emp => empresasSet.add(emp));
         }
+        if (obra.usinas && Array.isArray(obra.usinas)) {
+          obra.usinas.forEach(usina => usinasSet.add(usina));
+        }
       });
       setEmpreiteiras(Array.from(empresasSet).sort());
+      setUsinas(Array.from(usinasSet).sort());
 
       // Buscar registros do mês
       const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
@@ -220,6 +226,7 @@ export default function ProdutividadePage() {
                 id: reg.id,
                 tipo: entityName || 'Registro',
                 empreiteira: empreiteira,
+                usina: reg.usina_selecionada || reg.usina || '',
                 status: reg.status || 'finalizado',
                 entityName: entityName || 'DiarioObra'
               });
@@ -284,20 +291,22 @@ export default function ProdutividadePage() {
     setEditDialog({ open: true, registro });
   };
 
-  const handleSaveEmpreiteira = async (novaEmpreiteira) => {
+  const handleSaveEmpreiteiraOuUsina = async (novoValor, tipo) => {
     if (!editDialog.registro) return;
     
     try {
       const entityName = editDialog.registro.entityName;
-      await base44.entities[entityName].update(editDialog.registro.id, {
-        empreiteira: novaEmpreiteira
-      });
+      const updateData = tipo === 'empreiteira' 
+        ? { empreiteira: novoValor }
+        : { usina_selecionada: novoValor, usina: novoValor };
+      
+      await base44.entities[entityName].update(editDialog.registro.id, updateData);
       
       setEditDialog({ open: false, registro: null });
       await loadData();
     } catch (error) {
-      console.error("Erro ao salvar empreiteira:", error);
-      alert("Erro ao salvar empreiteira");
+      console.error("Erro ao salvar:", error);
+      alert("Erro ao salvar");
     }
   };
 
@@ -453,22 +462,26 @@ export default function ProdutividadePage() {
                           >
                             {hasRegistros ? (
                               <div className="flex flex-col gap-0.5">
-                                {registros.map((reg, idx) => (
-                                  <div
-                                    key={idx}
-                                    className={`${reg.empreiteira ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
-                                    title={`${reg.tipo}${reg.empreiteira ? ' - ' + reg.empreiteira : ' - Sem empreiteira'}`}
-                                    onClick={() => userCanEdit && handleEditClick(reg)}
-                                  >
-                                    <div className="font-bold flex items-center justify-center gap-1">
-                                      OK
-                                      {userCanEdit && !reg.empreiteira && <Edit2 className="w-2 h-2" />}
-                                    </div>
-                                    <div className="truncate max-w-[60px]">
-                                      {reg.empreiteira || 'Definir'}
-                                    </div>
-                                  </div>
-                                ))}
+                                {registros.map((reg, idx) => {
+                                   const temInfo = reg.empreiteira || reg.usina;
+                                   const info = reg.empreiteira || reg.usina;
+                                   return (
+                                     <div
+                                       key={idx}
+                                       className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
+                                       title={`${reg.tipo}${temInfo ? ' - ' + info : ' - Sem empreiteira/usina'}`}
+                                       onClick={() => userCanEdit && handleEditClick(reg)}
+                                     >
+                                       <div className="font-bold flex items-center justify-center gap-1">
+                                         OK
+                                         {userCanEdit && !temInfo && <Edit2 className="w-2 h-2" />}
+                                       </div>
+                                       <div className="truncate max-w-[60px]">
+                                         {info || 'Definir'}
+                                       </div>
+                                     </div>
+                                   );
+                                 })}
                               </div>
                             ) : markedStatus ? (
                               <div className={`text-white text-xs px-1 py-1 rounded font-bold ${markedStatus === 'N/A' ? 'bg-blue-400' : 'bg-green-500'} ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`} onClick={() => userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}>
@@ -496,20 +509,21 @@ export default function ProdutividadePage() {
         </Card>
       </div>
 
-      {/* Dialog para editar empreiteira */}
+      {/* Dialog para editar empreiteira ou usina */}
       <Dialog open={editDialog.open} onOpenChange={(open) => !open && setEditDialog({ open: false, registro: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Selecionar Empreiteira</DialogTitle>
+            <DialogTitle>Selecionar Empreiteira ou Usina</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label>Empreiteira Atendida</Label>
               <Select
-                defaultValue={editDialog.registro?.empreiteira || ""}
+                value={editDialog.registro?.empreiteira || ""}
                 onValueChange={(value) => {
                   if (editDialog.registro) {
                     editDialog.registro.empreiteira = value;
+                    editDialog.registro.usina = "";
                   }
                 }}
               >
@@ -517,6 +531,7 @@ export default function ProdutividadePage() {
                   <SelectValue placeholder="Selecione a empreiteira" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value={null}>Nenhuma</SelectItem>
                   {empreiteiras.map(emp => (
                     <SelectItem key={emp} value={emp}>
                       {emp}
@@ -525,11 +540,45 @@ export default function ProdutividadePage() {
                 </SelectContent>
               </Select>
             </div>
+            
+            <div className="flex items-center justify-center text-sm text-gray-500">
+              <span className="px-2">ou</span>
+            </div>
+            
+            <div>
+              <Label>Usina</Label>
+              <Select
+                value={editDialog.registro?.usina || ""}
+                onValueChange={(value) => {
+                  if (editDialog.registro) {
+                    editDialog.registro.usina = value;
+                    editDialog.registro.empreiteira = "";
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a usina" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>Nenhuma</SelectItem>
+                  {usinas.map(usina => (
+                    <SelectItem key={usina} value={usina}>
+                      {usina}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setEditDialog({ open: false, registro: null })}>
                 Cancelar
               </Button>
-              <Button onClick={() => handleSaveEmpreiteira(editDialog.registro?.empreiteira)}>
+              <Button onClick={() => {
+                const tipo = editDialog.registro?.empreiteira ? 'empreiteira' : 'usina';
+                const valor = editDialog.registro?.empreiteira || editDialog.registro?.usina;
+                handleSaveEmpreiteiraOuUsina(valor, tipo);
+              }}>
                 Salvar
               </Button>
             </div>
