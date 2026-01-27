@@ -814,7 +814,7 @@ const DiarioForm = ({
               disabled={loadingUpload}
               onClick={async (e) => {
                 e.preventDefault();
-                await handleSubmit(e, 'rascunho');
+                await handleSubmit(e, 'rascunho', obras);
               }}
               className="border-blue-500 text-blue-600 hover:bg-blue-50"
             >
@@ -825,7 +825,7 @@ const DiarioForm = ({
               disabled={loadingUpload}
               onClick={async (e) => {
                 e.preventDefault();
-                await handleSubmit(e, 'finalizado');
+                await handleSubmit(e, 'finalizado', obras);
               }}
             >
               <Save className="mr-2 h-4 w-4" /> Finalizar
