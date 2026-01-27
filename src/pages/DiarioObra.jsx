@@ -29,6 +29,7 @@ const getInitialFormData = () => ({
   usina_selecionada: "",
   rodovia: "",
   trecho: "",
+  empreiteira: "",
   condicoes_climaticas: "ensolarado",
   temperatura: "",
   atividades_realizadas: "",
