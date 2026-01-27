@@ -563,53 +563,52 @@ export default function EnsaioGranulometriaIndividualPage() {
                       )) || <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>}
                     </SelectContent>
                   </Select>
-                </div>
+                  </div>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
                   <Label>Pedreira</Label>
                   <Input
                     value={formData.pedreira}
                     onChange={(e) => handleChange('pedreira', e.target.value)}
                     disabled={!isEditable || isApproved}
                   />
-                </div>
-                <div>
+                  </div>
+                  <div>
                   <Label>Faixa</Label>
                   <Input
                     value={formData.faixa}
                     onChange={(e) => handleChange('faixa', e.target.value)}
                     disabled={!isEditable || isApproved}
                   />
-                </div>
-                <div>
+                  </div>
+                  <div>
                   <Label>Local de Coleta</Label>
                   <Input
                     value={formData.local_coleta}
                     onChange={(e) => handleChange('local_coleta', e.target.value)}
                     disabled={!isEditable || isApproved}
                   />
-                </div>
-                </div>
-                </CardContent>
-                </Card>
+                  </div>
+                  </div>
+                  </CardContent>
+                  </Card>
 
-                {/* Agregados */}
-                <Card className="bg-slate-50">
-                <CardHeader>
-                <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                  {/* Agregados */}
+                  <Card className="bg-slate-50">
+                  <CardHeader>
+                  <div className="flex justify-between items-center">
                   <CardTitle className="text-lg">Agregados (até 4)</CardTitle>
                   {isEditable && !isApproved && formData.agregados.length < 4 && (
-                    <Button type="button" onClick={addAgregado} size="sm" className="bg-green-600 hover:bg-green-700">
-                      <Plus className="w-4 h-4 mr-2" /> Adicionar Agregado
-                    </Button>
+                  <Button type="button" onClick={addAgregado} size="sm" className="bg-green-600 hover:bg-green-700">
+                    <Plus className="w-4 h-4 mr-2" /> Adicionar Agregado
+                  </Button>
                   )}
-                </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-
-                {formData.agregados.map((agregado, index) => (
+                  </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                  {formData.agregados.map((agregado, index) => (
                   <Card key={index} className="border-2 border-slate-200">
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
@@ -717,20 +716,20 @@ export default function EnsaioGranulometriaIndividualPage() {
                             </tbody>
                           </table>
                         </div>
-                      </div>
-                    </CardContent>
-                    </Card>
-                    ))}
-                    </CardContent>
-                    </Card>
+                        </div>
+                        </CardContent>
+                        </Card>
+                        ))}
+                        </CardContent>
+                        </Card>
 
-                    {/* Equivalente de Areia */}
-                    <Card className="bg-slate-50">
-                    <CardHeader>
-                    <CardTitle className="text-lg">Equivalente de Areia</CardTitle>
-                    <CardDescription>DNIT 450/2024</CardDescription>
-                    </CardHeader>
-                <CardContent className="space-y-4">
+                        {/* Equivalente de Areia */}
+                        <Card className="bg-slate-50">
+                        <CardHeader>
+                        <CardTitle className="text-lg">Equivalente de Areia</CardTitle>
+                        <CardDescription>DNIT 450/2024</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
                   {formData.equivalente_areia.medicoes.map((medicao, index) => (
                     <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded">
                       <div>
@@ -789,10 +788,10 @@ export default function EnsaioGranulometriaIndividualPage() {
 
                   {/* Botões */}
                   <div className="flex justify-end gap-4">
-                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
+                  <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
                   Cancelar
-                </Button>
-                {isEditable && !isApproved && (
+                  </Button>
+                  {isEditable && !isApproved && (
                   <>
                     <Button 
                       type="button" 
@@ -810,8 +809,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                       <CheckCircle className="mr-2 h-4 w-4" /> Finalizar Registro
                     </Button>
                   </>
-                )}
-                {isApproved && (
+                  )}
+                  {isApproved && (
                   <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
                     <CheckCircle className="mr-2 h-4 w-4" /> Aprovado
                   </Badge>
