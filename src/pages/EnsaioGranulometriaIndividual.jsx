@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, Loader2, Plus, Trash2, AlertTriangle } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, AlertTriangle, Clock, CheckCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -412,20 +412,20 @@ export default function EnsaioGranulometriaIndividualPage() {
         <Card>
           <CardHeader>
             <CardTitle>{editingEnsaio?.id ? "Editar Granulometria Individual" : "Nova Granulometria Individual"}</CardTitle>
-          </CardHeader>
-          <CardContent>
+            <CardDescription>
+              {editingEnsaio?.id ? `Editando ensaio de ${new Date(editingEnsaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}` : "Granulometria Individual dos Agregados"}
+            </CardDescription>
             {formData.status === 'rascunho' && (
-              <div className="mb-4 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+              <div className="mt-4 flex items-start gap-2 p-3 bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg">
+                <Clock className="w-5 h-5 text-[#566E3D] mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-semibold text-blue-800">Em Rascunho</p>
-                  <p className="text-sm text-blue-700">Este registro ainda está em edição.</p>
+                  <p className="font-semibold text-[#566E3D]">Registro em Rascunho</p>
+                  <p className="text-sm text-[#00233B]/70">Este ensaio está salvo como rascunho. Clique em "Finalizar Registro" quando estiver completo.</p>
                 </div>
               </div>
             )}
-
             {formData.rejection_reason && (
-              <div className="mb-4 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="mt-4 flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
                 <div>
                   <p className="font-semibold text-red-800">Motivo da Reprovação:</p>
@@ -433,10 +433,17 @@ export default function EnsaioGranulometriaIndividualPage() {
                 </div>
               </div>
             )}
+          </CardHeader>
+          <CardContent>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Seleção Tipo de Material */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* DADOS DA OBRA */}
+              <Card className="bg-slate-50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">Dados da Obra</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <Label>Tipo de Material *</Label>
                   <Select
@@ -478,33 +485,48 @@ export default function EnsaioGranulometriaIndividualPage() {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
 
-              {/* Projeto */}
-              {formData.tipo_material && (
-                <div>
-                  <Label>Projeto</Label>
-                  <Select
-                    value={formData.project_id}
-                    onValueChange={(value) => handleChange('project_id', value)}
-                    disabled={!isEditable || isApproved}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o projeto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {filteredProjects.map(proj => (
-                        <SelectItem key={proj.id} value={proj.id}>
-                          {proj.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+                {/* Projeto */}
+                {formData.tipo_material && (
+                  <div>
+                    <Label>Projeto</Label>
+                    <Select
+                      value={formData.project_id}
+                      onValueChange={(value) => handleChange('project_id', value)}
+                      disabled={!isEditable || isApproved}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o projeto" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {filteredProjects.map(proj => (
+                          <SelectItem key={proj.id} value={proj.id}>
+                            {proj.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
-              {/* Dados Gerais */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Regional Info */}
+                {(() => {
+                  const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+                  const regionalSelecionada = obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null;
+                  return regionalSelecionada && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-2">
+                      <div className="space-y-0.5 text-sm">
+                        <p className="text-blue-800"><strong>📍 Regional:</strong> {regionalSelecionada.nome}</p>
+                        {regionalSelecionada.cliente && (
+                          <p className="text-blue-800"><strong>👤 Cliente:</strong> {regionalSelecionada.cliente}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Dados Gerais */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
                   <Label>Data do Ensaio *</Label>
                   <Input
@@ -542,9 +564,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
                   <Label>Pedreira</Label>
                   <Input
@@ -569,26 +590,32 @@ export default function EnsaioGranulometriaIndividualPage() {
                     disabled={!isEditable || isApproved}
                   />
                 </div>
-              </div>
+                </div>
+                </CardContent>
+                </Card>
 
-              {/* Agregados */}
-              <div className="space-y-4">
+                {/* Agregados */}
+                <Card className="bg-slate-50">
+                <CardHeader>
+                <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <Label className="text-lg font-semibold">Agregados (até 4)</Label>
+                  <CardTitle className="text-lg">Agregados (até 4)</CardTitle>
                   {isEditable && !isApproved && formData.agregados.length < 4 && (
-                    <Button type="button" onClick={addAgregado} size="sm">
+                    <Button type="button" onClick={addAgregado} size="sm" className="bg-green-600 hover:bg-green-700">
                       <Plus className="w-4 h-4 mr-2" /> Adicionar Agregado
                     </Button>
                   )}
                 </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
 
                 {formData.agregados.map((agregado, index) => (
-                  <Card key={index} className="bg-slate-50">
-                    <CardHeader>
+                  <Card key={index} className="border-2 border-slate-200">
+                    <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-base">Agregado {index + 1}</CardTitle>
                         {isEditable && !isApproved && formData.agregados.length > 1 && (
-                          <Button type="button" variant="destructive" size="sm" onClick={() => removeAgregado(index)}>
+                          <Button type="button" variant="ghost" size="sm" onClick={() => removeAgregado(index)} className="text-red-500 hover:text-red-700">
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         )}
@@ -692,15 +719,17 @@ export default function EnsaioGranulometriaIndividualPage() {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    </Card>
+                    ))}
+                    </CardContent>
+                    </Card>
 
-              {/* Equivalente de Areia */}
-              <Card className="bg-slate-50">
-                <CardHeader>
-                  <CardTitle className="text-base">Equivalente de Areia</CardTitle>
-                </CardHeader>
+                    {/* Equivalente de Areia */}
+                    <Card className="bg-slate-50">
+                    <CardHeader>
+                    <CardTitle className="text-lg">Equivalente de Areia</CardTitle>
+                    <CardDescription>DNIT 450/2024</CardDescription>
+                    </CardHeader>
                 <CardContent className="space-y-4">
                   {formData.equivalente_areia.medicoes.map((medicao, index) => (
                     <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded">
@@ -744,11 +773,11 @@ export default function EnsaioGranulometriaIndividualPage() {
                       disabled
                     />
                   </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                  </Card>
 
-              {/* Observações */}
-              <div>
+                  {/* OBSERVAÇÕES */}
+                  <div>
                 <Label>Observações</Label>
                 <Textarea
                   value={formData.observacoes}
@@ -765,13 +794,27 @@ export default function EnsaioGranulometriaIndividualPage() {
                 </Button>
                 {isEditable && !isApproved && (
                   <>
-                    <Button type="button" variant="outline" onClick={(e) => handleSubmit(e, 'rascunho')}>
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={(e) => handleSubmit(e, 'rascunho')}
+                      className="border-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/10"
+                    >
                       <Save className="mr-2 h-4 w-4" /> Salvar Progresso
                     </Button>
-                    <Button type="button" onClick={(e) => handleSubmit(e, 'finalizado')}>
-                      <Save className="mr-2 h-4 w-4" /> Finalizar
+                    <Button 
+                      type="button" 
+                      onClick={(e) => handleSubmit(e, 'finalizado')}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <CheckCircle className="mr-2 h-4 w-4" /> Finalizar Registro
                     </Button>
                   </>
+                )}
+                {isApproved && (
+                  <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
+                    <CheckCircle className="mr-2 h-4 w-4" /> Aprovado
+                  </Badge>
                 )}
               </div>
             </form>
