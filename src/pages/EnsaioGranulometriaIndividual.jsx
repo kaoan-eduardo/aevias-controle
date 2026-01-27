@@ -246,6 +246,25 @@ export default function EnsaioGranulometriaIndividualPage() {
         newAgregados[index].agua = (pesoUmido - pesoSeco).toFixed(2);
         newAgregados[index].umidade = pesoSeco > 0 ? (((pesoUmido - pesoSeco) / pesoSeco) * 100).toFixed(2) : "";
       }
+
+      // Recalcular % passante quando peso seco mudar
+      if (field === 'peso_seco' && pesoSeco > 0 && newAgregados[index].granulometria) {
+        const peneirasVisiveis = selectedProject?.faixa_trabalho 
+          ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
+          : Object.keys(PENEIRAS_MAP);
+
+        let retidoAcumulado = 0;
+        peneirasVisiveis.forEach(pKey => {
+          const retido = parseFloat(newAgregados[index].granulometria?.[pKey]?.retido) || 0;
+          retidoAcumulado += retido;
+          const percentualPassante = ((pesoSeco - retidoAcumulado) / pesoSeco * 100).toFixed(2);
+          
+          if (!newAgregados[index].granulometria[pKey]) {
+            newAgregados[index].granulometria[pKey] = {};
+          }
+          newAgregados[index].granulometria[pKey].passante = percentualPassante;
+        });
+      }
     }
 
     setFormData(prev => ({ ...prev, agregados: newAgregados }));
@@ -260,6 +279,29 @@ export default function EnsaioGranulometriaIndividualPage() {
       newAgregados[agregadoIndex].granulometria[peneira] = {};
     }
     newAgregados[agregadoIndex].granulometria[peneira][field] = value;
+
+    // Calcular % passante automaticamente quando retido mudar
+    if (field === 'retido') {
+      const pesoSeco = parseFloat(newAgregados[agregadoIndex].peso_seco) || 0;
+      if (pesoSeco > 0) {
+        const peneirasVisiveis = selectedProject?.faixa_trabalho 
+          ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
+          : Object.keys(PENEIRAS_MAP);
+
+        let retidoAcumulado = 0;
+        peneirasVisiveis.forEach(pKey => {
+          const retido = parseFloat(newAgregados[agregadoIndex].granulometria?.[pKey]?.retido) || 0;
+          retidoAcumulado += retido;
+          const percentualPassante = ((pesoSeco - retidoAcumulado) / pesoSeco * 100).toFixed(2);
+          
+          if (!newAgregados[agregadoIndex].granulometria[pKey]) {
+            newAgregados[agregadoIndex].granulometria[pKey] = {};
+          }
+          newAgregados[agregadoIndex].granulometria[pKey].passante = percentualPassante;
+        });
+      }
+    }
+
     setFormData(prev => ({ ...prev, agregados: newAgregados }));
   };
 
@@ -638,9 +680,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                                         type="number"
                                         step="0.01"
                                         value={agregado.granulometria?.[peneiraKey]?.passante || ""}
-                                        onChange={(e) => handleGranulometriaChange(index, peneiraKey, 'passante', e.target.value)}
-                                        disabled={!isEditable || isApproved}
-                                        className="h-8"
+                                        disabled
+                                        className="h-8 bg-gray-50"
                                       />
                                     </td>
                                   </tr>
