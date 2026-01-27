@@ -228,83 +228,18 @@ const DiarioForm = ({
       {formData.tipo_local === 'campo' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="rodovia">Rodovia *</Label>
-            {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
-              <Select
-                value={formData.rodovia || ""}
-                onValueChange={(value) => handleChange('rodovia', value)}
-                disabled={!isEditable || isApproved}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a rodovia" />
-                </SelectTrigger>
-                <SelectContent>
-                  {obraSelecionada.rodovias.map(rod => (
-                    <SelectItem key={rod} value={rod}>
-                      {rod}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <Input 
-                id="rodovia" 
-                name="rodovia" 
-                value={formData.rodovia} 
-                onChange={(e) => handleChange(e.target.name, e.target.value)} 
-                placeholder="Ex: BR-277" 
-                disabled={!isEditable || isApproved}
-                required
-              />
-            )}
+            <Label htmlFor="rodovia">Rodovia</Label>
+            <Input id="rodovia" name="rodovia" value={formData.rodovia} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: BR-277" disabled={!isEditable || isApproved} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="trecho">Trecho *</Label>
-            <Input 
-              id="trecho" 
-              name="trecho" 
-              value={formData.trecho} 
-              onChange={(e) => handleChange(e.target.name, e.target.value)} 
-              placeholder="Ex: km 10 ao km 15" 
-              disabled={!isEditable || isApproved}
-              required
-            />
+            <Label htmlFor="trecho">Trecho</Label>
+            <Input id="trecho" name="trecho" value={formData.trecho} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: km 10 ao km 15" disabled={!isEditable || isApproved} />
           </div>
         </div>
       ) : (
         <div className="space-y-2">
-          <Label htmlFor="usina_selecionada">Usina *</Label>
-          <Input 
-            id="usina_selecionada" 
-            name="usina_selecionada" 
-            value={formData.usina_selecionada} 
-            onChange={(e) => handleChange(e.target.name, e.target.value)} 
-            placeholder="Nome da usina" 
-            disabled={!isEditable || isApproved}
-            required
-          />
-        </div>
-      )}
-
-      {obraSelecionada?.tipo_obra === 'supervisao' && obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 && (
-        <div className="space-y-2">
-          <Label htmlFor="empreiteira">Empreiteira *</Label>
-          <Select
-            value={formData.empreiteira || ""}
-            onValueChange={(value) => handleChange('empreiteira', value)}
-            disabled={!isEditable || isApproved}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a empreiteira" />
-            </SelectTrigger>
-            <SelectContent>
-              {obraSelecionada.empreiteiras.map(emp => (
-                <SelectItem key={emp} value={emp}>
-                  {emp}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Label htmlFor="usina_selecionada">Usina</Label>
+          <Input id="usina_selecionada" name="usina_selecionada" value={formData.usina_selecionada} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Nome da usina" disabled={!isEditable || isApproved} />
         </div>
       )}
 
@@ -814,7 +749,7 @@ const DiarioForm = ({
               disabled={loadingUpload}
               onClick={async (e) => {
                 e.preventDefault();
-                await handleSubmit(e, 'rascunho', obras);
+                await handleSubmit(e, 'rascunho');
               }}
               className="border-blue-500 text-blue-600 hover:bg-blue-50"
             >
@@ -825,7 +760,7 @@ const DiarioForm = ({
               disabled={loadingUpload}
               onClick={async (e) => {
                 e.preventDefault();
-                await handleSubmit(e, 'finalizado', obras);
+                await handleSubmit(e, 'finalizado');
               }}
             >
               <Save className="mr-2 h-4 w-4" /> Finalizar
@@ -986,47 +921,13 @@ export default function DiarioObraPage() {
     }));
   };
 
-  const handleSubmit = async (e, saveStatus = 'finalizado', obrasParam) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
-    
-    const obrasToUse = obrasParam || obras;
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
       if (!formData.obra_id) {
         alert("Por favor, selecione uma obra.");
-        return;
-      }
-      if (!formData.data) {
-        alert("Por favor, preencha a data.");
-        return;
-      }
-      if (!formData.jornada?.horario_inicio) {
-        alert("Por favor, preencha o horário de início.");
-        return;
-      }
-      if (!formData.jornada?.horario_fim) {
-        alert("Por favor, preencha o horário de fim.");
-        return;
-      }
-      if (formData.tipo_local === 'campo') {
-        if (!formData.rodovia) {
-          alert("Por favor, selecione a rodovia.");
-          return;
-        }
-        if (!formData.trecho) {
-          alert("Por favor, preencha o trecho.");
-          return;
-        }
-      } else {
-        if (!formData.usina_selecionada) {
-          alert("Por favor, preencha o nome da usina.");
-          return;
-        }
-      }
-      const obraSelecionada = obrasToUse.find(o => o.id === formData.obra_id);
-      if (obraSelecionada?.tipo_obra === 'supervisao' && obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 && !formData.empreiteira) {
-        alert("Por favor, selecione a empreiteira.");
         return;
       }
       if (!formData.atividades_realizadas) {
