@@ -1,5 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const PENEIRAS_MAP = {
   "peneira_75_0mm": { astm: "3\"", mm: "75,0" },
@@ -36,34 +38,46 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
     );
   }
 
-  const handleDownloadPDF = () => {
-    const element = document.getElementById('report-content');
-    if (!element) return;
-    
-    const printWindow = window.open('', '', 'width=800,height=600');
-    const printContent = element.innerHTML;
-    const style = `
-      <style>
-        * { margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; padding: 0; margin: 0; }
-        @media print {
-          body { margin: 0; padding: 0; }
-          .no-print { display: none !important; }
-        }
-        table { border-collapse: collapse; width: 100%; }
-        td, th { border: 1px solid #999; padding: 4px; font-size: 11px; }
-      </style>
-    `;
-    
-    printWindow.document.write('<!DOCTYPE html><html><head>' + style + '</head><body>');
-    printWindow.document.write(printContent);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+  const handleDownloadPDF = async () => {
+    try {
+      const element = document.getElementById('report-content');
+      if (!element) return;
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`Relatorio_Granulometria_${formatDate(ensaio.data_ensaio)}.pdf`);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar o PDF. Tente novamente.');
+    }
   };
 
   const formatDate = (dateString) => {
