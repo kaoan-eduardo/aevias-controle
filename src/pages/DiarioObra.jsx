@@ -225,21 +225,95 @@ const DiarioForm = ({
         </div>
       </div>
 
+      {/* Campo Empreiteira - Obrigatório */}
+      <div className="space-y-2">
+        <Label htmlFor="empreiteira">Empreiteira *</Label>
+        <Select
+          value={formData.empreiteira || ""}
+          onValueChange={(value) => handleChange('empreiteira', value)}
+          required
+          disabled={!isEditable || isApproved}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione a empreiteira" />
+          </SelectTrigger>
+          <SelectContent>
+            {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
+              obraSelecionada.empreiteiras.map(emp => (
+                <SelectItem key={emp} value={emp}>
+                  {emp}
+                </SelectItem>
+              ))
+            ) : (
+              <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+
       {formData.tipo_local === 'campo' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="rodovia">Rodovia</Label>
-            <Input id="rodovia" name="rodovia" value={formData.rodovia} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: BR-277" disabled={!isEditable || isApproved} />
+            <Label htmlFor="rodovia">Rodovia *</Label>
+            <Select
+              value={formData.rodovia || ""}
+              onValueChange={(value) => handleChange('rodovia', value)}
+              required
+              disabled={!isEditable || isApproved}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a rodovia" />
+              </SelectTrigger>
+              <SelectContent>
+                {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
+                  obraSelecionada.rodovias.map(rodovia => (
+                    <SelectItem key={rodovia} value={rodovia}>
+                      {rodovia}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="trecho">Trecho</Label>
-            <Input id="trecho" name="trecho" value={formData.trecho} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: km 10 ao km 15" disabled={!isEditable || isApproved} />
+            <Label htmlFor="trecho">Trecho *</Label>
+            <Input 
+              id="trecho" 
+              name="trecho" 
+              value={formData.trecho} 
+              onChange={(e) => handleChange(e.target.name, e.target.value)} 
+              placeholder="Ex: km 10 ao km 15" 
+              required
+              disabled={!isEditable || isApproved} 
+            />
           </div>
         </div>
       ) : (
         <div className="space-y-2">
-          <Label htmlFor="usina_selecionada">Usina</Label>
-          <Input id="usina_selecionada" name="usina_selecionada" value={formData.usina_selecionada} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Nome da usina" disabled={!isEditable || isApproved} />
+          <Label htmlFor="usina_selecionada">Usina *</Label>
+          <Select
+            value={formData.usina_selecionada || ""}
+            onValueChange={(value) => handleChange('usina_selecionada', value)}
+            required
+            disabled={!isEditable || isApproved}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a usina" />
+            </SelectTrigger>
+            <SelectContent>
+              {obraSelecionada?.usinas && obraSelecionada.usinas.length > 0 ? (
+                obraSelecionada.usinas.map(usina => (
+                  <SelectItem key={usina} value={usina}>
+                    {usina}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value={null} disabled>Nenhuma usina cadastrada</SelectItem>
+              )}
+            </SelectContent>
+          </Select>
         </div>
       )}
 
@@ -928,6 +1002,22 @@ export default function DiarioObraPage() {
     if (saveStatus === 'finalizado') {
       if (!formData.obra_id) {
         alert("Por favor, selecione uma obra.");
+        return;
+      }
+      if (!formData.data || !formData.jornada?.horario_inicio || !formData.jornada?.horario_fim) {
+        alert("Por favor, preencha todos os campos de data e horários.");
+        return;
+      }
+      if (!formData.empreiteira) {
+        alert("Por favor, selecione uma empreiteira.");
+        return;
+      }
+      if (formData.tipo_local === 'campo' && (!formData.rodovia || !formData.trecho)) {
+        alert("Por favor, preencha rodovia e trecho.");
+        return;
+      }
+      if (formData.tipo_local === 'usina' && !formData.usina_selecionada) {
+        alert("Por favor, selecione uma usina.");
         return;
       }
       if (!formData.atividades_realizadas) {
