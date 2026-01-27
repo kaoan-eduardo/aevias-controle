@@ -102,6 +102,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       tipo_obra: "implantacao",
       ensaios: [
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
+        { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
       ]
@@ -117,6 +118,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Acompanhamento de Cargas", url: createPageUrl("AcompanhamentoCarga"), icon: FlaskConical },
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Granulometria + Equiv. Areia", url: createPageUrl("EnsaioGranAreia"), icon: FlaskConical },
+        { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
       ]
@@ -573,7 +575,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ"], []);
+  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual"], []);
 
   if (reportPages.includes(currentPageName)) {
     return <>{children}</>;
