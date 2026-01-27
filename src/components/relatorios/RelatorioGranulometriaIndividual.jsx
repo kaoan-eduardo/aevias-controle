@@ -93,7 +93,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           }
         }
       `}</style>
-      <div className="bg-gray-100 min-h-screen p-6 font-sans">
+      <div className="bg-white min-h-screen p-6 font-sans">
         {/* Header com Título e Botão de Download */}
         <div className="no-print flex justify-between items-center mb-6 px-6">
           <h1 className="text-2xl font-bold text-gray-800">
@@ -110,24 +110,24 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           </button>
         </div>
 
-        {/* Conteúdo Principal com Espaços Laterais */}
-        <div id="report-content" className="bg-white font-sans p-8 max-w-6xl mx-auto rounded-lg shadow-lg">
+        {/* Conteúdo Principal */}
+        <div id="report-content" className="bg-white font-sans p-8 max-w-6xl mx-auto">
       {/* Cabeçalho com Logo e Data */}
-      <header className="grid grid-cols-3 items-start gap-4 border-b-4 border-slate-700 pb-4 mb-6">
-        <div className="flex justify-start">
+      <header className="flex items-center justify-between border-b-4 border-slate-700 pb-4 mb-6">
+        <div className="w-1/4">
           <img 
             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
             alt="Logo Regional" 
-            className="h-14 object-contain" 
+            className="h-16 object-contain" 
           />
         </div>
-        <div className="text-center">
+        <div className="w-1/2 text-center">
           <h1 className="text-lg font-bold text-gray-800 uppercase">Relatório de Granulometria Individual</h1>
           <h2 className="text-sm text-gray-700">{obra?.name}</h2>
           <p className="text-xs text-slate-600">Ensaio de Granulometria do Agregado</p>
         </div>
-        <div className="flex justify-end text-xs">
-          <div>
+        <div className="w-1/4 flex justify-end">
+          <div className="text-xs text-right">
             <p className="font-semibold text-gray-800">DATA:</p>
             <p className="text-gray-700">{formatDate(ensaio.data_ensaio)}</p>
           </div>
