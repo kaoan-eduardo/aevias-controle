@@ -47,7 +47,11 @@ const getInitialFormData = () => ({
     { nome: "", peso_umido: "", peso_seco: "", agua: "", umidade: "", granulometria: {} }
   ],
   equivalente_areia: {
-    medicoes: [{ topo_argila: "", topo_areia: "", equivalente: "" }],
+    medicoes: [
+      { topo_argila: "", topo_areia: "", equivalente: "" },
+      { topo_argila: "", topo_areia: "", equivalente: "" },
+      { topo_argila: "", topo_areia: "", equivalente: "" }
+    ],
     media: ""
   },
   observacoes: "",
@@ -303,35 +307,7 @@ export default function EnsaioGranulometriaIndividualPage() {
     }));
   };
 
-  const addMedicao = () => {
-    if (formData.equivalente_areia.medicoes.length < 3) {
-      setFormData(prev => ({
-        ...prev,
-        equivalente_areia: {
-          ...prev.equivalente_areia,
-          medicoes: [...prev.equivalente_areia.medicoes, { topo_argila: "", topo_areia: "", equivalente: "" }]
-        }
-      }));
-    }
-  };
 
-  const removeMedicao = (index) => {
-    if (formData.equivalente_areia.medicoes.length > 1) {
-      const newMedicoes = formData.equivalente_areia.medicoes.filter((_, i) => i !== index);
-      const validos = newMedicoes.filter(m => m.equivalente && !isNaN(parseFloat(m.equivalente)));
-      const media = validos.length > 0 
-        ? (validos.reduce((sum, m) => sum + parseFloat(m.equivalente), 0) / validos.length).toFixed(2)
-        : "";
-
-      setFormData(prev => ({
-        ...prev,
-        equivalente_areia: {
-          medicoes: newMedicoes,
-          media
-        }
-      }));
-    }
-  };
 
   const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
@@ -507,11 +483,22 @@ export default function EnsaioGranulometriaIndividualPage() {
                 </div>
                 <div>
                   <Label>Rodovia</Label>
-                  <Input
+                  <Select
                     value={formData.rodovia}
-                    onChange={(e) => handleChange('rodovia', e.target.value)}
+                    onValueChange={(value) => handleChange('rodovia', value)}
                     disabled={!isEditable || isApproved}
-                  />
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a rodovia" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {obras.find(o => o.id === formData.obra_id)?.rodovias?.map(rodovia => (
+                        <SelectItem key={rodovia} value={rodovia}>
+                          {rodovia}
+                        </SelectItem>
+                      )) || <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -671,18 +658,11 @@ export default function EnsaioGranulometriaIndividualPage() {
               {/* Equivalente de Areia */}
               <Card className="bg-slate-50">
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-base">Equivalente de Areia</CardTitle>
-                    {isEditable && !isApproved && formData.equivalente_areia.medicoes.length < 3 && (
-                      <Button type="button" onClick={addMedicao} size="sm">
-                        <Plus className="w-4 h-4 mr-2" /> Adicionar Medição
-                      </Button>
-                    )}
-                  </div>
+                  <CardTitle className="text-base">Equivalente de Areia</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {formData.equivalente_areia.medicoes.map((medicao, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-3 border rounded">
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded">
                       <div>
                         <Label>H₁ - Topo Argila (cm)</Label>
                         <Input
@@ -712,13 +692,6 @@ export default function EnsaioGranulometriaIndividualPage() {
                           disabled
                         />
                       </div>
-                      {isEditable && !isApproved && formData.equivalente_areia.medicoes.length > 1 && (
-                        <div className="flex items-end">
-                          <Button type="button" variant="destructive" size="sm" onClick={() => removeMedicao(index)}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      )}
                     </div>
                   ))}
                   <div>
