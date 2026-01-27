@@ -37,6 +37,8 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual';
+import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +82,8 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "EnsaioGranulometriaIndividual": EnsaioGranulometriaIndividual,
+    "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
 }
 
 export const pagesConfig = {
