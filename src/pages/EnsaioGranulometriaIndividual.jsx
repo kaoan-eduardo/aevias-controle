@@ -149,18 +149,26 @@ export default function EnsaioGranulometriaIndividualPage() {
   };
 
   useEffect(() => {
-    if (formData.tipo_material && formData.obra_id) {
+    if (formData.obra_id) {
       const obraSelecionada = obras.find(o => o.id === formData.obra_id);
       if (obraSelecionada) {
         const regionalSelecionada = regionais.find(r => r.id === obraSelecionada.regional_id);
         if (regionalSelecionada?.project_ids) {
-          const projsFiltered = projects.filter(p => 
-            regionalSelecionada.project_ids.includes(p.id) && 
-            p.tipo_projeto === formData.tipo_material
-          );
+          let projsFiltered = projects.filter(p => regionalSelecionada.project_ids.includes(p.id));
+          
+          if (formData.tipo_material) {
+            projsFiltered = projsFiltered.filter(p => p.tipo_projeto === formData.tipo_material);
+          }
+          
           setFilteredProjects(projsFiltered);
+        } else {
+          setFilteredProjects([]);
         }
+      } else {
+        setFilteredProjects([]);
       }
+    } else {
+      setFilteredProjects([]);
     }
   }, [formData.tipo_material, formData.obra_id, obras, regionais, projects]);
 
