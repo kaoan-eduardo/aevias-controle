@@ -1024,7 +1024,7 @@ export default function DiarioObraPage() {
           return;
         }
       }
-      const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+      const obraSelecionada = obrasToUse.find(o => o.id === formData.obra_id);
       if (obraSelecionada?.tipo_obra === 'supervisao' && obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 && !formData.empreiteira) {
         alert("Por favor, selecione a empreiteira.");
         return;
