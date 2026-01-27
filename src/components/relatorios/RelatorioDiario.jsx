@@ -156,53 +156,70 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           <section className="mt-6">
             <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Informações Gerais</h2>
             <div className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm">
+              {/* Coluna 1 */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Cliente</p>
                 <p className="text-gray-800">{diario.cliente || regional?.cliente || 'N/A'}</p>
               </div>
               
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Obra</p>
-                <p className="text-gray-800">{obra?.name || 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Empreiteira</p>
-                <p className="text-gray-800">{diario.empreiteira || 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Temperatura</p>
-                <p className="text-gray-800">{diario.temperatura ? `${diario.temperatura}°C` : 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">Condições Climáticas</p>
-                <p className="text-gray-800">{CondicoesClimaticas[diario.condicoes_climaticas] || 'N/A'}</p>
-              </div>
-
+              {/* Coluna 2 */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "usina" ? "Usina" : "Rodovia"}</p>
                 <p className="text-gray-800">{rodovia}</p>
               </div>
 
-              {tipoLocal === "campo" && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">Trecho</p>
-                  <p className="text-gray-800">{trecho}</p>
-                </div>
-              )}
+              {/* Coluna 3 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "usina" ? "Usina" : "Empreiteira"}</p>
+                <p className="text-gray-800">{diario.empreiteira || 'N/A'}</p>
+              </div>
 
+              {/* Coluna 1 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Obra</p>
+                <p className="text-gray-800">{obra?.name || 'N/A'}</p>
+              </div>
+
+              {/* Coluna 2 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Condições Climáticas</p>
+                <p className="text-gray-800">{CondicoesClimaticas[diario.condicoes_climaticas] || 'N/A'}</p>
+              </div>
+
+              {/* Coluna 3 */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
                 <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
               </div>
 
-              {diario.jornada?.horario_inicio && diario.jornada?.horario_fim && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase">Jornada</p>
-                  <p className="text-gray-800">{diario.jornada.horario_inicio} - {diario.jornada.horario_fim}</p>
-                </div>
+              {/* Coluna 1 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "campo" ? "Rodovia" : "Regional"}</p>
+                <p className="text-gray-800">{tipoLocal === "campo" ? (diario.rodovia || 'N/A') : (regional?.nome || 'N/A')}</p>
+              </div>
+
+              {/* Coluna 2 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Temperatura</p>
+                <p className="text-gray-800">{diario.temperatura ? `${diario.temperatura}°C` : 'N/A'}</p>
+              </div>
+
+              {/* Coluna 3 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Jornada</p>
+                <p className="text-gray-800">{diario.jornada?.horario_inicio && diario.jornada?.horario_fim ? `${diario.jornada.horario_inicio} - ${diario.jornada.horario_fim}` : 'N/A'}</p>
+              </div>
+
+              {/* Trecho se campo */}
+              {tipoLocal === "campo" && (
+                <>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">Trecho</p>
+                    <p className="text-gray-800">{trecho}</p>
+                  </div>
+                  <div></div>
+                  <div></div>
+                </>
               )}
             </div>
           </section>
