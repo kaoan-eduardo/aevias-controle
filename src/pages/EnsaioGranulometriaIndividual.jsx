@@ -11,23 +11,26 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 const PENEIRAS_MAP = {
-  "50_80mm": { astm: "2\"", mm: "50,80" },
-  "38_10mm": { astm: "1 1/2\"", mm: "38,10" },
-  "25_40mm": { astm: "1\"", mm: "25,40" },
-  "19_10mm": { astm: "3/4\"", mm: "19,10" },
-  "12_70mm": { astm: "1/2\"", mm: "12,70" },
-  "9_50mm": { astm: "3/8\"", mm: "9,50" },
-  "6_30mm": { astm: "1/4\"", mm: "6,30" },
-  "4_75mm": { astm: "#4", mm: "4,75" },
-  "2_36mm": { astm: "#8", mm: "2,36" },
-  "2_00mm": { astm: "#10", mm: "2,00" },
-  "1_18mm": { astm: "#16", mm: "1,18" },
-  "0_60mm": { astm: "#30", mm: "0,60" },
-  "0_42mm": { astm: "#40", mm: "0,42" },
-  "0_30mm": { astm: "#50", mm: "0,30" },
-  "0_18mm": { astm: "#80", mm: "0,18" },
-  "0_15mm": { astm: "#100", mm: "0,15" },
-  "0_08mm": { astm: "#200", mm: "0,08" }
+  "peneira_75_0mm": { astm: "3\"", mm: "75,0" },
+  "peneira_63_0mm": { astm: "2 1/2\"", mm: "63,0" },
+  "peneira_50_0mm": { astm: "2\"", mm: "50,0" },
+  "peneira_38_1mm": { astm: "1 1/2\"", mm: "38,1" },
+  "peneira_37_5mm": { astm: "1 1/2\"", mm: "37,5" },
+  "peneira_25_0mm": { astm: "1\"", mm: "25,0" },
+  "peneira_19_0mm": { astm: "3/4\"", mm: "19,0" },
+  "peneira_16_0mm": { astm: "5/8\"", mm: "16,0" },
+  "peneira_12_5mm": { astm: "1/2\"", mm: "12,5" },
+  "peneira_9_5mm": { astm: "3/8\"", mm: "9,5" },
+  "peneira_4_75mm": { astm: "#4", mm: "4,75" },
+  "peneira_2_36mm": { astm: "#8", mm: "2,36" },
+  "peneira_2_0mm": { astm: "#10", mm: "2,0" },
+  "peneira_1_18mm": { astm: "#16", mm: "1,18" },
+  "peneira_0_6mm": { astm: "#30", mm: "0,6" },
+  "peneira_0_42mm": { astm: "#40", mm: "0,42" },
+  "peneira_0_3mm": { astm: "#50", mm: "0,3" },
+  "peneira_0_18mm": { astm: "#100", mm: "0,18" },
+  "peneira_0_15mm": { astm: "#100", mm: "0,15" },
+  "peneira_0_075mm": { astm: "#200", mm: "0,075" }
 };
 
 const getInitialFormData = () => ({
