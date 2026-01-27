@@ -228,18 +228,83 @@ const DiarioForm = ({
       {formData.tipo_local === 'campo' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="rodovia">Rodovia</Label>
-            <Input id="rodovia" name="rodovia" value={formData.rodovia} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: BR-277" disabled={!isEditable || isApproved} />
+            <Label htmlFor="rodovia">Rodovia *</Label>
+            {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
+              <Select
+                value={formData.rodovia || ""}
+                onValueChange={(value) => handleChange('rodovia', value)}
+                disabled={!isEditable || isApproved}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a rodovia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {obraSelecionada.rodovias.map(rod => (
+                    <SelectItem key={rod} value={rod}>
+                      {rod}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input 
+                id="rodovia" 
+                name="rodovia" 
+                value={formData.rodovia} 
+                onChange={(e) => handleChange(e.target.name, e.target.value)} 
+                placeholder="Ex: BR-277" 
+                disabled={!isEditable || isApproved}
+                required
+              />
+            )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="trecho">Trecho</Label>
-            <Input id="trecho" name="trecho" value={formData.trecho} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: km 10 ao km 15" disabled={!isEditable || isApproved} />
+            <Label htmlFor="trecho">Trecho *</Label>
+            <Input 
+              id="trecho" 
+              name="trecho" 
+              value={formData.trecho} 
+              onChange={(e) => handleChange(e.target.name, e.target.value)} 
+              placeholder="Ex: km 10 ao km 15" 
+              disabled={!isEditable || isApproved}
+              required
+            />
           </div>
         </div>
       ) : (
         <div className="space-y-2">
-          <Label htmlFor="usina_selecionada">Usina</Label>
-          <Input id="usina_selecionada" name="usina_selecionada" value={formData.usina_selecionada} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Nome da usina" disabled={!isEditable || isApproved} />
+          <Label htmlFor="usina_selecionada">Usina *</Label>
+          <Input 
+            id="usina_selecionada" 
+            name="usina_selecionada" 
+            value={formData.usina_selecionada} 
+            onChange={(e) => handleChange(e.target.name, e.target.value)} 
+            placeholder="Nome da usina" 
+            disabled={!isEditable || isApproved}
+            required
+          />
+        </div>
+      )}
+
+      {obraSelecionada?.tipo_obra === 'supervisao' && obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 && (
+        <div className="space-y-2">
+          <Label htmlFor="empreiteira">Empreiteira *</Label>
+          <Select
+            value={formData.empreiteira || ""}
+            onValueChange={(value) => handleChange('empreiteira', value)}
+            disabled={!isEditable || isApproved}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione a empreiteira" />
+            </SelectTrigger>
+            <SelectContent>
+              {obraSelecionada.empreiteiras.map(emp => (
+                <SelectItem key={emp} value={emp}>
+                  {emp}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       )}
 
