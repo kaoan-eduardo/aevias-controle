@@ -101,7 +101,7 @@ export default function ProdutividadePage() {
             base44.entities.ProdutividadeDiaria.list()
           ]);
 
-      // Coletar todos os laboratoristas que criaram registros nas obras das regionais do gestor
+      // Coletar apenas laboratoristas com registros ou marcadores no mês atual
       const obrasDoGestorIds = obrasDoGestor.map(o => o.id);
       const todosRegistros = [
         ...diarios, 
@@ -120,19 +120,37 @@ export default function ProdutividadePage() {
         ...acompanhamentoCarga
       ];
       
-      const labEmailsComRegistros = new Set();
+      const labEmailsComRegistrosNoMes = new Set();
+      
+      // Coletar laboratoristas com registros no mês atual
       todosRegistros.forEach(reg => {
-        if (obrasDoGestorIds.includes(reg.obra_id) && reg.created_by) {
-          labEmailsComRegistros.add(reg.created_by.toLowerCase());
+        if (!obrasDoGestorIds.includes(reg.obra_id) || !reg.created_by || reg.status !== 'finalizado') return;
+        
+        const regDateStr = reg.data;
+        if (!regDateStr) return;
+        
+        const [year, month, day] = regDateStr.split('-').map(Number);
+        const regDate = new Date(year, month - 1, day);
+        
+        if (regDate >= startDate && regDate <= endDate) {
+          labEmailsComRegistrosNoMes.add(reg.created_by.toLowerCase());
+        }
+      });
+      
+      // Adicionar laboratoristas com marcadores de dia no mês atual
+      produtividadeDiaria.forEach(marc => {
+        const dateStr = marc.data;
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const marcDate = new Date(year, month - 1, day);
+        
+        if (marcDate >= startDate && marcDate <= endDate) {
+          labEmailsComRegistrosNoMes.add(marc.laboratorista_email.toLowerCase());
         }
       });
 
-      // Combinar laboratoristas atuais com os que criaram registros
-      labEmails.forEach(email => labEmailsComRegistros.add(email));
-
-      // Buscar todos os laboratoristas (atuais e históricos)
+      // Buscar apenas laboratoristas com atividade no mês
       const todosLabUsers = allUsers.filter(u => 
-        labEmailsComRegistros.has(u.email.toLowerCase())
+        labEmailsComRegistrosNoMes.has(u.email.toLowerCase())
       );
 
       setLaboratoristas(todosLabUsers);
