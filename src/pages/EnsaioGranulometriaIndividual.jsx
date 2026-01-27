@@ -444,8 +444,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <Label>Tipo de Material *</Label>
+                    <div>
+                      <Label>Tipo de Material *</Label>
                   <Select
                     value={formData.tipo_material}
                     onValueChange={(value) => {
@@ -464,9 +464,9 @@ export default function EnsaioGranulometriaIndividualPage() {
                       <SelectItem value="CAMADAS_GRANULARES">Camadas Granulares</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                  </div>
 
-                <div>
+                  <div>
                   <Label>Obra *</Label>
                   <Select
                     value={formData.obra_id}
@@ -484,10 +484,10 @@ export default function EnsaioGranulometriaIndividualPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
+                  </div>
 
-                {/* Projeto */}
-                {formData.tipo_material && (
+                  {/* Projeto */}
+                  {formData.tipo_material && (
                   <div>
                     <Label>Projeto</Label>
                     <Select
@@ -506,11 +506,11 @@ export default function EnsaioGranulometriaIndividualPage() {
                         ))}
                       </SelectContent>
                     </Select>
-                  </div>
-                )}
+                    </div>
+                    )}
 
-                {/* Regional Info */}
-                {(() => {
+                    {/* Regional Info */}
+                    {(() => {
                   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
                   const regionalSelecionada = obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null;
                   return regionalSelecionada && (
@@ -522,12 +522,13 @@ export default function EnsaioGranulometriaIndividualPage() {
                         )}
                       </div>
                     </div>
-                  );
-                })()}
+                    );
+                    })()}
+                    </div>
 
-                {/* Dados Gerais */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div>
+                    {/* Dados Gerais */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
                   <Label>Data do Ensaio *</Label>
                   <Input
                     type="date"
@@ -535,8 +536,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                     onChange={(e) => handleChange('data_ensaio', e.target.value)}
                     disabled={!isEditable || isApproved}
                   />
-                </div>
-                <div>
+                  </div>
+                  <div>
                   <Label>Horário</Label>
                   <Input
                     type="time"
@@ -544,8 +545,8 @@ export default function EnsaioGranulometriaIndividualPage() {
                     onChange={(e) => handleChange('horario', e.target.value)}
                     disabled={!isEditable || isApproved}
                   />
-                </div>
-                <div>
+                  </div>
+                  <div>
                   <Label>Rodovia</Label>
                   <Select
                     value={formData.rodovia}
@@ -715,21 +716,21 @@ export default function EnsaioGranulometriaIndividualPage() {
                               })}
                             </tbody>
                           </table>
-                        </div>
-                        </div>
-                        </CardContent>
-                        </Card>
-                        ))}
-                        </CardContent>
-                        </Card>
+                          </div>
+                          </div>
+                          </CardContent>
+                          </Card>
+                          ))}
+                          </CardContent>
+                          </Card>
 
-                        {/* Equivalente de Areia */}
-                        <Card className="bg-slate-50">
-                        <CardHeader>
-                        <CardTitle className="text-lg">Equivalente de Areia</CardTitle>
-                        <CardDescription>DNIT 450/2024</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                          {/* Equivalente de Areia */}
+                          <Card className="bg-slate-50">
+                          <CardHeader>
+                          <CardTitle className="text-lg">Equivalente de Areia</CardTitle>
+                          <CardDescription>DNIT 450/2024</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
                   {formData.equivalente_areia.medicoes.map((medicao, index) => (
                     <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded">
                       <div>
@@ -771,28 +772,28 @@ export default function EnsaioGranulometriaIndividualPage() {
                       value={formData.equivalente_areia.media}
                       disabled
                     />
-                  </div>
-                  </CardContent>
-                  </Card>
+                    </div>
+                    </CardContent>
+                    </Card>
 
-                  {/* OBSERVAÇÕES */}
-                  <div>
-                  <Label>Observações</Label>
-                  <Textarea
-                  value={formData.observacoes}
-                  onChange={(e) => handleChange('observacoes', e.target.value)}
-                  disabled={!isEditable || isApproved}
-                  rows={3}
-                  />
-                  </div>
+                    {/* OBSERVAÇÕES */}
+                    <div>
+                    <Label>Observações</Label>
+                    <Textarea
+                    value={formData.observacoes}
+                    onChange={(e) => handleChange('observacoes', e.target.value)}
+                    disabled={!isEditable || isApproved}
+                    rows={3}
+                    />
+                    </div>
 
-                  {/* Botões */}
-                  <div className="flex justify-end gap-4">
-                  <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
-                  Cancelar
-                  </Button>
-                  {isEditable && !isApproved && (
-                  <>
+                    {/* Botões */}
+                    <div className="flex justify-end gap-4">
+                    <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))}>
+                    Cancelar
+                    </Button>
+                    {isEditable && !isApproved && (
+                    <>
                     <Button 
                       type="button" 
                       variant="outline"
@@ -808,15 +809,15 @@ export default function EnsaioGranulometriaIndividualPage() {
                     >
                       <CheckCircle className="mr-2 h-4 w-4" /> Finalizar Registro
                     </Button>
-                  </>
-                  )}
-                  {isApproved && (
-                  <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
+                    </>
+                    )}
+                    {isApproved && (
+                    <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
                     <CheckCircle className="mr-2 h-4 w-4" /> Aprovado
-                  </Badge>
-                  )}
-                  </div>
-                  </form>
+                    </Badge>
+                    )}
+                    </div>
+                    </form>
           </CardContent>
         </Card>
       </div>
