@@ -172,33 +172,46 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
         </div>
       </header>
 
-      {/* Grid com Dados da Obra */}
-      <section className="mb-4">
-        <div className="bg-slate-700 text-white p-2">
-          <h2 className="text-xs font-bold uppercase">Dados da Obra e Ensaio</h2>
+      {/* Informações da Obra e Amostra */}
+      <section className="mt-6 grid grid-cols-3 gap-6 text-sm mb-4">
+        <div className="space-y-1">
+          <p className="font-semibold">Obra:</p>
+          <p>{obra?.name} - {obra?.code}</p>
         </div>
-        <div className="grid grid-cols-6 gap-0 border border-gray-400">
-          {[
-            ['CLIENTE', regional?.cliente || 'N/A'],
-            ['RODOVIA', ensaio.rodovia || 'N/A'],
-            ['OBRA', obra?.name || 'N/A'],
-            ['FAIXA', ensaio.faixa || 'N/A'],
-            ['PEDREIRA', ensaio.pedreira || 'N/A'],
-            ['HORÁRIO', ensaio.horario || 'N/A'],
-            ['PROJETO', project?.name || 'N/A'],
-            ['LABORATORISTA', ensaio.laboratorista_name || 'N/A'],
-            ['LOCAL COLETA', ensaio.local_coleta || 'N/A'],
-            ['', ''],
-            ['', ''],
-            ['', ''],
-          ].map((item, idx) => (
-            <div key={idx} className={`border-r border-b border-gray-400 p-2 ${idx % 6 < 2 ? 'bg-gray-100' : ''}`}>
-              <p className="text-xs font-semibold text-gray-700">{item[0]}</p>
-              <p className="text-xs text-gray-600">{item[1]}</p>
-            </div>
-          ))}
+        <div className="space-y-1">
+          <p className="font-semibold">Projeto:</p>
+          <p>{project?.name || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Data:</p>
+          <p>{formatDate(ensaio.data_ensaio)}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Rodovia:</p>
+          <p>{ensaio.rodovia || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Laboratorista:</p>
+          <p>{ensaio.laboratorista_name || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Local de Coleta:</p>
+          <p>{ensaio.local_coleta || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Faixa:</p>
+          <p>{ensaio.faixa || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Pedreira:</p>
+          <p>{ensaio.pedreira || 'N/A'}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Horário:</p>
+          <p>{ensaio.horario || 'N/A'}</p>
         </div>
       </section>
+      <hr className="border-t-2 border-slate-300 my-4" />
 
       {/* Granulometria */}
       <section className="mb-4">
