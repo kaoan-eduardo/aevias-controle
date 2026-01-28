@@ -226,9 +226,10 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis 
-                dataKey="mm" 
+                dataKey="mm"
+                type="number"
                 scale="log"
-                domain={['auto', 'auto']}
+                domain={['dataMin', 'dataMax']}
                 tick={{ fontSize: 10 }}
                 tickFormatter={(value) => value.toFixed(2)}
                 label={{ value: 'Abertura (mm)', position: 'insideBottomRight', offset: -5 }}
