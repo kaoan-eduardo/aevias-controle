@@ -238,8 +238,9 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
               {ensaio.agregados?.map((agg, idx) => (
                 <Line 
                   key={idx}
-                  type="monotone" 
+                  type="linear" 
                   dataKey={`Agregado ${idx + 1}`}
+                  name={agg.nome || `Agregado ${idx + 1}`}
                   stroke={colors[idx % colors.length]}
                   dot={{ r: 3 }}
                   isAnimationActive={false}
