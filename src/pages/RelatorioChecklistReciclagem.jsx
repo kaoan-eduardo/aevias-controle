@@ -86,7 +86,7 @@ export default function RelatorioChecklistReciclagemPage() {
       </div>
 
       <div className="print:pt-0 print:pb-0">
-        <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-6 print:p-4">
+        <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-6 print:p-1 print:px-2">
           <RelatorioChecklistReciclagem 
             checklist={checklist} 
             obra={obra} 
@@ -100,7 +100,7 @@ export default function RelatorioChecklistReciclagemPage() {
         @media print {
           @page {
             size: A4;
-            margin: 10mm;
+            margin: 8mm 5mm;
           }
           body {
             print-color-adjust: exact;
