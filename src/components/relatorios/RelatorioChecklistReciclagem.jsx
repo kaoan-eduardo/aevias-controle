@@ -30,14 +30,14 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
           <img 
             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
             alt="Logo Regional" 
-            className="h-8 object-contain" 
+            className="h-12 object-contain" 
           />
         </div>
         <div className="text-center">
-          <h1 className="text-xs font-bold text-gray-800">CHECKLIST DE RECICLAGEM</h1>
+          <h1 className="text-sm font-bold text-gray-800">CHECKLIST DE RECICLAGEM</h1>
         </div>
         <div className="flex justify-end">
-          <div className="border border-gray-400 p-0.5 rounded-md text-[10px] bg-white">
+          <div className="border border-gray-400 p-0.5 rounded-md text-xs bg-white">
             <p className="font-semibold text-gray-800">{formatDate(checklist.data)}</p>
           </div>
         </div>
