@@ -74,7 +74,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       dataPoint[aggName] = parseFloat(agg.granulometria?.[pKey]?.passante) || 0;
     });
     return dataPoint;
-  }).sort((a, b) => a.mm - b.mm);
+  }).sort((a, b) => b.mm - a.mm);
 
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
 
@@ -226,10 +226,9 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis 
-                dataKey="mm"
-                type="number"
+                dataKey="mm" 
                 scale="log"
-                domain={['dataMin', 'dataMax']}
+                domain={['auto', 'auto']}
                 tick={{ fontSize: 10 }}
                 tickFormatter={(value) => value.toFixed(2)}
                 label={{ value: 'Abertura (mm)', position: 'insideBottomRight', offset: -5 }}
