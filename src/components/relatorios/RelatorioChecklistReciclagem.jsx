@@ -14,7 +14,7 @@ const CheckmarkColumn = ({ isYes, isNo, isNA }) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <h2 className="text-[9px] font-bold text-center bg-slate-100 py-0.5 px-0.5 my-1 uppercase tracking-wide">{children}</h2>
+  <h2 className="text-xs font-bold text-center bg-slate-100 py-0.5 px-0.5 my-1 uppercase tracking-wide">{children}</h2>
 );
 
 const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
@@ -44,7 +44,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
       </header>
 
       <SectionTitle>DADOS DA OBRA</SectionTitle>
-      <div className="grid grid-cols-4 gap-x-1 gap-y-1 mb-1 text-[9px]">
+      <div className="grid grid-cols-4 gap-x-1 gap-y-1 mb-1 text-[10px]">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -118,28 +118,28 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
     <footer className="mt-0.5 px-0.5 print:break-inside-avoid">
       <div className="grid grid-cols-3 gap-1 items-end">
         <div className="text-center">
-          <div className="text-[7px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
+          <div className="text-[8px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
             {checklist.laboratorista_name && (
               <>
-                <span className="text-[7px] font-bold">Assinado digitalmente por</span>
-                <span className="text-[7px] font-bold">{checklist.laboratorista_name}</span>
-                <span className="text-[6px] text-slate-600">em {formatDateBrasilia(checklist.created_date)}</span>
+                <span className="text-[8px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[8px] font-bold">{checklist.laboratorista_name}</span>
+                <span className="text-[7px] text-slate-600">em {formatDateBrasilia(checklist.created_date)}</span>
               </>
             )}
           </div>
           <div className="border-t border-gray-700 pt-0.5 w-full mx-auto">
-            <p className="text-[7px] font-semibold">Fiscal</p>
+            <p className="text-[8px] font-semibold">Fiscal</p>
           </div>
         </div>
 
         <div className="text-center">
           {checklist.approver_details ? (
             <>
-              <div className="text-[7px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
-                <span className="text-[7px] font-bold">Assinado digitalmente por</span>
-                <span className="text-[7px] font-bold">{checklist.approver_details.name}</span>
+              <div className="text-[8px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
+                <span className="text-[8px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[8px] font-bold">{checklist.approver_details.name}</span>
                 {checklist.approved_date && (
-                  <span className="text-[6px] text-slate-600">em {formatDateBrasilia(checklist.approved_date)}</span>
+                  <span className="text-[7px] text-slate-600">em {formatDateBrasilia(checklist.approved_date)}</span>
                 )}
               </div>
               <div className="border-t border-gray-700 pt-0.5 w-full mx-auto">
@@ -159,11 +159,11 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
         <div className="text-center">
           {checklist.client_signature?.signed_by ? (
             <>
-              <div className="text-[7px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
-                <span className="text-[7px] font-bold">Assinado digitalmente por</span>
-                <span className="text-[7px] font-bold">{checklist.client_signature.engineer_name}</span>
+              <div className="text-[8px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
+                <span className="text-[8px] font-bold">Assinado digitalmente por</span>
+                <span className="text-[8px] font-bold">{checklist.client_signature.engineer_name}</span>
                 {checklist.client_signature?.signed_date && (
-                  <span className="text-[6px] text-slate-600">em {formatDateBrasilia(checklist.client_signature.signed_date)}</span>
+                  <span className="text-[7px] text-slate-600">em {formatDateBrasilia(checklist.client_signature.signed_date)}</span>
                 )}
               </div>
               <div className="border-t border-gray-700 pt-0.5 w-full mx-auto">
@@ -181,7 +181,7 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
         </div>
       </div>
       {pageNum && totalPages && (
-        <p className="text-center text-[6px] text-slate-500 mt-0">Página {pageNum} de {totalPages}</p>
+        <p className="text-center text-[7px] text-slate-500 mt-0">Página {pageNum} de {totalPages}</p>
       )}
     </footer>
   );
@@ -295,7 +295,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             <thead className="bg-white">
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
-                  <th key={idx} className="border border-slate-300 px-0.5 py-1 text-center font-bold uppercase text-[8px]">
+                  <th key={idx} className="border border-slate-300 px-0.5 py-1 text-center font-bold uppercase text-[9px]">
                     {periodo.periodo === 'manha' ? 'MANHÃ' : periodo.periodo === 'tarde' ? 'TARDE' : 'NOITE'}
                   </th>
                 ))}
@@ -305,10 +305,10 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
               <tr>
                 {checklist.periodos_clima?.map((periodo, idx) => (
                   <td key={idx} className="border border-slate-300 px-0.5 py-1 text-center">
-                    <p className="font-medium mb-0 text-[7px]">
+                    <p className="font-medium mb-0 text-[8px]">
                       Temp: {periodo.temperatura_ambiente || 'N/A'}°C
                     </p>
-                    <p className="font-bold text-[8px]">
+                    <p className="font-bold text-[9px]">
                       {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
                     </p>
                   </td>
@@ -321,7 +321,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
         <SectionTitle>ACOMPANHAMENTO EXECUÇÃO DA CAMADA</SectionTitle>
         <div className="overflow-x-auto mb-1">
-          <table className="w-full border-collapse border border-slate-300 text-[8px]">
+          <table className="w-full border-collapse border border-slate-300 text-[9px]">
             <thead>
               <tr className="bg-white">
                 <th className="border border-slate-300 px-0.5 py-1 text-left font-medium">Controle</th>
@@ -404,7 +404,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {/* ENSAIOS DA EMPREITEIRA */}
         <SectionTitle>ACOMPANHAMENTO DOS ENSAIOS REALIZADOS PELA EMPREITEIRA</SectionTitle>
         <div className="overflow-x-auto mb-1">
-          <table className="w-full border-collapse border border-slate-300 text-[7px]">
+          <table className="w-full border-collapse border border-slate-300 text-[8px]">
             <thead>
               <tr className="bg-white">
                 <th className="border border-slate-300 px-0.5 py-1 text-left font-medium">ENSAIOS</th>
@@ -454,7 +454,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* OBSERVAÇÕES GERAIS */}
         <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-        <div className="border border-slate-300 p-1 min-h-[25px] text-[7px] mb-1">
+        <div className="border border-slate-300 p-1 min-h-[25px] text-[8px] mb-1">
           {checklist.observacoes_gerais || 'Nenhuma observação registrada.'}
         </div>
 
