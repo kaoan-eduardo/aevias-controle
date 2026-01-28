@@ -67,10 +67,11 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
   // Prepare data for chart
   const chartData = peneirasVisiveis.map(pKey => {
     const pInfo = PENEIRAS_MAP[pKey];
-    const mmValue = parseFloat(pInfo.mm);
+    const mmValue = parseFloat(pInfo.mm.replace(',', '.'));
     const dataPoint = { mm: mmValue, astm: pInfo.astm };
     ensaio.agregados?.forEach((agg, idx) => {
-      dataPoint[`Agregado ${idx + 1}`] = parseFloat(agg.granulometria?.[pKey]?.passante) || 0;
+      const aggName = agg.nome || `Agregado ${idx + 1}`;
+      dataPoint[aggName] = parseFloat(agg.granulometria?.[pKey]?.passante) || 0;
     });
     return dataPoint;
   }).sort((a, b) => b.mm - a.mm);
@@ -225,9 +226,12 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis 
-                dataKey="astm" 
-                tick={{ fontSize: 10 }} 
-                label={{ value: 'Peneiras', position: 'insideBottomRight', offset: -5 }}
+                dataKey="mm" 
+                scale="log"
+                domain={['auto', 'auto']}
+                tick={{ fontSize: 10 }}
+                tickFormatter={(value) => value.toFixed(2)}
+                label={{ value: 'Abertura (mm)', position: 'insideBottomRight', offset: -5 }}
               />
               <YAxis 
                 tick={{ fontSize: 10 }} 
@@ -235,16 +239,19 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
               />
               <Tooltip formatter={(value) => value.toFixed(2)} />
               <Legend wrapperStyle={{ fontSize: '11px' }} />
-              {ensaio.agregados?.map((agg, idx) => (
-                <Line 
-                  key={idx}
-                  type="monotone" 
-                  dataKey={`Agregado ${idx + 1}`}
-                  stroke={colors[idx % colors.length]}
-                  dot={{ r: 3 }}
-                  isAnimationActive={false}
-                />
-              ))}
+              {ensaio.agregados?.map((agg, idx) => {
+                const aggName = agg.nome || `Agregado ${idx + 1}`;
+                return (
+                  <Line 
+                    key={idx}
+                    type="linear"
+                    dataKey={aggName}
+                    stroke={colors[idx % colors.length]}
+                    dot={{ r: 3 }}
+                    isAnimationActive={false}
+                  />
+                );
+              })}
             </LineChart>
           </ResponsiveContainer>
         </div>
