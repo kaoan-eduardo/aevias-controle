@@ -115,7 +115,7 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
   };
 
   return (
-    <footer className="mt-0.5 px-0.5 print:break-inside-avoid">
+    <footer className="mt-2 px-0.5 print:break-inside-avoid">
       <div className="grid grid-cols-3 gap-1 items-end">
         <div className="text-center">
           <div className="text-[8px] text-slate-600 mb-0.5 min-h-[30px] flex flex-col justify-end items-center">
