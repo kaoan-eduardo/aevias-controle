@@ -2390,6 +2390,7 @@ export default function MeusEnsaios() {
         "ChecklistMRAF": ChecklistMRAF,
         "ChecklistConcretagem": ChecklistConcretagem,
         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+        "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
         "EnsaioSondagem": base44.entities.EnsaioSondagem,
         "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual
       };
@@ -2427,8 +2428,9 @@ export default function MeusEnsaios() {
         "ChecklistMRAF": ChecklistMRAF,
         "ChecklistConcretagem": ChecklistConcretagem,
         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+        "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
         "EnsaioSondagem": base44.entities.EnsaioSondagem,
-        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual
+        "EnsaioGranulometriaIndividual: base44.entities.EnsaioGranulometriaIndividual
       };
 
       const Entity = entityMap[ensaio.entityType];
