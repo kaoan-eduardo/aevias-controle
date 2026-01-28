@@ -150,7 +150,7 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
             <>
               <div className="min-h-[30px] mb-0.5"></div>
               <div className="border-t border-gray-700 pt-0.5 w-full mx-auto">
-                <p className="text-[7px] font-semibold">Engenheiro Responsavel</p>
+                <p className="text-[8px] font-semibold">Engenheiro Responsavel</p>
               </div>
             </>
             )}
@@ -174,7 +174,7 @@ const ReportFooter = ({ checklist, pageNum, totalPages }) => {
             <>
               <div className="min-h-[30px] mb-0.5"></div>
               <div className="border-t border-gray-700 pt-0.5 w-full mx-auto">
-                <p className="text-[7px] font-semibold">Engenheiro Cliente</p>
+                <p className="text-[8px] font-semibold">Engenheiro Cliente</p>
               </div>
             </>
             )}
