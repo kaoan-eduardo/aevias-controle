@@ -15,7 +15,7 @@ const PENEIRAS_INFO = [
     { nome: '0.075 mm', abertura: 0.075, key: 'peneira_0_075mm' },
 ];
 
-export default function GraficoGranulometria({ project, faixas, granulometriaEnsaio }) {
+export default function GraficoGranulometria({ project, faixas, granulometriaEnsaio, agregadoNome }) {
     if (!project || !faixas || !granulometriaEnsaio) {
         return <div className="p-4 text-center text-slate-500">Dados insuficientes para gerar o gráfico.</div>;
     }
@@ -78,7 +78,7 @@ export default function GraficoGranulometria({ project, faixas, granulometriaEns
                     />
                     <Legend verticalAlign="top" height={36} />
                     <Area 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="especificacao" 
                         stroke="#fca5a5" 
                         fill="#fee2e2"
@@ -86,11 +86,11 @@ export default function GraficoGranulometria({ project, faixas, granulometriaEns
                         activeDot={false}
                     />
                     <Line 
-                        type="monotone" 
+                        type="linear" 
                         dataKey="resultado" 
                         stroke="#3b82f6" 
                         strokeWidth={2}
-                        name="Resultado do Ensaio" 
+                        name={agregadoNome || "Resultado do Ensaio"} 
                         dot={{ r: 4 }}
                         activeDot={{ r: 6 }}
                     />
