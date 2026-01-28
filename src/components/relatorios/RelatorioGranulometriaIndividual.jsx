@@ -122,14 +122,13 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           />
         </div>
         <div className="w-1/2 text-center">
-          <h1 className="text-lg font-bold text-gray-800 uppercase">Relatório de Granulometria Individual</h1>
+          <h1 className="text-lg font-bold text-gray-800 uppercase">Granulometria Individual</h1>
           <h2 className="text-sm text-gray-700">{obra?.name}</h2>
           <p className="text-xs text-slate-600">Ensaio de Granulometria do Agregado</p>
         </div>
         <div className="w-1/4 flex justify-end">
-          <div className="text-xs text-right">
-            <p className="font-semibold text-gray-800">DATA:</p>
-            <p className="text-gray-700">{formatDate(ensaio.data_ensaio)}</p>
+          <div className="border border-gray-300 rounded-lg px-3 py-1 bg-white shadow-sm">
+            <p className="text-gray-700 text-sm font-semibold">{formatDate(ensaio.data_ensaio)}</p>
           </div>
         </div>
       </header>
@@ -182,23 +181,21 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
         {/* Tabela Compacta de Granulometria */}
         <div className="overflow-x-auto mb-4">
           <table className="w-full border-collapse border border-gray-400 text-xs">
-            <thead className="bg-slate-700 text-white">
+            <thead className="bg-slate-700 text-gray-800">
               <tr>
-                <th className="border border-gray-400 p-1">PENEIRA</th>
-                <th className="border border-gray-400 p-1">ASTM</th>
-                <th className="border border-gray-400 p-1">mm</th>
+                <th className="border border-gray-400 p-1 bg-slate-200">PENEIRA</th>
+                <th className="border border-gray-400 p-1 bg-slate-200">mm</th>
                 {ensaio.agregados?.map((agg, idx) => (
-                  <th key={idx} className="border border-gray-400 p-1" colSpan="2">{agg.nome || `Agg ${idx + 1}`}</th>
+                  <th key={idx} className="border border-gray-400 p-1 bg-slate-700 text-white" colSpan="2">{agg.nome || `Agg ${idx + 1}`}</th>
                 ))}
               </tr>
               <tr className="bg-gray-200">
                 <th className="border border-gray-400 p-1"></th>
                 <th className="border border-gray-400 p-1"></th>
-                <th className="border border-gray-400 p-1"></th>
                 {ensaio.agregados?.map((_, idx) => (
                   <React.Fragment key={idx}>
-                    <th className="border border-gray-400 p-1 text-xs">Ret (g)</th>
-                    <th className="border border-gray-400 p-1 text-xs">Pass %</th>
+                    <th className="border border-gray-400 p-1 text-xs text-gray-800">Ret (g)</th>
+                    <th className="border border-gray-400 p-1 text-xs text-gray-800">Pass %</th>
                   </React.Fragment>
                 ))}
               </tr>
@@ -209,7 +206,6 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                 return (
                   <tr key={pKey} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="border border-gray-400 p-1 font-semibold">{pInfo.astm}</td>
-                    <td className="border border-gray-400 p-1 text-center">{pInfo.astm}</td>
                     <td className="border border-gray-400 p-1 text-center">{pInfo.mm}</td>
                     {ensaio.agregados?.map((agg, aggIdx) => (
                       <React.Fragment key={aggIdx}>
@@ -260,13 +256,13 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       <section className="mb-4">
         <p className="text-xs text-center font-bold mb-2">MÉTODO DE ENSAIO DE EQUIVALENTE DE AREIA - DNIT 450/2024</p>
         <table className="w-full border-collapse border border-gray-400 text-xs">
-          <thead className="bg-slate-700 text-white">
+          <thead className="bg-slate-700">
             <tr>
-              <th className="border border-gray-400 p-2 text-xs">Parâmetro</th>
-              <th className="border border-gray-400 p-2 text-xs">Fórmula</th>
-              <th className="border border-gray-400 p-2 text-xs">Unidade</th>
+              <th className="border border-gray-400 p-2 text-xs text-white">Parâmetro</th>
+              <th className="border border-gray-400 p-2 text-xs text-white">Fórmula</th>
+              <th className="border border-gray-400 p-2 text-xs text-white">Unidade</th>
               {ensaio.equivalente_areia?.medicoes?.map((_, index) => (
-                <th key={index} className="border border-gray-400 p-2 text-xs">Med. {index + 1}</th>
+                <th key={index} className="border border-gray-400 p-2 text-xs text-white">Med. {index + 1}</th>
               ))}
             </tr>
           </thead>
