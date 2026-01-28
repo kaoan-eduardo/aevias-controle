@@ -319,7 +319,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       )}
 
       {/* Assinaturas */}
-      <footer className="mt-12 pt-8">
+      <footer className="mt-10 pt-8">
         <div className="grid grid-cols-3 gap-8 items-end">
           <div className="text-center">
             <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
