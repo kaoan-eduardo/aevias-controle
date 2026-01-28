@@ -44,7 +44,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
       </header>
 
       <SectionTitle>DADOS DA OBRA</SectionTitle>
-      <div className="grid grid-cols-4 gap-x-1 gap-y-1 mb-1 text-[8px]">
+      <div className="grid grid-cols-4 gap-x-1 gap-y-1 mb-1 text-[9px]">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
