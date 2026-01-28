@@ -203,7 +203,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                 const pInfo = PENEIRAS_MAP[pKey];
                 return (
                   <tr key={pKey} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="border border-gray-400 p-1 font-semibold">{pInfo.astm}</td>
+                    <td className="border border-gray-400 p-1 font-semibold text-center">{pInfo.astm}</td>
                     <td className="border border-gray-400 p-1 text-center">{pInfo.mm}</td>
                     {ensaio.agregados?.map((agg, aggIdx) => (
                       <React.Fragment key={aggIdx}>
