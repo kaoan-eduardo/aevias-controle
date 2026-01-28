@@ -289,6 +289,12 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
   return (
     <>
+      <style>{`
+        @media print {
+          @page { margin: 0.5cm; }
+          body { margin: 0; padding: 0; }
+        }
+      `}</style>
       {/* Página Principal */}
       <div className={photoChunks.length > 0 ? "break-after-page" : ""}>
         <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
