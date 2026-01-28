@@ -2349,6 +2349,7 @@ export default function MeusEnsaios() {
       ChecklistMRAF,
       ChecklistConcretagem,
       ChecklistTerraplanagem: base44.entities.ChecklistTerraplanagem,
+      ChecklistReciclagem: base44.entities.ChecklistReciclagem,
       EnsaioSondagem: base44.entities.EnsaioSondagem,
       EnsaioGranulometriaIndividual: base44.entities.EnsaioGranulometriaIndividual
     };
