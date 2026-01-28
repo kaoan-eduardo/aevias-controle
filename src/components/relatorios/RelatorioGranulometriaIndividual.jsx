@@ -207,8 +207,8 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                     <td className="border border-gray-400 p-1 text-center">{pInfo.mm}</td>
                     {ensaio.agregados?.map((agg, aggIdx) => (
                       <React.Fragment key={aggIdx}>
-                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.retido || '-'}</td>
-                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.passante || '-'}</td>
+                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.retido ?? (agg.granulometria?.[pKey]?.retido === 0 ? '0' : '-')}</td>
+                        <td className="border border-gray-400 p-1 text-center">{agg.granulometria?.[pKey]?.passante ?? (agg.granulometria?.[pKey]?.passante === 0 ? '0' : '-')}</td>
                       </React.Fragment>
                     ))}
                   </tr>
@@ -276,7 +276,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                 </td>
               ))}
             </tr>
-            <tr className="bg-gray-50">
+            <tr className="bg-white">
               <td className="border border-gray-400 p-2 font-semibold text-xs">Topo Areia</td>
               <td className="border border-gray-400 p-2 text-center text-xs">H₂</td>
               <td className="border border-gray-400 p-2 text-center text-xs">cm</td>
@@ -286,7 +286,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                 </td>
               ))}
             </tr>
-            <tr className="bg-white">
+            <tr className="bg-blue-50">
               <td className="border border-gray-400 p-2 font-semibold text-xs">Equivalente Areia</td>
               <td className="border border-gray-400 p-2 text-center text-xs">(H₂/H₁)×100</td>
               <td className="border border-gray-400 p-2 text-center text-xs">%</td>
@@ -296,7 +296,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
                 </td>
               ))}
             </tr>
-            <tr className="bg-slate-100">
+            <tr className="bg-blue-50">
               <td className="border border-gray-400 p-2 font-bold text-xs">Média</td>
               <td className="border border-gray-400 p-2"></td>
               <td className="border border-gray-400 p-2 text-center text-xs font-bold">%</td>
