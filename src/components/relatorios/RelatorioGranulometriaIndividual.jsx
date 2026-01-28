@@ -183,15 +183,13 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           <table className="w-full border-collapse border border-gray-400 text-xs">
             <thead className="bg-slate-700 text-gray-800">
               <tr>
-                <th className="border border-gray-400 p-1 bg-slate-200">PENEIRA</th>
-                <th className="border border-gray-400 p-1 bg-slate-200">mm</th>
+                <th className="border border-gray-400 p-1 text-white" style={{ backgroundColor: '#334155' }} rowSpan="2">PENEIRA</th>
+                <th className="border border-gray-400 p-1 text-white" style={{ backgroundColor: '#334155' }} rowSpan="2">mm</th>
                 {ensaio.agregados?.map((agg, idx) => (
                   <th key={idx} className="border border-gray-400 p-1 bg-slate-700 text-white" colSpan="2">{agg.nome || `Agg ${idx + 1}`}</th>
                 ))}
               </tr>
               <tr className="bg-gray-200">
-                <th className="border border-gray-400 p-1"></th>
-                <th className="border border-gray-400 p-1"></th>
                 {ensaio.agregados?.map((_, idx) => (
                   <React.Fragment key={idx}>
                     <th className="border border-gray-400 p-1 text-xs text-gray-800">Ret (g)</th>
