@@ -284,13 +284,13 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
     return chunks;
   };
 
-  const photoChunks = chunkArray(compressedPhotos, 6);
+  const photoChunks = compressedPhotos.length > 0 ? chunkArray(compressedPhotos, 6) : [];
   const totalPages = 1 + photoChunks.length;
 
   return (
     <>
       {/* Página Principal */}
-      <div className="break-after-page">
+      <div className={photoChunks.length > 0 ? "break-after-page" : ""}>
         <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
         {/* CONDIÇÕES CLIMÁTICAS */}

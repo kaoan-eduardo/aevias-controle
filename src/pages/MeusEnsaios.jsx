@@ -303,6 +303,9 @@ const getDataFormatted = (ensaio) => {
     case "ChecklistTerraplanagem":
       dateField = ensaio.data;
       break;
+    case "ChecklistReciclagem":
+      dateField = ensaio.data;
+      break;
     case "EnsaioSondagem":
       dateField = ensaio.data;
       break;
@@ -613,8 +616,12 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       return ensaio.data;
     case "ChecklistTerraplanagem":
       return ensaio.data;
+    case "ChecklistReciclagem":
+      return ensaio.data;
     case "EnsaioSondagem":
       return ensaio.data;
+    case "EnsaioGranulometriaIndividual":
+      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
