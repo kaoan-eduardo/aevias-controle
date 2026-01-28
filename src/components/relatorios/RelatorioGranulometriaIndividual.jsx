@@ -74,7 +74,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       dataPoint[aggName] = parseFloat(agg.granulometria?.[pKey]?.passante) || 0;
     });
     return dataPoint;
-  }).sort((a, b) => b.mm - a.mm);
+  }).sort((a, b) => a.mm - b.mm);
 
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
 
