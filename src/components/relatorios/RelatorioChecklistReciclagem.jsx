@@ -454,7 +454,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* OBSERVAÇÕES GERAIS */}
         <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-        <div className="border border-slate-300 p-0.5 min-h-[15px] text-[7px] mb-0 print:mb-0">
+        <div className="border border-slate-300 p-0.5 min-h-[12px] text-[7px] mb-3">
           {checklist.observacoes_gerais || 'Nenhuma observação registrada.'}
         </div>
 
