@@ -311,7 +311,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       {/* Observações */}
       {ensaio.observacoes && (
         <section className="mb-4">
-          <div className="border border-gray-400 p-3 bg-gray-50">
+          <div className="border border-gray-400 p-3 bg-white">
             <p className="font-semibold text-xs mb-2">OBSERVAÇÕES:</p>
             <p className="text-xs whitespace-pre-wrap text-gray-700">{ensaio.observacoes}</p>
           </div>
