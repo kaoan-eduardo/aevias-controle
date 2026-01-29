@@ -220,21 +220,17 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               </table>
             </div>
 
-            {/* TABELA DE CARGAS - Paginação Dinâmica */}
+            {/* TABELA DE CARGAS - Sempre 20 linhas por página */}
             {(() => {
               const cargas = ensaio.cargas || [];
               const cargasPorPagina = 20;
-              const totalPaginas = Math.ceil(Math.max(cargas.length, cargasPorPagina) / cargasPorPagina);
-              const linhasPorPagina = cargas.length > 0 && cargas.length < cargasPorPagina ? cargasPorPagina : cargasPorPagina;
-              const alturaLinha = cargas.length > 0 && cargas.length < cargasPorPagina ? 'py-1.5' : 'py-0';
+              const totalPaginas = cargas.length > cargasPorPagina ? Math.ceil(cargas.length / cargasPorPagina) : 1;
 
               return Array.from({ length: totalPaginas }, (_, pageIdx) => {
                 const startIdx = pageIdx * cargasPorPagina;
                 const endIdx = startIdx + cargasPorPagina;
                 const cargasPagina = cargas.slice(startIdx, endIdx);
-                const linhasVazias = pageIdx === 0 && cargas.length < cargasPorPagina 
-                  ? cargasPorPagina - cargas.length 
-                  : (pageIdx === totalPaginas - 1 ? cargasPorPagina - cargasPagina.length : 0);
+                const linhasVazias = cargasPorPagina - cargasPagina.length;
 
                 return (
                   <div key={pageIdx} className={`overflow-x-auto mb-0 print:mb-0 mt-0 ${pageIdx > 0 ? 'print:break-before-page' : ''}`}>
@@ -271,33 +267,33 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                       </colgroup>
                       <thead className="bg-slate-200">
                         <tr>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PLACA CAMINHÃO</th>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">HORA DE SAÍDA</th>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PESO<br/>(t)</th>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">O/M</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">PLACA CAMINHÃO</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">HORA DE SAÍDA</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">PESO<br/>(t)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">O/M</th>
                         </tr>
                       </thead>
                       <tbody>
                         {cargasPagina.map((carga, idx) => (
                           <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.placa_caminhao || '-'}</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.hora_saida || '-'}</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.peso || '-'}</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.temperatura_1 || '-'}</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.temperatura_2 || '-'}</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha}`}>{carga.observacao || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.placa_caminhao || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.hora_saida || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.peso || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.temperatura_1 || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.temperatura_2 || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5">{carga.observacao || '-'}</td>
                           </tr>
                         ))}
                         {Array.from({ length: linhasVazias }, (_, idx) => (
                           <tr key={`empty-${idx}`} className={(cargasPagina.length + idx) % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
-                            <td className={`border border-slate-400 px-0.5 ${alturaLinha}`}>-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5">-</td>
                           </tr>
                         ))}
                       </tbody>
