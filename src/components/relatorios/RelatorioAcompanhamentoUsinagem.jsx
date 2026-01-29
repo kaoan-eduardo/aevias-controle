@@ -96,86 +96,86 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
         {/* Conteúdo Principal */}
         <div id="report-content" className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
           {/* Cabeçalho com Logo e Data */}
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-1 print:pb-1 print:mb-1">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-10 print:h-7 object-contain" 
+                className="h-14 print:h-12 object-contain" 
               />
             </div>
             <div className="text-center">
-              <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+              <h1 className="text-sm font-bold text-gray-800 leading-tight print:text-xs print:leading-tight">
                 ACOMPANHAMENTO DE USINAGEM
               </h1>
             </div>
             <div className="flex justify-end items-start">
               <div className="text-right">
-                <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
-                <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio.data)}</p>
+                <p className="text-xs font-bold text-gray-700 print:text-[10px]">DATA:</p>
+                <p className="text-sm font-semibold text-gray-900 print:text-xs">{formatDate(ensaio.data)}</p>
               </div>
             </div>
           </header>
 
           <main className="text-sm print:text-sm">
             {/* DADOS DA OBRA */}
-            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 text-[8px] leading-tight">
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-2 py-1 font-bold text-center mb-1 text-[9px] leading-tight print:px-1 print:py-0.5 print:mb-0.5">
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
+            <div className="grid grid-cols-3 gap-x-2 gap-y-1 mb-1 text-[9px] leading-tight px-1 print:gap-x-1 print:gap-y-0.5 print:mb-0.5 print:px-0.5">
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">TRECHO:</p>
                 <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">PEDREIRA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">PEDREIRA:</p>
                 <p className="text-gray-900">{ensaio.pedreira || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">OBRA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">OBRA:</p>
                 <p className="text-gray-900">{obra?.name || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">Nº PROJETO:</p>
                 <p className="text-gray-900">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">FAIXA ESPECIFICADA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">FAIXA ESPECIFICADA:</p>
                 <p className="text-gray-900">{ensaio.faixa_especificada || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">RODOVIA:</p>
                 <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">USINA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">USINA:</p>
                 <p className="text-gray-900">{ensaio.usina || 'N/A'}</p>
               </div>
 
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">LABORATORISTA:</p>
+              <div className="col-span-1 mb-1 print:mb-0.5">
+                <p className="font-bold text-gray-700 mb-0.5 print:mb-0">LABORATORISTA:</p>
                 <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
               </div>
             </div>
 
             {/* DADOS DO ENSAIO */}
-            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 mt-0 text-[8px] leading-tight">
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-2 py-1 font-bold text-center mb-1 mt-1 text-[9px] leading-tight print:px-1 print:py-0.5 print:mb-0.5 print:mt-0.5">
               DADOS DO ENSAIO
             </div>
 
-            <div className="overflow-x-auto mb-0 print:mb-0">
+            <div className="overflow-x-auto mb-1 print:mb-0.5">
               <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
                 <colgroup>
                   <col style={{width: '36%'}} />
@@ -235,23 +235,23 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                 return (
                   <div key={pageIdx} className={`overflow-x-auto mb-0 print:mb-0 mt-0 ${pageIdx > 0 ? 'print:break-before-page' : ''}`}>
                     {pageIdx > 0 && (
-                      <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0 print:mt-0">
+                      <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-1 print:pb-1 print:mb-1 print:mt-0">
                         <div className="flex justify-start">
                           <img 
                             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                             alt="Logo Regional" 
-                            className="h-10 print:h-7 object-contain" 
+                            className="h-14 print:h-12 object-contain" 
                           />
                         </div>
                         <div className="text-center">
-                          <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+                          <h1 className="text-sm font-bold text-gray-800 leading-tight print:text-xs print:leading-tight">
                             ACOMPANHAMENTO DE USINAGEM
                           </h1>
                         </div>
                         <div className="flex justify-end items-start">
                           <div className="text-right">
-                            <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
-                            <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio.data)}</p>
+                            <p className="text-xs font-bold text-gray-700 print:text-[10px]">DATA:</p>
+                            <p className="text-sm font-semibold text-gray-900 print:text-xs">{formatDate(ensaio.data)}</p>
                           </div>
                         </div>
                       </header>
