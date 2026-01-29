@@ -123,7 +123,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-4 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
+            <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -132,11 +132,6 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
                 <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
-              </div>
-
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
-                <p className="text-gray-900">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
               </div>
 
               <div className="col-span-1 mb-0.5">
@@ -150,8 +145,18 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               </div>
 
               <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
+                <p className="text-gray-900">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">FAIXA ESPECIFICADA:</p>
                 <p className="text-gray-900">{ensaio.faixa_especificada || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
+                <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
               </div>
 
               <div className="col-span-1 mb-0.5">
@@ -163,11 +168,6 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                 <p className="font-bold text-gray-700 mb-0">LABORATORISTA:</p>
                 <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
               </div>
-
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
-                <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
-              </div>
             </div>
 
             {/* DADOS DO ENSAIO */}
@@ -176,7 +176,14 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </div>
 
             <div className="overflow-x-auto mb-0 print:mb-0">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight">
+              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+                <colgroup>
+                  <col style={{width: '40%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '12%'}} />
+                </colgroup>
                 <thead>
                   <tr className="bg-slate-200">
                     <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">AGREGADOS</th>
@@ -215,7 +222,15 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
 
             {/* TABELA DE CARGAS */}
             <div className="overflow-x-auto mb-0 print:mb-0 mt-0">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight">
+              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+                <colgroup>
+                  <col style={{width: '15%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '10%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '12%'}} />
+                  <col style={{width: '39%'}} />
+                </colgroup>
                 <thead className="bg-slate-200">
                   <tr>
                     <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PLACA CAMINHÃO</th>
@@ -254,16 +269,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               </table>
             </div>
 
-            {/* Observações */}
-            {ensaio.observacoes_gerais && (
-              <div className="mb-0 mt-0 print:mt-0">
-                <div className="bg-slate-200 px-1 py-0 font-bold text-[8px] print:text-[7px] print:py-0">OBSERVAÇÕES</div>
-                <div className="border border-slate-300 p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]">
-                  {ensaio.observacoes_gerais}
-                </div>
-              </div>
-            )}
-          </main>
+            </main>
 
           {/* Assinaturas */}
           <footer className="mt-0 px-1.5 print:break-inside-avoid print:mt-0 print:px-0.5">

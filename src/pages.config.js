@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AcompanhamentoUsinagem from './pages/AcompanhamentoUsinagem';
 import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
@@ -89,11 +90,11 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import AcompanhamentoUsinagem from './pages/AcompanhamentoUsinagem';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AcompanhamentoUsinagem": AcompanhamentoUsinagem,
     "ChecklistAplicacao": ChecklistAplicacao,
     "ChecklistConcretagem": ChecklistConcretagem,
     "ChecklistMRAF": ChecklistMRAF,
@@ -136,7 +137,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "AcompanhamentoUsinagem": AcompanhamentoUsinagem,
 }
 
 export const pagesConfig = {

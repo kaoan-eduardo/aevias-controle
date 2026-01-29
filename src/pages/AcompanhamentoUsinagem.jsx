@@ -41,7 +41,6 @@ export default function AcompanhamentoUsinagemPage() {
     temperatura_ligante: '',
     agregados: [],
     cargas: [],
-    observacoes_gerais: '',
     status: 'rascunho'
   });
 
@@ -652,22 +651,6 @@ export default function AcompanhamentoUsinagemPage() {
                 </table>
               </div>
             )}
-          </CardContent>
-        </Card>
-
-        {/* Observações */}
-        <Card className="bg-white/40 backdrop-blur-lg border-white/20">
-          <CardHeader>
-            <CardTitle className="text-[#00233B]">Observações Gerais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              value={formData.observacoes_gerais}
-              onChange={(e) => setFormData(prev => ({ ...prev, observacoes_gerais: e.target.value }))}
-              placeholder="Adicione observações gerais sobre o acompanhamento..."
-              rows={4}
-              disabled={!isEditable}
-            />
           </CardContent>
         </Card>
 
