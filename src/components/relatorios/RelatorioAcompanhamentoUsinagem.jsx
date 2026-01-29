@@ -130,13 +130,12 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                   <th className="border border-gray-400 p-2">AGREGADOS</th>
                   <th className="border border-gray-400 p-2">COMPOSIÇÃO<br/>(%)</th>
                   <th className="border border-gray-400 p-2">UMIDADE<br/>(%)</th>
-                  <th className="border border-gray-400 p-2" colSpan="3">TEMPERATURAS</th>
+                  <th className="border border-gray-400 p-2" colSpan="2">TEMPERATURAS</th>
                 </tr>
                 <tr>
                   <th className="border border-gray-400 p-2"></th>
                   <th className="border border-gray-400 p-2"></th>
                   <th className="border border-gray-400 p-2"></th>
-                  <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">-</th>
                   <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T1<br/>(°C)</th>
                   <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T2<br/>(°C)</th>
                 </tr>
@@ -146,30 +145,18 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                   <td className="border border-gray-400 p-2 font-semibold">LIGANTE (NOME)</td>
                   <td className="border border-gray-400 p-2">{ensaio.ligante_nome || '-'}</td>
                   <td className="border border-gray-400 p-2">-</td>
-                  <td className="border border-gray-400 p-2 font-semibold text-center">TANQUE</td>
-                  <td className="border border-gray-400 p-2">{ensaio.agregados?.[0]?.temperatura_t1 || '-'}</td>
+                  <td className="border border-gray-400 p-2 text-center">{ensaio.temperatura_ligante || '-'}</td>
                   <td className="border border-gray-400 p-2">-</td>
                 </tr>
-                {[...Array(6)].map((_, idx) => {
-                  const agregado = ensaio.agregados?.[idx];
-                  const isSiloQuente = idx >= 2; // Agregados 3-6 mostram "SILO QUENTE"
-                  
-                  return (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="border border-gray-400 p-2 font-semibold">Agregado {idx + 1}</td>
-                      <td className="border border-gray-400 p-2 text-center">{agregado?.composicao || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{agregado?.umidade || '-'}</td>
-                      {idx === 2 && (
-                        <td className="border border-gray-400 p-2 font-semibold text-center" rowSpan="4">
-                          SILO QUENTE<br/>(SE APLICÁVEL)
-                        </td>
-                      )}
-                      {idx < 2 && <td className="border border-gray-400 p-2"></td>}
-                      <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t1 || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t2 || '-'}</td>
-                    </tr>
-                  );
-                })}
+                {ensaio.agregados?.map((agregado, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="border border-gray-400 p-2 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.composicao || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.umidade || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t1 || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t2 || '-'}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </section>

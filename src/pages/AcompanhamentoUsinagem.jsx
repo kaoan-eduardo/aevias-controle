@@ -38,14 +38,8 @@ export default function AcompanhamentoUsinagemPage() {
     rodovia: '',
     usina: '',
     ligante_nome: '',
-    agregados: [
-      { nome: 'Agregado 1', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-      { nome: 'Agregado 2', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-      { nome: 'Agregado 3', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-      { nome: 'Agregado 4', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-      { nome: 'Agregado 5', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-      { nome: 'Agregado 6', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' }
-    ],
+    temperatura_ligante: '',
+    agregados: [],
     cargas: [],
     observacoes_gerais: '',
     status: 'rascunho'
@@ -97,14 +91,7 @@ export default function AcompanhamentoUsinagemPage() {
         
         setFormData({
           ...ensaioData,
-          agregados: ensaioData.agregados || [
-            { nome: 'Agregado 1', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-            { nome: 'Agregado 2', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-            { nome: 'Agregado 3', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-            { nome: 'Agregado 4', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-            { nome: 'Agregado 5', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' },
-            { nome: 'Agregado 6', composicao: '', umidade: '', temperatura_t1: '', temperatura_t2: '' }
-          ],
+          agregados: ensaioData.agregados || [],
           cargas: ensaioData.cargas || []
         });
       } else {
@@ -134,12 +121,38 @@ export default function AcompanhamentoUsinagemPage() {
 
   const handleProjectChange = (projectId) => {
     const project = filteredProjects.find(p => p.id === projectId);
+    
+    // Buscar a faixa granulométrica do projeto
+    let faixaName = '';
+    if (project?.faixa_granulometrica_id) {
+      base44.entities.FaixaGranulometrica.get(project.faixa_granulometrica_id)
+        .then(faixa => {
+          if (faixa) {
+            setFormData(prev => ({
+              ...prev,
+              faixa_especificada: faixa.nome || ''
+            }));
+          }
+        })
+        .catch(err => console.error("Erro ao buscar faixa:", err));
+    }
+    
+    // Preencher agregados do projeto
+    const agregadosDoProjeto = project?.agregados?.map((agg, index) => ({
+      nome: agg.nome || `Agregado ${index + 1}`,
+      composicao: agg.percentual_mistura || '',
+      umidade: '',
+      temperatura_t1: '',
+      temperatura_t2: ''
+    })) || [];
+    
     setFormData(prev => ({
       ...prev,
       project_id: projectId,
       numero_projeto: project?.name || '',
       ligante_nome: project?.ligante?.tipo || '',
-      pedreira: project?.agregados?.[0]?.pedreira || ''
+      pedreira: project?.agregados?.[0]?.pedreira || '',
+      agregados: agregadosDoProjeto
     }));
   };
 
@@ -147,6 +160,26 @@ export default function AcompanhamentoUsinagemPage() {
     const newAgregados = [...formData.agregados];
     newAgregados[index] = { ...newAgregados[index], [field]: value };
     setFormData(prev => ({ ...prev, agregados: newAgregados }));
+  };
+
+  const adicionarAgregado = () => {
+    setFormData(prev => ({
+      ...prev,
+      agregados: [...prev.agregados, {
+        nome: `Agregado ${prev.agregados.length + 1}`,
+        composicao: '',
+        umidade: '',
+        temperatura_t1: '',
+        temperatura_t2: ''
+      }]
+    }));
+  };
+
+  const removerAgregado = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      agregados: prev.agregados.filter((_, i) => i !== index)
+    }));
   };
 
   const adicionarCarga = () => {
@@ -355,7 +388,8 @@ export default function AcompanhamentoUsinagemPage() {
                   id="faixa_especificada"
                   value={formData.faixa_especificada}
                   onChange={(e) => setFormData(prev => ({ ...prev, faixa_especificada: e.target.value }))}
-                  disabled={!isEditable}
+                  disabled={true}
+                  className="bg-gray-100"
                 />
               </div>
             </div>
@@ -365,86 +399,130 @@ export default function AcompanhamentoUsinagemPage() {
         {/* Dados do Ensaio - Agregados */}
         <Card className="bg-white/40 backdrop-blur-lg border-white/20">
           <CardHeader>
-            <CardTitle className="text-[#00233B]">Dados do Ensaio - Agregados</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-[#00233B]">Dados do Ensaio - Agregados</CardTitle>
+              {isEditable && formData.agregados.length > 0 && (
+                <Button onClick={adicionarAgregado} size="sm" className="bg-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/90">
+                  <Plus className="w-4 h-4 mr-1" /> Adicionar Agregado
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="ligante_nome">Ligante (Nome)</Label>
-              <Input
-                id="ligante_nome"
-                value={formData.ligante_nome}
-                onChange={(e) => setFormData(prev => ({ ...prev, ligante_nome: e.target.value }))}
-                disabled={!isEditable}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="ligante_nome">Ligante (Nome)</Label>
+                <Input
+                  id="ligante_nome"
+                  value={formData.ligante_nome}
+                  onChange={(e) => setFormData(prev => ({ ...prev, ligante_nome: e.target.value }))}
+                  disabled={!isEditable}
+                />
+              </div>
+              <div>
+                <Label htmlFor="temperatura_ligante">Temperatura do Ligante (CAP) - °C</Label>
+                <Input
+                  id="temperatura_ligante"
+                  type="number"
+                  step="0.1"
+                  value={formData.temperatura_ligante}
+                  onChange={(e) => setFormData(prev => ({ ...prev, temperatura_ligante: e.target.value }))}
+                  disabled={!isEditable}
+                />
+              </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-300 text-sm">
-                <thead className="bg-slate-700 text-white">
-                  <tr>
-                    <th className="border border-gray-300 p-2">Agregado</th>
-                    <th className="border border-gray-300 p-2">Composição (%)</th>
-                    <th className="border border-gray-300 p-2">Umidade (%)</th>
-                    <th className="border border-gray-300 p-2">T1 (°C) - Tanque</th>
-                    <th className="border border-gray-300 p-2">T2 (°C) - Silo Quente</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {formData.agregados.map((agregado, index) => (
-                    <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="border border-gray-300 p-2">
-                        <Input
-                          value={agregado.nome}
-                          onChange={(e) => handleAgregadoChange(index, 'nome', e.target.value)}
-                          disabled={!isEditable}
-                          className="text-sm"
-                        />
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={agregado.composicao}
-                          onChange={(e) => handleAgregadoChange(index, 'composicao', e.target.value)}
-                          disabled={!isEditable}
-                          className="text-sm"
-                        />
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={agregado.umidade}
-                          onChange={(e) => handleAgregadoChange(index, 'umidade', e.target.value)}
-                          disabled={!isEditable}
-                          className="text-sm"
-                        />
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={agregado.temperatura_t1}
-                          onChange={(e) => handleAgregadoChange(index, 'temperatura_t1', e.target.value)}
-                          disabled={!isEditable}
-                          className="text-sm"
-                        />
-                      </td>
-                      <td className="border border-gray-300 p-2">
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={agregado.temperatura_t2}
-                          onChange={(e) => handleAgregadoChange(index, 'temperatura_t2', e.target.value)}
-                          disabled={!isEditable}
-                          className="text-sm"
-                        />
-                      </td>
+            {formData.agregados.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-[#00233B]/70 mb-4">Nenhum agregado cadastrado. Selecione um projeto ou adicione agregados manualmente.</p>
+                {isEditable && (
+                  <Button onClick={adicionarAgregado} className="bg-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/90">
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Primeiro Agregado
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border border-gray-300 text-sm">
+                  <thead className="bg-slate-700 text-white">
+                    <tr>
+                      <th className="border border-gray-300 p-2">Agregado</th>
+                      <th className="border border-gray-300 p-2">Composição (%)</th>
+                      <th className="border border-gray-300 p-2">Umidade (%)</th>
+                      <th className="border border-gray-300 p-2">T1 (°C)</th>
+                      <th className="border border-gray-300 p-2">T2 (°C)</th>
+                      {isEditable && <th className="border border-gray-300 p-2">Ações</th>}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {formData.agregados.map((agregado, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="border border-gray-300 p-2">
+                          <Input
+                            value={agregado.nome}
+                            onChange={(e) => handleAgregadoChange(index, 'nome', e.target.value)}
+                            disabled={!isEditable}
+                            className="text-sm"
+                          />
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={agregado.composicao}
+                            onChange={(e) => handleAgregadoChange(index, 'composicao', e.target.value)}
+                            disabled={!isEditable}
+                            className="text-sm"
+                          />
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={agregado.umidade}
+                            onChange={(e) => handleAgregadoChange(index, 'umidade', e.target.value)}
+                            disabled={!isEditable}
+                            className="text-sm"
+                          />
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={agregado.temperatura_t1}
+                            onChange={(e) => handleAgregadoChange(index, 'temperatura_t1', e.target.value)}
+                            disabled={!isEditable}
+                            className="text-sm"
+                          />
+                        </td>
+                        <td className="border border-gray-300 p-2">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={agregado.temperatura_t2}
+                            onChange={(e) => handleAgregadoChange(index, 'temperatura_t2', e.target.value)}
+                            disabled={!isEditable}
+                            className="text-sm"
+                          />
+                        </td>
+                        {isEditable && (
+                          <td className="border border-gray-300 p-2 text-center">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removerAgregado(index)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
 
