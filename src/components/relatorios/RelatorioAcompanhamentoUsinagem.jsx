@@ -92,36 +92,80 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             <table className="w-full border-collapse border border-gray-400 text-xs">
               <tbody>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">CLIENTE:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{regional?.cliente || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">PROJETO:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.numero_projeto || project?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">FATOR CORREÇÃO PRENSA:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">N/A</td>
+                  <td className="border border-gray-400 p-2 w-1/6 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">CLIENTE:</div>
+                    <div className="font-semibold">{regional?.cliente || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 w-1/6 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">PROJETO:</div>
+                    <div className="font-semibold">{ensaio.numero_projeto || project?.name || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 w-1/6 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">VOLUME VAZIOS PROJETO:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 w-1/6 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">FATOR CORREÇÃO PRENSA:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 w-1/6 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">DENS. ÁGUA 25°C:</div>
+                    <div className="font-semibold">0,9971 g/cm³</div>
+                  </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">OBRA:</td>
-                  <td className="border border-gray-400 p-2">{obra?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">FAIXA ESPECIFICADA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.faixa_especificada || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">DENS. ÁGUA 25°C:</td>
-                  <td className="border border-gray-400 p-2">0,9971 g/cm³</td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">OBRA:</div>
+                    <div className="font-semibold">{obra?.name || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">FAIXA ESPECIFICADA:</div>
+                    <div className="font-semibold">{ensaio.faixa_especificada || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">DENS. APARENTE PROJETO:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">DENS. RICE PROJETO:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">DATA:</div>
+                    <div className="font-semibold">{formatDate(ensaio.data)}</div>
+                  </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">RODOVIA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.rodovia || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">USINA FORNECEDORA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.usina || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">DATA:</td>
-                  <td className="border border-gray-400 p-2">{formatDate(ensaio.data)}</td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">RODOVIA:</div>
+                    <div className="font-semibold">{ensaio.rodovia || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">USINA FORNECEDORA:</div>
+                    <div className="font-semibold">{ensaio.usina || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">TRECHO:</div>
+                    <div className="font-semibold">{ensaio.trecho || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">SERVIÇO:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white">
+                    <div className="text-[10px] text-gray-600 mb-1">ESPESSURA PROJETO:</div>
+                    <div className="font-semibold">N/A</div>
+                  </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">TRECHO:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.trecho || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">LABORATORISTA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.laboratorista_name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">ESPESSURA PROJETO:</td>
-                  <td className="border border-gray-400 p-2">N/A</td>
+                  <td className="border border-gray-400 p-2 bg-white" colSpan="2">
+                    <div className="text-[10px] text-gray-600 mb-1">ENSAIO REALIZADO POR:</div>
+                    <div className="font-semibold">{ensaio.laboratorista_name || 'N/A'}</div>
+                  </td>
+                  <td className="border border-gray-400 p-2 bg-white" colSpan="3">
+                    <div className="text-[10px] text-gray-600 mb-1">LABORATORISTA:</div>
+                    <div className="font-semibold">{ensaio.laboratorista_name || 'N/A'}</div>
+                  </td>
                 </tr>
               </tbody>
             </table>
