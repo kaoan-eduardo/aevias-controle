@@ -70,6 +70,7 @@ import NaoConformidades from './pages/NaoConformidades';
 import Produtividade from './pages/Produtividade';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
+import RelatorioAcompanhamentoUsinagem from './pages/RelatorioAcompanhamentoUsinagem';
 import RelatorioCAUQ from './pages/RelatorioCAUQ';
 import RelatorioChecklist from './pages/RelatorioChecklist';
 import RelatorioChecklistAplicacao from './pages/RelatorioChecklistAplicacao';
@@ -88,7 +89,6 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import RelatorioAcompanhamentoUsinagem from './pages/RelatorioAcompanhamentoUsinagem';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +116,7 @@ export const PAGES = {
     "Produtividade": Produtividade,
     "Projects": Projects,
     "Regionais": Regionais,
+    "RelatorioAcompanhamentoUsinagem": RelatorioAcompanhamentoUsinagem,
     "RelatorioCAUQ": RelatorioCAUQ,
     "RelatorioChecklist": RelatorioChecklist,
     "RelatorioChecklistAplicacao": RelatorioChecklistAplicacao,
@@ -134,7 +135,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "RelatorioAcompanhamentoUsinagem": RelatorioAcompanhamentoUsinagem,
 }
 
 export const pagesConfig = {
