@@ -411,7 +411,7 @@ export default function AcompanhamentoUsinagemPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="ligante_nome">Ligante (Nome)</Label>
+                <Label htmlFor="ligante_nome">Ligante</Label>
                 <Input
                   id="ligante_nome"
                   value={formData.ligante_nome}
