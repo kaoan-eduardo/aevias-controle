@@ -2395,29 +2395,30 @@ export default function MeusEnsaios() {
       return;
     }
     try {
-      const entityMap = {
-        "DiarioObra": DiarioObra,
-        "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
-        "EnsaioDensidade": EnsaioDensidade,
-        "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
-        "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
-        "ChecklistUsina": ChecklistUsina,
-        "ChecklistAplicacao": ChecklistAplicacao,
-        "ChecklistMRAF": ChecklistMRAF,
-        "ChecklistConcretagem": ChecklistConcretagem,
-        "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-        "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
-        "EnsaioSondagem": base44.entities.EnsaioSondagem,
-        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual
-      };
+       const entityMap = {
+         "DiarioObra": DiarioObra,
+         "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+         "EnsaioDensidade": EnsaioDensidade,
+         "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+         "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+         "ChecklistUsina": ChecklistUsina,
+         "ChecklistAplicacao": ChecklistAplicacao,
+         "ChecklistMRAF": ChecklistMRAF,
+         "ChecklistConcretagem": ChecklistConcretagem,
+         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+         "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
+         "EnsaioSondagem": base44.entities.EnsaioSondagem,
+         "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
+         "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem
+       };
 
-      const Entity = entityMap[ensaio.entityType];
-      await Entity.update(ensaio.id, {
-        approved: false,
-        approved_by: user.email,
-        approved_date: new Date().toISOString(),
-        rejection_reason: motivo
-      });
+       const Entity = entityMap[ensaio.entityType];
+       await Entity.update(ensaio.id, {
+         approved: false,
+         approved_by: user.email,
+         approved_date: new Date().toISOString(),
+         rejection_reason: motivo
+       });
 
       loadData();
       alert('Registro reprovado com sucesso!');
