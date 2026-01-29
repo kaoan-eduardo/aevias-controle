@@ -419,6 +419,25 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
         </div>
       </div>
 
+      {/* --- Página 3: Ações Corretivas (se houver) --- */}
+      {temAcoesCorretivas && (
+        <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
+          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+            <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+            <main className="flex-grow mt-6">
+              <SectionTitle>Ações Corretivas Realizadas</SectionTitle>
+              <div className="border-2 border-slate-300 rounded-lg p-6 bg-slate-50 min-h-48">
+                <p className="text-base leading-relaxed whitespace-pre-wrap">{checklist.acoes_corretivas_descricao}</p>
+              </div>
+            </main>
+            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
+              Página 3 de {totalPages}
+            </footer>
+          </div>
+        </div>
+      )}
+
       {/* --- Páginas seguintes: Relatório Fotográfico --- */}
       {photoChunks.map((chunk, pageIndex) => (
         <div key={pageIndex} className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
