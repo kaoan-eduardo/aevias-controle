@@ -220,54 +220,92 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               </table>
             </div>
 
-            {/* TABELA DE CARGAS */}
-            <div className="overflow-x-auto mb-0 print:mb-0 mt-0">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
-                <colgroup>
-                  <col style={{width: '15%'}} />
-                  <col style={{width: '12%'}} />
-                  <col style={{width: '8%'}} />
-                  <col style={{width: '12%'}} />
-                  <col style={{width: '12%'}} />
-                  <col style={{width: '41%'}} />
-                </colgroup>
-                <thead className="bg-slate-200">
-                  <tr>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PLACA CAMINHÃO</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">HORA DE SAÍDA</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PESO<br/>(t)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">O/M</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ensaio.cargas && ensaio.cargas.length > 0 ? (
-                    ensaio.cargas.map((carga, idx) => (
-                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.placa_caminhao || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.hora_saida || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.peso || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_1 || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_2 || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0">{carga.observacao || '-'}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    [...Array(20)].map((_, idx) => (
-                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0">-</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            {/* TABELA DE CARGAS - Paginação Dinâmica */}
+            {(() => {
+              const cargas = ensaio.cargas || [];
+              const cargasPorPagina = 20;
+              const totalPaginas = Math.ceil(Math.max(cargas.length, cargasPorPagina) / cargasPorPagina);
+              const linhasPorPagina = cargas.length > 0 && cargas.length < cargasPorPagina ? cargasPorPagina : cargasPorPagina;
+              const alturaLinha = cargas.length > 0 && cargas.length < cargasPorPagina ? 'py-1.5' : 'py-0';
+
+              return Array.from({ length: totalPaginas }, (_, pageIdx) => {
+                const startIdx = pageIdx * cargasPorPagina;
+                const endIdx = startIdx + cargasPorPagina;
+                const cargasPagina = cargas.slice(startIdx, endIdx);
+                const linhasVazias = pageIdx === 0 && cargas.length < cargasPorPagina 
+                  ? cargasPorPagina - cargas.length 
+                  : (pageIdx === totalPaginas - 1 ? cargasPorPagina - cargasPagina.length : 0);
+
+                return (
+                  <div key={pageIdx} className={`overflow-x-auto mb-0 print:mb-0 mt-0 ${pageIdx > 0 ? 'print:break-before-page' : ''}`}>
+                    {pageIdx > 0 && (
+                      <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0 print:mt-0">
+                        <div className="flex justify-start">
+                          <img 
+                            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                            alt="Logo Regional" 
+                            className="h-10 print:h-7 object-contain" 
+                          />
+                        </div>
+                        <div className="text-center">
+                          <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+                            ACOMPANHAMENTO DE USINAGEM
+                          </h1>
+                        </div>
+                        <div className="flex justify-end items-start">
+                          <div className="text-right">
+                            <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
+                            <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio.data)}</p>
+                          </div>
+                        </div>
+                      </header>
+                    )}
+                    <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+                      <colgroup>
+                        <col style={{width: '15%'}} />
+                        <col style={{width: '12%'}} />
+                        <col style={{width: '8%'}} />
+                        <col style={{width: '12%'}} />
+                        <col style={{width: '12%'}} />
+                        <col style={{width: '41%'}} />
+                      </colgroup>
+                      <thead className="bg-slate-200">
+                        <tr>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PLACA CAMINHÃO</th>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">HORA DE SAÍDA</th>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PESO<br/>(t)</th>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">O/M</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cargasPagina.map((carga, idx) => (
+                          <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.placa_caminhao || '-'}</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.hora_saida || '-'}</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.peso || '-'}</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.temperatura_1 || '-'}</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>{carga.temperatura_2 || '-'}</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha}`}>{carga.observacao || '-'}</td>
+                          </tr>
+                        ))}
+                        {Array.from({ length: linhasVazias }, (_, idx) => (
+                          <tr key={`empty-${idx}`} className={(cargasPagina.length + idx) % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha} text-center`}>-</td>
+                            <td className={`border border-slate-400 px-0.5 ${alturaLinha}`}>-</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              });
+            })()}
 
             </main>
 
