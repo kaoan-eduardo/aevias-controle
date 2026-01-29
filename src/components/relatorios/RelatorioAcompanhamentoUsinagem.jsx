@@ -178,11 +178,11 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             <div className="overflow-x-auto mb-0 print:mb-0">
               <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
                 <colgroup>
-                  <col style={{width: '34%'}} />
-                  <col style={{width: '16%'}} />
-                  <col style={{width: '16%'}} />
-                  <col style={{width: '17%'}} />
-                  <col style={{width: '17%'}} />
+                  <col style={{width: '20%'}} />
+                  <col style={{width: '20%'}} />
+                  <col style={{width: '20%'}} />
+                  <col style={{width: '20%'}} />
+                  <col style={{width: '20%'}} />
                 </colgroup>
                 <thead>
                   <tr className="bg-slate-200">
