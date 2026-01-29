@@ -178,11 +178,11 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             <div className="overflow-x-auto mb-0 print:mb-0">
               <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
                 <colgroup>
-                  <col style={{width: '48%'}} />
-                  <col style={{width: '13%'}} />
-                  <col style={{width: '13%'}} />
-                  <col style={{width: '13%'}} />
-                  <col style={{width: '13%'}} />
+                  <col style={{width: '34%'}} />
+                  <col style={{width: '16%'}} />
+                  <col style={{width: '16%'}} />
+                  <col style={{width: '17%'}} />
+                  <col style={{width: '17%'}} />
                 </colgroup>
                 <thead>
                   <tr className="bg-slate-200">
@@ -225,11 +225,11 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
                 <colgroup>
                   <col style={{width: '13%'}} />
-                  <col style={{width: '10%'}} />
+                  <col style={{width: '11%'}} />
                   <col style={{width: '8%'}} />
-                  <col style={{width: '13%'}} />
-                  <col style={{width: '13%'}} />
-                  <col style={{width: '43%'}} />
+                  <col style={{width: '14%'}} />
+                  <col style={{width: '14%'}} />
+                  <col style={{width: '40%'}} />
                 </colgroup>
                 <thead className="bg-slate-200">
                   <tr>
@@ -238,7 +238,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                     <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PESO<br/>(t)</th>
                     <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
                     <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">OBSERVAÇÃO</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">O/M</th>
                   </tr>
                 </thead>
                 <tbody>
