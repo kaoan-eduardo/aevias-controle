@@ -86,42 +86,34 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
 
           {/* DADOS DA OBRA */}
           <section className="mb-4">
-            <div className="bg-[#2c3e50] text-white font-bold text-center py-2 text-sm uppercase">
+            <div className="bg-[#BFCF99] text-[#00233B] font-bold text-center py-2 text-sm">
               DADOS DA OBRA
             </div>
             <table className="w-full border-collapse border border-gray-400 text-xs">
               <tbody>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">CLIENTE:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">CLIENTE:</td>
                   <td className="border border-gray-400 p-2 w-1/3">{regional?.cliente || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">PROJETO:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.numero_projeto || project?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white w-1/6">FATOR CORREÇÃO PRENSA:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">N/A</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">TRECHO:</td>
+                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.trecho || 'N/A'}</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">PEDREIRA:</td>
+                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.pedreira || 'N/A'}</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">OBRA:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">OBRA:</td>
                   <td className="border border-gray-400 p-2">{obra?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">FAIXA ESPECIFICADA:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">N° PROJETO:</td>
+                  <td className="border border-gray-400 p-2">{ensaio.numero_projeto || project?.name || 'N/A'}</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">FAIXA ESPECIFICADA:</td>
                   <td className="border border-gray-400 p-2">{ensaio.faixa_especificada || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">DENS. ÁGUA 25°C:</td>
-                  <td className="border border-gray-400 p-2">0,9971 g/cm³</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">RODOVIA:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">RODOVIA:</td>
                   <td className="border border-gray-400 p-2">{ensaio.rodovia || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">USINA FORNECEDORA:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">USINA:</td>
                   <td className="border border-gray-400 p-2">{ensaio.usina || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">DATA:</td>
-                  <td className="border border-gray-400 p-2">{formatDate(ensaio.data)}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">TRECHO:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.trecho || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">LABORATORISTA:</td>
+                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">LABORATORISTA:</td>
                   <td className="border border-gray-400 p-2">{ensaio.laboratorista_name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-[#2c3e50] text-white">ESPESSURA PROJETO:</td>
-                  <td className="border border-gray-400 p-2">N/A</td>
                 </tr>
               </tbody>
             </table>
@@ -129,81 +121,86 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
 
           {/* DADOS DO ENSAIO */}
           <section className="mb-4">
-            <div className="bg-[#2c3e50] text-white font-bold text-center py-2 text-sm uppercase">
+            <div className="bg-[#BFCF99] text-[#00233B] font-bold text-center py-2 text-sm">
               DADOS DO ENSAIO
             </div>
             <table className="w-full border-collapse border border-gray-400 text-xs">
-              <thead>
-                <tr className="bg-[#2c3e50] text-white">
-                  <th rowSpan="2" className="border border-gray-400 p-2">N°</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">EST.</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">L</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">DATA<br/>EXT</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">ESPESSURA<br/>(mm)</th>
-                  <th colSpan="3" className="border border-gray-400 p-2">MÉDIA MEDI. APARENTE Á</th>
-                  <th colSpan="3" className="border border-gray-400 p-2">VOL</th>
-                  <th colSpan="3" className="border border-gray-400 p-2">DENS.<br/>PROJ.<br/>(%)</th>
-                  <th colSpan="3" className="border border-gray-400 p-2">D.C<br/>RICE<br/>(%)</th>
-                  <th colSpan="3" className="border border-gray-400 p-2">VOZ<br/>MD2<br/>(%)</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">LEIT<br/>(Kgf)<br/>(MPa)</th>
-                  <th rowSpan="2" className="border border-gray-400 p-2">RTCD<br/>(MPa)</th>
+              <thead className="bg-slate-700 text-white">
+                <tr>
+                  <th className="border border-gray-400 p-2">AGREGADOS</th>
+                  <th className="border border-gray-400 p-2">COMPOSIÇÃO<br/>(%)</th>
+                  <th className="border border-gray-400 p-2">UMIDADE<br/>(%)</th>
+                  <th className="border border-gray-400 p-2" colSpan="2">TEMPERATURAS</th>
                 </tr>
-                <tr className="bg-[#4a5f7f] text-white text-[10px]">
-                  <th className="border border-gray-400 p-1">MED<br/>(mm)</th>
-                  <th className="border border-gray-400 p-1">FAR<br/>(g)</th>
-                  <th className="border border-gray-400 p-1">FIM<br/>(g)</th>
-                  <th className="border border-gray-400 p-1">FSAT<br/>(g)</th>
-                  <th className="border border-gray-400 p-1">VOL<br/>CP(g)</th>
-                  <th className="border border-gray-400 p-1">DENS.<br/>REAL<br/>(%)</th>
-                  <th className="border border-gray-400 p-1">G.C<br/>PROJ.<br/>(%)</th>
-                  <th className="border border-gray-400 p-1">D/A<br/>(g/cm³)</th>
-                  <th className="border border-gray-400 p-1">D.C<br/>RICE<br/>(%)</th>
-                  <th className="border border-gray-400 p-1">VOZ<br/>MD2<br/>(%)</th>
-                  <th className="border border-gray-400 p-1">LEIT<br/>(Kgf)</th>
-                  <th className="border border-gray-400 p-1">RTCD<br/>(MPa)</th>
+                <tr>
+                  <th className="border border-gray-400 p-2"></th>
+                  <th className="border border-gray-400 p-2"></th>
+                  <th className="border border-gray-400 p-2"></th>
+                  <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T1<br/>(°C)</th>
+                  <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T2<br/>(°C)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="bg-white">
+                  <td className="border border-gray-400 p-2 font-semibold">LIGANTE (NOME)</td>
+                  <td className="border border-gray-400 p-2">{ensaio.ligante_nome || '-'}</td>
+                  <td className="border border-gray-400 p-2">-</td>
+                  <td className="border border-gray-400 p-2 text-center">{ensaio.temperatura_ligante || '-'}</td>
+                  <td className="border border-gray-400 p-2">-</td>
+                </tr>
+                {ensaio.agregados?.map((agregado, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="border border-gray-400 p-2 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.composicao || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.umidade || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t1 || '-'}</td>
+                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t2 || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+
+          {/* TABELA DE CARGAS */}
+          <section className="mb-4">
+            <table className="w-full border-collapse border border-gray-400 text-xs">
+              <thead className="bg-slate-700 text-white">
+                <tr>
+                  <th className="border border-gray-400 p-2">PLACA CAMINHÃO</th>
+                  <th className="border border-gray-400 p-2">HORA DE SAÍDA</th>
+                  <th className="border border-gray-400 p-2">PESO<br/>(t)</th>
+                  <th className="border border-gray-400 p-2">TEMPERATURA<br/>(°C)</th>
+                  <th className="border border-gray-400 p-2">TEMPERATURA<br/>(°C)</th>
+                  <th className="border border-gray-400 p-2">OBSERVAÇÃO</th>
                 </tr>
               </thead>
               <tbody>
                 {ensaio.cargas && ensaio.cargas.length > 0 ? (
                   ensaio.cargas.map((carga, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="border border-gray-400 p-1 text-center">{idx + 1}</td>
-                      <td className="border border-gray-400 p-1 text-center">{carga.placa_caminhao || '-'}</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">{carga.hora_saida || '-'}</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">-</td>
-                      <td className="border border-gray-400 p-1 text-center">{carga.temperatura_1 || '-'}</td>
-                      <td className="border border-gray-400 p-1 text-center">{carga.temperatura_2 || '-'}</td>
+                      <td className="border border-gray-400 p-2 text-center">{carga.placa_caminhao || '-'}</td>
+                      <td className="border border-gray-400 p-2 text-center">{carga.hora_saida || '-'}</td>
+                      <td className="border border-gray-400 p-2 text-center">{carga.peso || '-'}</td>
+                      <td className="border border-gray-400 p-2 text-center">{carga.temperatura_1 || '-'}</td>
+                      <td className="border border-gray-400 p-2 text-center">{carga.temperatura_2 || '-'}</td>
+                      <td className="border border-gray-400 p-2">{carga.observacao || '-'}</td>
                     </tr>
                   ))
                 ) : (
-                  [...Array(3)].map((_, idx) => (
+                  [...Array(20)].map((_, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="border border-gray-400 p-1 text-center">{idx + 1}</td>
-                      {[...Array(19)].map((_, colIdx) => (
-                        <td key={colIdx} className="border border-gray-400 p-1 text-center">-</td>
-                      ))}
+                      <td className="border border-gray-400 p-2 text-center">-</td>
+                      <td className="border border-gray-400 p-2 text-center">-</td>
+                      <td className="border border-gray-400 p-2 text-center">-</td>
+                      <td className="border border-gray-400 p-2 text-center">-</td>
+                      <td className="border border-gray-400 p-2 text-center">-</td>
+                      <td className="border border-gray-400 p-2">-</td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
           </section>
-
-
 
           {/* Observações */}
           {ensaio.observacoes_gerais && (
