@@ -34,8 +34,19 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
     <>
       <style>{`
         @media print {
-          body { margin: 0; padding: 0; }
-          .no-print { display: none !important; }
+          @page {
+            size: A4 portrait;
+            margin: 5mm 6mm 4mm 6mm;
+          }
+          body {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .no-print { 
+            display: none !important; 
+          }
           #report-content {
             max-width: 100% !important;
             margin: 0 !important;
@@ -43,6 +54,25 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             box-shadow: none !important;
             border-radius: 0 !important;
             background: white;
+          }
+          header {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            display: grid !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            margin-top: 0 !important;
+          }
+          aside, nav, [data-sidebar], [role="navigation"] {
+            display: none !important;
+          }
+          ::-webkit-scrollbar {
+            display: none !important;
+          }
+          * {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
           }
         }
       `}</style>
@@ -64,188 +94,213 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
         </div>
 
         {/* Conteúdo Principal */}
-        <div id="report-content" className="bg-white font-sans p-8 max-w-6xl mx-auto">
+        <div id="report-content" className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
           {/* Cabeçalho com Logo e Data */}
-          <header className="flex items-center justify-between border-b-4 border-slate-700 pb-4 mb-6">
-            <div className="w-1/4">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+            <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-16 object-contain" 
+                className="h-10 print:h-7 object-contain" 
               />
             </div>
-            <div className="w-1/2 text-center">
-              <h1 className="text-lg font-bold text-gray-800 uppercase">Acompanhamento de Usinagem</h1>
+            <div className="text-center">
+              <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+                ACOMPANHAMENTO DE USINAGEM
+              </h1>
             </div>
-            <div className="w-1/4 flex justify-end">
-              <div className="border border-gray-300 rounded-lg px-3 py-1 bg-white shadow-sm">
-                <p className="text-gray-700 text-sm font-semibold">{formatDate(ensaio.data)}</p>
+            <div className="flex justify-end items-start">
+              <div className="text-right">
+                <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
+                <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio.data)}</p>
               </div>
             </div>
           </header>
 
-          {/* DADOS DA OBRA */}
-          <section className="mb-4">
-            <div className="bg-[#BFCF99] text-[#00233B] font-bold text-center py-2 text-sm">
+          <main className="text-sm print:text-sm">
+            {/* DADOS DA OBRA */}
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 text-[8px] leading-tight">
               DADOS DA OBRA
             </div>
-            <table className="w-full border-collapse border border-gray-400 text-xs">
-              <tbody>
-                <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">CLIENTE:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{regional?.cliente || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">TRECHO:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.trecho || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50 w-1/6">PEDREIRA:</td>
-                  <td className="border border-gray-400 p-2 w-1/3">{ensaio.pedreira || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">OBRA:</td>
-                  <td className="border border-gray-400 p-2">{obra?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">N° PROJETO:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.numero_projeto || project?.name || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">FAIXA ESPECIFICADA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.faixa_especificada || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">RODOVIA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.rodovia || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">USINA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.usina || 'N/A'}</td>
-                  <td className="border border-gray-400 p-2 font-semibold bg-gray-50">LABORATORISTA:</td>
-                  <td className="border border-gray-400 p-2">{ensaio.laboratorista_name || 'N/A'}</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
 
-          {/* DADOS DO ENSAIO */}
-          <section className="mb-4">
-            <div className="bg-[#BFCF99] text-[#00233B] font-bold text-center py-2 text-sm">
+            <div className="grid grid-cols-4 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
+                <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
+                <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
+                <p className="text-gray-900">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">PEDREIRA:</p>
+                <p className="text-gray-900">{ensaio.pedreira || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">OBRA:</p>
+                <p className="text-gray-900">{obra?.name || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">FAIXA ESPECIFICADA:</p>
+                <p className="text-gray-900">{ensaio.faixa_especificada || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">USINA:</p>
+                <p className="text-gray-900">{ensaio.usina || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">LABORATORISTA:</p>
+                <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
+                <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
+              </div>
+            </div>
+
+            {/* DADOS DO ENSAIO */}
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 mt-0 text-[8px] leading-tight">
               DADOS DO ENSAIO
             </div>
-            <table className="w-full border-collapse border border-gray-400 text-xs">
-              <thead className="bg-slate-700 text-white">
-                <tr>
-                  <th className="border border-gray-400 p-2">AGREGADOS</th>
-                  <th className="border border-gray-400 p-2">COMPOSIÇÃO<br/>(%)</th>
-                  <th className="border border-gray-400 p-2">UMIDADE<br/>(%)</th>
-                  <th className="border border-gray-400 p-2" colSpan="2">TEMPERATURAS</th>
-                </tr>
-                <tr>
-                  <th className="border border-gray-400 p-2"></th>
-                  <th className="border border-gray-400 p-2"></th>
-                  <th className="border border-gray-400 p-2"></th>
-                  <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T1<br/>(°C)</th>
-                  <th className="border border-gray-400 p-2 bg-gray-200 text-gray-800">T2<br/>(°C)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white">
-                  <td className="border border-gray-400 p-2 font-semibold">LIGANTE (NOME)</td>
-                  <td className="border border-gray-400 p-2">{ensaio.ligante_nome || '-'}</td>
-                  <td className="border border-gray-400 p-2">-</td>
-                  <td className="border border-gray-400 p-2 text-center">{ensaio.temperatura_ligante || '-'}</td>
-                  <td className="border border-gray-400 p-2">-</td>
-                </tr>
-                {ensaio.agregados?.map((agregado, idx) => (
-                  <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="border border-gray-400 p-2 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
-                    <td className="border border-gray-400 p-2 text-center">{agregado?.composicao || '-'}</td>
-                    <td className="border border-gray-400 p-2 text-center">{agregado?.umidade || '-'}</td>
-                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t1 || '-'}</td>
-                    <td className="border border-gray-400 p-2 text-center">{agregado?.temperatura_t2 || '-'}</td>
+
+            <div className="overflow-x-auto mb-0 print:mb-0">
+              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight">
+                <thead>
+                  <tr className="bg-slate-200">
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">AGREGADOS</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">COMPOSIÇÃO<br/>(%)</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">UMIDADE<br/>(%)</th>
+                    <th colSpan="2" className="border border-slate-400 px-0.5 py-0 font-bold text-center leading-tight">TEMPERATURAS</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-
-          {/* TABELA DE CARGAS */}
-          <section className="mb-4">
-            <table className="w-full border-collapse border border-gray-400 text-xs">
-              <thead className="bg-slate-700 text-white">
-                <tr>
-                  <th className="border border-gray-400 p-2">PLACA CAMINHÃO</th>
-                  <th className="border border-gray-400 p-2">HORA DE SAÍDA</th>
-                  <th className="border border-gray-400 p-2">PESO<br/>(t)</th>
-                  <th className="border border-gray-400 p-2">TEMPERATURA<br/>(°C)</th>
-                  <th className="border border-gray-400 p-2">TEMPERATURA<br/>(°C)</th>
-                  <th className="border border-gray-400 p-2">OBSERVAÇÃO</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ensaio.cargas && ensaio.cargas.length > 0 ? (
-                  ensaio.cargas.map((carga, idx) => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="border border-gray-400 p-2 text-center">{carga.placa_caminhao || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{carga.hora_saida || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{carga.peso || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{carga.temperatura_1 || '-'}</td>
-                      <td className="border border-gray-400 p-2 text-center">{carga.temperatura_2 || '-'}</td>
-                      <td className="border border-gray-400 p-2">{carga.observacao || '-'}</td>
+                  <tr className="bg-slate-100">
+                    <th className="border border-slate-400 px-0.5 py-0"></th>
+                    <th className="border border-slate-400 px-0.5 py-0"></th>
+                    <th className="border border-slate-400 px-0.5 py-0"></th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">T1 (°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">T2 (°C)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-white">
+                    <td className="border border-slate-400 px-0.5 py-0 font-semibold">LIGANTE</td>
+                    <td className="border border-slate-400 px-0.5 py-0 text-center">{ensaio.ligante_nome || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                    <td className="border border-slate-400 px-0.5 py-0 text-center font-semibold">{ensaio.temperatura_ligante || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                  </tr>
+                  {ensaio.agregados?.map((agregado, idx) => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                      <td className="border border-slate-400 px-0.5 py-0 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.composicao || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.umidade || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.temperatura_t1 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.temperatura_t2 || '-'}</td>
                     </tr>
-                  ))
-                ) : (
-                  [...Array(20)].map((_, idx) => (
-                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="border border-gray-400 p-2 text-center">-</td>
-                      <td className="border border-gray-400 p-2 text-center">-</td>
-                      <td className="border border-gray-400 p-2 text-center">-</td>
-                      <td className="border border-gray-400 p-2 text-center">-</td>
-                      <td className="border border-gray-400 p-2 text-center">-</td>
-                      <td className="border border-gray-400 p-2">-</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </section>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          {/* Observações */}
-          {ensaio.observacoes_gerais && (
-            <section className="mb-4">
-              <div className="border border-gray-400 p-3 bg-white">
-                <p className="font-semibold text-xs mb-2">OBSERVAÇÕES:</p>
-                <p className="text-xs whitespace-pre-wrap text-gray-700">{ensaio.observacoes_gerais}</p>
+            {/* TABELA DE CARGAS */}
+            <div className="overflow-x-auto mb-0 print:mb-0 mt-0">
+              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight">
+                <thead className="bg-slate-200">
+                  <tr>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PLACA CAMINHÃO</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">HORA DE SAÍDA</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">PESO<br/>(t)</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">OBSERVAÇÃO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ensaio.cargas && ensaio.cargas.length > 0 ? (
+                    ensaio.cargas.map((carga, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.placa_caminhao || '-'}</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.hora_saida || '-'}</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.peso || '-'}</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_1 || '-'}</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_2 || '-'}</td>
+                        <td className="border border-slate-400 px-0.5 py-0">{carga.observacao || '-'}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    [...Array(20)].map((_, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                        <td className="border border-slate-400 px-0.5 py-0">-</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Observações */}
+            {ensaio.observacoes_gerais && (
+              <div className="mb-0 mt-0 print:mt-0">
+                <div className="bg-slate-200 px-1 py-0 font-bold text-[8px] print:text-[7px] print:py-0">OBSERVAÇÕES</div>
+                <div className="border border-slate-300 p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]">
+                  {ensaio.observacoes_gerais}
+                </div>
               </div>
-            </section>
-          )}
+            )}
+          </main>
 
           {/* Assinaturas */}
-          <footer className="mt-6 pt-6 print:break-inside-avoid">
-            <div className="grid grid-cols-3 gap-8 items-end">
+          <footer className="mt-0 px-1.5 print:break-inside-avoid print:mt-0 print:px-0.5">
+            <div className="grid grid-cols-3 gap-1.5 items-end print:gap-1">
               <div className="text-center">
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Assinado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.laboratorista_name}</p>
-                  <p className="truncate max-w-full">{ensaio.created_by}</p>
-                  <p>em {formatDateBrasilia(ensaio.created_date)}</p>
+                <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                  {ensaio.laboratorista_name && (
+                    <>
+                      <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
+                      <p className="text-[7px]">{ensaio.created_by}</p>
+                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.created_date)}</p>
+                    </>
+                  )}
                 </div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">Laboratorista</p>
+                <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
+                  <p className="text-[7px] print:text-[6px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
                 </div>
               </div>
 
               <div className="text-center">
                 {ensaio.approver_details ? (
                   <>
-                    <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                      <p>Aprovado digitalmente por</p>
-                      <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.approver_details.name}</p>
-                      <p className="truncate max-w-full">{ensaio.approved_by}</p>
-                      {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
-                      <p>em {formatDateBrasilia(ensaio.approved_date)}</p>
+                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                      <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
+                      <p className="text-[7px]">{ensaio.approved_by}</p>
+                      {ensaio.approver_details.crea_number && <p className="text-[7px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                     </div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Responsável</p>
+                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
+                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="h-24 mb-2"></div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Responsável</p>
+                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
+                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
+                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 )}
@@ -254,29 +309,28 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               <div className="text-center">
                 {ensaio.client_signature?.signed_by ? (
                   <>
-                    <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                      <p>Assinado digitalmente por</p>
-                      <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.client_signature.engineer_name}</p>
-                      <p className="truncate max-w-full">{ensaio.client_signature.signed_by}</p>
-                      {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
-                      <p>em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
+                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                      <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
+                      <p className="text-[7px]">{ensaio.client_signature.signed_by}</p>
+                      {ensaio.client_signature.crea_number && <p className="text-[7px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                     </div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Cliente</p>
+                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
+                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="h-24 mb-2"></div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Cliente</p>
+                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
+                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
+                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 )}
               </div>
             </div>
           </footer>
-        </div>
+          </div>
       </div>
     </>
   );
