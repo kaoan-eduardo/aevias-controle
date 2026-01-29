@@ -477,7 +477,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               ))}
             </main>
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-500">
-              Página {pageIndex + 3} de {totalPages}
+              Página {pageIndex + (temAcoesCorretivas ? 4 : 3)} de {totalPages}
             </footer>
           </div>
         </div>
