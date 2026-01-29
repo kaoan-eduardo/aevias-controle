@@ -123,50 +123,50 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight" style={{gridTemplateColumns: 'repeat(3, minmax(0, 1fr))'}}>
-              <div className="mb-0.5">
+            <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
-                <p className="text-gray-900 truncate">{regional?.cliente || 'N/A'}</p>
+                <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
-                <p className="text-gray-900 truncate">{ensaio.trecho || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">PEDREIRA:</p>
-                <p className="text-gray-900 truncate">{ensaio.pedreira || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.pedreira || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">OBRA:</p>
-                <p className="text-gray-900 truncate">{obra?.name || 'N/A'}</p>
+                <p className="text-gray-900">{obra?.name || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
-                <p className="text-gray-900 truncate">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.numero_projeto || project?.name || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">FAIXA ESPECIFICADA:</p>
-                <p className="text-gray-900 truncate">{ensaio.faixa_especificada || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.faixa_especificada || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
-                <p className="text-gray-900 truncate">{ensaio.rodovia || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">USINA:</p>
-                <p className="text-gray-900 truncate">{ensaio.usina || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.usina || 'N/A'}</p>
               </div>
 
-              <div className="mb-0.5">
+              <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">LABORATORISTA:</p>
-                <p className="text-gray-900 truncate">{ensaio.laboratorista_name || 'N/A'}</p>
+                <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
               </div>
             </div>
 
