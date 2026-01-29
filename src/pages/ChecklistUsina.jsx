@@ -65,6 +65,8 @@ const getInitialFormData = () => ({
     fluencia: { realizado: false, quantidade: 0, resultados: [], conforme: null }
   },
   observacoes: "",
+  acoes_corretivas_realizado: null,
+  acoes_corretivas_descricao: "",
   fotos: [],
   status: "rascunho",
   approved: null,
