@@ -123,7 +123,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-3 gap-x-2 gap-y-1 mb-1 text-[9px] leading-tight px-1 print:gap-x-1 print:gap-y-0.5 print:mb-0.5 print:px-0.5">
+            <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 mb-1 text-[9px] leading-tight px-1 py-1.5 print:gap-x-1 print:gap-y-1 print:mb-0.5 print:px-0.5 print:py-1">
               <div className="col-span-1 mb-1 print:mb-0.5">
                 <p className="font-bold text-gray-700 mb-0.5 print:mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -186,34 +186,34 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                 </colgroup>
                 <thead>
                   <tr className="bg-slate-200">
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">AGREGADOS</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">COMPOSIÇÃO<br/>(%)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">UMIDADE<br/>(%)</th>
-                    <th colSpan="2" className="border border-slate-400 px-0.5 py-0 font-bold text-center leading-tight">TEMPERATURAS</th>
+                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">AGREGADOS</th>
+                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">COMPOSIÇÃO<br/>(%)</th>
+                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">UMIDADE<br/>(%)</th>
+                    <th colSpan="2" className="border border-slate-400 px-0.5 py-1 font-bold text-center leading-tight">TEMPERATURAS</th>
                   </tr>
                   <tr className="bg-slate-100">
-                    <th className="border border-slate-400 px-0.5 py-0"></th>
-                    <th className="border border-slate-400 px-0.5 py-0"></th>
-                    <th className="border border-slate-400 px-0.5 py-0"></th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">T1 (°C)</th>
-                    <th className="border border-slate-400 px-0.5 py-0 font-bold leading-tight">T2 (°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-1"></th>
+                    <th className="border border-slate-400 px-0.5 py-1"></th>
+                    <th className="border border-slate-400 px-0.5 py-1"></th>
+                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">T1 (°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">T2 (°C)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-white">
-                    <td className="border border-slate-400 px-0.5 py-0 font-semibold">LIGANTE</td>
-                    <td className="border border-slate-400 px-0.5 py-0 text-center">{ensaio.ligante_nome || '-'}</td>
-                    <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                    <td className="border border-slate-400 px-0.5 py-0 text-center font-semibold">{ensaio.temperatura_ligante || '-'}</td>
-                    <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 font-semibold">LIGANTE</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">{ensaio.ligante_nome || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center font-semibold">{ensaio.temperatura_ligante || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
                   </tr>
                   {ensaio.agregados?.map((agregado, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
-                      <td className="border border-slate-400 px-0.5 py-0 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
-                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.composicao || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.umidade || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.temperatura_t1 || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-0 text-center">{agregado?.temperatura_t2 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.composicao || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.umidade || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.temperatura_t1 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.temperatura_t2 || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
