@@ -270,7 +270,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                           <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[9px]">PESO<br/>(t)</th>
                           <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[9px]">TEMPERATURA<br/>(°C)</th>
                           <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[9px]">TEMPERATURA<br/>(°C)</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[9px]">O/M</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[9px]">OBSERVAÇÕES</th>
                         </tr>
                       </thead>
                       <tbody>
