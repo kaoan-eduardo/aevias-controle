@@ -337,7 +337,8 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
   
-  const totalPages = 1 + 1 + photoChunks.length;
+  const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
+  const totalPages = 1 + 1 + (temAcoesCorretivas ? 1 : 0) + photoChunks.length;
 
   return (
     <div className="bg-white font-sans">
