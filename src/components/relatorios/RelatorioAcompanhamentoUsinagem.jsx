@@ -94,7 +94,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
         </div>
 
         {/* Conteúdo Principal */}
-        <div id="report-content" className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
+        <div id="report-content" className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
           {/* Cabeçalho com Logo e Data */}
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
             <div className="flex justify-start">
