@@ -217,8 +217,29 @@ export default function AcompanhamentoUsinagemPage() {
 
     setSaving(true);
     try {
+      // Limpar dados antes de salvar - converter strings vazias em null para campos numéricos
+      const agregadosLimpos = formData.agregados.map(agg => ({
+        nome: agg.nome || '',
+        composicao: agg.composicao === '' ? null : parseFloat(agg.composicao),
+        umidade: agg.umidade === '' ? null : parseFloat(agg.umidade),
+        temperatura_t1: agg.temperatura_t1 === '' ? null : parseFloat(agg.temperatura_t1),
+        temperatura_t2: agg.temperatura_t2 === '' ? null : parseFloat(agg.temperatura_t2)
+      }));
+
+      const cargasLimpas = formData.cargas.map(carga => ({
+        placa_caminhao: carga.placa_caminhao || '',
+        hora_saida: carga.hora_saida || '',
+        peso: carga.peso === '' ? null : parseFloat(carga.peso),
+        temperatura_1: carga.temperatura_1 === '' ? null : parseFloat(carga.temperatura_1),
+        temperatura_2: carga.temperatura_2 === '' ? null : parseFloat(carga.temperatura_2),
+        observacao: carga.observacao || ''
+      }));
+
       const dataToSave = {
         ...formData,
+        temperatura_ligante: formData.temperatura_ligante === '' ? null : parseFloat(formData.temperatura_ligante),
+        agregados: agregadosLimpos,
+        cargas: cargasLimpas,
         status: finalizar ? 'finalizado' : 'rascunho',
         was_rejected: editingId && formData.approved === false ? true : (formData.was_rejected || false)
       };
