@@ -396,7 +396,7 @@ export default function AcompanhamentoUsinagemPage() {
           </CardContent>
         </Card>
 
-        {/* Dados do Ensaio - Agregados */}
+        {/* Agregados */}
         <Card className="bg-white/40 backdrop-blur-lg border-white/20">
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -420,7 +420,7 @@ export default function AcompanhamentoUsinagemPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="temperatura_ligante">Temperatura do Ligante (CAP) - °C</Label>
+                <Label htmlFor="temperatura_ligante">Temperatura do Ligante - °C</Label>
                 <Input
                   id="temperatura_ligante"
                   type="number"
