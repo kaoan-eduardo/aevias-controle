@@ -111,7 +111,6 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </div>
             <div className="flex justify-end items-start">
               <div className="text-right">
-                <p className="text-xs font-bold text-gray-700 print:text-[10px]">DATA:</p>
                 <p className="text-sm font-semibold text-gray-900 print:text-xs">{formatDate(ensaio.data)}</p>
               </div>
             </div>
@@ -123,7 +122,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 mb-1 text-[9px] leading-tight px-1 py-1.5 print:gap-x-1 print:gap-y-1 print:mb-0.5 print:px-0.5 print:py-1">
+            <div className="grid grid-cols-3 gap-x-2 gap-y-1.5 mb-1 text-[10px] leading-tight px-1 py-1.5 print:gap-x-1 print:gap-y-1 print:mb-0.5 print:px-0.5 print:py-1">
               <div className="col-span-1 mb-1 print:mb-0.5">
                 <p className="font-bold text-gray-700 mb-0.5 print:mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -176,7 +175,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </div>
 
             <div className="overflow-x-auto mb-1 print:mb-0.5">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+              <table className="w-full border-collapse border border-slate-400 text-[8px] leading-tight table-fixed">
                 <colgroup>
                   <col style={{width: '36%'}} />
                   <col style={{width: '25%'}} />
@@ -186,34 +185,34 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                 </colgroup>
                 <thead>
                   <tr className="bg-slate-200">
-                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">AGREGADOS</th>
-                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">COMPOSIÇÃO<br/>(%)</th>
-                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">UMIDADE<br/>(%)</th>
-                    <th colSpan="2" className="border border-slate-400 px-0.5 py-1 font-bold text-center leading-tight">TEMPERATURAS</th>
+                    <th className="border border-slate-400 px-0.5 py-1.5 font-bold leading-tight text-[8px]">AGREGADOS</th>
+                    <th className="border border-slate-400 px-0.5 py-1.5 font-bold leading-tight text-[8px]">COMPOSIÇÃO<br/>(%)</th>
+                    <th className="border border-slate-400 px-0.5 py-1.5 font-bold leading-tight text-[8px]">UMIDADE<br/>(%)</th>
+                    <th colSpan="2" className="border border-slate-400 px-0.5 py-1.5 font-bold text-center leading-tight text-[8px]">TEMPERATURAS</th>
                   </tr>
                   <tr className="bg-slate-100">
-                    <th className="border border-slate-400 px-0.5 py-1"></th>
-                    <th className="border border-slate-400 px-0.5 py-1"></th>
-                    <th className="border border-slate-400 px-0.5 py-1"></th>
-                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">T1 (°C)</th>
-                    <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">T2 (°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-1.5"></th>
+                    <th className="border border-slate-400 px-0.5 py-1.5"></th>
+                    <th className="border border-slate-400 px-0.5 py-1.5"></th>
+                    <th className="border border-slate-400 px-0.5 py-1.5 font-bold leading-tight text-[8px]">T1 (°C)</th>
+                    <th className="border border-slate-400 px-0.5 py-1.5 font-bold leading-tight text-[8px]">T2 (°C)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-white">
-                    <td className="border border-slate-400 px-0.5 py-1.5 font-semibold">LIGANTE</td>
-                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">{ensaio.ligante_nome || '-'}</td>
-                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                    <td className="border border-slate-400 px-0.5 py-1.5 text-center font-semibold">{ensaio.temperatura_ligante || '-'}</td>
-                    <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 font-semibold text-[8px]">LIGANTE</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{ensaio.ligante_nome || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center font-semibold text-[8px]">{ensaio.temperatura_ligante || '-'}</td>
+                    <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
                   </tr>
                   {ensaio.agregados?.map((agregado, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
-                      <td className="border border-slate-400 px-0.5 py-1.5 font-semibold">{agregado.nome || `Agregado ${idx + 1}`}</td>
-                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.composicao || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.umidade || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.temperatura_t1 || '-'}</td>
-                      <td className="border border-slate-400 px-0.5 py-1.5 text-center">{agregado?.temperatura_t2 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 font-semibold text-[8px]">{agregado.nome || `Agregado ${idx + 1}`}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{agregado?.composicao || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{agregado?.umidade || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{agregado?.temperatura_t1 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{agregado?.temperatura_t2 || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -250,13 +249,12 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                         </div>
                         <div className="flex justify-end items-start">
                           <div className="text-right">
-                            <p className="text-xs font-bold text-gray-700 print:text-[10px]">DATA:</p>
                             <p className="text-sm font-semibold text-gray-900 print:text-xs">{formatDate(ensaio.data)}</p>
                           </div>
                         </div>
                       </header>
                     )}
-                    <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+                    <table className="w-full border-collapse border border-slate-400 text-[8px] leading-tight table-fixed">
                       <colgroup>
                         <col style={{width: '15%'}} />
                         <col style={{width: '12%'}} />
@@ -267,33 +265,33 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                       </colgroup>
                       <thead className="bg-slate-200">
                         <tr>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">PLACA CAMINHÃO</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">HORA DE SAÍDA</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">PESO<br/>(t)</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">TEMPERATURA<br/>(°C)</th>
-                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight">O/M</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">PLACA CAMINHÃO</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">HORA DE SAÍDA</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">PESO<br/>(t)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">TEMPERATURA<br/>(°C)</th>
+                          <th className="border border-slate-400 px-0.5 py-1 font-bold leading-tight text-[8px]">O/M</th>
                         </tr>
                       </thead>
                       <tbody>
                         {cargasPagina.map((carga, idx) => (
                           <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.placa_caminhao || '-'}</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.hora_saida || '-'}</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.peso || '-'}</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.temperatura_1 || '-'}</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">{carga.temperatura_2 || '-'}</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5">{carga.observacao || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{carga.placa_caminhao || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{carga.hora_saida || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{carga.peso || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{carga.temperatura_1 || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">{carga.temperatura_2 || '-'}</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-[8px]">{carga.observacao || '-'}</td>
                           </tr>
                         ))}
                         {Array.from({ length: linhasVazias }, (_, idx) => (
                           <tr key={`empty-${idx}`} className={(cargasPagina.length + idx) % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5 text-center">-</td>
-                            <td className="border border-slate-400 px-0.5 py-1.5">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-center text-[8px]">-</td>
+                            <td className="border border-slate-400 px-0.5 py-1.5 text-[8px]">-</td>
                           </tr>
                         ))}
                       </tbody>
@@ -306,7 +304,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </main>
 
           {/* Assinaturas */}
-          <footer className="mt-0 px-1.5 print:break-inside-avoid print:mt-0 print:px-0.5">
+          <footer className="mt-4 px-1.5 print:break-inside-avoid print:mt-2 print:px-0.5">
             <div className="grid grid-cols-3 gap-1.5 items-end print:gap-1">
               <div className="text-center">
                 <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
