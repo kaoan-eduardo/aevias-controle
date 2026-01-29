@@ -2240,6 +2240,7 @@ export default function MeusEnsaios() {
             case "ChecklistMRAF": return ensaio.data;
             case "ChecklistConcretagem": return ensaio.data;
             case "ChecklistTerraplanagem": return ensaio.data;
+            case "ChecklistReciclagem": return ensaio.data;
             case "EnsaioSondagem": return ensaio.data;
             case "EnsaioGranulometriaIndividual": return ensaio.data_ensaio;
             default: return ensaio.created_date;
