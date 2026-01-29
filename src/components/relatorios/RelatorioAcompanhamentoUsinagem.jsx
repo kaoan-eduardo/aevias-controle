@@ -307,38 +307,38 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
           <footer className="mt-8 px-1.5 print:break-inside-avoid print:mt-4 print:px-0.5">
             <div className="grid grid-cols-3 gap-1.5 items-end print:gap-1">
               <div className="text-center">
-                <div className="text-[8px] print:text-[7px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                <div className="text-[9px] print:text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
                   {ensaio.laboratorista_name && (
                     <>
                       <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
-                      <p className="text-[8px]">{ensaio.created_by}</p>
-                      <p className="text-[8px]">em {formatDateBrasilia(ensaio.created_date)}</p>
+                      <p className="text-[9px]">{ensaio.created_by}</p>
+                      <p className="text-[9px]">em {formatDateBrasilia(ensaio.created_date)}</p>
                     </>
                   )}
                 </div>
                 <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                  <p className="text-[8px] print:text-[7px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+                  <p className="text-[9px] print:text-[8px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
                 </div>
               </div>
 
               <div className="text-center">
                 {ensaio.approver_details ? (
                   <>
-                    <div className="text-[8px] print:text-[7px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                    <div className="text-[9px] print:text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
                       <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
-                      <p className="text-[8px]">{ensaio.approved_by}</p>
-                      {ensaio.approver_details.crea_number && <p className="text-[8px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                      <p className="text-[8px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
+                      <p className="text-[9px]">{ensaio.approved_by}</p>
+                      {ensaio.approver_details.crea_number && <p className="text-[9px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                      <p className="text-[9px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[9px] print:text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[9px] print:text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 )}
@@ -347,21 +347,21 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               <div className="text-center">
                 {ensaio.client_signature?.signed_by ? (
                   <>
-                    <div className="text-[8px] print:text-[7px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                    <div className="text-[9px] print:text-[8px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
                       <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
-                      <p className="text-[8px]">{ensaio.client_signature.signed_by}</p>
-                      {ensaio.client_signature.crea_number && <p className="text-[8px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                      <p className="text-[8px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
+                      <p className="text-[9px]">{ensaio.client_signature.signed_by}</p>
+                      {ensaio.client_signature.crea_number && <p className="text-[9px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                      <p className="text-[9px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[9px] print:text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[9px] print:text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 )}
