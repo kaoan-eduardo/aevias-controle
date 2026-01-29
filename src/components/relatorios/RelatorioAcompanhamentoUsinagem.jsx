@@ -30,13 +30,20 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
     });
   };
 
+  // Garante que sempre teremos 20 linhas de cargas
+  const cargasParaExibir = React.useMemo(() => {
+    const cargas = ensaio.cargas || [];
+    const linhasVazias = Math.max(0, 20 - cargas.length);
+    return [...cargas, ...Array(linhasVazias).fill(null)];
+  }, [ensaio.cargas]);
+
   return (
     <>
       <style>{`
         @media print {
           @page {
             size: A4 portrait;
-            margin: 5mm 6mm 4mm 6mm;
+            margin: 4mm 5mm 3mm 5mm;
           }
           body {
             print-color-adjust: exact;
@@ -64,8 +71,11 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             position: relative !important;
             margin-top: 0 !important;
           }
-          aside, nav, [data-sidebar], [role="navigation"] {
+          aside, nav, [data-sidebar], [role="navigation"], .no-print {
             display: none !important;
+          }
+          main {
+            display: block !important;
           }
           ::-webkit-scrollbar {
             display: none !important;
@@ -75,10 +85,13 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             -ms-overflow-style: none !important;
           }
         }
+        aside, nav, [data-sidebar], [role="navigation"] {
+          display: none !important;
+        }
       `}</style>
-      <div className="bg-white min-h-screen p-6 font-sans">
+      <div className="bg-white min-h-screen font-sans">
         {/* Header com Título e Botão de Download */}
-        <div className="no-print flex justify-between items-center mb-6 px-6">
+        <div className="no-print flex justify-between items-center mb-6 px-6 py-4">
           <h1 className="text-2xl font-bold text-gray-800">
             Relatório - Acompanhamento de Usinagem
           </h1>
@@ -94,36 +107,36 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
         </div>
 
         {/* Conteúdo Principal */}
-        <div id="report-content" className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
+        <div id="report-content" className="w-full bg-white pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
           {/* Cabeçalho com Logo e Data */}
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0.5 print:mb-0">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-10 print:h-7 object-contain" 
+                className="h-9 print:h-6 object-contain" 
               />
             </div>
             <div className="text-center">
-              <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+              <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[8px] print:leading-tight">
                 ACOMPANHAMENTO DE USINAGEM
               </h1>
             </div>
             <div className="flex justify-end items-start">
               <div className="text-right">
-                <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
-                <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio.data)}</p>
+                <p className="text-[9px] font-bold text-gray-700 print:text-[8px]">DATA:</p>
+                <p className="text-xs font-semibold text-gray-900 print:text-[9px]">{formatDate(ensaio.data)}</p>
               </div>
             </div>
           </header>
 
           <main className="text-sm print:text-sm">
             {/* DADOS DA OBRA */}
-            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 text-[8px] leading-tight">
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-0.5 py-0 font-bold text-center mb-0 text-[7px] leading-tight print:text-[6px]">
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
+            <div className="grid grid-cols-3 gap-x-0.5 gap-y-0 mb-0 text-[8px] leading-tight print:text-[7px]">
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -171,12 +184,12 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </div>
 
             {/* DADOS DO ENSAIO */}
-            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 mt-0 text-[8px] leading-tight">
+            <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-0.5 py-0 font-bold text-center mb-0 mt-0 text-[7px] leading-tight print:text-[6px]">
               DADOS DO ENSAIO
             </div>
 
             <div className="overflow-x-auto mb-0 print:mb-0">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+              <table className="w-full border-collapse border border-slate-400 text-[6px] leading-tight table-fixed print:text-[6px]">
                 <colgroup>
                   <col style={{width: '50%'}} />
                   <col style={{width: '10%'}} />
@@ -222,7 +235,7 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
 
             {/* TABELA DE CARGAS */}
             <div className="overflow-x-auto mb-0 print:mb-0 mt-0">
-              <table className="w-full border-collapse border border-slate-400 text-[7px] leading-tight table-fixed">
+              <table className="w-full border-collapse border border-slate-400 text-[6px] leading-tight table-fixed print:text-[6px]">
                 <colgroup>
                   <col style={{width: '13%'}} />
                   <col style={{width: '10%'}} />
@@ -242,29 +255,16 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
                   </tr>
                 </thead>
                 <tbody>
-                  {ensaio.cargas && ensaio.cargas.length > 0 ? (
-                    ensaio.cargas.map((carga, idx) => (
-                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.placa_caminhao || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.hora_saida || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.peso || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_1 || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">{carga.temperatura_2 || '-'}</td>
-                        <td className="border border-slate-400 px-0.5 py-0">{carga.observacao || '-'}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    [...Array(20)].map((_, idx) => (
-                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0 text-center">-</td>
-                        <td className="border border-slate-400 px-0.5 py-0">-</td>
-                      </tr>
-                    ))
-                  )}
+                  {cargasParaExibir.map((carga, idx) => (
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{carga?.placa_caminhao || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{carga?.hora_saida || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{carga?.peso || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{carga?.temperatura_1 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0 text-center">{carga?.temperatura_2 || '-'}</td>
+                      <td className="border border-slate-400 px-0.5 py-0">{carga?.observacao || '-'}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -272,41 +272,41 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
             </main>
 
           {/* Assinaturas */}
-          <footer className="mt-0 px-1.5 print:break-inside-avoid print:mt-0 print:px-0.5">
-            <div className="grid grid-cols-3 gap-1.5 items-end print:gap-1">
+          <footer className="mt-0.5 px-1 print:break-inside-avoid print:mt-0.5 print:px-0.5">
+            <div className="grid grid-cols-3 gap-1 items-end print:gap-0.5">
               <div className="text-center">
-                <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                <div className="text-[6px] print:text-[5px] text-slate-500 mb-0 min-h-[20px] flex flex-col justify-end items-center print:min-h-[16px] print:mb-0">
                   {ensaio.laboratorista_name && (
                     <>
                       <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
-                      <p className="text-[7px]">{ensaio.created_by}</p>
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.created_date)}</p>
+                      <p className="text-[6px]">{ensaio.created_by}</p>
+                      <p className="text-[6px]">em {formatDateBrasilia(ensaio.created_date)}</p>
                     </>
                   )}
                 </div>
                 <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                  <p className="text-[7px] print:text-[6px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+                  <p className="text-[6px] print:text-[5px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
                 </div>
               </div>
 
               <div className="text-center">
                 {ensaio.approver_details ? (
                   <>
-                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                    <div className="text-[6px] print:text-[5px] text-slate-500 mb-0 min-h-[20px] flex flex-col justify-end items-center print:min-h-[16px] print:mb-0">
                       <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
-                      <p className="text-[7px]">{ensaio.approved_by}</p>
-                      {ensaio.approver_details.crea_number && <p className="text-[7px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
+                      <p className="text-[6px]">{ensaio.approved_by}</p>
+                      {ensaio.approver_details.crea_number && <p className="text-[6px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                      <p className="text-[6px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[6px] print:text-[5px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
+                    <div className="min-h-[20px] mb-0 print:min-h-[16px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[6px] print:text-[5px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                     </div>
                   </>
                 )}
@@ -315,21 +315,21 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               <div className="text-center">
                 {ensaio.client_signature?.signed_by ? (
                   <>
-                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
+                    <div className="text-[6px] print:text-[5px] text-slate-500 mb-0 min-h-[20px] flex flex-col justify-end items-center print:min-h-[16px] print:mb-0">
                       <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
-                      <p className="text-[7px]">{ensaio.client_signature.signed_by}</p>
-                      {ensaio.client_signature.crea_number && <p className="text-[7px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
+                      <p className="text-[6px]">{ensaio.client_signature.signed_by}</p>
+                      {ensaio.client_signature.crea_number && <p className="text-[6px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                      <p className="text-[6px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[6px] print:text-[5px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
+                    <div className="min-h-[20px] mb-0 print:min-h-[16px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[6px] print:text-[5px] font-semibold">ENGENHEIRO CLIENTE</p>
                     </div>
                   </>
                 )}
