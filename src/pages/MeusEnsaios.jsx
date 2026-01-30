@@ -1129,17 +1129,22 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           {(() => {
                             const naoConformidades = getNaoConformidades(ensaio);
+                            const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+                            
                             if (naoConformidades.length > 0) {
+                              const mensagem = temAcoesCorretivas 
+                                ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
+                                : `Não conformidades:\n${naoConformidades.join('\n')}`;
                               return (
                                 <span 
                                   className="text-red-600 cursor-help" 
-                                  title={`Não conformidades:\n${naoConformidades.join('\n')}`}
+                                  title={mensagem}
                                 >
                                   ⚠️
                                 </span>
                               );
                             }
-                            if (ensaio.acoes_corretivas_realizado === true) {
+                            if (temAcoesCorretivas) {
                               return (
                                 <span 
                                   className="text-orange-500 cursor-help" 
@@ -2076,17 +2081,22 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           {(() => {
                             const naoConformidades = getNaoConformidades(ensaio);
+                            const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+                            
                             if (naoConformidades.length > 0) {
+                              const mensagem = temAcoesCorretivas 
+                                ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
+                                : `Não conformidades:\n${naoConformidades.join('\n')}`;
                               return (
                                 <span 
                                   className="text-red-600 cursor-help" 
-                                  title={`Não conformidades:\n${naoConformidades.join('\n')}`}
+                                  title={mensagem}
                                 >
                                   ⚠️
                                 </span>
                               );
                             }
-                            if (ensaio.acoes_corretivas_realizado === true) {
+                            if (temAcoesCorretivas) {
                               return (
                                 <span 
                                   className="text-orange-500 cursor-help" 
