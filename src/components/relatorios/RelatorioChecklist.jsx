@@ -161,46 +161,43 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
           <p>{regional?.cliente || 'N/A'}</p>
         </div>
         <div>
-          <p className="font-bold">OBRA:</p>
-          <p>{obra?.name || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">USINA:</p>
-          <p>{checklist.usina}</p>
-        </div>
-        <div>
-          <p className="font-bold">ENSAIO REALIZADO POR:</p>
-          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
-        </div>
-
-        <div>
           <p className="font-bold">PROJETO:</p>
           <p>{project?.name || checklist.projeto_utilizado || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">LIGANTE:</p>
-          <p>{checklist.ligante || 'N/A'}</p>
         </div>
         <div>
           <p className="font-bold">PEDREIRA:</p>
           <p>{checklist.pedreira || 'N/A'}</p>
         </div>
         <div>
-          <p className="font-bold">FAIXA ESPECIFICADA:</p>
-          <p>{checklist.faixa_especificada || 'N/A'}</p>
-        </div>
-
-        <div>
           <p className="font-bold">INSPETOR:</p>
           <p>{checklist.inspetor_campo || 'N/A'}</p>
         </div>
 
-        {checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim && (
-          <div>
-            <p className="font-bold">JORNADA:</p>
-            <p>{checklist.jornada.horario_inicio} - {checklist.jornada.horario_fim}</p>
-          </div>
-        )}
+        <div>
+          <p className="font-bold">OBRA:</p>
+          <p>{obra?.name || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">FAIXA ESPECIFICADA:</p>
+          <p>{checklist.faixa_especificada || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">JORNADA:</p>
+          <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
+        </div>
+
+        <div>
+          <p className="font-bold">USINA:</p>
+          <p>{checklist.usina}</p>
+        </div>
+        <div>
+          <p className="font-bold">LIGANTE:</p>
+          <p>{checklist.ligante || 'N/A'}</p>
+        </div>
       </div>
     </main>
   </div>
