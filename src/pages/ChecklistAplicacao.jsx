@@ -544,8 +544,8 @@ export default function ChecklistAplicacaoPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.project_id) {
-        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho).");
+      if (!formData.obra_id || !formData.project_id || !formData.data || !formData.rodovia || !formData.trecho || !formData.empreiteira || !formData.usina || !formData.ligante || !formData.pedreira || !formData.ensaio_realizado_por) {
+        alert("Preencha todos os campos obrigatórios (Obra, Projeto Vinculado, Data, Rodovia, Trecho, Empreiteira, Usina, Ligante, Pedreira, Ensaio realizado por).");
         return;
       }
     } else {
@@ -779,11 +779,12 @@ export default function ChecklistAplicacaoPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="empreiteira">Empreiteira</Label>
+                    <Label htmlFor="empreiteira">Empreiteira *</Label>
                     <Select 
                       value={formData.empreiteira} 
                       onValueChange={(value) => handleInputChange('empreiteira', value)} 
                       disabled={!isEditable || !formData.obra_id}
+                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione a empreiteira" />
@@ -799,11 +800,12 @@ export default function ChecklistAplicacaoPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="usina">Usina</Label>
+                    <Label htmlFor="usina">Usina *</Label>
                     <Select 
                       value={formData.usina} 
                       onValueChange={(value) => handleInputChange('usina', value)} 
                       disabled={!isEditable || !formData.obra_id}
+                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione a usina" />
@@ -819,7 +821,7 @@ export default function ChecklistAplicacaoPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="ligante">Ligante</Label>
+                    <Label htmlFor="ligante">Ligante *</Label>
                     <Input
                       id="ligante"
                       value={formData.ligante}
@@ -828,11 +830,12 @@ export default function ChecklistAplicacaoPage() {
                       readOnly={!!selectedProject}
                       className={selectedProject ? "bg-slate-100" : ""}
                       placeholder="Tipo de ligante"
+                      required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="pedreira">Pedreira</Label>
+                    <Label htmlFor="pedreira">Pedreira *</Label>
                     <Input
                       id="pedreira"
                       value={formData.pedreira}
@@ -841,15 +844,17 @@ export default function ChecklistAplicacaoPage() {
                       readOnly={!!selectedProject}
                       className={selectedProject ? "bg-slate-100" : ""}
                       placeholder="Nome da pedreira"
+                      required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
+                    <Label htmlFor="ensaio_realizado_por">Ensaio realizado por: *</Label>
                     <Select 
                       value={formData.ensaio_realizado_por} 
                       onValueChange={(value) => handleInputChange('ensaio_realizado_por', value)} 
                       disabled={!isEditable}
+                      required
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione" />
