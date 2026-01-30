@@ -63,6 +63,8 @@ const getInitialFormData = () => ({
     observacoes: ""
   },
   observacoes_gerais: "",
+  acoes_corretivas_realizado: null,
+  acoes_corretivas_descricao: "",
   fotos: [],
   medicoes_geometricas: [],
   status: "rascunho"
@@ -1415,6 +1417,58 @@ export default function ChecklistAplicacaoPage() {
                   <p className="text-xs text-right text-[#00233B]/60 mt-1">
                     {(formData.observacoes_gerais || '').length} / 1000 caracteres
                   </p>
+                </div>
+
+                {/* AÇÕES CORRETIVAS */}
+                <div className="border-t pt-4">
+                  <Label className="text-base font-semibold mb-3">Ações Corretivas Realizadas?</Label>
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        id="acoes_sim"
+                        name="acoes_corretivas"
+                        checked={formData.acoes_corretivas_realizado === true}
+                        onChange={() => handleInputChange('acoes_corretivas_realizado', true)}
+                        disabled={!isEditable}
+                        className="w-4 h-4"
+                      />
+                      <Label htmlFor="acoes_sim" className="font-normal cursor-pointer">Sim</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        id="acoes_nao"
+                        name="acoes_corretivas"
+                        checked={formData.acoes_corretivas_realizado === false}
+                        onChange={() => {
+                          handleInputChange('acoes_corretivas_realizado', false);
+                          handleInputChange('acoes_corretivas_descricao', '');
+                        }}
+                        disabled={!isEditable}
+                        className="w-4 h-4"
+                      />
+                      <Label htmlFor="acoes_nao" className="font-normal cursor-pointer">Não</Label>
+                    </div>
+                  </div>
+
+                  {formData.acoes_corretivas_realizado === true && (
+                    <div className="mt-4">
+                      <Label htmlFor="acoes_descricao">Descrever as ações corretivas realizadas</Label>
+                      <Textarea
+                        id="acoes_descricao"
+                        value={formData.acoes_corretivas_descricao}
+                        onChange={(e) => handleInputChange('acoes_corretivas_descricao', e.target.value)}
+                        disabled={!isEditable}
+                        rows={2}
+                        placeholder="Descreva as ações corretivas..."
+                        maxLength="500"
+                      />
+                      <p className="text-xs text-right text-[#00233B]/60 mt-1">
+                        {formData.acoes_corretivas_descricao?.length || 0} / 500
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div>
