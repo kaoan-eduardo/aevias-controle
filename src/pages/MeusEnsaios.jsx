@@ -1139,6 +1139,16 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                                 </span>
                               );
                             }
+                            if (ensaio.acoes_corretivas_realizado === true) {
+                              return (
+                                <span 
+                                  className="text-orange-500 cursor-help" 
+                                  title="Ações corretivas realizadas"
+                                >
+                                  ⚠️
+                                </span>
+                              );
+                            }
                             return null;
                           })()}
                         </div>
@@ -2066,6 +2076,16 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                                 <span 
                                   className="text-red-600 cursor-help" 
                                   title={`Não conformidades:\n${naoConformidades.join('\n')}`}
+                                >
+                                  ⚠️
+                                </span>
+                              );
+                            }
+                            if (ensaio.acoes_corretivas_realizado === true) {
+                              return (
+                                <span 
+                                  className="text-orange-500 cursor-help" 
+                                  title="Ações corretivas realizadas"
                                 >
                                   ⚠️
                                 </span>
