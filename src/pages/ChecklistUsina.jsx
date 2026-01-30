@@ -513,11 +513,27 @@ export default function ChecklistUsinaPage() {
 
   const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
-    
+
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
       if (!formData.obra_id || !formData.usina) {
         alert("Por favor, preencha a obra e a usina.");
+        return;
+      }
+      if (!formData.project_id) {
+        alert("Por favor, selecione o projeto vinculado.");
+        return;
+      }
+      if (!formData.pedreira) {
+        alert("Por favor, preencha a pedreira.");
+        return;
+      }
+      if (!formData.faixa_especificada) {
+        alert("Por favor, preencha a faixa especificada.");
+        return;
+      }
+      if (!formData.ligante) {
+        alert("Por favor, preencha o ligante asfáltico.");
         return;
       }
     } else {
