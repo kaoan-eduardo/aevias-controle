@@ -521,23 +521,16 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
         <div className="break-before-page relative min-h-[297mm] p-4 print:p-4 flex flex-col">
           <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
-          <div className="flex-1">
-            <SectionTitle>Ações Corretivas</SectionTitle>
-            <div className="border-2 border-slate-400 rounded p-2 bg-yellow-50">
-              <p className="font-bold text-[10px] mb-1 text-slate-800">DESCRIÇÃO DAS AÇÕES CORRETIVAS REALIZADAS:</p>
-              <p className="text-[9px] text-slate-700 whitespace-pre-wrap leading-relaxed">
-                {checklist.acoes_corretivas_descricao}
-              </p>
-            </div>
-
-            {checklist.observacoes_gerais && (
-              <div className="mt-2">
-                <p className="font-bold text-[10px] mb-1 text-slate-800">OBSERVAÇÕES GERAIS:</p>
-                <div className="p-1 bg-white border border-slate-300 rounded text-[9px]">
-                  <p className="whitespace-pre-wrap">{checklist.observacoes_gerais}</p>
-                </div>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full max-w-4xl">
+              <SectionTitle>Ações Corretivas</SectionTitle>
+              <div className="border-2 border-slate-400 rounded p-6 bg-white">
+                <p className="font-bold text-base mb-3 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                  {checklist.acoes_corretivas_descricao}
+                </p>
               </div>
-            )}
+            </div>
           </div>
 
           <footer className="mt-4 text-center text-xs text-slate-500 border-t border-slate-300 pt-2">
