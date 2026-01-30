@@ -550,7 +550,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-16 print:pt-2 print:px-3 print:pb-16 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
             <ReportHeader />
             <main className="text-sm print:text-xs mt-0.5">
               <DadosObra />
@@ -569,7 +569,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <CargaContent carga={cargas[0]} />
             </main>
             <div className="absolute bottom-3 left-3 right-3">
-              {!temAcoesCorretivas ? <ReportFooterWithSignatures /> : <ReportFooterSimple />}
+              <ReportFooterWithSignatures />
             </div>
           </div>
         </div>
@@ -582,7 +582,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         
         return (
           <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
-            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-16 print:pt-2 print:px-3 print:pb-16 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
+            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-3 px-3 pb-3 print:pt-3 print:px-3 print:pb-3 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
               <ReportHeader />
               <main className="text-sm print:text-xs mt-0.5">
                 {isPrimeiraCarga && (
@@ -606,7 +606,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </main>
               
               <div className="absolute bottom-3 left-3 right-3">
-                <ReportFooterSimple />
+                {isUltimaCarga && !temAcoesCorretivas ? (
+                  <ReportFooterWithSignatures />
+                ) : (
+                  <ReportFooterSimple />
+                )}
               </div>
             </div>
           </div>
@@ -615,11 +619,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
       {temAcoesCorretivas && (
-        <div className="break-before-page">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-16 print:pt-2 print:px-3 print:pb-16 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
+        <div className="break-before-page relative p-3 print:p-3" style={{ minHeight: '297mm', height: '297mm' }}>
+          <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
             <ReportHeader />
 
-            <main className="text-sm print:text-xs mt-0.5">
+            <main className="mt-2">
               <SectionTitle>Ações Corretivas</SectionTitle>
               <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
                 <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
@@ -629,7 +633,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </div>
             </main>
 
-            <div className="absolute bottom-3 left-3 right-3">
+            <div className="absolute bottom-0 left-0 right-0 pt-1 break-inside-avoid">
               <ReportFooterWithSignatures />
             </div>
           </div>
