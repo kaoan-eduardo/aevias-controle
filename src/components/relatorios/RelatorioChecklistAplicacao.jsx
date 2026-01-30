@@ -560,8 +560,56 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <p style={{ fontSize: '8px' }}>{checklist.observacoes_gerais || 'Nenhuma observação adicional.'}</p>
             </div>
           </main>
-          <div className="mt-auto">
-            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} pageNumber={1} totalPages={totalPages} />
+          <div className="mt-auto pt-1 break-inside-avoid">
+            <div className="grid grid-cols-3 gap-4 items-end">
+              <div className="text-center">
+                <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                  <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
+                  <p>{checklist.created_by}</p>
+                  <p>em {formatDateBrasilia(checklist.created_date)}</p>
+                </div>
+                <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Laboratorista Responsável</p></div>
+              </div>
+              
+              <div className="text-center">
+                {checklist.approved === true && checklist.approver_details ? (
+                  <>
+                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                      <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
+                      <p>{checklist.approved_by}</p>
+                      {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
+                      <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+                    </div>
+                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-10 mb-1"></div>
+                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
+                  </>
+                )}
+              </div>
+
+              <div className="text-center">
+                {checklist.client_signature?.signed_by ? (
+                  <>
+                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                      <p>Assinado digitalmente por</p>
+                      <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
+                      <p>{checklist.client_signature.signed_by}</p>
+                      {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
+                      <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+                    </div>
+                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-10 mb-1"></div>
+                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -569,21 +617,67 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
       {/* --- Página 2: Ações Corretivas (se houver) --- */}
       {temAcoesCorretivas && (
         <div className="p-3 print:p-3 flex flex-col page-container break-before-page" style={{ minHeight: '297mm', maxHeight: '297mm' }}>
-          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+          <div className="w-full max-w-[190mm] mx-auto flex flex-col" style={{ height: '100%' }}>
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />
-            <main className="flex-grow mt-2 flex items-center justify-center">
-              <div className="w-full">
-                <SectionTitle>Ações Corretivas</SectionTitle>
-                <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '400px' }}>
-                  <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                    {checklist.acoes_corretivas_descricao}
-                  </p>
-                </div>
+            <main className="flex-1 mt-2">
+              <SectionTitle>Ações Corretivas</SectionTitle>
+              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
+                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                  {checklist.acoes_corretivas_descricao}
+                </p>
               </div>
             </main>
-            <div className="mt-auto">
-              <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} pageNumber={2} totalPages={totalPages} />
+            <div className="mt-auto pt-1 break-inside-avoid">
+              <div className="grid grid-cols-3 gap-4 items-end">
+                <div className="text-center">
+                  <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                    <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
+                    <p>{checklist.created_by}</p>
+                    <p>em {formatDateBrasilia(checklist.created_date)}</p>
+                  </div>
+                  <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Laboratorista Responsável</p></div>
+                </div>
+                
+                <div className="text-center">
+                  {checklist.approved === true && checklist.approver_details ? (
+                    <>
+                      <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                        <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
+                        <p>{checklist.approved_by}</p>
+                        {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
+                        <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+                      </div>
+                      <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-10 mb-1"></div>
+                      <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
+                    </>
+                  )}
+                </div>
+
+                <div className="text-center">
+                  {checklist.client_signature?.signed_by ? (
+                    <>
+                      <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                        <p>Assinado digitalmente por</p>
+                        <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
+                        <p>{checklist.client_signature.signed_by}</p>
+                        {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
+                        <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+                      </div>
+                      <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-10 mb-1"></div>
+                      <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -622,8 +716,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                 </div>
               ))}
             </main>
-            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-500 break-inside-avoid">
-              Página {pageIndex + (temAcoesCorretivas ? 3 : 2)} de {totalPages}
+            <footer className="mt-auto pt-2 break-inside-avoid">
             </footer>
           </div>
         </div>
@@ -658,7 +751,6 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               />
             </main>
             <footer className="text-center text-xs text-gray-500 pt-2 shrink-0">
-              Página {1 + (temAcoesCorretivas ? 1 : 0) + photoChunks.length + medicaoIndex + 1} de {totalPages}
             </footer>
           </div>
         </div>
