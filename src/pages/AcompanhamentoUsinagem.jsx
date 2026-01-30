@@ -54,7 +54,9 @@ export default function AcompanhamentoUsinagemPage() {
       if (obraSelecionada && obraSelecionada.regional_id) {
         const regional = regionais.find(r => r.id === obraSelecionada.regional_id);
         if (regional && regional.project_ids) {
-          const projetosFiltrados = projects.filter(p => regional.project_ids.includes(p.id));
+          const projetosFiltrados = projects.filter(p => 
+            regional.project_ids.includes(p.id) && p.tipo_projeto === 'CAUQ'
+          );
           setFilteredProjects(projetosFiltrados);
         }
       }
