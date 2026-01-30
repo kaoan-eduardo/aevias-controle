@@ -191,20 +191,20 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
   // Componente do Footer COM assinaturas (apenas última página)
   const ReportFooterWithSignatures = () => (
-    <footer className="mt-auto pt-1">
+    <footer className="pt-1">
       <div className="grid grid-cols-3 gap-4 items-end">
         <div className="text-center">
           <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-14 flex flex-col justify-end items-center">
-            {checklist.inspetor_campo && (
+            {checklist.laboratorista_name && (
               <>
                 <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.inspetor_campo}</p>
+                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
                 <p>{checklist.created_by}</p>
                 <p>em {formatDateBrasilia(checklist.created_date)}</p>
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Fiscal de Campo</p></div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Laboratorista Responsável</p></div>
         </div>
         <div className="text-center">
           {checklist.approver_details ? (
@@ -250,10 +250,12 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
   // Componente do Footer SEM assinaturas (páginas intermediárias)
   const ReportFooterSimple = () => (
-    <footer className="mt-auto pt-0.5">
+    <footer className="pt-0.5">
       {/* Footer sem paginação */}
     </footer>
   );
+
+  const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
 
   // Componente de Dados da Obra (reutilizável)
   const DadosObra = () => (
@@ -548,9 +550,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3 flex flex-col print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
             <ReportHeader />
-            <main className="text-sm print:text-xs mt-0.5 flex-grow">
+            <main className="text-sm print:text-xs mt-0.5">
               <DadosObra />
               <CondicoesClimaticas />
               
@@ -566,7 +568,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <ReportFooterWithSignatures />
+            <div className="absolute bottom-3 left-3 right-3">
+              <ReportFooterWithSignatures />
+            </div>
           </div>
         </div>
       )}
@@ -574,13 +578,14 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 2: MÚLTIPLAS CARGAS - UMA CARGA POR PÁGINA */}
       {temMultiplasCargas && cargas.map((carga, cargaIndex) => {
         const isUltimaCarga = cargaIndex === cargas.length - 1;
+        const isPrimeiraCarga = cargaIndex === 0;
         
         return (
           <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
-            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-3 px-3 pb-3 print:pt-3 print:px-3 print:pb-3 flex flex-col print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
+            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-3 px-3 pb-3 print:pt-3 print:px-3 print:pb-3 relative print:min-h-[297mm]" style={{ minHeight: '297mm', height: '297mm' }}>
               <ReportHeader />
-              <main className="text-sm print:text-xs mt-0.5 flex-grow">
-                {cargaIndex === 0 && (
+              <main className="text-sm print:text-xs mt-0.5">
+                {isPrimeiraCarga && (
                   <>
                     <DadosObra />
                     <CondicoesClimaticas />
@@ -600,15 +605,40 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
                 <CargaContent carga={carga} />
               </main>
               
-              {isUltimaCarga ? (
-                <ReportFooterWithSignatures />
-              ) : (
-                <ReportFooterSimple />
-              )}
+              <div className="absolute bottom-3 left-3 right-3">
+                {isUltimaCarga && !temAcoesCorretivas ? (
+                  <ReportFooterWithSignatures />
+                ) : (
+                  <ReportFooterSimple />
+                )}
+              </div>
             </div>
           </div>
         );
       })}
+
+      {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
+      {temAcoesCorretivas && (
+        <div className="break-before-page relative p-3 print:p-3" style={{ minHeight: '297mm', height: '297mm' }}>
+          <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
+            <ReportHeader />
+
+            <main className="mt-2">
+              <SectionTitle>Ações Corretivas</SectionTitle>
+              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
+                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                  {checklist.acoes_corretivas_descricao}
+                </p>
+              </div>
+            </main>
+
+            <div className="absolute bottom-0 left-0 right-0 pt-1 break-inside-avoid">
+              <ReportFooterWithSignatures />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
@@ -625,7 +655,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
                 </div>
                 <div className="text-center">
                   <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico</h1>
-                  <p className="text-base print:text-sm text-gray-600">Checklist</p>
+                  <p className="text-base print:text-sm text-gray-600">Checklist de Concretagem</p>
                 </div>
                 <div className="flex justify-end text-sm print:text-xs">
                   <div className="border border-gray-400 p-2 rounded-md">
