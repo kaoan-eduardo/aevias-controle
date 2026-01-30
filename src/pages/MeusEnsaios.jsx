@@ -1343,17 +1343,22 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 <TypeIcon className="w-5 h-5 text-[#BFCF99]" /> {name}
                 {(() => {
                   const naoConformidades = getNaoConformidades(ensaio);
+                  const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+
                   if (naoConformidades.length > 0) {
+                    const mensagem = temAcoesCorretivas 
+                      ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
+                      : `Não conformidades:\n${naoConformidades.join('\n')}`;
                     return (
                       <span 
                         className="text-red-600 cursor-help text-xl" 
-                        title={`Não conformidades:\n${naoConformidades.join('\n')}`}
+                        title={mensagem}
                       >
                         ⚠️
                       </span>
                     );
                   }
-                  if (ensaio.acoes_corretivas_realizado === true) {
+                  if (temAcoesCorretivas) {
                     return (
                       <span 
                         className="text-orange-500 cursor-help text-xl" 
