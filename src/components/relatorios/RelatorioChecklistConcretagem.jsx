@@ -485,13 +485,13 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       )}
 
       {/* Moldes para Fiscalização */}
-      <div className="mb-1">
+      <div className="mb-0">
         <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Moldes para Fiscalização</h3>
         {carga.moldado_fiscalizacao ? (
           <>
             {carga.corpos_prova && carga.corpos_prova.length > 0 ? (
               <>
-                <table className="w-full border-collapse border border-slate-300 text-xs mt-1">
+                <table className="w-full border-collapse border border-slate-300 text-xs mt-0.5">
                   <thead className="bg-slate-100">
                     <tr>
                       <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Dias para Ruptura</th>
@@ -525,7 +525,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
                     })}
                   </tbody>
                 </table>
-                <p className="text-xs mt-1 text-slate-600">
+                <p className="text-xs mt-0.5 text-slate-600 mb-0">
                   <strong>Total de CPs moldados:</strong> {carga.corpos_prova.length}
                 </p>
               </>
@@ -552,7 +552,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         <div className="break-inside-avoid">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3 relative" style={{ minHeight: '297mm', height: '297mm' }}>
             <ReportHeader />
-            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '80px' }}>
+            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '70px' }}>
               <DadosObra />
               <CondicoesClimaticas />
               
@@ -568,7 +568,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <div className="absolute bottom-3 left-3 right-3">
+            <div className="absolute bottom-2 left-3 right-3">
               <ReportFooterWithSignatures />
             </div>
           </div>
