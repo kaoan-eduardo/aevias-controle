@@ -513,7 +513,58 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
           )}
         </div>
 
-        <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+        <footer className="mt-2 pt-1 break-inside-avoid">
+          <div className="grid grid-cols-3 gap-2 items-end">
+            <div className="text-center">
+              <div className="text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
+                <p>{checklist.created_by}</p>
+                <p>em {formatDateBrasilia(checklist.created_date)}</p>
+              </div>
+              <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Laboratorista Responsável</p></div>
+            </div>
+            
+            <div className="text-center">
+              {checklist.approved === true && checklist.approver_details ? (
+                <>
+                  <div className="text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                    <p>Assinado digitalmente por</p>
+                    <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
+                    <p>{checklist.approved_by}</p>
+                    {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
+                    <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+                  </div>
+                  <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Aprovação</p></div>
+                </>
+              ) : (
+                <>
+                  <div className="h-10 mb-0.5"></div>
+                  <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Aprovação</p></div>
+                </>
+              )}
+            </div>
+
+            <div className="text-center">
+              {checklist.client_signature?.signed_by ? (
+                <>
+                  <div className="text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
+                    <p>Assinado digitalmente por</p>
+                    <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
+                    <p>{checklist.client_signature.signed_by}</p>
+                    {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
+                    <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+                  </div>
+                  <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Engenheiro Cliente</p></div>
+                </>
+              ) : (
+                <>
+                  <div className="h-10 mb-0.5"></div>
+                  <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Engenheiro Cliente</p></div>
+                </>
+              )}
+            </div>
+          </div>
+        </footer>
       </div>
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
@@ -627,8 +678,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
             </div>
           </div>
 
-          <footer className="mt-4 text-center text-xs text-slate-500 border-t border-slate-300 pt-2">
-            Página {photoPages.length > 0 ? (checklist.acoes_corretivas_realizado === true ? pageIndex + 3 : pageIndex + 2) : (checklist.acoes_corretivas_realizado === true ? 3 : 2)} de {photoPages.length > 0 ? (checklist.acoes_corretivas_realizado === true ? photoPages.length + 2 : photoPages.length + 1) : (checklist.acoes_corretivas_realizado === true ? 2 : 1)}
+          <footer className="mt-4 pt-2 break-inside-avoid">
           </footer>
         </div>
       ))}
