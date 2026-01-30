@@ -243,8 +243,8 @@ export default function ChecklistMRAFPage() {
     
     // Validações obrigatórias apenas quando finalizando
     if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.rodovia || !formData.trecho) {
-        alert("Por favor, preencha os campos obrigatórios: obra, rodovia e trecho.");
+      if (!formData.obra_id || !formData.project_id || !formData.rodovia || !formData.trecho || !formData.empreiteira || !formData.pedreira || !formData.ligante || !formData.ensaio_realizado_por) {
+        alert("Por favor, preencha todos os campos obrigatórios: Obra, Projeto Vinculado, Rodovia, Trecho, Empreiteira, Pedreira, Ligante e Ensaio realizado por.");
         return;
       }
     } else {
@@ -514,12 +514,13 @@ export default function ChecklistMRAFPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="project_id" className="text-base">Projeto Vinculado</Label>
+                      <Label htmlFor="project_id" className="text-base">Projeto Vinculado *</Label>
                       <select
                         id="project_id"
                         value={formData.project_id}
                         onChange={(e) => handleProjectChange(e.target.value)}
                         disabled={!isEditable || isApproved || !formData.obra_id}
+                        required
                         className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
                         <option value="">Selecione um projeto</option>
@@ -624,12 +625,13 @@ export default function ChecklistMRAFPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="empreiteira" className="text-base">Empreiteira</Label>
+                      <Label htmlFor="empreiteira" className="text-base">Empreiteira *</Label>
                       <select
                         id="empreiteira"
                         value={formData.empreiteira}
                         onChange={(e) => handleChange('empreiteira', e.target.value)}
                         disabled={!isEditable || isApproved || !obraSelecionada}
+                        required
                         className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
                         <option value="">Selecione a empreiteira</option>
@@ -642,13 +644,14 @@ export default function ChecklistMRAFPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="pedreira" className="text-base">Pedreira</Label>
+                      <Label htmlFor="pedreira" className="text-base">Pedreira *</Label>
                       <Input
                         id="pedreira"
                         value={formData.pedreira}
                         onChange={(e) => handleChange('pedreira', e.target.value)}
                         disabled={!isEditable || isApproved}
                         readOnly={!!selectedProject}
+                        required
                         className={selectedProject ? "bg-slate-100 h-11 text-base" : "bg-white border-slate-200 text-slate-700 h-11 text-base"}
                         placeholder="Nome da pedreira"
                       />
@@ -667,25 +670,27 @@ export default function ChecklistMRAFPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="ligante" className="text-base">Ligante Asfáltico</Label>
+                      <Label htmlFor="ligante" className="text-base">Ligante Asfáltico *</Label>
                       <Input
                         id="ligante"
                         value={formData.ligante}
                         onChange={(e) => handleChange('ligante', e.target.value)}
                         disabled={!isEditable || isApproved}
                         readOnly={!!selectedProject}
+                        required
                         className={selectedProject ? "bg-slate-100 h-11 text-base" : "bg-white border-slate-200 text-slate-700 h-11 text-base"}
                         placeholder="Ex: Emulsão RL-1C"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="ensaio_realizado_por" className="text-base">Ensaio realizado por:</Label>
+                      <Label htmlFor="ensaio_realizado_por" className="text-base">Ensaio realizado por: *</Label>
                       <select
                         id="ensaio_realizado_por"
                         value={formData.ensaio_realizado_por}
                         onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
                         disabled={!isEditable || isApproved}
+                        required
                         className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
                         <option value="Afirma Evias">Afirma Evias</option>
