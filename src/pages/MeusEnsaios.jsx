@@ -1343,6 +1343,16 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                       </span>
                     );
                   }
+                  if (ensaio.acoes_corretivas_realizado === true) {
+                    return (
+                      <span 
+                        className="text-orange-500 cursor-help text-xl" 
+                        title="Ações corretivas realizadas"
+                      >
+                        ⚠️
+                      </span>
+                    );
+                  }
                   return null;
                 })()}
               </h3>
