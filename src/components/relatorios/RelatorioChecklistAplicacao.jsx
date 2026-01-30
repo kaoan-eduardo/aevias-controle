@@ -571,10 +571,15 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         <div className="p-3 print:p-3 flex flex-col page-container break-before-page" style={{ minHeight: '297mm', maxHeight: '297mm' }}>
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />
-            <main className="flex-grow mt-2">
-              <SectionTitle>Ações Corretivas Realizadas</SectionTitle>
-              <div className="border-2 border-slate-300 rounded-lg p-3 bg-white min-h-48">
-                <p className="text-xs leading-relaxed whitespace-pre-wrap text-justify">{checklist.acoes_corretivas_descricao}</p>
+            <main className="flex-grow mt-2 flex items-center justify-center">
+              <div className="w-full">
+                <SectionTitle>Ações Corretivas</SectionTitle>
+                <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '400px' }}>
+                  <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                    {checklist.acoes_corretivas_descricao}
+                  </p>
+                </div>
               </div>
             </main>
             <div className="mt-auto">
