@@ -286,7 +286,8 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const totalPages = 1 + photoChunks.length + compressedMedicoes.length;
+  const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
+  const totalPages = 1 + (temAcoesCorretivas ? 1 : 0) + photoChunks.length + compressedMedicoes.length;
 
   return (
     <div className="bg-white font-sans">
@@ -565,6 +566,24 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         </div>
       </div>
 
+      {/* --- Página 2: Ações Corretivas (se houver) --- */}
+      {temAcoesCorretivas && (
+        <div className="p-3 print:p-3 flex flex-col page-container break-before-page" style={{ minHeight: '297mm', maxHeight: '297mm' }}>
+          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+            <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />
+            <main className="flex-grow mt-2">
+              <SectionTitle>Ações Corretivas Realizadas</SectionTitle>
+              <div className="border-2 border-slate-300 rounded-lg p-3 bg-white min-h-48">
+                <p className="text-xs leading-relaxed whitespace-pre-wrap text-justify">{checklist.acoes_corretivas_descricao}</p>
+              </div>
+            </main>
+            <div className="mt-auto">
+              <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} pageNumber={2} totalPages={totalPages} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {photoChunks.map((chunk, pageIndex) => (
         <div key={pageIndex} className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
@@ -634,7 +653,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               />
             </main>
             <footer className="text-center text-xs text-gray-500 pt-2 shrink-0">
-              Página {1 + photoChunks.length + medicaoIndex + 1} de {totalPages}
+              Página {1 + (temAcoesCorretivas ? 1 : 0) + photoChunks.length + medicaoIndex + 1} de {totalPages}
             </footer>
           </div>
         </div>
