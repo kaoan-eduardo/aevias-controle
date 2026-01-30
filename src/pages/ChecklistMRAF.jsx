@@ -73,6 +73,8 @@ const getInitialFormData = () => ({
     observacoes: ""
   },
   observacoes_gerais: "",
+  acoes_corretivas_realizado: null,
+  acoes_corretivas_descricao: "",
   fotos: [],
   status: "rascunho",
   approved: null,
@@ -1425,6 +1427,61 @@ export default function ChecklistMRAFPage() {
                   {formData.observacoes_gerais?.length || 0} / 1000 caracteres
                 </p>
               </div>
+
+              {/* AÇÕES CORRETIVAS */}
+              <Card className="bg-slate-50">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl">Ações Corretivas</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-base">Foram realizadas ações corretivas?</Label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="acoes_corretivas_realizado"
+                          checked={formData.acoes_corretivas_realizado === true}
+                          onChange={() => handleChange('acoes_corretivas_realizado', true)}
+                          disabled={!isEditable || isApproved}
+                          className="w-4 h-4"
+                        />
+                        <span className="text-base">Sim</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="acoes_corretivas_realizado"
+                          checked={formData.acoes_corretivas_realizado === false}
+                          onChange={() => handleChange('acoes_corretivas_realizado', false)}
+                          disabled={!isEditable || isApproved}
+                          className="w-4 h-4"
+                        />
+                        <span className="text-base">Não</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {formData.acoes_corretivas_realizado === true && (
+                    <div>
+                      <Label htmlFor="acoes_corretivas_descricao" className="text-base">Descrição das Ações Corretivas *</Label>
+                      <Textarea
+                        id="acoes_corretivas_descricao"
+                        value={formData.acoes_corretivas_descricao}
+                        onChange={(e) => handleChange('acoes_corretivas_descricao', e.target.value)}
+                        disabled={!isEditable || isApproved}
+                        rows={4}
+                        maxLength={1000}
+                        placeholder="Descreva detalhadamente as ações corretivas realizadas..."
+                        className="bg-white border-slate-200 text-slate-700 text-base"
+                      />
+                      <p className="text-sm text-right text-slate-600 mt-1">
+                        {formData.acoes_corretivas_descricao?.length || 0} / 1000 caracteres
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
               {/* FOTOS */}
               <div>

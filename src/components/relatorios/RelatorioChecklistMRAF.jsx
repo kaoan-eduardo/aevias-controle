@@ -516,6 +516,36 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
         <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
       </div>
 
+      {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
+      {checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao && (
+        <div className="break-before-page relative min-h-[297mm] p-4 print:p-4 flex flex-col">
+          <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+
+          <div className="flex-1">
+            <SectionTitle>Ações Corretivas</SectionTitle>
+            <div className="border-2 border-slate-400 rounded p-2 bg-yellow-50">
+              <p className="font-bold text-[10px] mb-1 text-slate-800">DESCRIÇÃO DAS AÇÕES CORRETIVAS REALIZADAS:</p>
+              <p className="text-[9px] text-slate-700 whitespace-pre-wrap leading-relaxed">
+                {checklist.acoes_corretivas_descricao}
+              </p>
+            </div>
+
+            {checklist.observacoes_gerais && (
+              <div className="mt-2">
+                <p className="font-bold text-[10px] mb-1 text-slate-800">OBSERVAÇÕES GERAIS:</p>
+                <div className="p-1 bg-white border border-slate-300 rounded text-[9px]">
+                  <p className="whitespace-pre-wrap">{checklist.observacoes_gerais}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <footer className="mt-4 text-center text-xs text-slate-500 border-t border-slate-300 pt-2">
+            Página 2 de {photoPages.length > 0 ? photoPages.length + 2 : 2}
+          </footer>
+        </div>
+      )}
+
       {/* PÁGINAS DE FOTOS - CADA UMA COM HEADER */}
       {photoPages.map((photos, pageIndex) => (
         <div key={pageIndex} className="break-before-page relative min-h-[297mm] p-4 print:p-4 flex flex-col">
@@ -557,7 +587,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
           </div>
 
           <footer className="mt-4 text-center text-xs text-slate-500 border-t border-slate-300 pt-2">
-            Página {photoPages.length > 0 ? pageIndex + 2 : 1} de {photoPages.length > 0 ? photoPages.length + 1 : 1}
+            Página {photoPages.length > 0 ? (checklist.acoes_corretivas_realizado === true ? pageIndex + 3 : pageIndex + 2) : (checklist.acoes_corretivas_realizado === true ? 3 : 2)} de {photoPages.length > 0 ? (checklist.acoes_corretivas_realizado === true ? photoPages.length + 2 : photoPages.length + 1) : (checklist.acoes_corretivas_realizado === true ? 2 : 1)}
           </footer>
         </div>
       ))}
