@@ -616,10 +616,10 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
 
       {/* --- Página 2: Ações Corretivas (se houver) --- */}
       {temAcoesCorretivas && (
-        <div className="p-3 print:p-3 flex flex-col page-container break-before-page" style={{ minHeight: '297mm', maxHeight: '297mm' }}>
-          <div className="w-full max-w-[190mm] mx-auto flex flex-col" style={{ height: '100%' }}>
+        <div className="p-3 print:p-3 break-before-page relative" style={{ minHeight: '297mm', height: '297mm' }}>
+          <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />
-            <main className="flex-1 mt-2">
+            <main className="mt-2">
               <SectionTitle>Ações Corretivas</SectionTitle>
               <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
                 <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
@@ -628,7 +628,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                 </p>
               </div>
             </main>
-            <div className="mt-auto pt-1 break-inside-avoid">
+            <div className="absolute bottom-0 left-0 right-0 pt-1 break-inside-avoid">
               <div className="grid grid-cols-3 gap-4 items-end">
                 <div className="text-center">
                   <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
