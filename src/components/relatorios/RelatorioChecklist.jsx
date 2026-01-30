@@ -426,8 +426,8 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
             <main className="flex-grow mt-6">
               <SectionTitle>Ações Corretivas Realizadas</SectionTitle>
-              <div className="border-2 border-slate-300 rounded-lg p-6 bg-slate-50 min-h-48">
-                <p className="text-base leading-relaxed whitespace-pre-wrap">{checklist.acoes_corretivas_descricao}</p>
+              <div className="border-2 border-slate-300 rounded-lg p-6 bg-white min-h-48">
+                <p className="text-base leading-relaxed whitespace-pre-wrap text-justify">{checklist.acoes_corretivas_descricao}</p>
               </div>
             </main>
             <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
