@@ -114,7 +114,11 @@ export default function ChecklistAplicacaoPage() {
     console.log("🔍 [DEBUG] Calculando projetos disponíveis. Regional:", regional, "Projects:", projects);
     if (!regional || !projects) return [];
     const regionalProjectIds = regional.project_ids || [];
-    const disponiveis = projects.filter(p => regionalProjectIds.includes(p.id) && p.status === 'ativo');
+    const disponiveis = projects.filter(p => 
+      regionalProjectIds.includes(p.id) && 
+      p.status === 'ativo' && 
+      p.tipo_projeto === 'CAUQ'
+    );
     console.log("🔍 [DEBUG] Projetos disponíveis:", disponiveis);
     return disponiveis;
   }, [regional, projects]);
