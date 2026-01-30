@@ -108,6 +108,18 @@ const getNaoConformidades = (ensaio) => {
       naoConformidades.push("Taxa de Pintura Residual");
     }
   }
+
+  if (ensaio.entityType === "ChecklistConcretagem") {
+    const cargas = ensaio.cargas_concreto || [];
+    cargas.forEach((carga, idx) => {
+      if (carga.slump_test?.conforme === false) {
+        naoConformidades.push(`Slump Test (Carga ${carga.numero_carga || idx + 1})`);
+      }
+      if (carga.espessura_camada?.conforme === false) {
+        naoConformidades.push(`Espessura da Camada (Carga ${carga.numero_carga || idx + 1})`);
+      }
+    });
+  }
   
   return naoConformidades;
 };
