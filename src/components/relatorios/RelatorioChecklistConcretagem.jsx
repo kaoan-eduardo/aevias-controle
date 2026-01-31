@@ -550,9 +550,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3 relative" style={{ minHeight: '297mm', height: '297mm' }}>
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3" style={{ minHeight: '297mm' }}>
             <ReportHeader />
-            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '60px' }}>
+            <main className="text-sm print:text-xs mt-0.5">
               <DadosObra />
               <CondicoesClimaticas />
               
@@ -568,7 +568,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <div className="absolute bottom-2 left-3 right-3 print:bottom-2">
+            <div className="mt-3 print:mt-3">
               <ReportFooterWithSignatures />
             </div>
           </div>
@@ -619,11 +619,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
       {temAcoesCorretivas && (
-        <div className="break-before-page relative p-3 print:p-3" style={{ minHeight: '297mm', height: '297mm' }}>
-          <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
+        <div className="break-before-page p-3 print:p-3" style={{ minHeight: '297mm' }}>
+          <div className="w-full max-w-[190mm] mx-auto">
             <ReportHeader />
 
-            <main className="mt-2" style={{ marginBottom: '60px' }}>
+            <main className="mt-2">
               <SectionTitle>Ações Corretivas</SectionTitle>
               <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
                 <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
@@ -633,7 +633,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </div>
             </main>
 
-            <div className="absolute bottom-2 left-3 right-3 print:bottom-2">
+            <div className="mt-3 print:mt-3">
               <ReportFooterWithSignatures />
             </div>
           </div>
