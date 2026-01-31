@@ -530,7 +530,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
           </>
         )}
 
-        {!temAcoesCorretivas && <ReportFooter checklist={checklist} pageNum={1} totalPages={totalPages} />}
+        {!temAcoesCorretivas && <ReportFooterWithSignatures />}
       </div>
 
       {/* PÁGINA DE AÇÕES CORRETIVAS */}
