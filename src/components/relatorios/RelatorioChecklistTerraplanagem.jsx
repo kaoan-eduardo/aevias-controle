@@ -631,6 +631,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
               <ReportHeader />
+              <DadosObra />
 
               <main className="mt-2" style={{ flex: '1' }}>
                 <SectionTitle>Ações Corretivas</SectionTitle>
