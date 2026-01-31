@@ -621,22 +621,24 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS */}
       {temAcoesCorretivas && (
-        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
-          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
-            <ReportHeader />
+        <div className="break-before-page">
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
+              <ReportHeader />
 
-            <main className="mt-2" style={{ flex: '1' }}>
-              <SectionTitle>Ações Corretivas</SectionTitle>
-              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
-                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {checklist.acoes_corretivas_descricao}
-                </p>
+              <main className="mt-2" style={{ flex: '1' }}>
+                <SectionTitle>Ações Corretivas</SectionTitle>
+                <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
+                  <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                    {checklist.acoes_corretivas_descricao}
+                  </p>
+                </div>
+              </main>
+
+              <div style={{ marginTop: 'auto' }}>
+                <ReportFooter />
               </div>
-            </main>
-
-            <div style={{ marginTop: 'auto' }}>
-              <ReportFooter />
             </div>
           </div>
         </div>

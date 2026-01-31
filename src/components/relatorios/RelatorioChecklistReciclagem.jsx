@@ -535,40 +535,24 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
       {/* PÁGINA DE AÇÕES CORRETIVAS */}
       {temAcoesCorretivas && (
-        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
-          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
-            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-0.5">
-              <div className="flex justify-start">
-                <img 
-                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-12 object-contain" 
-                />
-              </div>
-              <div className="text-center">
-                <h1 className="text-sm font-bold text-gray-800">CHECKLIST DE RECICLAGEM</h1>
-              </div>
-              <div className="flex justify-end">
-                <div className="border border-gray-400 p-0.5 rounded-md text-xs bg-white">
-                  <p className="font-semibold text-gray-800">
-                    {checklist.data ? new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''}
+        <div className="break-before-page">
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
+              <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+
+              <main className="mt-2" style={{ flex: '1' }}>
+                <SectionTitle>Ações Corretivas</SectionTitle>
+                <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
+                  <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                  <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                    {checklist.acoes_corretivas_descricao}
                   </p>
                 </div>
-              </div>
-            </header>
+              </main>
 
-            <main className="mt-2" style={{ flex: '1' }}>
-              <SectionTitle>Ações Corretivas</SectionTitle>
-              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
-                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {checklist.acoes_corretivas_descricao}
-                </p>
+              <div style={{ marginTop: 'auto' }}>
+                <ReportFooterWithSignatures />
               </div>
-            </main>
-
-            <div style={{ marginTop: 'auto' }}>
-              <ReportFooterWithSignatures />
             </div>
           </div>
         </div>
