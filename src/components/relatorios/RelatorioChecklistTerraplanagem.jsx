@@ -173,6 +173,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
   };
 
   const photoChunks = chunkArray(compressedPhotos, 6);
+  const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
 
   const ReportHeader = () => (
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
@@ -604,15 +605,42 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
               </tbody>
             </table>
 
-            <SectionTitle>Observações Gerais</SectionTitle>
-            <div className="text-xs mb-0.5 p-1 bg-white rounded border border-slate-300 h-16 overflow-hidden">
-              {checklist.observacoes_gerais || 'Sem observações'}
-            </div>
+            {checklist.observacoes_gerais && (
+              <>
+                <SectionTitle>Observações Gerais</SectionTitle>
+                <div className="text-xs mb-0.5 p-1 bg-white rounded border border-slate-300 h-16 overflow-hidden">
+                  {checklist.observacoes_gerais}
+                </div>
+              </>
+            )}
           </main>
           
-          <ReportFooter />
+          {!temAcoesCorretivas && <ReportFooter />}
         </div>
       </div>
+
+      {/* PÁGINA DE AÇÕES CORRETIVAS */}
+      {temAcoesCorretivas && (
+        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
+          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
+            <ReportHeader />
+
+            <main className="mt-2" style={{ flex: '1' }}>
+              <SectionTitle>Ações Corretivas</SectionTitle>
+              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
+                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                  {checklist.acoes_corretivas_descricao}
+                </p>
+              </div>
+            </main>
+
+            <div style={{ marginTop: 'auto' }}>
+              <ReportFooter />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (

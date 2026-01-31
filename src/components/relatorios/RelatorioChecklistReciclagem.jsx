@@ -280,12 +280,80 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
   };
 
   const photoChunks = compressedPhotos.length > 0 ? chunkArray(compressedPhotos, 6) : [];
-  const totalPages = 1 + photoChunks.length;
+  const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
+  const totalPages = 1 + photoChunks.length + (temAcoesCorretivas ? 1 : 0);
+
+  const formatDateBrasilia = (dateString) => {
+    if (!dateString) return 'N/A';
+    let normalizedDate = dateString;
+    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
+      normalizedDate = dateString + 'Z';
+    }
+    return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
+  };
+
+  const ReportFooterWithSignatures = () => (
+    <footer className="pt-0">
+      <div className="grid grid-cols-3 gap-2 items-end">
+        <div className="text-center">
+          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
+            {checklist.laboratorista_name && (
+              <>
+                <p>Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
+                <p>{checklist.created_by}</p>
+                <p>em {formatDateBrasilia(checklist.created_date)}</p>
+              </>
+            )}
+          </div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Fiscal</p></div>
+        </div>
+        <div className="text-center">
+          {checklist.approver_details ? (
+            <>
+              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
+                <p>Aprovado digitalmente por</p>
+                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
+                <p>{checklist.approved_by}</p>
+                {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
+                <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+              </div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
+            </>
+          ) : (
+            <>
+              <div className="h-10 mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
+            </>
+          )}
+        </div>
+        <div className="text-center">
+          {checklist.client_signature?.signed_by ? (
+            <>
+              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
+                <p>Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
+                <p>{checklist.client_signature.signed_by}</p>
+                {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
+                <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+              </div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+            </>
+          ) : (
+            <>
+              <div className="h-10 mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+            </>
+          )}
+        </div>
+      </div>
+    </footer>
+  );
 
   return (
     <>
       {/* Página Principal */}
-      <div className={photoChunks.length > 0 ? "break-after-page" : ""}>
+      <div className={(photoChunks.length > 0 || temAcoesCorretivas) ? "break-after-page" : ""}>
         <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
         {/* CONDIÇÕES CLIMÁTICAS */}
@@ -453,13 +521,58 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         </div>
 
         {/* OBSERVAÇÕES GERAIS */}
-        <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-        <div className="border border-slate-300 p-1 min-h-[25px] text-[8px] mb-1">
-          {checklist.observacoes_gerais || 'Nenhuma observação registrada.'}
-        </div>
+        {checklist.observacoes_gerais && (
+          <>
+            <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
+            <div className="border border-slate-300 p-1 min-h-[25px] text-[8px] mb-1">
+              {checklist.observacoes_gerais}
+            </div>
+          </>
+        )}
 
-        <ReportFooter checklist={checklist} pageNum={1} totalPages={totalPages} />
+        {!temAcoesCorretivas && <ReportFooter checklist={checklist} pageNum={1} totalPages={totalPages} />}
       </div>
+
+      {/* PÁGINA DE AÇÕES CORRETIVAS */}
+      {temAcoesCorretivas && (
+        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
+          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
+            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-0.5">
+              <div className="flex justify-start">
+                <img 
+                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                  alt="Logo Regional" 
+                  className="h-12 object-contain" 
+                />
+              </div>
+              <div className="text-center">
+                <h1 className="text-sm font-bold text-gray-800">CHECKLIST DE RECICLAGEM</h1>
+              </div>
+              <div className="flex justify-end">
+                <div className="border border-gray-400 p-0.5 rounded-md text-xs bg-white">
+                  <p className="font-semibold text-gray-800">
+                    {checklist.data ? new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''}
+                  </p>
+                </div>
+              </div>
+            </header>
+
+            <main className="mt-2" style={{ flex: '1' }}>
+              <SectionTitle>Ações Corretivas</SectionTitle>
+              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
+                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                  {checklist.acoes_corretivas_descricao}
+                </p>
+              </div>
+            </main>
+
+            <div style={{ marginTop: 'auto' }}>
+              <ReportFooterWithSignatures />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
