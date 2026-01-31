@@ -334,7 +334,75 @@ export default function ChecklistReciclagem() {
     setSaving(true);
 
     try {
+      // Para salvar progresso, apenas obra é obrigatória
+      if (!formData.obra_id) {
+        alert("Por favor, selecione uma obra.");
+        setSaving(false);
+        return;
+      }
+
+      // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
+        if (!formData.rodovia?.trim()) {
+          alert("Por favor, selecione a Rodovia.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.empreiteira?.trim()) {
+          alert("Por favor, selecione a Empreiteira.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.estaca?.trim()) {
+          alert("Por favor, preencha o campo Estaca.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.project_id?.trim()) {
+          alert("Por favor, selecione o Projeto.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.trecho?.trim()) {
+          alert("Por favor, preencha o campo Trecho.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.faixa?.trim()) {
+          alert("Por favor, preencha o campo Faixa.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.material?.trim()) {
+          alert("Por favor, preencha o campo Material.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.inspetor_fiscal?.trim()) {
+          alert("Por favor, preencha o campo Inspetor de Campo.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.jornada?.horario_inicio?.trim()) {
+          alert("Por favor, preencha o Horário de Início.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.jornada?.horario_fim?.trim()) {
+          alert("Por favor, preencha o Horário Fim.");
+          setSaving(false);
+          return;
+        }
+
         for (let i = 0; i < formData.periodos_clima.length; i++) {
           const periodo = formData.periodos_clima[i];
           if (!periodo.temperatura_ambiente || periodo.temperatura_ambiente === '') {
@@ -343,9 +411,10 @@ export default function ChecklistReciclagem() {
             return;
           }
         }
-      } else {
-        if (!formData.obra_id) {
-          alert("Por favor, selecione uma obra.");
+
+        // Validar ações corretivas
+        if (formData.acoes_corretivas_realizado === true && !formData.acoes_corretivas_descricao?.trim()) {
+          alert("Por favor, descreva as ações corretivas realizadas.");
           setSaving(false);
           return;
         }
