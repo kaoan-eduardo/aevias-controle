@@ -191,10 +191,10 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
   // Componente do Footer COM assinaturas (apenas última página)
   const ReportFooterWithSignatures = () => (
-    <footer className="pt-0.5">
-      <div className="grid grid-cols-3 gap-3 items-end">
+    <footer className="pt-0">
+      <div className="grid grid-cols-3 gap-2 items-end">
         <div className="text-center">
-          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center">
+          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
             {checklist.laboratorista_name && (
               <>
                 <p>Assinado digitalmente por</p>
@@ -209,7 +209,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         <div className="text-center">
           {checklist.approver_details ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center">
+              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
                 <p>Aprovado digitalmente por</p>
                 <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
                 <p>{checklist.approved_by}</p>
@@ -220,7 +220,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
             </>
           ) : (
             <>
-              <div className="h-12 mb-0.5"></div>
+              <div className="h-10 mb-0.5"></div>
               <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
             </>
           )}
@@ -228,7 +228,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         <div className="text-center">
           {checklist.client_signature?.signed_by ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center">
+              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
                 <p>Assinado digitalmente por</p>
                 <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
                 <p>{checklist.client_signature.signed_by}</p>
@@ -239,7 +239,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
             </>
           ) : (
             <>
-              <div className="h-12 mb-0.5"></div>
+              <div className="h-10 mb-0.5"></div>
               <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
             </>
           )}
@@ -550,7 +550,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3">
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
             <ReportHeader />
             <main className="text-sm print:text-xs mt-0.5">
               <DadosObra />
@@ -568,7 +568,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <div className="mt-3 print:mt-3">
+            <div className="mt-1 print:mt-1">
               <ReportFooterWithSignatures />
             </div>
           </div>
@@ -582,7 +582,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         
         return (
           <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
-            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3">
+            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
               <ReportHeader />
               <main className="text-sm print:text-xs mt-0.5">
                 {isPrimeiraCarga && (
@@ -606,11 +606,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </main>
               
               {isUltimaCarga && !temAcoesCorretivas ? (
-                <div className="mt-3 print:mt-3">
+                <div className="mt-1 print:mt-1">
                   <ReportFooterWithSignatures />
                 </div>
               ) : (
-                <div className="mt-3 print:mt-3">
+                <div className="mt-1 print:mt-1">
                   <ReportFooterSimple />
                 </div>
               )}
@@ -621,7 +621,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
       {temAcoesCorretivas && (
-        <div className="break-before-page p-3 print:p-3">
+        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
           <div className="w-full max-w-[190mm] mx-auto">
             <ReportHeader />
 
@@ -635,7 +635,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </div>
             </main>
 
-            <div className="mt-3 print:mt-3">
+            <div className="mt-1 print:mt-1">
               <ReportFooterWithSignatures />
             </div>
           </div>
