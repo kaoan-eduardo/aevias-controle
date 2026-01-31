@@ -197,6 +197,57 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
     </header>
   );
 
+  const DadosObra = () => (
+    <>
+      <SectionTitle>Dados da Obra</SectionTitle>
+      <div className="grid grid-cols-3 gap-x-3 gap-y-0.5 mb-0.5 p-1 rounded text-xs">
+        <div>
+          <p className="font-bold">CLIENTE:</p>
+          <p>{regional?.cliente || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">RODOVIA:</p>
+          <p>{checklist.rodovia}</p>
+        </div>
+        <div>
+          <p className="font-bold">MATERIAL:</p>
+          <p>{checklist.material}</p>
+        </div>
+
+        <div>
+          <p className="font-bold">EMPREITEIRA:</p>
+          <p>{checklist.empreiteira}</p>
+        </div>
+        <div>
+          <p className="font-bold">ESTACA:</p>
+          <p>{checklist.estaca}</p>
+        </div>
+        <div>
+          <p className="font-bold">INSPETOR FISC:</p>
+          <p>{checklist.inspetor_fiscal || 'N/A'}</p>
+        </div>
+
+        <div>
+          <p className="font-bold">OBRA:</p>
+          <p>{obra?.name || 'N/A'}</p>
+        </div>
+        <div>
+          <p className="font-bold">CAMADA:</p>
+          <p>{checklist.camada}</p>
+        </div>
+        <div>
+          <p className="font-bold">JORNADA:</p>
+          <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
+        </div>
+
+        <div>
+          <p className="font-bold">ENSAIO REALIZADO POR:</p>
+          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
+        </div>
+      </div>
+    </>
+  );
+
   const ReportFooter = () => (
     <footer className="mt-12 pt-0.5">
       <div className="grid grid-cols-3 gap-2 items-end">
@@ -263,52 +314,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
           <ReportHeader />
           
           <main className="text-xs print:text-xs mt-0.5 mb-3">
-            <SectionTitle>Dados da Obra</SectionTitle>
-            <div className="grid grid-cols-3 gap-x-3 gap-y-0.5 mb-0.5 p-1 rounded text-xs">
-              <div>
-                <p className="font-bold">CLIENTE:</p>
-                <p>{regional?.cliente || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="font-bold">RODOVIA:</p>
-                <p>{checklist.rodovia}</p>
-              </div>
-              <div>
-                <p className="font-bold">MATERIAL:</p>
-                <p>{checklist.material}</p>
-              </div>
-
-              <div>
-                <p className="font-bold">EMPREITEIRA:</p>
-                <p>{checklist.empreiteira}</p>
-              </div>
-              <div>
-                <p className="font-bold">ESTACA:</p>
-                <p>{checklist.estaca}</p>
-              </div>
-              <div>
-                <p className="font-bold">INSPETOR FISC:</p>
-                <p>{checklist.inspetor_fiscal || 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="font-bold">OBRA:</p>
-                <p>{obra?.name || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="font-bold">CAMADA:</p>
-                <p>{checklist.camada}</p>
-              </div>
-              <div>
-                <p className="font-bold">JORNADA:</p>
-                <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="font-bold">ENSAIO REALIZADO POR:</p>
-                <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
-              </div>
-            </div>
+            <DadosObra />
 
             <SectionTitle>Condições Climáticas</SectionTitle>
             <div className="mb-0.5">
