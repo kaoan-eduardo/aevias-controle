@@ -506,6 +506,12 @@ export default function ChecklistConcretagem() {
 
       // Validações obrigatórias apenas quando finalizando
       if (saveStatus === 'finalizado') {
+        if (!formData.project_id?.trim()) {
+          alert("Por favor, selecione a Carta Traço de Concreto.");
+          setSaving(false);
+          return;
+        }
+
         if (!formData.concreteira?.trim()) {
           alert("Por favor, preencha o campo Concreteira.");
           setSaving(false);
@@ -530,8 +536,26 @@ export default function ChecklistConcretagem() {
           return;
         }
 
+        if (!formData.volume || formData.volume === '') {
+          alert("Por favor, preencha o campo Volume (m³).");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.fck || formData.fck === '') {
+          alert("Por favor, preencha o campo Fck (MPa).");
+          setSaving(false);
+          return;
+        }
+
         if (!formData.estrutura?.trim()) {
           alert("Por favor, preencha o campo Estrutura.");
+          setSaving(false);
+          return;
+        }
+
+        if (!formData.inspetor_campo?.trim()) {
+          alert("Por favor, preencha o campo Inspetor Campo.");
           setSaving(false);
           return;
         }
