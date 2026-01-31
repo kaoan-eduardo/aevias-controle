@@ -279,56 +279,56 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
   };
 
   const ReportFooterWithSignatures = () => (
-    <footer className="mt-2 px-0.5 print:break-inside-avoid">
+    <footer className="mt-4 px-0.5 print:break-inside-avoid">
       <div className="grid grid-cols-3 gap-2 items-end">
         <div className="text-center">
-          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
+          <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
             {checklist.laboratorista_name && (
               <>
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
-                <p>{checklist.created_by}</p>
-                <p>em {formatDateBrasilia(checklist.created_date)}</p>
+                <p className="leading-tight">Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600 leading-tight">{checklist.laboratorista_name}</p>
+                <p className="leading-tight text-[7px]">{checklist.created_by}</p>
+                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.created_date)}</p>
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Fiscal</p></div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Fiscal</p></div>
         </div>
         <div className="text-center">
           {checklist.approver_details ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Aprovado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                <p>{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+              <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
+                <p className="leading-tight">Aprovado digitalmente por</p>
+                <p className="font-bold text-slate-600 leading-tight">{checklist.approver_details.name}</p>
+                <p className="leading-tight text-[7px]">{checklist.approved_by}</p>
+                {checklist.approver_details.crea_number && <p className="leading-tight text-[7px]">CREA: {checklist.approver_details.crea_number}</p>}
+                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.approved_date)}</p>
               </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
             </>
           ) : (
             <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
+              <div className="min-h-[35px] mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Responsável</p></div>
             </>
           )}
         </div>
         <div className="text-center">
           {checklist.client_signature?.signed_by ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                <p>{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+              <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
+                <p className="leading-tight">Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600 leading-tight">{checklist.client_signature.engineer_name}</p>
+                <p className="leading-tight text-[7px]">{checklist.client_signature.signed_by}</p>
+                {checklist.client_signature.crea_number && <p className="leading-tight text-[7px]">CREA: {checklist.client_signature.crea_number}</p>}
+                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
               </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Cliente</p></div>
             </>
           ) : (
             <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+              <div className="min-h-[35px] mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Cliente</p></div>
             </>
           )}
         </div>
@@ -502,7 +502,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         {checklist.observacoes_gerais && (
           <>
             <SectionTitle>OBSERVAÇÕES GERAIS</SectionTitle>
-            <div className="border border-slate-300 p-2 min-h-[30px] text-[9px] mb-2">
+            <div className="border border-slate-300 p-2 min-h-[25px] text-[9px] mb-1">
               {checklist.observacoes_gerais}
             </div>
           </>
