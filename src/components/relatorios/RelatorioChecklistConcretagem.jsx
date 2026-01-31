@@ -615,8 +615,8 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
       {temAcoesCorretivas && (
-        <div className="break-before-page py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '5mm', minHeight: '297mm' }}>
-          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(297mm - 4mm)' }}>
+        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
+          <div className="w-full max-w-[190mm] mx-auto" style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
             <ReportHeader />
 
             <main className="mt-2" style={{ flex: '1' }}>
