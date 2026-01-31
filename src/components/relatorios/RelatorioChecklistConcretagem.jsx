@@ -550,9 +550,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
+          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
             <ReportHeader />
-            <main className="text-sm print:text-xs mt-0.5">
+            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
               <DadosObra />
               <CondicoesClimaticas />
               
@@ -568,9 +568,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <div className="mt-1 print:mt-1">
-              <ReportFooterWithSignatures />
-            </div>
+            <ReportFooterWithSignatures />
           </div>
         </div>
       )}
@@ -582,9 +580,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         
         return (
           <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
-            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
+            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
               <ReportHeader />
-              <main className="text-sm print:text-xs mt-0.5">
+              <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
                 {isPrimeiraCarga && (
                   <>
                     <DadosObra />
@@ -606,13 +604,9 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </main>
               
               {isUltimaCarga && !temAcoesCorretivas ? (
-                <div className="mt-1 print:mt-1">
-                  <ReportFooterWithSignatures />
-                </div>
+                <ReportFooterWithSignatures />
               ) : (
-                <div className="mt-1 print:mt-1">
-                  <ReportFooterSimple />
-                </div>
+                <ReportFooterSimple />
               )}
             </div>
           </div>
@@ -621,11 +615,11 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
       {temAcoesCorretivas && (
-        <div className="break-before-page py-2 px-3 print:py-2 print:px-3">
+        <div className="break-before-page py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
           <div className="w-full max-w-[190mm] mx-auto">
             <ReportHeader />
 
-            <main className="mt-2">
+            <main className="mt-2" style={{ marginBottom: '15mm' }}>
               <SectionTitle>Ações Corretivas</SectionTitle>
               <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
                 <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
@@ -635,9 +629,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
               </div>
             </main>
 
-            <div className="mt-1 print:mt-1">
-              <ReportFooterWithSignatures />
-            </div>
+            <ReportFooterWithSignatures />
           </div>
         </div>
       )}
