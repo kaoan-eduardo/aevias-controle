@@ -191,56 +191,56 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
   // Componente do Footer COM assinaturas (apenas última página)
   const ReportFooterWithSignatures = () => (
-    <footer className="pt-1">
-      <div className="grid grid-cols-3 gap-4 items-end">
+    <footer className="pt-0.5">
+      <div className="grid grid-cols-3 gap-2 items-end">
         <div className="text-center">
-          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-14 flex flex-col justify-end items-center">
+          <div className="text-xs print:text-[9px] text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center leading-tight">
             {checklist.laboratorista_name && (
               <>
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
-                <p>{checklist.created_by}</p>
-                <p>em {formatDateBrasilia(checklist.created_date)}</p>
+                <p className="mb-0">Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600 mb-0">{checklist.laboratorista_name}</p>
+                <p className="mb-0">{checklist.created_by}</p>
+                <p className="mb-0">em {formatDateBrasilia(checklist.created_date)}</p>
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Laboratorista Responsável</p></div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-[9px]">Laboratorista Responsável</p></div>
         </div>
         <div className="text-center">
           {checklist.approver_details ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-14 flex flex-col justify-end items-center">
-                <p>Aprovado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                <p>{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+              <div className="text-xs print:text-[9px] text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center leading-tight">
+                <p className="mb-0">Aprovado digitalmente por</p>
+                <p className="font-bold text-slate-600 mb-0">{checklist.approver_details.name}</p>
+                <p className="mb-0">{checklist.approved_by}</p>
+                {checklist.approver_details.crea_number && <p className="mb-0">CREA: {checklist.approver_details.crea_number}</p>}
+                <p className="mb-0">em {formatDateBrasilia(checklist.approved_date)}</p>
               </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-[9px]">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
             </>
           ) : (
             <>
-              <div className="h-14 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
+              <div className="h-12 mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-[9px]">Engenheiro Responsável</p></div>
             </>
           )}
         </div>
         <div className="text-center">
           {checklist.client_signature?.signed_by ? (
             <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-14 flex flex-col justify-end items-center">
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                <p>{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+              <div className="text-xs print:text-[9px] text-slate-500 mb-0.5 h-12 flex flex-col justify-end items-center leading-tight">
+                <p className="mb-0">Assinado digitalmente por</p>
+                <p className="font-bold text-slate-600 mb-0">{checklist.client_signature.engineer_name}</p>
+                <p className="mb-0">{checklist.client_signature.signed_by}</p>
+                {checklist.client_signature.crea_number && <p className="mb-0">CREA: {checklist.client_signature.crea_number}</p>}
+                <p className="mb-0">em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
               </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-[9px]">Engenheiro Cliente</p></div>
             </>
           ) : (
             <>
-              <div className="h-14 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
+              <div className="h-12 mb-0.5"></div>
+              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-[9px]">Engenheiro Cliente</p></div>
             </>
           )}
         </div>
@@ -552,7 +552,7 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         <div className="break-inside-avoid">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-3 print:p-3 relative" style={{ minHeight: '297mm', height: '297mm' }}>
             <ReportHeader />
-            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '70px' }}>
+            <main className="text-sm print:text-xs mt-0.5" style={{ paddingBottom: '65px' }}>
               <DadosObra />
               <CondicoesClimaticas />
               
@@ -623,17 +623,17 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
           <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
             <ReportHeader />
 
-            <main className="mt-2" style={{ marginBottom: '80px' }}>
+            <main className="mt-2" style={{ paddingBottom: '65px' }}>
               <SectionTitle>Ações Corretivas</SectionTitle>
-              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
-                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+              <div className="border-2 border-slate-400 rounded p-4 bg-white" style={{ minHeight: '400px' }}>
+                <p className="font-bold text-base mb-3 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
                 <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
                   {checklist.acoes_corretivas_descricao}
                 </p>
               </div>
             </main>
 
-            <div className="absolute bottom-3 left-3 right-3">
+            <div className="absolute bottom-2 left-3 right-3">
               <ReportFooterWithSignatures />
             </div>
           </div>
