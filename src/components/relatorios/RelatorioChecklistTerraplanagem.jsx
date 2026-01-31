@@ -621,7 +621,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
             )}
           </main>
           
-          {!temAcoesCorretivas && <ReportFooter />}
+          <ReportFooter />
         </div>
       </div>
 
