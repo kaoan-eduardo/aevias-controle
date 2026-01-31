@@ -374,33 +374,33 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
 
         {/* ACOMPANHAMENTO EXECUÇÃO DA CAMADA */}
         <SectionTitle>ACOMPANHAMENTO EXECUÇÃO DA CAMADA</SectionTitle>
-        <div className="overflow-x-auto mb-2">
-          <table className="w-full border-collapse border border-slate-300 text-[10px]">
+        <div className="overflow-x-auto mb-1.5">
+          <table className="w-full border-collapse border border-slate-300 text-[9px]">
             <thead>
               <tr className="bg-white">
-                <th className="border border-slate-300 px-1 py-1.5 text-left font-medium">Controle</th>
-                <th className="border border-slate-300 px-1 py-1.5 text-center font-medium w-10">Sim</th>
-                <th className="border border-slate-300 px-1 py-1.5 text-center font-medium w-10">Não</th>
-                <th className="border border-slate-300 px-1 py-1.5 text-center font-medium w-10">N/A</th>
-                <th className="border border-slate-300 px-1 py-1.5 text-left font-medium">Observações</th>
+                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Controle</th>
+                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-9">Sim</th>
+                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-9">Não</th>
+                <th className="border border-slate-300 px-1 py-1 text-center font-medium w-9">N/A</th>
+                <th className="border border-slate-300 px-1 py-1 text-left font-medium">Observações</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-slate-300 px-1 py-1.5 bg-white">Foi realizado remoção de material existente?</td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.remocao_material_existente?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.remocao_material_existente?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.remocao_material_existente?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1.5">
+                <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado remoção de material existente?</td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.remocao_material_existente?.sim} /></td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.remocao_material_existente?.nao} /></td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.remocao_material_existente?.na} /></td>
+                <td className="border border-slate-300 px-1 py-1">
                   KM DO BOTA FORA: {checklist.acompanhamento_execucao?.remocao_material_existente?.km_bota_fora || '-'}
                 </td>
               </tr>
               <tr>
-                <td className="border border-slate-300 px-1 py-1.5 bg-white">Foi espalhado material novo para construção da camada?</td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.espalhamento_material_novo?.sim} /></td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.espalhamento_material_novo?.nao} /></td>
-                <td className="border border-slate-300 px-1 py-1.5 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.espalhamento_material_novo?.na} /></td>
-                <td className="border border-slate-300 px-1 py-1.5">
+                <td className="border border-slate-300 px-1 py-1 bg-white">Foi espalhado material novo para construção da camada?</td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isYes={checklist.acompanhamento_execucao?.espalhamento_material_novo?.sim} /></td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNo={checklist.acompanhamento_execucao?.espalhamento_material_novo?.nao} /></td>
+                <td className="border border-slate-300 px-1 py-1 text-center"><CheckmarkColumn isNA={checklist.acompanhamento_execucao?.espalhamento_material_novo?.na} /></td>
+                <td className="border border-slate-300 px-1 py-1">
                   TIPO DE MATERIAL: Pó de pedra
                 </td>
               </tr>
