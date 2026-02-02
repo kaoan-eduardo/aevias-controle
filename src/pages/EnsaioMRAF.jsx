@@ -586,44 +586,14 @@ export default function EnsaioMRAFPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="local_coleta">Local de Coleta</Label>
-                      <Input
-                        id="local_coleta"
-                        value={formData.local_coleta}
-                        onChange={(e) => handleChange('local_coleta', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="usina_fornecedora">Usina Fornecedora</Label>
-                      {usinasDisponiveis.length > 0 ? (
-                        <select
-                          id="usina_fornecedora"
-                          value={formData.usina_fornecedora}
-                          onChange={(e) => handleChange('usina_fornecedora', e.target.value)}
-                          disabled={!isEditable || isApproved}
-                          className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                        >
-                          <option value="">Selecione a usina</option>
-                          {usinasDisponiveis.map((usina, idx) => (
-                            <option key={idx} value={usina}>
-                              {usina}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <Input
-                          id="usina_fornecedora"
-                          value={formData.usina_fornecedora}
-                          onChange={(e) => handleChange('usina_fornecedora', e.target.value)}
-                          disabled={!isEditable || isApproved}
-                          placeholder={formData.obra_id ? "Nenhuma usina cadastrada na obra" : "Selecione a obra primeiro"}
-                        />
-                      )}
-                    </div>
+                  <div>
+                    <Label htmlFor="local_coleta">Local de Coleta</Label>
+                    <Input
+                      id="local_coleta"
+                      value={formData.local_coleta}
+                      onChange={(e) => handleChange('local_coleta', e.target.value)}
+                      disabled={!isEditable || isApproved}
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
