@@ -53,7 +53,6 @@ const getInitialFormData = () => ({
   temperatura_cap: null,
   faixa_especificada: "",
   ensaio_realizado_por: "Afirma Evias",
-  realizar_ensaio_umidade: false,
   extracao_ligante: {
     amostra_umida: null,
     amostra_seca: null,
@@ -64,7 +63,9 @@ const getInitialFormData = () => ({
     peso_ligante: null,
     teor_ligante: null,
     filler_betume: null,
-    teor_ligante_real: null
+    teor_ligante_real: null,
+    residuo_emulsao: null,
+    percentual_emulsao: null
   },
   granulometria: {
     peso_retido_peneiras: {}
@@ -146,7 +147,7 @@ export default function EnsaioMRAFPage() {
   useEffect(() => {
     const ext = formData.extracao_ligante;
     
-    if (formData.realizar_ensaio_umidade && ext.amostra_umida && ext.amostra_seca) {
+    if (ext.amostra_umida && ext.amostra_seca) {
       const umidade = ((ext.amostra_umida - ext.amostra_seca) / ext.amostra_seca) * 100;
       handleNestedChange('extracao_ligante.umidade', parseFloat(umidade.toFixed(2)));
     }
@@ -157,21 +158,28 @@ export default function EnsaioMRAFPage() {
       handleNestedChange('extracao_ligante.peso_ligante', parseFloat(pesoLigante.toFixed(2)));
       handleNestedChange('extracao_ligante.teor_ligante', parseFloat(teorLigante.toFixed(2)));
       
-      if (formData.realizar_ensaio_umidade && ext.umidade) {
+      if (ext.umidade) {
         const teorReal = teorLigante - ext.umidade;
         handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorReal.toFixed(2)));
       } else {
         handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorLigante.toFixed(2)));
       }
     }
+
+    // Cálculo do % de emulsão
+    if (ext.teor_ligante_real && ext.residuo_emulsao) {
+      const percentualEmulsao = (ext.teor_ligante_real / ext.residuo_emulsao) * 100;
+      handleNestedChange('extracao_ligante.percentual_emulsao', parseFloat(percentualEmulsao.toFixed(2)));
+    }
   }, [
-    formData.realizar_ensaio_umidade,
     formData.extracao_ligante.amostra_umida,
     formData.extracao_ligante.amostra_seca,
     formData.extracao_ligante.amostra_com_ligante,
     formData.extracao_ligante.amostra_sem_ligante,
     formData.extracao_ligante.fator_correcao,
     formData.extracao_ligante.umidade,
+    formData.extracao_ligante.teor_ligante_real,
+    formData.extracao_ligante.residuo_emulsao,
     handleNestedChange
   ]);
 
@@ -381,7 +389,6 @@ export default function EnsaioMRAFPage() {
               ...getInitialFormData(),
               ...ensaioToEdit,
               data_ensaio: ensaioToEdit.data_ensaio ? new Date(ensaioToEdit.data_ensaio).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-              realizar_ensaio_umidade: ensaioToEdit.realizar_ensaio_umidade ?? false,
               extracao_ligante: { ...getInitialFormData().extracao_ligante, ...(ensaioToEdit.extracao_ligante || {}) },
               granulometria: { ...getInitialFormData().granulometria, ...(ensaioToEdit.granulometria || {}) }
             });
@@ -395,7 +402,6 @@ export default function EnsaioMRAFPage() {
           if (availableObras.length > 0) {
             initialNewFormData.obra_id = availableObras[0].id;
           }
-          initialNewFormData.realizar_ensaio_umidade = false;
           setFormData(initialNewFormData);
           setEditingEnsaio(null);
         }
@@ -664,62 +670,45 @@ export default function EnsaioMRAFPage() {
               {/* EXTRAÇÃO DE LIGANTE */}
               <Card className="bg-slate-50">
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">Extração de Ligante (Rotarex) *</CardTitle>
-                      <CardDescription>DNIT 427/20 - ABNT NBR 15619/16</CardDescription>
-                    </div>
-                    {isEditable && !isApproved && (
-                      <div className="flex items-center gap-2">
-                        <Label className="text-sm font-normal">Ensaio de Umidade?</Label>
-                        <input
-                          type="checkbox"
-                          checked={formData.realizar_ensaio_umidade}
-                          onChange={(e) => handleChange('realizar_ensaio_umidade', e.target.checked)}
-                          className="w-4 h-4"
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <CardTitle className="text-lg">Extração de Ligante (Rotarex) *</CardTitle>
+                  <CardDescription>DNIT 427/20 - ABNT NBR 15619/16</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {formData.realizar_ensaio_umidade && (
-                      <>
-                        <div>
-                          <Label>Amostra Úmida (g)</Label>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            value={formData.extracao_ligante.amostra_umida || ''}
-                            onChange={(e) => handleNestedChange('extracao_ligante.amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
-                            disabled={!isEditable || isApproved}
-                          />
-                        </div>
+                    <div>
+                      <Label>Amostra Úmida (g) *</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.extracao_ligante.amostra_umida || ''}
+                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
+                        disabled={!isEditable || isApproved}
+                        required={formData.status === 'finalizado'}
+                      />
+                    </div>
 
-                        <div>
-                          <Label>Amostra Seca (g)</Label>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            value={formData.extracao_ligante.amostra_seca || ''}
-                            onChange={(e) => handleNestedChange('extracao_ligante.amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
-                            disabled={!isEditable || isApproved}
-                          />
-                        </div>
+                    <div>
+                      <Label>Amostra Seca (g) *</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.extracao_ligante.amostra_seca || ''}
+                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
+                        disabled={!isEditable || isApproved}
+                        required={formData.status === 'finalizado'}
+                      />
+                    </div>
 
-                        <div>
-                          <Label>Umidade (%)</Label>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            value={formData.extracao_ligante.umidade || ''}
-                            readOnly
-                            className="bg-slate-100"
-                          />
-                        </div>
-                      </>
-                    )}
+                    <div>
+                      <Label>Umidade (%)</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.extracao_ligante.umidade || ''}
+                        readOnly
+                        className="bg-slate-100"
+                      />
+                    </div>
 
                     <div>
                       <Label>Amostra com Ligante (g) {formData.status === 'finalizado' && '*'}</Label>
@@ -797,6 +786,28 @@ export default function EnsaioMRAFPage() {
                         value={formData.extracao_ligante.filler_betume || ''}
                         readOnly
                         className="bg-blue-50 font-semibold"
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Resíduo da Emulsão (%)</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.extracao_ligante.residuo_emulsao || ''}
+                        onChange={(e) => handleNestedChange('extracao_ligante.residuo_emulsao', e.target.value ? parseFloat(e.target.value) : null)}
+                        disabled={!isEditable || isApproved}
+                      />
+                    </div>
+
+                    <div>
+                      <Label>% de Emulsão</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.extracao_ligante.percentual_emulsao || ''}
+                        readOnly
+                        className="bg-green-50 font-semibold"
                       />
                     </div>
                   </div>
