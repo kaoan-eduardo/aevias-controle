@@ -498,6 +498,11 @@ export default function EnsaioCAUQPage() {
     return obraSelecionada.usinas || [];
   }, [obraSelecionada]);
 
+  const rodoviasDisponiveis = useMemo(() => {
+    if (!obraSelecionada) return [];
+    return obraSelecionada.rodovias || [];
+  }, [obraSelecionada]);
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -729,12 +734,30 @@ export default function EnsaioCAUQPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <Label htmlFor="rodovia">Rodovia</Label>
-                      <Input
-                        id="rodovia"
-                        value={formData.rodovia}
-                        onChange={(e) => handleChange('rodovia', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                      />
+                      {rodoviasDisponiveis.length > 0 ? (
+                        <select
+                          id="rodovia"
+                          value={formData.rodovia}
+                          onChange={(e) => handleChange('rodovia', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                          className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                        >
+                          <option value="">Selecione a rodovia</option>
+                          {rodoviasDisponiveis.map((rodovia, idx) => (
+                            <option key={idx} value={rodovia}>
+                              {rodovia}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <Input
+                          id="rodovia"
+                          value={formData.rodovia}
+                          onChange={(e) => handleChange('rodovia', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                          placeholder={formData.obra_id ? "Nenhuma rodovia cadastrada na obra" : "Selecione a obra primeiro"}
+                        />
+                      )}
                     </div>
 
                     <div>
