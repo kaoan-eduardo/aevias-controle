@@ -455,7 +455,7 @@ export default function ResumosPersonalizadosPage() {
     <div className="p-6 bg-transparent min-h-screen">
       <div className="max-w-7xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-[#00233B]">Resumo</h1>
+          <h1 className="text-3xl font-bold text-[#00233B]">Resumos</h1>
           <p className="text-[#00233B]/80 mt-1">
             Selecione os ensaios, período e campos para gerar relatórios consolidados
           </p>
