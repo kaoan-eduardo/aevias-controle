@@ -240,9 +240,11 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
           <section className="mt-6">
             <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Atividades e Observações</h2>
-            {renderTextArea("Atividades Realizadas", diario.atividades_realizadas)}
-            {diario.observacoes && renderTextArea("Observações", diario.observacoes)}
-            {diario.acoes_corretivas_realizado === true && diario.acoes_corretivas_descricao && renderTextArea("Ações Corretivas", diario.acoes_corretivas_descricao)}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {renderTextArea("Atividades Realizadas", diario.atividades_realizadas)}
+              {diario.observacoes && renderTextArea("Observações", diario.observacoes)}
+              {diario.acoes_corretivas_realizado === true && diario.acoes_corretivas_descricao && renderTextArea("Ações Corretivas", diario.acoes_corretivas_descricao)}
+            </div>
           </section>
         </main>
 
