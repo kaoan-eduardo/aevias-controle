@@ -1253,7 +1253,6 @@ export default function DiarioObraPage() {
               handleRemovePhoto={handleRemovePhoto}
               handleSubmit={handleSubmit}
               onCancel={() => {
-                clearSavedData();
                 navigate(createPageUrl('MeusEnsaios'));
               }}
               obras={obras}
