@@ -253,29 +253,31 @@ export default function RelatorioCAUQ() {
               DADOS DA OBRA
             </div>
 
-            <div className="grid grid-cols-4 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
-              {/* Coluna 1: Cliente, Obra, Rodovia */}
+            <div className="grid grid-cols-5 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight">
+              {/* Linha 1 */}
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
                 <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
               </div>
 
-              {/* Coluna 2: Trecho, Local de Coleta, Usina Fornecedora */}
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
                 <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
               </div>
 
-              {/* Coluna 3: Projeto, Faixa, Pedreira */}
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">Nº PROJETO:</p>
                 <p className="text-gray-900">{project?.name || 'N/A'}</p>
               </div>
 
-              {/* Coluna 4: Placa do Caminhão, Laboratorista, Hora */}
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">PLACA CAMINHÃO:</p>
                 <p className="text-gray-900">{ensaio.placa_caminhao || 'N/A'}</p>
+              </div>
+
+              <div className="col-span-1 row-span-3 mb-0.5">
+                <p className="font-bold text-gray-700 mb-0">ENSAIO REALIZADO POR:</p>
+                <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
               </div>
 
               {/* Linha 2 */}
@@ -318,12 +320,6 @@ export default function RelatorioCAUQ() {
               <div className="col-span-1 mb-0.5">
                 <p className="font-bold text-gray-700 mb-0">HORÁRIO:</p>
                 <p className="text-gray-900">{ensaio.horario || 'N/A'}</p>
-              </div>
-
-              {/* Linha 4 */}
-              <div className="col-span-1 mb-0.5">
-                <p className="font-bold text-gray-700 mb-0">ENSAIO REALIZADO POR:</p>
-                <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
               </div>
             </div>
 
