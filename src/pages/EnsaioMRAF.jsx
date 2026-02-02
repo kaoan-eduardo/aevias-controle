@@ -62,8 +62,6 @@ const getInitialFormData = () => ({
     fator_correcao: 1.0,
     peso_ligante: null,
     teor_ligante: null,
-    filler_betume: null,
-    teor_ligante_real: null,
     residuo_emulsao: null,
     percentual_emulsao: null
   },
@@ -157,13 +155,6 @@ export default function EnsaioMRAFPage() {
       const teorLigante = (pesoLigante / ext.amostra_com_ligante) * 100;
       handleNestedChange('extracao_ligante.peso_ligante', parseFloat(pesoLigante.toFixed(2)));
       handleNestedChange('extracao_ligante.teor_ligante', parseFloat(teorLigante.toFixed(2)));
-      
-      if (ext.umidade) {
-        const teorReal = teorLigante - ext.umidade;
-        handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorReal.toFixed(2)));
-      } else {
-        handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorLigante.toFixed(2)));
-      }
     }
 
     // Cálculo do % de emulsão
@@ -177,30 +168,8 @@ export default function EnsaioMRAFPage() {
     formData.extracao_ligante.amostra_com_ligante,
     formData.extracao_ligante.amostra_sem_ligante,
     formData.extracao_ligante.fator_correcao,
-    formData.extracao_ligante.umidade,
     formData.extracao_ligante.teor_ligante,
     formData.extracao_ligante.residuo_emulsao,
-    handleNestedChange
-  ]);
-
-  // Cálculo automático do Filler/Betume
-  useEffect(() => {
-    const teorReal = formData.extracao_ligante.teor_ligante_real;
-    const pesoRetido200 = formData.granulometria.peso_retido_peneiras?.peneira_0_075mm;
-    
-    if (teorReal && pesoRetido200 !== null && pesoRetido200 !== undefined) {
-      const pesoTotal = Object.values(formData.granulometria.peso_retido_peneiras || {})
-        .reduce((sum, val) => sum + (val || 0), 0);
-      
-      if (pesoTotal > 0) {
-        const percentualPassante200 = (pesoRetido200 / pesoTotal) * 100;
-        const fillerBetume = (percentualPassante200 * (100 - teorReal)) / (100 * teorReal);
-        handleNestedChange('extracao_ligante.filler_betume', parseFloat(fillerBetume.toFixed(2)));
-      }
-    }
-  }, [
-    formData.extracao_ligante.teor_ligante_real,
-    formData.granulometria.peso_retido_peneiras,
     handleNestedChange
   ]);
 
