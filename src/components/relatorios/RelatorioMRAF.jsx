@@ -109,9 +109,9 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
   return (
     <div>
-      <div className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-6 pb-2 print:pt-1 print:px-2 print:pb-1">
+      <div className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-4 px-8 pb-4 print:pt-2 print:px-4 print:pb-2">
         {/* Header */}
-        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3 print:pb-1 print:mb-2">
           <div className="flex justify-start">
             <img 
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
@@ -134,11 +134,11 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
         <main className="text-sm print:text-sm">
           {/* DADOS DA OBRA */}
-          <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-2 py-1 font-bold text-center mb-1 text-[10px] leading-tight">
+          <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-3 py-2 font-bold text-center mb-2 text-[10px] leading-tight print:px-2 print:py-1 print:mb-1.5">
             DADOS DA OBRA
           </div>
 
-          <div className="grid grid-cols-4 gap-x-2 gap-y-1 mb-2 text-[10px] leading-tight">
+          <div className="grid grid-cols-4 gap-x-3 gap-y-2 mb-3 text-[10px] leading-tight print:gap-x-2 print:gap-y-1.5 print:mb-2">
             {/* Linha 1 */}
             <div className="col-span-1">
               <p className="font-bold text-gray-700 mb-1">CLIENTE:</p>
@@ -204,33 +204,33 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
           </div>
 
           {/* DADOS DO ENSAIO */}
-          <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-2 py-1 font-bold text-center mb-1 mt-1 text-[10px] leading-tight">
+          <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-3 py-2 font-bold text-center mb-2 mt-2 text-[10px] leading-tight print:px-2 print:py-1 print:mb-1.5 print:mt-1.5">
             DADOS DO ENSAIO
           </div>
 
-          <div className="grid grid-cols-12 gap-1 mb-1">
+          <div className="grid grid-cols-12 gap-2 mb-3 print:gap-1 print:mb-2">
             {/* Coluna Granulometria */}
             <div className="col-span-7 border border-slate-400">
-              <div className="bg-slate-200 font-bold text-center border-b border-slate-400 px-1 py-0.5 text-[10px]">
+              <div className="bg-slate-200 font-bold text-center border-b border-slate-400 px-2 py-1 text-[10px] print:px-1 print:py-0.5">
                 ENSAIO DE GRANULOMETRIA - DNIT 412/2025
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-[8px] leading-tight">
                   <thead>
                     <tr className="bg-slate-100">
-                      <th rowSpan="2" className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">PENEIRAS<br/>ASTM (mm)</th>
-                      <th colSpan="3" className="border-r border-slate-300 font-bold text-center leading-tight px-1 py-0.5">PESO DA AMOSTRA (g)</th>
-                      <th colSpan="2" className="border-r border-slate-300 font-bold text-center leading-tight px-1 py-0.5">FAIXA DE TRABALHO</th>
-                      <th colSpan="2" className="font-bold text-center leading-tight px-1 py-0.5">FAIXA ESPECIFICADA<br/>{faixaGranulometrica?.especificacao || ''}</th>
+                      <th rowSpan="2" className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">PENEIRAS<br/>ASTM (mm)</th>
+                      <th colSpan="3" className="border-r border-slate-300 font-bold text-center leading-tight px-2 py-1 print:px-1 print:py-0.5">PESO DA AMOSTRA (g)</th>
+                      <th colSpan="2" className="border-r border-slate-300 font-bold text-center leading-tight px-2 py-1 print:px-1 print:py-0.5">FAIXA DE TRABALHO</th>
+                      <th colSpan="2" className="font-bold text-center leading-tight px-2 py-1 print:px-1 print:py-0.5">FAIXA ESPECIFICADA<br/>{faixaGranulometrica?.especificacao || ''}</th>
                     </tr>
                     <tr className="bg-slate-100">
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">RETIDO (g)</th>
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">PASS. (g)</th>
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">% PASS.</th>
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">MÍN. (%)</th>
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">MÁX. (%)</th>
-                      <th className="border-r border-slate-300 font-bold leading-tight px-1 py-0.5">MÍN. (%)</th>
-                      <th className="font-bold leading-tight px-1 py-0.5">MÁX. (%)</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">RETIDO (g)</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">PASS. (g)</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">% PASS.</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">MÍN. (%)</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">MÁX. (%)</th>
+                      <th className="border-r border-slate-300 font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">MÍN. (%)</th>
+                      <th className="font-bold leading-tight px-2 py-1 print:px-1 print:py-0.5">MÁX. (%)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -243,14 +243,14 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
                       return (
                         <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                          <td className={`border-r border-slate-300 px-1 text-center font-semibold ${heightClass}`}>{dado.astm}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center ${heightClass}`}>{dado.retido}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center ${heightClass}`}>{dado.passante}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center font-semibold ${heightClass}`}>{dado.percentualPassante}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center ${heightClass}`}>{dado.faixaTrabalhoMin ? parseFloat(dado.faixaTrabalhoMin).toFixed(1) : ''}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center ${heightClass}`}>{dado.faixaTrabalhoMax ? parseFloat(dado.faixaTrabalhoMax).toFixed(1) : ''}</td>
-                          <td className={`border-r border-slate-300 px-1 text-center ${heightClass}`}>{dado.limiteMin ? parseFloat(dado.limiteMin).toFixed(1) : ''}</td>
-                          <td className={`px-1 text-center ${heightClass}`}>{dado.limiteMax ? parseFloat(dado.limiteMax).toFixed(1) : ''}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center font-semibold ${heightClass} print:px-1 print:py-0.5`}>{dado.astm}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.retido}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.passante}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center font-semibold ${heightClass} print:px-1 print:py-0.5`}>{dado.percentualPassante}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.faixaTrabalhoMin ? parseFloat(dado.faixaTrabalhoMin).toFixed(1) : ''}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.faixaTrabalhoMax ? parseFloat(dado.faixaTrabalhoMax).toFixed(1) : ''}</td>
+                          <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.limiteMin ? parseFloat(dado.limiteMin).toFixed(1) : ''}</td>
+                          <td className={`px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.limiteMax ? parseFloat(dado.limiteMax).toFixed(1) : ''}</td>
                         </tr>
                       );
                     })}
@@ -262,7 +262,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
             {/* Coluna Extração de Ligante */}
             <div className="col-span-5">
               <div className="border border-slate-400 border-l-0">
-                <div className="bg-slate-200 font-bold text-center border-b border-slate-400 leading-tight px-1 py-0.5 text-[9px]">
+                <div className="bg-slate-200 font-bold text-center border-b border-slate-400 leading-tight px-2 py-1 text-[9px] print:px-1 print:py-0.5">
                   EXTRAÇÃO LIGANTE (ROTAREX)<br/>ABNT NBR 16208/2013
                 </div>
                 <table className="w-full border-collapse table-fixed text-[8px]">
@@ -272,39 +272,39 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                   </colgroup>
                   <tbody>
                     <tr className="bg-white">
-                      <td className="border-r border-slate-300 font-bold px-1 py-1">EMULSÃO:</td>
-                      <td className="px-1 py-1">{project?.emulsao_utilizada || '-'}</td>
+                      <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">EMULSÃO:</td>
+                      <td className="px-2 py-1.5 print:px-1 print:py-1">{project?.emulsao_utilizada || '-'}</td>
                     </tr>
                     <tr className="bg-slate-50">
-                      <td className="border-r border-slate-300 font-bold px-1 py-1">TIPO LIG.:</td>
-                      <td className="px-1 py-1">{ensaio?.tipo_ligante || '-'}</td>
+                      <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">TIPO LIG.:</td>
+                      <td className="px-2 py-1.5 print:px-1 print:py-1">{ensaio?.tipo_ligante || '-'}</td>
                     </tr>
 
                     {ensaio?.extracao_ligante && (
                       <>
                         <tr className="bg-white">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">AM. C/ LIG.:</td>
-                          <td className="px-1 py-1">{ensaio.extracao_ligante.amostra_com_ligante || '-'} g</td>
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">AM. C/ LIG.:</td>
+                          <td className="px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.amostra_com_ligante || '-'} g</td>
                         </tr>
                         <tr className="bg-slate-50">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">AM. S/ LIG.:</td>
-                          <td className="px-1 py-1">{ensaio.extracao_ligante.amostra_sem_ligante || '-'} g</td>
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">AM. S/ LIG.:</td>
+                          <td className="px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.amostra_sem_ligante || '-'} g</td>
                         </tr>
                         <tr className="bg-white">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">FAT. CORR.:</td>
-                          <td className="px-1 py-1">{ensaio.extracao_ligante.fator_correcao || '1.0000'}</td>
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">FAT. CORR.:</td>
+                          <td className="px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.fator_correcao || '1.0000'}</td>
                         </tr>
                         <tr className="bg-slate-50">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">PESO LIG.:</td>
-                          <td className="px-1 py-1">{ensaio.extracao_ligante.peso_ligante || '-'} g</td>
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">PESO LIG.:</td>
+                          <td className="px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.peso_ligante || '-'} g</td>
                         </tr>
                         <tr className="bg-white">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">TEOR LIG.:</td>
-                          <td className="font-semibold px-1 py-1">{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">TEOR LIG.:</td>
+                          <td className="font-semibold px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
                         </tr>
                         <tr className="bg-blue-50">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">% DE EMULSÃO:</td>
-                          <td className="font-semibold text-blue-700 px-1 py-1">
+                          <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">% DE EMULSÃO:</td>
+                          <td className="font-semibold text-blue-700 px-2 py-1.5 print:px-1 print:py-1">
                             {ensaio.extracao_ligante.teor_ligante && ensaio.extracao_ligante.residuo_emulsao 
                               ? ((ensaio.extracao_ligante.teor_ligante / ensaio.extracao_ligante.residuo_emulsao) * 100).toFixed(2)
                               : '-'}%
@@ -313,8 +313,8 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
                         {ensaio.extracao_ligante.amostra_umida && (
                           <tr className="bg-blue-50">
-                            <td className="border-r border-slate-300 font-bold px-1 py-1">UMIDADE:</td>
-                            <td className="font-semibold text-blue-700 px-1 py-1">{ensaio.extracao_ligante.umidade || 0}%</td>
+                            <td className="border-r border-slate-300 font-bold px-2 py-1.5 print:px-1 print:py-1">UMIDADE:</td>
+                            <td className="font-semibold text-blue-700 px-2 py-1.5 print:px-1 print:py-1">{ensaio.extracao_ligante.umidade || 0}%</td>
                           </tr>
                         )}
                       </>
@@ -326,9 +326,9 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
           </div>
 
           {/* Gráfico de Granulometria */}
-          <div className="border border-slate-300 p-1 print:p-0.5 mb-1">
-            <h3 className="font-bold text-center mb-1 py-1 print:py-0.5 text-[10px] print:text-[9px]">GRANULOMETRIA DA MISTURA</h3>
-            <div className="relative h-64 print:h-64">
+          <div className="border border-slate-300 p-3 print:p-2 mb-3 print:mb-2">
+            <h3 className="font-bold text-center mb-2 py-1 print:py-0.5 text-[10px] print:text-[9px]">GRANULOMETRIA DA MISTURA</h3>
+            <div className="relative h-72 print:h-64">
               {hoveredPoint && (
                 <div 
                   className="absolute bg-white border-2 border-slate-300 rounded-lg shadow-lg p-2 text-[8px] z-50 pointer-events-none"
@@ -522,9 +522,9 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
           {/* Observações */}
           {ensaio?.observacoes && (
-            <div className="mt-1 print:mt-1 mb-2">
-              <div className="bg-slate-200 font-bold px-2 py-1 text-[10px] print:text-[9px] print:py-0.5">OBSERVAÇÕES</div>
-              <div className="border border-slate-300 p-2 text-[10px] min-h-[30px] print:text-[9px] print:p-1 print:min-h-[20px]">
+            <div className="mt-3 print:mt-2 mb-4 print:mb-3">
+              <div className="bg-slate-200 font-bold px-3 py-2 text-[10px] print:text-[9px] print:px-2 print:py-1">OBSERVAÇÕES</div>
+              <div className="border border-slate-300 p-3 text-[10px] min-h-[40px] print:text-[9px] print:p-2 print:min-h-[30px]">
                 {ensaio.observacoes}
               </div>
             </div>
@@ -532,8 +532,8 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
         </main>
 
         {/* Footer com assinaturas */}
-        <footer className="px-2 print:break-inside-avoid print:px-1 mt-2 print:mt-1">
-          <div className="grid grid-cols-3 gap-2 items-end print:gap-1.5">
+        <footer className="px-3 print:break-inside-avoid print:px-2 mt-4 print:mt-3">
+          <div className="grid grid-cols-3 gap-4 items-end print:gap-2">
             <div className="text-center">
               <div className="text-[8px] print:text-[7px] text-slate-500 mb-1 min-h-[32px] flex flex-col justify-end items-center print:min-h-[24px] print:mb-0">
                 {ensaio?.laboratorista_name && (
@@ -603,7 +603,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
         @media print {
           @page {
             size: A4 portrait;
-            margin: 8mm 10mm 8mm 10mm;
+            margin: 6mm 8mm 6mm 8mm;
           }
           body {
             print-color-adjust: exact;
