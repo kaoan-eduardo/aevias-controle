@@ -118,7 +118,6 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
   const photoChunks = compressedPhotos.length > 0 ? chunkArray(compressedPhotos, 6) : [];
   const hasChecklistVeiculo = diario?.checklist_veiculo_ativo === true;
-  const hasAcoesCorretivas = diario?.acoes_corretivas_realizado === true && diario?.acoes_corretivas_descricao;
   
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -243,6 +242,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Atividades e Observações</h2>
             {renderTextArea("Atividades Realizadas", diario.atividades_realizadas)}
             {diario.observacoes && renderTextArea("Observações", diario.observacoes)}
+            {diario.acoes_corretivas_realizado === true && diario.acoes_corretivas_descricao && renderTextArea("Ações Corretivas", diario.acoes_corretivas_descricao)}
           </section>
         </main>
 
@@ -311,112 +311,9 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
         </footer>
 
         <p className="text-center text-xs text-gray-400 mt-8">
-          Página 1 de {1 + (hasAcoesCorretivas ? 1 : 0) + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
+          Página 1 de {1 + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
         </p>
       </div>
-
-      {/* Página de Ações Corretivas */}
-      {hasAcoesCorretivas && (
-        <div className="break-before-page p-8 print:p-8 min-h-[29.7cm] relative flex flex-col">
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4">
-            <div className="flex justify-start">
-              <img 
-                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-16 object-contain" 
-              />
-            </div>
-            <div className="text-center">
-              <h1 className="text-2xl font-bold text-gray-800">Ações Corretivas</h1>
-              <p className="text-md text-slate-700">{obra?.name}</p> 
-            </div>
-            <div className="flex justify-end">
-               <div className="border border-gray-400 p-2 rounded-md">
-                  <p className="text-sm font-semibold text-gray-800">
-                    {new Date(diario.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-                  </p>
-               </div>
-            </div>
-          </header>
-
-          <main className="flex-grow mt-8">
-            <div className="border-2 border-slate-400 rounded-lg p-8 bg-white min-h-[500px]">
-              <h2 className="text-lg font-bold text-slate-800 mb-6">AÇÕES CORRETIVAS APONTADAS:</h2>
-              <p className="text-base text-slate-700 whitespace-pre-wrap leading-relaxed">
-                {diario.acoes_corretivas_descricao}
-              </p>
-            </div>
-          </main>
-
-          <footer className="mt-12 pt-8">
-            <div className="grid grid-cols-3 gap-8 items-end">
-              <div className="text-center">
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Assinado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{diario.laboratorista_name}</p>
-                  <p className="truncate max-w-full">{diario.created_by}</p>
-                  <p>em {formatDateBrasilia(diario.created_date)}</p>
-                </div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">Laboratorista Responsável</p>
-                </div>
-              </div>
-
-              <div className="text-center">
-                 {diario.approver_details ? (
-                  <>
-                    <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                      <p>Aprovado digitalmente por</p>
-                      <p className="font-bold text-slate-600 truncate max-w-full">{diario.approver_details.name}</p>
-                      <p className="truncate max-w-full">{diario.approved_by}</p>
-                      {diario.approver_details.crea_number && <p>CREA: {diario.approver_details.crea_number}</p>}
-                      <p>em {formatDateBrasilia(diario.approved_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">{diario.approver_details.position}</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-24 mb-2"></div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Aprovação</p>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="text-center">
-                {diario.client_signature?.signed_by ? (
-                   <>
-                      <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                        <p>Assinado digitalmente por</p>
-                        <p className="font-bold text-slate-600 truncate max-w-full">{diario.client_signature.engineer_name}</p>
-                        <p className="truncate max-w-full">{diario.client_signature.signed_by}</p>
-                        {diario.client_signature.crea_number && <p>CREA: {diario.client_signature.crea_number}</p>}
-                        <p>em {formatDateBrasilia(diario.client_signature.signed_date)}</p>
-                      </div>
-                      <div className="border-t border-gray-500 pt-2">
-                        <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                      </div>
-                   </>
-                ) : (
-                  <>
-                    <div className="h-24 mb-2"></div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </footer>
-
-          <p className="text-center text-xs text-gray-400 mt-8">
-            Página 2 de {1 + (hasAcoesCorretivas ? 1 : 0) + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
-          </p>
-        </div>
-      )}
 
       {/* Página do Checklist de Veículo */}
       {hasChecklistVeiculo && (
@@ -737,7 +634,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </main>
 
           <footer className="text-center pt-4 text-xs text-gray-500 break-inside-avoid">
-            Página {pageIndex + 2 + (hasAcoesCorretivas ? 1 : 0) + (hasChecklistVeiculo ? 1 : 0)} de {1 + (hasAcoesCorretivas ? 1 : 0) + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
+            Página {pageIndex + 2 + (hasChecklistVeiculo ? 1 : 0)} of {1 + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
           </footer>
         </div>
       ))}
