@@ -456,7 +456,7 @@ export default function RelatorioCAUQ() {
             {/* Gráfico de Granulometria */}
             <div className="border border-slate-300 p-0 mb-0 print:p-0">
               <h3 className="text-[7px] font-bold text-center mb-0 print:text-[6px] print:py-0">GRANULOMETRIA DA MISTURA</h3>
-              <div className="relative h-48 print:h-48">
+              <div className={`relative ${ensaio.realizar_marshall ? 'h-48 print:h-48' : 'h-96 print:h-80'}`}>
                 {hoveredPoint && (
                   <div 
                     className="absolute bg-white border-2 border-slate-300 rounded-lg shadow-lg p-2 text-[8px] z-50 pointer-events-none"
@@ -482,21 +482,32 @@ export default function RelatorioCAUQ() {
                     <div className="text-blue-600 font-semibold">% Passante (Ensaio): {hoveredPoint.percentualPassante}%</div>
                   </div>
                 )}
-                <svg width="100%" height="100%" viewBox="0 0 640 250" preserveAspectRatio="xMidYMid meet">
+                <svg width="100%" height="100%" viewBox={ensaio.realizar_marshall ? "0 0 640 250" : "0 0 640 450"} preserveAspectRatio="xMidYMid meet">
                   {/* Eixos */}
-                  <line x1="30" y1="5" x2="30" y2="190" stroke="#333" strokeWidth="1" />
-                  <line x1="30" y1="190" x2="620" y2="190" stroke="#333" strokeWidth="1" />
+                  {(() => {
+                    const altura = ensaio.realizar_marshall ? 190 : 390;
+                    return (
+                      <>
+                        <line x1="30" y1="5" x2="30" y2={altura} stroke="#333" strokeWidth="1" />
+                        <line x1="30" y1={altura} x2="620" y2={altura} stroke="#333" strokeWidth="1" />
+                      </>
+                    );
+                  })()}
 
                   {/* Grid horizontal (% passante) */}
-                  {[0, 20, 40, 60, 80, 100].map((value) => {
-                    const y = 190 - ((value - 0) / 100 * 185);
-                    return (
-                      <g key={value}>
-                        <line x1="30" y1={y} x2="620" y2={y} stroke="#e0e0e0" strokeWidth="0.5" />
-                        <text x="25" y={y + 3} fontSize="8" textAnchor="end" fill="#333">{value}%</text>
-                      </g>
-                    );
-                  })}
+                  {(() => {
+                    const alturaTotal = ensaio.realizar_marshall ? 190 : 390;
+                    const alturaGrafico = ensaio.realizar_marshall ? 185 : 385;
+                    return [0, 20, 40, 60, 80, 100].map((value) => {
+                      const y = alturaTotal - ((value - 0) / 100 * alturaGrafico);
+                      return (
+                        <g key={value}>
+                          <line x1="30" y1={y} x2="620" y2={y} stroke="#e0e0e0" strokeWidth="0.5" />
+                          <text x="25" y={y + 3} fontSize="8" textAnchor="end" fill="#333">{value}%</text>
+                        </g>
+                      );
+                    });
+                  })()}
 
                   {/* Função para converter abertura mm para posição X (escala logarítmica) */}
                   {(() => {
@@ -516,22 +527,28 @@ export default function RelatorioCAUQ() {
                       return 30 + (590 * (logMax - logValue) / (logMax - logMin));
                     };
 
+                    const alturaTotal = ensaio.realizar_marshall ? 190 : 390;
+                    const alturaGrafico = ensaio.realizar_marshall ? 185 : 385;
+                    
                     const getY = (percentual) => {
-                      return 190 - ((parseFloat(percentual) - 0) / 100 * 185);
+                      return alturaTotal - ((parseFloat(percentual) - 0) / 100 * alturaGrafico);
                     };
 
                     return (
                       <>
                         {/* Labels do eixo X */}
-                        {dadosGranulometria.map((d, i) => {
-                          const aberturaMm = parseFloat(d.abertura.replace(',', '.'));
-                          const x = getX(aberturaMm);
-                          return (
-                            <text key={i} x={x} y="205" fontSize="8" textAnchor="middle" fill="#333">
-                              {d.astm}
-                            </text>
-                          );
-                        })}
+                        {(() => {
+                          const yLabel = ensaio.realizar_marshall ? 205 : 405;
+                          return dadosGranulometria.map((d, i) => {
+                            const aberturaMm = parseFloat(d.abertura.replace(',', '.'));
+                            const x = getX(aberturaMm);
+                            return (
+                              <text key={i} x={x} y={yLabel} fontSize="8" textAnchor="middle" fill="#333">
+                                {d.astm}
+                              </text>
+                            );
+                          });
+                        })()}
 
                         {/* Linhas faixa especificada */}
                         {dadosGranulometria.some(d => d.limiteMin) && (
@@ -639,16 +656,21 @@ export default function RelatorioCAUQ() {
                   })()}
 
                   {/* Legenda */}
-                  <g transform="translate(230, 215)">
-                    <line x1="0" y1="3" x2="15" y2="3" stroke="#3b82f6" strokeWidth="2" />
-                    <text x="18" y="5" fontSize="7" fill="#333">% Pass.</text>
+                  {(() => {
+                    const yLegenda = ensaio.realizar_marshall ? 215 : 415;
+                    return (
+                      <g transform={`translate(230, ${yLegenda})`}>
+                        <line x1="0" y1="3" x2="15" y2="3" stroke="#3b82f6" strokeWidth="2" />
+                        <text x="18" y="5" fontSize="7" fill="#333">% Pass.</text>
 
-                    <line x1="60" y1="3" x2="75" y2="3" stroke="#dc2626" strokeWidth="1" />
-                    <text x="78" y="5" fontSize="7" fill="#333">Faixa especificada</text>
+                        <line x1="60" y1="3" x2="75" y2="3" stroke="#dc2626" strokeWidth="1" />
+                        <text x="78" y="5" fontSize="7" fill="#333">Faixa especificada</text>
 
-                    <line x1="170" y1="3" x2="185" y2="3" stroke="#fbbf24" strokeWidth="1.5" strokeDasharray="3,2" />
-                    <text x="188" y="5" fontSize="7" fill="#333">Faixa de Trabalho</text>
-                  </g>
+                        <line x1="170" y1="3" x2="185" y2="3" stroke="#fbbf24" strokeWidth="1.5" strokeDasharray="3,2" />
+                        <text x="188" y="5" fontSize="7" fill="#333">Faixa de Trabalho</text>
+                      </g>
+                    );
+                  })()}
                 </svg>
               </div>
             </div>
