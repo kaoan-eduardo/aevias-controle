@@ -1924,25 +1924,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
     ];
 
-    const typeOptions = [
-    { value: 'all', label: 'Todos os tipos' },
-    { value: 'DiarioObra', label: 'Diário de Obra' },
-    { value: 'EnsaioCAUQ', label: 'Ensaio de CAUQ' },
-    { value: 'EnsaioMRAF', label: 'Ensaio MRAF' },
-    { value: 'EnsaioDensidade', label: 'Densidade CP' },
-    { value: 'EnsaioDensidadeInSitu', label: 'Densidade In Situ' },
-    { value: 'EnsaioTaxaPinturaImprimacao', label: 'Taxa Pintura/Imprimação' },
-    { value: 'ChecklistUsina', label: 'Checklist Usina' },
-    { value: 'ChecklistAplicacao', label: 'Checklist Aplicação' },
-    { value: 'ChecklistMRAF', label: 'Checklist MRAF' },
-    { value: 'ChecklistConcretagem', label: 'Checklist Concretagem' },
-    { value: 'ChecklistTerraplanagem', label: 'Checklist Terraplanagem' },
-    { value: 'ChecklistReciclagem', label: 'Checklist Reciclagem' },
-    { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
-    { value: 'EnsaioGranulometriaIndividual', label: 'Granulometria Individual' },
-    { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
-  ];
-
   const statusOptions = [
     { value: 'all', label: 'Todos os status' },
     { value: 'approved', label: 'Aprovados (não assinados)' },
