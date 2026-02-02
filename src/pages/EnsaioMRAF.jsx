@@ -152,7 +152,7 @@ export default function EnsaioMRAFPage() {
 
     if (ext.amostra_com_ligante && ext.amostra_sem_ligante && ext.fator_correcao) {
       const pesoLigante = (ext.amostra_com_ligante - ext.amostra_sem_ligante) * ext.fator_correcao;
-      const teorLigante = (pesoLigante / ext.amostra_com_ligante) * 100;
+      const teorLigante = (pesoLigante / ext.amostra_sem_ligante) * 100;
       handleNestedChange('extracao_ligante.peso_ligante', parseFloat(pesoLigante.toFixed(2)));
       handleNestedChange('extracao_ligante.teor_ligante', parseFloat(teorLigante.toFixed(2)));
     }
