@@ -78,6 +78,7 @@ const getInitialFormData = () => ({
     densidade_agua: 0.9971,
     densidade_rice: null
   },
+  realizar_marshall: false,
   corpos_prova_marshall: [],
   observacoes: "",
   status: "rascunho",
@@ -559,6 +560,7 @@ export default function EnsaioCAUQPage() {
               granulometria: { ...getInitialFormData().granulometria, ...(ensaioToEdit.granulometria || {}) },
               realizar_densidade_rice: ensaioToEdit.realizar_densidade_rice ?? false,
               densidade_rice: { ...getInitialFormData().densidade_rice, ...(ensaioToEdit.densidade_rice || {}) },
+              realizar_marshall: ensaioToEdit.realizar_marshall ?? false,
               corpos_prova_marshall: ensaioToEdit.corpos_prova_marshall || []
             });
           } else {
@@ -573,6 +575,7 @@ export default function EnsaioCAUQPage() {
           }
           initialNewFormData.realizar_densidade_rice = false;
           initialNewFormData.realizar_ensaio_umidade = false;
+          initialNewFormData.realizar_marshall = false;
           setFormData(initialNewFormData);
           setEditingEnsaio(null);
         }
@@ -1171,25 +1174,49 @@ export default function EnsaioCAUQPage() {
               {/* CORPOS DE PROVA MARSHALL */}
               <Card className="bg-slate-50">
                 <CardHeader>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-start">
                     <div>
                       <CardTitle className="text-lg">Ensaio Marshall (Opcional)</CardTitle>
                       <CardDescription>DNIT 428/22 - NBR 15087/12</CardDescription>
                     </div>
-                    {isEditable && !isApproved && formData.corpos_prova_marshall.length < 6 && (
-                      <Button type="button" onClick={adicionarCorpoProva} className="bg-green-600 hover:bg-green-700">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Adicionar CP Marshall
-                      </Button>
+                    {isEditable && !isApproved && (
+                      <div className="flex items-center gap-2">
+                        <Label className="text-sm font-normal">Realizar Marshall?</Label>
+                        <input
+                          type="checkbox"
+                          checked={formData.realizar_marshall}
+                          onChange={(e) => {
+                            handleChange('realizar_marshall', e.target.checked);
+                            if (!e.target.checked) {
+                              handleChange('corpos_prova_marshall', []);
+                            }
+                          }}
+                          className="w-4 h-4"
+                        />
+                      </div>
                     )}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {formData.corpos_prova_marshall.length === 0 ? (
+                  {!formData.realizar_marshall ? (
                     <p className="text-center text-slate-500 py-8 italic">
-                      Clique em "Adicionar CP Marshall" para incluir corpos de prova ao ensaio
+                      Marque a opção "Realizar Marshall?" para incluir o ensaio Marshall
                     </p>
                   ) : (
+                    <>
+                      {isEditable && !isApproved && formData.corpos_prova_marshall.length < 6 && (
+                        <div className="flex justify-end">
+                          <Button type="button" onClick={adicionarCorpoProva} className="bg-green-600 hover:bg-green-700">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Adicionar CP Marshall
+                          </Button>
+                        </div>
+                      )}
+                      {formData.corpos_prova_marshall.length === 0 ? (
+                        <p className="text-center text-slate-500 py-4 italic">
+                          Clique em "Adicionar CP Marshall" para incluir corpos de prova ao ensaio
+                        </p>
+                      ) : (
                     formData.corpos_prova_marshall.map((cp, index) => (
                       <Card key={index} className="relative border-2 border-slate-200">
                         <CardHeader className="pb-3">
@@ -1467,6 +1494,8 @@ export default function EnsaioCAUQPage() {
                         </CardContent>
                       </Card>
                     ))
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>

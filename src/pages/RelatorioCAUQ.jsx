@@ -647,12 +647,14 @@ export default function RelatorioCAUQ() {
               </div>
             </div>
 
-            {/* Ensaio Marshall - Tabela de Corpos de Prova */}
-            <div className="bg-slate-200 px-0.5 py-0 text-[8px] font-bold text-center border-b border-slate-400 mt-0 print:text-[7px] print:py-0">
-              ENSAIO MARSHALL - MÉTODO DE ENSAIO DNIT 447/2024
-            </div>
+            {/* Ensaio Marshall - Tabela de Corpos de Prova (apenas se realizar_marshall === true) */}
+            {ensaio.realizar_marshall && (
+              <>
+                <div className="bg-slate-200 px-0.5 py-0 text-[8px] font-bold text-center border-b border-slate-400 mt-0 print:text-[7px] print:py-0">
+                  ENSAIO MARSHALL - MÉTODO DE ENSAIO DNIT 447/2024
+                </div>
 
-            <div className="overflow-x-auto mb-0 print:mb-0">
+                <div className="overflow-x-auto mb-0 print:mb-0">
               <table className="w-full border-collapse border border-slate-400 text-[8px] table-fixed">
                 <colgroup>
                   <col style={{width: '23%'}} />
@@ -942,7 +944,9 @@ export default function RelatorioCAUQ() {
                   })()}
                 </tbody>
               </table>
-            </div>
+                </div>
+              </>
+            )}
 
             {/* Densidade RICE */}
             {ensaio.densidade_rice && (
