@@ -2314,21 +2314,31 @@ export default function MeusEnsaios() {
             case "ChecklistReciclagem": return ensaio.data;
             case "EnsaioSondagem": return ensaio.data;
             case "EnsaioGranulometriaIndividual": return ensaio.data_ensaio;
+            case "AcompanhamentoUsinagem": return ensaio.data;
             default: return ensaio.created_date;
           }
         };
         
-        // Ordenar por data do ensaio (decrescente) e, em caso de empate, por updated_date (decrescente)
+        // Ordenar por data do ensaio (decrescente - mais recente primeiro)
         const dateA = new Date(getRelevantDate(a));
         const dateB = new Date(getRelevantDate(b));
-        const dateDiff = dateB.getTime() - dateA.getTime();
         
-        if (dateDiff !== 0) return dateDiff;
+        // Se ambas as datas são válidas, ordenar por data
+        if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+          const dateDiff = dateB.getTime() - dateA.getTime();
+          if (dateDiff !== 0) return dateDiff;
+          
+          // Critério de desempate: updated_date (mais recente primeiro)
+          const updatedA = new Date(a.updated_date);
+          const updatedB = new Date(b.updated_date);
+          return updatedB.getTime() - updatedA.getTime();
+        }
         
-        // Critério de desempate: updated_date
-        const updatedA = new Date(a.updated_date);
-        const updatedB = new Date(b.updated_date);
-        return updatedB.getTime() - updatedA.getTime();
+        // Se uma das datas for inválida, colocar registros com datas inválidas no final
+        if (isNaN(dateA.getTime())) return 1;
+        if (isNaN(dateB.getTime())) return -1;
+        
+        return 0;
       });
 
       console.log("📊 [DEBUG] Total combinado:", combinedEnsaios.length);
