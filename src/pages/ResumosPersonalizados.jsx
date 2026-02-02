@@ -154,10 +154,10 @@ export default function ResumosPersonalizadosPage() {
   
   // Filtros
   const [obraId, setObraId] = useState("");
-  const [tiposEnsaioSelecionados, setTiposEnsaioSelecionados] = useState([]);
+  const [tipoEnsaioSelecionado, setTipoEnsaioSelecionado] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [camposSelecionados, setCamposSelecionados] = useState({});
+  const [camposSelecionados, setCamposSelecionados] = useState([]);
   
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
@@ -237,38 +237,22 @@ export default function ResumosPersonalizadosPage() {
     }
   };
 
-  const handleTipoEnsaioToggle = (tipo) => {
-    setTiposEnsaioSelecionados(prev => {
-      const isSelected = prev.includes(tipo);
-      if (isSelected) {
-        // Remove o tipo e seus campos
-        const newCampos = { ...camposSelecionados };
-        delete newCampos[tipo];
-        setCamposSelecionados(newCampos);
-        return prev.filter(t => t !== tipo);
-      } else {
-        // Adiciona o tipo e seleciona todos os campos por padrão
-        const campos = CAMPOS_POR_TIPO[tipo] || [];
-        setCamposSelecionados(prev => ({
-          ...prev,
-          [tipo]: campos.map(c => c.key)
-        }));
-        return [...prev, tipo];
-      }
-    });
+  const handleTipoEnsaioChange = (tipo) => {
+    setTipoEnsaioSelecionado(tipo);
+    if (tipo) {
+      const campos = CAMPOS_POR_TIPO[tipo] || [];
+      setCamposSelecionados(campos.map(c => c.key));
+    } else {
+      setCamposSelecionados([]);
+    }
   };
 
-  const handleCampoToggle = (tipoEnsaio, campoKey) => {
+  const handleCampoToggle = (campoKey) => {
     setCamposSelecionados(prev => {
-      const camposAtuais = prev[tipoEnsaio] || [];
-      const isSelected = camposAtuais.includes(campoKey);
-      
-      return {
-        ...prev,
-        [tipoEnsaio]: isSelected
-          ? camposAtuais.filter(c => c !== campoKey)
-          : [...camposAtuais, campoKey]
-      };
+      const isSelected = prev.includes(campoKey);
+      return isSelected
+        ? prev.filter(c => c !== campoKey)
+        : [...prev, campoKey];
     });
   };
 
@@ -322,94 +306,96 @@ export default function ResumosPersonalizadosPage() {
   };
 
   const carregarDados = async () => {
-    if (!obraId || tiposEnsaioSelecionados.length === 0) {
-      alert("Selecione ao menos uma obra e um tipo de ensaio.");
+    if (!obraId || !tipoEnsaioSelecionado) {
+      alert("Selecione uma obra e um tipo de ensaio.");
+      return;
+    }
+
+    if (camposSelecionados.length === 0) {
+      alert("Selecione ao menos um campo para exibir.");
       return;
     }
 
     setLoadingData(true);
     try {
       const resultados = [];
+      const tipo = tipoEnsaioSelecionado;
+      const campos = camposSelecionados;
 
-      for (const tipo of tiposEnsaioSelecionados) {
-        const campos = camposSelecionados[tipo] || [];
-        if (campos.length === 0) continue;
+      // Mapear entidades específicas
+      let ensaios;
+      if (tipo === 'DiarioObra') {
+        const DiarioObra = await import('@/entities/DiarioObra').then(m => m.DiarioObra);
+        ensaios = await DiarioObra.filter({ obra_id: obraId });
+      } else if (tipo === 'EnsaioDensidade') {
+        const EnsaioDensidade = await import('@/entities/EnsaioDensidade').then(m => m.EnsaioDensidade);
+        ensaios = await EnsaioDensidade.filter({ obra_id: obraId });
+      } else if (tipo === 'ChecklistUsina') {
+        const ChecklistUsina = await import('@/entities/ChecklistUsina').then(m => m.ChecklistUsina);
+        ensaios = await ChecklistUsina.filter({ obra_id: obraId });
+      } else if (tipo === 'ChecklistAplicacao') {
+        const ChecklistAplicacao = await import('@/entities/ChecklistAplicacao').then(m => m.ChecklistAplicacao);
+        ensaios = await ChecklistAplicacao.filter({ obra_id: obraId });
+      } else if (tipo === 'ChecklistMRAF') {
+        const ChecklistMRAF = await import('@/entities/ChecklistMRAF').then(m => m.ChecklistMRAF);
+        ensaios = await ChecklistMRAF.filter({ obra_id: obraId });
+      } else if (tipo === 'ChecklistConcretagem') {
+        const ChecklistConcretagem = await import('@/entities/ChecklistConcretagem').then(m => m.ChecklistConcretagem);
+        ensaios = await ChecklistConcretagem.filter({ obra_id: obraId });
+      } else {
+        // Para outros tipos, usar base44.entities
+        ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
+      }
 
-        // Mapear entidades específicas
-        let ensaios;
-        if (tipo === 'DiarioObra') {
-          const DiarioObra = await import('@/entities/DiarioObra').then(m => m.DiarioObra);
-          ensaios = await DiarioObra.filter({ obra_id: obraId });
-        } else if (tipo === 'EnsaioDensidade') {
-          const EnsaioDensidade = await import('@/entities/EnsaioDensidade').then(m => m.EnsaioDensidade);
-          ensaios = await EnsaioDensidade.filter({ obra_id: obraId });
-        } else if (tipo === 'ChecklistUsina') {
-          const ChecklistUsina = await import('@/entities/ChecklistUsina').then(m => m.ChecklistUsina);
-          ensaios = await ChecklistUsina.filter({ obra_id: obraId });
-        } else if (tipo === 'ChecklistAplicacao') {
-          const ChecklistAplicacao = await import('@/entities/ChecklistAplicacao').then(m => m.ChecklistAplicacao);
-          ensaios = await ChecklistAplicacao.filter({ obra_id: obraId });
-        } else if (tipo === 'ChecklistMRAF') {
-          const ChecklistMRAF = await import('@/entities/ChecklistMRAF').then(m => m.ChecklistMRAF);
-          ensaios = await ChecklistMRAF.filter({ obra_id: obraId });
-        } else if (tipo === 'ChecklistConcretagem') {
-          const ChecklistConcretagem = await import('@/entities/ChecklistConcretagem').then(m => m.ChecklistConcretagem);
-          ensaios = await ChecklistConcretagem.filter({ obra_id: obraId });
-        } else {
-          // Para outros tipos, usar base44.entities
-          ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
-        }
+      // Filtrar por período
+      let ensaiosFiltrados = ensaios;
+      if (dataInicio || dataFim) {
+        ensaiosFiltrados = ensaios.filter(e => {
+          const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
+          if (!dataEnsaio) return false;
 
-        // Filtrar por período
-        let ensaiosFiltrados = ensaios;
-        if (dataInicio || dataFim) {
-          ensaiosFiltrados = ensaios.filter(e => {
-            const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
-            if (!dataEnsaio) return false;
-
-            const dataEnsaioObj = new Date(dataEnsaio);
-            
-            if (dataInicio) {
-              const dataInicioObj = new Date(dataInicio);
-              if (dataEnsaioObj < dataInicioObj) return false;
-            }
-            
-            if (dataFim) {
-              const dataFimObj = new Date(dataFim);
-              if (dataEnsaioObj > dataFimObj) return false;
-            }
-            
-            return true;
-          });
-        }
-
-        // Processar cada ensaio
-        ensaiosFiltrados.forEach(ensaio => {
-          const linha = {
-            tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-            id: ensaio.id,
-            data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
-          };
-
-          campos.forEach(campoKey => {
-            const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
-            
-            if (campo?.subfields) {
-              // Calcular médias para arrays
-              const arrayData = getNestedValue(ensaio, campoKey);
-              campo.subfields.forEach(subfield => {
-                const media = calcularMediaArray(arrayData, subfield.key);
-                linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
-              });
-            } else {
-              const value = getNestedValue(ensaio, campoKey);
-              linha[campoKey] = formatValue(value, campoKey);
-            }
-          });
-
-          resultados.push(linha);
+          const dataEnsaioObj = new Date(dataEnsaio);
+          
+          if (dataInicio) {
+            const dataInicioObj = new Date(dataInicio);
+            if (dataEnsaioObj < dataInicioObj) return false;
+          }
+          
+          if (dataFim) {
+            const dataFimObj = new Date(dataFim);
+            if (dataEnsaioObj > dataFimObj) return false;
+          }
+          
+          return true;
         });
       }
+
+      // Processar cada ensaio
+      ensaiosFiltrados.forEach(ensaio => {
+        const linha = {
+          tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+          id: ensaio.id,
+          data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+        };
+
+        campos.forEach(campoKey => {
+          const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+          
+          if (campo?.subfields) {
+            // Calcular médias para arrays
+            const arrayData = getNestedValue(ensaio, campoKey);
+            campo.subfields.forEach(subfield => {
+              const media = calcularMediaArray(arrayData, subfield.key);
+              linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
+            });
+          } else {
+            const value = getNestedValue(ensaio, campoKey);
+            linha[campoKey] = formatValue(value, campoKey);
+          }
+        });
+
+        resultados.push(linha);
+      });
 
       setDadosConsolidados(resultados);
     } catch (error) {
@@ -515,45 +501,44 @@ export default function ResumosPersonalizadosPage() {
               </div>
             </div>
 
-            {/* Tipos de Ensaio */}
+            {/* Tipo de Ensaio */}
             <div>
-              <Label className="text-[#00233B] mb-2 block">Tipos de Ensaio *</Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              <Label htmlFor="tipoEnsaio" className="text-[#00233B]">Tipo de Ensaio *</Label>
+              <select
+                id="tipoEnsaio"
+                value={tipoEnsaioSelecionado}
+                onChange={(e) => handleTipoEnsaioChange(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+              >
+                <option value="">Selecione um tipo de ensaio</option>
                 {TIPOS_ENSAIO.map(tipo => (
-                  <div key={tipo.value} className="flex items-center gap-2 p-2 bg-white/30 rounded border border-white/20">
-                    <Checkbox
-                      id={tipo.value}
-                      checked={tiposEnsaioSelecionados.includes(tipo.value)}
-                      onCheckedChange={() => handleTipoEnsaioToggle(tipo.value)}
-                    />
-                    <label htmlFor={tipo.value} className="text-sm text-[#00233B] cursor-pointer">
-                      {tipo.label}
-                    </label>
-                  </div>
+                  <option key={tipo.value} value={tipo.value}>
+                    {tipo.label}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
-            {/* Campos por tipo de ensaio */}
-            {tiposEnsaioSelecionados.map(tipo => (
-              <div key={tipo} className="border border-white/20 rounded-lg p-4 bg-white/10">
+            {/* Campos do ensaio selecionado */}
+            {tipoEnsaioSelecionado && (
+              <div className="border border-white/20 rounded-lg p-4 bg-white/10">
                 <h4 className="font-semibold text-[#00233B] mb-2">
-                  Campos - {TIPOS_ENSAIO.find(t => t.value === tipo)?.label}
+                  Campos - {TIPOS_ENSAIO.find(t => t.value === tipoEnsaioSelecionado)?.label}
                 </h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {CAMPOS_POR_TIPO[tipo]?.map(campo => (
+                  {CAMPOS_POR_TIPO[tipoEnsaioSelecionado]?.map(campo => (
                     <div key={campo.key}>
                       <div className="flex items-center gap-2 p-2 bg-white/50 rounded">
                         <Checkbox
-                          id={`${tipo}-${campo.key}`}
-                          checked={camposSelecionados[tipo]?.includes(campo.key)}
-                          onCheckedChange={() => handleCampoToggle(tipo, campo.key)}
+                          id={`campo-${campo.key}`}
+                          checked={camposSelecionados.includes(campo.key)}
+                          onCheckedChange={() => handleCampoToggle(campo.key)}
                         />
-                        <label htmlFor={`${tipo}-${campo.key}`} className="text-xs text-[#00233B] cursor-pointer">
+                        <label htmlFor={`campo-${campo.key}`} className="text-xs text-[#00233B] cursor-pointer">
                           {campo.label}
                         </label>
                       </div>
-                      {campo.subfields && camposSelecionados[tipo]?.includes(campo.key) && (
+                      {campo.subfields && camposSelecionados.includes(campo.key) && (
                         <div className="ml-6 mt-1 text-xs text-[#00233B]/70">
                           {campo.subfields.map(sub => (
                             <div key={sub.key}>• {sub.label}</div>
@@ -564,12 +549,12 @@ export default function ResumosPersonalizadosPage() {
                   ))}
                 </div>
               </div>
-            ))}
+            )}
 
             <div className="flex gap-2">
               <Button 
                 onClick={carregarDados} 
-                disabled={loadingData || !obraId || tiposEnsaioSelecionados.length === 0}
+                disabled={loadingData || !obraId || !tipoEnsaioSelecionado}
                 className="bg-[#00233B] text-white hover:bg-[#00233B]/90"
               >
                 {loadingData ? (
@@ -651,7 +636,7 @@ export default function ResumosPersonalizadosPage() {
           </Card>
         )}
 
-        {dadosConsolidados.length === 0 && !loadingData && tiposEnsaioSelecionados.length > 0 && obraId && (
+        {dadosConsolidados.length === 0 && !loadingData && tipoEnsaioSelecionado && obraId && (
           <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <div className="w-16 h-16 bg-[#00233B]/10 rounded-full flex items-center justify-center mb-4">
