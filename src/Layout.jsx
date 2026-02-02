@@ -371,7 +371,7 @@ const AppLayout = ({ children }) => {
     { title: "Projetos", url: createPageUrl("Projects"), icon: FolderOpen, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Ensaios Realizados", url: createPageUrl("MeusEnsaios"), icon: FileText, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Não Conformidades", url: createPageUrl("NaoConformidades"), icon: AlertTriangle, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
-    { title: "Resumos Personalizados", url: createPageUrl("ResumosPersonalizados"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
+    { title: "Resumo", url: createPageUrl("ResumosPersonalizados"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
     { title: "Transferências", url: createPageUrl("SolicitacoesTransferencia"), icon: ArrowLeftRight, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'], showBadge: true }
   ], []);
 
