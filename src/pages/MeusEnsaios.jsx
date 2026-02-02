@@ -1303,11 +1303,9 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const editLink = createPageUrl(`${ensaio.entityType}?editId=${ensaio.id}`);
 
   const isCliente = user?.access_level === 'cliente';
-  // Cliente pode assinar registros aprovados
   const podeAssinarCliente = isCliente && ensaio.approved === true && !ensaio.client_signature?.signed_by;
 
   const podeVerPDF = ensaio.approved === true || ensaio.client_signature?.signed_by;
-  // Pode editar se: está em rascunho OU foi reprovado
   const podeEditar = ensaio.created_by === user?.email && !isCliente && (ensaio.status === 'rascunho' || ensaio.approved === false);
   const podeAssinar = podeAssinarCliente;
   const jaAssinado = ensaio.client_signature?.signed_by === user?.email;
@@ -1356,13 +1354,13 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   }, [user, ensaio]);
 
   return (
-    <Card className="hover:shadow-md transition-shadow duration-200 bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-3">
+    <Card className="hover:shadow-md transition-shadow duration-200 bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B] mx-1 my-2">
+      <CardContent className="p-6">
+        <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-bold text-[#00233B] text-lg flex items-center gap-2">
-                <TypeIcon className="w-5 h-5 text-[#BFCF99]" /> {name}
+              <h3 className="font-bold text-[#00233B] text-xl flex items-center gap-3">
+                <TypeIcon className="w-6 h-6 text-[#BFCF99]" /> {name}
                 {(() => {
                   const naoConformidades = getNaoConformidades(ensaio);
                   const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
@@ -1393,66 +1391,66 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                   return null;
                 })()}
               </h3>
-              <p className="text-sm text-[#00233B]/70">{dataFormatted}</p>
+              <p className="text-base text-[#00233B]/70 mt-1">{dataFormatted}</p>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <Badge className={`${status.className} gap-1.5`}>
-                <status.icon className="w-3 h-3" />
+              <Badge className={`${status.className} gap-2 px-3 py-1.5 text-sm`}>
+                <status.icon className="w-4 h-4" />
                 {status.text}
               </Badge>
               {status.wasRejected && (
-                <Badge className="bg-orange-100/80 text-orange-800 border border-orange-300/50 text-xs">
+                <Badge className="bg-orange-100/80 text-orange-800 border border-orange-300/50 text-sm px-3 py-1">
                   🔄 Editado após reprovação
                 </Badge>
               )}
               {jaAssinado && (
-                <Badge className="bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 text-xs">
+                <Badge className="bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 text-sm px-3 py-1">
                   ✍️ Assinado por você
                 </Badge>
               )}
             </div>
           </div>
 
-          <div className="border-t border-white/20 pt-4 pb-2 space-y-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-[#00233B]/80">
-              <div className="flex items-center gap-1.5" title="Obra">
-                <Building className="w-4 h-4 text-[#BFCF99] shrink-0" />
+          <div className="border-t border-white/20 pt-5 pb-3 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-[#00233B]/80">
+              <div className="flex items-center gap-2" title="Obra">
+                <Building className="w-5 h-5 text-[#BFCF99] shrink-0" />
                 <span className="font-medium text-[#00233B]">{obra?.name || 'N/A'}</span>
-                <span className="text-xs">({obra?.code || 'N/A'})</span>
+                <span className="text-sm">({obra?.code || 'N/A'})</span>
               </div>
-              <div className="flex items-center gap-1.5" title="Laboratorista">
-                <UserIconSmall className="w-4 h-4 text-[#BFCF99] shrink-0" />
+              <div className="flex items-center gap-2" title="Laboratorista">
+                <UserIconSmall className="w-5 h-5 text-[#BFCF99] shrink-0" />
                 <span>{laboratorista}</span>
               </div>
               {getRodoviaInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Rodovia">
-                  <MapPin className="w-4 h-4 text-[#BFCF99] shrink-0" />
+                <div className="flex items-center gap-2" title="Rodovia">
+                  <MapPin className="w-5 h-5 text-[#BFCF99] shrink-0" />
                   <span className="font-medium">{getRodoviaInfo(ensaio)}</span>
                 </div>
               )}
               {getTrechoInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Trecho">
-                  <MapPin className="w-4 h-4 text-[#BFCF99] shrink-0" />
-                  <span className="text-xs">Trecho: {getTrechoInfo(ensaio)}</span>
+                <div className="flex items-center gap-2" title="Trecho">
+                  <MapPin className="w-5 h-5 text-[#BFCF99] shrink-0" />
+                  <span className="text-sm">Trecho: {getTrechoInfo(ensaio)}</span>
                 </div>
               )}
               {getResponsavelInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Responsável">
-                  <Building className="w-4 h-4 text-[#BFCF99] shrink-0" />
+                <div className="flex items-center gap-2" title="Responsável">
+                  <Building className="w-5 h-5 text-[#BFCF99] shrink-0" />
                   <span className="font-medium">{getResponsavelInfo(ensaio)}</span>
                 </div>
               )}
             </div>
 
             {ensaio.sample_id && (
-              <div className="text-sm">
+              <div className="text-base">
                 <span className="font-medium text-[#00233B]">Amostra/ID: </span>
                 <span className="text-[#00233B]/90">{ensaio.sample_id}</span>
               </div>
             )}
 
             {ensaio.client_signature?.signed_by && (
-              <div className="text-sm bg-[#00233B]/5 p-2 rounded border border-[#00233B]/20">
+              <div className="text-base bg-[#00233B]/5 p-3 rounded-lg border border-[#00233B]/20">
                 <span className="font-medium text-[#00233B]">Assinado por: </span>
                 <span className="text-[#00233B]/80">{ensaio.client_signature.engineer_name}</span>
                 {ensaio.client_signature.crea_number && (
@@ -1463,49 +1461,48 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                   </>
                 )}
                 <br />
-                <span className="text-xs text-[#00233B]/70">
+                <span className="text-sm text-[#00233B]/70">
                   {new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR')}
                 </span>
               </div>
             )}
 
             {ensaio.rejection_reason && (
-              <div className="text-sm bg-[#800020]/5 p-2 rounded border border-[#800020]/20">
+              <div className="text-base bg-[#800020]/5 p-3 rounded-lg border border-[#800020]/20">
                 <span className="font-medium text-[#800020]">Motivo da Reprovação: </span>
                 <span className="text-[#800020]/80">{ensaio.rejection_reason}</span>
               </div>
             )}
           </div>
 
-          <div className="border-t border-white/20 pt-3 flex items-center gap-2 flex-wrap min-h-[38px]">
+          <div className="border-t border-white/20 pt-4 flex items-center gap-3 flex-wrap min-h-[42px]">
             {podeVerPDF && (
-              <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-black/10 border-white/20">
+              <Button asChild variant="outline" className="text-[#00233B] hover:bg-black/10 border-white/20 text-base px-4 py-2">
                 <Link to={reportUrl} target="_blank">
-                  <FileText className="w-4 h-4 mr-1 text-[#BFCF99]" /> Ver PDF
+                  <FileText className="w-5 h-5 mr-2 text-[#BFCF99]" /> Ver PDF
                 </Link>
               </Button>
             )}
             
             {podeAssinar && (
               <Button 
-                size="sm" 
                 style={{ backgroundColor: '#566E3D' }}
-                className="text-white hover:opacity-90 transition-opacity"
+                className="text-white hover:opacity-90 transition-opacity text-base px-4 py-2"
                 onClick={handleAssinar}
               >
-                <MessageSquare className="w-4 h-4 mr-1" /> Assinar Registro
+                <MessageSquare className="w-5 h-5 mr-2" /> Assinar Registro
               </Button>
             )}
             
             {podeEditar && (
-              <Button asChild size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">
+              <Button asChild className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 text-base px-4 py-2">
                 <Link to={editLink}>
-                  <Edit className="w-4 h-4 mr-1 text-[#BFCF99]" /> Editar
+                  <Edit className="w-5 h-5 mr-2 text-[#BFCF99]" /> Editar
                 </Link>
               </Button>
             )}
             {ensaio.status === 'finalizado' && ensaio.approved === null && !isCliente && (
-              <p className="text-sm text-[#00233B]/70 italic">
+              <p className="text-base text-[#00233B]/70 italic">
                 Aguardando aprovação do administrador.
               </p>
             )}
