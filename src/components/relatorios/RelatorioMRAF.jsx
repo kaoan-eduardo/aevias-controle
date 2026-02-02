@@ -121,7 +121,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
           </div>
           <div className="text-center">
             <h1 className="text-sm font-bold text-gray-800 leading-tight print:text-xs print:leading-tight">
-              ENSAIO DE EXTRAÇÃO E GRANULOMETRIA<br/>MRAF - MISTURA ASFÁLTICA RECICLADA A FRIO
+              ENSAIO DE EXTRAÇÃO E GRANULOMETRIA
             </h1>
           </div>
           <div className="flex justify-end items-start">
