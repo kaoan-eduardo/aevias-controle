@@ -109,25 +109,25 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
   return (
     <div>
-      <div className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-4 px-8 pb-4 print:pt-2 print:px-4 print:pb-2">
+      <div className="w-full max-w-[270mm] mx-auto bg-white shadow-xl print:shadow-none pt-6 px-8 pb-6 print:pt-4 print:px-4 print:pb-4">
         {/* Header */}
-        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3 print:pb-1 print:mb-2">
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-3 mb-4 print:pb-2 print:mb-3">
           <div className="flex justify-start">
             <img 
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
               alt="Logo Regional" 
-              className="h-10 print:h-7 object-contain" 
+              className="h-16 print:h-12 object-contain" 
             />
           </div>
           <div className="text-center">
-            <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
+            <h1 className="text-sm font-bold text-gray-800 leading-tight print:text-xs print:leading-tight">
               ENSAIO DE EXTRAÇÃO E GRANULOMETRIA<br/>MRAF - MISTURA ASFÁLTICA RECICLADA A FRIO
             </h1>
           </div>
           <div className="flex justify-end items-start">
             <div className="text-right">
-              <p className="text-[10px] font-bold text-gray-700 print:text-[9px]">DATA:</p>
-              <p className="text-xs font-semibold text-gray-900 print:text-[10px]">{formatDate(ensaio?.data_ensaio)}</p>
+              <p className="text-xs font-bold text-gray-700 print:text-[10px]">DATA:</p>
+              <p className="text-sm font-semibold text-gray-900 print:text-xs">{formatDate(ensaio?.data_ensaio)}</p>
             </div>
           </div>
         </header>
@@ -603,7 +603,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
         @media print {
           @page {
             size: A4 portrait;
-            margin: 6mm 8mm 6mm 8mm;
+            margin: 10mm 8mm 10mm 8mm;
           }
           body {
             print-color-adjust: exact;
