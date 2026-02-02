@@ -757,17 +757,6 @@ export default function EnsaioMRAFPage() {
                     </div>
 
                     <div>
-                      <Label>Teor Ligante Real (%)</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={formData.extracao_ligante.teor_ligante_real || ''}
-                        readOnly
-                        className="bg-blue-50 font-semibold"
-                      />
-                    </div>
-
-                    <div>
                       <Label>Resíduo da Emulsão (%)</Label>
                       <Input
                         type="number"
