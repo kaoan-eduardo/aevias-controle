@@ -145,9 +145,16 @@ export default function ChecklistConcretagem() {
         setProjects([]);
       }
       
-      // Limpar project_id se o projeto selecionado não estiver mais disponível
-      if (formData.project_id) {
-        const projectStillAvailable = projects.some(p => p.id === formData.project_id);
+      // Limpar project_id apenas se a obra mudou e o projeto não está mais disponível
+      // Não limpar quando está carregando um checklist existente pela primeira vez
+      if (formData.project_id && !editingChecklist) {
+        const projetosFiltrados = allProjects.filter(p => {
+          if (p.tipo_projeto !== 'CARTA_TRACO_CONCRETO') return false;
+          const projectIdsRegional = regionais.find(r => r.id === obraSelecionada?.regional_id)?.project_ids || [];
+          return projectIdsRegional.includes(p.id) || p.regional_id === obraSelecionada?.regional_id;
+        });
+        
+        const projectStillAvailable = projetosFiltrados.some(p => p.id === formData.project_id);
         if (!projectStillAvailable) {
           setFormData(prev => ({ ...prev, project_id: "" }));
         }
