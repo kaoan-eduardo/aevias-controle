@@ -520,12 +520,7 @@ export default function ProdutividadePage() {
               <Label>Empreiteira Atendida</Label>
               <Select
                 value={editDialog.registro?.empreiteira || ""}
-                onValueChange={(value) => {
-                  if (editDialog.registro) {
-                    editDialog.registro.empreiteira = value;
-                    editDialog.registro.usina = "";
-                  }
-                }}
+                onValueChange={(value) => handleSaveEmpreiteiraOuUsina(value, 'empreiteira')}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a empreiteira" />
@@ -549,12 +544,7 @@ export default function ProdutividadePage() {
               <Label>Usina</Label>
               <Select
                 value={editDialog.registro?.usina || ""}
-                onValueChange={(value) => {
-                  if (editDialog.registro) {
-                    editDialog.registro.usina = value;
-                    editDialog.registro.empreiteira = "";
-                  }
-                }}
+                onValueChange={(value) => handleSaveEmpreiteiraOuUsina(value, 'usina')}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a usina" />
@@ -572,14 +562,7 @@ export default function ProdutividadePage() {
             
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setEditDialog({ open: false, registro: null })}>
-                Cancelar
-              </Button>
-              <Button onClick={() => {
-                const tipo = editDialog.registro?.empreiteira ? 'empreiteira' : 'usina';
-                const valor = editDialog.registro?.empreiteira || editDialog.registro?.usina;
-                handleSaveEmpreiteiraOuUsina(valor, tipo);
-              }}>
-                Salvar
+                Fechar
               </Button>
             </div>
           </div>
