@@ -5,7 +5,9 @@ import { EnsaioDensidade } from '@/entities/EnsaioDensidade';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
 import { User } from '@/entities/User';
+import { Regional } from '@/entities/Regional';
 import RelatorioDensidade from '../components/relatorios/RelatorioDensidade';
+import RelatorioMRAF from '../components/relatorios/RelatorioMRAF';
 import { base44 } from "@/api/base44Client";
 
 export default function RelatorioEnsaio() {
@@ -29,14 +31,17 @@ export default function RelatorioEnsaio() {
 
       const user = await User.me();
       
-      const [ensaiosDensidade, obras, projects] = await Promise.all([
+      const [ensaiosDensidade, ensaiosMRAF, obras, projects, regionais] = await Promise.all([
         EnsaioDensidade.list(),
+        base44.entities.EnsaioMRAF.list(),
         Obra.list(),
-        Project.list()
+        Project.list(),
+        Regional.list()
       ]);
 
       let record;
       if (tipo === 'densidade') record = ensaiosDensidade.find(r => r.id === id);
+      if (tipo === 'mraf') record = ensaiosMRAF.find(r => r.id === id);
 
       // Note: 'diario' type is now handled by a separate dedicated page/component.
       // If 'tipo' is 'diario' here, 'record' will remain undefined, and the
@@ -47,21 +52,27 @@ export default function RelatorioEnsaio() {
       let obra = null;
       let project = null;
       let regional = null;
+      let faixaGranulometrica = null;
+      
       if (record.obra_id) {
         obra = obras.find(o => o.id === record.obra_id);
-        if (obra && obra.project_id) {
-          project = projects.find(p => p.id === obra.project_id);
-        }
         if (obra && obra.regional_id) {
-          const regionais = await base44.entities.Regional.list();
           regional = regionais.find(r => r.id === obra.regional_id);
+        }
+      }
+      
+      if (record.project_id) {
+        project = projects.find(p => p.id === record.project_id);
+        if (project && project.faixa_granulometrica_id) {
+          const faixas = await base44.entities.FaixaGranulometrica.list();
+          faixaGranulometrica = faixas.find(f => f.id === project.faixa_granulometrica_id);
         }
       }
 
       setState({
         loading: false,
         error: null,
-        data: { tipo, record, obra, project, user, regional }
+        data: { tipo, record, obra, project, user, regional, faixaGranulometrica }
       });
     } catch (error) {
       console.error('Erro ao carregar relatório:', error);
@@ -83,10 +94,12 @@ export default function RelatorioEnsaio() {
 
   const renderReport = () => {
     if (!state.data) return null;
-    const { tipo, record, obra, project, user, regional } = state.data;
+    const { tipo, record, obra, project, user, regional, faixaGranulometrica } = state.data;
     switch (tipo) {
       case 'densidade':
         return <RelatorioDensidade ensaio={record} obra={obra} project={project} user={user} regional={regional} />;
+      case 'mraf':
+        return <RelatorioMRAF ensaio={record} obra={obra} project={project} user={user} regional={regional} faixaGranulometrica={faixaGranulometrica} />;
       default:
         return <div>Tipo de relatório inválido</div>;
     }
@@ -94,6 +107,7 @@ export default function RelatorioEnsaio() {
 
   const getTipoRelatorioNome = () => {
     if (state.data?.tipo === 'densidade') return 'Densidade CP Extraído';
+    if (state.data?.tipo === 'mraf') return 'Ensaio MRAF';
     return 'Relatório de Ensaio';
   };
 
