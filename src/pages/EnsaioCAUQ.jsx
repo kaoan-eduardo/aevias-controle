@@ -1071,28 +1071,29 @@ export default function EnsaioCAUQPage() {
                 </CardContent>
               </Card>
 
-              {/* DENSIDADE RICE */}
-              <Card className="bg-slate-50">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">Densidade Rice (DMT) - Opcional</CardTitle>
-                      <CardDescription>DNIT 136/2018</CardDescription>
-                    </div>
-                    {isEditable && !isApproved && (
-                      <div className="flex items-center gap-2">
-                        <Label className="text-sm font-normal">Realizar Rice?</Label>
-                        <input
-                          type="checkbox"
-                          checked={formData.realizar_densidade_rice}
-                          onChange={(e) => handleChange('realizar_densidade_rice', e.target.checked)}
-                          className="w-4 h-4"
-                        />
+              {/* DENSIDADE RICE - apenas se Marshall estiver habilitado */}
+              {formData.realizar_marshall && (
+                <Card className="bg-slate-50">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">Densidade Rice (DMT) - Opcional</CardTitle>
+                        <CardDescription>DNIT 136/2018</CardDescription>
                       </div>
-                    )}
-                  </div>
-                </CardHeader>
-                {formData.realizar_densidade_rice ? (
+                      {isEditable && !isApproved && (
+                        <div className="flex items-center gap-2">
+                          <Label className="text-sm font-normal">Realizar Rice?</Label>
+                          <input
+                            type="checkbox"
+                            checked={formData.realizar_densidade_rice}
+                            onChange={(e) => handleChange('realizar_densidade_rice', e.target.checked)}
+                            className="w-4 h-4"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                  {formData.realizar_densidade_rice ? (
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div>
@@ -1169,7 +1170,8 @@ export default function EnsaioCAUQPage() {
                     </p>
                   </CardContent>
                 )}
-              </Card>
+                </Card>
+                )}
 
               {/* CORPOS DE PROVA MARSHALL */}
               <Card className="bg-slate-50">

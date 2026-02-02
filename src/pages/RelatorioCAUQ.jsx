@@ -948,8 +948,8 @@ export default function RelatorioCAUQ() {
               </>
             )}
 
-            {/* Densidade RICE */}
-            {ensaio.densidade_rice && (
+            {/* Densidade RICE - apenas se Marshall foi realizado */}
+            {ensaio.realizar_marshall && ensaio.densidade_rice && (
               <div className="mt-0 print:mt-0">
                 <div className="bg-slate-200 px-0.5 py-0 text-[8px] font-bold text-center border-b border-slate-400 print:text-[7px] print:py-0">
                   ENSAIO DE DENSIDADE RICE (DMT) - DNIT 427/20 - ABNT NBR 15619/16
