@@ -332,50 +332,59 @@ export default function RelatorioCAUQ() {
               DADOS DO ENSAIO
             </div>
 
-            <div className="grid grid-cols-12 gap-0 mb-0">
+            <div className={`grid ${ensaio.realizar_marshall ? 'grid-cols-12 gap-0' : 'grid-cols-12 gap-2'} mb-0`}>
               {/* Coluna Granulometria */}
-              <div className="col-span-7 border border-slate-400">
-                <div className="bg-slate-200 px-0.5 py-0 text-[9px] font-bold text-center border-b border-slate-400">
+              <div className={`${ensaio.realizar_marshall ? 'col-span-7' : 'col-span-7'} border border-slate-400`}>
+                <div className={`bg-slate-200 font-bold text-center border-b border-slate-400 ${ensaio.realizar_marshall ? 'px-0.5 py-0 text-[9px]' : 'px-1.5 py-1 text-[11px]'}`}>
                   ENSAIO DE GRANULOMETRIA - DNIT 412/2025
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-[7px] leading-tight">
+                  <table className={`w-full border-collapse ${ensaio.realizar_marshall ? 'text-[7px]' : 'text-[9px]'} leading-tight`}>
                     <thead>
                       <tr className="bg-slate-100">
-                        <th rowSpan="2" className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">PENEIRAS<br/>ASTM (mm)</th>
-                        <th colSpan="3" className="border-r border-slate-300 px-0.5 py-0 font-bold text-center leading-tight">PESO DA AMOSTRA (g)</th>
-                        <th colSpan="2" className="border-r border-slate-300 px-0.5 py-0 font-bold text-center leading-tight">FAIXA DE TRABALHO</th>
-                        <th colSpan="2" className="px-0.5 py-0 font-bold text-center leading-tight">FAIXA ESPECIFICADA<br/>{faixa?.especificacao || ''}</th>
+                        <th rowSpan="2" className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>PENEIRAS<br/>ASTM (mm)</th>
+                        <th colSpan="3" className={`border-r border-slate-300 font-bold text-center leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>PESO DA AMOSTRA (g)</th>
+                        <th colSpan="2" className={`border-r border-slate-300 font-bold text-center leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>FAIXA DE TRABALHO</th>
+                        <th colSpan="2" className={`font-bold text-center leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>FAIXA ESPECIFICADA<br/>{faixa?.especificacao || ''}</th>
                       </tr>
                       <tr className="bg-slate-100">
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">RETIDO (g)</th>
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">PASS. (g)</th>
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">% PASS.</th>
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">MÍN. (%)</th>
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">MÁX. (%)</th>
-                        <th className="border-r border-slate-300 px-0.5 py-0 font-bold leading-tight">MÍN. (%)</th>
-                        <th className="px-0.5 py-0 font-bold leading-tight">MÁX. (%)</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>RETIDO (g)</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>PASS. (g)</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>% PASS.</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>MÍN. (%)</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>MÁX. (%)</th>
+                        <th className={`border-r border-slate-300 font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>MÍN. (%)</th>
+                        <th className={`font-bold leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1'}`}>MÁX. (%)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {dadosGranulometria.map((dado, idx) => {
                         const numPeneiras = dadosGranulometria.length;
-                        // Altura dinâmica baseada no número de peneiras
-                        const heightClass = numPeneiras <= 5 ? 'h-8' : 
-                                            numPeneiras <= 7 ? 'h-6' : 
-                                            numPeneiras <= 10 ? 'h-5' : 
-                                            numPeneiras <= 13 ? 'h-4' : 'h-3';
+                        // Altura dinâmica baseada no número de peneiras e se tem marshall
+                        const heightClass = ensaio.realizar_marshall ? (
+                          numPeneiras <= 5 ? 'h-8' : 
+                          numPeneiras <= 7 ? 'h-6' : 
+                          numPeneiras <= 10 ? 'h-5' : 
+                          numPeneiras <= 13 ? 'h-4' : 'h-3'
+                        ) : (
+                          numPeneiras <= 5 ? 'h-12' : 
+                          numPeneiras <= 7 ? 'h-10' : 
+                          numPeneiras <= 10 ? 'h-8' : 
+                          numPeneiras <= 13 ? 'h-7' : 'h-6'
+                        );
+
+                        const paddingClass = ensaio.realizar_marshall ? 'px-0' : 'px-1.5';
 
                         return (
                           <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                            <td className={`border-r border-slate-300 px-0 text-center font-semibold ${heightClass}`}>{dado.astm}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center ${heightClass}`}>{dado.retido}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center ${heightClass}`}>{dado.passante}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center font-semibold ${heightClass}`}>{dado.percentualPassante}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center ${heightClass}`}>{dado.faixaTrabalhoMin ? parseFloat(dado.faixaTrabalhoMin).toFixed(1) : ''}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center ${heightClass}`}>{dado.faixaTrabalhoMax ? parseFloat(dado.faixaTrabalhoMax).toFixed(1) : ''}</td>
-                            <td className={`border-r border-slate-300 px-0 text-center ${heightClass}`}>{dado.limiteMin ? parseFloat(dado.limiteMin).toFixed(1) : ''}</td>
-                            <td className={`px-0 text-center ${heightClass}`}>{dado.limiteMax ? parseFloat(dado.limiteMax).toFixed(1) : ''}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center font-semibold ${heightClass}`}>{dado.astm}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.retido}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.passante}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center font-semibold ${heightClass}`}>{dado.percentualPassante}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.faixaTrabalhoMin ? parseFloat(dado.faixaTrabalhoMin).toFixed(1) : ''}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.faixaTrabalhoMax ? parseFloat(dado.faixaTrabalhoMax).toFixed(1) : ''}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.limiteMin ? parseFloat(dado.limiteMin).toFixed(1) : ''}</td>
+                            <td className={`${paddingClass} text-center ${heightClass}`}>{dado.limiteMax ? parseFloat(dado.limiteMax).toFixed(1) : ''}</td>
                           </tr>
                         );
                       })}
@@ -386,63 +395,63 @@ export default function RelatorioCAUQ() {
 
               {/* Coluna Extração de Ligante */}
               <div className="col-span-5">
-                <div className="border border-slate-400 border-l-0">
-                  <div className="bg-slate-200 px-0.5 py-0 text-[8px] font-bold text-center border-b border-slate-400 leading-tight">
+                <div className={`border border-slate-400 ${ensaio.realizar_marshall ? 'border-l-0' : ''}`}>
+                  <div className={`bg-slate-200 font-bold text-center border-b border-slate-400 leading-tight ${ensaio.realizar_marshall ? 'px-0.5 py-0 text-[8px]' : 'px-1.5 py-1 text-[11px]'}`}>
                     EXTRAÇÃO LIGANTE (ROTAREX)<br/>ABNT NBR 16208/2013
                   </div>
-                  <table className="w-full border-collapse text-[7px] table-fixed">
+                  <table className={`w-full border-collapse table-fixed ${ensaio.realizar_marshall ? 'text-[7px]' : 'text-[9px]'}`}>
                     <colgroup>
                       <col className="w-[35%]" />
                       <col className="w-[65%]" />
                     </colgroup>
                     <tbody>
                       <tr className="bg-white">
-                        <td className="border-r border-slate-300 px-0.5 py-0 font-bold">TEMP. CAP:</td>
-                        <td className="px-0.5 py-0">{ensaio.temperatura_cap || '-'}°C</td>
+                        <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEMP. CAP:</td>
+                        <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.temperatura_cap || '-'}°C</td>
                       </tr>
                       <tr className="bg-slate-50">
-                        <td className="border-r border-slate-300 px-0.5 py-0 font-bold">TIPO LIG.:</td>
-                        <td className="px-0.5 py-0">{ensaio.tipo_ligante || '-'}</td>
+                        <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TIPO LIG.:</td>
+                        <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.tipo_ligante || '-'}</td>
                       </tr>
 
                       {ensaio.extracao_ligante && (
                         <>
                           <tr className="bg-white">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">AM. C/ LIG.:</td>
-                            <td className="px-0.5 py-0">{ensaio.extracao_ligante.amostra_com_ligante || '-'} g</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>AM. C/ LIG.:</td>
+                            <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.amostra_com_ligante || '-'} g</td>
                           </tr>
                           <tr className="bg-slate-50">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">AM. S/ LIG.:</td>
-                            <td className="px-0.5 py-0">{ensaio.extracao_ligante.amostra_sem_ligante || '-'} g</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>AM. S/ LIG.:</td>
+                            <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.amostra_sem_ligante || '-'} g</td>
                           </tr>
                           <tr className="bg-white">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">FAT. CORR.:</td>
-                            <td className="px-0.5 py-0">{ensaio.extracao_ligante.fator_correcao || '1.0000'}</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>FAT. CORR.:</td>
+                            <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.fator_correcao || '1.0000'}</td>
                           </tr>
                           <tr className="bg-slate-50">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">PESO LIG.:</td>
-                            <td className="px-0.5 py-0">{ensaio.extracao_ligante.peso_ligante || '-'} g</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>PESO LIG.:</td>
+                            <td className={`${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.peso_ligante || '-'} g</td>
                           </tr>
                           <tr className="bg-white">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">TEOR LIG.:</td>
-                            <td className="px-0.5 py-0 font-semibold">{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEOR LIG.:</td>
+                            <td className={`font-semibold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
                           </tr>
                           <tr className="bg-slate-50">
-                            <td className="border-r border-slate-300 px-0.5 py-0 font-bold">FILLER/BET.:</td>
-                            <td className="px-0.5 py-0 font-semibold">{ensaio.extracao_ligante.filler_betume || '-'}</td>
+                            <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>FILLER/BET.:</td>
+                            <td className={`font-semibold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.filler_betume || '-'}</td>
                           </tr>
 
                           {ensaio.extracao_ligante.teor_ligante_real && (
                             <tr className="bg-blue-50">
-                              <td className="border-r border-slate-300 px-0.5 py-0 font-bold">TEOR LIG. REAL:</td>
-                              <td className="px-0.5 py-0 font-semibold text-blue-700">{ensaio.extracao_ligante.teor_ligante_real}%</td>
+                              <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEOR LIG. REAL:</td>
+                              <td className={`font-semibold text-blue-700 ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.teor_ligante_real}%</td>
                             </tr>
                           )}
 
                           {ensaio.extracao_ligante.amostra_umida && (
                             <tr className="bg-blue-50">
-                              <td className="border-r border-slate-300 px-0.5 py-0 font-bold">UMIDADE:</td>
-                              <td className="px-0.5 py-0 font-semibold text-blue-700">{ensaio.extracao_ligante.umidade || 0}%</td>
+                              <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>UMIDADE:</td>
+                              <td className={`font-semibold text-blue-700 ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.umidade || 0}%</td>
                             </tr>
                           )}
                         </>
@@ -454,8 +463,8 @@ export default function RelatorioCAUQ() {
               </div>
 
             {/* Gráfico de Granulometria */}
-            <div className="border border-slate-300 p-0 mb-0 print:p-0">
-              <h3 className="text-[7px] font-bold text-center mb-0 print:text-[6px] print:py-0">GRANULOMETRIA DA MISTURA</h3>
+            <div className={`border border-slate-300 p-0 print:p-0 ${ensaio.realizar_marshall ? 'mb-0' : 'mb-2'}`}>
+              <h3 className={`font-bold text-center mb-0 print:py-0 ${ensaio.realizar_marshall ? 'text-[7px] print:text-[6px]' : 'text-[10px] print:text-[9px] py-1'}`}>GRANULOMETRIA DA MISTURA</h3>
               <div className={`relative ${ensaio.realizar_marshall ? 'h-48 print:h-48' : 'h-96 print:h-80'}`}>
                 {hoveredPoint && (
                   <div 
@@ -1013,9 +1022,9 @@ export default function RelatorioCAUQ() {
 
             {/* Observações */}
             {ensaio.observacoes && (
-              <div className="mb-0 mt-0 print:mt-0">
-                <div className="bg-slate-200 px-1 py-0 font-bold text-[8px] print:text-[7px] print:py-0">OBSERVAÇÕES</div>
-                <div className="border border-slate-300 p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]">
+              <div className={`mt-0 print:mt-0 ${ensaio.realizar_marshall ? 'mb-0' : 'mb-2'}`}>
+                <div className={`bg-slate-200 font-bold ${ensaio.realizar_marshall ? 'px-1 py-0 text-[8px] print:text-[7px] print:py-0' : 'px-2 py-1 text-[10px] print:text-[8px] print:py-1'}`}>OBSERVAÇÕES</div>
+                <div className={`border border-slate-300 ${ensaio.realizar_marshall ? 'p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]' : 'p-2 text-[10px] min-h-[20px] print:text-[8px] print:p-1 print:min-h-[16px]'}`}>
                   {ensaio.observacoes}
                 </div>
               </div>
