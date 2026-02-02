@@ -34,6 +34,8 @@ const getInitialFormData = () => ({
   temperatura: "",
   atividades_realizadas: "",
   observacoes: "",
+  acoes_corretivas_realizado: null,
+  acoes_corretivas_descricao: "",
   fotos: [],
   cliente: "",
   approved: null,
@@ -361,6 +363,59 @@ const DiarioForm = ({
           disabled={!isEditable || isApproved}
         />
       </div>
+
+      {/* Ações Corretivas */}
+      <Card className="bg-orange-50 border-orange-200">
+        <CardHeader>
+          <CardTitle className="text-lg">Ações Corretivas</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Foram realizadas ações corretivas? *</Label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input 
+                  type="radio" 
+                  checked={formData.acoes_corretivas_realizado === true}
+                  onChange={() => handleChange('acoes_corretivas_realizado', true)}
+                  disabled={!isEditable || isApproved}
+                  className="mr-2"
+                />
+                Sim
+              </label>
+              <label className="flex items-center">
+                <input 
+                  type="radio" 
+                  checked={formData.acoes_corretivas_realizado === false}
+                  onChange={() => {
+                    handleChange('acoes_corretivas_realizado', false);
+                    handleChange('acoes_corretivas_descricao', '');
+                  }}
+                  disabled={!isEditable || isApproved}
+                  className="mr-2"
+                />
+                Não
+              </label>
+            </div>
+          </div>
+
+          {formData.acoes_corretivas_realizado === true && (
+            <div className="space-y-2 p-4 border-2 border-orange-300 rounded-lg bg-white">
+              <Label htmlFor="acoes_corretivas_descricao">Descrição das Ações Corretivas *</Label>
+              <Textarea
+                id="acoes_corretivas_descricao"
+                name="acoes_corretivas_descricao"
+                value={formData.acoes_corretivas_descricao || ""}
+                onChange={(e) => handleChange('acoes_corretivas_descricao', e.target.value)}
+                placeholder="Descreva detalhadamente as ações corretivas que foram realizadas..."
+                rows={4}
+                required={formData.acoes_corretivas_realizado === true}
+                disabled={!isEditable || isApproved}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Checklist de Veículo */}
       <Card className="bg-slate-50">
@@ -1022,6 +1077,14 @@ export default function DiarioObraPage() {
       }
       if (!formData.atividades_realizadas) {
         alert("Por favor, preencha as atividades realizadas.");
+        return;
+      }
+      if (formData.acoes_corretivas_realizado === null) {
+        alert("Por favor, indique se foram realizadas ações corretivas.");
+        return;
+      }
+      if (formData.acoes_corretivas_realizado === true && !formData.acoes_corretivas_descricao?.trim()) {
+        alert("Por favor, descreva as ações corretivas realizadas.");
         return;
       }
     } else {
