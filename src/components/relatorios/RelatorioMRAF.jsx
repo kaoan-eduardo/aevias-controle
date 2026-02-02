@@ -138,7 +138,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
             DADOS DA OBRA
           </div>
 
-          <div className="grid grid-cols-5 gap-x-2 gap-y-1 mb-2 text-[10px] leading-tight">
+          <div className="grid grid-cols-4 gap-x-2 gap-y-1 mb-2 text-[10px] leading-tight">
             {/* Linha 1 */}
             <div className="col-span-1">
               <p className="font-bold text-gray-700 mb-1">CLIENTE:</p>
@@ -160,11 +160,6 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
               <p className="text-gray-900">{ensaio?.placa_caminhao || 'N/A'}</p>
             </div>
 
-            <div className="col-span-1 row-span-3">
-              <p className="font-bold text-gray-700 mb-1">ENSAIO REALIZADO POR:</p>
-              <p className="text-gray-900">{ensaio?.ensaio_realizado_por || 'N/A'}</p>
-            </div>
-
             {/* Linha 2 */}
             <div className="col-span-1">
               <p className="font-bold text-gray-700 mb-1">OBRA:</p>
@@ -182,8 +177,8 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
             </div>
 
             <div className="col-span-1">
-              <p className="font-bold text-gray-700 mb-1">LABORATORISTA:</p>
-              <p className="text-gray-900">{ensaio?.laboratorista_name || 'N/A'}</p>
+              <p className="font-bold text-gray-700 mb-1">ENSAIO REALIZADO POR:</p>
+              <p className="text-gray-900">{ensaio?.ensaio_realizado_por || 'N/A'}</p>
             </div>
 
             {/* Linha 3 */}
@@ -193,13 +188,13 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
             </div>
 
             <div className="col-span-1">
-              <p className="font-bold text-gray-700 mb-1">USINA FORNECEDORA:</p>
-              <p className="text-gray-900">{ensaio?.usina_fornecedora || 'N/A'}</p>
+              <p className="font-bold text-gray-700 mb-1">PEDREIRA:</p>
+              <p className="text-gray-900">{ensaio?.pedreira || 'N/A'}</p>
             </div>
 
             <div className="col-span-1">
-              <p className="font-bold text-gray-700 mb-1">PEDREIRA:</p>
-              <p className="text-gray-900">{ensaio?.pedreira || 'N/A'}</p>
+              <p className="font-bold text-gray-700 mb-1">LABORATORISTA:</p>
+              <p className="text-gray-900">{ensaio?.laboratorista_name || 'N/A'}</p>
             </div>
 
             <div className="col-span-1">
@@ -306,10 +301,6 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                         <tr className="bg-white">
                           <td className="border-r border-slate-300 font-bold px-1 py-1">TEOR LIG.:</td>
                           <td className="font-semibold px-1 py-1">{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
-                        </tr>
-                        <tr className="bg-slate-50">
-                          <td className="border-r border-slate-300 font-bold px-1 py-1">FILLER/BET.:</td>
-                          <td className="font-semibold px-1 py-1">{ensaio.extracao_ligante.filler_betume || '-'}</td>
                         </tr>
                         <tr className="bg-blue-50">
                           <td className="border-r border-slate-300 font-bold px-1 py-1">% DE EMULSÃO:</td>
