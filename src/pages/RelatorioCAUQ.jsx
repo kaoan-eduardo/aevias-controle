@@ -235,7 +235,9 @@ export default function RelatorioCAUQ() {
                   <>ENSAIO DE EXTRAÇÃO E GRANULOMETRIA</>
                 )}
               </h1>
-              <p className="text-[10px] text-gray-500 mt-0.5 print:text-[7px] print:mt-0">MÉTODO DE ENSAIO: DNIT 428/22 - NBR 15087/12</p>
+              {(ensaio.realizar_marshall || ensaio.realizar_densidade_rice) && (
+                <p className="text-[10px] text-gray-500 mt-0.5 print:text-[7px] print:mt-0">MÉTODO DE ENSAIO: DNIT 428/22 - NBR 15087/12</p>
+              )}
             </div>
             <div className="flex justify-end items-start">
               <div className="text-right">
