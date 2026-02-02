@@ -131,6 +131,8 @@ const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Diário de Obra", icon: Book };
     case "EnsaioCAUQ":
       return { name: "Ensaio de CAUQ", icon: FlaskConical };
+    case "EnsaioMRAF":
+      return { name: "Ensaio MRAF", icon: FlaskConical };
     case "EnsaioDensidade":
       return { name: "Densidade CP Extraído", icon: Gauge };
     case "EnsaioDensidadeInSitu":
@@ -167,6 +169,8 @@ const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioDiario?id=${ensaio.id}`);
     case "EnsaioCAUQ":
       return createPageUrl(`RelatorioCAUQ?id=${ensaio.id}`);
+    case "EnsaioMRAF":
+      return createPageUrl(`RelatorioEnsaio?id=${ensaio.id}&tipo=mraf`);
     case "EnsaioDensidade":
       return createPageUrl(`RelatorioEnsaio?id=${ensaio.id}&tipo=densidade`);
     case "EnsaioDensidadeInSitu":
@@ -1693,6 +1697,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     switch (entityType) {
       case "DiarioObra": return ensaio.data;
       case "EnsaioCAUQ": return ensaio.data_ensaio;
+      case "EnsaioMRAF": return ensaio.data_ensaio;
       case "EnsaioDensidade": return ensaio.extraction_date;
       case "EnsaioDensidadeInSitu": return ensaio.data_ensaio;
       case "EnsaioTaxaPinturaImprimacao": return ensaio.data_ensaio;
@@ -1865,6 +1870,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         const entityMap = {
           "DiarioObra": DiarioObra,
           "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+          "EnsaioMRAF": base44.entities.EnsaioMRAF,
           "EnsaioDensidade": EnsaioDensidade,
           "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
           "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
@@ -2237,6 +2243,7 @@ export default function MeusEnsaios() {
         projectsData,
         diariosData,
         ensaiosCAUQData,
+        ensaiosMRAFData,
         densidadeData,
         densidadeInSituData,
         taxaPinturaData,
@@ -2255,6 +2262,7 @@ export default function MeusEnsaios() {
           Project.list(),
           DiarioObra.list("-created_date", 200),
           base44.entities.EnsaioCAUQ.list("-created_date", 200),
+          base44.entities.EnsaioMRAF.list("-created_date", 200),
           EnsaioDensidade.list("-created_date", 200),
           base44.entities.EnsaioDensidadeInSitu.list("-created_date", 200),
           base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 200),
@@ -2286,6 +2294,7 @@ export default function MeusEnsaios() {
       const combinedEnsaios = [
         ...diariosData.map((d) => ({ ...d, entityType: "DiarioObra" })),
         ...ensaiosCAUQData.map((d) => ({ ...d, entityType: "EnsaioCAUQ" })),
+        ...ensaiosMRAFData.map((d) => ({ ...d, entityType: "EnsaioMRAF" })),
         ...densidadeData.map((d) => ({ ...d, entityType: "EnsaioDensidade" })),
         ...densidadeInSituData.map((d) => ({ ...d, entityType: "EnsaioDensidadeInSitu" })),
         ...taxaPinturaData.map((d) => ({ ...d, entityType: "EnsaioTaxaPinturaImprimacao" })),
@@ -2465,6 +2474,7 @@ export default function MeusEnsaios() {
        const entityMap = {
          "DiarioObra": DiarioObra,
          "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+         "EnsaioMRAF": base44.entities.EnsaioMRAF,
          "EnsaioDensidade": EnsaioDensidade,
          "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
          "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
@@ -2504,6 +2514,7 @@ export default function MeusEnsaios() {
       const entityMap = {
         "DiarioObra": DiarioObra,
         "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+        "EnsaioMRAF": base44.entities.EnsaioMRAF,
         "EnsaioDensidade": EnsaioDensidade,
         "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
         "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
