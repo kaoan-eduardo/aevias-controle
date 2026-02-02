@@ -626,7 +626,7 @@ export default function EnsaioMRAFPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <Label htmlFor="tipo_ligante">Tipo de Ligante</Label>
                       <Input
@@ -636,17 +636,6 @@ export default function EnsaioMRAFPage() {
                         disabled={!isEditable || isApproved}
                         readOnly={!!selectedProject}
                         className={selectedProject ? "bg-slate-100" : ""}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="temperatura_cap">Temperatura CAP (°C)</Label>
-                      <Input
-                        id="temperatura_cap"
-                        type="number"
-                        value={formData.temperatura_cap || ''}
-                        onChange={(e) => handleChange('temperatura_cap', e.target.value ? parseFloat(e.target.value) : null)}
-                        disabled={!isEditable || isApproved}
                       />
                     </div>
 
@@ -773,17 +762,6 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.teor_ligante_real || ''}
-                        readOnly
-                        className="bg-blue-50 font-semibold"
-                      />
-                    </div>
-
-                    <div>
-                      <Label>Filler/Betume</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={formData.extracao_ligante.filler_betume || ''}
                         readOnly
                         className="bg-blue-50 font-semibold"
                       />
