@@ -314,8 +314,8 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                         <tr className="bg-blue-50">
                           <td className="border-r border-slate-300 font-bold px-1 py-1">% DE EMULSÃO:</td>
                           <td className="font-semibold text-blue-700 px-1 py-1">
-                            {ensaio.extracao_ligante.teor_ligante && project?.percentual_emulsao 
-                              ? ((ensaio.extracao_ligante.teor_ligante / project.percentual_emulsao) * 100).toFixed(2)
+                            {ensaio.extracao_ligante.teor_ligante && ensaio.extracao_ligante.residuo_emulsao 
+                              ? ((ensaio.extracao_ligante.teor_ligante / ensaio.extracao_ligante.residuo_emulsao) * 100).toFixed(2)
                               : '-'}%
                           </td>
                         </tr>
