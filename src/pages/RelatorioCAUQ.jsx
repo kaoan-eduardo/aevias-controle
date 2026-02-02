@@ -229,7 +229,11 @@ export default function RelatorioCAUQ() {
             </div>
             <div className="text-center">
               <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
-                ENSAIO DE EXTRAÇÃO E GRANULOMETRIA<br/>PARÂMETROS MARSHALL E DENSIDADE RICE
+                {ensaio.realizar_marshall || ensaio.realizar_densidade_rice ? (
+                  <>ENSAIO DE EXTRAÇÃO E GRANULOMETRIA<br/>PARÂMETROS MARSHALL E DENSIDADE RICE</>
+                ) : (
+                  <>ENSAIO DE EXTRAÇÃO E GRANULOMETRIA</>
+                )}
               </h1>
               <p className="text-[10px] text-gray-500 mt-0.5 print:text-[7px] print:mt-0">MÉTODO DE ENSAIO: DNIT 428/22 - NBR 15087/12</p>
             </div>
