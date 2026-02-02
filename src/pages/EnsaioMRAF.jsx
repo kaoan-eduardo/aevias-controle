@@ -167,8 +167,8 @@ export default function EnsaioMRAFPage() {
     }
 
     // Cálculo do % de emulsão
-    if (ext.teor_ligante_real && ext.residuo_emulsao) {
-      const percentualEmulsao = (ext.teor_ligante_real / ext.residuo_emulsao) * 100;
+    if (ext.teor_ligante && ext.residuo_emulsao) {
+      const percentualEmulsao = (ext.teor_ligante / ext.residuo_emulsao) * 100;
       handleNestedChange('extracao_ligante.percentual_emulsao', parseFloat(percentualEmulsao.toFixed(2)));
     }
   }, [
@@ -178,7 +178,7 @@ export default function EnsaioMRAFPage() {
     formData.extracao_ligante.amostra_sem_ligante,
     formData.extracao_ligante.fator_correcao,
     formData.extracao_ligante.umidade,
-    formData.extracao_ligante.teor_ligante_real,
+    formData.extracao_ligante.teor_ligante,
     formData.extracao_ligante.residuo_emulsao,
     handleNestedChange
   ]);
