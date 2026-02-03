@@ -92,13 +92,14 @@ const CAMPOS_POR_TIPO = {
     { key: "furos", label: "Dados do Furo", subfields: [
       { key: "estaca", label: "Estaca" },
       { key: "densidade_seca_solo", label: "Densidade Seca Solo (g/cm³)" },
-      { key: "umidade", label: "Umidade (%)" },
-      { key: "desvio_umidade", label: "Variação Umidade (%)" },
-      { key: "grau_compactacao", label: "Grau Compactação (%)" }
+      { key: "umidade", label: "Umidade (%)" }
     ]},
     { key: "dados_proctor.densidade_seca_max", label: "Densidade Seca Max Proctor (g/cm³)" },
     { key: "dados_proctor.umidade_otima", label: "Umidade Ótima Proctor (%)" },
-    { key: "approved", label: "Status Aprovação" }
+    { key: "furos_variacao", label: "Dados do Furo Final", subfields: [
+      { key: "desvio_umidade", label: "Variação Umidade (%)" },
+      { key: "grau_compactacao", label: "Grau Compactação (%)" }
+    ]}
   ],
   EnsaioTaxaPinturaImprimacao: [
     { key: "data_ensaio", label: "Data" },
@@ -540,7 +541,7 @@ export default function ResumosPersonalizadosPage() {
             campos.forEach(campoKey => {
               const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
               
-              if (campoKey === 'furos') {
+              if (campoKey === 'furos' || campoKey === 'furos_variacao') {
                 // Para cada subfield, pegar o valor do furo atual
                 campo.subfields.forEach(subfield => {
                   const value = getNestedValue(furo, subfield.key);
