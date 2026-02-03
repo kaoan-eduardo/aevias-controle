@@ -472,8 +472,12 @@ export default function ResumosPersonalizadosPage() {
     
     if (typeof value === 'number') {
       // 3 casas decimais para campos de densidade
-      if (campo.includes('densidade') || campo.includes('gc_') || campo.includes('grau_compactacao')) {
+      if (campo.includes('densidade') || campo.includes('dens_')) {
         return value.toFixed(3);
+      }
+      // 2 casas decimais para grau de compactação
+      if (campo.includes('gc_') || campo.includes('grau_compactacao')) {
+        return value.toFixed(2);
       }
       return value.toFixed(2);
     }
