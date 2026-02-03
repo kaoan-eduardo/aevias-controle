@@ -157,10 +157,13 @@ export default function ResumosPersonalizadosPage() {
   const [tipoEnsaioSelecionado, setTipoEnsaioSelecionado] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
+  const [empreiteiraFiltro, setEmpreiteiraFiltro] = useState("");
+  const [laboratoristaFiltro, setLaboratoristaFiltro] = useState("");
   const [camposSelecionados, setCamposSelecionados] = useState([]);
   
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
+  const [laboratoristas, setLaboratoristas] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -239,6 +242,8 @@ export default function ResumosPersonalizadosPage() {
 
   const handleTipoEnsaioChange = (tipo) => {
     setTipoEnsaioSelecionado(tipo);
+    setEmpreiteiraFiltro("");
+    setLaboratoristaFiltro("");
     if (tipo) {
       const campos = CAMPOS_POR_TIPO[tipo] || [];
       setCamposSelecionados(campos.map(c => c.key));
@@ -246,6 +251,20 @@ export default function ResumosPersonalizadosPage() {
       setCamposSelecionados([]);
     }
   };
+
+  // Verificar se o tipo de ensaio selecionado tem campo de empreiteira
+  const tipoTemEmpreiteira = useMemo(() => {
+    if (!tipoEnsaioSelecionado) return false;
+    const campos = CAMPOS_POR_TIPO[tipoEnsaioSelecionado] || [];
+    return campos.some(c => c.key === 'empreiteira');
+  }, [tipoEnsaioSelecionado]);
+
+  // Obter empreiteiras da obra selecionada
+  const empreiteirasDisponiveis = useMemo(() => {
+    if (!obraId) return [];
+    const obra = obras.find(o => o.id === obraId);
+    return obra?.empreiteiras || [];
+  }, [obraId, obras]);
 
   const handleCampoToggle = (campoKey) => {
     setCamposSelecionados(prev => {
@@ -349,26 +368,48 @@ export default function ResumosPersonalizadosPage() {
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
-      if (dataInicio || dataFim) {
+      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro) {
         ensaiosFiltrados = ensaios.filter(e => {
+          // Filtro por data
           const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
-          if (!dataEnsaio) return false;
+          if (dataInicio || dataFim) {
+            if (!dataEnsaio) return false;
 
-          const dataEnsaioObj = new Date(dataEnsaio);
-          
-          if (dataInicio) {
-            const dataInicioObj = new Date(dataInicio);
-            if (dataEnsaioObj < dataInicioObj) return false;
+            const dataEnsaioObj = new Date(dataEnsaio);
+            
+            if (dataInicio) {
+              const dataInicioObj = new Date(dataInicio);
+              if (dataEnsaioObj < dataInicioObj) return false;
+            }
+            
+            if (dataFim) {
+              const dataFimObj = new Date(dataFim);
+              if (dataEnsaioObj > dataFimObj) return false;
+            }
           }
-          
-          if (dataFim) {
-            const dataFimObj = new Date(dataFim);
-            if (dataEnsaioObj > dataFimObj) return false;
+
+          // Filtro por empreiteira
+          if (empreiteiraFiltro && e.empreiteira !== empreiteiraFiltro) {
+            return false;
+          }
+
+          // Filtro por laboratorista
+          if (laboratoristaFiltro && e.laboratorista_name !== laboratoristaFiltro) {
+            return false;
           }
           
           return true;
         });
       }
+
+      // Coletar laboratoristas únicos
+      const labsUnicos = new Set();
+      ensaios.forEach(e => {
+        if (e.laboratorista_name) {
+          labsUnicos.add(e.laboratorista_name);
+        }
+      });
+      setLaboratoristas(Array.from(labsUnicos).sort());
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
@@ -500,6 +541,42 @@ export default function ResumosPersonalizadosPage() {
                 />
               </div>
             </div>
+
+            {/* Filtro por Empreiteira */}
+            {tipoTemEmpreiteira && empreiteirasDisponiveis.length > 0 && (
+              <div>
+                <Label htmlFor="empreiteira" className="text-[#00233B]">Empreiteira</Label>
+                <select
+                  id="empreiteira"
+                  value={empreiteiraFiltro}
+                  onChange={(e) => setEmpreiteiraFiltro(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Todas</option>
+                  {empreiteirasDisponiveis.map(emp => (
+                    <option key={emp} value={emp}>{emp}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Filtro por Laboratorista */}
+            {laboratoristas.length > 0 && (
+              <div>
+                <Label htmlFor="laboratorista" className="text-[#00233B]">Laboratorista</Label>
+                <select
+                  id="laboratorista"
+                  value={laboratoristaFiltro}
+                  onChange={(e) => setLaboratoristaFiltro(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Todos</option>
+                  {laboratoristas.map(lab => (
+                    <option key={lab} value={lab}>{lab}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Tipo de Ensaio */}
             <div>
