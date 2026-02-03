@@ -366,9 +366,9 @@ export default function ResumosPersonalizadosPage() {
     ];
     
     const pesos = ensaio.granulometria.peso_retido_peneiras;
-    const pesoTotal = Object.values(pesos).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
+    const pesoInicial = ensaio.extracao_ligante?.amostra_sem_ligante || 0;
     
-    if (pesoTotal === 0) return null;
+    if (pesoInicial === 0) return null;
     
     const indice = PENEIRAS.indexOf(peneira);
     if (indice === -1) return null;
@@ -378,7 +378,7 @@ export default function ResumosPersonalizadosPage() {
       pesoRetidoAcumulado += parseFloat(pesos[PENEIRAS[i]]) || 0;
     }
     
-    const percentualPassante = ((pesoTotal - pesoRetidoAcumulado) / pesoTotal) * 100;
+    const percentualPassante = ((pesoInicial - pesoRetidoAcumulado) / pesoInicial) * 100;
     return percentualPassante.toFixed(1);
   };
 
@@ -404,6 +404,10 @@ export default function ResumosPersonalizadosPage() {
     }
     
     if (typeof value === 'number') {
+      // 3 casas decimais para campos de densidade
+      if (campo.includes('densidade') || campo.includes('gc_') || campo.includes('grau_compactacao')) {
+        return value.toFixed(3);
+      }
       return value.toFixed(2);
     }
     
