@@ -28,13 +28,22 @@ const TIPOS_ENSAIO = [
 const CAMPOS_POR_TIPO = {
   EnsaioCAUQ: [
     { key: "data_ensaio", label: "Data" },
+    { key: "laboratorista_name", label: "Laboratorista" },
     { key: "rodovia", label: "Rodovia" },
-    { key: "trecho", label: "Trecho" },
-    { key: "placa_caminhao", label: "Placa Caminhão" },
     { key: "usina_fornecedora", label: "Usina" },
+    { key: "extracao_ligante.teor_ligante", label: "Teor Ligante (%)" },
     { key: "extracao_ligante.teor_ligante_real", label: "Teor Ligante Real (%)" },
-    { key: "densidade_rice.densidade_rice", label: "Densidade Rice (g/cm³)" },
-    { key: "corpos_prova_marshall", label: "Marshall - Médias", subfields: [
+    { key: "granulometria", label: "Granulometria (% passante)", subfields: [
+      { key: "peneira_19_0mm", label: "19,0mm" },
+      { key: "peneira_12_5mm", label: "12,5mm" },
+      { key: "peneira_9_5mm", label: "9,5mm" },
+      { key: "peneira_4_75mm", label: "4,75mm" },
+      { key: "peneira_2_0mm", label: "2,0mm" },
+      { key: "peneira_0_42mm", label: "0,42mm" },
+      { key: "peneira_0_18mm", label: "0,18mm" },
+      { key: "peneira_0_075mm", label: "0,075mm" }
+    ]},
+    { key: "corpos_prova_marshall", label: "Parâmetros Marshall", subfields: [
       { key: "densidade_aparente", label: "Densidade Aparente (g/cm³)" },
       { key: "volume_vazios", label: "Volume Vazios (%)" },
       { key: "vam", label: "VAM (%)" },
@@ -43,6 +52,7 @@ const CAMPOS_POR_TIPO = {
       { key: "estabilidade_corrigida", label: "Estabilidade (Kgf/cm²)" },
       { key: "fluencia", label: "Fluência (mm)" }
     ]},
+    { key: "densidade_rice.densidade_rice", label: "RICE - Densidade (g/cm³)" },
     { key: "approved", label: "Status Aprovação" }
   ],
   EnsaioSondagem: [
@@ -159,11 +169,15 @@ export default function ResumosPersonalizadosPage() {
   const [dataFim, setDataFim] = useState("");
   const [empreiteiraFiltro, setEmpreiteiraFiltro] = useState("");
   const [laboratoristaFiltro, setLaboratoristaFiltro] = useState("");
+  const [projetoFiltro, setProjetoFiltro] = useState("");
+  const [rodoviaFiltro, setRodoviaFiltro] = useState("");
   const [camposSelecionados, setCamposSelecionados] = useState([]);
   
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
   const [laboratoristas, setLaboratoristas] = useState([]);
+  const [projetos, setProjetos] = useState([]);
+  const [rodovias, setRodovias] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -244,6 +258,8 @@ export default function ResumosPersonalizadosPage() {
     setTipoEnsaioSelecionado(tipo);
     setEmpreiteiraFiltro("");
     setLaboratoristaFiltro("");
+    setProjetoFiltro("");
+    setRodoviaFiltro("");
     if (tipo) {
       const campos = CAMPOS_POR_TIPO[tipo] || [];
       setCamposSelecionados(campos.map(c => c.key));
@@ -264,6 +280,13 @@ export default function ResumosPersonalizadosPage() {
     if (!obraId) return [];
     const obra = obras.find(o => o.id === obraId);
     return obra?.empreiteiras || [];
+  }, [obraId, obras]);
+
+  // Obter rodovias da obra selecionada
+  const rodoviasDisponiveis = useMemo(() => {
+    if (!obraId) return [];
+    const obra = obras.find(o => o.id === obraId);
+    return obra?.rodovias || [];
   }, [obraId, obras]);
 
   const handleCampoToggle = (campoKey) => {
@@ -294,6 +317,34 @@ export default function ResumosPersonalizadosPage() {
     if (valores.length === 0) return null;
     const media = valores.reduce((a, b) => a + b, 0) / valores.length;
     return media.toFixed(2);
+  };
+
+  const calcularGranulometriaPassante = (ensaio, peneira) => {
+    if (!ensaio?.granulometria?.peso_retido_peneiras) return null;
+    
+    const PENEIRAS = [
+      'peneira_75_0mm', 'peneira_63_0mm', 'peneira_50_0mm', 'peneira_37_5mm',
+      'peneira_25_0mm', 'peneira_19_0mm', 'peneira_16_0mm', 'peneira_12_5mm',
+      'peneira_9_5mm', 'peneira_4_75mm', 'peneira_2_36mm', 'peneira_2_0mm',
+      'peneira_1_18mm', 'peneira_0_6mm', 'peneira_0_42mm', 'peneira_0_3mm',
+      'peneira_0_18mm', 'peneira_0_15mm', 'peneira_0_075mm'
+    ];
+    
+    const pesos = ensaio.granulometria.peso_retido_peneiras;
+    const pesoTotal = Object.values(pesos).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
+    
+    if (pesoTotal === 0) return null;
+    
+    const indice = PENEIRAS.indexOf(peneira);
+    if (indice === -1) return null;
+    
+    let pesoRetidoAcumulado = 0;
+    for (let i = 0; i <= indice; i++) {
+      pesoRetidoAcumulado += parseFloat(pesos[PENEIRAS[i]]) || 0;
+    }
+    
+    const percentualPassante = ((pesoTotal - pesoRetidoAcumulado) / pesoTotal) * 100;
+    return percentualPassante.toFixed(1);
   };
 
   const formatValue = (value, campo) => {
@@ -368,7 +419,7 @@ export default function ResumosPersonalizadosPage() {
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
-      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro) {
+      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro || projetoFiltro || rodoviaFiltro) {
         ensaiosFiltrados = ensaios.filter(e => {
           // Filtro por data
           const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
@@ -397,6 +448,16 @@ export default function ResumosPersonalizadosPage() {
           if (laboratoristaFiltro && e.laboratorista_name !== laboratoristaFiltro) {
             return false;
           }
+
+          // Filtro por projeto
+          if (projetoFiltro && e.project_id !== projetoFiltro) {
+            return false;
+          }
+
+          // Filtro por rodovia
+          if (rodoviaFiltro && e.rodovia !== rodoviaFiltro) {
+            return false;
+          }
           
           return true;
         });
@@ -411,6 +472,31 @@ export default function ResumosPersonalizadosPage() {
       });
       setLaboratoristas(Array.from(labsUnicos).sort());
 
+      // Coletar projetos e rodovias únicos (para CAUQ)
+      if (tipo === 'EnsaioCAUQ') {
+        const Project = await import('@/entities/Project').then(m => m.Project);
+        const projetosData = await Project.list();
+        
+        const obra = obras.find(o => o.id === obraId);
+        const regional = regionais.find(r => r.id === obra?.regional_id);
+        const projetosRegional = projetosData.filter(p => 
+          p.tipo_projeto === 'CAUQ' && 
+          (regional?.project_ids || []).includes(p.id)
+        );
+        setProjetos(projetosRegional);
+
+        const rodUnicos = new Set();
+        ensaios.forEach(e => {
+          if (e.rodovia) {
+            rodUnicos.add(e.rodovia);
+          }
+        });
+        setRodovias(Array.from(rodUnicos).sort());
+      } else {
+        setProjetos([]);
+        setRodovias([]);
+      }
+
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
         const linha = {
@@ -423,12 +509,20 @@ export default function ResumosPersonalizadosPage() {
           const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
           
           if (campo?.subfields) {
-            // Calcular médias para arrays
-            const arrayData = getNestedValue(ensaio, campoKey);
-            campo.subfields.forEach(subfield => {
-              const media = calcularMediaArray(arrayData, subfield.key);
-              linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
-            });
+            // Tratar granulometria de forma especial
+            if (campoKey === 'granulometria') {
+              campo.subfields.forEach(subfield => {
+                const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
+                linha[`${campoKey}.${subfield.key}`] = percentualPassante !== null ? `${percentualPassante}%` : '-';
+              });
+            } else {
+              // Calcular médias para arrays
+              const arrayData = getNestedValue(ensaio, campoKey);
+              campo.subfields.forEach(subfield => {
+                const media = calcularMediaArray(arrayData, subfield.key);
+                linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
+              });
+            }
           } else {
             const value = getNestedValue(ensaio, campoKey);
             linha[campoKey] = formatValue(value, campoKey);
@@ -573,6 +667,42 @@ export default function ResumosPersonalizadosPage() {
                   <option value="">Todos</option>
                   {laboratoristas.map(lab => (
                     <option key={lab} value={lab}>{lab}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Filtro por Projeto (CAUQ) */}
+            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && projetos.length > 0 && (
+              <div>
+                <Label htmlFor="projeto" className="text-[#00233B]">Projeto</Label>
+                <select
+                  id="projeto"
+                  value={projetoFiltro}
+                  onChange={(e) => setProjetoFiltro(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Todos</option>
+                  {projetos.map(proj => (
+                    <option key={proj.id} value={proj.id}>{proj.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Filtro por Rodovia (CAUQ) */}
+            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && rodovias.length > 0 && (
+              <div>
+                <Label htmlFor="rodovia" className="text-[#00233B]">Rodovia</Label>
+                <select
+                  id="rodovia"
+                  value={rodoviaFiltro}
+                  onChange={(e) => setRodoviaFiltro(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Todas</option>
+                  {rodovias.map(rod => (
+                    <option key={rod} value={rod}>{rod}</option>
                   ))}
                 </select>
               </div>
