@@ -126,11 +126,32 @@ const CAMPOS_POR_TIPO = {
   ],
   ChecklistUsina: [
     { key: "data", label: "Data" },
-    { key: "usina", label: "Usina" },
+    { key: "laboratorista_name", label: "Laboratorista" },
     { key: "projeto_utilizado", label: "Projeto" },
-    { key: "controle_agregados", label: "Controle Agregados" },
-    { key: "rodadas_producao", label: "Rodadas Produção" },
-    { key: "approved", label: "Status Aprovação" }
+    { key: "faixa_especificada", label: "Faixa" },
+    { key: "ligante", label: "Ligante" },
+    { key: "pedreira", label: "Pedreira" },
+    { key: "usina", label: "Usina" },
+    { key: "equivalente_areia_resultados", label: "Equiv. Areia", subfields: [
+      { key: "resultado_1", label: "Equiv. Areia 1 (%)" },
+      { key: "resultado_2", label: "Equiv. Areia 2 (%)" },
+      { key: "resultado_3", label: "Equiv. Areia 3 (%)" }
+    ]},
+    { key: "rodadas_producao", label: "Rodadas Produção", subfields: [
+      { key: "quantidade_produzida", label: "Qtd. Produzida (t)" }
+    ]},
+    { key: "controle_cauq", label: "Controle CAUQ", subfields: [
+      { key: "teor_ligante", label: "Teor Ligante (%)" },
+      { key: "densidade_aparente", label: "Densidade Aparente (g/cm³)" },
+      { key: "volume_vazios", label: "Volume Vazios (%)" },
+      { key: "vam", label: "VAM (%)" },
+      { key: "rbv", label: "RBV (%)" },
+      { key: "rtcd", label: "RTCD (MPa)" },
+      { key: "estabilidade", label: "Estabilidade (Kgf)" },
+      { key: "fluencia", label: "Fluência (mm)" }
+    ]},
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" },
+    { key: "acoes_corretivas_descricao", label: "Descrição Ações Corretivas" }
   ],
   ChecklistAplicacao: [
     { key: "data", label: "Data" },
@@ -587,6 +608,86 @@ export default function ResumosPersonalizadosPage() {
 
             resultados.push(linha);
           });
+        } else if (tipo === 'ChecklistUsina') {
+          // Para ChecklistUsina, criar uma linha por rodada de produção se houver
+          const rodadas = ensaio.rodadas_producao || [];
+          
+          if (rodadas.length > 0) {
+            rodadas.forEach((rodada, idx) => {
+              const linha = {
+                tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+                id: `${ensaio.id}_Rodada${idx + 1}`,
+                data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+              };
+
+              campos.forEach(campoKey => {
+                const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+                
+                if (campoKey === 'equivalente_areia_resultados') {
+                  // Tratar equivalente de areia
+                  const resultados = ensaio.equivalente_areia_resultados || [];
+                  campo.subfields.forEach((subfield, sfIdx) => {
+                    linha[subfield.label] = resultados[sfIdx] !== undefined ? formatValue(resultados[sfIdx], 'number') : '-';
+                  });
+                } else if (campoKey === 'rodadas_producao') {
+                  // Para cada subfield da rodada, pegar o valor da rodada atual
+                  campo.subfields.forEach(subfield => {
+                    const value = getNestedValue(rodada, subfield.key);
+                    linha[subfield.label] = formatValue(value, subfield.key);
+                  });
+                } else if (campoKey === 'controle_cauq') {
+                  // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
+                  const controleCauq = ensaio.controle_cauq || {};
+                  campo.subfields.forEach(subfield => {
+                    const value = getNestedValue(controleCauq, subfield.key);
+                    linha[subfield.label] = formatValue(value, subfield.key);
+                  });
+                } else {
+                  // Campos do ensaio principal
+                  const value = getNestedValue(ensaio, campoKey);
+                  linha[campo.label] = formatValue(value, campoKey);
+                }
+              });
+
+              resultados.push(linha);
+            });
+          } else {
+            // Se não houver rodadas, criar uma linha única
+            const linha = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: ensaio.id,
+              data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+            };
+
+            campos.forEach(campoKey => {
+              const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+              
+              if (campoKey === 'equivalente_areia_resultados') {
+                const resultados = ensaio.equivalente_areia_resultados || [];
+                campo.subfields.forEach((subfield, sfIdx) => {
+                  linha[subfield.label] = resultados[sfIdx] !== undefined ? formatValue(resultados[sfIdx], 'number') : '-';
+                });
+              } else if (campoKey === 'controle_cauq') {
+                const controleCauq = ensaio.controle_cauq || {};
+                campo.subfields.forEach(subfield => {
+                  const value = getNestedValue(controleCauq, subfield.key);
+                  linha[subfield.label] = formatValue(value, subfield.key);
+                });
+              } else if (campo?.subfields) {
+                // Outros campos com subfields
+                const arrayData = getNestedValue(ensaio, campoKey);
+                campo.subfields.forEach(subfield => {
+                  const media = calcularMediaArray(arrayData, subfield.key);
+                  linha[subfield.label] = media !== null ? media : '-';
+                });
+              } else {
+                const value = getNestedValue(ensaio, campoKey);
+                linha[campo.label] = formatValue(value, campoKey);
+              }
+            });
+
+            resultados.push(linha);
+          }
         } else {
           // Para outros tipos de ensaio
           const linha = {
