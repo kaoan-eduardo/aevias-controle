@@ -35,14 +35,25 @@ const CAMPOS_POR_TIPO = {
     { key: "extracao_ligante.teor_ligante", label: "Teor Ligante (%)" },
     { key: "extracao_ligante.teor_ligante_real", label: "Teor Ligante Real (%)" },
     { key: "granulometria", label: "Granulometria (% passante)", subfields: [
-      { key: "peneira_19_0mm", label: "19,0mm" },
-      { key: "peneira_12_5mm", label: "12,5mm" },
-      { key: "peneira_9_5mm", label: "9,5mm" },
-      { key: "peneira_4_75mm", label: "4,75mm" },
-      { key: "peneira_2_0mm", label: "2,0mm" },
-      { key: "peneira_0_42mm", label: "0,42mm" },
-      { key: "peneira_0_18mm", label: "0,18mm" },
-      { key: "peneira_0_075mm", label: "0,075mm" }
+      { key: "peneira_75_0mm", label: 'Nº 3"', astm: 'Nº 3"' },
+      { key: "peneira_63_0mm", label: 'Nº 2½"', astm: 'Nº 2½"' },
+      { key: "peneira_50_0mm", label: 'Nº 2"', astm: 'Nº 2"' },
+      { key: "peneira_37_5mm", label: 'Nº 1½"', astm: 'Nº 1½"' },
+      { key: "peneira_25_0mm", label: 'Nº 1"', astm: 'Nº 1"' },
+      { key: "peneira_19_0mm", label: 'Nº ¾"', astm: 'Nº ¾"' },
+      { key: "peneira_16_0mm", label: 'Nº ⅝"', astm: 'Nº ⅝"' },
+      { key: "peneira_12_5mm", label: 'Nº ½"', astm: 'Nº ½"' },
+      { key: "peneira_9_5mm", label: 'Nº ⅜"', astm: 'Nº ⅜"' },
+      { key: "peneira_4_75mm", label: "Nº 4", astm: "Nº 4" },
+      { key: "peneira_2_36mm", label: "Nº 8", astm: "Nº 8" },
+      { key: "peneira_2_0mm", label: "Nº 10", astm: "Nº 10" },
+      { key: "peneira_1_18mm", label: "Nº 16", astm: "Nº 16" },
+      { key: "peneira_0_6mm", label: "Nº 30", astm: "Nº 30" },
+      { key: "peneira_0_42mm", label: "Nº 40", astm: "Nº 40" },
+      { key: "peneira_0_3mm", label: "Nº 50", astm: "Nº 50" },
+      { key: "peneira_0_18mm", label: "Nº 80", astm: "Nº 80" },
+      { key: "peneira_0_15mm", label: "Nº 100", astm: "Nº 100" },
+      { key: "peneira_0_075mm", label: "Nº 200", astm: "Nº 200" }
     ]},
     { key: "corpos_prova_marshall", label: "Parâmetros Marshall", subfields: [
       { key: "densidade_aparente", label: "Densidade Aparente (g/cm³)" },
@@ -373,13 +384,25 @@ export default function ResumosPersonalizadosPage() {
     const indice = PENEIRAS.indexOf(peneira);
     if (indice === -1) return null;
     
+    // Verificar se a peneira foi preenchida no ensaio
+    const pesoRetidoPeneira = parseFloat(pesos[peneira]) || 0;
+    let temDados = false;
+    for (let i = 0; i < PENEIRAS.length; i++) {
+      if (parseFloat(pesos[PENEIRAS[i]]) > 0) {
+        temDados = true;
+        break;
+      }
+    }
+    
+    if (!temDados) return null;
+    
     let pesoRetidoAcumulado = 0;
     for (let i = 0; i <= indice; i++) {
       pesoRetidoAcumulado += parseFloat(pesos[PENEIRAS[i]]) || 0;
     }
     
     const percentualPassante = ((pesoInicial - pesoRetidoAcumulado) / pesoInicial) * 100;
-    return percentualPassante.toFixed(1);
+    return percentualPassante.toFixed(2);
   };
 
   const formatValue = (value, campo) => {
@@ -542,6 +565,32 @@ export default function ResumosPersonalizadosPage() {
         setUsinas([]);
       }
 
+      // Determinar peneiras relevantes para CAUQ
+      let peneirasRelevantes = [];
+      if (tipo === 'EnsaioCAUQ') {
+        if (projetoFiltro) {
+          // Usar peneiras do projeto selecionado
+          const projeto = projetos.find(p => p.id === projetoFiltro);
+          if (projeto?.faixa_granulometrica_id) {
+            const FaixaGranulometrica = await import('@/entities/FaixaGranulometrica').then(m => m.FaixaGranulometrica);
+            const faixa = await FaixaGranulometrica.get(projeto.faixa_granulometrica_id);
+            if (faixa?.peneiras) {
+              const PENEIRAS_CONFIG = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
+              peneirasRelevantes = PENEIRAS_CONFIG.filter(p => {
+                const abertura = p.key.replace('peneira_', '').replace('mm', '').replace('_', '.');
+                return faixa.peneiras.some(fp => {
+                  const aberturaFaixa = fp.abertura.toString().replace(/mm/gi, '').replace(',', '.').trim();
+                  return parseFloat(aberturaFaixa) === parseFloat(abertura);
+                });
+              });
+            }
+          }
+        } else {
+          // Sem filtro de projeto: usar todas as peneiras
+          peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
+        }
+      }
+
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
         const linha = {
@@ -562,9 +611,16 @@ export default function ResumosPersonalizadosPage() {
           if (campo?.subfields) {
             // Tratar granulometria de forma especial
             if (campoKey === 'granulometria') {
-              campo.subfields.forEach(subfield => {
+              const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
+              peneirasParaExibir.forEach(subfield => {
                 const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
-                linha[`${campoKey}.${subfield.key}`] = percentualPassante !== null ? `${percentualPassante}%` : '-';
+                // Exibir apenas se foi preenchido no ensaio (ou se filtro de projeto está ativo)
+                if (percentualPassante !== null) {
+                  linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
+                } else if (projetoFiltro) {
+                  // Com filtro de projeto, mostrar '-' para não preenchidos
+                  linha[`${campoKey}.${subfield.astm}`] = '-';
+                }
               });
             } else {
               // Calcular médias para arrays
