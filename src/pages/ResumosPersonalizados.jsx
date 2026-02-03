@@ -172,6 +172,7 @@ export default function ResumosPersonalizadosPage() {
   const [laboratoristaFiltro, setLaboratoristaFiltro] = useState("");
   const [projetoFiltro, setProjetoFiltro] = useState("");
   const [rodoviaFiltro, setRodoviaFiltro] = useState("");
+  const [usinaFiltro, setUsinaFiltro] = useState("");
   const [camposSelecionados, setCamposSelecionados] = useState([]);
   
   // Dados
@@ -179,6 +180,7 @@ export default function ResumosPersonalizadosPage() {
   const [laboratoristas, setLaboratoristas] = useState([]);
   const [projetos, setProjetos] = useState([]);
   const [rodovias, setRodovias] = useState([]);
+  const [usinas, setUsinas] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -261,6 +263,7 @@ export default function ResumosPersonalizadosPage() {
     setLaboratoristaFiltro("");
     setProjetoFiltro("");
     setRodoviaFiltro("");
+    setUsinaFiltro("");
     if (tipo) {
       const campos = CAMPOS_POR_TIPO[tipo] || [];
       setCamposSelecionados(campos.map(c => c.key));
@@ -420,7 +423,7 @@ export default function ResumosPersonalizadosPage() {
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
-      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro || projetoFiltro || rodoviaFiltro) {
+      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro || projetoFiltro || rodoviaFiltro || usinaFiltro) {
         ensaiosFiltrados = ensaios.filter(e => {
           // Filtro por data
           const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
@@ -459,6 +462,11 @@ export default function ResumosPersonalizadosPage() {
           if (rodoviaFiltro && e.rodovia !== rodoviaFiltro) {
             return false;
           }
+
+          // Filtro por usina
+          if (usinaFiltro && e.usina_fornecedora !== usinaFiltro) {
+            return false;
+          }
           
           return true;
         });
@@ -473,7 +481,7 @@ export default function ResumosPersonalizadosPage() {
       });
       setLaboratoristas(Array.from(labsUnicos).sort());
 
-      // Coletar projetos e rodovias únicos (para CAUQ)
+      // Coletar projetos, rodovias e usinas únicos (para CAUQ)
       if (tipo === 'EnsaioCAUQ') {
         const Project = await import('@/entities/Project').then(m => m.Project);
         const projetosData = await Project.list();
@@ -487,15 +495,21 @@ export default function ResumosPersonalizadosPage() {
         setProjetos(projetosRegional);
 
         const rodUnicos = new Set();
+        const usinaUnicos = new Set();
         ensaios.forEach(e => {
           if (e.rodovia) {
             rodUnicos.add(e.rodovia);
           }
+          if (e.usina_fornecedora) {
+            usinaUnicos.add(e.usina_fornecedora);
+          }
         });
         setRodovias(Array.from(rodUnicos).sort());
+        setUsinas(Array.from(usinaUnicos).sort());
       } else {
         setProjetos([]);
         setRodovias([]);
+        setUsinas([]);
       }
 
       // Processar cada ensaio
@@ -710,6 +724,24 @@ export default function ResumosPersonalizadosPage() {
                   <option value="">Todas</option>
                   {rodovias.map(rod => (
                     <option key={rod} value={rod}>{rod}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Filtro por Usina (CAUQ) */}
+            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && usinas.length > 0 && (
+              <div>
+                <Label htmlFor="usina" className="text-[#00233B]">Usina</Label>
+                <select
+                  id="usina"
+                  value={usinaFiltro}
+                  onChange={(e) => setUsinaFiltro(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Todas</option>
+                  {usinas.map(usina => (
+                    <option key={usina} value={usina}>{usina}</option>
                   ))}
                 </select>
               </div>
