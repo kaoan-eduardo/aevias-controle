@@ -628,9 +628,14 @@ export default function ResumosPersonalizadosPage() {
             resultados.push(linha);
           });
         } else if (tipo === 'ChecklistUsina') {
+          console.log('=== DEBUG ChecklistUsina ===');
+          console.log('Ensaio ID:', ensaio.id);
+          console.log('Controle CAUQ:', ensaio.controle_cauq);
+          console.log('Teor Ligante:', ensaio.controle_cauq?.teor_ligante);
+
           // Para ChecklistUsina, criar uma linha por rodada de produção se houver
           const rodadas = ensaio.rodadas_producao || [];
-          
+
           if (rodadas.length > 0) {
             rodadas.forEach((rodada, idx) => {
               const linha = {
@@ -640,7 +645,7 @@ export default function ResumosPersonalizadosPage() {
 
               campos.forEach(campoKey => {
                 const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
-                
+
                 if (campoKey === 'data') {
                   linha[campo.label] = formatValue(ensaio.data, 'data');
                 } else if (campoKey === 'equivalente_areia_resultados') {
@@ -658,20 +663,28 @@ export default function ResumosPersonalizadosPage() {
                 } else if (campoKey === 'controle_cauq') {
                   // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
                   const controleCauq = ensaio.controle_cauq || {};
+                  console.log('Processando controle_cauq para rodada', idx + 1);
+                  console.log('controleCauq:', controleCauq);
+
                   campo.subfields.forEach(subfield => {
                     let value;
-                    
+
+                    console.log('Processando subfield:', subfield.key, subfield.label);
+
                     // Para teor_ligante, acessar resultados array
                     if (subfield.key.startsWith('teor_ligante.resultado_')) {
                       const idx = parseInt(subfield.key.split('_').pop()) - 1;
                       const teorLigante = controleCauq.teor_ligante || {};
                       const resultados = teorLigante.resultados || [];
+                      console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
                       value = resultados[idx] !== undefined ? resultados[idx] : null;
                     } else {
                       value = getNestedValue(controleCauq, subfield.key);
+                      console.log('Valor obtido via getNestedValue:', value);
                     }
-                    
+
                     linha[subfield.label] = formatValue(value, subfield.key);
+                    console.log('Linha[' + subfield.label + ']:', linha[subfield.label]);
                   });
                 } else {
                   // Campos do ensaio principal
@@ -683,6 +696,7 @@ export default function ResumosPersonalizadosPage() {
               resultados.push(linha);
             });
           } else {
+            console.log('Sem rodadas - criando linha única');
             // Se não houver rodadas, criar uma linha única
             const linha = {
               tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
@@ -691,7 +705,7 @@ export default function ResumosPersonalizadosPage() {
 
             campos.forEach(campoKey => {
               const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
-              
+
               if (campoKey === 'data') {
                 linha[campo.label] = formatValue(ensaio.data, 'data');
               } else if (campoKey === 'equivalente_areia_resultados') {
@@ -701,20 +715,29 @@ export default function ResumosPersonalizadosPage() {
                 });
               } else if (campoKey === 'controle_cauq') {
                 const controleCauq = ensaio.controle_cauq || {};
+                console.log('Processando controle_cauq (sem rodadas)');
+                console.log('controleCauq:', controleCauq);
+
                 campo.subfields.forEach(subfield => {
                   let value;
-                  
+
+                  console.log('Processando subfield:', subfield.key, subfield.label);
+
                   // Para teor_ligante, acessar resultados array
                   if (subfield.key.startsWith('teor_ligante.resultado_')) {
                     const idx = parseInt(subfield.key.split('_').pop()) - 1;
                     const teorLigante = controleCauq.teor_ligante || {};
                     const resultados = teorLigante.resultados || [];
+                    console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
+                    console.log('Todos os resultados:', resultados);
                     value = resultados[idx] !== undefined ? resultados[idx] : null;
                   } else {
                     value = getNestedValue(controleCauq, subfield.key);
+                    console.log('Valor obtido via getNestedValue:', value);
                   }
-                  
+
                   linha[subfield.label] = formatValue(value, subfield.key);
+                  console.log('Linha[' + subfield.label + ']:', linha[subfield.label]);
                 });
               } else if (campo?.subfields) {
                 // Outros campos com subfields
@@ -731,6 +754,7 @@ export default function ResumosPersonalizadosPage() {
 
             resultados.push(linha);
           }
+          console.log('=== FIM DEBUG ChecklistUsina ===');
         } else {
           // Para outros tipos de ensaio
           const linha = {
