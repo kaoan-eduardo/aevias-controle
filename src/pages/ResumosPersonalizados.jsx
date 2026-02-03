@@ -31,6 +31,7 @@ const CAMPOS_POR_TIPO = {
     { key: "laboratorista_name", label: "Laboratorista" },
     { key: "rodovia", label: "Rodovia" },
     { key: "usina_fornecedora", label: "Usina" },
+    { key: "project_name", label: "Projeto" },
     { key: "extracao_ligante.teor_ligante", label: "Teor Ligante (%)" },
     { key: "extracao_ligante.teor_ligante_real", label: "Teor Ligante Real (%)" },
     { key: "granulometria", label: "Granulometria (% passante)", subfields: [
@@ -504,6 +505,12 @@ export default function ResumosPersonalizadosPage() {
           id: ensaio.id,
           data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
         };
+
+        // Adicionar nome do projeto se for CAUQ
+        if (tipo === 'EnsaioCAUQ' && ensaio.project_id) {
+          const projeto = projetos.find(p => p.id === ensaio.project_id);
+          ensaio.project_name = projeto?.name || '-';
+        }
 
         campos.forEach(campoKey => {
           const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
