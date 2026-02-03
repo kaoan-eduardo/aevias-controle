@@ -256,13 +256,58 @@ export default function ResumosPersonalizadosPage() {
     }
   };
 
-  const handleTipoEnsaioChange = (tipo) => {
+  const handleTipoEnsaioChange = async (tipo) => {
     setTipoEnsaioSelecionado(tipo);
     setEmpreiteiraFiltro("");
     setLaboratoristaFiltro("");
     setProjetoFiltro("");
     setRodoviaFiltro("");
     setUsinaFiltro("");
+
+    // Carregar dados específicos para CAUQ
+    if (tipo === 'EnsaioCAUQ' && obraId) {
+      try {
+        const ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
+        
+        // Coletar laboratoristas únicos
+        const labsUnicos = new Set();
+        ensaios.forEach(e => {
+          if (e.laboratorista_name) {
+            labsUnicos.add(e.laboratorista_name);
+          }
+        });
+        setLaboratoristas(Array.from(labsUnicos).sort());
+
+        // Coletar projetos
+        const Project = await import('@/entities/Project').then(m => m.Project);
+        const projetosData = await Project.list();
+        
+        const obra = obras.find(o => o.id === obraId);
+        const regional = regionais.find(r => r.id === obra?.regional_id);
+        const projetosRegional = projetosData.filter(p => 
+          p.tipo_projeto === 'CAUQ' && 
+          (regional?.project_ids || []).includes(p.id)
+        );
+        setProjetos(projetosRegional);
+
+        // Coletar rodovias e usinas únicos
+        const rodUnicos = new Set();
+        const usinaUnicos = new Set();
+        ensaios.forEach(e => {
+          if (e.rodovia) rodUnicos.add(e.rodovia);
+          if (e.usina_fornecedora) usinaUnicos.add(e.usina_fornecedora);
+        });
+        setRodovias(Array.from(rodUnicos).sort());
+        setUsinas(Array.from(usinaUnicos).sort());
+      } catch (error) {
+        console.error("Erro ao carregar filtros:", error);
+      }
+    } else {
+      setProjetos([]);
+      setRodovias([]);
+      setUsinas([]);
+      setLaboratoristas([]);
+    }
   };
 
   // Verificar se o tipo de ensaio selecionado tem campo de empreiteira
@@ -638,7 +683,7 @@ export default function ResumosPersonalizadosPage() {
               </div>
             </div>
 
-            {/* Filtro por Empreiteira */}
+            {/* Filtros por Empreiteira */}
             {tipoTemEmpreiteira && empreiteirasDisponiveis.length > 0 && (
               <div>
                 <Label htmlFor="empreiteira" className="text-[#00233B]">Empreiteira</Label>
@@ -656,8 +701,85 @@ export default function ResumosPersonalizadosPage() {
               </div>
             )}
 
-            {/* Filtro por Laboratorista */}
-            {laboratoristas.length > 0 && (
+            {/* Filtros específicos para CAUQ em grid */}
+            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {/* Filtro por Laboratorista */}
+                {laboratoristas.length > 0 && (
+                  <div>
+                    <Label htmlFor="laboratorista" className="text-[#00233B]">Laboratorista</Label>
+                    <select
+                      id="laboratorista"
+                      value={laboratoristaFiltro}
+                      onChange={(e) => setLaboratoristaFiltro(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                    >
+                      <option value="">Todos</option>
+                      {laboratoristas.map(lab => (
+                        <option key={lab} value={lab}>{lab}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Filtro por Projeto */}
+                {projetos.length > 0 && (
+                  <div>
+                    <Label htmlFor="projeto" className="text-[#00233B]">Projeto</Label>
+                    <select
+                      id="projeto"
+                      value={projetoFiltro}
+                      onChange={(e) => setProjetoFiltro(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                    >
+                      <option value="">Todos</option>
+                      {projetos.map(proj => (
+                        <option key={proj.id} value={proj.id}>{proj.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Filtro por Rodovia */}
+                {rodovias.length > 0 && (
+                  <div>
+                    <Label htmlFor="rodovia" className="text-[#00233B]">Rodovia</Label>
+                    <select
+                      id="rodovia"
+                      value={rodoviaFiltro}
+                      onChange={(e) => setRodoviaFiltro(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                    >
+                      <option value="">Todas</option>
+                      {rodovias.map(rod => (
+                        <option key={rod} value={rod}>{rod}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {/* Filtro por Usina */}
+                {usinas.length > 0 && (
+                  <div>
+                    <Label htmlFor="usina" className="text-[#00233B]">Usina</Label>
+                    <select
+                      id="usina"
+                      value={usinaFiltro}
+                      onChange={(e) => setUsinaFiltro(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                    >
+                      <option value="">Todas</option>
+                      {usinas.map(usina => (
+                        <option key={usina} value={usina}>{usina}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Filtro por Laboratorista para outros tipos */}
+            {tipoEnsaioSelecionado && tipoEnsaioSelecionado !== 'EnsaioCAUQ' && laboratoristas.length > 0 && (
               <div>
                 <Label htmlFor="laboratorista" className="text-[#00233B]">Laboratorista</Label>
                 <select
@@ -669,60 +791,6 @@ export default function ResumosPersonalizadosPage() {
                   <option value="">Todos</option>
                   {laboratoristas.map(lab => (
                     <option key={lab} value={lab}>{lab}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Filtro por Projeto (CAUQ) */}
-            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && projetos.length > 0 && (
-              <div>
-                <Label htmlFor="projeto" className="text-[#00233B]">Projeto</Label>
-                <select
-                  id="projeto"
-                  value={projetoFiltro}
-                  onChange={(e) => setProjetoFiltro(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                >
-                  <option value="">Todos</option>
-                  {projetos.map(proj => (
-                    <option key={proj.id} value={proj.id}>{proj.name}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Filtro por Rodovia (CAUQ) */}
-            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && rodovias.length > 0 && (
-              <div>
-                <Label htmlFor="rodovia" className="text-[#00233B]">Rodovia</Label>
-                <select
-                  id="rodovia"
-                  value={rodoviaFiltro}
-                  onChange={(e) => setRodoviaFiltro(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                >
-                  <option value="">Todas</option>
-                  {rodovias.map(rod => (
-                    <option key={rod} value={rod}>{rod}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Filtro por Usina (CAUQ) */}
-            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && usinas.length > 0 && (
-              <div>
-                <Label htmlFor="usina" className="text-[#00233B]">Usina</Label>
-                <select
-                  id="usina"
-                  value={usinaFiltro}
-                  onChange={(e) => setUsinaFiltro(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                >
-                  <option value="">Todas</option>
-                  {usinas.map(usina => (
-                    <option key={usina} value={usina}>{usina}</option>
                   ))}
                 </select>
               </div>
