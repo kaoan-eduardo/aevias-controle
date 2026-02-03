@@ -482,11 +482,13 @@ export default function ResumosPersonalizadosPage() {
       return;
     }
 
+    console.log('Carregando dados:', { obraId, tipoEnsaioSelecionado });
     setLoadingData(true);
     try {
       const resultados = [];
       const tipo = tipoEnsaioSelecionado;
       const campos = CAMPOS_POR_TIPO[tipo].map(c => c.key);
+      console.log('Campos:', campos);
 
       // Mapear entidades específicas
       let ensaios;
@@ -508,10 +510,15 @@ export default function ResumosPersonalizadosPage() {
       } else if (tipo === 'ChecklistConcretagem') {
         const ChecklistConcretagem = await import('@/entities/ChecklistConcretagem').then(m => m.ChecklistConcretagem);
         ensaios = await ChecklistConcretagem.filter({ obra_id: obraId });
+      } else if (tipo === 'ChecklistTerraplanagem') {
+        const ChecklistTerraplanagem = await import('@/entities/ChecklistTerraplanagem').then(m => m.ChecklistTerraplanagem);
+        ensaios = await ChecklistTerraplanagem.filter({ obra_id: obraId });
       } else {
         // Para outros tipos, usar base44.entities
         ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
       }
+      
+      console.log('Ensaios carregados:', ensaios.length);
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
@@ -649,10 +656,11 @@ export default function ResumosPersonalizadosPage() {
         resultados.push(linha);
       });
 
+      console.log('Resultados processados:', resultados.length);
       setDadosConsolidados(resultados);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
-      alert("Erro ao carregar dados dos ensaios.");
+      alert("Erro ao carregar dados dos ensaios: " + error.message);
     } finally {
       setLoadingData(false);
     }
