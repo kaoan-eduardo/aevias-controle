@@ -89,8 +89,6 @@ const CAMPOS_POR_TIPO = {
     { key: "data_ensaio", label: "Data" },
     { key: "camada", label: "Camada" },
     { key: "material", label: "Material" },
-    { key: "dados_proctor.densidade_seca_max", label: "Densidade Seca Max Proctor (g/cm³)" },
-    { key: "dados_proctor.umidade_otima", label: "Umidade Ótima Proctor (%)" },
     { key: "furos", label: "Dados do Furo", subfields: [
       { key: "estaca", label: "Estaca" },
       { key: "densidade_seca_solo", label: "Densidade Seca Solo (g/cm³)" },
@@ -98,6 +96,8 @@ const CAMPOS_POR_TIPO = {
       { key: "desvio_umidade", label: "Variação Umidade (%)" },
       { key: "grau_compactacao", label: "Grau Compactação (%)" }
     ]},
+    { key: "dados_proctor.densidade_seca_max", label: "Densidade Seca Max Proctor (g/cm³)" },
+    { key: "dados_proctor.umidade_otima", label: "Umidade Ótima Proctor (%)" },
     { key: "approved", label: "Status Aprovação" }
   ],
   EnsaioTaxaPinturaImprimacao: [
