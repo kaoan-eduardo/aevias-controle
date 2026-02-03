@@ -641,7 +641,9 @@ export default function ResumosPersonalizadosPage() {
               campos.forEach(campoKey => {
                 const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
                 
-                if (campoKey === 'equivalente_areia_resultados') {
+                if (campoKey === 'data') {
+                  linha[campo.label] = formatValue(ensaio.data, 'data');
+                } else if (campoKey === 'equivalente_areia_resultados') {
                   // Tratar equivalente de areia
                   const resultados = ensaio.equivalente_areia_resultados || [];
                   campo.subfields.forEach((subfield, sfIdx) => {
@@ -657,14 +659,16 @@ export default function ResumosPersonalizadosPage() {
                   // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
                   const controleCauq = ensaio.controle_cauq || {};
                   campo.subfields.forEach(subfield => {
-                    let value = getNestedValue(controleCauq, subfield.key);
+                    let value;
                     
                     // Para teor_ligante, acessar resultados array
                     if (subfield.key.startsWith('teor_ligante.resultado_')) {
                       const idx = parseInt(subfield.key.split('_').pop()) - 1;
                       const teorLigante = controleCauq.teor_ligante || {};
                       const resultados = teorLigante.resultados || [];
-                      value = resultados[idx];
+                      value = resultados[idx] !== undefined ? resultados[idx] : null;
+                    } else {
+                      value = getNestedValue(controleCauq, subfield.key);
                     }
                     
                     linha[subfield.label] = formatValue(value, subfield.key);
@@ -688,7 +692,9 @@ export default function ResumosPersonalizadosPage() {
             campos.forEach(campoKey => {
               const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
               
-              if (campoKey === 'equivalente_areia_resultados') {
+              if (campoKey === 'data') {
+                linha[campo.label] = formatValue(ensaio.data, 'data');
+              } else if (campoKey === 'equivalente_areia_resultados') {
                 const resultados = ensaio.equivalente_areia_resultados || [];
                 campo.subfields.forEach((subfield, sfIdx) => {
                   linha[subfield.label] = resultados[sfIdx] !== undefined ? formatValue(resultados[sfIdx], 'number') : '-';
@@ -696,14 +702,16 @@ export default function ResumosPersonalizadosPage() {
               } else if (campoKey === 'controle_cauq') {
                 const controleCauq = ensaio.controle_cauq || {};
                 campo.subfields.forEach(subfield => {
-                  let value = getNestedValue(controleCauq, subfield.key);
+                  let value;
                   
                   // Para teor_ligante, acessar resultados array
                   if (subfield.key.startsWith('teor_ligante.resultado_')) {
                     const idx = parseInt(subfield.key.split('_').pop()) - 1;
                     const teorLigante = controleCauq.teor_ligante || {};
                     const resultados = teorLigante.resultados || [];
-                    value = resultados[idx];
+                    value = resultados[idx] !== undefined ? resultados[idx] : null;
+                  } else {
+                    value = getNestedValue(controleCauq, subfield.key);
                   }
                   
                   linha[subfield.label] = formatValue(value, subfield.key);
