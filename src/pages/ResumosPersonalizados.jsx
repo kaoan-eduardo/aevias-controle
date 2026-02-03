@@ -68,15 +68,20 @@ const CAMPOS_POR_TIPO = {
     { key: "approved", label: "Status Aprovação" }
   ],
   EnsaioSondagem: [
-    { key: "data", label: "Data" },
-    { key: "rodovia", label: "Rodovia" },
-    { key: "trecho", label: "Trecho" },
+    { key: "data", label: "Data Ensaio" },
+    { key: "project_name", label: "Projeto" },
     { key: "usina_fornecedora", label: "Usina" },
-    { key: "corpos_prova", label: "Média - Resultados", subfields: [
-      { key: "densidade", label: "Densidade Média (g/cm³)" },
-      { key: "gc_dens_projeto", label: "GC Dens. Projeto Médio (%)" },
-      { key: "volume_vazios", label: "Volume Vazios Médio (%)" },
-      { key: "rtcd_25c", label: "RTCD 25°C Médio (MPa)" }
+    { key: "dens_aparente_projeto", label: "Dens. Aparente Projeto (g/cm³)" },
+    { key: "corpos_prova", label: "Corpos de Prova", subfields: [
+      { key: "data_execucao", label: "Data Execução CP" },
+      { key: "estaca", label: "Estaca" },
+      { key: "lado", label: "Lado" },
+      { key: "media_espessura", label: "Espessura Média (cm)" },
+      { key: "densidade", label: "Dens. Aparente CP (g/cm³)" },
+      { key: "dens_rice_do_dia", label: "Dens. RICE do Dia (g/cm³)" },
+      { key: "gc_dens_projeto", label: "GC Dens. Projeto (%)" },
+      { key: "gc_dens_rice_dia", label: "GC RICE do Dia (%)" },
+      { key: "rtcd_25c", label: "RTCD (MPa)" }
     ]},
     { key: "approved", label: "Status Aprovação" }
   ],
@@ -616,9 +621,11 @@ export default function ResumosPersonalizadosPage() {
           data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
         };
 
-        // Adicionar nome do projeto se for CAUQ
-        if (tipo === 'EnsaioCAUQ' && ensaio.project_id) {
-          const projeto = projetos.find(p => p.id === ensaio.project_id);
+        // Adicionar nome do projeto se for CAUQ ou Sondagem
+        if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') && ensaio.project_id) {
+          const Project = await import('@/entities/Project').then(m => m.Project);
+          const projetosData = await Project.list();
+          const projeto = projetosData.find(p => p.id === ensaio.project_id);
           ensaio.project_name = projeto?.name || '-';
         }
 
@@ -639,8 +646,17 @@ export default function ResumosPersonalizadosPage() {
                   linha[`${campoKey}.${subfield.astm}`] = '-';
                 }
               });
+            } else if (campoKey === 'corpos_prova' && tipo === 'EnsaioSondagem') {
+              // Para Sondagem, mostrar dados de cada CP individualmente
+              const cps = getNestedValue(ensaio, campoKey) || [];
+              cps.forEach((cp, idx) => {
+                campo.subfields.forEach(subfield => {
+                  const value = getNestedValue(cp, subfield.key);
+                  linha[`CP${idx + 1}.${subfield.label}`] = formatValue(value, subfield.key);
+                });
+              });
             } else {
-              // Calcular médias para arrays
+              // Calcular médias para arrays (outros tipos)
               const arrayData = getNestedValue(ensaio, campoKey);
               campo.subfields.forEach(subfield => {
                 const media = calcularMediaArray(arrayData, subfield.key);
