@@ -132,6 +132,7 @@ const CAMPOS_POR_TIPO = {
     { key: "ligante", label: "Ligante" },
     { key: "pedreira", label: "Pedreira" },
     { key: "usina", label: "Usina" },
+    { key: "fornecedora_ligante", label: "Fornecedora Ligante" },
     { key: "equivalente_areia_resultados", label: "Equiv. Areia", subfields: [
       { key: "resultado_1", label: "Equiv. Areia 1 (%)" },
       { key: "resultado_2", label: "Equiv. Areia 2 (%)" },
@@ -141,7 +142,9 @@ const CAMPOS_POR_TIPO = {
       { key: "quantidade_produzida", label: "Qtd. Produzida (t)" }
     ]},
     { key: "controle_cauq", label: "Controle CAUQ", subfields: [
-      { key: "teor_ligante.resultados", label: "Teor Ligante (%)" },
+      { key: "teor_ligante.resultado_1", label: "Teor Ligante 1 (%)" },
+      { key: "teor_ligante.resultado_2", label: "Teor Ligante 2 (%)" },
+      { key: "teor_ligante.resultado_3", label: "Teor Ligante 3 (%)" },
       { key: "teor_ligante.quantidade", label: "Qtd. Teor Ligante" },
       { key: "teor_ligante.conforme", label: "Teor Ligante Conforme" },
       { key: "densidade_aparente.resultados", label: "Densidade Aparente (g/cm³)" },
@@ -632,8 +635,7 @@ export default function ResumosPersonalizadosPage() {
             rodadas.forEach((rodada, idx) => {
               const linha = {
                 tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-                id: `${ensaio.id}_Rodada${idx + 1}`,
-                data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+                id: `${ensaio.id}_Rodada${idx + 1}`
               };
 
               campos.forEach(campoKey => {
@@ -655,7 +657,16 @@ export default function ResumosPersonalizadosPage() {
                   // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
                   const controleCauq = ensaio.controle_cauq || {};
                   campo.subfields.forEach(subfield => {
-                    const value = getNestedValue(controleCauq, subfield.key);
+                    let value = getNestedValue(controleCauq, subfield.key);
+                    
+                    // Para teor_ligante, acessar resultados array
+                    if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                      const idx = parseInt(subfield.key.split('_').pop()) - 1;
+                      const teorLigante = controleCauq.teor_ligante || {};
+                      const resultados = teorLigante.resultados || [];
+                      value = resultados[idx];
+                    }
+                    
                     linha[subfield.label] = formatValue(value, subfield.key);
                   });
                 } else {
@@ -671,8 +682,7 @@ export default function ResumosPersonalizadosPage() {
             // Se não houver rodadas, criar uma linha única
             const linha = {
               tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-              id: ensaio.id,
-              data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+              id: ensaio.id
             };
 
             campos.forEach(campoKey => {
@@ -686,7 +696,16 @@ export default function ResumosPersonalizadosPage() {
               } else if (campoKey === 'controle_cauq') {
                 const controleCauq = ensaio.controle_cauq || {};
                 campo.subfields.forEach(subfield => {
-                  const value = getNestedValue(controleCauq, subfield.key);
+                  let value = getNestedValue(controleCauq, subfield.key);
+                  
+                  // Para teor_ligante, acessar resultados array
+                  if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                    const idx = parseInt(subfield.key.split('_').pop()) - 1;
+                    const teorLigante = controleCauq.teor_ligante || {};
+                    const resultados = teorLigante.resultados || [];
+                    value = resultados[idx];
+                  }
+                  
                   linha[subfield.label] = formatValue(value, subfield.key);
                 });
               } else if (campo?.subfields) {
@@ -753,6 +772,14 @@ export default function ResumosPersonalizadosPage() {
     }
   };
 
+  const normalizarTexto = (texto) => {
+    if (typeof texto !== 'string') return texto;
+    return texto
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\x00-\x7F]/g, '');
+  };
+
   const exportarParaCSV = () => {
     if (dadosConsolidados.length === 0) {
       alert("Nenhum dado para exportar.");
@@ -761,9 +788,9 @@ export default function ResumosPersonalizadosPage() {
 
     const headers = Object.keys(dadosConsolidados[0]);
     const csvContent = [
-      headers.join(';'),
+      headers.map(h => normalizarTexto(h)).join(';'),
       ...dadosConsolidados.map(row => 
-        headers.map(h => row[h] || '').join(';')
+        headers.map(h => normalizarTexto(String(row[h] || ''))).join(';')
       )
     ].join('\n');
 
