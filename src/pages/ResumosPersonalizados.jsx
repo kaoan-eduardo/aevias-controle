@@ -185,18 +185,11 @@ export default function ResumosPersonalizadosPage() {
   const [tipoEnsaioSelecionado, setTipoEnsaioSelecionado] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [empreiteiraFiltro, setEmpreiteiraFiltro] = useState("");
   const [laboratoristaFiltro, setLaboratoristaFiltro] = useState("");
-  const [projetoFiltro, setProjetoFiltro] = useState("");
-  const [rodoviaFiltro, setRodoviaFiltro] = useState("");
-  const [usinaFiltro, setUsinaFiltro] = useState("");
   
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
   const [laboratoristas, setLaboratoristas] = useState([]);
-  const [projetos, setProjetos] = useState([]);
-  const [rodovias, setRodovias] = useState([]);
-  const [usinas, setUsinas] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -278,113 +271,23 @@ export default function ResumosPersonalizadosPage() {
     }
   };
 
-  // Carregar filtros quando tipo de ensaio ou obra mudam
-  const loadCAUQFilters = async (tipo, selectedObraId) => {
-    if (tipo !== 'EnsaioCAUQ' || !selectedObraId) {
-      setProjetos([]);
-      setRodovias([]);
-      setUsinas([]);
-      setLaboratoristas([]);
-      return;
-    }
 
-    setLoadingFilters(true);
-    try {
-      const ensaios = await base44.entities.EnsaioCAUQ.filter({ obra_id: selectedObraId });
-      
-      // Coletar laboratoristas únicos
-      const labsUnicos = new Set();
-      ensaios.forEach(e => {
-        if (e.laboratorista_name) {
-          labsUnicos.add(e.laboratorista_name);
-        }
-      });
-      setLaboratoristas(Array.from(labsUnicos).sort());
-
-      // Coletar projetos
-      const Project = await import('@/entities/Project').then(m => m.Project);
-      const projetosData = await Project.list();
-      
-      const obra = obras.find(o => o.id === selectedObraId);
-      const regional = regionais.find(r => r.id === obra?.regional_id);
-      const projetosRegional = projetosData.filter(p => 
-        p.tipo_projeto === 'CAUQ' && 
-        (regional?.project_ids || []).includes(p.id)
-      );
-      setProjetos(projetosRegional);
-
-      // Coletar rodovias e usinas únicos
-      const rodUnicos = new Set();
-      const usinaUnicos = new Set();
-      ensaios.forEach(e => {
-        if (e.rodovia) rodUnicos.add(e.rodovia);
-        if (e.usina_fornecedora) usinaUnicos.add(e.usina_fornecedora);
-      });
-      setRodovias(Array.from(rodUnicos).sort());
-      setUsinas(Array.from(usinaUnicos).sort());
-    } catch (error) {
-      console.error("Erro ao carregar filtros:", error);
-    } finally {
-      setLoadingFilters(false);
-    }
-  };
 
   const handleObraChange = (newObraId) => {
     setObraId(newObraId);
-    // Limpar filtros ao trocar de obra
-    setEmpreiteiraFiltro("");
     setLaboratoristaFiltro("");
-    setProjetoFiltro("");
-    setRodoviaFiltro("");
-    setUsinaFiltro("");
+    setLaboratoristas([]);
     setDadosConsolidados([]);
-    
-    // Recarregar filtros se tipo CAUQ já estiver selecionado
-    if (tipoEnsaioSelecionado === 'EnsaioCAUQ' && newObraId) {
-      loadCAUQFilters('EnsaioCAUQ', newObraId);
-    }
   };
 
   const handleTipoEnsaioChange = (tipo) => {
     setTipoEnsaioSelecionado(tipo);
-    setEmpreiteiraFiltro("");
     setLaboratoristaFiltro("");
-    setProjetoFiltro("");
-    setRodoviaFiltro("");
-    setUsinaFiltro("");
+    setLaboratoristas([]);
     setDadosConsolidados([]);
-
-    // Carregar filtros para CAUQ
-    if (tipo === 'EnsaioCAUQ' && obraId) {
-      loadCAUQFilters(tipo, obraId);
-    } else {
-      setProjetos([]);
-      setRodovias([]);
-      setUsinas([]);
-      setLaboratoristas([]);
-    }
   };
 
-  // Verificar se o tipo de ensaio selecionado tem campo de empreiteira
-  const tipoTemEmpreiteira = useMemo(() => {
-    if (!tipoEnsaioSelecionado) return false;
-    const campos = CAMPOS_POR_TIPO[tipoEnsaioSelecionado] || [];
-    return campos.some(c => c.key === 'empreiteira');
-  }, [tipoEnsaioSelecionado]);
 
-  // Obter empreiteiras da obra selecionada
-  const empreiteirasDisponiveis = useMemo(() => {
-    if (!obraId) return [];
-    const obra = obras.find(o => o.id === obraId);
-    return obra?.empreiteiras || [];
-  }, [obraId, obras]);
-
-  // Obter rodovias da obra selecionada
-  const rodoviasDisponiveis = useMemo(() => {
-    if (!obraId) return [];
-    const obra = obras.find(o => o.id === obraId);
-    return obra?.rodovias || [];
-  }, [obraId, obras]);
 
 
 
@@ -531,7 +434,7 @@ export default function ResumosPersonalizadosPage() {
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
-      if (dataInicio || dataFim || empreiteiraFiltro || laboratoristaFiltro || projetoFiltro || rodoviaFiltro || usinaFiltro) {
+      if (dataInicio || dataFim || laboratoristaFiltro) {
         ensaiosFiltrados = ensaios.filter(e => {
           // Filtro por data
           const dataEnsaio = e.data_ensaio || e.data || e.extraction_date;
@@ -539,21 +442,16 @@ export default function ResumosPersonalizadosPage() {
             if (!dataEnsaio) return false;
 
             const dataEnsaioObj = new Date(dataEnsaio);
-            
+
             if (dataInicio) {
               const dataInicioObj = new Date(dataInicio);
               if (dataEnsaioObj < dataInicioObj) return false;
             }
-            
+
             if (dataFim) {
               const dataFimObj = new Date(dataFim);
               if (dataEnsaioObj > dataFimObj) return false;
             }
-          }
-
-          // Filtro por empreiteira
-          if (empreiteiraFiltro && e.empreiteira !== empreiteiraFiltro) {
-            return false;
           }
 
           // Filtro por laboratorista
@@ -561,35 +459,18 @@ export default function ResumosPersonalizadosPage() {
             return false;
           }
 
-          // Filtro por projeto
-          if (projetoFiltro && e.project_id !== projetoFiltro) {
-            return false;
-          }
-
-          // Filtro por rodovia
-          if (rodoviaFiltro && e.rodovia !== rodoviaFiltro) {
-            return false;
-          }
-
-          // Filtro por usina
-          if (usinaFiltro && e.usina_fornecedora !== usinaFiltro) {
-            return false;
-          }
-          
           return true;
         });
       }
 
-      // Atualizar laboratoristas (para outros tipos que não CAUQ)
-      if (tipo !== 'EnsaioCAUQ') {
-        const labsUnicos = new Set();
-        ensaios.forEach(e => {
-          if (e.laboratorista_name) {
-            labsUnicos.add(e.laboratorista_name);
-          }
-        });
-        setLaboratoristas(Array.from(labsUnicos).sort());
-      }
+      // Coletar laboratoristas únicos
+      const labsUnicos = new Set();
+      ensaios.forEach(e => {
+        if (e.laboratorista_name) {
+          labsUnicos.add(e.laboratorista_name);
+        }
+      });
+      setLaboratoristas(Array.from(labsUnicos).sort());
 
       // Carregar projetos para nomes (CAUQ e Sondagem)
       let todosOsProjetos = [];
@@ -598,30 +479,10 @@ export default function ResumosPersonalizadosPage() {
         todosOsProjetos = await Project.list();
       }
 
-      // Determinar peneiras relevantes para CAUQ
+      // Para CAUQ, usar todas as peneiras
       let peneirasRelevantes = [];
       if (tipo === 'EnsaioCAUQ') {
-        if (projetoFiltro) {
-          // Usar peneiras do projeto selecionado
-          const projeto = projetos.find(p => p.id === projetoFiltro);
-          if (projeto?.faixa_granulometrica_id) {
-            const FaixaGranulometrica = await import('@/entities/FaixaGranulometrica').then(m => m.FaixaGranulometrica);
-            const faixa = await FaixaGranulometrica.get(projeto.faixa_granulometrica_id);
-            if (faixa?.peneiras) {
-              const PENEIRAS_CONFIG = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
-              peneirasRelevantes = PENEIRAS_CONFIG.filter(p => {
-                const abertura = p.key.replace('peneira_', '').replace('mm', '').replace('_', '.');
-                return faixa.peneiras.some(fp => {
-                  const aberturaFaixa = fp.abertura.toString().replace(/mm/gi, '').replace(',', '.').trim();
-                  return parseFloat(aberturaFaixa) === parseFloat(abertura);
-                });
-              });
-            }
-          }
-        } else {
-          // Sem filtro de projeto: usar todas as peneiras
-          peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
-        }
+        peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
       }
 
       // Processar cada ensaio
@@ -679,12 +540,8 @@ export default function ResumosPersonalizadosPage() {
                 const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
                 peneirasParaExibir.forEach(subfield => {
                   const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
-                  // Exibir apenas se foi preenchido no ensaio (ou se filtro de projeto está ativo)
                   if (percentualPassante !== null) {
                     linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
-                  } else if (projetoFiltro) {
-                    // Com filtro de projeto, mostrar '-' para não preenchidos
-                    linha[`${campoKey}.${subfield.astm}`] = '-';
                   }
                 });
               } else {
@@ -828,104 +685,8 @@ export default function ResumosPersonalizadosPage() {
               </div>
             </div>
 
-            {/* Filtros por Empreiteira */}
-            {tipoTemEmpreiteira && empreiteirasDisponiveis.length > 0 && (
-              <div>
-                <Label htmlFor="empreiteira" className="text-[#00233B]">Empreiteira</Label>
-                <select
-                  id="empreiteira"
-                  value={empreiteiraFiltro}
-                  onChange={(e) => setEmpreiteiraFiltro(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                >
-                  <option value="">Todas</option>
-                  {empreiteirasDisponiveis.map(emp => (
-                    <option key={emp} value={emp}>{emp}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Filtros específicos para CAUQ em grid */}
-            {tipoEnsaioSelecionado === 'EnsaioCAUQ' && obraId && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {loadingFilters ? (
-                  <div className="col-span-full flex items-center justify-center py-4">
-                    <Loader2 className="w-5 h-5 animate-spin text-[#00233B]/50 mr-2" />
-                    <span className="text-[#00233B]/70">Carregando filtros...</span>
-                  </div>
-                ) : (
-                  <>
-                    {/* Filtro por Projeto */}
-                    <div>
-                      <Label htmlFor="projeto" className="text-[#00233B]">Projeto</Label>
-                      <select
-                        id="projeto"
-                        value={projetoFiltro}
-                        onChange={(e) => setProjetoFiltro(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                      >
-                        <option value="">Todos</option>
-                        {projetos.map(proj => (
-                          <option key={proj.id} value={proj.id}>{proj.name}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Filtro por Laboratorista */}
-                    <div>
-                      <Label htmlFor="laboratorista" className="text-[#00233B]">Laboratorista</Label>
-                      <select
-                        id="laboratorista"
-                        value={laboratoristaFiltro}
-                        onChange={(e) => setLaboratoristaFiltro(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                      >
-                        <option value="">Todos</option>
-                        {laboratoristas.map(lab => (
-                          <option key={lab} value={lab}>{lab}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Filtro por Usina */}
-                    <div>
-                      <Label htmlFor="usina" className="text-[#00233B]">Usina</Label>
-                      <select
-                        id="usina"
-                        value={usinaFiltro}
-                        onChange={(e) => setUsinaFiltro(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                      >
-                        <option value="">Todas</option>
-                        {usinas.map(usina => (
-                          <option key={usina} value={usina}>{usina}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Filtro por Rodovia */}
-                    <div>
-                      <Label htmlFor="rodovia" className="text-[#00233B]">Rodovia</Label>
-                      <select
-                        id="rodovia"
-                        value={rodoviaFiltro}
-                        onChange={(e) => setRodoviaFiltro(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                      >
-                        <option value="">Todas</option>
-                        {rodovias.map(rod => (
-                          <option key={rod} value={rod}>{rod}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Filtro por Laboratorista para outros tipos */}
-            {tipoEnsaioSelecionado && tipoEnsaioSelecionado !== 'EnsaioCAUQ' && laboratoristas.length > 0 && (
+            {/* Filtro por Laboratorista */}
+            {laboratoristas.length > 0 && (
               <div>
                 <Label htmlFor="laboratorista" className="text-[#00233B]">Laboratorista</Label>
                 <select
