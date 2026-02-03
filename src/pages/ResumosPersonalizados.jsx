@@ -622,59 +622,83 @@ export default function ResumosPersonalizadosPage() {
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
-        const linha = {
-          tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-          id: ensaio.id,
-          data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
-        };
-
         // Adicionar nome do projeto se for CAUQ ou Sondagem
         if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') && ensaio.project_id) {
           const projeto = todosOsProjetos.find(p => p.id === ensaio.project_id);
           ensaio.project_name = projeto?.name || '-';
         }
 
-        campos.forEach(campoKey => {
-          const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+        // Para Sondagem, criar uma linha para cada CP
+        if (tipo === 'EnsaioSondagem') {
+          const cps = ensaio.corpos_prova || [];
           
-          if (campo?.subfields) {
-            // Tratar granulometria de forma especial
-            if (campoKey === 'granulometria') {
-              const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
-              peneirasParaExibir.forEach(subfield => {
-                const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
-                // Exibir apenas se foi preenchido no ensaio (ou se filtro de projeto está ativo)
-                if (percentualPassante !== null) {
-                  linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
-                } else if (projetoFiltro) {
-                  // Com filtro de projeto, mostrar '-' para não preenchidos
-                  linha[`${campoKey}.${subfield.astm}`] = '-';
-                }
-              });
-            } else if (campoKey === 'corpos_prova' && tipo === 'EnsaioSondagem') {
-              // Para Sondagem, mostrar dados de cada CP individualmente
-              const cps = getNestedValue(ensaio, campoKey) || [];
-              cps.forEach((cp, idx) => {
+          cps.forEach((cp, idx) => {
+            const linha = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: `${ensaio.id}_CP${idx + 1}`,
+              data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+            };
+
+            // Adicionar campos do ensaio
+            campos.forEach(campoKey => {
+              const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+              
+              if (campoKey === 'corpos_prova') {
+                // Para cada subfield, pegar o valor do CP atual
                 campo.subfields.forEach(subfield => {
                   const value = getNestedValue(cp, subfield.key);
-                  linha[`CP${idx + 1}.${subfield.label}`] = formatValue(value, subfield.key);
+                  linha[subfield.label] = formatValue(value, subfield.key);
                 });
-              });
-            } else {
-              // Calcular médias para arrays (outros tipos)
-              const arrayData = getNestedValue(ensaio, campoKey);
-              campo.subfields.forEach(subfield => {
-                const media = calcularMediaArray(arrayData, subfield.key);
-                linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
-              });
-            }
-          } else {
-            const value = getNestedValue(ensaio, campoKey);
-            linha[campoKey] = formatValue(value, campoKey);
-          }
-        });
+              } else {
+                // Campos do ensaio (não do CP)
+                const value = getNestedValue(ensaio, campoKey);
+                linha[campo.label] = formatValue(value, campoKey);
+              }
+            });
 
-        resultados.push(linha);
+            resultados.push(linha);
+          });
+        } else {
+          // Para outros tipos de ensaio
+          const linha = {
+            tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+            id: ensaio.id,
+            data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+          };
+
+          campos.forEach(campoKey => {
+            const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+            
+            if (campo?.subfields) {
+              // Tratar granulometria de forma especial
+              if (campoKey === 'granulometria') {
+                const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
+                peneirasParaExibir.forEach(subfield => {
+                  const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
+                  // Exibir apenas se foi preenchido no ensaio (ou se filtro de projeto está ativo)
+                  if (percentualPassante !== null) {
+                    linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
+                  } else if (projetoFiltro) {
+                    // Com filtro de projeto, mostrar '-' para não preenchidos
+                    linha[`${campoKey}.${subfield.astm}`] = '-';
+                  }
+                });
+              } else {
+                // Calcular médias para arrays (outros tipos)
+                const arrayData = getNestedValue(ensaio, campoKey);
+                campo.subfields.forEach(subfield => {
+                  const media = calcularMediaArray(arrayData, subfield.key);
+                  linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
+                });
+              }
+            } else {
+              const value = getNestedValue(ensaio, campoKey);
+              linha[campoKey] = formatValue(value, campoKey);
+            }
+          });
+
+          resultados.push(linha);
+        }
       });
 
       console.log('Resultados processados:', resultados.length);
