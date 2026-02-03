@@ -931,7 +931,7 @@ export default function ResumosPersonalizadosPage() {
                         .filter(key => key !== 'tipo' && key !== 'data' && key !== 'id')
                         .map(key => (
                           <th key={key} className="border border-white/20 px-2 py-2 text-left">
-                            {key}
+                            {key.replace('granulometria.', '')}
                           </th>
                         ))}
                     </tr>
