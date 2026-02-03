@@ -675,7 +675,11 @@ export default function ResumosPersonalizadosPage() {
                     if (subfield.key.startsWith('teor_ligante.resultado_')) {
                       const idx = parseInt(subfield.key.split('_').pop()) - 1;
                       const teorLigante = controleCauq.teor_ligante || {};
+                      console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
+                      console.log('>>> Keys do teorLigante:', Object.keys(teorLigante));
                       const resultados = teorLigante.resultados || [];
+                      console.log('>>> Array resultados:', resultados);
+                      console.log('>>> Tipo de resultados:', typeof resultados, Array.isArray(resultados));
                       console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
                       value = resultados[idx] !== undefined ? resultados[idx] : null;
                     } else {
@@ -727,7 +731,11 @@ export default function ResumosPersonalizadosPage() {
                   if (subfield.key.startsWith('teor_ligante.resultado_')) {
                     const idx = parseInt(subfield.key.split('_').pop()) - 1;
                     const teorLigante = controleCauq.teor_ligante || {};
+                    console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
+                    console.log('>>> Keys do teorLigante:', Object.keys(teorLigante));
                     const resultados = teorLigante.resultados || [];
+                    console.log('>>> Array resultados:', resultados);
+                    console.log('>>> Tipo de resultados:', typeof resultados, Array.isArray(resultados));
                     console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
                     console.log('Todos os resultados:', resultados);
                     value = resultados[idx] !== undefined ? resultados[idx] : null;
