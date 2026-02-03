@@ -587,6 +587,13 @@ export default function ResumosPersonalizadosPage() {
         setLaboratoristas(Array.from(labsUnicos).sort());
       }
 
+      // Carregar projetos para nomes (CAUQ e Sondagem)
+      let todosOsProjetos = [];
+      if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') {
+        const Project = await import('@/entities/Project').then(m => m.Project);
+        todosOsProjetos = await Project.list();
+      }
+
       // Determinar peneiras relevantes para CAUQ
       let peneirasRelevantes = [];
       if (tipo === 'EnsaioCAUQ') {
@@ -623,9 +630,7 @@ export default function ResumosPersonalizadosPage() {
 
         // Adicionar nome do projeto se for CAUQ ou Sondagem
         if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') && ensaio.project_id) {
-          const Project = await import('@/entities/Project').then(m => m.Project);
-          const projetosData = await Project.list();
-          const projeto = projetosData.find(p => p.id === ensaio.project_id);
+          const projeto = todosOsProjetos.find(p => p.id === ensaio.project_id);
           ensaio.project_name = projeto?.name || '-';
         }
 
