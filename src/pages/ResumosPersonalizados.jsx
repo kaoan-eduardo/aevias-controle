@@ -103,16 +103,17 @@ const CAMPOS_POR_TIPO = {
   ],
   EnsaioTaxaPinturaImprimacao: [
     { key: "data_ensaio", label: "Data" },
-    { key: "rodovia", label: "Rodovia" },
-    { key: "trecho", label: "Trecho" },
-    { key: "material", label: "Material" },
-    { key: "tipo_servico", label: "Tipo Serviço" },
-    { key: "ensaios", label: "Ensaios - Médias", subfields: [
-      { key: "taxa_aplicada", label: "Taxa Aplicada Média (l/m²)" },
-      { key: "taxa_residual", label: "Taxa Residual Média (l/m²)" },
-      { key: "temperatura_aplicacao", label: "Temperatura Média (°C)" }
-    ]},
-    { key: "approved", label: "Status Aprovação" }
+    { key: "tipo_servico", label: "Serviço" },
+    { key: "ensaios", label: "Dados do Ensaio", subfields: [
+      { key: "camada", label: "Camada" },
+      { key: "material_camada", label: "Material" },
+      { key: "estaca", label: "Estaca" },
+      { key: "taxa_aplicada", label: "Taxa Aplicada (l/m²)" },
+      { key: "taxa_residual", label: "Taxa Residual (l/m²)" },
+      { key: "taxa_emulsao_aplicada", label: "Taxa Emulsão (l/m²)" },
+      { key: "ensaio_residuo.data", label: "Data Ensaio Resíduo" },
+      { key: "ensaio_residuo.residuo", label: "% Resíduo" }
+    ]}
   ],
   EnsaioDensidade: [
     { key: "extraction_date", label: "Data" },
@@ -549,6 +550,36 @@ export default function ResumosPersonalizadosPage() {
                 });
               } else {
                 // Campos do ensaio (não do furo)
+                const value = getNestedValue(ensaio, campoKey);
+                linha[campo.label] = formatValue(value, campoKey);
+              }
+            });
+
+            resultados.push(linha);
+          });
+        } else if (tipo === 'EnsaioTaxaPinturaImprimacao') {
+          // Para Taxa de Pintura, criar uma linha para cada ensaio (bandeja)
+          const ensaiosArray = ensaio.ensaios || [];
+          
+          ensaiosArray.forEach((ens, idx) => {
+            const linha = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: `${ensaio.id}_Ensaio${idx + 1}`,
+              data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+            };
+
+            // Adicionar campos do ensaio e do item do array
+            campos.forEach(campoKey => {
+              const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+              
+              if (campoKey === 'ensaios') {
+                // Para cada subfield, pegar o valor do ensaio atual
+                campo.subfields.forEach(subfield => {
+                  const value = getNestedValue(ens, subfield.key);
+                  linha[subfield.label] = formatValue(value, subfield.key);
+                });
+              } else {
+                // Campos do ensaio principal (não do item do array)
                 const value = getNestedValue(ensaio, campoKey);
                 linha[campo.label] = formatValue(value, campoKey);
               }
