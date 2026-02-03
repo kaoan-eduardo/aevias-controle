@@ -95,6 +95,7 @@ const CAMPOS_POR_TIPO = {
       { key: "estaca", label: "Estaca" },
       { key: "densidade_seca_solo", label: "Densidade Seca Solo (g/cm³)" },
       { key: "umidade", label: "Umidade (%)" },
+      { key: "desvio_umidade", label: "Variação Umidade (%)" },
       { key: "grau_compactacao", label: "Grau Compactação (%)" }
     ]},
     { key: "approved", label: "Status Aprovação" }
