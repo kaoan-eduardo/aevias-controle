@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Badge } from "@/components/ui/badge";
 import { Download, Filter, Loader2, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -173,7 +173,6 @@ export default function ResumosPersonalizadosPage() {
   const [projetoFiltro, setProjetoFiltro] = useState("");
   const [rodoviaFiltro, setRodoviaFiltro] = useState("");
   const [usinaFiltro, setUsinaFiltro] = useState("");
-  const [camposSelecionados, setCamposSelecionados] = useState([]);
   
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
@@ -264,12 +263,6 @@ export default function ResumosPersonalizadosPage() {
     setProjetoFiltro("");
     setRodoviaFiltro("");
     setUsinaFiltro("");
-    if (tipo) {
-      const campos = CAMPOS_POR_TIPO[tipo] || [];
-      setCamposSelecionados(campos.map(c => c.key));
-    } else {
-      setCamposSelecionados([]);
-    }
   };
 
   // Verificar se o tipo de ensaio selecionado tem campo de empreiteira
@@ -293,14 +286,7 @@ export default function ResumosPersonalizadosPage() {
     return obra?.rodovias || [];
   }, [obraId, obras]);
 
-  const handleCampoToggle = (campoKey) => {
-    setCamposSelecionados(prev => {
-      const isSelected = prev.includes(campoKey);
-      return isSelected
-        ? prev.filter(c => c !== campoKey)
-        : [...prev, campoKey];
-    });
-  };
+
 
   const getNestedValue = (obj, path) => {
     const keys = path.split('.');
@@ -385,16 +371,11 @@ export default function ResumosPersonalizadosPage() {
       return;
     }
 
-    if (camposSelecionados.length === 0) {
-      alert("Selecione ao menos um campo para exibir.");
-      return;
-    }
-
     setLoadingData(true);
     try {
       const resultados = [];
       const tipo = tipoEnsaioSelecionado;
-      const campos = camposSelecionados;
+      const campos = CAMPOS_POR_TIPO[tipo].map(c => c.key);
 
       // Mapear entidades específicas
       let ensaios;
@@ -765,37 +746,7 @@ export default function ResumosPersonalizadosPage() {
               </select>
             </div>
 
-            {/* Campos do ensaio selecionado */}
-            {tipoEnsaioSelecionado && (
-              <div className="border border-white/20 rounded-lg p-4 bg-white/10">
-                <h4 className="font-semibold text-[#00233B] mb-2">
-                  Campos - {TIPOS_ENSAIO.find(t => t.value === tipoEnsaioSelecionado)?.label}
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {CAMPOS_POR_TIPO[tipoEnsaioSelecionado]?.map(campo => (
-                    <div key={campo.key}>
-                      <div className="flex items-center gap-2 p-2 bg-white/50 rounded">
-                        <Checkbox
-                          id={`campo-${campo.key}`}
-                          checked={camposSelecionados.includes(campo.key)}
-                          onCheckedChange={() => handleCampoToggle(campo.key)}
-                        />
-                        <label htmlFor={`campo-${campo.key}`} className="text-xs text-[#00233B] cursor-pointer">
-                          {campo.label}
-                        </label>
-                      </div>
-                      {campo.subfields && camposSelecionados.includes(campo.key) && (
-                        <div className="ml-6 mt-1 text-xs text-[#00233B]/70">
-                          {campo.subfields.map(sub => (
-                            <div key={sub.key}>• {sub.label}</div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
 
             <div className="flex gap-2">
               <Button 
