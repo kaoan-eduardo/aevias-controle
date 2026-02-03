@@ -87,14 +87,15 @@ const CAMPOS_POR_TIPO = {
   ],
   EnsaioDensidadeInSitu: [
     { key: "data_ensaio", label: "Data" },
-    { key: "rodovia", label: "Rodovia" },
-    { key: "trecho", label: "Trecho" },
     { key: "camada", label: "Camada" },
     { key: "material", label: "Material" },
-    { key: "furos", label: "Furos - Médias", subfields: [
-      { key: "densidade_seca_solo", label: "Densidade Seca Média (g/cm³)" },
-      { key: "umidade", label: "Umidade Média (%)" },
-      { key: "grau_compactacao", label: "Grau Compactação Médio (%)" }
+    { key: "dados_proctor.densidade_seca_max", label: "Densidade Seca Max Proctor (g/cm³)" },
+    { key: "dados_proctor.umidade_otima", label: "Umidade Ótima Proctor (%)" },
+    { key: "furos", label: "Dados do Furo", subfields: [
+      { key: "estaca", label: "Estaca" },
+      { key: "densidade_seca_solo", label: "Densidade Seca Solo (g/cm³)" },
+      { key: "umidade", label: "Umidade (%)" },
+      { key: "grau_compactacao", label: "Grau Compactação (%)" }
     ]},
     { key: "approved", label: "Status Aprovação" }
   ],
@@ -516,6 +517,36 @@ export default function ResumosPersonalizadosPage() {
                 });
               } else {
                 // Campos do ensaio (não do CP)
+                const value = getNestedValue(ensaio, campoKey);
+                linha[campo.label] = formatValue(value, campoKey);
+              }
+            });
+
+            resultados.push(linha);
+          });
+        } else if (tipo === 'EnsaioDensidadeInSitu') {
+          // Para Densidade In Situ, criar uma linha para cada furo
+          const furos = ensaio.furos || [];
+          
+          furos.forEach((furo, idx) => {
+            const linha = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: `${ensaio.id}_Furo${idx + 1}`,
+              data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+            };
+
+            // Adicionar campos do ensaio e do furo
+            campos.forEach(campoKey => {
+              const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+              
+              if (campoKey === 'furos') {
+                // Para cada subfield, pegar o valor do furo atual
+                campo.subfields.forEach(subfield => {
+                  const value = getNestedValue(furo, subfield.key);
+                  linha[subfield.label] = formatValue(value, subfield.key);
+                });
+              } else {
+                // Campos do ensaio (não do furo)
                 const value = getNestedValue(ensaio, campoKey);
                 linha[campo.label] = formatValue(value, campoKey);
               }
