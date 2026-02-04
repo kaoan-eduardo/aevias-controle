@@ -442,7 +442,7 @@ export default function ChecklistConcretagem() {
     if (!allowedTypes.includes(file.type)) {
       throw new Error(`Tipo de arquivo não suportado: ${file.type}`);
     }
-    const maxSize = 10 * 1024 * 1024;
+    const maxSize = 50 * 1024 * 1024;
     if (file.size > maxSize) {
       throw new Error(`Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
     }
