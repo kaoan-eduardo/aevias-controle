@@ -21,51 +21,70 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
 
       const validPhotos = checklist.fotos.filter(photo => photo && photo.trim() !== '');
       const compressed = [];
-      const batchSize = 3; // Processar apenas 3 imagens por vez para evitar rate limiting
       
-      // Processar uma imagem por vez de forma sequencial
+      // Processar uma imagem por vez com retry logic
       for (let i = 0; i < validPhotos.length; i++) {
         const photoUrl = validPhotos[i];
+        let attempts = 0;
+        const maxAttempts = 3;
         
-        try {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = photoUrl;
-          });
+        while (attempts < maxAttempts) {
+          try {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            await new Promise((resolve, reject) => {
+              const timeout = setTimeout(() => reject(new Error('Timeout ao carregar imagem')), 10000);
+              img.onload = () => {
+                clearTimeout(timeout);
+                resolve();
+              };
+              img.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error('Erro ao carregar imagem'));
+              };
+              img.src = photoUrl;
+            });
 
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          // Reduzir dimensões
-          const maxWidth = 800;
-          const maxHeight = 600;
-          let width = img.width;
-          let height = img.height;
-          
-          if (width > maxWidth || height > maxHeight) {
-            const ratio = Math.min(maxWidth / width, maxHeight / height);
-            width = width * ratio;
-            height = height * ratio;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Reduzir dimensões
+            const maxWidth = 800;
+            const maxHeight = 600;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxWidth || height > maxHeight) {
+              const ratio = Math.min(maxWidth / width, maxHeight / height);
+              width = width * ratio;
+              height = height * ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Comprimir com qualidade de 50%
+            compressed.push(canvas.toDataURL('image/jpeg', 0.5));
+            break; // Sucesso, sair do loop de tentativas
+          } catch (error) {
+            attempts++;
+            console.error(`Tentativa ${attempts} falhou para imagem ${i + 1}:`, error);
+            
+            if (attempts >= maxAttempts) {
+              // Usar URL original após todas as tentativas falharem
+              compressed.push(photoUrl);
+            } else {
+              // Aguardar antes de tentar novamente (exponential backoff)
+              await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+            }
           }
-          
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Comprimir com qualidade de 50%
-          compressed.push(canvas.toDataURL('image/jpeg', 0.5));
-        } catch (error) {
-          console.error('Erro ao comprimir imagem:', error);
-          compressed.push(photoUrl); // Usar original se falhar
         }
         
-        // Aguardar 150ms entre cada imagem
+        // Aguardar 600ms entre cada imagem para evitar rate limiting
         if (i < validPhotos.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 150));
+          await new Promise(resolve => setTimeout(resolve, 600));
         }
       }
 
