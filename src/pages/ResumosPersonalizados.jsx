@@ -605,8 +605,11 @@ export default function ResumosPersonalizadosPage() {
         } else if (tipo === 'ChecklistUsina') {
           console.log('=== DEBUG ChecklistUsina ===');
           console.log('Ensaio ID:', ensaio.id);
+          console.log('Ensaio completo:', JSON.stringify(ensaio, null, 2));
           console.log('Controle CAUQ:', ensaio.controle_cauq);
           console.log('Teor Ligante:', ensaio.controle_cauq?.teor_ligante);
+          console.log('Rodadas Produção:', ensaio.rodadas_producao);
+          console.log('Keys do ensaio:', Object.keys(ensaio));
 
           // Para ChecklistUsina, criar uma linha por rodada de produção se houver
           const rodadas = ensaio.rodadas_producao || [];
