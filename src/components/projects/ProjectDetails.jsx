@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -138,13 +137,18 @@ const AgregadosList = ({ agregados }) => {
 const LiganteInfo = ({ ligante }) => {
   if (!ligante || Object.keys(ligante).length === 0) return null;
   
+  const formatDensidade = (value) => {
+    if (value === null || value === undefined) return null;
+    return Number(value).toFixed(3);
+  };
+  
   return (
     <div className="p-4 bg-[#F2F1EF] rounded-lg border border-[#00233B]/10">
       <h4 className="font-semibold text-[#00233B] mb-3">Ligante Asfáltico</h4>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <DetailItem label="Tipo" value={ligante.tipo} />
         <DetailItem label="Fornecedor" value={ligante.fornecedor} />
-        <DetailItem label="Densidade" value={ligante.densidade} unit="g/cm³" />
+        <DetailItem label="Densidade" value={formatDensidade(ligante.densidade)} unit="g/cm³" />
       </div>
     </div>
   );
@@ -299,6 +303,10 @@ const FaixaTrabalhoTable = ({ faixaTrabalho, faixaMin, faixaMax }) => {
 const TabelaMarshall = ({ project }) => {
   const formatValue = (value, unit = '') => {
     if (value === undefined || value === null || value === '') return '—';
+    // Para densidade, usar 3 casas decimais
+    if (unit === ' g/cm³') {
+      return `${Number(value).toFixed(3)}${unit}`;
+    }
     return `${Number(value).toFixed(2)}${unit}`;
   };
 
@@ -794,7 +802,7 @@ export default function ProjectDetails({ project, faixas, onClose }) {
                     otimo={project.taxa_aplicacao_mraf?.otimo}
                     unit=" kg/m²" 
                   />
-                  <DetailItem label="Densidade da Mistura" value={project.densidade_mistura_mraf} unit="g/cm³" />
+                  <DetailItem label="Densidade da Mistura" value={project.densidade_mistura_mraf ? Number(project.densidade_mistura_mraf).toFixed(3) : null} unit="g/cm³" />
                 </div>
               </DetailSection>
               <Separator className="bg-[#00233B]/20" />
