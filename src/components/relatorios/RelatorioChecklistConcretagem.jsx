@@ -19,45 +19,62 @@ export default function RelatorioChecklistConcretagem({ checklist }) {
         return;
       }
 
-      const compressed = await Promise.all(
-        checklist.fotos.filter(photo => photo && photo.trim() !== '').map(async (photoUrl) => {
-          try {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            
-            await new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-              img.src = photoUrl;
-            });
+      const validPhotos = checklist.fotos.filter(photo => photo && photo.trim() !== '');
+      const compressed = [];
+      const batchSize = 8; // Processar 8 imagens por vez
+      
+      // Dividir fotos em lotes
+      for (let i = 0; i < validPhotos.length; i += batchSize) {
+        const batch = validPhotos.slice(i, i + batchSize);
+        
+        // Processar lote atual
+        const batchResults = await Promise.all(
+          batch.map(async (photoUrl) => {
+            try {
+              const img = new Image();
+              img.crossOrigin = 'anonymous';
+              
+              await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = photoUrl;
+              });
 
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Reduzir dimensões para 50% do original
-            const maxWidth = 800;
-            const maxHeight = 600;
-            let width = img.width;
-            let height = img.height;
-            
-            if (width > maxWidth || height > maxHeight) {
-              const ratio = Math.min(maxWidth / width, maxHeight / height);
-              width = width * ratio;
-              height = height * ratio;
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              // Reduzir dimensões para 50% do original
+              const maxWidth = 800;
+              const maxHeight = 600;
+              let width = img.width;
+              let height = img.height;
+              
+              if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width = width * ratio;
+                height = height * ratio;
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // Comprimir com qualidade de 50%
+              return canvas.toDataURL('image/jpeg', 0.5);
+            } catch (error) {
+              console.error('Erro ao comprimir imagem:', error);
+              return photoUrl; // Usar original se falhar
             }
-            
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Comprimir com qualidade de 50%
-            return canvas.toDataURL('image/jpeg', 0.5);
-          } catch (error) {
-            console.error('Erro ao comprimir imagem:', error);
-            return photoUrl; // Usar original se falhar
-          }
-        })
-      );
+          })
+        );
+        
+        compressed.push(...batchResults);
+        
+        // Aguardar 400ms entre lotes para evitar sobrecarga
+        if (i + batchSize < validPhotos.length) {
+          await new Promise(resolve => setTimeout(resolve, 400));
+        }
+      }
 
       setCompressedPhotos(compressed);
       setIsCompressing(false);
