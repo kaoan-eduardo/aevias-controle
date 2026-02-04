@@ -646,17 +646,24 @@ export default function ResumosPersonalizadosPage() {
 
                     console.log('Processando subfield:', subfield.key, subfield.label);
 
-                    // Para teor_ligante, acessar resultados array
+                    // Para teor_ligante, acessar resultados
                     if (subfield.key.startsWith('teor_ligante.resultado_')) {
-                      const idx = parseInt(subfield.key.split('_').pop()) - 1;
+                      const numResultado = subfield.key.split('_').pop();
                       const teorLigante = controleCauq.teor_ligante || {};
                       console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
-                      console.log('>>> Keys do teorLigante:', Object.keys(teorLigante));
-                      const resultados = teorLigante.resultados || [];
-                      console.log('>>> Array resultados:', resultados);
-                      console.log('>>> Tipo de resultados:', typeof resultados, Array.isArray(resultados));
-                      console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
-                      value = resultados[idx] !== undefined ? resultados[idx] : null;
+                      console.log('>>> Buscando resultado_' + numResultado);
+
+                      // Tentar acessar diretamente resultado_1, resultado_2, etc
+                      value = teorLigante[`resultado_${numResultado}`];
+                      console.log('>>> Valor direto resultado_' + numResultado + ':', value);
+
+                      // Se não encontrar, tentar no array resultados
+                      if (value === undefined) {
+                        const resultados = teorLigante.resultados || [];
+                        const idx = parseInt(numResultado) - 1;
+                        value = resultados[idx];
+                        console.log('>>> Valor do array resultados[' + idx + ']:', value);
+                      }
                     } else {
                       value = getNestedValue(controleCauq, subfield.key);
                       console.log('Valor obtido via getNestedValue:', value);
@@ -702,18 +709,24 @@ export default function ResumosPersonalizadosPage() {
 
                   console.log('Processando subfield:', subfield.key, subfield.label);
 
-                  // Para teor_ligante, acessar resultados array
+                  // Para teor_ligante, acessar resultados
                   if (subfield.key.startsWith('teor_ligante.resultado_')) {
-                    const idx = parseInt(subfield.key.split('_').pop()) - 1;
+                    const numResultado = subfield.key.split('_').pop();
                     const teorLigante = controleCauq.teor_ligante || {};
                     console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
-                    console.log('>>> Keys do teorLigante:', Object.keys(teorLigante));
-                    const resultados = teorLigante.resultados || [];
-                    console.log('>>> Array resultados:', resultados);
-                    console.log('>>> Tipo de resultados:', typeof resultados, Array.isArray(resultados));
-                    console.log('Acessando teor_ligante resultado', idx + 1, ':', resultados[idx]);
-                    console.log('Todos os resultados:', resultados);
-                    value = resultados[idx] !== undefined ? resultados[idx] : null;
+                    console.log('>>> Buscando resultado_' + numResultado);
+
+                    // Tentar acessar diretamente resultado_1, resultado_2, etc
+                    value = teorLigante[`resultado_${numResultado}`];
+                    console.log('>>> Valor direto resultado_' + numResultado + ':', value);
+
+                    // Se não encontrar, tentar no array resultados
+                    if (value === undefined) {
+                      const resultados = teorLigante.resultados || [];
+                      const idx = parseInt(numResultado) - 1;
+                      value = resultados[idx];
+                      console.log('>>> Valor do array resultados[' + idx + ']:', value);
+                    }
                   } else {
                     value = getNestedValue(controleCauq, subfield.key);
                     console.log('Valor obtido via getNestedValue:', value);
