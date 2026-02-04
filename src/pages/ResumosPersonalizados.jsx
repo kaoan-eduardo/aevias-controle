@@ -446,33 +446,8 @@ export default function ResumosPersonalizadosPage() {
       const campos = CAMPOS_POR_TIPO[tipo].map(c => c.key);
       console.log('Campos:', campos);
 
-      // Mapear entidades específicas
-      let ensaios;
-      if (tipo === 'DiarioObra') {
-        const DiarioObra = await import('@/entities/DiarioObra').then(m => m.DiarioObra);
-        ensaios = await DiarioObra.filter({ obra_id: obraId });
-      } else if (tipo === 'EnsaioDensidade') {
-        const EnsaioDensidade = await import('@/entities/EnsaioDensidade').then(m => m.EnsaioDensidade);
-        ensaios = await EnsaioDensidade.filter({ obra_id: obraId });
-      } else if (tipo === 'ChecklistUsina') {
-        const ChecklistUsina = await import('@/entities/ChecklistUsina').then(m => m.ChecklistUsina);
-        ensaios = await ChecklistUsina.filter({ obra_id: obraId });
-      } else if (tipo === 'ChecklistAplicacao') {
-        const ChecklistAplicacao = await import('@/entities/ChecklistAplicacao').then(m => m.ChecklistAplicacao);
-        ensaios = await ChecklistAplicacao.filter({ obra_id: obraId });
-      } else if (tipo === 'ChecklistMRAF') {
-        const ChecklistMRAF = await import('@/entities/ChecklistMRAF').then(m => m.ChecklistMRAF);
-        ensaios = await ChecklistMRAF.filter({ obra_id: obraId });
-      } else if (tipo === 'ChecklistConcretagem') {
-        const ChecklistConcretagem = await import('@/entities/ChecklistConcretagem').then(m => m.ChecklistConcretagem);
-        ensaios = await ChecklistConcretagem.filter({ obra_id: obraId });
-      } else if (tipo === 'ChecklistTerraplanagem') {
-        const ChecklistTerraplanagem = await import('@/entities/ChecklistTerraplanagem').then(m => m.ChecklistTerraplanagem);
-        ensaios = await ChecklistTerraplanagem.filter({ obra_id: obraId });
-      } else {
-        // Para outros tipos, usar base44.entities
-        ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
-      }
+      // Usar base44.entities para todas as entidades
+      const ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
       
       console.log('Ensaios carregados:', ensaios.length);
 
