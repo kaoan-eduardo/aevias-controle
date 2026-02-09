@@ -640,39 +640,72 @@ export default function ResumosPersonalizadosPage() {
                 } else if (campoKey === 'controle_cauq') {
                   // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
                   const controleCauq = ensaio.controle_cauq || {};
-                  console.log('Processando controle_cauq para rodada', idx + 1);
-                  console.log('controleCauq:', controleCauq);
+                  console.log('=== Processando controle_cauq para rodada', idx + 1, '===');
+                  console.log('controleCauq keys:', Object.keys(controleCauq));
+                  console.log('controleCauq completo:', JSON.stringify(controleCauq, null, 2));
 
                   campo.subfields.forEach(subfield => {
                     let value;
 
-                    console.log('Processando subfield:', subfield.key, subfield.label);
+                    console.log('>>> Processando subfield:', subfield.key, '|', subfield.label);
 
-                    // Para teor_ligante, acessar resultados
-                    if (subfield.key.startsWith('teor_ligante.resultado_')) {
-                      const numResultado = subfield.key.split('_').pop();
-                      const teorLigante = controleCauq.teor_ligante || {};
-                      console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
-                      console.log('>>> Buscando resultado_' + numResultado);
-
-                      // Tentar acessar diretamente resultado_1, resultado_2, etc
-                      value = teorLigante[`resultado_${numResultado}`];
-                      console.log('>>> Valor direto resultado_' + numResultado + ':', value);
-
-                      // Se não encontrar, tentar no array resultados
-                      if (value === undefined) {
-                        const resultados = teorLigante.resultados || [];
-                        const idx = parseInt(numResultado) - 1;
-                        value = resultados[idx];
-                        console.log('>>> Valor do array resultados[' + idx + ']:', value);
+                    // Para teor_ligante
+                    if (subfield.key.includes('teor_ligante')) {
+                      // Verificar se existe extracao_ligante_rotarex ou extracao_ligante_soxhlet
+                      const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
+                      const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
+                      
+                      console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
+                      console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
+                      
+                      // Tentar pegar o teor de ligante das extrações
+                      if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                        const numResultado = parseInt(subfield.key.split('_').pop());
+                        const idx = numResultado - 1;
+                        
+                        // Tentar nos formatos possíveis
+                        const teorLigante = controleCauq.teor_ligante || {};
+                        
+                        // Formato 1: controleCauq.teor_ligante.resultado_X
+                        value = teorLigante[`resultado_${numResultado}`];
+                        
+                        // Formato 2: controleCauq.teor_ligante.resultados[idx]
+                        if (value === undefined && teorLigante.resultados) {
+                          value = teorLigante.resultados[idx];
+                        }
+                        
+                        // Formato 3: Buscar em extracao_ligante_rotarex
+                        if (value === undefined && extracaoRotarex && Array.isArray(extracaoRotarex)) {
+                          value = extracaoRotarex[idx]?.teor_ligante;
+                        }
+                        
+                        // Formato 4: Buscar em extracao_ligante_soxhlet
+                        if (value === undefined && extracaoSoxhlet && Array.isArray(extracaoSoxhlet)) {
+                          value = extracaoSoxhlet[idx]?.teor_ligante;
+                        }
+                        
+                        console.log('>>> Teor ligante resultado_' + numResultado + ':', value);
+                      } else if (subfield.key === 'teor_ligante.quantidade') {
+                        const teorLigante = controleCauq.teor_ligante;
+                        value = teorLigante?.quantidade;
+                        
+                        if (value === undefined && extracaoRotarex) {
+                          value = Array.isArray(extracaoRotarex) ? extracaoRotarex.length : 0;
+                        }
+                        if (value === undefined && extracaoSoxhlet) {
+                          value = Array.isArray(extracaoSoxhlet) ? extracaoSoxhlet.length : 0;
+                        }
+                      } else if (subfield.key === 'teor_ligante.conforme') {
+                        value = controleCauq.teor_ligante?.conforme;
                       }
                     } else {
+                      // Outros campos do controle CAUQ
                       value = getNestedValue(controleCauq, subfield.key);
-                      console.log('Valor obtido via getNestedValue:', value);
+                      console.log('>>> Valor via getNestedValue:', value);
                     }
 
                     linha[subfield.label] = formatValue(value, subfield.key);
-                    console.log('Linha[' + subfield.label + ']:', linha[subfield.label]);
+                    console.log('>>> Linha[' + subfield.label + ']:', linha[subfield.label]);
                   });
                 } else {
                   // Campos do ensaio principal
