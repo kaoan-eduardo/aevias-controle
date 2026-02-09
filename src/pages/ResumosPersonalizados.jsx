@@ -742,33 +742,57 @@ export default function ResumosPersonalizadosPage() {
                 campo.subfields.forEach(subfield => {
                   let value;
 
-                  console.log('Processando subfield:', subfield.key, subfield.label);
+                  console.log('>>> Processando subfield (sem rodadas):', subfield.key, '|', subfield.label);
 
-                  // Para teor_ligante, acessar resultados
-                  if (subfield.key.startsWith('teor_ligante.resultado_')) {
-                    const numResultado = subfield.key.split('_').pop();
-                    const teorLigante = controleCauq.teor_ligante || {};
-                    console.log('>>> teorLigante completo:', JSON.stringify(teorLigante, null, 2));
-                    console.log('>>> Buscando resultado_' + numResultado);
-
-                    // Tentar acessar diretamente resultado_1, resultado_2, etc
-                    value = teorLigante[`resultado_${numResultado}`];
-                    console.log('>>> Valor direto resultado_' + numResultado + ':', value);
-
-                    // Se não encontrar, tentar no array resultados
-                    if (value === undefined) {
-                      const resultados = teorLigante.resultados || [];
-                      const idx = parseInt(numResultado) - 1;
-                      value = resultados[idx];
-                      console.log('>>> Valor do array resultados[' + idx + ']:', value);
+                  // Para teor_ligante
+                  if (subfield.key.includes('teor_ligante')) {
+                    const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
+                    const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
+                    
+                    console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
+                    console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
+                    
+                    if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                      const numResultado = parseInt(subfield.key.split('_').pop());
+                      const idx = numResultado - 1;
+                      
+                      const teorLigante = controleCauq.teor_ligante || {};
+                      
+                      value = teorLigante[`resultado_${numResultado}`];
+                      
+                      if (value === undefined && teorLigante.resultados) {
+                        value = teorLigante.resultados[idx];
+                      }
+                      
+                      if (value === undefined && extracaoRotarex && Array.isArray(extracaoRotarex)) {
+                        value = extracaoRotarex[idx]?.teor_ligante;
+                      }
+                      
+                      if (value === undefined && extracaoSoxhlet && Array.isArray(extracaoSoxhlet)) {
+                        value = extracaoSoxhlet[idx]?.teor_ligante;
+                      }
+                      
+                      console.log('>>> Teor ligante resultado_' + numResultado + ':', value);
+                    } else if (subfield.key === 'teor_ligante.quantidade') {
+                      const teorLigante = controleCauq.teor_ligante;
+                      value = teorLigante?.quantidade;
+                      
+                      if (value === undefined && extracaoRotarex) {
+                        value = Array.isArray(extracaoRotarex) ? extracaoRotarex.length : 0;
+                      }
+                      if (value === undefined && extracaoSoxhlet) {
+                        value = Array.isArray(extracaoSoxhlet) ? extracaoSoxhlet.length : 0;
+                      }
+                    } else if (subfield.key === 'teor_ligante.conforme') {
+                      value = controleCauq.teor_ligante?.conforme;
                     }
                   } else {
                     value = getNestedValue(controleCauq, subfield.key);
-                    console.log('Valor obtido via getNestedValue:', value);
+                    console.log('>>> Valor via getNestedValue:', value);
                   }
 
                   linha[subfield.label] = formatValue(value, subfield.key);
-                  console.log('Linha[' + subfield.label + ']:', linha[subfield.label]);
+                  console.log('>>> Linha[' + subfield.label + ']:', linha[subfield.label]);
                 });
               } else if (campo?.subfields) {
                 // Outros campos com subfields
