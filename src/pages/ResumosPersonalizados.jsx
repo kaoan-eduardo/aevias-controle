@@ -494,8 +494,7 @@ export default function ResumosPersonalizadosPage() {
       // Carregar projetos para nomes (CAUQ e Sondagem)
       let todosOsProjetos = [];
       if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') {
-        const Project = await import('@/entities/Project').then(m => m.Project);
-        todosOsProjetos = await Project.list();
+        todosOsProjetos = await base44.entities.Project.list();
       }
 
       // Para CAUQ, usar todas as peneiras
