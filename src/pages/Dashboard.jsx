@@ -552,76 +552,69 @@ export default function Dashboard() {
           <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-[#00233B]">
-                {isCliente ? 'Ações Pendentes' : 'Alertas e Lembretes'}
+                {isCliente ? 'Ações Pendentes' : 'Registros por Regional'}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {isCliente ? (
-                  <>
-                    {isEngenheiro && alerts.aguardando_assinatura > 0 ? (
-                      <Link to={createPageUrl('MeusEnsaios')}>
-                        <div className="flex items-start gap-3 p-3 rounded-lg border bg-[#FBBF24]/10 border-[#FBBF24]/30 cursor-pointer hover:bg-[#FBBF24]/20 transition-colors">
-                          <FileSignature className="w-5 h-5 text-[#854d0e] mt-0.5" />
-                          <div>
-                            <p className="text-sm font-medium" style={{ color: '#854d0e' }}>
-                              {alerts.aguardando_assinatura} registro(s) aguardando sua assinatura
-                            </p>
-                            <p className="text-xs" style={{ color: '#854d0e', opacity: 0.8 }}>Clique para visualizar e assinar.</p>
-                          </div>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-green-400/30 bg-green-400/20">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-green-800">
-                            {isEngenheiro ? 'Todos os registros foram assinados' : 'Nenhuma ação pendente'}
-                          </p>
-                          <p className="text-xs text-green-700">
-                            {isEngenheiro ? 'Não há registros aguardando assinatura.' : 'Continue acompanhando os registros das obras.'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {alerts.pending > 0 ? (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border bg-[#FBBF24]/10 border-[#FBBF24]/30">
-                        <AlertTriangle className="w-5 h-5 text-[#854d0e] mt-0.5" />
+              {isCliente ? (
+                <div className="space-y-4">
+                  {isEngenheiro && alerts.aguardando_assinatura > 0 ? (
+                    <Link to={createPageUrl('MeusEnsaios')}>
+                      <div className="flex items-start gap-3 p-3 rounded-lg border bg-[#FBBF24]/10 border-[#FBBF24]/30 cursor-pointer hover:bg-[#FBBF24]/20 transition-colors">
+                        <FileSignature className="w-5 h-5 text-[#854d0e] mt-0.5" />
                         <div>
                           <p className="text-sm font-medium" style={{ color: '#854d0e' }}>
-                            {alerts.pending} registro(s) aguardando aprovação
+                            {alerts.aguardando_assinatura} registro(s) aguardando sua assinatura
                           </p>
-                          <p className="text-xs" style={{ color: '#854d0e', opacity: 0.8 }}>Acesse "Ensaios Realizados" para analisar.</p>
+                          <p className="text-xs" style={{ color: '#854d0e', opacity: 0.8 }}>Clique para visualizar e assinar.</p>
                         </div>
                       </div>
-                    ) : (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-green-400/30 bg-green-400/20">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-green-800">
-                            Nenhum registro pendente
-                          </p>
-                          <p className="text-xs text-green-700">Todos os registros foram analisados.</p>
-                        </div>
+                    </Link>
+                  ) : (
+                    <div className="flex items-start gap-3 p-3 rounded-lg border border-green-400/30 bg-green-400/20">
+                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-green-800">
+                          {isEngenheiro ? 'Todos os registros foram assinados' : 'Nenhuma ação pendente'}
+                        </p>
+                        <p className="text-xs text-green-700">
+                          {isEngenheiro ? 'Não há registros aguardando assinatura.' : 'Continue acompanhando os registros das obras.'}
+                        </p>
                       </div>
-                    )}
-                    {alerts.rejected > 0 && (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-[#800020]/30 bg-[#800020]/10">
-                        <XCircle className="w-5 h-5 text-[#800020] mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-[#800020]">
-                            {alerts.rejected} registro(s) reprovados
-                          </p>
-                          <p className="text-xs text-[#800020] opacity: 0.80">Verifique os motivos e solicite a correção.</p>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {regionalChartData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={regionalChartData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={100}
+                          fill="#8884d8"
+                          dataKey="value"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {regionalChartData.map((entry, index) => {
+                            const colors = ['#00233B', '#566E3D', '#BFCF99', '#F2F1EF', '#800020', '#FBBF24'];
+                            return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                          })}
+                        </Pie>
+                        <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                        <Legend wrapperStyle={{ color: '#00233B' }}/>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-[300px]">
+                      <p className="text-[#00233B]/70">Nenhum registro disponível</p>
+                    </div>
+                  )}
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
