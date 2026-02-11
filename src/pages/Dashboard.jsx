@@ -208,6 +208,31 @@ export default function Dashboard() {
         aguardando_assinatura: aguardandoAssinaturaCount 
       });
 
+      // Processar dados de ensaios por regional
+      if (!isCliente) {
+        const ensaiosPorRegional = {};
+        
+        allEnsaios.forEach(ensaio => {
+          const obra = obrasFiltradas.find(o => o.id === ensaio.obra_id);
+          if (obra && obra.regional_id) {
+            const regional = regionais.find(r => r.id === obra.regional_id);
+            if (regional) {
+              if (!ensaiosPorRegional[regional.nome]) {
+                ensaiosPorRegional[regional.nome] = 0;
+              }
+              ensaiosPorRegional[regional.nome]++;
+            }
+          }
+        });
+
+        const regionalChartDataProcessed = Object.entries(ensaiosPorRegional).map(([nome, value]) => ({
+          name: nome,
+          value: value
+        }));
+
+        setRegionalChartData(regionalChartDataProcessed);
+      }
+
       // Process monthly chart data
       const now = new Date();
       const last6Months = Array.from({ length: 6 }).map((_, i) => {
