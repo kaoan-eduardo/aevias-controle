@@ -70,6 +70,7 @@ export default function Dashboard() {
   const [monthlyChartData, setMonthlyChartData] = useState([]);
   const [statusChartData, setStatusChartData] = useState([]);
   const [alerts, setAlerts] = useState({ pending: 0, rejected: 0, aguardando_assinatura: 0 });
+  const [regionalChartData, setRegionalChartData] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
