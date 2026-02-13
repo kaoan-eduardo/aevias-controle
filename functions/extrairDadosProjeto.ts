@@ -81,7 +81,18 @@ Retorne APENAS um objeto JSON. Use null para campos não encontrados.`;
       const peneirasStr = faixa.peneiras?.map(p => `${p.astm} (${p.abertura})`).join(', ') || '';
       
       prompt += `
-Peneiras da faixa especificada: ${peneirasStr}
+PENEIRAS DA FAIXA ESPECIFICADA: ${peneirasStr}
+
+ATENÇÃO - PRIORIDADES DE EXTRAÇÃO:
+🔴 CRÍTICO (obrigatório extrair):
+   - Faixa de trabalho (faixa_trabalho, faixa_trabalho_min, faixa_trabalho_max) com valores para TODAS as peneiras
+   - Teor de ligante ótimo (teor_ligante.otimo)
+   - Densidades (massa_especifica_aparente, densidade_maxima_medida)
+   - Agregados (nome, pedreira, percentual_mistura, granulometria completa)
+
+🟡 IMPORTANTE (extrair se disponível):
+   - Temperaturas, Volume de vazios, Parâmetros Marshall (Estabilidade, Fluência, VAM, RBV, RTCD)
+   - Informações básicas (name, client, location, description)
 
 Extraia os seguintes dados do projeto:
 - name: Nome do projeto
@@ -127,17 +138,46 @@ DADOS ESPECÍFICOS DE BGS:
 - agregados: array simples com {nome, pedreira}
 ` : ''}
 
-IMPORTANTE:
-- Para peneiras, use o formato exato: peneira_19_0mm, peneira_4_75mm, peneira_0_075mm, etc.
-- Converta todas as unidades para o formato especificado
-- Valores numéricos devem ser números, não strings
-- Use null se o dado não for encontrado no arquivo
+FORMATO DAS PENEIRAS - MUITO IMPORTANTE:
+Use EXATAMENTE estes nomes de campos para as peneiras:
+- peneira_75_0mm (3")
+- peneira_63_0mm (2 1/2")
+- peneira_50_0mm (2")
+- peneira_37_5mm (1 1/2")
+- peneira_25_0mm (1")
+- peneira_19_0mm (3/4")
+- peneira_16_0mm (5/8")
+- peneira_12_5mm (1/2")
+- peneira_9_5mm (3/8")
+- peneira_4_75mm (Nº 4)
+- peneira_2_36mm (Nº 8)
+- peneira_2_0mm (Nº 10)
+- peneira_1_18mm (Nº 16)
+- peneira_0_6mm (Nº 30)
+- peneira_0_42mm (Nº 40)
+- peneira_0_3mm (Nº 50)
+- peneira_0_18mm (Nº 80)
+- peneira_0_15mm (Nº 100)
+- peneira_0_075mm (Nº 200)
+
+REGRAS DE EXTRAÇÃO:
+- Valores numéricos devem ser NUMBER, não strings
+- Use null para campos não encontrados
+- Para faixa_trabalho, faixa_trabalho_min, faixa_trabalho_max: crie objetos com as peneiras como chaves
+- Para agregados: extraia TODOS os agregados encontrados no arquivo, com granulometria COMPLETA de cada um
+- Seja DETALHISTA ao buscar os valores - analise tabelas, gráficos e textos cuidadosamente
+
+EXEMPLO de faixa_trabalho:
+{
+  "peneira_19_0mm": 100,
+  "peneira_4_75mm": 65.5,
+  "peneira_0_075mm": 5.2
+}
 
 Retorne APENAS um objeto JSON válido com os campos extraídos.`;
     }
 
     console.log('🤖 Chamando LLM para extração de dados...');
-    console.log('Prompt:', prompt);
 
     // Chamar o LLM com visão para analisar o arquivo
     const resultado = await base44.integrations.Core.InvokeLLM({
@@ -146,10 +186,137 @@ Retorne APENAS um objeto JSON válido com os campos extraídos.`;
       response_json_schema: {
         type: "object",
         properties: {
-          name: { type: "string" },
-          client: { type: "string" },
+          name: { type: ["string", "null"] },
+          client: { type: ["string", "null"] },
           location: { type: ["string", "null"] },
-          description: { type: ["string", "null"] }
+          description: { type: ["string", "null"] },
+          equivalente_areia_minimo: { type: ["number", "null"] },
+          ligante: {
+            type: ["object", "null"],
+            properties: {
+              tipo: { type: ["string", "null"] },
+              fornecedor: { type: ["string", "null"] },
+              densidade: { type: ["number", "null"] }
+            }
+          },
+          agregados: {
+            type: ["array", "null"],
+            items: {
+              type: "object",
+              properties: {
+                nome: { type: ["string", "null"] },
+                pedreira: { type: ["string", "null"] },
+                percentual_mistura: { type: ["number", "null"] },
+                granulometria: { type: ["object", "null"] }
+              }
+            }
+          },
+          faixa_trabalho: { type: ["object", "null"] },
+          faixa_trabalho_min: { type: ["object", "null"] },
+          faixa_trabalho_max: { type: ["object", "null"] },
+          teor_ligante: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              otimo: { type: ["number", "null"] }
+            }
+          },
+          massa_especifica_aparente: { type: ["number", "null"] },
+          densidade_maxima_medida: { type: ["number", "null"] },
+          temperaturas: {
+            type: ["object", "null"],
+            properties: {
+              mistura: {
+                type: ["object", "null"],
+                properties: {
+                  min: { type: ["number", "null"] },
+                  max: { type: ["number", "null"] }
+                }
+              },
+              compactacao: {
+                type: ["object", "null"],
+                properties: {
+                  min: { type: ["number", "null"] },
+                  max: { type: ["number", "null"] }
+                }
+              },
+              espalhamento: {
+                type: ["object", "null"],
+                properties: {
+                  min: { type: ["number", "null"] },
+                  max: { type: ["number", "null"] }
+                }
+              }
+            }
+          },
+          volume_vazios: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              otimo: { type: ["number", "null"] }
+            }
+          },
+          rtcd: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] }
+            }
+          },
+          estabilidade: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              projeto: { type: ["number", "null"] }
+            }
+          },
+          fluencia: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              projeto: { type: ["number", "null"] }
+            }
+          },
+          vam: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              projeto: { type: ["number", "null"] }
+            }
+          },
+          rbv: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              projeto: { type: ["number", "null"] }
+            }
+          },
+          emulsao_utilizada: { type: ["string", "null"] },
+          teor_ligante_residual: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              otimo: { type: ["number", "null"] }
+            }
+          },
+          percentual_emulsao: { type: ["number", "null"] },
+          taxa_aplicacao_mraf: {
+            type: ["object", "null"],
+            properties: {
+              min: { type: ["number", "null"] },
+              max: { type: ["number", "null"] },
+              otimo: { type: ["number", "null"] }
+            }
+          },
+          densidade_mistura_mraf: { type: ["number", "null"] },
+          melhorador_utilizado: { type: ["string", "null"] },
+          umidade_otima: { type: ["number", "null"] },
+          densidade_otima: { type: ["number", "null"] },
+          resistencia_mpa: { type: ["number", "null"] }
         }
       }
     });
