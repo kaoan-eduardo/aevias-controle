@@ -714,9 +714,9 @@ ATENÇÃO ESPECIAL PARA:
             </div>
             <Badge className="bg-purple-600 text-white">Novo</Badge>
           </div>
-          <p className="text-sm text-slate-600 mt-2">
+          <div className="text-sm text-slate-600 mt-2">
             Faça upload de um documento do projeto (PDF, imagem, etc.) e deixe a IA preencher automaticamente os parâmetros técnicos
-          </p>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4">
@@ -756,9 +756,9 @@ ATENÇÃO ESPECIAL PARA:
             </Label>
           </div>
           {!!project && (
-            <p className="text-xs text-amber-600 mt-2">
+            <div className="text-xs text-amber-600 mt-2">
               ⚠️ Upload desabilitado durante edição de projeto existente
-            </p>
+            </div>
           )}
         </CardContent>
       </Card>
