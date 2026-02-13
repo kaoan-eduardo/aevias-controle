@@ -345,14 +345,25 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validar tamanho do arquivo (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Arquivo muito grande. Máximo: 10MB');
+      e.target.value = '';
+      return;
+    }
+
     setUploadingFile(true);
     setExtractingData(true);
 
     try {
+      toast.loading('Fazendo upload do arquivo...', { id: 'upload' });
+      
       // Upload do arquivo
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      
+      toast.loading('Analisando documento com IA...', { id: 'upload' });
 
-      // Extrair dados usando IA
+      // Extrair dados usando IA com timeout
       const schemaPrompt = `Analise este documento de projeto de engenharia rodoviária e extraia TODOS os dados técnicos encontrados.
 
 TIPOS DE PROJETO ACEITOS:
@@ -535,13 +546,21 @@ INSTRUÇÕES:
         }
       };
 
-      const extractedData = await base44.integrations.Core.InvokeLLM({
+      // Criar timeout de 60 segundos
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout: A IA demorou muito para processar')), 60000)
+      );
+
+      const llmPromise = base44.integrations.Core.InvokeLLM({
         prompt: schemaPrompt,
         file_urls: [file_url],
         response_json_schema: jsonSchema
       });
 
-      console.log('Dados extraídos pela IA:', extractedData);
+      const extractedData = await Promise.race([llmPromise, timeoutPromise]);
+
+      console.log('✅ Dados extraídos pela IA:', extractedData);
+      toast.dismiss('upload');
 
       // Normalizar dados das faixas granulométricas
       const normalizarFaixa = (faixa) => {
@@ -614,10 +633,24 @@ INSTRUÇÕES:
         }
       }));
 
-      toast.success('Dados extraídos com sucesso! Revise e ajuste conforme necessário.');
+      toast.success('✅ Dados extraídos! Revise e ajuste conforme necessário', { duration: 4000 });
     } catch (error) {
-      console.error('Erro ao extrair dados:', error);
-      toast.error('Erro ao processar arquivo: ' + error.message);
+      console.error('❌ Erro ao extrair dados:', error);
+      toast.dismiss('upload');
+      
+      let errorMessage = 'Erro ao processar arquivo';
+      
+      if (error.message?.includes('Timeout')) {
+        errorMessage = 'A IA demorou muito. Tente com um arquivo menor ou mais simples';
+      } else if (error.message?.includes('502') || error.message?.includes('500')) {
+        errorMessage = 'Servidor temporariamente indisponível. Tente novamente em alguns instantes';
+      } else if (error.message?.includes('404')) {
+        errorMessage = 'Serviço de IA não encontrado. Entre em contato com o suporte';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      toast.error(errorMessage, { duration: 5000 });
     } finally {
       setUploadingFile(false);
       setExtractingData(false);
