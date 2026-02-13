@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Trash2, AlertCircle, FileUp, Sparkles, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { base44 } from "@/api/base44Client";
 
 // ========================================
 // MAPEAMENTO FIXO E FINAL DE PENEIRAS DNIT/ASTM
@@ -46,6 +47,10 @@ const obterPeneiraPadrao = (aberturaString) => {
 };
 
 export default function ProjectForm({ project, faixas, regionais, user, onSave, onCancel }) {
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractionError, setExtractionError] = useState(null);
+
   const [formData, setFormData] = useState({
     tipo_projeto: "CAUQ",
     regional_id: "",
@@ -335,6 +340,68 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       };
       return { ...prev, agregados: newAgregados };
     });
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar se tem tipo de projeto, faixa e regional selecionados
+    if (!formData.tipo_projeto || !formData.faixa_granulometrica_id || !formData.regional_id) {
+      setExtractionError('Por favor, selecione o tipo de projeto, faixa granulométrica e regional antes de fazer upload.');
+      return;
+    }
+
+    // Validar tamanho do arquivo (máximo 50MB)
+    if (file.size > 50 * 1024 * 1024) {
+      setExtractionError('O arquivo é muito grande. Tamanho máximo: 50MB');
+      return;
+    }
+
+    setIsExtracting(true);
+    setExtractionError(null);
+
+    try {
+      // Upload do arquivo
+      console.log('📤 Fazendo upload do arquivo...');
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      console.log('✅ Arquivo enviado:', file_url);
+
+      setUploadedFile(file_url);
+
+      // Chamar função de extração
+      console.log('🤖 Extraindo dados do projeto...');
+      const response = await base44.functions.invoke('extrairDadosProjeto', {
+        file_url,
+        tipo_projeto: formData.tipo_projeto,
+        faixa_id: formData.faixa_granulometrica_id,
+        regional_id: formData.regional_id
+      });
+
+      console.log('✅ Dados extraídos:', response);
+
+      if (response.success && response.dados) {
+        // Preencher o formulário com os dados extraídos
+        setFormData(prev => ({
+          ...prev,
+          ...response.dados,
+          // Manter os campos já selecionados
+          tipo_projeto: prev.tipo_projeto,
+          regional_id: prev.regional_id,
+          faixa_granulometrica_id: prev.faixa_granulometrica_id
+        }));
+
+        alert('✅ Dados extraídos com sucesso! Revise os campos antes de salvar.');
+      } else {
+        throw new Error('Falha ao extrair dados do arquivo');
+      }
+
+    } catch (error) {
+      console.error('❌ Erro ao processar arquivo:', error);
+      setExtractionError(error.message || 'Erro ao extrair dados do arquivo');
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   const handleSubmit = (e) => {
