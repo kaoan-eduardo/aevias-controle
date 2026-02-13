@@ -616,13 +616,62 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
               </Select>
               <p className="text-xs text-slate-500 mt-1">
                 Selecione a regional à qual este projeto será vinculado
-              </p>
-            </div>
-          )}
+                </p>
+                </div>
+                )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Nome do Projeto *</Label>
+                {/* Agente de IA - Upload de Arquivo */}
+                {!isCartaTraco && formData.tipo_projeto && formData.faixa_granulometrica_id && formData.regional_id && !project && (
+                <div className="p-4 border-2 border-dashed border-[#BFCF99] rounded-lg bg-[#BFCF99]/5">
+                <div className="flex items-start gap-3 mb-3">
+                <Sparkles className="w-5 h-5 text-[#00233B] mt-1" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-[#00233B] mb-1">
+                    Agente de IA - Preenchimento Automático
+                  </h3>
+                  <p className="text-sm text-[#00233B]/80 mb-3">
+                    Faça upload de um arquivo do projeto (PDF, imagem, documento) e deixe a IA preencher os parâmetros automaticamente.
+                  </p>
+
+                  {isExtracting ? (
+                    <div className="flex items-center gap-2 text-[#00233B]">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">Analisando arquivo e extraindo dados...</span>
+                    </div>
+                  ) : (
+                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-[#00233B] text-[#F2F1EF] rounded-lg cursor-pointer hover:bg-[#00233B]/90 transition-colors">
+                      <FileUp className="w-4 h-4" />
+                      <span className="text-sm font-medium">Escolher Arquivo do Projeto</span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                        onChange={handleFileUpload}
+                        disabled={isExtracting}
+                      />
+                    </label>
+                  )}
+
+                  {uploadedFile && !isExtracting && (
+                    <div className="mt-2 flex items-center gap-2 text-sm text-green-700">
+                      <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                      Arquivo processado com sucesso
+                    </div>
+                  )}
+
+                  {extractionError && (
+                    <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-800">
+                      {extractionError}
+                    </div>
+                  )}
+                </div>
+                </div>
+                </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                <Label htmlFor="name">Nome do Projeto *</Label>
               <Input
                 id="name"
                 value={formData.name}
