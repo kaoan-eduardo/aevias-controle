@@ -179,153 +179,29 @@ Retorne APENAS um objeto JSON válido com os campos extraídos.`;
 
     console.log('🤖 Chamando LLM para extração de dados...');
 
-    // Chamar o LLM com visão para analisar o arquivo
+    // Chamar o LLM com visão para analisar o arquivo - SEM schema restritivo
     const resultado = await base44.integrations.Core.InvokeLLM({
       prompt: prompt,
-      file_urls: [file_url],
-      response_json_schema: {
-        type: "object",
-        properties: {
-          name: { type: ["string", "null"] },
-          client: { type: ["string", "null"] },
-          location: { type: ["string", "null"] },
-          description: { type: ["string", "null"] },
-          equivalente_areia_minimo: { type: ["number", "null"] },
-          ligante: {
-            type: ["object", "null"],
-            properties: {
-              tipo: { type: ["string", "null"] },
-              fornecedor: { type: ["string", "null"] },
-              densidade: { type: ["number", "null"] }
-            }
-          },
-          agregados: {
-            type: ["array", "null"],
-            items: {
-              type: "object",
-              properties: {
-                nome: { type: ["string", "null"] },
-                pedreira: { type: ["string", "null"] },
-                percentual_mistura: { type: ["number", "null"] },
-                granulometria: { type: ["object", "null"] }
-              }
-            }
-          },
-          faixa_trabalho: { type: ["object", "null"] },
-          faixa_trabalho_min: { type: ["object", "null"] },
-          faixa_trabalho_max: { type: ["object", "null"] },
-          teor_ligante: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              otimo: { type: ["number", "null"] }
-            }
-          },
-          massa_especifica_aparente: { type: ["number", "null"] },
-          densidade_maxima_medida: { type: ["number", "null"] },
-          temperaturas: {
-            type: ["object", "null"],
-            properties: {
-              mistura: {
-                type: ["object", "null"],
-                properties: {
-                  min: { type: ["number", "null"] },
-                  max: { type: ["number", "null"] }
-                }
-              },
-              compactacao: {
-                type: ["object", "null"],
-                properties: {
-                  min: { type: ["number", "null"] },
-                  max: { type: ["number", "null"] }
-                }
-              },
-              espalhamento: {
-                type: ["object", "null"],
-                properties: {
-                  min: { type: ["number", "null"] },
-                  max: { type: ["number", "null"] }
-                }
-              }
-            }
-          },
-          volume_vazios: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              otimo: { type: ["number", "null"] }
-            }
-          },
-          rtcd: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] }
-            }
-          },
-          estabilidade: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              projeto: { type: ["number", "null"] }
-            }
-          },
-          fluencia: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              projeto: { type: ["number", "null"] }
-            }
-          },
-          vam: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              projeto: { type: ["number", "null"] }
-            }
-          },
-          rbv: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              projeto: { type: ["number", "null"] }
-            }
-          },
-          emulsao_utilizada: { type: ["string", "null"] },
-          teor_ligante_residual: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              otimo: { type: ["number", "null"] }
-            }
-          },
-          percentual_emulsao: { type: ["number", "null"] },
-          taxa_aplicacao_mraf: {
-            type: ["object", "null"],
-            properties: {
-              min: { type: ["number", "null"] },
-              max: { type: ["number", "null"] },
-              otimo: { type: ["number", "null"] }
-            }
-          },
-          densidade_mistura_mraf: { type: ["number", "null"] },
-          melhorador_utilizado: { type: ["string", "null"] },
-          umidade_otima: { type: ["number", "null"] },
-          densidade_otima: { type: ["number", "null"] },
-          resistencia_mpa: { type: ["number", "null"] }
-        }
-      }
+      file_urls: [file_url]
     });
 
-    console.log('✅ Resposta do LLM:', resultado);
+    console.log('✅ Resposta do LLM (raw):', resultado);
+
+    // Tentar fazer parse se vier como string
+    let dadosExtraidos;
+    if (typeof resultado === 'string') {
+      // Remover markdown code blocks se existirem
+      const cleanJson = resultado.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      dadosExtraidos = JSON.parse(cleanJson);
+    } else {
+      dadosExtraidos = resultado;
+    }
+
+    console.log('✅ Dados parseados:', dadosExtraidos);
 
     return Response.json({
       success: true,
-      dados: resultado
+      dados: dadosExtraidos
     });
 
   } catch (error) {
