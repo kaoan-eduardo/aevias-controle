@@ -353,7 +353,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
 
       // Extrair dados usando IA
-      const schemaPrompt = `Analise este documento de projeto de engenharia rodoviária e extraia TODOS os dados técnicos encontrados no formato JSON especificado.
+      const schemaPrompt = `Analise este documento de projeto de engenharia rodoviária e extraia TODOS os dados técnicos encontrados.
 
 TIPOS DE PROJETO ACEITOS:
 - CAUQ (Concreto Asfáltico Usinado a Quente)
@@ -362,20 +362,36 @@ TIPOS DE PROJETO ACEITOS:
 - CARTA_TRACO_CONCRETO (Carta Traço de Concreto)
 - CAMADAS_GRANULARES (Camadas Granulares)
 
-INSTRUÇÕES IMPORTANTES:
-1. Identifique o tipo de projeto baseado no conteúdo do documento
-2. Extraia TODOS os valores numéricos encontrados
-3. Para campos não encontrados, use null
-4. Para arrays vazios, use []
-5. Mantenha precisão dos valores numéricos
-6. Identifique todas as peneiras e seus percentuais
+FORMATO DAS PENEIRAS - MUITO IMPORTANTE:
+Use EXATAMENTE estas chaves para as peneiras granulométricas:
+- peneira_75_0mm (75.0 mm)
+- peneira_63_0mm (63.0 mm)
+- peneira_50_0mm (50.0 mm)
+- peneira_37_5mm (37.5 mm)
+- peneira_25_0mm (25.0 mm)
+- peneira_19_0mm (19.0 mm)
+- peneira_16_0mm (16.0 mm)
+- peneira_12_5mm (12.5 mm)
+- peneira_9_5mm (9.5 mm)
+- peneira_4_75mm (4.75 mm)
+- peneira_2_36mm (2.36 mm)
+- peneira_2_0mm (2.0 mm)
+- peneira_1_18mm (1.18 mm)
+- peneira_0_6mm (0.6 mm)
+- peneira_0_42mm (0.42 mm)
+- peneira_0_3mm (0.3 mm)
+- peneira_0_18mm (0.18 mm)
+- peneira_0_15mm (0.15 mm)
+- peneira_0_075mm (0.075 mm)
 
-ATENÇÃO ESPECIAL PARA:
-- Faixas granulométricas (peneiras e % passante)
-- Agregados individuais e suas composições
-- Parâmetros Marshall (para CAUQ)
-- Temperaturas de controle
-- Limites min/max/ótimo`;
+INSTRUÇÕES:
+1. Identifique o tipo de projeto
+2. Para faixa_trabalho: extraia os valores ÓTIMOS/PROJETO de % passante
+3. Para faixa_trabalho_min: extraia os valores MÍNIMOS de % passante
+4. Para faixa_trabalho_max: extraia os valores MÁXIMOS de % passante
+5. Use as chaves exatas das peneiras listadas acima
+6. Valores numéricos devem ser números, não strings
+7. Para campos não encontrados, use null`;
 
       const jsonSchema = {
         type: "object",
@@ -407,9 +423,21 @@ ATENÇÃO ESPECIAL PARA:
               espalhamento: { type: "object", properties: { min: { type: "number" }, max: { type: "number" } } }
             }
           },
-          faixa_trabalho: { type: "object", description: "Valores ótimos de % passante por peneira" },
-          faixa_trabalho_min: { type: "object", description: "Valores mínimos de % passante por peneira" },
-          faixa_trabalho_max: { type: "object", description: "Valores máximos de % passante por peneira" },
+          faixa_trabalho: { 
+            type: "object",
+            description: "Valores ótimos/projeto de % passante. Use chaves: peneira_75_0mm, peneira_63_0mm, peneira_50_0mm, peneira_37_5mm, peneira_25_0mm, peneira_19_0mm, peneira_16_0mm, peneira_12_5mm, peneira_9_5mm, peneira_4_75mm, peneira_2_36mm, peneira_2_0mm, peneira_1_18mm, peneira_0_6mm, peneira_0_42mm, peneira_0_3mm, peneira_0_18mm, peneira_0_15mm, peneira_0_075mm",
+            additionalProperties: { type: "number" }
+          },
+          faixa_trabalho_min: { 
+            type: "object",
+            description: "Valores mínimos de % passante. Use as mesmas chaves de peneira",
+            additionalProperties: { type: "number" }
+          },
+          faixa_trabalho_max: { 
+            type: "object",
+            description: "Valores máximos de % passante. Use as mesmas chaves de peneira",
+            additionalProperties: { type: "number" }
+          },
           teor_ligante: {
             type: "object",
             properties: {
@@ -515,6 +543,30 @@ ATENÇÃO ESPECIAL PARA:
 
       console.log('Dados extraídos pela IA:', extractedData);
 
+      // Normalizar dados das faixas granulométricas
+      const normalizarFaixa = (faixa) => {
+        if (!faixa || typeof faixa !== 'object') return {};
+        
+        const normalizada = {};
+        Object.keys(faixa).forEach(key => {
+          const valor = faixa[key];
+          if (valor !== null && valor !== undefined && !isNaN(valor)) {
+            normalizada[key] = parseFloat(valor);
+          }
+        });
+        return normalizada;
+      };
+
+      const faixaTrabalho = normalizarFaixa(extractedData.faixa_trabalho);
+      const faixaTrabalhoMin = normalizarFaixa(extractedData.faixa_trabalho_min);
+      const faixaTrabalhoMax = normalizarFaixa(extractedData.faixa_trabalho_max);
+
+      console.log('Faixas normalizadas:', {
+        faixa_trabalho: faixaTrabalho,
+        faixa_trabalho_min: faixaTrabalhoMin,
+        faixa_trabalho_max: faixaTrabalhoMax
+      });
+
       // Preencher formulário com dados extraídos
       setFormData(prev => ({
         ...prev,
@@ -527,9 +579,9 @@ ATENÇÃO ESPECIAL PARA:
         ligante: extractedData.ligante || prev.ligante,
         emulsao_utilizada: extractedData.emulsao_utilizada || prev.emulsao_utilizada,
         temperaturas: extractedData.temperaturas || prev.temperaturas,
-        faixa_trabalho: extractedData.faixa_trabalho || prev.faixa_trabalho,
-        faixa_trabalho_min: extractedData.faixa_trabalho_min || prev.faixa_trabalho_min,
-        faixa_trabalho_max: extractedData.faixa_trabalho_max || prev.faixa_trabalho_max,
+        faixa_trabalho: Object.keys(faixaTrabalho).length > 0 ? faixaTrabalho : prev.faixa_trabalho,
+        faixa_trabalho_min: Object.keys(faixaTrabalhoMin).length > 0 ? faixaTrabalhoMin : prev.faixa_trabalho_min,
+        faixa_trabalho_max: Object.keys(faixaTrabalhoMax).length > 0 ? faixaTrabalhoMax : prev.faixa_trabalho_max,
         teor_ligante: extractedData.teor_ligante || prev.teor_ligante,
         teor_ligante_residual: extractedData.teor_ligante_residual || prev.teor_ligante_residual,
         percentual_emulsao: extractedData.percentual_emulsao || prev.percentual_emulsao,
