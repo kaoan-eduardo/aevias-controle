@@ -5,8 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Trash2, AlertCircle, Upload, Sparkles, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { base44 } from "@/api/base44Client";
+import toast from "react-hot-toast";
 
 // ========================================
 // MAPEAMENTO FIXO E FINAL DE PENEIRAS DNIT/ASTM
@@ -46,8 +48,10 @@ const obterPeneiraPadrao = (aberturaString) => {
 };
 
 export default function ProjectForm({ project, faixas, regionais, user, onSave, onCancel }) {
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [extractingData, setExtractingData] = useState(false);
   const [formData, setFormData] = useState({
-    tipo_projeto: "CAUQ",
+    tipo_projeto: "",
     regional_id: "",
     name: "",
     client: "",
@@ -337,6 +341,239 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     });
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingFile(true);
+    setExtractingData(true);
+
+    try {
+      // Upload do arquivo
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+
+      // Extrair dados usando IA
+      const schemaPrompt = `Analise este documento de projeto de engenharia rodoviária e extraia TODOS os dados técnicos encontrados no formato JSON especificado.
+
+TIPOS DE PROJETO ACEITOS:
+- CAUQ (Concreto Asfáltico Usinado a Quente)
+- MRAF (Micro Revestimento Asfáltico a Frio)
+- BGS (Brita Graduada Simples)
+- CARTA_TRACO_CONCRETO (Carta Traço de Concreto)
+- CAMADAS_GRANULARES (Camadas Granulares)
+
+INSTRUÇÕES IMPORTANTES:
+1. Identifique o tipo de projeto baseado no conteúdo do documento
+2. Extraia TODOS os valores numéricos encontrados
+3. Para campos não encontrados, use null
+4. Para arrays vazios, use []
+5. Mantenha precisão dos valores numéricos
+6. Identifique todas as peneiras e seus percentuais
+
+ATENÇÃO ESPECIAL PARA:
+- Faixas granulométricas (peneiras e % passante)
+- Agregados individuais e suas composições
+- Parâmetros Marshall (para CAUQ)
+- Temperaturas de controle
+- Limites min/max/ótimo`;
+
+      const jsonSchema = {
+        type: "object",
+        properties: {
+          tipo_projeto: {
+            type: "string",
+            enum: ["CAUQ", "MRAF", "BGS", "CARTA_TRACO_CONCRETO", "CAMADAS_GRANULARES"],
+            description: "Tipo identificado do projeto"
+          },
+          name: { type: "string", description: "Nome do projeto" },
+          client: { type: "string", description: "Cliente" },
+          location: { type: "string", description: "Localização" },
+          description: { type: "string", description: "Descrição do projeto" },
+          equivalente_areia_minimo: { type: "number", description: "Equivalente de areia mínimo (%)" },
+          ligante: {
+            type: "object",
+            properties: {
+              tipo: { type: "string" },
+              fornecedor: { type: "string" },
+              densidade: { type: "number" }
+            }
+          },
+          emulsao_utilizada: { type: "string" },
+          temperaturas: {
+            type: "object",
+            properties: {
+              mistura: { type: "object", properties: { min: { type: "number" }, max: { type: "number" } } },
+              compactacao: { type: "object", properties: { min: { type: "number" }, max: { type: "number" } } },
+              espalhamento: { type: "object", properties: { min: { type: "number" }, max: { type: "number" } } }
+            }
+          },
+          faixa_trabalho: { type: "object", description: "Valores ótimos de % passante por peneira" },
+          faixa_trabalho_min: { type: "object", description: "Valores mínimos de % passante por peneira" },
+          faixa_trabalho_max: { type: "object", description: "Valores máximos de % passante por peneira" },
+          teor_ligante: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              otimo: { type: "number" }
+            }
+          },
+          teor_ligante_residual: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              otimo: { type: "number" }
+            }
+          },
+          percentual_emulsao: { type: "number" },
+          taxa_aplicacao_mraf: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              otimo: { type: "number" }
+            }
+          },
+          densidade_mistura_mraf: { type: "number" },
+          massa_especifica_aparente: { type: "number" },
+          densidade_maxima_medida: { type: "number" },
+          volume_vazios: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              otimo: { type: "number" }
+            }
+          },
+          rtcd: {
+            type: "object",
+            properties: { min: { type: "number" } }
+          },
+          estabilidade: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              projeto: { type: "number" }
+            }
+          },
+          fluencia: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              projeto: { type: "number" }
+            }
+          },
+          vam: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              projeto: { type: "number" }
+            }
+          },
+          rbv: {
+            type: "object",
+            properties: {
+              min: { type: "number" },
+              max: { type: "number" },
+              projeto: { type: "number" }
+            }
+          },
+          agregados: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                nome: { type: "string" },
+                pedreira: { type: "string" },
+                percentual_mistura: { type: "number" },
+                granulometria: { type: "object" }
+              }
+            }
+          },
+          fck: { type: "number", description: "FCK para carta traço" },
+          slump_projeto: { type: "number" },
+          slump_minimo: { type: "number" },
+          slump_maximo: { type: "number" },
+          consumo_agua: { type: "number" },
+          tipo_aditivo: { type: "string" },
+          tipo_cimento: { type: "string" },
+          concreteira: { type: "string" },
+          melhorador_utilizado: { type: "string" },
+          umidade_otima: { type: "number" },
+          densidade_otima: { type: "number" },
+          resistencia_mpa: { type: "number" }
+        }
+      };
+
+      const extractedData = await base44.integrations.Core.InvokeLLM({
+        prompt: schemaPrompt,
+        file_urls: [file_url],
+        response_json_schema: jsonSchema
+      });
+
+      console.log('Dados extraídos pela IA:', extractedData);
+
+      // Preencher formulário com dados extraídos
+      setFormData(prev => ({
+        ...prev,
+        tipo_projeto: extractedData.tipo_projeto || prev.tipo_projeto,
+        name: extractedData.name || prev.name,
+        client: extractedData.client || prev.client,
+        location: extractedData.location || prev.location,
+        description: extractedData.description || prev.description,
+        equivalente_areia_minimo: extractedData.equivalente_areia_minimo || prev.equivalente_areia_minimo,
+        ligante: extractedData.ligante || prev.ligante,
+        emulsao_utilizada: extractedData.emulsao_utilizada || prev.emulsao_utilizada,
+        temperaturas: extractedData.temperaturas || prev.temperaturas,
+        faixa_trabalho: extractedData.faixa_trabalho || prev.faixa_trabalho,
+        faixa_trabalho_min: extractedData.faixa_trabalho_min || prev.faixa_trabalho_min,
+        faixa_trabalho_max: extractedData.faixa_trabalho_max || prev.faixa_trabalho_max,
+        teor_ligante: extractedData.teor_ligante || prev.teor_ligante,
+        teor_ligante_residual: extractedData.teor_ligante_residual || prev.teor_ligante_residual,
+        percentual_emulsao: extractedData.percentual_emulsao || prev.percentual_emulsao,
+        taxa_aplicacao_mraf: extractedData.taxa_aplicacao_mraf || prev.taxa_aplicacao_mraf,
+        densidade_mistura_mraf: extractedData.densidade_mistura_mraf || prev.densidade_mistura_mraf,
+        massa_especifica_aparente: extractedData.massa_especifica_aparente || prev.massa_especifica_aparente,
+        densidade_maxima_medida: extractedData.densidade_maxima_medida || prev.densidade_maxima_medida,
+        volume_vazios: extractedData.volume_vazios || prev.volume_vazios,
+        rtcd: extractedData.rtcd || prev.rtcd,
+        estabilidade: extractedData.estabilidade || prev.estabilidade,
+        fluencia: extractedData.fluencia || prev.fluencia,
+        vam: extractedData.vam || prev.vam,
+        rbv: extractedData.rbv || prev.rbv,
+        agregados: extractedData.agregados || prev.agregados,
+        carta_traco_concreto: {
+          fck: extractedData.fck || prev.carta_traco_concreto.fck,
+          slump_projeto: extractedData.slump_projeto || prev.carta_traco_concreto.slump_projeto,
+          slump_minimo: extractedData.slump_minimo || prev.carta_traco_concreto.slump_minimo,
+          slump_maximo: extractedData.slump_maximo || prev.carta_traco_concreto.slump_maximo,
+          consumo_agua: extractedData.consumo_agua || prev.carta_traco_concreto.consumo_agua,
+          tipo_aditivo: extractedData.tipo_aditivo || prev.carta_traco_concreto.tipo_aditivo,
+          tipo_cimento: extractedData.tipo_cimento || prev.carta_traco_concreto.tipo_cimento,
+          concreteira: extractedData.concreteira || prev.carta_traco_concreto.concreteira
+        },
+        camadas_granulares: {
+          melhorador_utilizado: extractedData.melhorador_utilizado || prev.camadas_granulares.melhorador_utilizado,
+          umidade_otima: extractedData.umidade_otima || prev.camadas_granulares.umidade_otima,
+          densidade_otima: extractedData.densidade_otima || prev.camadas_granulares.densidade_otima,
+          resistencia_mpa: extractedData.resistencia_mpa || prev.camadas_granulares.resistencia_mpa
+        }
+      }));
+
+      toast.success('Dados extraídos com sucesso! Revise e ajuste conforme necessário.');
+    } catch (error) {
+      console.error('Erro ao extrair dados:', error);
+      toast.error('Erro ao processar arquivo: ' + error.message);
+    } finally {
+      setUploadingFile(false);
+      setExtractingData(false);
+      // Limpar input
+      e.target.value = '';
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -468,6 +705,64 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
+      <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-dashed border-blue-300">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+              <CardTitle className="text-blue-900">Assistente IA - Preenchimento Automático</CardTitle>
+            </div>
+            <Badge className="bg-purple-600 text-white">Novo</Badge>
+          </div>
+          <p className="text-sm text-slate-600 mt-2">
+            Faça upload de um documento do projeto (PDF, imagem, etc.) e deixe a IA preencher automaticamente os parâmetros técnicos
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <Label 
+              htmlFor="file-upload" 
+              className={`flex-1 cursor-pointer flex items-center justify-center gap-3 p-6 border-2 border-dashed rounded-lg transition-all ${
+                extractingData 
+                  ? 'bg-blue-100 border-blue-400' 
+                  : 'bg-white hover:bg-blue-50 border-blue-300 hover:border-blue-500'
+              }`}
+            >
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                onChange={handleFileUpload}
+                disabled={uploadingFile || !!project}
+                accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+              />
+              {extractingData ? (
+                <>
+                  <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                  <div className="text-left">
+                    <p className="font-semibold text-blue-900">Processando documento...</p>
+                    <p className="text-sm text-blue-700">A IA está analisando e extraindo os dados</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-6 h-6 text-blue-600" />
+                  <div className="text-left">
+                    <p className="font-semibold text-blue-900">Clique para fazer upload</p>
+                    <p className="text-sm text-slate-600">PDF, imagens ou documentos do projeto</p>
+                  </div>
+                </>
+              )}
+            </Label>
+          </div>
+          {!!project && (
+            <p className="text-xs text-amber-600 mt-2">
+              ⚠️ Upload desabilitado durante edição de projeto existente
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Informações Básicas</CardTitle>
@@ -481,7 +776,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
               disabled={!!project}
             >
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue placeholder="Selecione o tipo de projeto" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="CAUQ">
