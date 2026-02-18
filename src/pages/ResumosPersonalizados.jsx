@@ -476,10 +476,8 @@ export default function ResumosPersonalizadosPage() {
   };
 
   const formatValue = (value, campo) => {
-    if (value === null || value === undefined) return '-';
-    
     // Se o valor é um objeto com estrutura {sim, nao, na}, retornar a resposta
-    if (typeof value === 'object' && !Array.isArray(value)) {
+    if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
       if ('sim' in value && 'nao' in value && 'na' in value) {
         if (value.sim === true) return 'Sim';
         if (value.nao === true) return 'Não';
@@ -490,11 +488,15 @@ export default function ResumosPersonalizadosPage() {
       return '-';
     }
     
-    if (campo.includes('approved') || campo.includes('conforme')) {
+    // Verificar campos de conformidade e aprovação ANTES do check de null
+    if (campo && (campo.includes('approved') || campo.includes('conforme'))) {
       if (value === true) return 'Sim';
       if (value === false) return 'Não';
+      if (value === null || value === undefined) return 'N/A';
       return 'Pendente';
     }
+    
+    if (value === null || value === undefined) return '-';
     
     if (campo.includes('data')) {
       try {
