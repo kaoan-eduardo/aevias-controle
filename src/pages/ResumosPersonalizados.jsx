@@ -668,6 +668,79 @@ export default function ResumosPersonalizadosPage() {
 
             resultados.push(linha);
           });
+        } else if (tipo === 'ChecklistConcretagem') {
+          // Para ChecklistConcretagem, criar uma linha por carga de concreto
+          const cargas = ensaio.cargas_concreto || [];
+
+          if (cargas.length > 0) {
+            cargas.forEach((carga, idx) => {
+              const linha = {
+                tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+                id: `${ensaio.id}_Carga${idx + 1}`,
+                data: formatValue(ensaio.data, 'data')
+              };
+
+              campos.forEach(campoKey => {
+                const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+
+                if (campoKey === 'cargas_concreto') {
+                  // Para cada subfield da carga, pegar o valor da carga atual
+                  campo.subfields.forEach(subfield => {
+                    if (subfield.key.startsWith('qtd_cps_') || subfield.key.startsWith('tipo_ruptura_')) {
+                      // Processar contagem de CPs por dias de ruptura
+                      const diasRuptura = parseInt(subfield.key.match(/\d+/)[0]);
+                      const cps = carga.corpos_prova || [];
+                      
+                      if (subfield.key.startsWith('qtd_cps_')) {
+                        const qtd = cps.filter(cp => cp.dias_ruptura === diasRuptura).length;
+                        linha[subfield.label] = qtd > 0 ? qtd : '-';
+                      } else if (subfield.key.startsWith('tipo_ruptura_')) {
+                        const tiposRuptura = cps
+                          .filter(cp => cp.dias_ruptura === diasRuptura)
+                          .map(cp => {
+                            if (cp.tipo_ruptura === 'compressao_axial') return 'Compressão Axial';
+                            if (cp.tipo_ruptura === 'comp_diametral') return 'Compressão Diametral';
+                            if (cp.tipo_ruptura === 'tracao_flexao') return 'Tração Flexão';
+                            return cp.tipo_ruptura;
+                          });
+                        linha[subfield.label] = tiposRuptura.length > 0 ? tiposRuptura.join(', ') : '-';
+                      }
+                    } else {
+                      const value = getNestedValue(carga, subfield.key);
+                      linha[subfield.label] = formatValue(value, subfield.key);
+                    }
+                  });
+                } else {
+                  // Campos do ensaio principal
+                  const value = getNestedValue(ensaio, campoKey);
+                  linha[campo.label] = formatValue(value, campoKey);
+                }
+              });
+
+              resultados.push(linha);
+            });
+          } else {
+            // Se não houver cargas, criar uma linha única
+            const linha = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: ensaio.id,
+              data: formatValue(ensaio.data, 'data')
+            };
+
+            campos.forEach(campoKey => {
+              const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+              if (campo?.subfields) {
+                campo.subfields.forEach(subfield => {
+                  linha[subfield.label] = '-';
+                });
+              } else {
+                const value = getNestedValue(ensaio, campoKey);
+                linha[campo.label] = formatValue(value, campoKey);
+              }
+            });
+
+            resultados.push(linha);
+          }
         } else if (tipo === 'ChecklistUsina') {
           console.log('=== DEBUG ChecklistUsina ===');
           console.log('Ensaio ID:', ensaio.id);
