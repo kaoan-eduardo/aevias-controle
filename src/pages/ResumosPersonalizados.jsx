@@ -192,10 +192,10 @@ const CAMPOS_POR_TIPO = {
     { key: "controle_aplicacao.espessura_camada.conforme", label: "Espessura Camada Conforme" }
   ],
   ChecklistMRAF: [
+    { key: "laboratorista_name", label: "Laboratorista" },
     { key: "rodovia", label: "Rodovia" },
     { key: "trecho", label: "Trecho" },
-    { key: "projeto_utilizado", label: "Projeto" },
-    { key: "usina", label: "Usina" },
+    { key: "project_name", label: "Projeto" },
     { key: "empreiteira", label: "Empreiteira" },
     { key: "condicionamento_insumos.agregados_separados", label: "Agregados Separados" },
     { key: "condicionamento_insumos.agregados_cobertos", label: "Agregados Cobertos" },
@@ -207,8 +207,7 @@ const CAMPOS_POR_TIPO = {
     { key: "preparacao_superficie.pavimento_patologias", label: "Pavimento com Patologias" },
     { key: "preparacao_superficie.superficie_fresada", label: "Superfície Fresada" },
     { key: "preparacao_superficie.superficie_limpa", label: "Superfície Limpa" },
-    { key: "acompanhamento_aplicacao.tempo_rompimento_cura.realizado", label: "Tempo Rompimento/Cura Realizado" },
-    { key: "acompanhamento_aplicacao.tempo_rompimento_cura.resultado", label: "Tempo Rompimento/Cura" },
+    { key: "acompanhamento_aplicacao.tempo_rompimento_cura.realizado", label: "Tempo Rompimento/Cura" },
     { key: "acompanhamento_aplicacao.taxa_aplicacao.realizado", label: "Taxa Aplicação Realizado" },
     { key: "acompanhamento_aplicacao.taxa_aplicacao.resultado", label: "Taxa Aplicação (kg/m²)" },
     { key: "acompanhamento_aplicacao.taxa_aplicacao.conforme", label: "Taxa Aplicação Conforme" },
@@ -536,9 +535,9 @@ export default function ResumosPersonalizadosPage() {
       });
       setLaboratoristas(Array.from(labsUnicos).sort());
 
-      // Carregar projetos para nomes (CAUQ, Sondagem e ChecklistUsina)
+      // Carregar projetos para nomes (CAUQ, Sondagem, ChecklistUsina e ChecklistMRAF)
       let todosOsProjetos = [];
-      if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina') {
+      if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina' || tipo === 'ChecklistMRAF') {
         todosOsProjetos = await base44.entities.Project.list();
       }
 
@@ -550,8 +549,8 @@ export default function ResumosPersonalizadosPage() {
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
-        // Adicionar nome do projeto se for CAUQ, Sondagem ou ChecklistUsina
-        if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina') && ensaio.project_id) {
+        // Adicionar nome do projeto se for CAUQ, Sondagem, ChecklistUsina ou ChecklistMRAF
+        if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina' || tipo === 'ChecklistMRAF') && ensaio.project_id) {
           const projeto = todosOsProjetos.find(p => p.id === ensaio.project_id);
           ensaio.project_name = projeto?.name || '-';
           // Adicionar fornecedora do ligante para ChecklistUsina
