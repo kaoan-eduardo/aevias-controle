@@ -412,9 +412,12 @@ export default function ResumosPersonalizadosPage() {
   const formatValue = (value, campo) => {
     if (value === null || value === undefined) return '-';
     
-    if (campo.includes('approved')) {
-      if (value === true) return '✅ Aprovado';
-      if (value === false) return '❌ Reprovado';
+    // Se o valor ainda é um objeto, retornar '-' (falha ao extrair valor aninhado)
+    if (typeof value === 'object' && !Array.isArray(value)) return '-';
+    
+    if (campo.includes('approved') || campo.includes('conforme')) {
+      if (value === true) return '✅ Sim';
+      if (value === false) return '❌ Não';
       return '⏳ Pendente';
     }
     
