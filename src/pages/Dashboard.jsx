@@ -69,7 +69,7 @@ export default function Dashboard() {
   const [monthlyChartData, setMonthlyChartData] = useState([]);
   const [statusChartData, setStatusChartData] = useState([]);
   const [recordsByObraChartData, setRecordsByObraChartData] = useState([]);
-  const [recordsByAccessLevelChartData, setRecordsByAccessLevelChartData] = useState([]);
+  const [recordsByTypeChartData, setRecordsByTypeChartData] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -222,39 +222,43 @@ export default function Dashboard() {
         setRecordsByObraChartData(recordsByObraData);
       }
 
-      // Process records by access level chart data
-      const recordsByAccessLevel = {
-        admin: 0,
-        gestor_contrato: 0,
-        sala_tecnica_afirmaevias: 0,
-        cliente: 0,
+      // Process records by type chart data
+      const recordsByType = {};
+      const typeColors = {
+        'EnsaioCAUQ': '#00233B',
+        'EnsaioDensidade': '#566E3D',
+        'DiarioObra': '#BFCF99',
+        'ChecklistUsina': '#FBBF24',
+        'ChecklistAplicacao': '#800020',
+        'ChecklistMRAF': '#854d0e',
+        'ChecklistConcretagem': '#4B5563',
+        'ChecklistTerraplanagem': '#6B8E23',
+        'EnsaioSondagem': '#4682B4',
       };
 
       allEnsaios.forEach(ensaio => {
-        const createdBy = ensaio.created_by?.toLowerCase() || '';
-        // This is a simplified approach - in a real scenario you'd fetch user data
-        // For now, we'll count by status as a proxy
-        if (createdBy) {
-          recordsByAccessLevel.admin++;
+        if (!recordsByType[ensaio.entityType]) {
+          recordsByType[ensaio.entityType] = 0;
         }
+        recordsByType[ensaio.entityType]++;
       });
 
-      const accessLevelColors = {
-        admin: '#00233B',
-        gestor_contrato: '#566E3D',
-        sala_tecnica_afirmaevias: '#BFCF99',
-        cliente: '#FBBF24',
-      };
+      const recordsByTypeData = Object.entries(recordsByType).map(([type, count]) => ({
+        name: type === 'EnsaioCAUQ' ? 'Ensaio CAUQ' : 
+              type === 'EnsaioDensidade' ? 'Ensaio Densidade' :
+              type === 'DiarioObra' ? 'Diário de Obra' :
+              type === 'ChecklistUsina' ? 'Checklist Usina' :
+              type === 'ChecklistAplicacao' ? 'Checklist Aplicação' :
+              type === 'ChecklistMRAF' ? 'Checklist MRAF' :
+              type === 'ChecklistConcretagem' ? 'Checklist Concretagem' :
+              type === 'ChecklistTerraplanagem' ? 'Checklist Terraplanagem' :
+              type === 'EnsaioSondagem' ? 'Ensaio Sondagem' :
+              type,
+        value: count,
+        color: typeColors[type] || '#999999',
+      })).sort((a, b) => b.value - a.value);
 
-      const recordsByAccessLevelData = Object.entries(recordsByAccessLevel)
-        .filter(([_, count]) => count > 0)
-        .map(([level, count]) => ({
-          name: level === 'admin' ? 'Dev' : level === 'gestor_contrato' ? 'Gestor' : level === 'sala_tecnica_afirmaevias' ? 'Sala Técnica' : 'Cliente',
-          value: count,
-          color: accessLevelColors[level],
-        }));
-
-      setRecordsByAccessLevelChartData(recordsByAccessLevelData);
+      setRecordsByTypeChartData(recordsByTypeData);
 
       // Process monthly chart data
       const now = new Date();
@@ -474,23 +478,23 @@ export default function Dashboard() {
             <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-[#00233B]">
-                  Tipo de Registro por Perfil
+                  Tipos de Registros
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={recordsByAccessLevelChartData}
+                      data={recordsByTypeChartData}
                       cx="50%"
                       cy="50%"
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, value }) => `${name}: ${value}`}
                     >
-                      {recordsByAccessLevelChartData.map((entry, index) => (
+                      {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
@@ -503,30 +507,29 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Tipo de Registro por Perfil for all users */}
-        {!isCliente && recordsByAccessLevelChartData.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div></div>
+        {/* Tipos de Registros for gestores, salas técnicas and clientes */}
+        {(userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'cliente') && recordsByTypeChartData.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 mb-8">
             <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-[#00233B]">
-                  Tipo de Registro por Perfil
+                  Tipos de Registros
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={recordsByAccessLevelChartData}
+                      data={recordsByTypeChartData}
                       cx="50%"
                       cy="50%"
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, value }) => `${name}: ${value}`}
                     >
-                      {recordsByAccessLevelChartData.map((entry, index) => (
+                      {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
