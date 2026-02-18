@@ -173,8 +173,7 @@ const CAMPOS_POR_TIPO = {
       { key: "rtcd_25c.quantidade", label: "Qtd. RTCD" },
       { key: "rtcd_25c.conforme", label: "RTCD Conforme" }
     ]},
-    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" },
-    { key: "acoes_corretivas_descricao", label: "Descrição Ações Corretivas" }
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistAplicacao: [
     { key: "data", label: "Data" },
