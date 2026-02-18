@@ -173,7 +173,6 @@ const CAMPOS_POR_TIPO = {
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistAplicacao: [
-    { key: "data", label: "Data" },
     { key: "rodovia", label: "Rodovia" },
     { key: "trecho", label: "Trecho" },
     { key: "usina", label: "Usina" },
