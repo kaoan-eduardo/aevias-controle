@@ -705,10 +705,30 @@ export default function ResumosPersonalizadosPage() {
                           value = true;
                         }
                       }
-                    } else {
-                      // Outros campos do controle CAUQ
-                      value = getNestedValue(controleCauq, subfield.key);
-                      console.log('>>> Valor via getNestedValue:', value);
+                    } 
+                     // Campos específicos de VAM e RTCD
+                     else if (subfield.key === 'vam.resultados') {
+                       const vamMarshall = controleCauq.vam_marshall;
+                       if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
+                         value = vamMarshall.resultados.join(', ');
+                       }
+                     } else if (subfield.key === 'vam.quantidade') {
+                       value = controleCauq.vam_marshall?.quantidade;
+                     } else if (subfield.key === 'vam.conforme') {
+                       value = controleCauq.vam_marshall?.conforme;
+                     } else if (subfield.key === 'rtcd_25c.resultados') {
+                       const rtcd = controleCauq.rtcd_25c;
+                       if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
+                         value = rtcd.resultados.join(', ');
+                       }
+                     } else if (subfield.key === 'rtcd_25c.quantidade') {
+                       value = controleCauq.rtcd_25c?.quantidade;
+                     } else if (subfield.key === 'rtcd_25c.conforme') {
+                       value = controleCauq.rtcd_25c?.conforme;
+                     } else {
+                     // Outros campos do controle CAUQ
+                     value = getNestedValue(controleCauq, subfield.key);
+                     console.log('>>> Valor via getNestedValue:', value);
                     }
 
                     linha[subfield.label] = formatValue(value, subfield.key);
@@ -800,9 +820,29 @@ export default function ResumosPersonalizadosPage() {
                         value = true;
                       }
                     }
-                  } else {
-                    value = getNestedValue(controleCauq, subfield.key);
-                    console.log('>>> Valor via getNestedValue:', value);
+                  } 
+                   // Campos específicos de VAM e RTCD (sem rodadas)
+                   else if (subfield.key === 'vam.resultados') {
+                     const vamMarshall = controleCauq.vam_marshall;
+                     if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
+                       value = vamMarshall.resultados.join(', ');
+                     }
+                   } else if (subfield.key === 'vam.quantidade') {
+                     value = controleCauq.vam_marshall?.quantidade;
+                   } else if (subfield.key === 'vam.conforme') {
+                     value = controleCauq.vam_marshall?.conforme;
+                   } else if (subfield.key === 'rtcd_25c.resultados') {
+                     const rtcd = controleCauq.rtcd_25c;
+                     if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
+                       value = rtcd.resultados.join(', ');
+                     }
+                   } else if (subfield.key === 'rtcd_25c.quantidade') {
+                     value = controleCauq.rtcd_25c?.quantidade;
+                   } else if (subfield.key === 'rtcd_25c.conforme') {
+                     value = controleCauq.rtcd_25c?.conforme;
+                   } else {
+                   value = getNestedValue(controleCauq, subfield.key);
+                   console.log('>>> Valor via getNestedValue:', value);
                   }
 
                   linha[subfield.label] = formatValue(value, subfield.key);
