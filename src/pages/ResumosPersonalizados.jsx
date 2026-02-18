@@ -127,7 +127,7 @@ const CAMPOS_POR_TIPO = {
   ChecklistUsina: [
     { key: "data", label: "Data" },
     { key: "laboratorista_name", label: "Laboratorista" },
-    { key: "projeto_utilizado", label: "Projeto" },
+    { key: "project_name", label: "Projeto" },
     { key: "faixa_especificada", label: "Faixa" },
     { key: "ligante", label: "Ligante" },
     { key: "pedreira", label: "Pedreira" },
@@ -152,7 +152,8 @@ const CAMPOS_POR_TIPO = {
       { key: "teor_ligante.conforme", label: "Teor Ligante Conforme" },
       { key: "densidade_aparente.resultados", label: "Densidade Aparente (g/cm³)" },
       { key: "densidade_aparente.quantidade", label: "Qtd. Densidade Aparente" },
-      { key: "densidade_aparente.conforme", label: "Densidade Aparente Conforme" },
+      { key: "densidade_rice.resultados", label: "Densidade RICE (g/cm³)" },
+      { key: "densidade_rice.quantidade", label: "Qtd. Densidade RICE" },
       { key: "volume_vazios.resultados", label: "Volume Vazios (%)" },
       { key: "volume_vazios.quantidade", label: "Qtd. Volume Vazios" },
       { key: "volume_vazios.conforme", label: "Volume Vazios Conforme" },
@@ -162,15 +163,15 @@ const CAMPOS_POR_TIPO = {
       { key: "rbv.resultados", label: "RBV (%)" },
       { key: "rbv.quantidade", label: "Qtd. RBV" },
       { key: "rbv.conforme", label: "RBV Conforme" },
-      { key: "rtcd.resultados", label: "RTCD (MPa)" },
-      { key: "rtcd.quantidade", label: "Qtd. RTCD" },
-      { key: "rtcd.conforme", label: "RTCD Conforme" },
       { key: "estabilidade.resultados", label: "Estabilidade (Kgf)" },
       { key: "estabilidade.quantidade", label: "Qtd. Estabilidade" },
       { key: "estabilidade.conforme", label: "Estabilidade Conforme" },
       { key: "fluencia.resultados", label: "Fluência (mm)" },
       { key: "fluencia.quantidade", label: "Qtd. Fluência" },
-      { key: "fluencia.conforme", label: "Fluência Conforme" }
+      { key: "fluencia.conforme", label: "Fluência Conforme" },
+      { key: "rtcd_25c.resultados", label: "RTCD (MPa)" },
+      { key: "rtcd_25c.quantidade", label: "Qtd. RTCD" },
+      { key: "rtcd_25c.conforme", label: "RTCD Conforme" }
     ]},
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" },
     { key: "acoes_corretivas_descricao", label: "Descrição Ações Corretivas" }
