@@ -189,7 +189,8 @@ const CAMPOS_POR_TIPO = {
     { key: "controle_aplicacao.temp_aplicacao_cargas.quantidade", label: "Temp. Aplicação Qtd" },
     { key: "controle_aplicacao.temp_aplicacao_cargas.conforme", label: "Temp. Aplicação Conforme" },
     { key: "controle_aplicacao.espessura_camada.quantidade", label: "Espessura Camada Qtd" },
-    { key: "controle_aplicacao.espessura_camada.conforme", label: "Espessura Camada Conforme" }
+    { key: "controle_aplicacao.espessura_camada.conforme", label: "Espessura Camada Conforme" },
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistMRAF: [
     { key: "laboratorista_name", label: "Laboratorista" },
