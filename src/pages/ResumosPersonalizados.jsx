@@ -253,7 +253,6 @@ const CAMPOS_POR_TIPO = {
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistTerraplanagem: [
-    { key: "data", label: "Data" },
     { key: "laboratorista_name", label: "Laboratorista" },
     { key: "rodovia", label: "Rodovia" },
     { key: "empreiteira", label: "Empreiteira" },
