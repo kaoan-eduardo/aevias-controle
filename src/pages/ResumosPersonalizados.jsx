@@ -157,9 +157,9 @@ const CAMPOS_POR_TIPO = {
       { key: "volume_vazios.resultados", label: "Volume Vazios (%)" },
       { key: "volume_vazios.quantidade", label: "Qtd. Volume Vazios" },
       { key: "volume_vazios.conforme", label: "Volume Vazios Conforme" },
-      { key: "vam_marshall.resultados", label: "VAM (%)" },
-      { key: "vam_marshall.quantidade", label: "Qtd. VAM" },
-      { key: "vam_marshall.conforme", label: "VAM Conforme" },
+      { key: "vam.resultados", label: "VAM (%)" },
+      { key: "vam.quantidade", label: "Qtd. VAM" },
+      { key: "vam.conforme", label: "VAM Conforme" },
       { key: "rbv.resultados", label: "RBV (%)" },
       { key: "rbv.quantidade", label: "Qtd. RBV" },
       { key: "rbv.conforme", label: "RBV Conforme" },
@@ -706,8 +706,17 @@ export default function ResumosPersonalizadosPage() {
                         }
                       }
                     } 
-                     // Campos específicos de RTCD
-                     else if (subfield.key === 'rtcd_25c.resultados') {
+                     // Campos específicos de VAM e RTCD
+                     else if (subfield.key === 'vam.resultados') {
+                       const vamMarshall = controleCauq.vam_marshall;
+                       if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
+                         value = vamMarshall.resultados.join(', ');
+                       }
+                     } else if (subfield.key === 'vam.quantidade') {
+                       value = controleCauq.vam_marshall?.quantidade;
+                     } else if (subfield.key === 'vam.conforme') {
+                       value = controleCauq.vam_marshall?.conforme;
+                     } else if (subfield.key === 'rtcd_25c.resultados') {
                        const rtcd = controleCauq.rtcd_25c;
                        if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
                          value = rtcd.resultados.join(', ');
@@ -812,8 +821,17 @@ export default function ResumosPersonalizadosPage() {
                       }
                     }
                   } 
-                   // Campos específicos de RTCD (sem rodadas)
-                   else if (subfield.key === 'rtcd_25c.resultados') {
+                   // Campos específicos de VAM e RTCD (sem rodadas)
+                   else if (subfield.key === 'vam.resultados') {
+                     const vamMarshall = controleCauq.vam_marshall;
+                     if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
+                       value = vamMarshall.resultados.join(', ');
+                     }
+                   } else if (subfield.key === 'vam.quantidade') {
+                     value = controleCauq.vam_marshall?.quantidade;
+                   } else if (subfield.key === 'vam.conforme') {
+                     value = controleCauq.vam_marshall?.conforme;
+                   } else if (subfield.key === 'rtcd_25c.resultados') {
                      const rtcd = controleCauq.rtcd_25c;
                      if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
                        value = rtcd.resultados.join(', ');
