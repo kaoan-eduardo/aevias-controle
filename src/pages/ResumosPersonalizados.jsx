@@ -916,7 +916,7 @@ export default function ResumosPersonalizadosPage() {
               }
             } else {
               const value = getNestedValue(ensaio, campoKey);
-              linha[campoKey] = formatValue(value, campoKey);
+              linha[campo.label] = formatValue(value, campoKey);
             }
           });
 
