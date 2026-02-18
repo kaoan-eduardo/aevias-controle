@@ -548,12 +548,13 @@ const AppLayout = ({ children }) => {
                   <h1 className="text-xl font-bold text-[#00233B]">Afirmaevias</h1>
                 </div>
                 {canCreateRecords && (
-                  <DialogTrigger asChild>
-                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors">
-                      <FilePlus className="w-5 h-5 text-[#BFCF99]"/>
-                    </Button>
-                  </DialogTrigger>
-                )}
+                   <DialogTrigger asChild>
+                     <Button className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-[#BFCF99] hover:bg-[#00233B]/90 transition-all duration-200 px-4 py-2 rounded-lg font-semibold animate-pulse md:animate-none">
+                       <FilePlus className="w-6 h-6 text-[#BFCF99] mr-2"/>
+                       Novo
+                     </Button>
+                   </DialogTrigger>
+                 )}
               </div>
             </header>
 
