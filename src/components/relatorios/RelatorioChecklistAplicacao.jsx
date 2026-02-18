@@ -394,7 +394,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   <th className="border border-slate-300 p-0.5 text-center font-medium w-10">Sim</th>
                   <th className="border border-slate-300 p-0.5 text-center font-medium w-10">Não</th>
                   <th className="border border-slate-300 p-0.5 text-center font-medium w-16">Resultado</th>
-                  <th className="border border-slate-300 p-0.5 text-center font-medium w-20">Conformidade</th>
+                  <th className="border border-slate-300 p-0.5 text-center font-medium w-20">Limites DNIT 148/2012</th>
                   <th className="border border-slate-300 p-0.5 text-left font-medium">Observações</th>
                 </tr>
               </thead>
@@ -436,12 +436,13 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   <td className="border border-slate-300 p-0.5 text-center">
                     <CheckmarkColumn value={checklist.pintura_ligacao?.taxa_pintura?.realizado} isYesColumn={false} />
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className={`border border-slate-300 p-0.5 text-center ${
+                    checklist.pintura_ligacao?.taxa_pintura?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
                     {checklist.pintura_ligacao?.taxa_pintura?.resultado || '-'}
+                    {checklist.pintura_ligacao?.taxa_pintura?.conforme === false && ' ⚠️'}
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    {checklist.pintura_ligacao?.taxa_pintura?.conforme === true ? 'Sim' : checklist.pintura_ligacao?.taxa_pintura?.conforme === false ? 'Não' : '-'}
-                  </td>
+                  <td className="border border-slate-300 p-0.5 text-center" style={{ fontSize: '8px' }}>0,8 l/m² a 1,0 l/m²</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-300 p-0.5">Resíduo da Emulsão:</td>
@@ -464,12 +465,13 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   <td className="border border-slate-300 p-0.5 text-center">
                     <CheckmarkColumn value={checklist.pintura_ligacao?.taxa_pintura_residual?.realizado} isYesColumn={false} />
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
+                  <td className={`border border-slate-300 p-0.5 text-center ${
+                    checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === false ? 'text-red-600 font-bold' : ''
+                  }`}>
                     {checklist.pintura_ligacao?.taxa_pintura_residual?.resultado || '-'}
+                    {checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === false && ' ⚠️'}
                   </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    {checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === true ? 'Sim' : checklist.pintura_ligacao?.taxa_pintura_residual?.conforme === false ? 'Não' : '-'}
-                  </td>
+                  <td className="border border-slate-300 p-0.5 text-center" style={{ fontSize: '8px' }}>0,3 l/m² a 0,4 l/m²</td>
                 </tr>
               </tbody>
             </table>
