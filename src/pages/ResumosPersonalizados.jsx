@@ -277,7 +277,6 @@ const CAMPOS_POR_TIPO = {
     { key: "ensaios_empreiteira.massa_especifica_in_situ.conforme", label: "Massa Específica In Situ - Conforme" },
     { key: "umidade_in_situ", label: "Umidade In Situ (%)" },
     { key: "ensaios_empreiteira.granulometria.quantidade", label: "Granulometria - Qtde" },
-    { key: "ensaios_empreiteira.granulometria.resultados", label: "Granulometria - Resultados" },
     { key: "ensaios_empreiteira.granulometria.conforme", label: "Granulometria - Conforme" },
     { key: "ensaios_empreiteira.variacao_umidade_conforme", label: "Variação Umidade - Conforme" },
     { key: "ensaios_empreiteira.grau_compactacao_conforme", label: "Grau Compactação - Conforme" },
