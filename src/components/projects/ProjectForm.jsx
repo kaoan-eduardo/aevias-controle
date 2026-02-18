@@ -381,119 +381,19 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
       console.log('✅ Dados extraídos:', response);
 
       if (response.success && response.dados) {
-        console.log('📥 Aplicando dados extraídos ao formulário:', response.dados);
-        
-        // Preencher o formulário com os dados extraídos, mesclando objetos nested
-        setFormData(prev => {
-          const novoFormData = { ...prev };
-          
-          // Campos simples
-          if (response.dados.name) novoFormData.name = response.dados.name;
-          if (response.dados.client) novoFormData.client = response.dados.client;
-          if (response.dados.location) novoFormData.location = response.dados.location;
-          if (response.dados.description) novoFormData.description = response.dados.description;
-          if (response.dados.equivalente_areia_minimo) novoFormData.equivalente_areia_minimo = response.dados.equivalente_areia_minimo;
-          
-          // Agregados
-          if (response.dados.agregados && Array.isArray(response.dados.agregados)) {
-            novoFormData.agregados = response.dados.agregados;
-          }
-          
-          // Ligante (CAUQ)
-          if (response.dados.ligante) {
-            novoFormData.ligante = { ...prev.ligante, ...response.dados.ligante };
-          }
-          
-          // Faixas de trabalho
-          if (response.dados.faixa_trabalho) {
-            novoFormData.faixa_trabalho = response.dados.faixa_trabalho;
-          }
-          if (response.dados.faixa_trabalho_min) {
-            novoFormData.faixa_trabalho_min = response.dados.faixa_trabalho_min;
-          }
-          if (response.dados.faixa_trabalho_max) {
-            novoFormData.faixa_trabalho_max = response.dados.faixa_trabalho_max;
-          }
-          
-          // Teor de ligante
-          if (response.dados.teor_ligante) {
-            novoFormData.teor_ligante = { ...prev.teor_ligante, ...response.dados.teor_ligante };
-          }
-          
-          // Densidades
-          if (response.dados.massa_especifica_aparente) {
-            novoFormData.massa_especifica_aparente = response.dados.massa_especifica_aparente;
-          }
-          if (response.dados.densidade_maxima_medida) {
-            novoFormData.densidade_maxima_medida = response.dados.densidade_maxima_medida;
-          }
-          
-          // Temperaturas (CAUQ)
-          if (response.dados.temperaturas) {
-            novoFormData.temperaturas = {
-              mistura: { ...prev.temperaturas.mistura, ...(response.dados.temperaturas.mistura || {}) },
-              compactacao: { ...prev.temperaturas.compactacao, ...(response.dados.temperaturas.compactacao || {}) },
-              espalhamento: { ...prev.temperaturas.espalhamento, ...(response.dados.temperaturas.espalhamento || {}) }
-            };
-          }
-          
-          // Parâmetros Marshall
-          if (response.dados.volume_vazios) {
-            novoFormData.volume_vazios = { ...prev.volume_vazios, ...response.dados.volume_vazios };
-          }
-          if (response.dados.estabilidade) {
-            novoFormData.estabilidade = { ...prev.estabilidade, ...response.dados.estabilidade };
-          }
-          if (response.dados.fluencia) {
-            novoFormData.fluencia = { ...prev.fluencia, ...response.dados.fluencia };
-          }
-          if (response.dados.vam) {
-            novoFormData.vam = { ...prev.vam, ...response.dados.vam };
-          }
-          if (response.dados.rbv) {
-            novoFormData.rbv = { ...prev.rbv, ...response.dados.rbv };
-          }
-          if (response.dados.rtcd) {
-            novoFormData.rtcd = { ...prev.rtcd, ...response.dados.rtcd };
-          }
-          
-          // MRAF específico
-          if (response.dados.emulsao_utilizada) {
-            novoFormData.emulsao_utilizada = response.dados.emulsao_utilizada;
-          }
-          if (response.dados.teor_ligante_residual) {
-            novoFormData.teor_ligante_residual = { ...prev.teor_ligante_residual, ...response.dados.teor_ligante_residual };
-          }
-          if (response.dados.percentual_emulsao) {
-            novoFormData.percentual_emulsao = response.dados.percentual_emulsao;
-          }
-          if (response.dados.taxa_aplicacao_mraf) {
-            novoFormData.taxa_aplicacao_mraf = { ...prev.taxa_aplicacao_mraf, ...response.dados.taxa_aplicacao_mraf };
-          }
-          if (response.dados.densidade_mistura_mraf) {
-            novoFormData.densidade_mistura_mraf = response.dados.densidade_mistura_mraf;
-          }
-          
-          // Camadas Granulares específico
-          if (response.dados.melhorador_utilizado) {
-            novoFormData.camadas_granulares.melhorador_utilizado = response.dados.melhorador_utilizado;
-          }
-          if (response.dados.umidade_otima) {
-            novoFormData.camadas_granulares.umidade_otima = response.dados.umidade_otima;
-          }
-          if (response.dados.densidade_otima) {
-            novoFormData.camadas_granulares.densidade_otima = response.dados.densidade_otima;
-          }
-          if (response.dados.resistencia_mpa) {
-            novoFormData.camadas_granulares.resistencia_mpa = response.dados.resistencia_mpa;
-          }
-          
-          return novoFormData;
-        });
+        // Preencher o formulário com os dados extraídos
+        setFormData(prev => ({
+          ...prev,
+          ...response.dados,
+          // Manter os campos já selecionados
+          tipo_projeto: prev.tipo_projeto,
+          regional_id: prev.regional_id,
+          faixa_granulometrica_id: prev.faixa_granulometrica_id
+        }));
 
         alert('✅ Dados extraídos com sucesso! Revise os campos antes de salvar.');
       } else {
-        throw new Error(response.error || 'Falha ao extrair dados do arquivo');
+        throw new Error('Falha ao extrair dados do arquivo');
       }
 
     } catch (error) {
