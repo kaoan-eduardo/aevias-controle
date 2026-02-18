@@ -177,7 +177,6 @@ const CAMPOS_POR_TIPO = {
     { key: "rodovia", label: "Rodovia" },
     { key: "trecho", label: "Trecho" },
     { key: "usina", label: "Usina" },
-    { key: "controle_aplicacao", label: "Controle Aplicação" },
     { key: "approved", label: "Status Aprovação" }
   ],
   ChecklistMRAF: [
