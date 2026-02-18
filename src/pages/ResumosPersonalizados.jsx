@@ -222,7 +222,7 @@ const CAMPOS_POR_TIPO = {
     { key: "controle_aplicacao.km_estaca_final", label: "KM/Estaca Final" },
     { key: "controle_aplicacao.lado_final", label: "Lado Final" },
     { key: "controle_aplicacao.quantidade_aplicada_m2", label: "Quantidade Aplicada (m²)" },
-    { key: "approved", label: "Status Aprovação" }
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistConcretagem: [
     { key: "data", label: "Data" },
