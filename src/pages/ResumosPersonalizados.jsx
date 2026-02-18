@@ -669,8 +669,8 @@ export default function ResumosPersonalizadosPage() {
                         const numResultado = parseInt(subfield.key.split('_').pop());
                         const idx = numResultado - 1;
                         
-                        if (extracaoRotarex && Array.isArray(extracaoRotarex) && extracaoRotarex[idx]) {
-                          value = extracaoRotarex[idx]?.teor_ligante;
+                        if (extracaoRotarex?.resultados && Array.isArray(extracaoRotarex.resultados)) {
+                          value = extracaoRotarex.resultados[idx];
                         }
                         
                         console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
@@ -680,25 +680,30 @@ export default function ResumosPersonalizadosPage() {
                         const numResultado = parseInt(subfield.key.split('_').pop());
                         const idx = numResultado - 1;
                         
-                        if (extracaoSoxhlet && Array.isArray(extracaoSoxhlet) && extracaoSoxhlet[idx]) {
-                          value = extracaoSoxhlet[idx]?.teor_ligante;
+                        if (extracaoSoxhlet?.resultados && Array.isArray(extracaoSoxhlet.resultados)) {
+                          value = extracaoSoxhlet.resultados[idx];
                         }
                         
                         console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
                       }
                       // Quantidade e conforme
                       else if (subfield.key === 'teor_ligante.quantidade') {
-                        const teorLigante = controleCauq.teor_ligante;
-                        value = teorLigante?.quantidade;
-                        
-                        if (value === undefined && extracaoRotarex) {
-                          value = Array.isArray(extracaoRotarex) ? extracaoRotarex.length : 0;
-                        }
-                        if (value === undefined && extracaoSoxhlet) {
-                          value = Array.isArray(extracaoSoxhlet) ? extracaoSoxhlet.length : 0;
-                        }
+                        // Somar quantidade de rotarex e soxhlet
+                        const qtdRotarex = extracaoRotarex?.quantidade || 0;
+                        const qtdSoxhlet = extracaoSoxhlet?.quantidade || 0;
+                        value = qtdRotarex + qtdSoxhlet;
                       } else if (subfield.key === 'teor_ligante.conforme') {
-                        value = controleCauq.teor_ligante?.conforme;
+                        // Conforme se ambos forem conformes (ou null se nenhum foi realizado)
+                        const conformeRotarex = extracaoRotarex?.conforme;
+                        const conformeSoxhlet = extracaoSoxhlet?.conforme;
+                        
+                        if (conformeRotarex === null && conformeSoxhlet === null) {
+                          value = null;
+                        } else if (conformeRotarex === false || conformeSoxhlet === false) {
+                          value = false;
+                        } else if (conformeRotarex === true || conformeSoxhlet === true) {
+                          value = true;
+                        }
                       }
                     } else {
                       // Outros campos do controle CAUQ
@@ -759,8 +764,8 @@ export default function ResumosPersonalizadosPage() {
                       const numResultado = parseInt(subfield.key.split('_').pop());
                       const idx = numResultado - 1;
                       
-                      if (extracaoRotarex && Array.isArray(extracaoRotarex) && extracaoRotarex[idx]) {
-                        value = extracaoRotarex[idx]?.teor_ligante;
+                      if (extracaoRotarex?.resultados && Array.isArray(extracaoRotarex.resultados)) {
+                        value = extracaoRotarex.resultados[idx];
                       }
                       
                       console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
@@ -770,25 +775,30 @@ export default function ResumosPersonalizadosPage() {
                       const numResultado = parseInt(subfield.key.split('_').pop());
                       const idx = numResultado - 1;
                       
-                      if (extracaoSoxhlet && Array.isArray(extracaoSoxhlet) && extracaoSoxhlet[idx]) {
-                        value = extracaoSoxhlet[idx]?.teor_ligante;
+                      if (extracaoSoxhlet?.resultados && Array.isArray(extracaoSoxhlet.resultados)) {
+                        value = extracaoSoxhlet.resultados[idx];
                       }
                       
                       console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
                     }
                     // Quantidade e conforme
                     else if (subfield.key === 'teor_ligante.quantidade') {
-                      const teorLigante = controleCauq.teor_ligante;
-                      value = teorLigante?.quantidade;
-                      
-                      if (value === undefined && extracaoRotarex) {
-                        value = Array.isArray(extracaoRotarex) ? extracaoRotarex.length : 0;
-                      }
-                      if (value === undefined && extracaoSoxhlet) {
-                        value = Array.isArray(extracaoSoxhlet) ? extracaoSoxhlet.length : 0;
-                      }
+                      // Somar quantidade de rotarex e soxhlet
+                      const qtdRotarex = extracaoRotarex?.quantidade || 0;
+                      const qtdSoxhlet = extracaoSoxhlet?.quantidade || 0;
+                      value = qtdRotarex + qtdSoxhlet;
                     } else if (subfield.key === 'teor_ligante.conforme') {
-                      value = controleCauq.teor_ligante?.conforme;
+                      // Conforme se ambos forem conformes (ou null se nenhum foi realizado)
+                      const conformeRotarex = extracaoRotarex?.conforme;
+                      const conformeSoxhlet = extracaoSoxhlet?.conforme;
+                      
+                      if (conformeRotarex === null && conformeSoxhlet === null) {
+                        value = null;
+                      } else if (conformeRotarex === false || conformeSoxhlet === false) {
+                        value = false;
+                      } else if (conformeRotarex === true || conformeSoxhlet === true) {
+                        value = true;
+                      }
                     }
                   } else {
                     value = getNestedValue(controleCauq, subfield.key);
