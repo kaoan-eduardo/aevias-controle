@@ -22,6 +22,7 @@ const TIPOS_ENSAIO = [
   { value: "ChecklistMRAF", label: "Checklist MRAF" },
   { value: "ChecklistConcretagem", label: "Checklist de Concretagem" },
   { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem" },
+  { value: "ChecklistReciclagem", label: "Checklist de Reciclagem" },
   { value: "DiarioObra", label: "Diário de Obra" }
 ];
 
@@ -280,6 +281,48 @@ const CAMPOS_POR_TIPO = {
     { key: "ensaios_empreiteira.granulometria.conforme", label: "Granulometria - Conforme" },
     { key: "variacao_umidade_valor", label: "Variação Umidade (%)" },
     { key: "grau_compactacao_valor", label: "Grau Compactação (%)" },
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
+  ],
+  ChecklistReciclagem: [
+    { key: "laboratorista_name", label: "Laboratorista" },
+    { key: "rodovia", label: "Rodovia" },
+    { key: "empreiteira", label: "Empreiteira" },
+    { key: "estaca", label: "Estaca" },
+    { key: "trecho", label: "Trecho" },
+    { key: "faixa", label: "Faixa" },
+    { key: "material", label: "Material" },
+    { key: "inspetor_fiscal", label: "Inspetor Fiscal" },
+    { key: "acompanhamento_execucao.remocao_material_existente", label: "Remoção Material" },
+    { key: "acompanhamento_execucao.espalhamento_material_novo", label: "Espalhamento Material" },
+    { key: "acompanhamento_execucao.compactacao_conforme_projeto", label: "Compactação Conforme" },
+    { key: "acompanhamento_execucao.ensaio_viga_benkelman", label: "Viga Benkelman" },
+    { key: "acompanhamento_execucao.teste_carga", label: "Teste de Carga" },
+    { key: "acompanhamento_execucao.falha_compactacao", label: "Falha Compactação" },
+    { key: "ensaios_empreiteira.compactacao_proctor.quantidade", label: "Proctor - Qtde" },
+    { key: "ensaios_empreiteira.compactacao_proctor.resultados", label: "Proctor - Resultados (g/cm³)" },
+    { key: "ensaios_empreiteira.compactacao_proctor.conforme", label: "Proctor - Conforme" },
+    { key: "ensaios_empreiteira.taxa_agregado.quantidade", label: "Taxa Agregado - Qtde" },
+    { key: "ensaios_empreiteira.taxa_agregado.resultados", label: "Taxa Agregado - Resultados" },
+    { key: "ensaios_empreiteira.taxa_agregado.conforme", label: "Taxa Agregado - Conforme" },
+    { key: "ensaios_empreiteira.taxa_cimento.quantidade", label: "Taxa Cimento - Qtde" },
+    { key: "ensaios_empreiteira.taxa_cimento.resultados", label: "Taxa Cimento - Resultados" },
+    { key: "ensaios_empreiteira.taxa_cimento.conforme", label: "Taxa Cimento - Conforme" },
+    { key: "ensaios_empreiteira.umidade_frigideira.quantidade", label: "Umidade Frigideira - Qtde" },
+    { key: "ensaios_empreiteira.umidade_frigideira.resultados", label: "Umidade Frigideira - Resultados (%)" },
+    { key: "ensaios_empreiteira.umidade_frigideira.conforme", label: "Umidade Frigideira - Conforme" },
+    { key: "ensaios_empreiteira.massa_especifica_in_situ.quantidade", label: "Massa Específica In Situ - Qtde" },
+    { key: "ensaios_empreiteira.massa_especifica_in_situ.resultados", label: "Massa Específica In Situ - Resultados (g/cm³)" },
+    { key: "ensaios_empreiteira.massa_especifica_in_situ.conforme", label: "Massa Específica In Situ - Conforme" },
+    { key: "ensaios_empreiteira.granulometria.quantidade", label: "Granulometria - Qtde" },
+    { key: "ensaios_empreiteira.granulometria.conforme", label: "Granulometria - Conforme" },
+    { key: "ensaios_empreiteira.moldagem_resistencia.quantidade", label: "Moldagem Resistência - Qtde" },
+    { key: "ensaios_empreiteira.moldagem_resistencia.conforme", label: "Moldagem Resistência - Conforme" },
+    { key: "ensaios_empreiteira.viga_benkelman.quantidade", label: "Viga Benkelman - Qtde" },
+    { key: "ensaios_empreiteira.viga_benkelman.conforme", label: "Viga Benkelman - Conforme" },
+    { key: "ensaios_empreiteira.taxa_pintura_ligacao.quantidade", label: "Taxa Pintura Ligação - Qtde" },
+    { key: "ensaios_empreiteira.taxa_pintura_ligacao.conforme", label: "Taxa Pintura Ligação - Conforme" },
+    { key: "ensaios_empreiteira.finura_cimento.quantidade", label: "Finura Cimento - Qtde" },
+    { key: "ensaios_empreiteira.finura_cimento.conforme", label: "Finura Cimento - Conforme" },
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   DiarioObra: [
@@ -1035,8 +1078,8 @@ export default function ResumosPersonalizadosPage() {
             resultados.push(linha);
           }
           console.log('=== FIM DEBUG ChecklistUsina ===');
-        } else if (tipo === 'ChecklistTerraplanagem') {
-          // Para ChecklistTerraplanagem, calcular variação de umidade e grau de compactação
+        } else if (tipo === 'ChecklistTerraplanagem' || tipo === 'ChecklistReciclagem') {
+          // Para ChecklistTerraplanagem e ChecklistReciclagem
           const linha = {
             tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
             id: ensaio.id,
@@ -1047,7 +1090,7 @@ export default function ResumosPersonalizadosPage() {
             const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
             
             if (campoKey === 'variacao_umidade_valor') {
-              // Calcular variação de umidade
+              // Calcular variação de umidade (apenas ChecklistTerraplanagem)
               const umidadeOtima = ensaio.umidade_otima_proctor;
               const umidadeInSitu = ensaio.umidade_in_situ;
               if (umidadeOtima != null && umidadeInSitu != null) {
@@ -1057,7 +1100,7 @@ export default function ResumosPersonalizadosPage() {
                 linha[campo.label] = '-';
               }
             } else if (campoKey === 'grau_compactacao_valor') {
-              // Calcular grau de compactação
+              // Calcular grau de compactação (apenas ChecklistTerraplanagem)
               const densidadeProctor = ensaio.ensaios_empreiteira?.compactacao_proctor?.resultados;
               const densidadeInSitu = ensaio.ensaios_empreiteira?.massa_especifica_in_situ?.resultados;
               
