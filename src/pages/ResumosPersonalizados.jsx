@@ -16,7 +16,6 @@ const TIPOS_ENSAIO = [
   { value: "EnsaioSondagem", label: "Sondagem" },
   { value: "EnsaioDensidadeInSitu", label: "Densidade In Situ" },
   { value: "EnsaioTaxaPinturaImprimacao", label: "Taxa de Pintura/Imprimação" },
-  { value: "EnsaioDensidade", label: "Densidade (Extração)" },
   { value: "ChecklistUsina", label: "Checklist de Usina" },
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
   { value: "ChecklistMRAF", label: "Checklist MRAF" },
@@ -116,15 +115,7 @@ const CAMPOS_POR_TIPO = {
       { key: "ensaio_residuo.residuo", label: "% Resíduo" }
     ]}
   ],
-  EnsaioDensidade: [
-    { key: "extraction_date", label: "Data" },
-    { key: "location", label: "Local" },
-    { key: "pesos.espessura_cp", label: "Espessura CP (mm)" },
-    { key: "densidade_aparente", label: "Densidade Aparente (g/cm³)" },
-    { key: "volume_vazios", label: "Volume Vazios (%)" },
-    { key: "grau_compactacao", label: "Grau Compactação (%)" },
-    { key: "approved", label: "Status Aprovação" }
-  ],
+
   ChecklistUsina: [
     { key: "laboratorista_name", label: "Laboratorista" },
     { key: "project_name", label: "Projeto" },
