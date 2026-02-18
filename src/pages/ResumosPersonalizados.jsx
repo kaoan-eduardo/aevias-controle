@@ -635,15 +635,14 @@ export default function ResumosPersonalizadosPage() {
             rodadas.forEach((rodada, idx) => {
               const linha = {
                 tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-                id: `${ensaio.id}_Rodada${idx + 1}`
+                id: `${ensaio.id}_Rodada${idx + 1}`,
+                data: formatValue(ensaio.data, 'data')
               };
 
               campos.forEach(campoKey => {
                 const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
 
-                if (campoKey === 'data') {
-                  linha[campo.label] = formatValue(ensaio.data, 'data');
-                } else if (campoKey === 'equivalente_areia_resultados') {
+                if (campoKey === 'equivalente_areia_resultados') {
                   // Tratar equivalente de areia
                   const resultados = ensaio.equivalente_areia_resultados || [];
                   campo.subfields.forEach((subfield, sfIdx) => {
@@ -763,15 +762,14 @@ export default function ResumosPersonalizadosPage() {
             // Se não houver rodadas, criar uma linha única
             const linha = {
               tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-              id: ensaio.id
+              id: ensaio.id,
+              data: formatValue(ensaio.data, 'data')
             };
 
             campos.forEach(campoKey => {
               const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
 
-              if (campoKey === 'data') {
-                linha[campo.label] = formatValue(ensaio.data, 'data');
-              } else if (campoKey === 'equivalente_areia_resultados') {
+              if (campoKey === 'equivalente_areia_resultados') {
                 const resultados = ensaio.equivalente_areia_resultados || [];
                 campo.subfields.forEach((subfield, sfIdx) => {
                   linha[subfield.label] = resultados[sfIdx] !== undefined ? formatValue(resultados[sfIdx], 'number') : '-';
