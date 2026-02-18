@@ -549,8 +549,8 @@ const AppLayout = ({ children }) => {
                 </div>
                 {canCreateRecords && (
                   <DialogTrigger asChild>
-                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-xl ring-4 ring-[#BFCF99] hover:bg-[#00233B]/90 transition-all duration-200 scale-110">
-                      <FilePlus className="w-6 h-6 text-[#BFCF99]"/>
+                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors">
+                      <FilePlus className="w-5 h-5 text-[#BFCF99]"/>
                     </Button>
                   </DialogTrigger>
                 )}
