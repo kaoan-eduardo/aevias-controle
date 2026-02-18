@@ -394,6 +394,7 @@ export default function ChecklistTerraplanagem() {
       const dataToSave = {
         ...formData,
         status: saveStatus,
+        ensaio_realizado_por: formData.ensaio_realizado_por,
         umidade_otima_proctor: formData.umidade_otima_proctor ? parseFloat(formData.umidade_otima_proctor) : null,
         umidade_in_situ: formData.umidade_in_situ ? parseFloat(formData.umidade_in_situ) : null,
         periodos_clima: formData.periodos_clima.map(p => ({
