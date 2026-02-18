@@ -59,6 +59,7 @@ const getInitialFormData = () => ({
     densidade_rice: { realizado: false, quantidade: 0, resultados: [] },
     densidade_aparente: { realizado: false, quantidade: 0, resultados: [] },
     volume_vazios: { realizado: false, quantidade: 0, resultados: [], conforme: null },
+    vam_marshall: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     rbv: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     rtcd_25c: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     estabilidade: { realizado: false, quantidade: 0, resultados: [], conforme: null },
@@ -135,6 +136,12 @@ export default function ChecklistUsinaPage() {
       case 'volume_vazios':
         if (project.volume_vazios && project.volume_vazios.min !== null && project.volume_vazios.max !== null) {
           return num >= project.volume_vazios.min && num <= project.volume_vazios.max;
+        }
+        break;
+      
+      case 'vam_marshall':
+        if (project.vam && project.vam.min !== null) {
+          return num > project.vam.min;
         }
         break;
       
@@ -1364,6 +1371,7 @@ export default function ChecklistUsinaPage() {
                           { key: 'densidade_rice', label: 'Densidade RICE', padrao: selectedProject?.densidade_maxima_medida ? `${selectedProject.densidade_maxima_medida} g/cm³` : 'N/A', noConformity: true, decimals: 3 },
                           { key: 'densidade_aparente', label: 'Densidade Aparente', padrao: selectedProject?.massa_especifica_aparente ? `${selectedProject.massa_especifica_aparente} g/cm³` : 'N/A', noConformity: true, decimals: 3 },
                           { key: 'volume_vazios', label: 'Volume de Vazios', padrao: selectedProject?.volume_vazios ? `${selectedProject.volume_vazios.min} a ${selectedProject.volume_vazios.max} %` : 'N/A', decimals: 1 },
+                          { key: 'vam_marshall', label: 'VAM', padrao: selectedProject?.vam ? `> ${selectedProject.vam.min} %` : 'N/A', decimals: 1 },
                           { key: 'rbv', label: 'RBV', padrao: selectedProject?.rbv ? `${selectedProject.rbv.min} a ${selectedProject.rbv.max} %` : 'N/A', decimals: 1 },
                           { key: 'rtcd_25c', label: 'RTCD 25°C', padrao: selectedProject?.rtcd ? `> ${selectedProject.rtcd.min} MPa` : 'N/A', decimals: 2 },
                           { key: 'estabilidade', label: 'Estabilidade', padrao: selectedProject?.estabilidade ? `> ${selectedProject.estabilidade.min} N` : 'N/A', decimals: 0 },
