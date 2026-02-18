@@ -311,10 +311,6 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </div>
           </div>
         </footer>
-
-        <p className="text-center text-xs text-gray-400 mt-8">
-          Página 1 de {1 + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
-        </p>
       </div>
 
       {/* Página do Checklist de Veículo */}
@@ -636,7 +632,6 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </main>
 
           <footer className="text-center pt-4 text-xs text-gray-500 break-inside-avoid">
-            Página {pageIndex + 2 + (hasChecklistVeiculo ? 1 : 0)} of {1 + (hasChecklistVeiculo ? 1 : 0) + photoChunks.length}
           </footer>
         </div>
       ))}
