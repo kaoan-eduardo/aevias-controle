@@ -416,9 +416,9 @@ export default function ResumosPersonalizadosPage() {
     if (typeof value === 'object' && !Array.isArray(value)) return '-';
     
     if (campo.includes('approved') || campo.includes('conforme')) {
-      if (value === true) return '✅ Sim';
-      if (value === false) return '❌ Não';
-      return '⏳ Pendente';
+      if (value === true) return 'Sim';
+      if (value === false) return 'Não';
+      return 'Pendente';
     }
     
     if (campo.includes('data')) {
