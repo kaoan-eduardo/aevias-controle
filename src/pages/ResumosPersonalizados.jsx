@@ -260,24 +260,12 @@ const CAMPOS_POR_TIPO = {
     { key: "estaca", label: "Estaca" },
     { key: "camada", label: "Camada" },
     { key: "material", label: "Material" },
-    { key: "acompanhamento_execucao.remocao_material_existente.sim", label: "Remoção Material - Sim" },
-    { key: "acompanhamento_execucao.remocao_material_existente.nao", label: "Remoção Material - Não" },
-    { key: "acompanhamento_execucao.remocao_material_existente.na", label: "Remoção Material - N/A" },
-    { key: "acompanhamento_execucao.espalhamento_material_novo.sim", label: "Espalhamento Material - Sim" },
-    { key: "acompanhamento_execucao.espalhamento_material_novo.nao", label: "Espalhamento Material - Não" },
-    { key: "acompanhamento_execucao.espalhamento_material_novo.na", label: "Espalhamento Material - N/A" },
-    { key: "acompanhamento_execucao.compactacao_conforme_projeto.sim", label: "Compactação Conforme - Sim" },
-    { key: "acompanhamento_execucao.compactacao_conforme_projeto.nao", label: "Compactação Conforme - Não" },
-    { key: "acompanhamento_execucao.compactacao_conforme_projeto.na", label: "Compactação Conforme - N/A" },
-    { key: "acompanhamento_execucao.ensaio_viga_benkelman.sim", label: "Viga Benkelman - Sim" },
-    { key: "acompanhamento_execucao.ensaio_viga_benkelman.nao", label: "Viga Benkelman - Não" },
-    { key: "acompanhamento_execucao.ensaio_viga_benkelman.na", label: "Viga Benkelman - N/A" },
-    { key: "acompanhamento_execucao.teste_carga.sim", label: "Teste de Carga - Sim" },
-    { key: "acompanhamento_execucao.teste_carga.nao", label: "Teste de Carga - Não" },
-    { key: "acompanhamento_execucao.teste_carga.na", label: "Teste de Carga - N/A" },
-    { key: "acompanhamento_execucao.falha_compactacao.sim", label: "Falha Compactação - Sim" },
-    { key: "acompanhamento_execucao.falha_compactacao.nao", label: "Falha Compactação - Não" },
-    { key: "acompanhamento_execucao.falha_compactacao.na", label: "Falha Compactação - N/A" },
+    { key: "acompanhamento_execucao.remocao_material_existente", label: "Remoção Material" },
+    { key: "acompanhamento_execucao.espalhamento_material_novo", label: "Espalhamento Material" },
+    { key: "acompanhamento_execucao.compactacao_conforme_projeto", label: "Compactação Conforme" },
+    { key: "acompanhamento_execucao.ensaio_viga_benkelman", label: "Viga Benkelman" },
+    { key: "acompanhamento_execucao.teste_carga", label: "Teste de Carga" },
+    { key: "acompanhamento_execucao.falha_compactacao", label: "Falha Compactação" },
     { key: "ensaios_empreiteira.compactacao_proctor.realizado", label: "Proctor - Realizado" },
     { key: "ensaios_empreiteira.compactacao_proctor.quantidade", label: "Proctor - Qtde" },
     { key: "ensaios_empreiteira.compactacao_proctor.resultados", label: "Proctor - Resultados (g/cm³)" },
@@ -494,8 +482,17 @@ export default function ResumosPersonalizadosPage() {
   const formatValue = (value, campo) => {
     if (value === null || value === undefined) return '-';
     
-    // Se o valor ainda é um objeto, retornar '-' (falha ao extrair valor aninhado)
-    if (typeof value === 'object' && !Array.isArray(value)) return '-';
+    // Se o valor é um objeto com estrutura {sim, nao, na}, retornar a resposta
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      if ('sim' in value && 'nao' in value && 'na' in value) {
+        if (value.sim === true) return 'Sim';
+        if (value.nao === true) return 'Não';
+        if (value.na === true) return 'N/A';
+        return '-';
+      }
+      // Outros objetos retornam '-'
+      return '-';
+    }
     
     if (campo.includes('approved') || campo.includes('conforme')) {
       if (value === true) return 'Sim';
