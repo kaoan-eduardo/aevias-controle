@@ -278,7 +278,9 @@ const CAMPOS_POR_TIPO = {
     { key: "umidade_in_situ", label: "Umidade In Situ (%)" },
     { key: "ensaios_empreiteira.granulometria.quantidade", label: "Granulometria - Qtde" },
     { key: "ensaios_empreiteira.granulometria.conforme", label: "Granulometria - Conforme" },
+    { key: "variacao_umidade_valor", label: "Variação Umidade (%)" },
     { key: "ensaios_empreiteira.variacao_umidade_conforme", label: "Variação Umidade - Conforme" },
+    { key: "grau_compactacao_valor", label: "Grau Compactação (%)" },
     { key: "ensaios_empreiteira.grau_compactacao_conforme", label: "Grau Compactação - Conforme" },
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
@@ -1033,6 +1035,60 @@ export default function ResumosPersonalizadosPage() {
             resultados.push(linha);
           }
           console.log('=== FIM DEBUG ChecklistUsina ===');
+        } else if (tipo === 'ChecklistTerraplanagem') {
+          // Para ChecklistTerraplanagem, calcular variação de umidade e grau de compactação
+          const linha = {
+            tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+            id: ensaio.id,
+            data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
+          };
+
+          campos.forEach(campoKey => {
+            const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+            
+            if (campoKey === 'variacao_umidade_valor') {
+              // Calcular variação de umidade
+              const umidadeOtima = ensaio.umidade_otima_proctor;
+              const umidadeInSitu = ensaio.umidade_in_situ;
+              if (umidadeOtima != null && umidadeInSitu != null) {
+                const variacao = umidadeInSitu - umidadeOtima;
+                linha[campo.label] = variacao.toFixed(2);
+              } else {
+                linha[campo.label] = '-';
+              }
+            } else if (campoKey === 'grau_compactacao_valor') {
+              // Calcular grau de compactação
+              const densidadeProctor = ensaio.ensaios_empreiteira?.compactacao_proctor?.resultados;
+              const densidadeInSitu = ensaio.ensaios_empreiteira?.massa_especifica_in_situ?.resultados;
+              
+              if (densidadeProctor && densidadeInSitu) {
+                // Pegar primeiro valor do array ou valor direto
+                const densProc = Array.isArray(densidadeProctor) ? parseFloat(densidadeProctor[0]) : parseFloat(densidadeProctor);
+                const densIS = Array.isArray(densidadeInSitu) ? parseFloat(densidadeInSitu[0]) : parseFloat(densidadeInSitu);
+                
+                if (!isNaN(densProc) && !isNaN(densIS) && densProc > 0) {
+                  const grauComp = (densIS / densProc) * 100;
+                  linha[campo.label] = grauComp.toFixed(2);
+                } else {
+                  linha[campo.label] = '-';
+                }
+              } else {
+                linha[campo.label] = '-';
+              }
+            } else if (campo?.subfields) {
+              // Calcular médias para arrays
+              const arrayData = getNestedValue(ensaio, campoKey);
+              campo.subfields.forEach(subfield => {
+                const media = calcularMediaArray(arrayData, subfield.key);
+                linha[`${campoKey}.${subfield.key}`] = media !== null ? media : '-';
+              });
+            } else {
+              const value = getNestedValue(ensaio, campoKey);
+              linha[campo.label] = formatValue(value, campoKey);
+            }
+          });
+
+          resultados.push(linha);
         } else {
           // Para outros tipos de ensaio
           const linha = {
