@@ -125,7 +125,6 @@ const CAMPOS_POR_TIPO = {
     { key: "approved", label: "Status Aprovação" }
   ],
   ChecklistUsina: [
-    { key: "data", label: "Data" },
     { key: "laboratorista_name", label: "Laboratorista" },
     { key: "project_name", label: "Projeto" },
     { key: "faixa_especificada", label: "Faixa" },
