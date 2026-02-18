@@ -228,12 +228,29 @@ const CAMPOS_POR_TIPO = {
   ],
   ChecklistConcretagem: [
     { key: "data", label: "Data" },
+    { key: "laboratorista_name", label: "Laboratorista" },
     { key: "rodovia", label: "Rodovia" },
     { key: "trecho", label: "Trecho" },
     { key: "concreteira", label: "Concreteira" },
     { key: "fck", label: "FCK (MPa)" },
     { key: "volume", label: "Volume (m³)" },
-    { key: "approved", label: "Status Aprovação" }
+    { key: "cargas_concreto", label: "Cargas de Concreto", subfields: [
+      { key: "numero_carga", label: "Nº Carga" },
+      { key: "nota_fiscal", label: "Nota Fiscal" },
+      { key: "slump_test.resultado", label: "Slump (cm)" },
+      { key: "slump_test.conforme", label: "Slump Conforme" },
+      { key: "espessura_camada.resultado", label: "Espessura (cm)" },
+      { key: "espessura_camada.conforme", label: "Espessura Conforme" },
+      { key: "superficie_tratada_limpa", label: "Superfície Tratada e Limpa" },
+      { key: "adensamento_realizado", label: "Adensamento Realizado" },
+      { key: "qtd_cps_3d", label: "Qtd CPs 3 dias" },
+      { key: "tipo_ruptura_3d", label: "Tipo Ruptura 3 dias" },
+      { key: "qtd_cps_7d", label: "Qtd CPs 7 dias" },
+      { key: "tipo_ruptura_7d", label: "Tipo Ruptura 7 dias" },
+      { key: "qtd_cps_28d", label: "Qtd CPs 28 dias" },
+      { key: "tipo_ruptura_28d", label: "Tipo Ruptura 28 dias" }
+    ]},
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistTerraplanagem: [
     { key: "data", label: "Data" },
