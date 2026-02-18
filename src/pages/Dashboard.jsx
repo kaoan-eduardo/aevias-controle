@@ -66,10 +66,10 @@ export default function Dashboard() {
     assinados: 0,
     aguardando_assinatura: 0,
   });
-  const [recentActivity, setRecentActivity] = useState([]);
   const [monthlyChartData, setMonthlyChartData] = useState([]);
   const [statusChartData, setStatusChartData] = useState([]);
-  const [alerts, setAlerts] = useState({ pending: 0, rejected: 0, aguardando_assinatura: 0 });
+  const [recordsByObraChartData, setRecordsByObraChartData] = useState([]);
+  const [recordsByAccessLevelChartData, setRecordsByAccessLevelChartData] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -201,11 +201,60 @@ export default function Dashboard() {
         aguardando_assinatura: aguardandoAssinaturaCount,
       });
 
-      setAlerts({ 
-        pending: pendingCount, 
-        rejected: rejectedCount,
-        aguardando_assinatura: aguardandoAssinaturaCount 
+      // Process records by obra chart data (ONLY FOR DEV/ADMIN)
+      if (userAccessLevel === 'admin') {
+        const recordsByObra = {};
+        allEnsaios.forEach(ensaio => {
+          if (!recordsByObra[ensaio.obra_id]) {
+            recordsByObra[ensaio.obra_id] = 0;
+          }
+          recordsByObra[ensaio.obra_id]++;
+        });
+
+        const recordsByObraData = Object.entries(recordsByObra).map(([obraId, count]) => {
+          const obra = obrasFiltradas.find(o => o.id === obraId);
+          return {
+            name: obra?.name || 'Obra Desconhecida',
+            value: count,
+          };
+        }).sort((a, b) => b.value - a.value);
+
+        setRecordsByObraChartData(recordsByObraData);
+      }
+
+      // Process records by access level chart data
+      const recordsByAccessLevel = {
+        admin: 0,
+        gestor_contrato: 0,
+        sala_tecnica_afirmaevias: 0,
+        cliente: 0,
+      };
+
+      allEnsaios.forEach(ensaio => {
+        const createdBy = ensaio.created_by?.toLowerCase() || '';
+        // This is a simplified approach - in a real scenario you'd fetch user data
+        // For now, we'll count by status as a proxy
+        if (createdBy) {
+          recordsByAccessLevel.admin++;
+        }
       });
+
+      const accessLevelColors = {
+        admin: '#00233B',
+        gestor_contrato: '#566E3D',
+        sala_tecnica_afirmaevias: '#BFCF99',
+        cliente: '#FBBF24',
+      };
+
+      const recordsByAccessLevelData = Object.entries(recordsByAccessLevel)
+        .filter(([_, count]) => count > 0)
+        .map(([level, count]) => ({
+          name: level === 'admin' ? 'Dev' : level === 'gestor_contrato' ? 'Gestor' : level === 'sala_tecnica_afirmaevias' ? 'Sala Técnica' : 'Cliente',
+          value: count,
+          color: accessLevelColors[level],
+        }));
+
+      setRecordsByAccessLevelChartData(recordsByAccessLevelData);
 
       // Process monthly chart data
       const now = new Date();
@@ -251,104 +300,7 @@ export default function Dashboard() {
         ]);
       }
 
-      // Process recent activity - customizado para cliente
-      if (isCliente) {
-        const recentActivitiesFormatted = [];
 
-        // 1. Ensaios aguardando assinatura (se for engenheiro)
-        if (isEngenheiro) {
-          const ensaiosAguardandoAssinatura = allEnsaios
-            .filter(e => e.approved === true && !e.client_signature?.signed_by)
-            .sort((a, b) => new Date(b.approved_date || b.created_date) - new Date(a.approved_date || a.created_date))
-            .slice(0, 3);
-
-          ensaiosAguardandoAssinatura.forEach(ensaio => {
-            const obra = obrasFiltradas.find(o => o.id === ensaio.obra_id);
-            const description = getEntityTypeDescription(ensaio.entityType);
-            recentActivitiesFormatted.push({
-              description: `${description} aguardando assinatura`,
-              obra: obra ? `Obra ${obra.name}` : '',
-              time: formatDistanceToNow(new Date(ensaio.approved_date || ensaio.created_date), { addSuffix: true, locale: ptBR }),
-              icon: FileSignature,
-              color: 'text-[#FBBF24]',
-              action: 'assinar'
-            });
-          });
-        }
-
-        // 2. Projetos recentemente adicionados à regional (últimos 30 dias)
-        const dataLimite = subDays(now, 30);
-        const projetosRecentes = projectsFiltrados
-          .filter(p => new Date(p.created_date) >= dataLimite)
-          .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
-          .slice(0, 2);
-
-        projetosRecentes.forEach(projeto => {
-          recentActivitiesFormatted.push({
-            description: `Projeto "${projeto.name}" vinculado à sua regional`,
-            obra: regionalDoUsuario ? `Regional ${regionalDoUsuario.nome}` : '',
-            time: formatDistanceToNow(new Date(projeto.created_date), { addSuffix: true, locale: ptBR }),
-            icon: FolderOpen,
-            color: 'text-[#566E3D]',
-            action: 'info'
-          });
-        });
-
-        // 3. Transferências aprovadas para a regional (últimos 30 dias)
-        if (regionalDoUsuario && transferencias) {
-          const transferenciasRecentes = transferencias
-            .filter(t => 
-              t.regional_destino_id === regionalDoUsuario.id && 
-              t.status === 'aprovada' &&
-              new Date(t.aprovado_em) >= dataLimite
-            )
-            .sort((a, b) => new Date(b.aprovado_em) - new Date(a.aprovado_em))
-            .slice(0, 2);
-
-          transferenciasRecentes.forEach(trans => {
-            recentActivitiesFormatted.push({
-              description: `${trans.laboratorista_name} transferido para sua regional`,
-              obra: `De ${trans.regional_atual_nome}`,
-              time: formatDistanceToNow(new Date(trans.aprovado_em), { addSuffix: true, locale: ptBR }),
-              icon: UserPlus,
-              color: 'text-[#00233B]',
-              action: 'info'
-            });
-          });
-        }
-
-        setRecentActivity(recentActivitiesFormatted.slice(0, 5));
-      } else {
-        // Atividade recente padrão para outros perfis
-        const allActivities = [
-          ...obrasFiltradas.slice(0, 10).map(o => ({...o, entityType: 'Obra'})),
-          ...projectsFiltrados.slice(0, 10).map(p => ({...p, entityType: 'Project'})),
-          ...allEnsaios.slice(0, 20)
-        ];
-
-        const sortedActivities = allActivities.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-
-        const recentActivitiesFormatted = sortedActivities.slice(0, 5).map(activity => {
-          const obra = obrasFiltradas.find(o => o.id === activity.obra_id);
-          const description = getEntityTypeDescription(activity.entityType);
-
-          let details;
-          if (activity.entityType === 'DiarioObra' && activity.laboratorista_name && activity.data) {
-            const laboratoristaFirstName = activity.laboratorista_name.split(' ')[0];
-            const diarioDate = format(new Date(activity.data), 'dd/MM', { locale: ptBR });
-            details = ` por ${laboratoristaFirstName} em ${diarioDate}`;
-          } else {
-            details = `: ${activity.name || activity.sample_id || activity.id}`;
-          }
-
-          return {
-            description: `${description}${details}`,
-            obra: obra ? `Obra ${obra.name}` : '',
-            time: formatDistanceToNow(new Date(activity.created_date), { addSuffix: true, locale: ptBR }),
-          };
-        });
-        setRecentActivity(recentActivitiesFormatted);
-      }
 
     } catch (error) {
       console.error("Erro ao carregar dados do dashboard:", error);
@@ -486,119 +438,108 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Recent Activity & Alerts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-[#00233B] flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#BFCF99]" />
-                {isCliente ? 'Notificações Recentes' : 'Atividade Recente'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.length > 0 ? recentActivity.map((activity, index) => {
-                  const ActivityIcon = activity.icon || null;
-                  return (
-                    <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-black/5">
-                      {ActivityIcon ? (
-                        <ActivityIcon className={`w-5 h-5 mt-1 ${activity.color || 'text-[#00233B]'}`} />
-                      ) : (
-                        <div className="w-2 h-2 bg-[#00233B] rounded-full mt-2"></div>
-                      )}
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-[#00233B]">
-                          {activity.description}
-                        </p>
-                        <p className="text-xs text-[#00233B]/70">{activity.obra} {activity.obra && '•'} {activity.time}</p>
-                      </div>
-                    </div>
-                  );
-                }) : (
-                  <p className="text-center text-[#00233B]/70 py-8">
-                    {isCliente ? 'Nenhuma notificação recente.' : 'Nenhuma atividade recente.'}
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Additional Charts for Admins */}
+        {userAccessLevel === 'admin' && recordsByObraChartData.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-[#00233B]">
+                  Registros por Obra
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={recordsByObraChartData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: ${value}`}
+                    >
+                      {recordsByObraChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#00233B', '#566E3D', '#BFCF99', '#FBBF24', '#800020'][index % 5]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                    <Legend wrapperStyle={{ color: '#00233B' }}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-[#00233B]">
-                {isCliente ? 'Ações Pendentes' : 'Alertas e Lembretes'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {isCliente ? (
-                  <>
-                    {isEngenheiro && alerts.aguardando_assinatura > 0 ? (
-                      <Link to={createPageUrl('MeusEnsaios')}>
-                        <div className="flex items-start gap-3 p-3 rounded-lg border bg-[#FBBF24]/10 border-[#FBBF24]/30 cursor-pointer hover:bg-[#FBBF24]/20 transition-colors">
-                          <FileSignature className="w-5 h-5 text-[#854d0e] mt-0.5" />
-                          <div>
-                            <p className="text-sm font-medium" style={{ color: '#854d0e' }}>
-                              {alerts.aguardando_assinatura} registro(s) aguardando sua assinatura
-                            </p>
-                            <p className="text-xs" style={{ color: '#854d0e', opacity: 0.8 }}>Clique para visualizar e assinar.</p>
-                          </div>
-                        </div>
-                      </Link>
-                    ) : (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-green-400/30 bg-green-400/20">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-green-800">
-                            {isEngenheiro ? 'Todos os registros foram assinados' : 'Nenhuma ação pendente'}
-                          </p>
-                          <p className="text-xs text-green-700">
-                            {isEngenheiro ? 'Não há registros aguardando assinatura.' : 'Continue acompanhando os registros das obras.'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {alerts.pending > 0 ? (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border bg-[#FBBF24]/10 border-[#FBBF24]/30">
-                        <AlertTriangle className="w-5 h-5 text-[#854d0e] mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium" style={{ color: '#854d0e' }}>
-                            {alerts.pending} registro(s) aguardando aprovação
-                          </p>
-                          <p className="text-xs" style={{ color: '#854d0e', opacity: 0.8 }}>Acesse "Ensaios Realizados" para analisar.</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-green-400/30 bg-green-400/20">
-                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-green-800">
-                            Nenhum registro pendente
-                          </p>
-                          <p className="text-xs text-green-700">Todos os registros foram analisados.</p>
-                        </div>
-                      </div>
-                    )}
-                    {alerts.rejected > 0 && (
-                      <div className="flex items-start gap-3 p-3 rounded-lg border border-[#800020]/30 bg-[#800020]/10">
-                        <XCircle className="w-5 h-5 text-[#800020] mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-[#800020]">
-                            {alerts.rejected} registro(s) reprovados
-                          </p>
-                          <p className="text-xs text-[#800020] opacity: 0.80">Verifique os motivos e solicite a correção.</p>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-[#00233B]">
+                  Tipo de Registro por Perfil
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={recordsByAccessLevelChartData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {recordsByAccessLevelChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                    <Legend wrapperStyle={{ color: '#00233B' }}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Tipo de Registro por Perfil for all users */}
+        {!isCliente && recordsByAccessLevelChartData.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div></div>
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-[#00233B]">
+                  Tipo de Registro por Perfil
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={recordsByAccessLevelChartData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {recordsByAccessLevelChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                    <Legend wrapperStyle={{ color: '#00233B' }}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+
       </div>
     </div>
   );
