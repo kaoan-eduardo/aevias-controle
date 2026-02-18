@@ -432,6 +432,10 @@ export default function ResumosPersonalizadosPage() {
     }
     
     if (typeof value === 'number') {
+      // 0 casas decimais para campos de quantidade
+      if (campo.includes('quantidade')) {
+        return Math.round(value).toString();
+      }
       // 3 casas decimais para campos de densidade
       if (campo.includes('densidade') || campo.includes('dens_')) {
         return value.toFixed(3);
