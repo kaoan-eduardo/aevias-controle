@@ -142,9 +142,12 @@ const CAMPOS_POR_TIPO = {
       { key: "quantidade_produzida", label: "Qtd. Produzida (t)" }
     ]},
     { key: "controle_cauq", label: "Controle CAUQ", subfields: [
-      { key: "teor_ligante.resultado_1", label: "Teor Ligante 1 (%)" },
-      { key: "teor_ligante.resultado_2", label: "Teor Ligante 2 (%)" },
-      { key: "teor_ligante.resultado_3", label: "Teor Ligante 3 (%)" },
+      { key: "teor_ligante.rotarex_1", label: "Teor Ligante Rotarex 1 (%)" },
+      { key: "teor_ligante.rotarex_2", label: "Teor Ligante Rotarex 2 (%)" },
+      { key: "teor_ligante.rotarex_3", label: "Teor Ligante Rotarex 3 (%)" },
+      { key: "teor_ligante.soxhlet_1", label: "Teor Ligante Soxhlet 1 (%)" },
+      { key: "teor_ligante.soxhlet_2", label: "Teor Ligante Soxhlet 2 (%)" },
+      { key: "teor_ligante.soxhlet_3", label: "Teor Ligante Soxhlet 3 (%)" },
       { key: "teor_ligante.quantidade", label: "Qtd. Teor Ligante" },
       { key: "teor_ligante.conforme", label: "Teor Ligante Conforme" },
       { key: "densidade_aparente.resultados", label: "Densidade Aparente (g/cm³)" },
@@ -491,9 +494,9 @@ export default function ResumosPersonalizadosPage() {
       });
       setLaboratoristas(Array.from(labsUnicos).sort());
 
-      // Carregar projetos para nomes (CAUQ e Sondagem)
+      // Carregar projetos para nomes (CAUQ, Sondagem e ChecklistUsina)
       let todosOsProjetos = [];
-      if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') {
+      if (tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina') {
         todosOsProjetos = await base44.entities.Project.list();
       }
 
@@ -505,10 +508,14 @@ export default function ResumosPersonalizadosPage() {
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
-        // Adicionar nome do projeto se for CAUQ ou Sondagem
-        if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem') && ensaio.project_id) {
+        // Adicionar nome do projeto se for CAUQ, Sondagem ou ChecklistUsina
+        if ((tipo === 'EnsaioCAUQ' || tipo === 'EnsaioSondagem' || tipo === 'ChecklistUsina') && ensaio.project_id) {
           const projeto = todosOsProjetos.find(p => p.id === ensaio.project_id);
           ensaio.project_name = projeto?.name || '-';
+          // Adicionar fornecedora do ligante para ChecklistUsina
+          if (tipo === 'ChecklistUsina') {
+            ensaio.fornecedora_ligante = projeto?.ligante?.fornecedor || '-';
+          }
         }
 
         // Para Sondagem, criar uma linha para cada CP
@@ -651,41 +658,36 @@ export default function ResumosPersonalizadosPage() {
 
                     // Para teor_ligante
                     if (subfield.key.includes('teor_ligante')) {
-                      // Verificar se existe extracao_ligante_rotarex ou extracao_ligante_soxhlet
                       const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
                       const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
                       
                       console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
                       console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
                       
-                      // Tentar pegar o teor de ligante das extrações
-                      if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                      // Rotarex 1, 2, 3
+                      if (subfield.key.startsWith('teor_ligante.rotarex_')) {
                         const numResultado = parseInt(subfield.key.split('_').pop());
                         const idx = numResultado - 1;
                         
-                        // Tentar nos formatos possíveis
-                        const teorLigante = controleCauq.teor_ligante || {};
-                        
-                        // Formato 1: controleCauq.teor_ligante.resultado_X
-                        value = teorLigante[`resultado_${numResultado}`];
-                        
-                        // Formato 2: controleCauq.teor_ligante.resultados[idx]
-                        if (value === undefined && teorLigante.resultados) {
-                          value = teorLigante.resultados[idx];
-                        }
-                        
-                        // Formato 3: Buscar em extracao_ligante_rotarex
-                        if (value === undefined && extracaoRotarex && Array.isArray(extracaoRotarex)) {
+                        if (extracaoRotarex && Array.isArray(extracaoRotarex) && extracaoRotarex[idx]) {
                           value = extracaoRotarex[idx]?.teor_ligante;
                         }
                         
-                        // Formato 4: Buscar em extracao_ligante_soxhlet
-                        if (value === undefined && extracaoSoxhlet && Array.isArray(extracaoSoxhlet)) {
+                        console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
+                      }
+                      // Soxhlet 1, 2, 3
+                      else if (subfield.key.startsWith('teor_ligante.soxhlet_')) {
+                        const numResultado = parseInt(subfield.key.split('_').pop());
+                        const idx = numResultado - 1;
+                        
+                        if (extracaoSoxhlet && Array.isArray(extracaoSoxhlet) && extracaoSoxhlet[idx]) {
                           value = extracaoSoxhlet[idx]?.teor_ligante;
                         }
                         
-                        console.log('>>> Teor ligante resultado_' + numResultado + ':', value);
-                      } else if (subfield.key === 'teor_ligante.quantidade') {
+                        console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
+                      }
+                      // Quantidade e conforme
+                      else if (subfield.key === 'teor_ligante.quantidade') {
                         const teorLigante = controleCauq.teor_ligante;
                         value = teorLigante?.quantidade;
                         
@@ -752,28 +754,30 @@ export default function ResumosPersonalizadosPage() {
                     console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
                     console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
                     
-                    if (subfield.key.startsWith('teor_ligante.resultado_')) {
+                    // Rotarex 1, 2, 3
+                    if (subfield.key.startsWith('teor_ligante.rotarex_')) {
                       const numResultado = parseInt(subfield.key.split('_').pop());
                       const idx = numResultado - 1;
                       
-                      const teorLigante = controleCauq.teor_ligante || {};
-                      
-                      value = teorLigante[`resultado_${numResultado}`];
-                      
-                      if (value === undefined && teorLigante.resultados) {
-                        value = teorLigante.resultados[idx];
-                      }
-                      
-                      if (value === undefined && extracaoRotarex && Array.isArray(extracaoRotarex)) {
+                      if (extracaoRotarex && Array.isArray(extracaoRotarex) && extracaoRotarex[idx]) {
                         value = extracaoRotarex[idx]?.teor_ligante;
                       }
                       
-                      if (value === undefined && extracaoSoxhlet && Array.isArray(extracaoSoxhlet)) {
+                      console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
+                    }
+                    // Soxhlet 1, 2, 3
+                    else if (subfield.key.startsWith('teor_ligante.soxhlet_')) {
+                      const numResultado = parseInt(subfield.key.split('_').pop());
+                      const idx = numResultado - 1;
+                      
+                      if (extracaoSoxhlet && Array.isArray(extracaoSoxhlet) && extracaoSoxhlet[idx]) {
                         value = extracaoSoxhlet[idx]?.teor_ligante;
                       }
                       
-                      console.log('>>> Teor ligante resultado_' + numResultado + ':', value);
-                    } else if (subfield.key === 'teor_ligante.quantidade') {
+                      console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
+                    }
+                    // Quantidade e conforme
+                    else if (subfield.key === 'teor_ligante.quantidade') {
                       const teorLigante = controleCauq.teor_ligante;
                       value = teorLigante?.quantidade;
                       
