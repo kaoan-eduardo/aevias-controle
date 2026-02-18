@@ -279,9 +279,7 @@ const CAMPOS_POR_TIPO = {
     { key: "ensaios_empreiteira.granulometria.quantidade", label: "Granulometria - Qtde" },
     { key: "ensaios_empreiteira.granulometria.conforme", label: "Granulometria - Conforme" },
     { key: "variacao_umidade_valor", label: "Variação Umidade (%)" },
-    { key: "ensaios_empreiteira.variacao_umidade_conforme", label: "Variação Umidade - Conforme" },
     { key: "grau_compactacao_valor", label: "Grau Compactação (%)" },
-    { key: "ensaios_empreiteira.grau_compactacao_conforme", label: "Grau Compactação - Conforme" },
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   DiarioObra: [
