@@ -558,24 +558,8 @@ export default function ChecklistAplicacaoPage() {
 
     setSaving(true);
     try {
-      // Calcular conformidade antes de salvar
-      const pinturaAtualizada = { ...formData.pintura_ligacao };
-      
-      // Taxa de Pintura: 0.8 a 1.0 l/m²
-      if (pinturaAtualizada.taxa_pintura.realizado && pinturaAtualizada.taxa_pintura.resultado !== null) {
-        const resultado = pinturaAtualizada.taxa_pintura.resultado;
-        pinturaAtualizada.taxa_pintura.conforme = resultado >= 0.8 && resultado <= 1.0;
-      }
-
-      // Taxa de Pintura Residual: 0.3 a 0.4 l/m²
-      if (pinturaAtualizada.taxa_pintura_residual.realizado && pinturaAtualizada.taxa_pintura_residual.resultado !== null) {
-        const resultado = pinturaAtualizada.taxa_pintura_residual.resultado;
-        pinturaAtualizada.taxa_pintura_residual.conforme = resultado >= 0.3 && resultado <= 0.4;
-      }
-
       const dataToSave = {
         ...formData,
-        pintura_ligacao: pinturaAtualizada,
         status: saveStatus,
         laboratorista_name: user?.laboratorista_name || user?.full_name,
         inspetor_campo: user?.laboratorista_name || user?.full_name
@@ -1011,7 +995,7 @@ export default function ChecklistAplicacaoPage() {
                         <th className="border border-slate-300 px-2 py-2 text-left">Serviço</th>
                         <th className="border border-slate-300 px-2 py-2 text-center">Realizado</th>
                         <th className="border border-slate-300 px-2 py-2 text-center">Resultado</th>
-                        <th className="border border-slate-300 px-2 py-2 text-center">Limites DNIT 148/2012</th>
+                        <th className="border border-slate-300 px-2 py-2 text-center">Conformidade</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1085,37 +1069,36 @@ export default function ChecklistAplicacaoPage() {
                           />
                         </td>
                         <td className="border border-slate-300 px-2 py-1">
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="text"
-                              inputMode="decimal"
-                              value={formData.pintura_ligacao.taxa_pintura.resultado !== null && formData.pintura_ligacao.taxa_pintura.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura.resultado : ''}
-                              onChange={(e) => {
-                                const value = e.target.value.replace(',', '.');
-                                if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
-                                  handleNestedChange('pintura_ligacao.taxa_pintura.resultado', value === '' ? null : parseFloat(value) || value);
-                                }
-                              }}
-                              disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
-                              placeholder="Ex: 0.9"
-                              className={`h-8 ${
-                                formData.pintura_ligacao.taxa_pintura.realizado && 
-                                formData.pintura_ligacao.taxa_pintura.resultado !== null &&
-                                (formData.pintura_ligacao.taxa_pintura.resultado < 0.8 || 
-                                 formData.pintura_ligacao.taxa_pintura.resultado > 1.0)
-                                  ? 'text-red-600 font-bold'
-                                  : ''
-                              }`}
-                            />
-                            {formData.pintura_ligacao.taxa_pintura.realizado && 
-                             formData.pintura_ligacao.taxa_pintura.resultado !== null &&
-                             (formData.pintura_ligacao.taxa_pintura.resultado < 0.8 || 
-                              formData.pintura_ligacao.taxa_pintura.resultado > 1.0) && (
-                              <span className="text-red-600 text-xl" title="Fora dos parâmetros">⚠️</span>
-                            )}
-                          </div>
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            value={formData.pintura_ligacao.taxa_pintura.resultado !== null && formData.pintura_ligacao.taxa_pintura.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura.resultado : ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(',', '.');
+                              if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                                handleNestedChange('pintura_ligacao.taxa_pintura.resultado', value === '' ? null : parseFloat(value) || value);
+                              }
+                            }}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
+                            placeholder="Ex: 0.9"
+                            className="h-8"
+                          />
                         </td>
-                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">0,8 a 1,0 l/m²</td>
+                        <td className="border border-slate-300 px-2 py-1">
+                          <Select
+                            value={formData.pintura_ligacao.taxa_pintura.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura.conforme === false ? "nao" : ""}
+                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura.conforme', value === "sim" ? true : value === "nao" ? false : null)}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue placeholder="-" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="sim">Sim</SelectItem>
+                              <SelectItem value="nao">Não</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </td>
                       </tr>
 
                       <tr>
@@ -1155,37 +1138,36 @@ export default function ChecklistAplicacaoPage() {
                           />
                         </td>
                         <td className="border border-slate-300 px-2 py-1">
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="text"
-                              inputMode="decimal"
-                              value={formData.pintura_ligacao.taxa_pintura_residual.resultado !== null && formData.pintura_ligacao.taxa_pintura_residual.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura_residual.resultado : ''}
-                              onChange={(e) => {
-                                const value = e.target.value.replace(',', '.');
-                                if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
-                                  handleNestedChange('pintura_ligacao.taxa_pintura_residual.resultado', value === '' ? null : parseFloat(value) || value);
-                                }
-                              }}
-                              disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
-                              placeholder="Ex: 0.35"
-                              className={`h-8 ${
-                                formData.pintura_ligacao.taxa_pintura_residual.realizado && 
-                                formData.pintura_ligacao.taxa_pintura_residual.resultado !== null &&
-                                (formData.pintura_ligacao.taxa_pintura_residual.resultado < 0.3 || 
-                                 formData.pintura_ligacao.taxa_pintura_residual.resultado > 0.4)
-                                  ? 'text-red-600 font-bold'
-                                  : ''
-                              }`}
-                            />
-                            {formData.pintura_ligacao.taxa_pintura_residual.realizado && 
-                             formData.pintura_ligacao.taxa_pintura_residual.resultado !== null &&
-                             (formData.pintura_ligacao.taxa_pintura_residual.resultado < 0.3 || 
-                              formData.pintura_ligacao.taxa_pintura_residual.resultado > 0.4) && (
-                              <span className="text-red-600 text-xl" title="Fora dos parâmetros">⚠️</span>
-                            )}
-                          </div>
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            value={formData.pintura_ligacao.taxa_pintura_residual.resultado !== null && formData.pintura_ligacao.taxa_pintura_residual.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura_residual.resultado : ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(',', '.');
+                              if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                                handleNestedChange('pintura_ligacao.taxa_pintura_residual.resultado', value === '' ? null : parseFloat(value) || value);
+                              }
+                            }}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
+                            placeholder="Ex: 0.35"
+                            className="h-8"
+                          />
                         </td>
-                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">0,3 a 0,4 l/m²</td>
+                        <td className="border border-slate-300 px-2 py-1">
+                          <Select
+                            value={formData.pintura_ligacao.taxa_pintura_residual.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura_residual.conforme === false ? "nao" : ""}
+                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.conforme', value === "sim" ? true : value === "nao" ? false : null)}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue placeholder="-" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="sim">Sim</SelectItem>
+                              <SelectItem value="nao">Não</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
