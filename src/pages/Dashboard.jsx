@@ -3,8 +3,11 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import {
-  Building2, FolderOpen, FlaskConical, CheckCircle, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus
+  Building2, FolderOpen, FlaskConical, CheckCircle, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus, Filter, X
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays } from 'date-fns';
@@ -56,6 +59,21 @@ const getEntityTypeDescription = (type) => {
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [allData, setAllData] = useState({
+    obras: [],
+    projects: [],
+    ensaios: [],
+    regionais: []
+  });
+  
+  // Filtros ativos
+  const [filters, setFilters] = useState({
+    obraId: null,
+    status: null,
+    tipoRegistro: null,
+    periodo: '6meses'
+  });
+  
   const [stats, setStats] = useState({
     obras: 0,
     projects: 0,
