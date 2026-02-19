@@ -315,48 +315,56 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
 
       {/* Página do Efetivo de Obra */}
       {diario.efetivo_obra_ativo && (
-        <div className="break-before-page p-3 print:p-3">
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1.5 mb-2">
+        <div className="break-before-page p-8 print:p-8 min-h-[29.7cm] flex flex-col">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-12 object-contain" 
+                className="h-16 object-contain" 
               />
             </div>
             <div className="text-center">
-              <h1 className="text-base font-bold text-gray-800">Efetivo de Obra</h1>
-              <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+              <h1 className="text-2xl font-bold text-gray-800">Efetivo de Obra</h1>
+              <p className="text-md text-slate-700">{obra?.name || 'N/A'}</p>
             </div>
             <div className="flex justify-end">
-              <div className="border border-gray-400 p-1.5 rounded-md text-xs bg-white">
-                <p className="font-semibold text-gray-800">{formatDate(diario.data)}</p>
+              <div className="border border-gray-400 p-2 rounded-md bg-white">
+                <p className="text-sm font-semibold text-gray-800">
+                  {new Date(diario.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+                </p>
               </div>
             </div>
           </header>
 
           {/* Tabela de Máquinas */}
-          <table className="w-full border-collapse border border-slate-900 mb-3 text-xs">
+          <table className="w-full border-collapse border border-slate-900 mb-6 text-sm">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-slate-900 p-1.5 text-center font-bold" colSpan="8">EFETIVO DE MÁQUINAS OPERANTES</th>
+              <tr className="bg-gray-50">
+                <th className="border border-slate-900 p-2 text-center font-bold" colSpan="4">EFETIVO DE MÁQUINAS OPERANTES</th>
               </tr>
             </thead>
             <tbody>
               {[
-                ['Motoniveladora', 'motoniveladora', 'Caminhão Munck', 'caminhao_munck', 'Recicladora', 'recicladora', 'Ônibus', 'onibus'],
-                ['Pá Carregadeira', 'pa_carregadeira', 'Caminhão Sinalização', 'caminhao_sinalizacao', 'Vibro Acabadora', 'vibro_acabadora', 'Trator de Grade', 'trator_grade'],
-                ['Retroescavadeira', 'retroescavadeira', 'Caminhão Pipa', 'caminhao_pipa', 'Rolo Carneiro', 'rolo_carneiro', 'Trator de Esteira', 'trator_esteira'],
-                ['Escavadeira Hidráulica', 'escavadeira_hidraulica', 'Caminhão Basculante', 'caminhao_basculante', 'Rolo Liso', 'rolo_liso', 'Veículo Leve', 'veiculo_leve'],
-                ['Mini Carregadeira', 'mini_carregadeira', 'Caminhão Cimento', 'caminhao_cimento', 'Rolo Pneu', 'rolo_pneu', 'Placa Vibratória', 'placa_vibratoria'],
-                ['Extrusora', 'extrusora', 'Caminhão Viga', 'caminhao_viga', 'Tanque Combustível', 'tanque_combustivel', '', ''],
-                ['Caminhão Prancha', 'caminhao_prancha', 'Caminhão Espargidor', 'caminhao_espargidor', 'Comboio', 'comboio', '', '']
+                ['Motoniveladora', 'motoniveladora', 'Caminhão Espargidor', 'caminhao_espargidor'],
+                ['Pá Carregadeira', 'pa_carregadeira', 'Recicladora', 'recicladora'],
+                ['Retroescavadeira', 'retroescavadeira', 'Vibro Acabadora', 'vibro_acabadora'],
+                ['Escavadeira Hidráulica', 'escavadeira_hidraulica', 'Rolo Carneiro', 'rolo_carneiro'],
+                ['Mini Carregadeira', 'mini_carregadeira', 'Rolo Liso', 'rolo_liso'],
+                ['Extrusora', 'extrusora', 'Rolo Pneu', 'rolo_pneu'],
+                ['Caminhão Prancha', 'caminhao_prancha', 'Tanque Combustível', 'tanque_combustivel'],
+                ['Caminhão Munck', 'caminhao_munck', 'Comboio', 'comboio'],
+                ['Caminhão Sinalização', 'caminhao_sinalizacao', 'Ônibus', 'onibus'],
+                ['Caminhão Pipa', 'caminhao_pipa', 'Trator de Grade', 'trator_grade'],
+                ['Caminhão Basculante', 'caminhao_basculante', 'Trator de Esteira', 'trator_esteira'],
+                ['Caminhão Cimento', 'caminhao_cimento', 'Veículo Leve', 'veiculo_leve'],
+                ['Caminhão Viga', 'caminhao_viga', 'Placa Vibratória', 'placa_vibratoria']
               ].map((row, idx) => (
-                <tr key={idx} className="even:bg-gray-50">
-                  {[0, 2, 4, 6].map(i => (
+                <tr key={idx} className="even:bg-gray-50/50">
+                  {[0, 2].map(i => (
                     <React.Fragment key={i}>
-                      <td className="border border-slate-900 p-1 font-semibold">{row[i]}</td>
-                      <td className="border border-slate-900 p-1 text-center">{row[i+1] ? (diario.efetivo_maquinas?.[row[i+1]] || '') : ''}</td>
+                      <td className="border border-slate-900 p-1.5 px-3 font-semibold w-[35%]">{row[i]}</td>
+                      <td className="border border-slate-900 p-1.5 px-3 text-center w-[15%]">{row[i+1] ? (diario.efetivo_maquinas?.[row[i+1]] || '') : ''}</td>
                     </React.Fragment>
                   ))}
                 </tr>
@@ -365,24 +373,28 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </table>
 
           {/* Tabela de Colaboradores */}
-          <table className="w-full border-collapse border border-slate-900 text-xs">
+          <table className="w-full border-collapse border border-slate-900 text-sm">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-slate-900 p-1.5 text-center font-bold" colSpan="8">EFETIVO DE COLABORADORES</th>
+              <tr className="bg-gray-50">
+                <th className="border border-slate-900 p-2 text-center font-bold" colSpan="4">EFETIVO DE COLABORADORES</th>
               </tr>
             </thead>
             <tbody>
               {[
-                ['Encarregado', 'encarregado', 'Pedreiro', 'pedreiro', 'Topógrafo', 'topografo', 'Spoter', 'spoter'],
-                ['Greidista', 'greidista', 'Armador', 'armador', 'Aux. Topografia', 'aux_topografia', 'Segurança', 'seguranca'],
-                ['Operadores', 'operadores', 'Carpinteiro', 'carpinteiro', 'Laboratorista', 'laboratorista', 'Apontador', 'apontador'],
-                ['Motorista', 'motorista', 'Ajudante', 'ajudante', 'Aux. Laboratório', 'aux_laboratorio', '', '']
+                ['Encarregado', 'encarregado', 'Topógrafo', 'topografo'],
+                ['Greidista', 'greidista', 'Aux. Topografia', 'aux_topografia'],
+                ['Operadores', 'operadores', 'Laboratorista', 'laboratorista'],
+                ['Motorista', 'motorista', 'Aux. Laboratório', 'aux_laboratorio'],
+                ['Pedreiro', 'pedreiro', 'Spoter', 'spoter'],
+                ['Armador', 'armador', 'Segurança', 'seguranca'],
+                ['Carpinteiro', 'carpinteiro', 'Apontador', 'apontador'],
+                ['Ajudante', 'ajudante', '', '']
               ].map((row, idx) => (
-                <tr key={idx} className="even:bg-gray-50">
-                  {[0, 2, 4, 6].map(i => (
+                <tr key={idx} className="even:bg-gray-50/50">
+                  {[0, 2].map(i => (
                     <React.Fragment key={i}>
-                      <td className="border border-slate-900 p-1 font-semibold">{row[i]}</td>
-                      <td className="border border-slate-900 p-1 text-center">{row[i+1] ? (diario.efetivo_colaboradores?.[row[i+1]] || '') : ''}</td>
+                      <td className="border border-slate-900 p-1.5 px-3 font-semibold w-[35%]">{row[i]}</td>
+                      <td className="border border-slate-900 p-1.5 px-3 text-center w-[15%]">{row[i+1] ? (diario.efetivo_colaboradores?.[row[i+1]] || '') : ''}</td>
                     </React.Fragment>
                   ))}
                 </tr>
