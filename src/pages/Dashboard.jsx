@@ -542,6 +542,25 @@ export default function Dashboard() {
       .sort((a, b) => b.value - a.value);
 
     setRecordsByTypeChartData(typeChartData);
+
+    // Records by Laboratorista (admin, gestor_contrato, sala_tecnica_afirmaevias)
+    if (userAccessLevel === 'admin' || userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+      const laboratoristaRecordCount = {};
+      ensaios.forEach(ensaio => {
+        const laboratorista = ensaio.laboratorista_name || ensaio.created_by || 'Não especificado';
+        laboratoristaRecordCount[laboratorista] = (laboratoristaRecordCount[laboratorista] || 0) + 1;
+      });
+
+      const laboratoristaChartData = Object.entries(laboratoristaRecordCount)
+        .map(([name, count]) => ({
+          name: name,
+          value: count
+        }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10);
+
+      setRecordsByLaboratoristaChartData(laboratoristaChartData);
+    }
   }, [filters.periodo, allData.obras]);
 
   const handlePieClick = useCallback((data, chartType) => {
