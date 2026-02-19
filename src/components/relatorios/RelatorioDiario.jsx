@@ -337,16 +337,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </div>
           </header>
 
-          {/* Rodovia */}
-          <div className="border-t-2 border-slate-900 pt-1 pb-1">
-            <div>
-              <p className="text-gray-500 text-[10px] font-semibold uppercase">Rodovia</p>
-              <p className="text-gray-800 font-medium">{diario.rodovia || 'N/A'}</p>
-            </div>
-          </div>
-
           {/* Informações Gerais */}
-          <div className="border-t-2 border-slate-900 pt-2">
+          <div className="mb-3 border-t-2 border-slate-900 pt-2">
             <h2 className="text-xs font-bold text-gray-800 mb-2">INFORMAÇÕES GERAIS</h2>
             <div className="grid grid-cols-3 gap-4 text-xs">
               {/* Coluna 1 */}
@@ -358,6 +350,10 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 <div>
                   <p className="text-gray-500 text-[10px] font-semibold uppercase">Obra</p>
                   <p className="text-gray-800 font-medium">{obra?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Rodovia</p>
+                  <p className="text-gray-800 font-medium">{diario.rodovia || 'N/A'}</p>
                 </div>
               </div>
 
