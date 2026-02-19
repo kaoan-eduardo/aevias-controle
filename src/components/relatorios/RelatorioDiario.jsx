@@ -435,8 +435,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 <tr key={idx} className="even:bg-gray-50/50">
                   {[0, 2].map(i => (
                     <React.Fragment key={i}>
-                      <td className="border border-slate-900 p-1.5 px-3 font-semibold w-[35%]">{row[i]}</td>
-                      <td className="border border-slate-900 p-1.5 px-3 text-center w-[15%]">{row[i+1] ? (diario.efetivo_colaboradores?.[row[i+1]] || '') : ''}</td>
+                      <td className="border p-1.5 px-3 font-semibold w-[35%]" style={{ borderColor: 'hsl(212.73deg 26.83% 83.92%)' }}>{row[i]}</td>
+                      <td className="border p-1.5 px-3 text-center w-[15%]" style={{ borderColor: 'hsl(212.73deg 26.83% 83.92%)' }}>{row[i+1] ? (diario.efetivo_colaboradores?.[row[i+1]] || '') : ''}</td>
                     </React.Fragment>
                   ))}
                 </tr>
