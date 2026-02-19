@@ -54,6 +54,7 @@ import ChecklistMRAF from './pages/ChecklistMRAF';
 import ChecklistReciclagem from './pages/ChecklistReciclagem';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
 import ChecklistUsina from './pages/ChecklistUsina';
+import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
@@ -63,7 +64,6 @@ import EnsaioMRAF from './pages/EnsaioMRAF';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
-import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import MonitorProdutividade from './pages/MonitorProdutividade';
@@ -90,7 +90,7 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -102,6 +102,7 @@ export const PAGES = {
     "ChecklistReciclagem": ChecklistReciclagem,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
     "ChecklistUsina": ChecklistUsina,
+    "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
@@ -111,7 +112,6 @@ export const PAGES = {
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "FaixasGranulometricas": FaixasGranulometricas,
-    "Home": Home,
     "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "MonitorProdutividade": MonitorProdutividade,
@@ -138,7 +138,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "Dashboard": Dashboard,
+    "Home": Home,
 }
 
 export const pagesConfig = {
