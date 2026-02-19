@@ -337,6 +337,48 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </div>
           </header>
 
+          <section className="mb-6">
+            <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Informações Gerais</h2>
+            <div className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm">
+              {/* Row 1 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Cliente</p>
+                <p className="text-gray-800">{diario.cliente || regional?.cliente || 'N/A'}</p>
+              </div>
+              <div>
+                {tipoLocal === "campo" && (
+                  <>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">Trecho</p>
+                    <p className="text-gray-800">{trecho}</p>
+                  </>
+                )}
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Empreiteira</p>
+                <p className="text-gray-800">{diario.empreiteira || 'N/A'}</p>
+              </div>
+
+              {/* Row 2 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Obra</p>
+                <p className="text-gray-800">{obra?.name || 'N/A'}</p>
+              </div>
+              <div></div>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
+                <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
+              </div>
+
+              {/* Row 3 */}
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "usina" ? "Usina" : "Rodovia"}</p>
+                <p className="text-gray-800">{tipoLocal === "usina" ? (diario.usina_selecionada || 'N/A') : (diario.rodovia || 'N/A')}</p>
+              </div>
+              <div></div>
+              <div></div>
+            </div>
+          </section>
+
           {/* Tabela de Máquinas */}
           <table className="w-full border-collapse border border-slate-900 mb-6 text-sm">
             <thead>
