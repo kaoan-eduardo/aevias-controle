@@ -88,6 +88,7 @@ export default function Dashboard() {
   const [statusChartData, setStatusChartData] = useState([]);
   const [recordsByObraChartData, setRecordsByObraChartData] = useState([]);
   const [recordsByTypeChartData, setRecordsByTypeChartData] = useState([]);
+  const [recordsByLaboratoristaChartData, setRecordsByLaboratoristaChartData] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
