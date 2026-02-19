@@ -1502,6 +1502,145 @@ export default function ChecklistUsinaPage() {
                 </CardContent>
               </Card>
 
+              {/* CONTROLE DE LIGANTE */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">Controle de Qualidade de Ligantes</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="controle_ligante_ativo"
+                        checked={formData.controle_ligante_ativo || false}
+                        onChange={(e) => handleChange('controle_ligante_ativo', e.target.checked)}
+                        disabled={!isEditable || isApproved}
+                        className="w-4 h-4"
+                      />
+                      <Label htmlFor="controle_ligante_ativo" className="font-normal cursor-pointer">Preencher Controle de Ligante</Label>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                {formData.controle_ligante_ativo && (
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="ligante_tipo">Tipo de Ligante</Label>
+                        <Input
+                          id="ligante_tipo"
+                          value={formData.controle_ligante?.ligante_tipo || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.ligante_tipo', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                          placeholder="Ex: CAP 50/70"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="nota_fiscal">Nota Fiscal</Label>
+                        <Input
+                          id="nota_fiscal"
+                          value={formData.controle_ligante?.nota_fiscal || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.nota_fiscal', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="fornecedor">Fornecedor</Label>
+                        <Input
+                          id="fornecedor"
+                          value={formData.controle_ligante?.fornecedor || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.fornecedor', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="placa_carreta">Placa Carreta</Label>
+                        <Input
+                          id="placa_carreta"
+                          value={formData.controle_ligante?.placa_carreta || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.placa_carreta', e.target.value)}
+                          disabled={!isEditable || isApproved}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="quantidade_toneladas">Quantidade (t)</Label>
+                        <Input
+                          id="quantidade_toneladas"
+                          type="number"
+                          step="0.1"
+                          value={formData.controle_ligante?.quantidade_toneladas || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.quantidade_toneladas', e.target.value ? parseFloat(e.target.value) : null)}
+                          disabled={!isEditable || isApproved}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold text-sm mb-4">Ensaios Acompanhados</h4>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="bg-slate-100">
+                              <th className="border border-slate-300 px-3 py-2 text-left font-semibold">Ensaio</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Unidade</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Resultado</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Limite Esp.</th>
+                              <th className="border border-slate-300 px-3 py-2 text-left font-semibold">Especificação</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_1_resultado", unidade: "cP", limite: "3000", spec: "ABNT NBR - 15184" },
+                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_2_resultado", unidade: "cP", limite: "2000", spec: "ABNT NBR - 15529" },
+                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_3_resultado", unidade: "cP", limite: "1000", spec: "ABNT NBR - 15184" },
+                              { label: "Recuperação Elástica", key: "recuperacao_elastica_resultado", unidade: "%", limite: "75", spec: "ABNT NBR - 15086" },
+                              { label: "Penetração (100g, 5s, 25ºC)", key: "penetracao_resultado", unidade: "0,1 mm", limite: "45 a 70", spec: "ABNT NBR - 6576" },
+                              { label: "Ponto de Amolecimento", key: "ponto_amolecimento_resultado", unidade: "ºC", limite: "55", spec: "ABNT NBR - 6560" },
+                              { label: "Ponto de Fulgor", key: "ponto_fulgor_resultado", unidade: "ºC", limite: "235", spec: "ABNT NBR - 11341" }
+                            ].map((ensaio) => (
+                              <tr key={ensaio.key} className="even:bg-slate-50">
+                                <td className="border border-slate-300 px-3 py-2">{ensaio.label}</td>
+                                <td className="border border-slate-300 px-3 py-2 text-center text-xs">{ensaio.unidade}</td>
+                                <td className="border border-slate-300 px-3 py-2">
+                                  <Input
+                                    type="number"
+                                    step="0.1"
+                                    value={formData.controle_ligante?.[ensaio.key] || ''}
+                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}`, e.target.value ? parseFloat(e.target.value) : null)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-8 text-sm"
+                                  />
+                                </td>
+                                <td className="border border-slate-300 px-3 py-2 text-center text-xs bg-blue-50">{ensaio.limite}</td>
+                                <td className="border border-slate-300 px-3 py-2 text-xs">{ensaio.spec}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="controle_ligante_obs">Observações</Label>
+                      <Textarea
+                        id="controle_ligante_obs"
+                        value={formData.controle_ligante?.observacoes || ''}
+                        onChange={(e) => handleNestedChange('controle_ligante.observacoes', e.target.value)}
+                        disabled={!isEditable || isApproved}
+                        rows={2}
+                        maxLength="500"
+                      />
+                      <p className="text-xs text-right text-slate-500 mt-1">
+                        {formData.controle_ligante?.observacoes?.length || 0} / 500
+                      </p>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
               {/* OBSERVAÇÕES GERAIS */}
               <div className="space-y-4">
                 <div>
