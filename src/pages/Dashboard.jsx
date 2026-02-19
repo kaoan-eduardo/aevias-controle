@@ -795,6 +795,7 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="text-lg font-semibold text-[#00233B]">
                 {isCliente ? 'Status das Assinaturas' : 'Status dos Registros'}
+                <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -807,9 +808,15 @@ export default function Dashboard() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
+                    onClick={(data) => handlePieClick(data, 'status')}
+                    style={{ cursor: 'pointer' }}
                   >
                     {statusChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.color}
+                        opacity={filters.status && entry.name !== (filters.status === 'approved' ? 'Aprovados' : filters.status === 'pending' ? 'Pendentes' : 'Reprovados') ? 0.3 : 1}
+                      />
                     ))}
                   </Pie>
                   <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
@@ -827,6 +834,7 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-[#00233B]">
                   Registros por Obra
+                  <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -839,9 +847,15 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
+                      onClick={(data) => handlePieClick(data, 'obra')}
+                      style={{ cursor: 'pointer' }}
                     >
                       {recordsByObraChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={['#00233B', '#566E3D', '#BFCF99', '#FBBF24', '#800020'][index % 5]} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={['#00233B', '#566E3D', '#BFCF99', '#FBBF24', '#800020'][index % 5]}
+                          opacity={filters.obraId && entry.obraId !== filters.obraId ? 0.3 : 1}
+                        />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
@@ -855,6 +869,7 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-[#00233B]">
                   Tipos de Registros
+                  <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -867,9 +882,15 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
+                      onClick={(data) => handlePieClick(data, 'type')}
+                      style={{ cursor: 'pointer' }}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          opacity={filters.tipoRegistro && entry.entityType !== filters.tipoRegistro ? 0.3 : 1}
+                        />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
@@ -888,6 +909,7 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-[#00233B]">
                   Tipos de Registros
+                  <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -900,9 +922,15 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
+                      onClick={(data) => handlePieClick(data, 'type')}
+                      style={{ cursor: 'pointer' }}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          opacity={filters.tipoRegistro && entry.entityType !== filters.tipoRegistro ? 0.3 : 1}
+                        />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
