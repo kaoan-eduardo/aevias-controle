@@ -367,7 +367,7 @@ const AppLayout = ({ children }) => {
 
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
-    { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
+    { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
     { title: "Projetos", url: createPageUrl("Projects"), icon: FolderOpen, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Ensaios Realizados", url: createPageUrl("MeusEnsaios"), icon: FileText, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
     { title: "Não Conformidades", url: createPageUrl("NaoConformidades"), icon: AlertTriangle, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
