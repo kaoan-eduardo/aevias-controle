@@ -343,6 +343,238 @@ export default function Dashboard() {
     loadData();
   }, [loadData]);
 
+  // Aplicar filtros e recalcular dados
+  const filteredData = useMemo(() => {
+    if (!allData.ensaios.length) return { ensaios: [], obras: allData.obras };
+
+    let filtered = [...allData.ensaios];
+
+    // Filtro por obra
+    if (filters.obraId) {
+      filtered = filtered.filter(e => e.obra_id === filters.obraId);
+    }
+
+    // Filtro por status
+    if (filters.status) {
+      if (filters.status === 'approved') {
+        filtered = filtered.filter(e => e.approved === true);
+      } else if (filters.status === 'pending') {
+        filtered = filtered.filter(e => e.approved === null);
+      } else if (filters.status === 'rejected') {
+        filtered = filtered.filter(e => e.approved === false);
+      }
+    }
+
+    // Filtro por tipo de registro
+    if (filters.tipoRegistro) {
+      filtered = filtered.filter(e => e.entityType === filters.tipoRegistro);
+    }
+
+    // Filtro por período
+    const now = new Date();
+    let startDate;
+    if (filters.periodo === '1mes') {
+      startDate = subMonths(now, 1);
+    } else if (filters.periodo === '3meses') {
+      startDate = subMonths(now, 3);
+    } else {
+      startDate = subMonths(now, 6);
+    }
+    filtered = filtered.filter(e => new Date(e.created_date) >= startDate);
+
+    return { ensaios: filtered, obras: allData.obras };
+  }, [allData, filters]);
+
+  // Recalcular stats baseado nos dados filtrados
+  useEffect(() => {
+    if (!filteredData.ensaios.length && allData.ensaios.length) {
+      return;
+    }
+
+    const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+    const isCliente = userAccessLevel === 'cliente';
+    const isEngenheiro = isCliente && user?.position?.toLowerCase().includes('engenheiro');
+
+    let approvedCount, pendingCount, rejectedCount, assinadosCount, aguardandoAssinaturaCount;
+
+    if (isCliente) {
+      assinadosCount = filteredData.ensaios.filter(e => e.client_signature?.signed_by).length;
+      aguardandoAssinaturaCount = isEngenheiro ? 
+        filteredData.ensaios.filter(e => e.approved === true && !e.client_signature?.signed_by).length : 
+        0;
+      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
+      pendingCount = 0;
+      rejectedCount = 0;
+    } else {
+      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
+      pendingCount = filteredData.ensaios.filter(e => e.approved === null).length;
+      rejectedCount = filteredData.ensaios.filter(e => e.approved === false).length;
+      assinadosCount = 0;
+      aguardandoAssinaturaCount = 0;
+    }
+
+    setStats({
+      obras: filteredData.obras.length,
+      projects: allData.projects.length,
+      ensaios: filteredData.ensaios.length,
+      approved: approvedCount,
+      pending: pendingCount,
+      rejected: rejectedCount,
+      assinados: assinadosCount,
+      aguardando_assinatura: aguardandoAssinaturaCount,
+    });
+
+    // Recalcular gráficos
+    calculateCharts(filteredData.ensaios, userAccessLevel, isCliente);
+  }, [filteredData, user, allData.projects.length]);
+
+  const calculateCharts = useCallback((ensaios, userAccessLevel, isCliente) => {
+    const now = new Date();
+    const monthsToShow = filters.periodo === '1mes' ? 1 : filters.periodo === '3meses' ? 3 : 6;
+    const months = Array.from({ length: monthsToShow }, (_, i) => subMonths(now, monthsToShow - 1 - i));
+    
+    const monthlyData = months.map(month => {
+      const start = startOfMonth(month);
+      const end = endOfMonth(month);
+      const monthEnsaios = ensaios.filter(e => 
+        isWithinInterval(new Date(e.created_date), { start, end })
+      );
+      
+      return {
+        name: format(month, 'MMM', { locale: ptBR }),
+        ensaios: monthEnsaios.length,
+        aprovados: isCliente ? 
+          monthEnsaios.filter(e => e.client_signature?.signed_by).length :
+          monthEnsaios.filter(e => e.approved === true).length,
+        assinados: isCliente ? monthEnsaios.filter(e => e.client_signature?.signed_by).length : 0
+      };
+    });
+    setMonthlyChartData(monthlyData);
+
+    // Status Chart
+    if (isCliente) {
+      const assinados = ensaios.filter(e => e.client_signature?.signed_by).length;
+      const aguardando = ensaios.filter(e => e.approved === true && !e.client_signature?.signed_by).length;
+      setStatusChartData([
+        { name: 'Assinados', value: assinados, color: '#566E3D' },
+        { name: 'Aguardando', value: aguardando, color: '#FBBF24' }
+      ].filter(item => item.value > 0));
+    } else {
+      const approved = ensaios.filter(e => e.approved === true).length;
+      const pending = ensaios.filter(e => e.approved === null).length;
+      const rejected = ensaios.filter(e => e.approved === false).length;
+      setStatusChartData([
+        { name: 'Aprovados', value: approved, color: '#566E3D' },
+        { name: 'Pendentes', value: pending, color: '#FBBF24' },
+        { name: 'Reprovados', value: rejected, color: '#800020' }
+      ].filter(item => item.value > 0));
+    }
+
+    // Records by Obra (admin only)
+    if (userAccessLevel === 'admin') {
+      const obraRecordCount = {};
+      ensaios.forEach(ensaio => {
+        const obraId = ensaio.obra_id;
+        if (obraId) {
+          obraRecordCount[obraId] = (obraRecordCount[obraId] || 0) + 1;
+        }
+      });
+
+      const obraChartData = Object.entries(obraRecordCount)
+        .map(([obraId, count]) => {
+          const obra = allData.obras.find(o => o.id === obraId);
+          return {
+            name: obra?.name || 'Desconhecida',
+            value: count,
+            obraId: obraId
+          };
+        })
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10);
+
+      setRecordsByObraChartData(obraChartData);
+    }
+
+    // Records by Type
+    const typeColors = {
+      'EnsaioCAUQ': '#00233B',
+      'EnsaioDensidade': '#566E3D',
+      'DiarioObra': '#BFCF99',
+      'ChecklistUsina': '#FBBF24',
+      'ChecklistAplicacao': '#800020',
+      'ChecklistMRAF': '#4A90E2',
+      'ChecklistConcretagem': '#8B4513',
+      'ChecklistTerraplanagem': '#228B22',
+    };
+
+    const typeRecordCount = {};
+    ensaios.forEach(ensaio => {
+      const type = ensaio.entityType;
+      if (type) {
+        typeRecordCount[type] = (typeRecordCount[type] || 0) + 1;
+      }
+    });
+
+    const typeLabels = {
+      'EnsaioCAUQ': 'Ensaio CAUQ',
+      'EnsaioDensidade': 'Densidade',
+      'DiarioObra': 'Diário',
+      'ChecklistUsina': 'Checklist Usina',
+      'ChecklistAplicacao': 'Checklist Aplicação',
+      'ChecklistMRAF': 'Checklist MRAF',
+      'ChecklistConcretagem': 'Checklist Concretagem',
+      'ChecklistTerraplanagem': 'Checklist Terraplanagem',
+    };
+
+    const typeChartData = Object.entries(typeRecordCount)
+      .map(([type, count]) => ({
+        name: typeLabels[type] || type,
+        value: count,
+        color: typeColors[type] || '#00233B',
+        entityType: type
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    setRecordsByTypeChartData(typeChartData);
+  }, [filters.periodo, allData.obras]);
+
+  const handlePieClick = useCallback((data, chartType) => {
+    if (chartType === 'status') {
+      const statusMap = {
+        'Aprovados': 'approved',
+        'Pendentes': 'pending',
+        'Reprovados': 'rejected',
+        'Assinados': 'approved',
+        'Aguardando': 'pending'
+      };
+      setFilters(prev => ({
+        ...prev,
+        status: prev.status === statusMap[data.name] ? null : statusMap[data.name]
+      }));
+    } else if (chartType === 'obra') {
+      setFilters(prev => ({
+        ...prev,
+        obraId: prev.obraId === data.obraId ? null : data.obraId
+      }));
+    } else if (chartType === 'type') {
+      setFilters(prev => ({
+        ...prev,
+        tipoRegistro: prev.tipoRegistro === data.entityType ? null : data.entityType
+      }));
+    }
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFilters({
+      obraId: null,
+      status: null,
+      tipoRegistro: null,
+      periodo: '6meses'
+    });
+  }, []);
+
+  const hasActiveFilters = filters.obraId || filters.status || filters.tipoRegistro;
+
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isCliente = userAccessLevel === 'cliente';
   const isEngenheiro = isCliente && user?.position?.toLowerCase().includes('engenheiro');
