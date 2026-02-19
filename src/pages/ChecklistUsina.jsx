@@ -65,6 +65,22 @@ const getInitialFormData = () => ({
     estabilidade: { realizado: false, quantidade: 0, resultados: [], conforme: null },
     fluencia: { realizado: false, quantidade: 0, resultados: [], conforme: null }
   },
+  controle_ligante_ativo: false,
+  controle_ligante: {
+    ligante_tipo: "",
+    nota_fiscal: "",
+    fornecedor: "",
+    placa_carreta: "",
+    quantidade_toneladas: null,
+    viscosidade_1_resultado: null,
+    viscosidade_2_resultado: null,
+    viscosidade_3_resultado: null,
+    recuperacao_elastica_resultado: null,
+    penetracao_resultado: null,
+    ponto_amolecimento_resultado: null,
+    ponto_fulgor_resultado: null,
+    observacoes: ""
+  },
   observacoes: "",
   acoes_corretivas_realizado: null,
   acoes_corretivas_descricao: "",
