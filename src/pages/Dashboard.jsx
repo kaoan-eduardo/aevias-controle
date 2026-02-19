@@ -427,15 +427,12 @@ export default function Dashboard() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
                     {statusChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
-                  <Legend wrapperStyle={{ color: '#00233B' }}/>
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -461,15 +458,12 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {recordsByObraChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={['#00233B', '#566E3D', '#BFCF99', '#FBBF24', '#800020'][index % 5]} />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
-                    <Legend wrapperStyle={{ color: '#00233B' }}/>
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
