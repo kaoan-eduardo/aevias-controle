@@ -14,10 +14,12 @@ export default function HomePage() {
       try {
         const user = await User.me();
         if (user) {
-          if (user.role === 'admin') {
-            navigate(createPageUrl('Dashboard'), { replace: true });
+          const userAccessLevel = user.access_level || (user.role === 'admin' ? 'admin' : 'user');
+          
+          if (userAccessLevel === 'user') {
+            navigate(createPageUrl('MeusEnsaios'), { replace: true });
           } else {
-            navigate(createPageUrl('Obras'), { replace: true });
+            navigate(createPageUrl('Dashboard'), { replace: true });
           }
         }
       } catch (error) {
