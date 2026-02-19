@@ -338,7 +338,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           </header>
 
           {/* Informações Gerais */}
-          <div className="border-t border-slate-900 pt-2 mb-3">
+          <div className="mb-3">
             <h2 className="text-xs font-bold text-gray-800 mb-2">INFORMAÇÕES GERAIS</h2>
             <div className="grid grid-cols-3 gap-4 text-xs">
               {/* Coluna 1 */}
