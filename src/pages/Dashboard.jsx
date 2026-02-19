@@ -485,15 +485,12 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
-                    <Legend wrapperStyle={{ color: '#00233B' }}/>
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -520,15 +517,12 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
-                    <Legend wrapperStyle={{ color: '#00233B' }}/>
                   </PieChart>
                 </ResponsiveContainer>
               </CardContent>
