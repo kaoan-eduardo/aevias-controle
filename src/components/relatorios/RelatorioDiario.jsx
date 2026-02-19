@@ -337,6 +337,48 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
             </div>
           </header>
 
+          {/* Informações Gerais */}
+          <div className="mb-3 border-t-2 border-slate-900 pt-2">
+            <h2 className="text-xs font-bold text-gray-800 mb-2">INFORMAÇÕES GERAIS</h2>
+            <div className="grid grid-cols-3 gap-4 text-xs">
+              {/* Coluna 1 */}
+              <div className="space-y-2">
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Cliente</p>
+                  <p className="text-gray-800 font-medium">{diario.cliente || regional?.cliente || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Obra</p>
+                  <p className="text-gray-800 font-medium">{obra?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Rodovia</p>
+                  <p className="text-gray-800 font-medium">{diario.rodovia || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* Coluna 2 */}
+              <div className="space-y-2">
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Trecho</p>
+                  <p className="text-gray-800 font-medium">{diario.trecho || 'N/A'}</p>
+                </div>
+              </div>
+
+              {/* Coluna 3 */}
+              <div className="space-y-2">
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Empreiteira</p>
+                  <p className="text-gray-800 font-medium">{diario.empreiteira || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-[10px] font-semibold uppercase">Laboratorista</p>
+                  <p className="text-gray-800 font-medium">{diario.laboratorista_name || user?.full_name || 'N/A'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Tabela de Máquinas */}
           <table className="w-full border-collapse border border-slate-900 mb-6 text-sm">
             <thead>
