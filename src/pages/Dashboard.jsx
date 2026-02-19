@@ -475,8 +475,8 @@ export default function Dashboard() {
       ].filter(item => item.value > 0));
     }
 
-    // Records by Obra (admin only)
-    if (userAccessLevel === 'admin') {
+    // Records by Obra (admin and cliente)
+    if (userAccessLevel === 'admin' || userAccessLevel === 'cliente') {
       const obraRecordCount = {};
       ensaios.forEach(ensaio => {
         const obraId = ensaio.obra_id;
@@ -834,8 +834,8 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Additional Charts for Admins */}
-        {userAccessLevel === 'admin' && recordsByObraChartData.length > 0 && (
+        {/* Additional Charts for Admins and Clientes */}
+        {(userAccessLevel === 'admin' || userAccessLevel === 'cliente') && recordsByObraChartData.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
               <CardHeader>
