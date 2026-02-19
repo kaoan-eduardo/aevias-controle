@@ -514,8 +514,7 @@ export default function Dashboard() {
           name: laboratorista,
           value: count
         }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 10);
+        .sort((a, b) => b.value - a.value);
 
       setRecordsByLaboratoristaChartData(laboratoristaChartData);
     }
