@@ -36,6 +36,20 @@ const getInitialFormData = () => ({
   observacoes: "",
   acoes_corretivas_realizado: null,
   acoes_corretivas_descricao: "",
+  efetivo_obra_ativo: false,
+  efetivo_maquinas: {
+    motoniveladora: 0, pa_carregadeira: 0, retroescavadeira: 0, escavadeira_hidraulica: 0,
+    mini_carregadeira: 0, extrusora: 0, caminhao_prancha: 0, caminhao_munck: 0,
+    caminhao_sinalizacao: 0, caminhao_pipa: 0, caminhao_basculante: 0, caminhao_cimento: 0,
+    caminhao_viga: 0, caminhao_espargidor: 0, recicladora: 0, vibro_acabadora: 0,
+    rolo_carneiro: 0, rolo_liso: 0, rolo_pneu: 0, tanque_combustivel: 0, comboio: 0,
+    onibus: 0, trator_grade: 0, trator_esteira: 0, veiculo_leve: 0, placa_vibratoria: 0
+  },
+  efetivo_colaboradores: {
+    encarregado: 0, greidista: 0, operadores: 0, motorista: 0, pedreiro: 0,
+    armador: 0, carpinteiro: 0, ajudante: 0, topografo: 0, aux_topografia: 0,
+    laboratorista: 0, aux_laboratorio: 0, spoter: 0, seguranca: 0, apontador: 0
+  },
   fotos: [],
   cliente: "",
   approved: null,
