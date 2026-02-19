@@ -141,6 +141,11 @@ export default function Dashboard() {
 
       let regionalDoUsuario = null;
 
+      // Filtrar para laboratoristas - mostrar apenas seus próprios registros
+      if (userAccessLevel === 'user') {
+        allEnsaios = allEnsaios.filter(e => e.created_by === userData.email);
+      }
+
       // Filtrar dados baseado no nível de acesso
       if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
         const regionaisDoUsuario = regionais.filter(regional => {
