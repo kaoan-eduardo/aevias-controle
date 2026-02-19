@@ -969,6 +969,37 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Registros por Laboratorista for admins, gestores and salas técnicas */}
+        {(userAccessLevel === 'admin' || userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') && recordsByLaboratoristaChartData.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-[#00233B]">
+                  Registros por Laboratorista
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={recordsByLaboratoristaChartData} layout="horizontal">
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" />
+                    <XAxis type="number" stroke="#00233B" />
+                    <YAxis type="category" dataKey="name" stroke="#00233B" width={150} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(242, 241, 239, 0.8)', 
+                        border: '1px solid rgba(0, 35, 59, 0.2)', 
+                        borderRadius: '8px', 
+                        color: '#00233B' 
+                      }}
+                    />
+                    <Bar dataKey="value" fill="#00233B" radius={[0, 8, 8, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
 
       </div>
     </div>
