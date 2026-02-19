@@ -350,6 +350,14 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                   <>
                     <p className="text-xs font-semibold text-gray-500 uppercase">Trecho</p>
                     <p className="text-gray-800">{trecho}</p>
+                    <p className="text-xs font-semibold text-gray-500 uppercase mt-3">Rodovia</p>
+                    <p className="text-gray-800">{diario.rodovia || 'N/A'}</p>
+                  </>
+                )}
+                {tipoLocal === "usina" && (
+                  <>
+                    <p className="text-xs font-semibold text-gray-500 uppercase">Usina</p>
+                    <p className="text-gray-800">{diario.usina_selecionada || 'N/A'}</p>
                   </>
                 )}
               </div>
@@ -368,14 +376,6 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
                 <p className="text-xs font-semibold text-gray-500 uppercase">Laboratorista</p>
                 <p className="text-gray-800">{diario.laboratorista_name || user?.laboratorista_name || user?.full_name || diario.created_by?.split('@')[0] || 'Não Identificado'}</p>
               </div>
-
-              {/* Row 3 */}
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase">{tipoLocal === "usina" ? "Usina" : "Rodovia"}</p>
-                <p className="text-gray-800">{tipoLocal === "usina" ? (diario.usina_selecionada || 'N/A') : (diario.rodovia || 'N/A')}</p>
-              </div>
-              <div></div>
-              <div></div>
             </div>
           </section>
 
