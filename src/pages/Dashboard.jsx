@@ -88,6 +88,7 @@ export default function Dashboard() {
   const [statusChartData, setStatusChartData] = useState([]);
   const [recordsByObraChartData, setRecordsByObraChartData] = useState([]);
   const [recordsByTypeChartData, setRecordsByTypeChartData] = useState([]);
+  const [recordsByLaboratoristaChartData, setRecordsByLaboratoristaChartData] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -500,6 +501,25 @@ export default function Dashboard() {
       setRecordsByObraChartData(obraChartData);
     }
 
+    // Records by Laboratorista (admin, gestor_contrato, sala_tecnica_afirmaevias)
+    if (userAccessLevel === 'admin' || userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+      const laboratoristaRecordCount = {};
+      ensaios.forEach(ensaio => {
+        const laboratorista = ensaio.laboratorista_name || ensaio.created_by || 'Desconhecido';
+        laboratoristaRecordCount[laboratorista] = (laboratoristaRecordCount[laboratorista] || 0) + 1;
+      });
+
+      const laboratoristaChartData = Object.entries(laboratoristaRecordCount)
+        .map(([laboratorista, count]) => ({
+          name: laboratorista,
+          value: count
+        }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 10);
+
+      setRecordsByLaboratoristaChartData(laboratoristaChartData);
+    }
+
     // Records by Type
     const typeColors = {
       'EnsaioCAUQ': '#00233B',
@@ -909,43 +929,78 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Tipos de Registros for gestores, salas técnicas and clientes */}
-        {(userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'cliente') && recordsByTypeChartData.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 mb-8">
-            <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-[#00233B]">
-                  Tipos de Registros
-                  <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={recordsByTypeChartData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      onClick={(data) => handlePieClick(data, 'type')}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {recordsByTypeChartData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={entry.color}
-                          opacity={filters.tipoRegistro && entry.entityType !== filters.tipoRegistro ? 0.3 : 1}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
-                    <Legend wrapperStyle={{ color: '#00233B' }}/>
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+        {/* Charts for gestores, salas técnicas and clientes */}
+        {(userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'cliente') && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {recordsByTypeChartData.length > 0 && (
+              <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-[#00233B]">
+                    Tipos de Registros
+                    <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={recordsByTypeChartData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                        onClick={(data) => handlePieClick(data, 'type')}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {recordsByTypeChartData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={entry.color}
+                            opacity={filters.tipoRegistro && entry.entityType !== filters.tipoRegistro ? 0.3 : 1}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                      <Legend wrapperStyle={{ color: '#00233B' }}/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            )}
+
+            {(userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') && recordsByLaboratoristaChartData.length > 0 && (
+              <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-[#00233B]">
+                    Registros por Laboratorista
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={recordsByLaboratoristaChartData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {recordsByLaboratoristaChartData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={['#00233B', '#566E3D', '#BFCF99', '#FBBF24', '#800020', '#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 10]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.8)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px', color: '#00233B' }}/>
+                      <Legend wrapperStyle={{ color: '#00233B' }}/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 
