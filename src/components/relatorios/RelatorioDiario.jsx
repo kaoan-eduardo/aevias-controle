@@ -383,7 +383,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional 
           <table className="w-full border-collapse mb-6 text-sm" style={{ borderColor: 'hsl(212.73deg 26.83% 83.92%)' }} border="1">
             <thead>
               <tr className="bg-gray-50">
-                <th className="border border-slate-900 p-2 text-center font-bold" colSpan="4">EFETIVO DE MÁQUINAS OPERANTES</th>
+                <th className="border p-2 text-center font-bold" style={{ borderColor: 'hsl(212.73deg 26.83% 83.92%)' }} colSpan="4">EFETIVO DE MÁQUINAS OPERANTES</th>
               </tr>
             </thead>
             <tbody>
