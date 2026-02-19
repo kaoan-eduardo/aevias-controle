@@ -427,8 +427,6 @@ export default function Dashboard() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
                     {statusChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -489,8 +487,6 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -524,8 +520,6 @@ export default function Dashboard() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      labelLine={false}
-                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {recordsByTypeChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
