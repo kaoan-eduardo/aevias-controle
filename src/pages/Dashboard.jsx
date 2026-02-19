@@ -208,6 +208,14 @@ export default function Dashboard() {
         aguardandoAssinaturaCount = 0;
       }
 
+      // Salvar dados originais para filtros
+      setAllData({
+        obras: obrasFiltradas,
+        projects: projectsFiltrados,
+        ensaios: allEnsaios,
+        regionais: regionais
+      });
+
       setStats({
         obras: obrasFiltradas.length,
         projects: projectsFiltrados.length,
