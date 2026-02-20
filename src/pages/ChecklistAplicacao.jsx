@@ -66,7 +66,11 @@ const getInitialFormData = () => ({
   acoes_corretivas_realizado: null,
   acoes_corretivas_descricao: "",
   fotos: [],
-  medicoes_geometricas: [],
+  medicoes_geometricas: {
+    subtrecho: "",
+    servico: "",
+    medicoes: []
+  },
   status: "rascunho"
 });
 
