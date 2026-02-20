@@ -335,7 +335,8 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
   };
   
   const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
-  const totalPages = 1 + 1 + (temAcoesCorretivas ? 1 : 0) + photoChunks.length;
+  const temControleLigante = checklist.controle_ligante_ativo === true;
+  const totalPages = 1 + 1 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0) + photoChunks.length;
 
   return (
     <div className="bg-white font-sans">
