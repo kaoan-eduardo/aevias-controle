@@ -425,7 +425,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             <main className="flex-grow mt-6">
               <SectionTitle>Controle de Qualidade de Ligantes</SectionTitle>
               
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-4 gap-4 mb-4">
                 <div>
                   <strong className="font-medium text-sm">Fornecedor:</strong>
                   <p className="text-base">{checklist.controle_ligante?.fornecedor || 'N/A'}</p>
@@ -452,7 +452,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <th className="border border-slate-300 p-2 text-center font-semibold">Resultado</th>
                     <th className="border border-slate-300 p-2 text-center font-semibold">Limite Esp.</th>
                     <th className="border border-slate-300 p-2 text-center font-semibold">Especificação</th>
-                    <th className="border border-slate-300 p-2 text-center font-semibold">Conf.</th>
+                    <th className="border border-slate-300 p-2 text-center font-semibold">Conformidade</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -466,9 +466,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15184</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.viscosidade_1_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -482,9 +482,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15529</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.viscosidade_2_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -498,9 +498,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15184</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.viscosidade_3_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -512,9 +512,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15086</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.recuperacao_elastica_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -526,9 +526,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 6576</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.penetracao_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -540,9 +540,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 6560</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.ponto_amolecimento_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>
@@ -554,9 +554,9 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 11341</td>
                     <td className="border border-slate-300 p-2 text-center">
                       {checklist.controle_ligante?.ponto_fulgor_conforme ? (
-                        <span className="text-green-600 font-bold">☑</span>
+                        <span className="text-green-600 font-bold text-2xl">✓</span>
                       ) : (
-                        <span className="text-red-600 font-bold">✗</span>
+                        <span className="text-red-600 font-bold text-2xl">✗</span>
                       )}
                     </td>
                   </tr>

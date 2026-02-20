@@ -1606,7 +1606,7 @@ export default function ChecklistUsinaPage() {
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Resultado</th>
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Limite Esp.</th>
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Especificação</th>
-                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Conforme</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Conformidade</th>
                             </tr>
                           </thead>
                           <tbody>
