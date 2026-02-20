@@ -1613,29 +1613,206 @@ export default function ChecklistUsinaPage() {
                             </tr>
                           </thead>
                           <tbody>
+                            {/* Viscosidade 1 */}
+                            <tr className="bg-slate-50">
+                              <td className="border border-slate-300 px-3 py-2">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  <span>Viscosidade Brookfield a</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_1_temp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_temp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>ºC, SP</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_1_sp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_sp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>[</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_1_rpm || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_rpm', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>rpm]</span>
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-center text-xs">cP</td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={formData.controle_ligante?.viscosidade_1_resultado || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="text"
+                                  value={formData.controle_ligante?.viscosidade_1_limite || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_limite', e.target.value)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm text-center"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15184</td>
+                            </tr>
+
+                            {/* Viscosidade 2 */}
+                            <tr>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  <span>Viscosidade Brookfield a</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_2_temp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_temp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>ºC, SP</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_2_sp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_sp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>[</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_2_rpm || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_rpm', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>rpm]</span>
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-center text-xs">cP</td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={formData.controle_ligante?.viscosidade_2_resultado || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="text"
+                                  value={formData.controle_ligante?.viscosidade_2_limite || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_limite', e.target.value)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm text-center"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15529</td>
+                            </tr>
+
+                            {/* Viscosidade 3 */}
+                            <tr className="bg-slate-50">
+                              <td className="border border-slate-300 px-3 py-2">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  <span>Viscosidade Brookfield a</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_3_temp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_temp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>ºC, SP</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_3_sp || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_sp', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>[</span>
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.viscosidade_3_rpm || ''}
+                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_rpm', e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-7 w-14 text-xs px-1"
+                                    placeholder="__"
+                                  />
+                                  <span>rpm]</span>
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-center text-xs">cP</td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={formData.controle_ligante?.viscosidade_3_resultado || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2">
+                                <Input
+                                  type="text"
+                                  value={formData.controle_ligante?.viscosidade_3_limite || ''}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_limite', e.target.value)}
+                                  disabled={!isEditable || isApproved}
+                                  className="h-8 text-sm text-center"
+                                />
+                              </td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15184</td>
+                            </tr>
+
+                            {/* Demais ensaios */}
                             {[
-                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_1_resultado", unidade: "cP", limite: "3000", spec: "ABNT NBR - 15184" },
-                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_2_resultado", unidade: "cP", limite: "2000", spec: "ABNT NBR - 15529" },
-                              { label: "Viscosidade Brookfield a __ºC, SP __ [__ rpm]", key: "viscosidade_3_resultado", unidade: "cP", limite: "1000", spec: "ABNT NBR - 15184" },
-                              { label: "Recuperação Elástica", key: "recuperacao_elastica_resultado", unidade: "%", limite: "75", spec: "ABNT NBR - 15086" },
-                              { label: "Penetração (100g, 5s, 25ºC)", key: "penetracao_resultado", unidade: "0,1 mm", limite: "45 a 70", spec: "ABNT NBR - 6576" },
-                              { label: "Ponto de Amolecimento", key: "ponto_amolecimento_resultado", unidade: "ºC", limite: "55", spec: "ABNT NBR - 6560" },
-                              { label: "Ponto de Fulgor", key: "ponto_fulgor_resultado", unidade: "ºC", limite: "235", spec: "ABNT NBR - 11341" }
-                            ].map((ensaio) => (
-                              <tr key={ensaio.key} className="even:bg-slate-50">
+                              { label: "Recuperação Elástica", key: "recuperacao_elastica", unidade: "%", spec: "ABNT NBR - 15086" },
+                              { label: "Penetração (100g, 5s, 25ºC)", key: "penetracao", unidade: "0,1 mm", spec: "ABNT NBR - 6576" },
+                              { label: "Ponto de Amolecimento", key: "ponto_amolecimento", unidade: "ºC", spec: "ABNT NBR - 6560" },
+                              { label: "Ponto de Fulgor", key: "ponto_fulgor", unidade: "ºC", spec: "ABNT NBR - 11341" }
+                            ].map((ensaio, idx) => (
+                              <tr key={ensaio.key} className={idx % 2 === 1 ? 'bg-slate-50' : ''}>
                                 <td className="border border-slate-300 px-3 py-2">{ensaio.label}</td>
                                 <td className="border border-slate-300 px-3 py-2 text-center text-xs">{ensaio.unidade}</td>
                                 <td className="border border-slate-300 px-3 py-2">
                                   <Input
                                     type="number"
                                     step="0.1"
-                                    value={formData.controle_ligante?.[ensaio.key] || ''}
-                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}`, e.target.value ? parseFloat(e.target.value) : null)}
+                                    value={formData.controle_ligante?.[`${ensaio.key}_resultado`] || ''}
+                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_resultado`, e.target.value ? parseFloat(e.target.value) : null)}
                                     disabled={!isEditable || isApproved}
                                     className="h-8 text-sm"
                                   />
                                 </td>
-                                <td className="border border-slate-300 px-3 py-2 text-center text-xs bg-blue-50">{ensaio.limite}</td>
+                                <td className="border border-slate-300 px-3 py-2">
+                                  <Input
+                                    type="text"
+                                    value={formData.controle_ligante?.[`${ensaio.key}_limite`] || ''}
+                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_limite`, e.target.value)}
+                                    disabled={!isEditable || isApproved}
+                                    className="h-8 text-sm text-center"
+                                  />
+                                </td>
                                 <td className="border border-slate-300 px-3 py-2 text-xs">{ensaio.spec}</td>
                               </tr>
                             ))}
