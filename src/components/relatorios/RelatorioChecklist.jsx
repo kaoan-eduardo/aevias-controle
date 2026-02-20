@@ -464,7 +464,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_1_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_1_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15184</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.viscosidade_1_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.viscosidade_1_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">
@@ -474,7 +480,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_2_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_2_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15529</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.viscosidade_2_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.viscosidade_2_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">
@@ -484,7 +496,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_3_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_3_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15184</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.viscosidade_3_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.viscosidade_3_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">Recuperação Elástica</td>
@@ -492,7 +510,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.recuperacao_elastica_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.recuperacao_elastica_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 15086</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.recuperacao_elastica_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.recuperacao_elastica_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">Penetração (100g, 5s, 25ºC)</td>
@@ -500,7 +524,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.penetracao_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.penetracao_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 6576</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.penetracao_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.penetracao_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">Ponto de Amolecimento</td>
@@ -508,7 +538,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.ponto_amolecimento_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.ponto_amolecimento_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 6560</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.ponto_amolecimento_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.ponto_amolecimento_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">Ponto de Fulgor</td>
@@ -516,7 +552,13 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.ponto_fulgor_resultado || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.ponto_fulgor_limite || '-'}</td>
                     <td className="border border-slate-300 p-2 text-center">ABNT NBR - 11341</td>
-                    <td className="border border-slate-300 p-2 text-center">{checklist.controle_ligante?.ponto_fulgor_conforme ? '☑' : ''}</td>
+                    <td className="border border-slate-300 p-2 text-center">
+                      {checklist.controle_ligante?.ponto_fulgor_conforme ? (
+                        <span className="text-green-600 font-bold">☑</span>
+                      ) : (
+                        <span className="text-red-600 font-bold">✗</span>
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>
