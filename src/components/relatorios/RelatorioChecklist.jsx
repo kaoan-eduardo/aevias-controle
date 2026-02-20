@@ -564,7 +564,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               </table>
             </main>
             <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
-            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
+            <footer className="pt-1 text-center text-sm print:text-xs text-gray-400">
               Página 3 de {totalPages}
             </footer>
           </div>
