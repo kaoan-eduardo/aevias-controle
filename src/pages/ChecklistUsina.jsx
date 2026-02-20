@@ -1853,21 +1853,6 @@ export default function ChecklistUsinaPage() {
                         </table>
                       </div>
                     </div>
-
-                    <div>
-                      <Label htmlFor="controle_ligante_obs">Observações</Label>
-                      <Textarea
-                        id="controle_ligante_obs"
-                        value={formData.controle_ligante?.observacoes || ''}
-                        onChange={(e) => handleNestedChange('controle_ligante.observacoes', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        rows={2}
-                        maxLength="500"
-                      />
-                      <p className="text-xs text-right text-slate-500 mt-1">
-                        {formData.controle_ligante?.observacoes?.length || 0} / 500
-                      </p>
-                    </div>
                   </CardContent>
                 )}
               </Card>

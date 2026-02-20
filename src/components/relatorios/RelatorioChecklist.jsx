@@ -562,13 +562,6 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                   </tr>
                 </tbody>
               </table>
-
-              {checklist.controle_ligante?.observacoes && (
-                <div className="mt-4">
-                  <strong className="font-medium">Observações:</strong>
-                  <p className="text-sm mt-1">{checklist.controle_ligante.observacoes}</p>
-                </div>
-              )}
             </main>
             <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
