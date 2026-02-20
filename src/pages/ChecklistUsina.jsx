@@ -1551,18 +1551,9 @@ export default function ChecklistUsinaPage() {
                           id="ligante_tipo"
                           value={formData.controle_ligante?.ligante_tipo || ''}
                           onChange={(e) => handleNestedChange('controle_ligante.ligante_tipo', e.target.value)}
-                          disabled={!isEditable || isApproved}
-                          placeholder="Ex: CAP 50/70"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="nota_fiscal">Nota Fiscal</Label>
-                        <Input
-                          id="nota_fiscal"
-                          value={formData.controle_ligante?.nota_fiscal || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.nota_fiscal', e.target.value)}
-                          disabled={!isEditable || isApproved}
+                          disabled={true}
+                          placeholder="Preenchido automaticamente pelo projeto"
+                          className="bg-slate-100"
                         />
                       </div>
 
@@ -1572,6 +1563,18 @@ export default function ChecklistUsinaPage() {
                           id="fornecedor"
                           value={formData.controle_ligante?.fornecedor || ''}
                           onChange={(e) => handleNestedChange('controle_ligante.fornecedor', e.target.value)}
+                          disabled={true}
+                          placeholder="Preenchido automaticamente pelo projeto"
+                          className="bg-slate-100"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="nota_fiscal">Nota Fiscal</Label>
+                        <Input
+                          id="nota_fiscal"
+                          value={formData.controle_ligante?.nota_fiscal || ''}
+                          onChange={(e) => handleNestedChange('controle_ligante.nota_fiscal', e.target.value)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
