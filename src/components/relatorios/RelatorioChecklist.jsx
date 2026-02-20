@@ -204,7 +204,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
 );
 
 const ReportFooter = ({ checklist, formatDateBrasilia }) => (
-    <footer className="mt-auto pt-4">
+    <footer className="mt-2">
        <div className="grid grid-cols-3 gap-8 items-end">
         <div className="text-center">
           <div className="text-sm print:text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
@@ -563,9 +563,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 </tbody>
               </table>
             </main>
-            <div className="mt-4">
-              <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
-            </div>
+            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
               Página 3 de {totalPages}
             </footer>
