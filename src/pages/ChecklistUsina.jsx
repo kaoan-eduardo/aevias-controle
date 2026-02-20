@@ -387,7 +387,12 @@ export default function ChecklistUsinaPage() {
         material_homogeneizado_qtde: 0,
         granulometria_individual: false,
         granulometria_individual_qtde: 0
-      }))
+      })),
+      controle_ligante: {
+        ...prev.controle_ligante,
+        ligante_tipo: project.ligante?.tipo || "",
+        fornecedor: project.ligante?.fornecedor || ""
+      }
     }));
   }, [projects, faixas]);
 
