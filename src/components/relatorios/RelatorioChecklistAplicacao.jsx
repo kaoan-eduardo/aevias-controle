@@ -720,39 +720,166 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         </div>
       ))}
 
-      {compressedMedicoes.map((medicaoUrl, medicaoIndex) => (
-        <div key={medicaoIndex} className="break-before-page" style={{ width: '210mm', height: '297mm', margin: '0 auto', padding: '15mm', boxSizing: 'border-box' }}>
-          <div className="w-full h-full flex flex-col">
-            <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-3 shrink-0">
-              <div className="flex justify-start">
-                <img 
-                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-12 object-contain" 
-                />
-              </div>
-              <div className="text-center">
-                <h1 className="text-xl font-bold text-gray-800">Medição Geométrica {compressedMedicoes.length > 1 ? `${medicaoIndex + 1}` : ''}</h1>
-                <p className="text-sm text-gray-600">Obra: {obra?.name || 'N/A'}</p>
-              </div>
-              <div className="flex justify-end text-xs">
-                <div className="border border-gray-400 p-1 rounded-md">
-                  <p>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                </div>
-              </div>
-            </header>
-            <main className="flex-grow flex items-center justify-center overflow-hidden" style={{ minHeight: 0 }}>
+      {checklist.medicoes_geometricas?.medicoes?.length > 0 && (
+        <div className="break-before-page p-3 print:p-3 min-h-screen flex flex-col">
+          <header className="grid grid-cols-3 items-center border-2 border-slate-900 pb-2 mb-3">
+            <div className="flex justify-start">
               <img 
-                src={medicaoUrl} 
-                alt={`Medição Geométrica ${medicaoIndex + 1}`} 
-                className="max-w-full max-h-full object-contain"
+                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                alt="Logo Regional" 
+                className="h-12 object-contain" 
               />
-            </main>
-            <footer className="text-center text-xs text-gray-500 pt-2 shrink-0">
-            </footer>
+            </div>
+            <div className="text-center">
+              <h1 className="text-lg font-bold text-gray-800">MEDIÇÃO GEOMÉTRICA DE CAMPO</h1>
+              <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+            </div>
+            <div className="flex justify-end text-xs">
+              <div className="border border-gray-400 p-1.5 rounded-md">
+                <p className="font-semibold">{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+              </div>
+            </div>
+          </header>
+
+          <div className="grid grid-cols-2 gap-x-6 mb-3 text-xs">
+            <div>
+              <span className="font-bold">Rodovia: </span>
+              <span>{checklist.rodovia || 'N/A'}</span>
+            </div>
+            <div>
+              <span className="font-bold">Data: </span>
+              <span>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</span>
+            </div>
+            <div>
+              <span className="font-bold">Trecho: </span>
+              <span>{checklist.trecho || 'N/A'}</span>
+            </div>
+            <div>
+              <span className="font-bold">Fiscal de campo: </span>
+              <span>{checklist.inspetor_campo || 'N/A'}</span>
+            </div>
+            <div>
+              <span className="font-bold">Subtrecho: </span>
+              <span>{checklist.medicoes_geometricas?.subtrecho || 'N/A'}</span>
+            </div>
+            <div>
+              <span className="font-bold">Empreiteira: </span>
+              <span>{checklist.empreiteira || 'N/A'}</span>
+            </div>
+            <div className="col-span-2">
+              <span className="font-bold">Serviço: </span>
+              <span>{checklist.medicoes_geometricas?.servico || 'N/A'}</span>
+            </div>
           </div>
+
+          <div className="flex-grow overflow-auto">
+            <table className="w-full border-collapse border border-slate-400 text-xs">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th className="border border-slate-400 p-1" colSpan="2">ESTACAS</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">LADO</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">FAIXA</th>
+                  <th className="border border-slate-400 p-1" colSpan="3">GEOMÉTRICO</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">PLACA</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">QUANT.</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">TEMPERATURA</th>
+                  <th className="border border-slate-400 p-1" rowSpan="2">OBSERVAÇÕES</th>
+                </tr>
+                <tr>
+                  <th className="border border-slate-400 p-1">INICIAL</th>
+                  <th className="border border-slate-400 p-1">FINAL</th>
+                  <th className="border border-slate-400 p-1">COMP.</th>
+                  <th className="border border-slate-400 p-1">LARG.</th>
+                  <th className="border border-slate-400 p-1">ALTURA</th>
+                </tr>
+              </thead>
+              <tbody>
+                {checklist.medicoes_geometricas.medicoes.map((medicao, index) => (
+                  <tr key={index} className="even:bg-slate-50">
+                    <td className="border border-slate-400 p-1 text-center">{medicao.estaca_inicial || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.estaca_final || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.lado || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.faixa || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.comprimento !== null ? medicao.comprimento.toFixed(2) : '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.largura !== null ? medicao.largura.toFixed(2) : '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.altura !== null ? medicao.altura.toFixed(2) : '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.placa || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.quantidade !== null ? medicao.quantidade.toFixed(2) : '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">{medicao.temperatura !== null ? `${medicao.temperatura.toFixed(1)}°C` : '-'}</td>
+                    <td className="border border-slate-400 p-1 text-xs">{medicao.observacoes || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <footer className="mt-4 pt-4 border-t border-slate-300">
+            <div className="grid grid-cols-3 gap-4 text-center text-xs">
+              <div>
+                {checklist.laboratorista_name && (
+                  <>
+                    <div className="mb-2 text-slate-500">
+                      <p>Assinado digitalmente por</p>
+                      <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
+                      <p>{checklist.created_by}</p>
+                      <p>em {formatDateBrasilia(checklist.created_date)}</p>
+                    </div>
+                    <div className="border-t border-slate-400 pt-1">
+                      <p className="font-semibold">Laboratorista Responsável</p>
+                    </div>
+                  </>
+                )}
+              </div>
+              <div>
+                {checklist.approver_details ? (
+                  <>
+                    <div className="mb-2 text-slate-500">
+                      <p>Aprovado digitalmente por</p>
+                      <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
+                      <p>{checklist.approved_by}</p>
+                      {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
+                      <p>em {formatDateBrasilia(checklist.approved_date)}</p>
+                    </div>
+                    <div className="border-t border-slate-400 pt-1">
+                      <p className="font-semibold">Aprovação</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-2 h-20"></div>
+                    <div className="border-t border-slate-400 pt-1">
+                      <p className="font-semibold">Aprovação</p>
+                    </div>
+                  </>
+                )}
+              </div>
+              <div>
+                {checklist.client_signature?.signed_by ? (
+                  <>
+                    <div className="mb-2 text-slate-500">
+                      <p>Assinado digitalmente por</p>
+                      <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
+                      <p>{checklist.client_signature.signed_by}</p>
+                      {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
+                      <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
+                    </div>
+                    <div className="border-t border-slate-400 pt-1">
+                      <p className="font-semibold">Engenheiro Cliente</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-2 h-20"></div>
+                    <div className="border-t border-slate-400 pt-1">
+                      <p className="font-semibold">Engenheiro Cliente</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </footer>
         </div>
-      ))}
+      )}
     </div>
   );
 }
