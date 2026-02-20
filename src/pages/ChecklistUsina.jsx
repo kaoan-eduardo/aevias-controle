@@ -67,7 +67,6 @@ const getInitialFormData = () => ({
   },
   controle_ligante_ativo: false,
   controle_ligante: {
-    ligante_tipo: "",
     nota_fiscal: "",
     fornecedor: "",
     placa_carreta: "",
@@ -390,7 +389,6 @@ export default function ChecklistUsinaPage() {
       })),
       controle_ligante: {
         ...prev.controle_ligante,
-        ligante_tipo: project.ligante?.tipo || "",
         fornecedor: project.ligante?.fornecedor || ""
       }
     }));
@@ -1545,18 +1543,6 @@ export default function ChecklistUsinaPage() {
                 {formData.controle_ligante_ativo && (
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="ligante_tipo">Tipo de Ligante</Label>
-                        <Input
-                          id="ligante_tipo"
-                          value={formData.controle_ligante?.ligante_tipo || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.ligante_tipo', e.target.value)}
-                          disabled={true}
-                          placeholder="Preenchido automaticamente pelo projeto"
-                          className="bg-slate-100"
-                        />
-                      </div>
-
                       <div>
                         <Label htmlFor="fornecedor">Fornecedor</Label>
                         <Input

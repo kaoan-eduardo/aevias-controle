@@ -427,10 +427,6 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <strong className="font-medium text-sm">Tipo de Ligante:</strong>
-                  <p className="text-base">{checklist.controle_ligante?.ligante_tipo || 'N/A'}</p>
-                </div>
-                <div>
                   <strong className="font-medium text-sm">Fornecedor:</strong>
                   <p className="text-base">{checklist.controle_ligante?.fornecedor || 'N/A'}</p>
                 </div>
@@ -461,7 +457,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 <tbody>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">
-                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_1_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_1_sp || '__'} [{checklist.controle_ligante?.viscosidade_1_rpm || '__'} rpm]
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_1_temp || '-'}ºC, SP {checklist.controle_ligante?.viscosidade_1_sp || '-'} [{checklist.controle_ligante?.viscosidade_1_rpm || '-'} rpm]
                     </td>
                     <td className="border border-slate-300 p-2 text-center">cP</td>
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_1_resultado || '-'}</td>
@@ -470,7 +466,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">
-                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_2_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_2_sp || '__'} [{checklist.controle_ligante?.viscosidade_2_rpm || '__'} rpm]
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_2_temp || '-'}ºC, SP {checklist.controle_ligante?.viscosidade_2_sp || '-'} [{checklist.controle_ligante?.viscosidade_2_rpm || '-'} rpm]
                     </td>
                     <td className="border border-slate-300 p-2 text-center">cP</td>
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_2_resultado || '-'}</td>
@@ -479,7 +475,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                   </tr>
                   <tr className="even:bg-slate-50">
                     <td className="border border-slate-300 p-2">
-                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_3_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_3_sp || '__'} [{checklist.controle_ligante?.viscosidade_3_rpm || '__'} rpm]
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_3_temp || '-'}ºC, SP {checklist.controle_ligante?.viscosidade_3_sp || '-'} [{checklist.controle_ligante?.viscosidade_3_rpm || '-'} rpm]
                     </td>
                     <td className="border border-slate-300 p-2 text-center">cP</td>
                     <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_3_resultado || '-'}</td>
