@@ -417,7 +417,122 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
         </div>
       </div>
 
-      {/* --- Página 3: Ações Corretivas (se houver) --- */}
+      {/* --- Página 3: Controle de Ligante (se houver) --- */}
+      {temControleLigante && (
+        <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
+          <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+            <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
+            <main className="flex-grow mt-6">
+              <SectionTitle>Controle de Qualidade de Ligantes</SectionTitle>
+              
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <strong className="font-medium text-sm">Tipo de Ligante:</strong>
+                  <p className="text-base">{checklist.controle_ligante?.ligante_tipo || 'N/A'}</p>
+                </div>
+                <div>
+                  <strong className="font-medium text-sm">Fornecedor:</strong>
+                  <p className="text-base">{checklist.controle_ligante?.fornecedor || 'N/A'}</p>
+                </div>
+                <div>
+                  <strong className="font-medium text-sm">Nota Fiscal:</strong>
+                  <p className="text-base">{checklist.controle_ligante?.nota_fiscal || 'N/A'}</p>
+                </div>
+                <div>
+                  <strong className="font-medium text-sm">Placa Carreta:</strong>
+                  <p className="text-base">{checklist.controle_ligante?.placa_carreta || 'N/A'}</p>
+                </div>
+                <div>
+                  <strong className="font-medium text-sm">Quantidade:</strong>
+                  <p className="text-base">{checklist.controle_ligante?.quantidade_toneladas ? `${checklist.controle_ligante.quantidade_toneladas} t` : 'N/A'}</p>
+                </div>
+              </div>
+
+              <table className="w-full border-collapse border border-slate-400 text-sm mt-4">
+                <thead>
+                  <tr className="bg-slate-100">
+                    <th className="border border-slate-300 p-2 text-left font-semibold">Ensaio</th>
+                    <th className="border border-slate-300 p-2 text-center font-semibold">Unidade</th>
+                    <th className="border border-slate-300 p-2 text-center font-semibold">Resultado</th>
+                    <th className="border border-slate-300 p-2 text-center font-semibold">Limite Esp.</th>
+                    <th className="border border-slate-300 p-2 text-left font-semibold">Especificação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_1_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_1_sp || '__'} [{checklist.controle_ligante?.viscosidade_1_rpm || '__'} rpm]
+                    </td>
+                    <td className="border border-slate-300 p-2 text-center">cP</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_1_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_1_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 15184</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_2_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_2_sp || '__'} [{checklist.controle_ligante?.viscosidade_2_rpm || '__'} rpm]
+                    </td>
+                    <td className="border border-slate-300 p-2 text-center">cP</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_2_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_2_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 15529</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">
+                      Viscosidade Brookfield a {checklist.controle_ligante?.viscosidade_3_temp || '__'}ºC, SP {checklist.controle_ligante?.viscosidade_3_sp || '__'} [{checklist.controle_ligante?.viscosidade_3_rpm || '__'} rpm]
+                    </td>
+                    <td className="border border-slate-300 p-2 text-center">cP</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.viscosidade_3_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.viscosidade_3_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 15184</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">Recuperação Elástica</td>
+                    <td className="border border-slate-300 p-2 text-center">%</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.recuperacao_elastica_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.recuperacao_elastica_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 15086</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">Penetração (100g, 5s, 25ºC)</td>
+                    <td className="border border-slate-300 p-2 text-center">0,1 mm</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.penetracao_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.penetracao_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 6576</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">Ponto de Amolecimento</td>
+                    <td className="border border-slate-300 p-2 text-center">ºC</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.ponto_amolecimento_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.ponto_amolecimento_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 6560</td>
+                  </tr>
+                  <tr className="even:bg-slate-50">
+                    <td className="border border-slate-300 p-2">Ponto de Fulgor</td>
+                    <td className="border border-slate-300 p-2 text-center">ºC</td>
+                    <td className="border border-slate-300 p-2 text-center font-semibold">{checklist.controle_ligante?.ponto_fulgor_resultado || '-'}</td>
+                    <td className="border border-slate-300 p-2 text-center bg-blue-50">{checklist.controle_ligante?.ponto_fulgor_limite || '-'}</td>
+                    <td className="border border-slate-300 p-2">ABNT NBR - 11341</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {checklist.controle_ligante?.observacoes && (
+                <div className="mt-4">
+                  <strong className="font-medium">Observações:</strong>
+                  <p className="text-sm mt-1">{checklist.controle_ligante.observacoes}</p>
+                </div>
+              )}
+            </main>
+            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+            <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
+              Página 3 de {totalPages}
+            </footer>
+          </div>
+        </div>
+      )}
+
+      {/* --- Página 4 (ou 3 se não houver ligante): Ações Corretivas (se houver) --- */}
       {temAcoesCorretivas && (
         <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
@@ -430,7 +545,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             </main>
             <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
-              Página 3 de {totalPages}
+              Página {temControleLigante ? 4 : 3} de {totalPages}
             </footer>
           </div>
         </div>
