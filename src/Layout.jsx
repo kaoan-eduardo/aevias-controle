@@ -378,6 +378,7 @@ const AppLayout = ({ children }) => {
   const adminNavigation = useMemo(() => [
     { title: "Usuários", url: createPageUrl("Users"), icon: Users, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
     { title: "Produtividade", url: createPageUrl("Produtividade"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias'] },
+    { title: "Controle Laboratoristas", url: createPageUrl("ControleLaboratoristas"), icon: Users, allowedLevels: ['admin'] },
     { title: "Faixas Granulométricas", url: createPageUrl("FaixasGranulometricas"), icon: Grid, allowedLevels: ['admin'] },
     { title: "Migração de Dados", url: createPageUrl("MigracaoDados"), icon: Grid, allowedLevels: ['admin'] },
     { title: "Monitor de Produtividade", url: createPageUrl("MonitorProdutividade"), icon: TrendingUp, allowedLevels: ['admin'] },
