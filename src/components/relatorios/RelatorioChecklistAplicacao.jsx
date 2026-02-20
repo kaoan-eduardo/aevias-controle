@@ -722,7 +722,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
 
       {checklist.medicoes_geometricas?.medicoes?.length > 0 && (
         <div className="break-before-page p-3 print:p-3 min-h-screen flex flex-col">
-          <header className="grid grid-cols-3 items-center border-2 border-slate-900 pb-2 mb-3">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
@@ -747,25 +747,22 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <span>{checklist.rodovia || 'N/A'}</span>
             </div>
             <div>
-              <span className="font-bold">Data: </span>
-              <span>{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</span>
+              <span className="font-bold">Fiscal de campo: </span>
+              <span>{checklist.inspetor_campo || 'N/A'}</span>
             </div>
             <div>
               <span className="font-bold">Trecho: </span>
               <span>{checklist.trecho || 'N/A'}</span>
             </div>
             <div>
-              <span className="font-bold">Fiscal de campo: </span>
-              <span>{checklist.inspetor_campo || 'N/A'}</span>
+              <span className="font-bold">Empreiteira: </span>
+              <span>{checklist.empreiteira || 'N/A'}</span>
             </div>
             <div>
               <span className="font-bold">Subtrecho: </span>
               <span>{checklist.medicoes_geometricas?.subtrecho || 'N/A'}</span>
             </div>
-            <div>
-              <span className="font-bold">Empreiteira: </span>
-              <span>{checklist.empreiteira || 'N/A'}</span>
-            </div>
+            <div></div>
             <div className="col-span-2">
               <span className="font-bold">Serviço: </span>
               <span>{checklist.medicoes_geometricas?.servico || 'N/A'}</span>
@@ -813,12 +810,12 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
             </table>
           </div>
 
-          <footer className="mt-4 pt-4 border-t border-slate-300">
-            <div className="grid grid-cols-3 gap-4 text-center text-xs">
+          <footer className="mt-6">
+            <div className="grid grid-cols-3 gap-8 text-center text-xs">
               <div>
                 {checklist.laboratorista_name && (
                   <>
-                    <div className="mb-2 text-slate-500">
+                    <div className="mb-2 text-slate-500 h-24 flex flex-col justify-end">
                       <p>Assinado digitalmente por</p>
                       <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
                       <p>{checklist.created_by}</p>
@@ -833,7 +830,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <div>
                 {checklist.approver_details ? (
                   <>
-                    <div className="mb-2 text-slate-500">
+                    <div className="mb-2 text-slate-500 h-24 flex flex-col justify-end">
                       <p>Aprovado digitalmente por</p>
                       <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
                       <p>{checklist.approved_by}</p>
@@ -846,7 +843,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   </>
                 ) : (
                   <>
-                    <div className="mb-2 h-20"></div>
+                    <div className="mb-2 h-24"></div>
                     <div className="border-t border-slate-400 pt-1">
                       <p className="font-semibold">Aprovação</p>
                     </div>
@@ -856,7 +853,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <div>
                 {checklist.client_signature?.signed_by ? (
                   <>
-                    <div className="mb-2 text-slate-500">
+                    <div className="mb-2 text-slate-500 h-24 flex flex-col justify-end">
                       <p>Assinado digitalmente por</p>
                       <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
                       <p>{checklist.client_signature.signed_by}</p>
@@ -869,7 +866,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                   </>
                 ) : (
                   <>
-                    <div className="mb-2 h-20"></div>
+                    <div className="mb-2 h-24"></div>
                     <div className="border-t border-slate-400 pt-1">
                       <p className="font-semibold">Engenheiro Cliente</p>
                     </div>
