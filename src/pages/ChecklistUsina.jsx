@@ -76,24 +76,31 @@ const getInitialFormData = () => ({
     viscosidade_1_rpm: "",
     viscosidade_1_resultado: null,
     viscosidade_1_limite: "3000",
+    viscosidade_1_conforme: false,
     viscosidade_2_temp: "",
     viscosidade_2_sp: "",
     viscosidade_2_rpm: "",
     viscosidade_2_resultado: null,
     viscosidade_2_limite: "2000",
+    viscosidade_2_conforme: false,
     viscosidade_3_temp: "",
     viscosidade_3_sp: "",
     viscosidade_3_rpm: "",
     viscosidade_3_resultado: null,
     viscosidade_3_limite: "1000",
+    viscosidade_3_conforme: false,
     recuperacao_elastica_resultado: null,
     recuperacao_elastica_limite: "75",
+    recuperacao_elastica_conforme: false,
     penetracao_resultado: null,
     penetracao_limite: "45 a 70",
+    penetracao_conforme: false,
     ponto_amolecimento_resultado: null,
     ponto_amolecimento_limite: "55",
+    ponto_amolecimento_conforme: false,
     ponto_fulgor_resultado: null,
     ponto_fulgor_limite: "235",
+    ponto_fulgor_conforme: false,
     observacoes: ""
   },
   observacoes: "",
@@ -1598,7 +1605,8 @@ export default function ChecklistUsinaPage() {
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Unidade</th>
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Resultado</th>
                               <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Limite Esp.</th>
-                              <th className="border border-slate-300 px-3 py-2 text-left font-semibold">Especificação</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Especificação</th>
+                              <th className="border border-slate-300 px-3 py-2 text-center font-semibold">Conforme</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1656,7 +1664,16 @@ export default function ChecklistUsinaPage() {
                                   className="h-8 text-sm text-center"
                                 />
                               </td>
-                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15184</td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs text-center">ABNT NBR - 15184</td>
+                              <td className="border border-slate-300 px-3 py-2 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.controle_ligante?.viscosidade_1_conforme || false}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_conforme', e.target.checked)}
+                                  disabled={!isEditable || isApproved}
+                                  className="w-5 h-5"
+                                />
+                              </td>
                             </tr>
 
                             {/* Viscosidade 2 */}
@@ -1713,7 +1730,16 @@ export default function ChecklistUsinaPage() {
                                   className="h-8 text-sm text-center"
                                 />
                               </td>
-                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15529</td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs text-center">ABNT NBR - 15529</td>
+                              <td className="border border-slate-300 px-3 py-2 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.controle_ligante?.viscosidade_2_conforme || false}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_conforme', e.target.checked)}
+                                  disabled={!isEditable || isApproved}
+                                  className="w-5 h-5"
+                                />
+                              </td>
                             </tr>
 
                             {/* Viscosidade 3 */}
@@ -1770,7 +1796,16 @@ export default function ChecklistUsinaPage() {
                                   className="h-8 text-sm text-center"
                                 />
                               </td>
-                              <td className="border border-slate-300 px-3 py-2 text-xs">ABNT NBR - 15184</td>
+                              <td className="border border-slate-300 px-3 py-2 text-xs text-center">ABNT NBR - 15184</td>
+                              <td className="border border-slate-300 px-3 py-2 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.controle_ligante?.viscosidade_3_conforme || false}
+                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_conforme', e.target.checked)}
+                                  disabled={!isEditable || isApproved}
+                                  className="w-5 h-5"
+                                />
+                              </td>
                             </tr>
 
                             {/* Demais ensaios */}
@@ -1802,7 +1837,16 @@ export default function ChecklistUsinaPage() {
                                     className="h-8 text-sm text-center"
                                   />
                                 </td>
-                                <td className="border border-slate-300 px-3 py-2 text-xs">{ensaio.spec}</td>
+                                <td className="border border-slate-300 px-3 py-2 text-xs text-center">{ensaio.spec}</td>
+                                <td className="border border-slate-300 px-3 py-2 text-center">
+                                  <input
+                                    type="checkbox"
+                                    checked={formData.controle_ligante?.[`${ensaio.key}_conforme`] || false}
+                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_conforme`, e.target.checked)}
+                                    disabled={!isEditable || isApproved}
+                                    className="w-5 h-5"
+                                  />
+                                </td>
                               </tr>
                             ))}
                           </tbody>
