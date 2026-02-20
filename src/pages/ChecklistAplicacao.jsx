@@ -1510,47 +1510,312 @@ export default function ChecklistAplicacaoPage() {
                   )}
                 </div>
 
-                <div>
-                  <Label>Medição Geométrica (Máximo 2 imagens)</Label>
-                  <p className="text-xs text-[#00233B]/60 mb-2">Upload de imagens de medição geométrica (cada uma aparecerá em uma página separada no relatório)</p>
-                  {isEditable && (formData.medicoes_geometricas || []).length < 2 && (
-                    <div className="mt-2">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleMedicaoUpload}
-                        className="hidden"
-                        disabled={uploadingPhoto}
-                        id="medicao-upload"
+                {/* Medição Geométrica de Campo */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold text-[#00233B] mb-4">Medição Geométrica de Campo</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label htmlFor="subtrecho">Subtrecho</Label>
+                      <Input
+                        id="subtrecho"
+                        value={formData.medicoes_geometricas?.subtrecho || ''}
+                        onChange={(e) => handleInputChange('medicoes_geometricas', { 
+                          ...formData.medicoes_geometricas, 
+                          subtrecho: e.target.value 
+                        })}
+                        disabled={!isEditable}
+                        placeholder="Ex: km 100 ao km 105"
                       />
-                      <label htmlFor="medicao-upload" className="cursor-pointer">
-                        <Button type="button" variant="outline" className="w-full" disabled={uploadingPhoto} onClick={(e) => {
-                          e.preventDefault();
-                          document.getElementById('medicao-upload').click();
-                        }}>
-                          <Upload className="w-4 h-4 mr-2" />
-                          {uploadingPhoto ? 'Enviando...' : `Adicionar Medição Geométrica (${(formData.medicoes_geometricas || []).length}/2)`}
-                        </Button>
-                      </label>
                     </div>
+                    <div>
+                      <Label htmlFor="servico_medicao">Serviço</Label>
+                      <Input
+                        id="servico_medicao"
+                        value={formData.medicoes_geometricas?.servico || ''}
+                        onChange={(e) => handleInputChange('medicoes_geometricas', { 
+                          ...formData.medicoes_geometricas, 
+                          servico: e.target.value 
+                        })}
+                        disabled={!isEditable}
+                        placeholder="Ex: Pavimentação asfáltica"
+                      />
+                    </div>
+                  </div>
+
+                  {isEditable && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const medicoes = formData.medicoes_geometricas?.medicoes || [];
+                        handleInputChange('medicoes_geometricas', {
+                          ...formData.medicoes_geometricas,
+                          medicoes: [...medicoes, {
+                            estaca_inicial: '',
+                            estaca_final: '',
+                            lado: '',
+                            faixa: '',
+                            comprimento: null,
+                            largura: null,
+                            altura: null,
+                            placa: '',
+                            quantidade: null,
+                            temperatura: null,
+                            observacoes: ''
+                          }]
+                        });
+                      }}
+                      className="w-full mb-4"
+                    >
+                      + Adicionar Medição
+                    </Button>
                   )}
-                  {formData.medicoes_geometricas && formData.medicoes_geometricas.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      {formData.medicoes_geometricas.map((medicaoUrl, index) => (
-                        <div key={index} className="relative group">
-                          <img src={medicaoUrl} alt={`Medição Geométrica ${index + 1}`} className="w-full h-48 object-contain rounded-lg border-2 border-white/20 bg-black/5" />
-                          {isEditable && (
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveMedicao(index)}
-                              className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          )}
-                          <p className="text-center text-xs text-[#00233B]/70 mt-1 font-medium">Medição {index + 1}</p>
-                        </div>
+
+                  {formData.medicoes_geometricas?.medicoes?.length > 0 && (
+                    <div className="space-y-4">
+                      {formData.medicoes_geometricas.medicoes.map((medicao, index) => (
+                        <Card key={index} className="border-2 border-[#BFCF99]/30">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-sm">Medição #{index + 1}</CardTitle>
+                              {isEditable && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes.splice(index, 1);
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                              <div>
+                                <Label className="text-xs">Estaca Inicial</Label>
+                                <Input
+                                  value={medicao.estaca_inicial}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].estaca_inicial = e.target.value;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="Ex: 100+5"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Estaca Final</Label>
+                                <Input
+                                  value={medicao.estaca_final}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].estaca_final = e.target.value;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="Ex: 105+0"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Lado</Label>
+                                <Select
+                                  value={medicao.lado}
+                                  onValueChange={(value) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].lado = value;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                >
+                                  <SelectTrigger className="h-9">
+                                    <SelectValue placeholder="Selecione" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="direito">Direito</SelectItem>
+                                    <SelectItem value="esquerdo">Esquerdo</SelectItem>
+                                    <SelectItem value="ambos">Ambos</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div>
+                                <Label className="text-xs">Faixa</Label>
+                                <Input
+                                  value={medicao.faixa}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].faixa = e.target.value;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="Ex: A, B, C"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                              <div>
+                                <Label className="text-xs">Comprimento (m)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={medicao.comprimento || ''}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].comprimento = e.target.value ? parseFloat(e.target.value) : null;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="0.00"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Largura (m)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={medicao.largura || ''}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].largura = e.target.value ? parseFloat(e.target.value) : null;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="0.00"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Altura (m)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={medicao.altura || ''}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].altura = e.target.value ? parseFloat(e.target.value) : null;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="0.00"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                              <div>
+                                <Label className="text-xs">Placa</Label>
+                                <Input
+                                  value={medicao.placa}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].placa = e.target.value;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="Ex: ABC-1234"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Quantidade</Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={medicao.quantidade || ''}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].quantidade = e.target.value ? parseFloat(e.target.value) : null;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="0.00"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-xs">Temperatura (°C)</Label>
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  value={medicao.temperatura || ''}
+                                  onChange={(e) => {
+                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                    medicoes[index].temperatura = e.target.value ? parseFloat(e.target.value) : null;
+                                    handleInputChange('medicoes_geometricas', {
+                                      ...formData.medicoes_geometricas,
+                                      medicoes
+                                    });
+                                  }}
+                                  disabled={!isEditable}
+                                  placeholder="0.0"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <Label className="text-xs">Observações</Label>
+                              <Textarea
+                                value={medicao.observacoes}
+                                onChange={(e) => {
+                                  const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                  medicoes[index].observacoes = e.target.value;
+                                  handleInputChange('medicoes_geometricas', {
+                                    ...formData.medicoes_geometricas,
+                                    medicoes
+                                  });
+                                }}
+                                disabled={!isEditable}
+                                placeholder="Observações sobre esta medição..."
+                                rows={2}
+                                className="text-sm"
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
                       ))}
                     </div>
                   )}
