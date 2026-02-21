@@ -498,50 +498,7 @@ export default function ChecklistAplicacaoPage() {
     }));
   }, []);
 
-  const handleMedicaoUpload = useCallback(async (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
 
-    const currentMedicoes = formData.medicoes_geometricas || [];
-    if (currentMedicoes.length + files.length > 2) {
-      alert('Você pode adicionar no máximo 2 imagens de medição geométrica.');
-      return;
-    }
-
-    for (const file of files) {
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor, selecione apenas arquivos de imagem.');
-        return;
-      }
-    }
-
-    setUploadingPhoto(true);
-    try {
-      const uploadedUrls = [];
-      for (const file of files) {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        uploadedUrls.push(file_url);
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        medicoes_geometricas: [...(prev.medicoes_geometricas || []), ...uploadedUrls]
-      }));
-      e.target.value = '';
-    } catch (error) {
-      console.error("Erro ao fazer upload da medição geométrica:", error);
-      alert("Erro ao fazer upload da imagem.");
-    } finally {
-      setUploadingPhoto(false);
-    }
-  }, [formData.medicoes_geometricas]);
-
-  const handleRemoveMedicao = useCallback((index) => {
-    setFormData(prev => ({
-      ...prev,
-      medicoes_geometricas: (prev.medicoes_geometricas || []).filter((_, i) => i !== index)
-    }));
-  }, []);
 
   const handleSubmit = useCallback(async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
