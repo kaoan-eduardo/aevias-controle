@@ -2450,13 +2450,26 @@ export default function MeusEnsaios() {
     const Entity = entityMap[ensaio.entityType];
 
     try {
-      await Entity.update(ensaio.id, {
+      const updateData = {
         approved: true,
         approved_by: user.email,
         approved_date: new Date().toISOString(),
         approver_details: approverDetails,
         rejection_reason: null
-      });
+      };
+
+      // Corrigir medicoes_geometricas se estiver em formato incorreto (ChecklistAplicacao)
+      if (ensaio.entityType === 'ChecklistAplicacao') {
+        if (!ensaio.medicoes_geometricas || Array.isArray(ensaio.medicoes_geometricas)) {
+          updateData.medicoes_geometricas = {
+            subtrecho: "",
+            servico: "",
+            medicoes: []
+          };
+        }
+      }
+
+      await Entity.update(ensaio.id, updateData);
 
       alert("Registro aprovado com sucesso!");
       loadData();
