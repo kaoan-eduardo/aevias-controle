@@ -125,81 +125,7 @@ const getNaoConformidades = (ensaio) => {
   return naoConformidades;
 };
 
-const getEnsaioTypeInfo = (ensaio) => {
-  const entityType = ensaio.entityType;
-  switch (entityType) {
-    case "DiarioObra":
-      return { name: "Diário de Obra", icon: Book };
-    case "EnsaioCAUQ":
-      return { name: "Ensaio de CAUQ", icon: FlaskConical };
-    case "EnsaioMRAF":
-      return { name: "Ensaio MRAF", icon: FlaskConical };
-    case "EnsaioDensidade":
-      return { name: "Densidade CP Extraído", icon: Gauge };
-    case "EnsaioDensidadeInSitu":
-      return { name: "Densidade In Situ", icon: Gauge };
-    case "EnsaioTaxaPinturaImprimacao":
-      return { name: "Taxa de Pintura/Imprimação", icon: FlaskConical };
-    case "ChecklistUsina":
-      return { name: "Checklist de Usina", icon: ClipboardList };
-    case "ChecklistAplicacao":
-      return { name: "Checklist de Aplicação", icon: ClipboardList };
-    case "ChecklistMRAF":
-      return { name: "Checklist de MRAF", icon: ClipboardList };
-    case "ChecklistConcretagem":
-      return { name: "Checklist de Concretagem", icon: ClipboardList };
-    case "ChecklistTerraplanagem":
-      return { name: "Checklist de Terraplanagem", icon: ClipboardList };
-    case "ChecklistReciclagem":
-      return { name: "Checklist de Reciclagem", icon: ClipboardList };
-    case "EnsaioSondagem":
-      return { name: "Ensaio de Sondagem", icon: Gauge };
-    case "EnsaioGranulometriaIndividual":
-      return { name: "Granulometria Individual", icon: FlaskConical };
-    case "AcompanhamentoUsinagem":
-      return { name: "Acompanhamento de Usinagem", icon: FlaskConical };
-    default:
-      return { name: "Ensaio Desconhecido", icon: FileText };
-    }
-    };
 
-const getReportLink = (ensaio) => {
-  const entityType = ensaio.entityType;
-  switch (entityType) {
-    case "DiarioObra":
-      return createPageUrl(`RelatorioDiario?id=${ensaio.id}`);
-    case "EnsaioCAUQ":
-      return createPageUrl(`RelatorioCAUQ?id=${ensaio.id}`);
-    case "EnsaioMRAF":
-      return createPageUrl(`RelatorioEnsaio?id=${ensaio.id}&tipo=mraf`);
-    case "EnsaioDensidade":
-      return createPageUrl(`RelatorioEnsaio?id=${ensaio.id}&tipo=densidade`);
-    case "EnsaioDensidadeInSitu":
-      return createPageUrl(`RelatorioDensidadeInSitu?id=${ensaio.id}`);
-    case "EnsaioTaxaPinturaImprimacao":
-      return createPageUrl(`RelatorioTaxaPinturaImprimacao?id=${ensaio.id}`);
-    case "ChecklistUsina":
-      return createPageUrl(`RelatorioChecklist?id=${ensaio.id}`);
-    case "ChecklistAplicacao":
-      return createPageUrl(`RelatorioChecklistAplicacao?id=${ensaio.id}`);
-    case "ChecklistMRAF":
-      return createPageUrl(`RelatorioChecklistMRAF?id=${ensaio.id}`);
-    case "ChecklistConcretagem":
-      return createPageUrl(`RelatorioChecklistConcretagem?id=${ensaio.id}`);
-    case "ChecklistTerraplanagem":
-      return createPageUrl(`RelatorioChecklistTerraplanagem?id=${ensaio.id}`);
-    case "ChecklistReciclagem":
-      return createPageUrl(`RelatorioChecklistReciclagem?id=${ensaio.id}`);
-    case "EnsaioSondagem":
-      return createPageUrl(`RelatorioSondagem?id=${ensaio.id}`);
-    case "EnsaioGranulometriaIndividual":
-      return createPageUrl(`RelatorioGranulometriaIndividual?id=${ensaio.id}`);
-    case "AcompanhamentoUsinagem":
-      return createPageUrl(`RelatorioAcompanhamentoUsinagem?id=${ensaio.id}`);
-    default:
-      return "#";
-    }
-    };
 
 const getLocalInfo = (ensaio) => {
   const entityType = ensaio.entityType;
@@ -286,60 +212,7 @@ const getTrechoInfo = (ensaio) => {
   return ensaio.trecho || ensaio.estaca || null;
 };
 
-const getDataFormatted = (ensaio) => {
-  const entityType = ensaio.entityType;
-  let dateField;
 
-  switch (entityType) {
-    case "DiarioObra":
-      dateField = ensaio.data;
-      break;
-    case "EnsaioCAUQ":
-      dateField = ensaio.data_ensaio;
-      break;
-    case "EnsaioDensidade":
-      dateField = ensaio.extraction_date;
-      break;
-    case "EnsaioDensidadeInSitu":
-      dateField = ensaio.data_ensaio;
-      break;
-    case "EnsaioTaxaPinturaImprimacao":
-      dateField = ensaio.data_ensaio;
-      break;
-    case "EnsaioGranulometriaIndividual":
-      dateField = ensaio.data_ensaio;
-      break;
-    case "ChecklistUsina":
-      dateField = ensaio.data;
-      break;
-    case "ChecklistAplicacao":
-      dateField = ensaio.data;
-      break;
-    case "ChecklistMRAF":
-      dateField = ensaio.data;
-      break;
-    case "ChecklistConcretagem":
-      dateField = ensaio.data;
-      break;
-    case "ChecklistTerraplanagem":
-      dateField = ensaio.data;
-      break;
-    case "ChecklistReciclagem":
-      dateField = ensaio.data;
-      break;
-    case "EnsaioSondagem":
-      dateField = ensaio.data;
-      break;
-    default:
-      dateField = ensaio.created_date;
-  }
-
-  if (dateField) {
-    return new Date(dateField).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-  }
-
-  return "Data não informada";
-};
 
 // Modal para reprovar ensaio - Memoizado
 const ReprovacaoModal = React.memo(({ ensaio, isOpen, onClose, onReprove }) => {
@@ -1278,7 +1151,8 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
             "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
             "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
             "EnsaioSondagem": base44.entities.EnsaioSondagem,
-            "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem
+            "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+            "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
               };
 
             const Entity = entityMap[ensaio.entityType];
