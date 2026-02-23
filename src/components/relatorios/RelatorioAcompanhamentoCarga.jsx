@@ -151,7 +151,7 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
                     const carga = acompanhamento.cargas?.[index];
                     return (
                       <tr key={index} className="even:bg-slate-50" style={{ fontSize: '7px', height: '20px' }}>
-                        <td className="border border-slate-300 px-0.5 py-1 text-center">{index + 1}</td>
+                        <td className="border border-slate-300 px-0.5 py-1 text-center">{carga ? index + 1 : ''}</td>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga?.placa || ''}</td>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga?.hora_saida || ''}</td>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga?.peso_toneladas || ''}</td>
