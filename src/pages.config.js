@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AcompanhamentoCarga from './pages/AcompanhamentoCarga';
 import AcompanhamentoUsinagem from './pages/AcompanhamentoUsinagem';
 import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
@@ -73,6 +74,7 @@ import NaoConformidades from './pages/NaoConformidades';
 import Produtividade from './pages/Produtividade';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
+import RelatorioAcompanhamentoCarga from './pages/RelatorioAcompanhamentoCarga';
 import RelatorioAcompanhamentoUsinagem from './pages/RelatorioAcompanhamentoUsinagem';
 import RelatorioCAUQ from './pages/RelatorioCAUQ';
 import RelatorioChecklist from './pages/RelatorioChecklist';
@@ -92,12 +94,11 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import AcompanhamentoCarga from './pages/AcompanhamentoCarga';
-import RelatorioAcompanhamentoCarga from './pages/RelatorioAcompanhamentoCarga';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AcompanhamentoCarga": AcompanhamentoCarga,
     "AcompanhamentoUsinagem": AcompanhamentoUsinagem,
     "ChecklistAplicacao": ChecklistAplicacao,
     "ChecklistConcretagem": ChecklistConcretagem,
@@ -124,6 +125,7 @@ export const PAGES = {
     "Produtividade": Produtividade,
     "Projects": Projects,
     "Regionais": Regionais,
+    "RelatorioAcompanhamentoCarga": RelatorioAcompanhamentoCarga,
     "RelatorioAcompanhamentoUsinagem": RelatorioAcompanhamentoUsinagem,
     "RelatorioCAUQ": RelatorioCAUQ,
     "RelatorioChecklist": RelatorioChecklist,
@@ -143,8 +145,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "AcompanhamentoCarga": AcompanhamentoCarga,
-    "RelatorioAcompanhamentoCarga": RelatorioAcompanhamentoCarga,
 }
 
 export const pagesConfig = {
