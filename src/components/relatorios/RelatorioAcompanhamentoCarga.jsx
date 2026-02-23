@@ -174,40 +174,35 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
               </table>
             </div>
 
-            {acompanhamento.observacoes_gerais && (
-              <div className="mt-3 print:mt-4">
-                <p className="font-bold text-xs">OBSERVAÇÕES GERAIS:</p>
-                <p className="text-xs mt-1">{acompanhamento.observacoes_gerais}</p>
-              </div>
-            )}
+
           </div>
 
-          <div className="mt-auto pt-4 print:pt-6 break-inside-avoid">
-            <div className="grid grid-cols-3 gap-8 items-end print:gap-12">
+          <div className="mt-auto pt-2 print:pt-3 break-inside-avoid">
+            <div className="grid grid-cols-3 gap-8 items-end print:gap-8">
               <div className="text-center">
-                <div className="text-slate-500 mb-2 h-12 flex flex-col justify-end items-center" style={{ fontSize: '9px' }}>
+                <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
                   <p className="font-bold text-slate-600">{acompanhamento.laboratorista_name}</p>
                   <p>{acompanhamento.created_by}</p>
-                  <p className="text-xs">em {formatDateBrasilia(acompanhamento.created_date)}</p>
+                  <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.created_date)}</p>
                 </div>
-                <div className="border-t border-gray-600 pt-1"><p style={{ fontSize: '9px' }}>Laboratorista Responsável</p></div>
+                <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Laboratorista Responsável</p></div>
               </div>
               
               <div className="text-center">
                 {acompanhamento.approved === true && acompanhamento.approver_details ? (
                   <>
-                    <div className="text-slate-500 mb-2 h-12 flex flex-col justify-end items-center" style={{ fontSize: '9px' }}>
+                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
                       <p className="font-bold text-slate-600">{acompanhamento.approver_details.name}</p>
                       <p>{acompanhamento.approved_by}</p>
                       {acompanhamento.approver_details.crea_number && <p>CREA: {acompanhamento.approver_details.crea_number}</p>}
-                      <p className="text-xs">em {formatDateBrasilia(acompanhamento.approved_date)}</p>
+                      <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.approved_date)}</p>
                     </div>
-                    <div className="border-t border-gray-600 pt-1"><p style={{ fontSize: '9px' }}>Engenheiro Responsável</p></div>
+                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Engenheiro Responsável</p></div>
                   </>
                 ) : (
                   <>
-                    <div className="h-12 mb-2"></div>
-                    <div className="border-t border-gray-600 pt-1"><p style={{ fontSize: '9px' }}>Engenheiro Responsável</p></div>
+                    <div className="h-10 mb-1"></div>
+                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Engenheiro Responsável</p></div>
                   </>
                 )}
               </div>
@@ -215,19 +210,19 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
               <div className="text-center">
                 {acompanhamento.client_signature?.signed_by ? (
                   <>
-                    <div className="text-slate-500 mb-2 h-12 flex flex-col justify-end items-center" style={{ fontSize: '9px' }}>
+                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
                       <p>Assinado digitalmente por</p>
                       <p className="font-bold text-slate-600">{acompanhamento.client_signature.engineer_name}</p>
                       <p>{acompanhamento.client_signature.signed_by}</p>
                       {acompanhamento.client_signature.crea_number && <p>CREA: {acompanhamento.client_signature.crea_number}</p>}
-                      <p className="text-xs">em {formatDateBrasilia(acompanhamento.client_signature.signed_date)}</p>
+                      <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.client_signature.signed_date)}</p>
                     </div>
-                    <div className="border-t border-gray-600 pt-1"><p style={{ fontSize: '9px' }}>Cliente</p></div>
+                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Cliente</p></div>
                   </>
                 ) : (
                   <>
-                    <div className="h-12 mb-2"></div>
-                    <div className="border-t border-gray-600 pt-1"><p style={{ fontSize: '9px' }}>Cliente</p></div>
+                    <div className="h-10 mb-1"></div>
+                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Cliente</p></div>
                   </>
                 )}
               </div>
