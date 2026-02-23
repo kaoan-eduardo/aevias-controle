@@ -47,7 +47,7 @@ export default function AcompanhamentoCarga() {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const { saveFormData, loadFormData, clearFormData } = useFormPersistence('acompanhamento_carga_form');
+  const { clearSavedData } = useFormPersistence('acompanhamento_carga_form', formData, setFormData, editMode);
 
   useEffect(() => {
     loadInitialData();
@@ -90,15 +90,10 @@ export default function AcompanhamentoCarga() {
           }
         }
       } else {
-        const savedData = loadFormData();
-        if (savedData) {
-          setFormData(savedData);
-        } else {
-          setFormData({
-            ...getInitialFormData(),
-            laboratorista_name: userData.laboratorista_name || userData.full_name || ""
-          });
-        }
+        setFormData({
+          ...getInitialFormData(),
+          laboratorista_name: userData.laboratorista_name || userData.full_name || ""
+        });
       }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
@@ -202,7 +197,7 @@ export default function AcompanhamentoCarga() {
         await base44.entities.AcompanhamentoCarga.create(dataToSave);
       }
 
-      clearFormData();
+      clearSavedData();
       alert(finalizar ? "Acompanhamento finalizado com sucesso!" : "Progresso salvo!");
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
@@ -213,11 +208,7 @@ export default function AcompanhamentoCarga() {
     }
   };
 
-  useEffect(() => {
-    if (!editMode) {
-      saveFormData(formData);
-    }
-  }, [formData, editMode, saveFormData]);
+
 
   if (loading) {
     return (
