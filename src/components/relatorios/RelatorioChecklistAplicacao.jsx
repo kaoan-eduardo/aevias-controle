@@ -722,50 +722,51 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
 
       {checklist.medicoes_geometricas?.medicoes?.length > 0 && (
         <div className="break-before-page p-3 print:p-3 min-h-screen flex flex-col">
-          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3">
+          <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-12 object-contain" 
+                className="h-10 object-contain" 
               />
             </div>
             <div className="text-center">
-              <h1 className="text-lg font-bold text-gray-800">MEDIÇÃO GEOMÉTRICA DE CAMPO</h1>
-              <p className="text-xs text-gray-600">Obra: {obra?.name || 'N/A'}</p>
+              <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Medição Geométrica de Campo</h1>
             </div>
-            <div className="flex justify-end text-xs">
-              <div className="border border-gray-400 p-1.5 rounded-md">
-                <p className="font-semibold">{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+            <div className="flex justify-end">
+              <div className="border border-gray-400 p-1 rounded-md text-xs">
+                <p className="font-semibold text-gray-800">
+                  {new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+                </p>
               </div>
             </div>
           </header>
 
-          <div className="grid grid-cols-2 gap-x-6 mb-3 text-xs">
+          <SectionTitle>Dados da Medição</SectionTitle>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 mb-0.5" style={{ fontSize: '9px' }}>
             <div>
-              <span className="font-bold">Rodovia: </span>
-              <span>{checklist.rodovia || 'N/A'}</span>
+              <p className="font-bold">RODOVIA:</p>
+              <p>{checklist.rodovia || 'N/A'}</p>
             </div>
             <div>
-              <span className="font-bold">Fiscal de campo: </span>
-              <span>{checklist.inspetor_campo || 'N/A'}</span>
+              <p className="font-bold">FISCAL DE CAMPO:</p>
+              <p>{checklist.inspetor_campo || 'N/A'}</p>
             </div>
             <div>
-              <span className="font-bold">Trecho: </span>
-              <span>{checklist.trecho || 'N/A'}</span>
+              <p className="font-bold">TRECHO:</p>
+              <p>{checklist.trecho || 'N/A'}</p>
             </div>
             <div>
-              <span className="font-bold">Empreiteira: </span>
-              <span>{checklist.empreiteira || 'N/A'}</span>
+              <p className="font-bold">EMPREITEIRA:</p>
+              <p>{checklist.empreiteira || 'N/A'}</p>
             </div>
             <div>
-              <span className="font-bold">Subtrecho: </span>
-              <span>{checklist.medicoes_geometricas?.subtrecho || 'N/A'}</span>
+              <p className="font-bold">SUBTRECHO:</p>
+              <p>{checklist.medicoes_geometricas?.subtrecho || 'N/A'}</p>
             </div>
-            <div></div>
             <div className="col-span-2">
-              <span className="font-bold">Serviço: </span>
-              <span>{checklist.medicoes_geometricas?.servico || 'N/A'}</span>
+              <p className="font-bold">SERVIÇO:</p>
+              <p>{checklist.medicoes_geometricas?.servico || 'N/A'}</p>
             </div>
           </div>
 
