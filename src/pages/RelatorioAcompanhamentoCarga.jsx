@@ -88,18 +88,23 @@ export default function RelatorioAcompanhamentoCargaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-[210mm] mx-auto bg-white shadow-lg my-4 print:my-0 print:shadow-none">
-        <div className="fixed top-4 right-4 z-50 print:hidden">
+    <div className="bg-white min-h-screen">
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[297mm] mx-auto flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-800">
+            Relatório de Acompanhamento de Cargas
+          </h2>
           <Button
             onClick={handlePrint}
-            className="bg-[#00233B] text-white hover:bg-[#00233B]/90 shadow-lg"
+            className="bg-[#00233B] text-white hover:bg-[#00233B]/90"
           >
             <Printer className="w-4 h-4 mr-2" />
             Gerar PDF
           </Button>
         </div>
+      </div>
 
+      <div className="max-w-[297mm] mx-auto bg-white shadow-lg my-4 print:my-0 print:shadow-none">
         <RelatorioAcompanhamentoCarga
           acompanhamento={acompanhamento}
           obra={obra}
@@ -120,7 +125,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           @page {
-            size: A4 portrait;
+            size: A4 landscape;
             margin: 8mm 10mm;
           }
           
@@ -128,11 +133,11 @@ export default function RelatorioAcompanhamentoCargaPage() {
             visibility: hidden;
           }
           
-          .max-w-\\[210mm\\], .max-w-\\[210mm\\] * {
+          .max-w-\\[297mm\\], .max-w-\\[297mm\\] * {
             visibility: visible;
           }
           
-          .max-w-\\[210mm\\] {
+          .max-w-\\[297mm\\] {
             position: absolute;
             left: 0;
             top: 0;
