@@ -46,18 +46,6 @@ export default function RelatorioAcompanhamentoCargaPage() {
 
       if (acompanhamentoData.project_id) {
         const projetoData = await Project.get(acompanhamentoData.project_id);
-        
-        // Buscar nome da faixa granulométrica se houver faixa_granulometrica_id
-        if (projetoData.faixa_granulometrica_id) {
-          try {
-            const faixa = await base44.entities.FaixaGranulometrica.get(projetoData.faixa_granulometrica_id);
-            projetoData.faixa_especificada_nome = faixa.nome;
-          } catch (error) {
-            console.warn("Erro ao buscar faixa granulométrica:", error);
-            projetoData.faixa_especificada_nome = 'N/A';
-          }
-        }
-        
         setProjeto(projetoData);
       }
     } catch (err) {
@@ -89,7 +77,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
   }
 
   return (
-    <div className="bg-white min-h-screen overflow-hidden">
+    <div className="bg-white">
       <div className="fixed top-4 right-4 z-50 print:hidden">
         <Button
           onClick={handlePrint}
@@ -108,38 +96,16 @@ export default function RelatorioAcompanhamentoCargaPage() {
       />
 
       <style>{`
-        body {
-          overflow: hidden !important;
-        }
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        * {
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        @media screen {
-          [data-sidebar] {
-            display: none !important;
-          }
-          header, nav, aside, .sidebar {
-            display: none !important;
-          }
-        }
         @media print {
           @page {
-            size: A4 landscape;
-            margin: 8mm;
+            size: A4;
+            margin: 0;
           }
           body {
             margin: 0;
             padding: 0;
-            overflow: hidden !important;
           }
           .print\\:hidden {
-            display: none !important;
-          }
-          [data-sidebar], header, nav, aside, .sidebar {
             display: none !important;
           }
         }

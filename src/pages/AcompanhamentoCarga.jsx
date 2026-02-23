@@ -620,6 +620,17 @@ export default function AcompanhamentoCarga() {
               )}
             </div>
 
+            {/* Observações Gerais */}
+            <div>
+              <Label>Observações Gerais</Label>
+              <Textarea
+                value={formData.observacoes_gerais}
+                onChange={(e) => setFormData(prev => ({ ...prev, observacoes_gerais: e.target.value }))}
+                disabled={!canEdit}
+                rows={4}
+              />
+            </div>
+
             {/* Botões de ação */}
             {canEdit && (
               <div className="flex gap-3 justify-end pt-4 border-t">
