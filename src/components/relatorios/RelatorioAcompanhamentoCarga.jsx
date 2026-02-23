@@ -5,49 +5,51 @@ const SectionTitle = ({ children }) => (
 );
 
 const ReportPrintHeader = ({ acompanhamento, obra, regional }) => (
-  <div className="print:hidden">
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
-      <div className="flex justify-start">
-        <img 
-          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-          alt="Logo Regional" 
-          className="h-10 object-contain" 
-        />
-      </div>
-      <div className="text-center">
-        <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Acompanhamento de Aplicação de CAUQ</h1>
-      </div>
-      <div className="flex justify-end">
-        <div className="border border-gray-400 p-1 rounded-md text-xs">
-          <p className="font-semibold text-gray-800">
-            {new Date(acompanhamento.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-          </p>
+  <>
+    <div className="print:hidden">
+      <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+        <div className="flex justify-start">
+          <img 
+            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+            alt="Logo Regional" 
+            className="h-10 object-contain" 
+          />
         </div>
-      </div>
-    </header>
-  </div>
+        <div className="text-center">
+          <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Acompanhamento de Aplicação de CAUQ</h1>
+        </div>
+        <div className="flex justify-end">
+          <div className="border border-gray-400 p-1 rounded-md text-xs">
+            <p className="font-semibold text-gray-800">
+              {new Date(acompanhamento.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+            </p>
+          </div>
+        </div>
+      </header>
+    </div>
 
-  <div className="hidden print:block mb-4">
-    <div className="grid grid-cols-3 items-start border-b-2 border-slate-900 pb-2">
-      <div className="flex justify-start">
-        <img 
-          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-          alt="Logo Regional" 
-          className="h-12 object-contain" 
-        />
-      </div>
-      <div className="text-center">
-        <h1 className="text-base font-bold text-gray-800">Acompanhamento de Aplicação de CAUQ</h1>
-      </div>
-      <div className="flex justify-end">
-        <div className="border border-gray-400 px-2 py-1 rounded text-sm">
-          <p className="font-semibold text-gray-800">
-            {new Date(acompanhamento.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-          </p>
+    <div className="hidden print:block mb-4">
+      <div className="grid grid-cols-3 items-start border-b-2 border-slate-900 pb-2">
+        <div className="flex justify-start">
+          <img 
+            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+            alt="Logo Regional" 
+            className="h-12 object-contain" 
+          />
+        </div>
+        <div className="text-center">
+          <h1 className="text-base font-bold text-gray-800">Acompanhamento de Aplicação de CAUQ</h1>
+        </div>
+        <div className="flex justify-end">
+          <div className="border border-gray-400 px-2 py-1 rounded text-sm">
+            <p className="font-semibold text-gray-800">
+              {new Date(acompanhamento.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </>
 );
 
 export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, regional, projeto, faixaGranulometrica }) {
