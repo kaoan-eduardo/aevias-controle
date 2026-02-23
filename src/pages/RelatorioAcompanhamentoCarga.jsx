@@ -89,7 +89,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-screen overflow-hidden">
       <div className="fixed top-4 right-4 z-50 print:hidden">
         <Button
           onClick={handlePrint}
@@ -108,27 +108,38 @@ export default function RelatorioAcompanhamentoCargaPage() {
       />
 
       <style>{`
+        body {
+          overflow: hidden !important;
+        }
+        ::-webkit-scrollbar {
+          display: none;
+        }
+        * {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
         @media screen {
           [data-sidebar] {
-            display: block;
+            display: none !important;
+          }
+          header, nav, aside, .sidebar {
+            display: none !important;
           }
         }
         @media print {
           @page {
             size: A4 landscape;
-            margin: 10mm;
+            margin: 8mm;
           }
           body {
             margin: 0;
             padding: 0;
+            overflow: hidden !important;
           }
           .print\\:hidden {
             display: none !important;
           }
-          [data-sidebar] {
-            display: none !important;
-          }
-          header nav, header button, .sidebar, aside {
+          [data-sidebar], header, nav, aside, .sidebar {
             display: none !important;
           }
         }

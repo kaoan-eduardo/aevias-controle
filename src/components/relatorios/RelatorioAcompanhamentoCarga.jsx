@@ -46,11 +46,11 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
 
   return (
     <div className="bg-white font-sans">
-      <div className="p-3 print:p-2 flex flex-col print:min-h-0">
-        <div className="w-full print:max-w-full mx-auto flex flex-col">
+      <div className="p-3 print:p-2 flex flex-col print:min-h-0 overflow-hidden">
+        <div className="w-full print:max-w-full mx-auto flex flex-col overflow-hidden">
           <ReportPrintHeader acompanhamento={acompanhamento} obra={obra} regional={regional} />
           
-          <main className="text-xs mt-0.5">
+          <main className="text-xs mt-0.5 overflow-hidden">
             <SectionTitle>Dados da Obra</SectionTitle>
             <div className="grid grid-cols-3 gap-x-3 gap-y-0.5" style={{ fontSize: '9px' }}>
               <div>
@@ -150,12 +150,7 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
               </table>
             </div>
 
-            {acompanhamento.observacoes_gerais && (
-              <div className="mt-2">
-                <p className="font-bold text-xs">OBSERVAÇÕES GERAIS:</p>
-                <p className="text-xs">{acompanhamento.observacoes_gerais}</p>
-              </div>
-            )}
+
           </div>
 
           <div className="mt-auto pt-1 break-inside-avoid">
