@@ -222,7 +222,7 @@ export default function AcompanhamentoCarga() {
   const regionalSelecionada = regionais.find(r => r.id === obraSelecionada?.regional_id);
   const projetoSelecionado = projects.find(p => p.id === formData.project_id);
 
-  const canEdit = !formData.approved && formData.created_by === user?.email;
+  const canEdit = !editMode || (!formData.approved && formData.created_by === user?.email);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
