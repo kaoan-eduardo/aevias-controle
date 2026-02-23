@@ -76,20 +76,11 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
           
           <main className="text-xs mt-1 print:mt-3">
             <SectionTitle>Dados da Obra</SectionTitle>
-            <div className="grid grid-cols-3 gap-x-4 gap-y-1 print:gap-y-1.5 mt-1" style={{ fontSize: '10px' }}>
+            <div className="grid grid-cols-5 gap-x-4 gap-y-1 print:gap-y-1.5 mt-1" style={{ fontSize: '10px' }}>
               <div>
                 <p className="font-bold">CLIENTE:</p>
                 <p>{regional?.cliente || 'N/A'}</p>
               </div>
-              <div>
-                <p className="font-bold">TRECHO:</p>
-                <p>{acompanhamento.trecho || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="font-bold">N° DO PROJETO:</p>
-                <p>{projeto?.name || 'N/A'}</p>
-              </div>
-
               <div>
                 <p className="font-bold">RODOVIA:</p>
                 <p>{acompanhamento.rodovia || 'N/A'}</p>
@@ -99,8 +90,12 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
                 <p>{acompanhamento.sub_trecho || 'N/A'}</p>
               </div>
               <div>
-                <p className="font-bold">LABORATORISTA:</p>
-                <p>{acompanhamento.laboratorista_name || 'N/A'}</p>
+                <p className="font-bold">N° DO PROJETO:</p>
+                <p>{projeto?.name || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">SERVIÇO:</p>
+                <p>{servicoLabel}</p>
               </div>
 
               <div>
@@ -108,17 +103,20 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
                 <p>{obra?.name || 'N/A'}</p>
               </div>
               <div>
+                <p className="font-bold">TRECHO:</p>
+                <p>{acompanhamento.trecho || 'N/A'}</p>
+              </div>
+              <div>
                 <p className="font-bold">USINA FORNECEDORA:</p>
                 <p>{acompanhamento.usina_fornecedora || 'N/A'}</p>
-              </div>
-
-              <div>
-                <p className="font-bold">SERVIÇO:</p>
-                <p>{servicoLabel}</p>
               </div>
               <div>
                 <p className="font-bold">FAIXA ESPECIFICADA:</p>
                 <p>{faixaGranulometrica?.nome || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold">LABORATORISTA:</p>
+                <p>{acompanhamento.laboratorista_name || 'N/A'}</p>
               </div>
             </div>
           </main>
