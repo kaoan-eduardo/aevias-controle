@@ -96,16 +96,27 @@ export default function RelatorioAcompanhamentoCargaPage() {
       />
 
       <style>{`
+        @media screen {
+          [data-sidebar] {
+            display: block;
+          }
+        }
         @media print {
           @page {
-            size: A4;
-            margin: 0;
+            size: A4 landscape;
+            margin: 10mm;
           }
           body {
             margin: 0;
             padding: 0;
           }
           .print\\:hidden {
+            display: none !important;
+          }
+          [data-sidebar] {
+            display: none !important;
+          }
+          header nav, header button, .sidebar, aside {
             display: none !important;
           }
         }

@@ -5,7 +5,7 @@ const SectionTitle = ({ children }) => (
 );
 
 const ReportPrintHeader = ({ acompanhamento, obra, regional }) => (
-  <div>
+  <div className="print-only">
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
       <div className="flex justify-start">
         <img 
@@ -46,8 +46,8 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
 
   return (
     <div className="bg-white font-sans">
-      <div className="p-3 print:p-3 flex flex-col" style={{ minHeight: '297mm', maxHeight: '297mm' }}>
-        <div className="w-full max-w-[190mm] mx-auto flex flex-col" style={{ height: '100%' }}>
+      <div className="p-3 print:p-2 flex flex-col print:min-h-0">
+        <div className="w-full print:max-w-full mx-auto flex flex-col">
           <ReportPrintHeader acompanhamento={acompanhamento} obra={obra} regional={regional} />
           
           <main className="text-xs mt-0.5">
@@ -94,42 +94,34 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
               </div>
               <div>
                 <p className="font-bold">FAIXA ESPECIFICADA:</p>
-                <p>{projeto?.faixa_granulometrica_id || 'N/A'}</p>
+                <p>{projeto?.faixa_especificada_nome || 'N/A'}</p>
               </div>
             </div>
           </main>
 
           <div className="mt-2">
-            <div className="grid grid-cols-2 gap-2 mb-1">
-              <div className="text-center font-bold text-xs bg-slate-100 p-1 border border-slate-300">
-                DADOS DA USINA
-              </div>
-              <div className="text-center font-bold text-xs bg-slate-100 p-1 border border-slate-300">
-                DADOS DA PISTA
-              </div>
-            </div>
-
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '8px' }}>
                 <thead className="bg-slate-100">
                   <tr>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">N° CARGA</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">PLACA</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">HORA SAÍDA</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">PESO<br/>(t)</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">HORA DA<br/>CHEGADA</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">TEMP. DE<br/>CHEGADA<br/>(°C)</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">HORA DE<br/>APLICAÇÃO</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">TEMP. DE<br/>ESPALHAMENTO<br/>(°C)</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">TEMP. DE<br/>COMPACTAÇÃO<br/>(°C)</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">PISTA</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">ESPESSURA<br/>(cm)</th>
-                    <th className="border border-slate-300 p-0.5 text-center" colSpan="2">ESTACAS</th>
-                    <th className="border border-slate-300 p-0.5" rowSpan="2">OBSERVAÇÕES</th>
+                    <th className="border border-slate-300 p-0.5 text-center font-bold" colSpan="4">DADOS DA USINA</th>
+                    <th className="border border-slate-300 p-0.5 text-center font-bold" colSpan="10">DADOS DA PISTA</th>
                   </tr>
                   <tr>
-                    <th className="border border-slate-300 p-0.5">INICIAL</th>
-                    <th className="border border-slate-300 p-0.5">FINAL</th>
+                    <th className="border border-slate-300 p-0.5">N° CARGA</th>
+                    <th className="border border-slate-300 p-0.5">PLACA</th>
+                    <th className="border border-slate-300 p-0.5">HORA SAÍDA</th>
+                    <th className="border border-slate-300 p-0.5">PESO<br/>(t)</th>
+                    <th className="border border-slate-300 p-0.5">HORA DA<br/>CHEGADA</th>
+                    <th className="border border-slate-300 p-0.5">TEMP. DE<br/>CHEGADA<br/>(°C)</th>
+                    <th className="border border-slate-300 p-0.5">HORA DE<br/>APLICAÇÃO</th>
+                    <th className="border border-slate-300 p-0.5">TEMP. DE<br/>ESPALHAMENTO<br/>(°C)</th>
+                    <th className="border border-slate-300 p-0.5">TEMP. DE<br/>COMPACTAÇÃO<br/>(°C)</th>
+                    <th className="border border-slate-300 p-0.5">PISTA</th>
+                    <th className="border border-slate-300 p-0.5">ESPESSURA<br/>(cm)</th>
+                    <th className="border border-slate-300 p-0.5">ESTACA<br/>INICIAL</th>
+                    <th className="border border-slate-300 p-0.5">ESTACA<br/>FINAL</th>
+                    <th className="border border-slate-300 p-0.5">OBSERVAÇÕES</th>
                   </tr>
                 </thead>
                 <tbody>
