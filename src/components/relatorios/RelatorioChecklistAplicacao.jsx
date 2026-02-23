@@ -743,30 +743,30 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
           </header>
 
           <SectionTitle>Dados da Medição</SectionTitle>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 mb-0.5" style={{ fontSize: '9px' }}>
+          <div className="grid grid-cols-3 gap-x-3 gap-y-0.5 mb-0.5" style={{ fontSize: '9px' }}>
             <div>
-              <p className="font-bold">RODOVIA:</p>
-              <p>{checklist.rodovia || 'N/A'}</p>
-            </div>
-            <div>
-              <p className="font-bold">FISCAL DE CAMPO:</p>
-              <p>{checklist.inspetor_campo || 'N/A'}</p>
+              <p className="font-bold">EMPREITEIRA:</p>
+              <p>{checklist.empreiteira || 'N/A'}</p>
             </div>
             <div>
               <p className="font-bold">TRECHO:</p>
               <p>{checklist.trecho || 'N/A'}</p>
             </div>
             <div>
-              <p className="font-bold">EMPREITEIRA:</p>
-              <p>{checklist.empreiteira || 'N/A'}</p>
+              <p className="font-bold">SERVIÇO:</p>
+              <p>{checklist.medicoes_geometricas?.servico || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="font-bold">RODOVIA:</p>
+              <p>{checklist.rodovia || 'N/A'}</p>
             </div>
             <div>
               <p className="font-bold">SUBTRECHO:</p>
               <p>{checklist.medicoes_geometricas?.subtrecho || 'N/A'}</p>
             </div>
-            <div className="col-span-2">
-              <p className="font-bold">SERVIÇO:</p>
-              <p>{checklist.medicoes_geometricas?.servico || 'N/A'}</p>
+            <div>
+              <p className="font-bold">FISCAL DE CAMPO:</p>
+              <p>{checklist.inspetor_campo || 'N/A'}</p>
             </div>
           </div>
 
