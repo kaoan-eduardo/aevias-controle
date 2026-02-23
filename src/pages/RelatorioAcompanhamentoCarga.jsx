@@ -12,6 +12,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);
   const [projeto, setProjeto] = useState(null);
+  const [faixaGranulometrica, setFaixaGranulometrica] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,6 +48,16 @@ export default function RelatorioAcompanhamentoCargaPage() {
       if (acompanhamentoData.project_id) {
         const projetoData = await Project.get(acompanhamentoData.project_id);
         setProjeto(projetoData);
+
+        // Buscar faixa granulométrica pelo ID se existir
+        if (projetoData.faixa_granulometrica_id) {
+          try {
+            const faixaData = await base44.entities.FaixaGranulometrica.get(projetoData.faixa_granulometrica_id);
+            setFaixaGranulometrica(faixaData);
+          } catch (err) {
+            console.warn("Faixa granulométrica não encontrada:", err);
+          }
+        }
       }
     } catch (err) {
       console.error("Erro ao carregar dados:", err);
@@ -93,19 +104,26 @@ export default function RelatorioAcompanhamentoCargaPage() {
         obra={obra}
         regional={regional}
         projeto={projeto}
+        faixaGranulometrica={faixaGranulometrica}
       />
 
       <style>{`
         @media print {
           @page {
-            size: A4;
-            margin: 0;
+            size: A4 portrait;
+            margin: 10mm;
           }
           body {
             margin: 0;
             padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
           .print\\:hidden {
+            display: none !important;
+          }
+          /* Hide sidebar and layout elements in print */
+          aside, nav, [role="navigation"], [class*="sidebar"], [class*="Sidebar"] {
             display: none !important;
           }
         }
