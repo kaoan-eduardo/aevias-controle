@@ -46,6 +46,18 @@ export default function RelatorioAcompanhamentoCargaPage() {
 
       if (acompanhamentoData.project_id) {
         const projetoData = await Project.get(acompanhamentoData.project_id);
+        
+        // Buscar nome da faixa granulométrica se houver faixa_granulometrica_id
+        if (projetoData.faixa_granulometrica_id) {
+          try {
+            const faixa = await base44.entities.FaixaGranulometrica.get(projetoData.faixa_granulometrica_id);
+            projetoData.faixa_especificada_nome = faixa.nome;
+          } catch (error) {
+            console.warn("Erro ao buscar faixa granulométrica:", error);
+            projetoData.faixa_especificada_nome = 'N/A';
+          }
+        }
+        
         setProjeto(projetoData);
       }
     } catch (err) {
