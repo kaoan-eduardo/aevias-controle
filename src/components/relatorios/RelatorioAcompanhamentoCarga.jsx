@@ -125,54 +125,48 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
 
           <div className="mt-3">
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '9px' }}>
+              <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '7px' }}>
                 <thead className="bg-slate-100">
                   <tr>
-                    <th className="border border-slate-300 p-1 text-center font-bold" colSpan="4">DADOS DA USINA</th>
-                    <th className="border border-slate-300 p-1 text-center font-bold" colSpan="10">DADOS DA PISTA</th>
+                    <th className="border border-slate-300 px-0.5 py-1 text-center font-bold" colSpan="4">DADOS DA USINA</th>
+                    <th className="border border-slate-300 px-0.5 py-1 text-center font-bold" colSpan="10">DADOS DA PISTA</th>
                   </tr>
                   <tr>
-                    <th className="border border-slate-300 p-1">N°<br/>CARGA</th>
-                    <th className="border border-slate-300 p-1">PLACA</th>
-                    <th className="border border-slate-300 p-1">HORA<br/>SAÍDA</th>
-                    <th className="border border-slate-300 p-1">PESO<br/>(t)</th>
-                    <th className="border border-slate-300 p-1">HORA DE<br/>CHEGADA</th>
-                    <th className="border border-slate-300 p-1">TEMP. DE<br/>CHEGADA<br/>(°C)</th>
-                    <th className="border border-slate-300 p-1">HORA DE<br/>APLICAÇÃO</th>
-                    <th className="border border-slate-300 p-1">TEMP. DE<br/>ESPALHAM.<br/>(°C)</th>
-                    <th className="border border-slate-300 p-1">TEMP. DE<br/>COMPACT.<br/>(°C)</th>
-                    <th className="border border-slate-300 p-1">PISTA</th>
-                    <th className="border border-slate-300 p-1">ESPESSURA<br/>(cm)</th>
-                    <th className="border border-slate-300 p-1 text-center" colSpan="2">ESTACAS</th>
-                    <th className="border border-slate-300 p-1">OBSERVAÇÕES</th>
-                  </tr>
-                  <tr>
-                    <th className="border border-slate-300 p-0" colSpan="4"></th>
-                    <th className="border border-slate-300 p-0" colSpan="7"></th>
-                    <th className="border border-slate-300 p-1 text-xs">INICIAL</th>
-                    <th className="border border-slate-300 p-1 text-xs">FINAL</th>
-                    <th className="border border-slate-300 p-0"></th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">N° CARGA</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">PLACA</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">HORA SAÍDA</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">PESO (t)</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">HORA CHEGADA</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">TEMP. CHEGADA (°C)</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">HORA APLICAÇÃO</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">TEMP. ESPALHAM. (°C)</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">TEMP. COMPACT. (°C)</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">PISTA</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">ESPESSURA (cm)</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">ESTACA INICIAL</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">ESTACA FINAL</th>
+                    <th className="border border-slate-300 px-0.5 py-0.5 text-[7px] leading-tight">OBSERVAÇÕES</th>
                   </tr>
                 </thead>
                 <tbody>
                   {Array.from({ length: 20 }).map((_, index) => {
                     const carga = acompanhamento.cargas?.[index];
                     return (
-                      <tr key={index} className="even:bg-slate-50">
-                        <td className="border border-slate-300 p-1 text-center">{index + 1}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.placa || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.hora_saida || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.peso_toneladas || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.hora_chegada || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.temp_chegada || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.hora_aplicacao || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.temp_espalhamento || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.temp_compactacao || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.pista || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.espessura_cm || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.estaca_inicial || ''}</td>
-                        <td className="border border-slate-300 p-1 text-center">{carga?.estaca_final || ''}</td>
-                        <td className="border border-slate-300 p-1" style={{ fontSize: '8px' }}>{carga?.observacoes || ''}</td>
+                      <tr key={index} className="even:bg-slate-50" style={{ fontSize: '7px' }}>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{index + 1}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.placa || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.hora_saida || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.peso_toneladas || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.hora_chegada || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.temp_chegada || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.hora_aplicacao || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.temp_espalhamento || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.temp_compactacao || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.pista || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.espessura_cm || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.estaca_inicial || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-center">{carga?.estaca_final || ''}</td>
+                        <td className="border border-slate-300 px-0.5 py-0.5 text-[6px] leading-tight">{carga?.observacoes || ''}</td>
                       </tr>
                     );
                   })}
