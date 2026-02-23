@@ -33,6 +33,7 @@ import {
   DialogTitle,
   DialogFooter
 } from "@/components/ui/dialog";
+import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
 
 const getStatusInfo = (ensaio) => {
   if (ensaio.client_signature?.signed_by) {
@@ -613,41 +614,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const isGestorContrato = user?.access_level === 'gestor_contrato';
   const isCliente = user?.access_level === 'cliente';
 
-  const getDataEnsaio = useCallback((ensaio) => {
-  const entityType = ensaio.entityType;
-  switch (entityType) {
-    case "DiarioObra":
-      return ensaio.data;
-    case "EnsaioCAUQ":
-      return ensaio.data_ensaio;
-    case "EnsaioDensidade":
-      return ensaio.extraction_date;
-    case "EnsaioDensidadeInSitu":
-      return ensaio.data_ensaio;
-    case "EnsaioTaxaPinturaImprimacao":
-      return ensaio.data_ensaio;
-    case "ChecklistUsina":
-      return ensaio.data;
-    case "ChecklistAplicacao":
-      return ensaio.data;
-    case "ChecklistMRAF":
-      return ensaio.data;
-    case "ChecklistConcretagem":
-      return ensaio.data;
-    case "ChecklistTerraplanagem":
-      return ensaio.data;
-    case "ChecklistReciclagem":
-      return ensaio.data;
-    case "EnsaioSondagem":
-      return ensaio.data;
-    case "EnsaioGranulometriaIndividual":
-      return ensaio.data_ensaio;
-    case "AcompanhamentoUsinagem":
-      return ensaio.data;
-    default:
-      return ensaio.created_date;
-    }
-    }, []);
+
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(prev => {
@@ -886,24 +853,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     pausada: "bg-[#FBBF24]/20 text-[#FBBF24] border border-[#FBBF24]/30"
   }), []);
 
-  const typeOptions = [
-    { value: 'all', label: 'Todos os tipos' },
-    { value: 'DiarioObra', label: 'Diário de Obra' },
-    { value: 'EnsaioCAUQ', label: 'Ensaio de CAUQ' },
-    { value: 'EnsaioMRAF', label: 'Ensaio MRAF' },
-    { value: 'EnsaioDensidade', label: 'Densidade CP' },
-    { value: 'EnsaioDensidadeInSitu', label: 'Densidade In Situ' },
-    { value: 'EnsaioTaxaPinturaImprimacao', label: 'Taxa Pintura/Imprimação' },
-    { value: 'ChecklistUsina', label: 'Checklist Usina' },
-    { value: 'ChecklistAplicacao', label: 'Checklist Aplicação' },
-    { value: 'ChecklistMRAF', label: 'Checklist MRAF' },
-    { value: 'ChecklistConcretagem', label: 'Checklist Concretagem' },
-    { value: 'ChecklistTerraplanagem', label: 'Checklist Terraplanagem' },
-    { value: 'ChecklistReciclagem', label: 'Checklist Reciclagem' },
-    { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
-    { value: 'EnsaioGranulometriaIndividual', label: 'Granulometria Individual' },
-    { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
-    ];
+
 
   const statusOptions = [
     { value: 'all', label: 'Todos os status' },
@@ -1693,27 +1643,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
 
-  const getDataEnsaio = useCallback((ensaio) => {
-    const entityType = ensaio.entityType;
-    switch (entityType) {
-      case "DiarioObra": return ensaio.data;
-      case "EnsaioCAUQ": return ensaio.data_ensaio;
-      case "EnsaioMRAF": return ensaio.data_ensaio;
-      case "EnsaioDensidade": return ensaio.extraction_date;
-      case "EnsaioDensidadeInSitu": return ensaio.data_ensaio;
-      case "EnsaioTaxaPinturaImprimacao": return ensaio.data_ensaio;
-      case "ChecklistUsina": return ensaio.data;
-      case "ChecklistAplicacao": return ensaio.data;
-      case "ChecklistMRAF": return ensaio.data;
-      case "ChecklistConcretagem": return ensaio.data;
-      case "ChecklistTerraplanagem": return ensaio.data;
-      case "ChecklistReciclagem": return ensaio.data;
-      case "EnsaioSondagem": return ensaio.data;
-      case "EnsaioGranulometriaIndividual": return ensaio.data_ensaio;
-      case "AcompanhamentoUsinagem": return ensaio.data;
-      default: return ensaio.created_date;
-      }
-      }, []);
+
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(prev => {
@@ -1882,7 +1812,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
           "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
           "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
           "EnsaioSondagem": base44.entities.EnsaioSondagem,
-          "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem
+          "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+          "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
               };
 
             const Entity = entityMap[ensaio.entityType];
@@ -1907,22 +1838,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     }
   }, [user]);
 
-  const typeOptions = [
-    { value: 'all', label: 'Todos os tipos' },
-    { value: 'DiarioObra', label: 'Diário de Obra' },
-    { value: 'EnsaioCAUQ', label: 'Ensaio de CAUQ' },
-    { value: 'EnsaioDensidade', label: 'Densidade CP' },
-    { value: 'EnsaioDensidadeInSitu', label: 'Densidade In Situ' },
-    { value: 'EnsaioTaxaPinturaImprimacao', label: 'Taxa Pintura/Imprimação' },
-    { value: 'ChecklistUsina', label: 'Checklist Usina' },
-    { value: 'ChecklistAplicacao', label: 'Checklist Aplicação' },
-    { value: 'ChecklistMRAF', label: 'Checklist MRAF' },
-    { value: 'ChecklistConcretagem', label: 'Checklist Concretagem' },
-    { value: 'ChecklistTerraplanagem', label: 'Checklist Terraplanagem' },
-    { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
-    { value: 'EnsaioGranulometriaIndividual', label: 'Granulometria Individual' },
-    { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
-    ];
+
 
   const statusOptions = [
     { value: 'all', label: 'Todos os status' },
@@ -2256,7 +2172,8 @@ export default function MeusEnsaios() {
         checklistsReciclagemData,
         sondagemData,
         granulometriaIndividualData,
-        acompanhamentoUsinagemData
+        acompanhamentoUsinagemData,
+        acompanhamentoCargaData
         ] = await Promise.all([
           Obra.list(),
           Regional.list(),
@@ -2275,7 +2192,8 @@ export default function MeusEnsaios() {
           base44.entities.ChecklistReciclagem.list("-created_date", 1000),
           base44.entities.EnsaioSondagem.list("-created_date", 1000),
           base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
-          base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000)
+          base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
+          base44.entities.AcompanhamentoCarga.list("-created_date", 1000)
         ]);
 
       setObras(obrasData);
@@ -2307,27 +2225,10 @@ export default function MeusEnsaios() {
         ...checklistsReciclagemData.map((d) => ({ ...d, entityType: "ChecklistReciclagem" })),
         ...sondagemData.map((d) => ({ ...d, entityType: "EnsaioSondagem" })),
         ...granulometriaIndividualData.map((d) => ({ ...d, entityType: "EnsaioGranulometriaIndividual" })),
-        ...acompanhamentoUsinagemData.map((d) => ({ ...d, entityType: "AcompanhamentoUsinagem" }))
+        ...acompanhamentoUsinagemData.map((d) => ({ ...d, entityType: "AcompanhamentoUsinagem" })),
+        ...acompanhamentoCargaData.map((d) => ({ ...d, entityType: "AcompanhamentoCarga" }))
       ].sort((a, b) => {
-        const getRelevantDate = (ensaio) => {
-          switch (ensaio.entityType) {
-            case "DiarioObra": return ensaio.data;
-            case "EnsaioCAUQ": return ensaio.data_ensaio;
-            case "EnsaioDensidade": return ensaio.extraction_date;
-            case "EnsaioDensidadeInSitu": return ensaio.data_ensaio;
-            case "EnsaioTaxaPinturaImprimacao": return ensaio.data_ensaio;
-            case "ChecklistUsina": return ensaio.data;
-            case "ChecklistAplicacao": return ensaio.data;
-            case "ChecklistMRAF": return ensaio.data;
-            case "ChecklistConcretagem": return ensaio.data;
-            case "ChecklistTerraplanagem": return ensaio.data;
-            case "ChecklistReciclagem": return ensaio.data;
-            case "EnsaioSondagem": return ensaio.data;
-            case "EnsaioGranulometriaIndividual": return ensaio.data_ensaio;
-            case "AcompanhamentoUsinagem": return ensaio.data;
-            default: return ensaio.created_date;
-          }
-        };
+        const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
         
         // Ordenar por data do ensaio (decrescente - mais recente primeiro)
         const dateA = new Date(getRelevantDate(a));
@@ -2444,7 +2345,8 @@ export default function MeusEnsaios() {
       ChecklistReciclagem: base44.entities.ChecklistReciclagem,
       EnsaioSondagem: base44.entities.EnsaioSondagem,
       EnsaioGranulometriaIndividual: base44.entities.EnsaioGranulometriaIndividual,
-      AcompanhamentoUsinagem: base44.entities.AcompanhamentoUsinagem
+      AcompanhamentoUsinagem: base44.entities.AcompanhamentoUsinagem,
+      AcompanhamentoCarga: base44.entities.AcompanhamentoCarga
       };
 
     const Entity = entityMap[ensaio.entityType];
@@ -2500,7 +2402,8 @@ export default function MeusEnsaios() {
          "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
          "EnsaioSondagem": base44.entities.EnsaioSondagem,
          "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
-         "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem
+         "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+         "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
        };
 
        const Entity = entityMap[ensaio.entityType];
@@ -2539,7 +2442,8 @@ export default function MeusEnsaios() {
         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
         "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
         "EnsaioSondagem": base44.entities.EnsaioSondagem,
-        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual
+        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
+        "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
       };
 
       const Entity = entityMap[ensaio.entityType];
