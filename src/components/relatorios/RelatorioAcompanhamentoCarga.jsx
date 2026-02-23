@@ -70,8 +70,8 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
 
   return (
     <div className="bg-white font-sans">
-      <div className="p-4 print:p-6 flex flex-col" style={{ minHeight: '100vh' }}>
-        <div className="w-full mx-auto flex flex-col">
+      <div className="p-6 print:p-0 flex flex-col min-h-screen print:min-h-0">
+        <div className="w-full flex flex-col">
           <ReportPrintHeader acompanhamento={acompanhamento} obra={obra} regional={regional} />
           
           <main className="text-xs mt-1 print:mt-3">

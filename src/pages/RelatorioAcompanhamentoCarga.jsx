@@ -88,43 +88,62 @@ export default function RelatorioAcompanhamentoCargaPage() {
   }
 
   return (
-    <div className="bg-white">
-      <div className="fixed top-4 right-4 z-50 print:hidden">
-        <Button
-          onClick={handlePrint}
-          className="bg-[#00233B] text-white hover:bg-[#00233B]/90 shadow-lg"
-        >
-          <Printer className="w-4 h-4 mr-2" />
-          Gerar PDF
-        </Button>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-[210mm] mx-auto bg-white shadow-lg my-4 print:my-0 print:shadow-none">
+        <div className="fixed top-4 right-4 z-50 print:hidden">
+          <Button
+            onClick={handlePrint}
+            className="bg-[#00233B] text-white hover:bg-[#00233B]/90 shadow-lg"
+          >
+            <Printer className="w-4 h-4 mr-2" />
+            Gerar PDF
+          </Button>
+        </div>
 
-      <RelatorioAcompanhamentoCarga
-        acompanhamento={acompanhamento}
-        obra={obra}
-        regional={regional}
-        projeto={projeto}
-        faixaGranulometrica={faixaGranulometrica}
-      />
+        <RelatorioAcompanhamentoCarga
+          acompanhamento={acompanhamento}
+          obra={obra}
+          regional={regional}
+          projeto={projeto}
+          faixaGranulometrica={faixaGranulometrica}
+        />
+      </div>
 
       <style>{`
         @media print {
-          @page {
-            size: A4 portrait;
-            margin: 10mm;
-          }
-          body {
+          html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            background: white !important;
           }
+          
+          @page {
+            size: A4 portrait;
+            margin: 15mm;
+          }
+          
+          body * {
+            visibility: hidden;
+          }
+          
+          .max-w-\\[210mm\\], .max-w-\\[210mm\\] * {
+            visibility: visible;
+          }
+          
+          .max-w-\\[210mm\\] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+          }
+          
           .print\\:hidden {
             display: none !important;
-          }
-          /* Hide sidebar and layout elements in print */
-          aside, nav, [role="navigation"], [class*="sidebar"], [class*="Sidebar"] {
-            display: none !important;
+            visibility: hidden !important;
           }
         }
       `}</style>
