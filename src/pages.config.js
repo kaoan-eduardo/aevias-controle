@@ -92,6 +92,8 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import AcompanhamentoCarga from './pages/AcompanhamentoCarga';
+import RelatorioAcompanhamentoCarga from './pages/RelatorioAcompanhamentoCarga';
 import __Layout from './Layout.jsx';
 
 
@@ -141,6 +143,8 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "AcompanhamentoCarga": AcompanhamentoCarga,
+    "RelatorioAcompanhamentoCarga": RelatorioAcompanhamentoCarga,
 }
 
 export const pagesConfig = {
