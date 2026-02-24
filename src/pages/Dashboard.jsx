@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
-  Building2, FolderOpen, FlaskConical, CheckCircle2, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus, Filter, X
+  Building2, FolderOpen, FlaskConical, CheckCircle, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus, Filter, X
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays } from 'date-fns';
@@ -749,7 +749,7 @@ export default function Dashboard() {
             <StatCard 
               title="Registros Assinados" 
               value={stats.assinados} 
-              icon={CheckCircle2}
+              icon={CheckCircle}
               note={isEngenheiro ? `${approvalPercentage}% assinados` : undefined}
             />
             {isEngenheiro && (
@@ -768,7 +768,7 @@ export default function Dashboard() {
             <StatCard title="Obras Ativas" value={stats.obras} icon={Building2} />
             <StatCard title="Projetos" value={stats.projects} icon={FolderOpen} />
             <StatCard title="Total de Registros" value={stats.ensaios} icon={FlaskConical} />
-            <StatCard title="Aprovados" value={stats.approved} icon={CheckCircle2} note={`${approvalPercentage}% de aprovação`} />
+            <StatCard title="Aprovados" value={stats.approved} icon={CheckCircle} note={`${approvalPercentage}% de aprovação`} />
             <StatCard title="Pendentes" value={stats.pending} icon={Clock} />
           </div>
         )}
