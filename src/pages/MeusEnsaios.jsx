@@ -1826,12 +1826,9 @@ export default function MeusEnsaios() {
         console.log("📊 [DEBUG] Sala Técnica - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel === 'gestor_contrato') {
         const regionaisDoUsuario = regionaisData.filter((regional) => {
-          // Verifica tanto o campo antigo quanto o novo array
-          const gestorAntigo = regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase();
-          const gestorNovo = (regional.gestores_contrato_responsaveis || []).some(
-            (email) => email.toLowerCase() === currentUser.email.toLowerCase()
-          );
-          return gestorAntigo || gestorNovo;
+          const gestores = regional.gestores_contrato_responsaveis || [];
+          return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase() ||
+                 gestores.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
         });
         console.log("📊 [DEBUG] Gestor - Regionais do usuário:", regionaisDoUsuario);
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
