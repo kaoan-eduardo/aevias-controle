@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
-  Building2, FolderOpen, FlaskConical, CheckCircle, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus, Filter, X
+  Building2, FolderOpen, FlaskConical, CheckCircle2, AlertTriangle, Clock, XCircle, Calendar, Loader2, FileSignature, UserPlus, Filter, X
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays } from 'date-fns';
