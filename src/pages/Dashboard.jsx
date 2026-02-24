@@ -156,7 +156,9 @@ export default function Dashboard() {
             const salas = regional.salas_tecnicas_responsaveis || [];
             return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
           } else if (userAccessLevel === 'gestor_contrato') {
-            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
+            const gestores = regional.gestores_contrato_responsaveis || [];
+            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
+                   gestores.some(email => email.toLowerCase() === userData.email.toLowerCase());
           }
           return false;
         });
