@@ -115,19 +115,19 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <thead>
               <tr>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>DATA<br/>APLICAÇÃO</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>VOLUME<br/>DE AREIA<br/>(mm³)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D1 (Ø)<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D2 (Ø)<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D3 (Ø)<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D4 (Ø)<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D(Ø) MÉDIA<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ÁREA<br/>(cm²)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>HS<br/>(cm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>HS<br/>(mm)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>TIPO DE<br/>SUPERFÍCIE</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>VOLUME<br/>DE AREIA<br/>(mm³)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D1 (Ø)<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D2 (Ø)<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D3 (Ø)<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D4 (Ø)<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>D(Ø) MÉDIA<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ÁREA<br/>(cm²)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>HS<br/>(cm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>HS<br/>(mm)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>TIPO DE<br/>SUPERFÍCIE</th>
               </tr>
             </thead>
             <tbody>
@@ -162,30 +162,30 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019
           </div>
           
-          <table className="w-full border-collapse text-[9px]">
+          <table className="w-full border-collapse text-[8px]">
             <thead>
               <tr>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>DATA<br/>APLICAÇÃO</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>1º</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>2º</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>3º</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>4º</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>5º</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>MÁXIMA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>MÍNIMA</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>VRD</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>CLASSE</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>DATA<br/>APLICAÇÃO</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>1º</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>2º</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>3º</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>4º</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>5º</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>MÁXIMA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>MÍNIMA</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>VRD</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>CLASSE</th>
               </tr>
             </thead>
             <tbody>
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '17px' }}>
+                  <tr key={idx} style={{ height: '15px' }}>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
