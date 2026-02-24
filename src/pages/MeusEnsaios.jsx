@@ -34,6 +34,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
+import { getEntityMap } from "@/components/ensaios/entityMaps";
 
 const getStatusInfo = (ensaio) => {
   if (ensaio.client_signature?.signed_by) {
@@ -1138,24 +1139,8 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const handleAssinar = useCallback(async () => {
     try {
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const entityMap = {
-            "DiarioObra": DiarioObra,
-            "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
-            "EnsaioDensidade": EnsaioDensidade,
-            "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
-            "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
-            "ChecklistUsina": ChecklistUsina,
-            "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
-            "ChecklistMRAF": ChecklistMRAF,
-            "ChecklistConcretagem": ChecklistConcretagem,
-            "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-            "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
-            "EnsaioSondagem": base44.entities.EnsaioSondagem,
-            "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
-            "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
-              };
-
-            const Entity = entityMap[ensaio.entityType];
+        const entityMap = getEntityMap();
+        const Entity = entityMap[ensaio.entityType];
 
         const signatureData = {
           client_signature: {
@@ -1672,25 +1657,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const handleAssinar = useCallback(async (ensaio) => {
     try {
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const entityMap = {
-          "DiarioObra": DiarioObra,
-          "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
-          "EnsaioMRAF": base44.entities.EnsaioMRAF,
-          "EnsaioDensidade": EnsaioDensidade,
-          "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
-          "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
-          "ChecklistUsina": ChecklistUsina,
-          "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
-          "ChecklistMRAF": ChecklistMRAF,
-          "ChecklistConcretagem": ChecklistConcretagem,
-          "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-          "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
-          "EnsaioSondagem": base44.entities.EnsaioSondagem,
-          "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
-          "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
-              };
-
-            const Entity = entityMap[ensaio.entityType];
+        const entityMap = getEntityMap();
+        const Entity = entityMap[ensaio.entityType];
 
         const signatureData = {
           client_signature: {
@@ -2205,24 +2173,7 @@ export default function MeusEnsaios() {
   }, [loadData]);
 
   const handleApprove = useCallback(async (ensaio, approverDetails) => {
-    const entityMap = {
-      DiarioObra,
-      EnsaioCAUQ: base44.entities.EnsaioCAUQ,
-      EnsaioDensidade,
-      EnsaioDensidadeInSitu: base44.entities.EnsaioDensidadeInSitu,
-      EnsaioTaxaPinturaImprimacao: base44.entities.EnsaioTaxaPinturaImprimacao,
-      ChecklistUsina,
-      ChecklistAplicacao: base44.entities.ChecklistAplicacao,
-      ChecklistMRAF,
-      ChecklistConcretagem,
-      ChecklistTerraplanagem: base44.entities.ChecklistTerraplanagem,
-      ChecklistReciclagem: base44.entities.ChecklistReciclagem,
-      EnsaioSondagem: base44.entities.EnsaioSondagem,
-      EnsaioGranulometriaIndividual: base44.entities.EnsaioGranulometriaIndividual,
-      AcompanhamentoUsinagem: base44.entities.AcompanhamentoUsinagem,
-      AcompanhamentoCarga: base44.entities.AcompanhamentoCarga
-      };
-
+    const entityMap = getEntityMap();
     const Entity = entityMap[ensaio.entityType];
 
     try {
@@ -2261,25 +2212,7 @@ export default function MeusEnsaios() {
       return;
     }
     try {
-       const entityMap = {
-         "DiarioObra": DiarioObra,
-         "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
-         "EnsaioMRAF": base44.entities.EnsaioMRAF,
-         "EnsaioDensidade": EnsaioDensidade,
-         "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
-         "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
-         "ChecklistUsina": ChecklistUsina,
-         "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
-         "ChecklistMRAF": ChecklistMRAF,
-         "ChecklistConcretagem": ChecklistConcretagem,
-         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-         "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
-         "EnsaioSondagem": base44.entities.EnsaioSondagem,
-         "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
-         "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
-         "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
-       };
-
+       const entityMap = getEntityMap();
        const Entity = entityMap[ensaio.entityType];
        await Entity.update(ensaio.id, {
          approved: false,
@@ -2302,24 +2235,7 @@ export default function MeusEnsaios() {
       return;
     }
     try {
-      const entityMap = {
-        "DiarioObra": DiarioObra,
-        "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
-        "EnsaioMRAF": base44.entities.EnsaioMRAF,
-        "EnsaioDensidade": EnsaioDensidade,
-        "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
-        "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
-        "ChecklistUsina": ChecklistUsina,
-        "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
-        "ChecklistMRAF": ChecklistMRAF,
-        "ChecklistConcretagem": ChecklistConcretagem,
-        "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
-        "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
-        "EnsaioSondagem": base44.entities.EnsaioSondagem,
-        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
-        "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
-      };
-
+      const entityMap = getEntityMap();
       const Entity = entityMap[ensaio.entityType];
       await Entity.delete(ensaio.id);
 
