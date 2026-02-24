@@ -62,9 +62,10 @@ export default function RelatorioManchaPenduloPage() {
   }
 
   return (
-    <>
-      <div className="print:hidden fixed top-4 right-4 z-50">
-        <Button onClick={handlePrint} className="bg-[#00233B] hover:bg-[#00233B]/90 text-white shadow-lg">
+    <div className="min-h-screen bg-slate-50">
+      <div className="print:hidden sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-slate-800">Relatório - Mancha + Pêndulo</h2>
+        <Button onClick={handlePrint} className="bg-[#00233B] hover:bg-[#00233B]/90 text-white">
           <FileText className="w-4 h-4 mr-2" />
           Gerar PDF
         </Button>
@@ -76,7 +77,7 @@ export default function RelatorioManchaPenduloPage() {
         @media print {
           @page {
             size: A4;
-            margin: 8mm;
+            margin: 10mm;
           }
           body {
             print-color-adjust: exact;
@@ -87,6 +88,6 @@ export default function RelatorioManchaPenduloPage() {
           }
         }
       `}</style>
-    </>
+    </div>
   );
 }
