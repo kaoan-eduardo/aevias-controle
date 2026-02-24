@@ -116,24 +116,27 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               </tr>
             </thead>
             <tbody>
-              {ensaio.ensaios_mancha && ensaio.ensaios_mancha.map((e, idx) => (
-                <tr key={idx}>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{formatDate(e.data_aplicacao)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.estaca}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.faixa_pista}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.bordo}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>25000</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.d1?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.d2?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.d3?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.d4?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.d_media?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.area?.toFixed(2)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.hs_cm?.toFixed(2)}</td>
-                  <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.hs_mm?.toFixed(2)}</td>
-                  <td className="border px-1 py-1 text-center text-[7px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.tipo_superficie}</td>
-                </tr>
-              ))}
+              {Array.from({ length: 15 }, (_, idx) => {
+                const e = ensaio.ensaios_mancha?.[idx];
+                return (
+                  <tr key={idx}>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? '25000' : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d1 ? e.d1.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d2 ? e.d2.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d3 ? e.d3.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d4 ? e.d4.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d_media ? e.d_media.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.area ? e.area.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_cm ? e.hs_cm.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_mm ? e.hs_mm.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-1 text-center text-[7px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.tipo_superficie || ''}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -164,24 +167,27 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               </tr>
             </thead>
             <tbody>
-              {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.map((e, idx) => (
-                <tr key={idx}>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{formatDate(e.data_aplicacao)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.estaca}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.faixa_pista}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.bordo}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.temp_pavimento}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.leitura_1}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.leitura_2}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.leitura_3}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.leitura_4}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.leitura_5}</td>
-                  <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.maxima?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.minima?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.vrd?.toFixed(1)}</td>
-                  <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.classe}</td>
-                </tr>
-              ))}
+              {Array.from({ length: 15 }, (_, idx) => {
+                const e = ensaio.ensaios_pendulo?.[idx];
+                return (
+                  <tr key={idx}>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.temp_pavimento || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_1 || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_2 || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_3 || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_4 || ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_5 || ''}</td>
+                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.maxima ? e.maxima.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.minima ? e.minima.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? e.vrd.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.classe || ''}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
