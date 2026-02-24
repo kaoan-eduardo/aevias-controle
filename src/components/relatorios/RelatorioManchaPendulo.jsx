@@ -33,8 +33,10 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
           ENSAIO DE MACROTEXTURA E MICROTEXTURA
         </h1>
       </div>
-      <div className="flex justify-end text-xs text-gray-600">
-        {formatDate(ensaio.data_ensaio)}
+      <div className="flex justify-end">
+        <div className="text-xs text-gray-600 border border-slate-300 rounded px-2 py-0.5">
+          {formatDate(ensaio.data_ensaio)}
+        </div>
       </div>
     </header>
   );
@@ -119,7 +121,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_mancha?.[idx];
                 return (
-                  <tr key={idx}>
+                  <tr key={idx} style={{ height: '24px' }}>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
@@ -170,7 +172,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 return (
-                  <tr key={idx}>
+                  <tr key={idx} style={{ height: '24px' }}>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
@@ -202,11 +204,29 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               <p className="font-bold text-gray-700">MANCHA DE AREIA:</p>
               <p className="text-gray-600 text-[9px] mt-1">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_mancha || '0,6mm ≤ HS ≤ 1,2mm'}</p>
+              {ensaio.ensaios_mancha && ensaio.ensaios_mancha.length > 0 && (() => {
+                const validHs = ensaio.ensaios_mancha.filter(e => e.hs_mm != null).map(e => e.hs_mm);
+                const mediaHs = validHs.length > 0 ? (validHs.reduce((sum, val) => sum + val, 0) / validHs.length).toFixed(2) : null;
+                return mediaHs && (
+                  <p className="text-gray-900 mt-2">
+                    <span className="font-semibold">MÉDIA:</span> {mediaHs} mm
+                  </p>
+                );
+              })()}
             </div>
             <div>
               <p className="font-bold text-gray-700">PÊNDULO BRITÂNICO:</p>
               <p className="text-gray-600 text-[9px] mt-1">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_pendulo || 'VRD ≥ 47'}</p>
+              {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.length > 0 && (() => {
+                const validVrd = ensaio.ensaios_pendulo.filter(e => e.vrd != null).map(e => e.vrd);
+                const mediaVrd = validVrd.length > 0 ? (validVrd.reduce((sum, val) => sum + val, 0) / validVrd.length).toFixed(1) : null;
+                return mediaVrd && (
+                  <p className="text-gray-900 mt-2">
+                    <span className="font-semibold">MÉDIA:</span> {mediaVrd}
+                  </p>
+                );
+              })()}
             </div>
           </div>
           <div className="border-t px-2 py-2" style={{ borderColor: 'rgb(148, 163, 184)' }}>
