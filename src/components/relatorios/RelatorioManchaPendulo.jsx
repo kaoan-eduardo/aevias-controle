@@ -134,7 +134,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_mancha?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '23px' }}>
+                  <tr key={idx} style={{ height: '21px' }}>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
@@ -185,7 +185,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '23px' }}>
+                  <tr key={idx} style={{ height: '21px' }}>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
