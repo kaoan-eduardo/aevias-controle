@@ -34,7 +34,6 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
-import { entityMap, loadAllEnsaios } from "@/components/ensaios/entityConfig";
 
 const getStatusInfo = (ensaio) => {
   if (ensaio.client_signature?.signed_by) {
@@ -1139,7 +1138,24 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const handleAssinar = useCallback(async () => {
     try {
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const Entity = entityMap[ensaio.entityType];
+        const entityMap = {
+            "DiarioObra": DiarioObra,
+            "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+            "EnsaioDensidade": EnsaioDensidade,
+            "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+            "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+            "ChecklistUsina": ChecklistUsina,
+            "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
+            "ChecklistMRAF": ChecklistMRAF,
+            "ChecklistConcretagem": ChecklistConcretagem,
+            "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+            "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
+            "EnsaioSondagem": base44.entities.EnsaioSondagem,
+            "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+            "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
+              };
+
+            const Entity = entityMap[ensaio.entityType];
 
         const signatureData = {
           client_signature: {
@@ -1656,7 +1672,25 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const handleAssinar = useCallback(async (ensaio) => {
     try {
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const Entity = entityMap[ensaio.entityType];
+        const entityMap = {
+          "DiarioObra": DiarioObra,
+          "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+          "EnsaioMRAF": base44.entities.EnsaioMRAF,
+          "EnsaioDensidade": EnsaioDensidade,
+          "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+          "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+          "ChecklistUsina": ChecklistUsina,
+          "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
+          "ChecklistMRAF": ChecklistMRAF,
+          "ChecklistConcretagem": ChecklistConcretagem,
+          "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+          "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
+          "EnsaioSondagem": base44.entities.EnsaioSondagem,
+          "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+          "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
+              };
+
+            const Entity = entityMap[ensaio.entityType];
 
         const signatureData = {
           client_signature: {
@@ -1994,13 +2028,80 @@ export default function MeusEnsaios() {
       const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
       // Carregar dados em paralelo
-      const [obrasData, regionaisData, projectsData] = await Promise.all([
-        Obra.list(),
-        Regional.list(),
-        Project.list()
-      ]);
+      const [
+        obrasData,
+        regionaisData,
+        projectsData,
+        diariosData,
+        ensaiosCAUQData,
+        ensaiosMRAFData,
+        densidadeData,
+        densidadeInSituData,
+        taxaPinturaData,
+        checklistsData,
+        checklistsAplicacaoData,
+        checklistsMRAFData,
+        checklistsConcretagemData,
+        checklistsTerraplanamemData,
+        checklistsReciclagemData,
+        sondagemData,
+        granulometriaIndividualData,
+        acompanhamentoUsinagemData,
+        acompanhamentoCargaData
+        ] = await Promise.all([
+          Obra.list(),
+          Regional.list(),
+          Project.list(),
+          DiarioObra.list("-created_date", 1000),
+          base44.entities.EnsaioCAUQ.list("-created_date", 1000),
+          base44.entities.EnsaioMRAF.list("-created_date", 1000),
+          EnsaioDensidade.list("-created_date", 1000),
+          base44.entities.EnsaioDensidadeInSitu.list("-created_date", 1000),
+          base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 1000),
+          ChecklistUsina.list("-created_date", 1000),
+          ChecklistAplicacao.list("-created_date", 1000),
+          ChecklistMRAF.list("-created_date", 1000),
+          ChecklistConcretagem.list("-created_date", 1000),
+          base44.entities.ChecklistTerraplanagem.list("-created_date", 1000),
+          base44.entities.ChecklistReciclagem.list("-created_date", 1000),
+          base44.entities.EnsaioSondagem.list("-created_date", 1000),
+          base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
+          base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
+          base44.entities.AcompanhamentoCarga.list("-created_date", 1000)
+        ]);
 
-      const combinedEnsaios = (await loadAllEnsaios()).sort((a, b) => {
+      setObras(obrasData);
+      setRegionais(regionaisData);
+      setProjects(projectsData);
+
+      console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
+
+      console.log("📊 [DEBUG] ChecklistConcretagem carregados:", checklistsConcretagemData.length);
+      checklistsConcretagemData.forEach(cc => {
+        console.log("  - ChecklistConcretagem ID:", cc.id, "Status:", cc.status, "Approved:", cc.approved, "Data:", cc.data);
+      });
+      console.log("📊 [DEBUG] Obras carregadas:", obrasData.length);
+      obrasData.forEach(o => console.log("  - Obra:", o.id, o.name, "Regional:", o.regional_id));
+      console.log("📊 [DEBUG] Current user:", currentUser.email, "Access:", currentUserAccessLevel);
+
+      const combinedEnsaios = [
+        ...diariosData.map((d) => ({ ...d, entityType: "DiarioObra" })),
+        ...ensaiosCAUQData.map((d) => ({ ...d, entityType: "EnsaioCAUQ" })),
+        ...ensaiosMRAFData.map((d) => ({ ...d, entityType: "EnsaioMRAF" })),
+        ...densidadeData.map((d) => ({ ...d, entityType: "EnsaioDensidade" })),
+        ...densidadeInSituData.map((d) => ({ ...d, entityType: "EnsaioDensidadeInSitu" })),
+        ...taxaPinturaData.map((d) => ({ ...d, entityType: "EnsaioTaxaPinturaImprimacao" })),
+        ...checklistsData.map((d) => ({ ...d, entityType: "ChecklistUsina" })),
+        ...checklistsAplicacaoData.map((d) => ({ ...d, entityType: "ChecklistAplicacao" })),
+        ...checklistsMRAFData.map((d) => ({ ...d, entityType: "ChecklistMRAF" })),
+        ...checklistsConcretagemData.map((d) => ({ ...d, entityType: "ChecklistConcretagem" })),
+        ...checklistsTerraplanamemData.map((d) => ({ ...d, entityType: "ChecklistTerraplanagem" })),
+        ...checklistsReciclagemData.map((d) => ({ ...d, entityType: "ChecklistReciclagem" })),
+        ...sondagemData.map((d) => ({ ...d, entityType: "EnsaioSondagem" })),
+        ...granulometriaIndividualData.map((d) => ({ ...d, entityType: "EnsaioGranulometriaIndividual" })),
+        ...acompanhamentoUsinagemData.map((d) => ({ ...d, entityType: "AcompanhamentoUsinagem" })),
+        ...acompanhamentoCargaData.map((d) => ({ ...d, entityType: "AcompanhamentoCarga" }))
+      ].sort((a, b) => {
         const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
         
         // Ordenar por data do ensaio (decrescente - mais recente primeiro)
@@ -2104,6 +2205,24 @@ export default function MeusEnsaios() {
   }, [loadData]);
 
   const handleApprove = useCallback(async (ensaio, approverDetails) => {
+    const entityMap = {
+      DiarioObra,
+      EnsaioCAUQ: base44.entities.EnsaioCAUQ,
+      EnsaioDensidade,
+      EnsaioDensidadeInSitu: base44.entities.EnsaioDensidadeInSitu,
+      EnsaioTaxaPinturaImprimacao: base44.entities.EnsaioTaxaPinturaImprimacao,
+      ChecklistUsina,
+      ChecklistAplicacao: base44.entities.ChecklistAplicacao,
+      ChecklistMRAF,
+      ChecklistConcretagem,
+      ChecklistTerraplanagem: base44.entities.ChecklistTerraplanagem,
+      ChecklistReciclagem: base44.entities.ChecklistReciclagem,
+      EnsaioSondagem: base44.entities.EnsaioSondagem,
+      EnsaioGranulometriaIndividual: base44.entities.EnsaioGranulometriaIndividual,
+      AcompanhamentoUsinagem: base44.entities.AcompanhamentoUsinagem,
+      AcompanhamentoCarga: base44.entities.AcompanhamentoCarga
+      };
+
     const Entity = entityMap[ensaio.entityType];
 
     try {
@@ -2142,6 +2261,25 @@ export default function MeusEnsaios() {
       return;
     }
     try {
+       const entityMap = {
+         "DiarioObra": DiarioObra,
+         "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+         "EnsaioMRAF": base44.entities.EnsaioMRAF,
+         "EnsaioDensidade": EnsaioDensidade,
+         "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+         "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+         "ChecklistUsina": ChecklistUsina,
+         "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
+         "ChecklistMRAF": ChecklistMRAF,
+         "ChecklistConcretagem": ChecklistConcretagem,
+         "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+         "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
+         "EnsaioSondagem": base44.entities.EnsaioSondagem,
+         "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
+         "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
+         "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
+       };
+
        const Entity = entityMap[ensaio.entityType];
        await Entity.update(ensaio.id, {
          approved: false,
@@ -2164,6 +2302,24 @@ export default function MeusEnsaios() {
       return;
     }
     try {
+      const entityMap = {
+        "DiarioObra": DiarioObra,
+        "EnsaioCAUQ": base44.entities.EnsaioCAUQ,
+        "EnsaioMRAF": base44.entities.EnsaioMRAF,
+        "EnsaioDensidade": EnsaioDensidade,
+        "EnsaioDensidadeInSitu": base44.entities.EnsaioDensidadeInSitu,
+        "EnsaioTaxaPinturaImprimacao": base44.entities.EnsaioTaxaPinturaImprimacao,
+        "ChecklistUsina": ChecklistUsina,
+        "ChecklistAplicacao": base44.entities.ChecklistAplicacao,
+        "ChecklistMRAF": ChecklistMRAF,
+        "ChecklistConcretagem": ChecklistConcretagem,
+        "ChecklistTerraplanagem": base44.entities.ChecklistTerraplanagem,
+        "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
+        "EnsaioSondagem": base44.entities.EnsaioSondagem,
+        "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
+        "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga
+      };
+
       const Entity = entityMap[ensaio.entityType];
       await Entity.delete(ensaio.id);
 

@@ -36,8 +36,6 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Acompanhamento de Usinagem", icon: FlaskConical };
     case "AcompanhamentoCarga":
       return { name: "Acompanhamento de Cargas", icon: FlaskConical };
-    case "EnsaioManchaPendulo":
-      return { name: "Mancha + Pêndulo", icon: Gauge };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }
@@ -78,8 +76,6 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioAcompanhamentoUsinagem?id=${ensaio.id}`);
     case "AcompanhamentoCarga":
       return createPageUrl(`RelatorioAcompanhamentoCarga?id=${ensaio.id}`);
-    case "EnsaioManchaPendulo":
-      return createPageUrl(`EnsaioManchaPendulo?id=${ensaio.id}`);
     default:
       return "#";
   }
@@ -110,9 +106,6 @@ export const getDataFormatted = (ensaio) => {
       break;
     case "AcompanhamentoCarga":
       dateField = ensaio.data;
-      break;
-    case "EnsaioManchaPendulo":
-      dateField = ensaio.data_ensaio;
       break;
     case "ChecklistUsina":
       dateField = ensaio.data;
@@ -179,8 +172,6 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data;
     case "AcompanhamentoCarga":
       return ensaio.data;
-    case "EnsaioManchaPendulo":
-      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
@@ -202,8 +193,7 @@ export const getEntityMap = () => ({
   "EnsaioSondagem": "EnsaioSondagem",
   "EnsaioGranulometriaIndividual": "EnsaioGranulometriaIndividual",
   "AcompanhamentoUsinagem": "AcompanhamentoUsinagem",
-  "AcompanhamentoCarga": "AcompanhamentoCarga",
-  "EnsaioManchaPendulo": "EnsaioManchaPendulo"
+  "AcompanhamentoCarga": "AcompanhamentoCarga"
 });
 
 export const typeOptions = [
@@ -224,5 +214,4 @@ export const typeOptions = [
   { value: 'EnsaioGranulometriaIndividual', label: 'Granulometria Individual' },
   { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
   { value: 'AcompanhamentoCarga', label: 'Acompanhamento de Cargas' },
-  { value: 'EnsaioManchaPendulo', label: 'Mancha + Pêndulo' },
 ];
