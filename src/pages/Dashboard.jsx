@@ -768,7 +768,7 @@ export default function Dashboard() {
             <StatCard title="Obras Ativas" value={stats.obras} icon={Building2} />
             <StatCard title="Projetos" value={stats.projects} icon={FolderOpen} />
             <StatCard title="Total de Registros" value={stats.ensaios} icon={FlaskConical} />
-            <StatCard title="Aprovados" value={stats.approved} icon={CheckCircle} note={`${approvalPercentage}% de aprovação`} />
+            <StatCard title="Aprovados" value={stats.approved} icon={CheckCircle2} note={`${approvalPercentage}% de aprovação`} />
             <StatCard title="Pendentes" value={stats.pending} icon={Clock} />
           </div>
         )}
