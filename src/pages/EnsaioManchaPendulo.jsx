@@ -90,12 +90,17 @@ export default function EnsaioManchaPendulo() {
       setFormData(prev => ({
         ...prev,
         obra_id: obraId,
-        rodovia: obra.rodovias?.[0] || '',
+        rodovia: '',
         trecho: '',
         pista: ''
       }));
     }
   };
+
+  const obrasConservacao = obras.filter(o => o.tipo_obra === 'conservacao');
+  
+  const obraSelecionada = obras.find(o => o.id === formData.obra_id);
+  const rodoviasDaObra = obraSelecionada?.rodovias || [];
 
   const calcularManchaValores = (ensaio) => {
     const { d1, d2, d3, d4, volume_areia = 25000 } = ensaio;
@@ -227,7 +232,7 @@ export default function EnsaioManchaPendulo() {
                   <SelectValue placeholder="Selecione a obra" />
                 </SelectTrigger>
                 <SelectContent>
-                  {obras.map(obra => (
+                  {obrasConservacao.map(obra => (
                     <SelectItem key={obra.id} value={obra.id}>{obra.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -236,7 +241,16 @@ export default function EnsaioManchaPendulo() {
 
             <div>
               <Label>Rodovia</Label>
-              <Input value={formData.rodovia} onChange={(e) => handleInputChange('rodovia', e.target.value)} />
+              <Select value={formData.rodovia} onValueChange={(value) => handleInputChange('rodovia', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a rodovia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {rodoviasDaObra.map((rodovia, idx) => (
+                    <SelectItem key={idx} value={rodovia}>{rodovia}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
