@@ -63,10 +63,12 @@ import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
 import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual';
 import EnsaioMRAF from './pages/EnsaioMRAF';
+import EnsaioManchaPendulo from './pages/EnsaioManchaPendulo';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import Home from './pages/Home';
+import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import MonitorProdutividade from './pages/MonitorProdutividade';
 import NaoConformidades from './pages/NaoConformidades';
@@ -93,8 +95,7 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import MeusEnsaios from './pages/MeusEnsaios';
-import EnsaioManchaPendulo from './pages/EnsaioManchaPendulo';
+import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
 import __Layout from './Layout.jsx';
 
 
@@ -115,10 +116,12 @@ export const PAGES = {
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
     "EnsaioGranulometriaIndividual": EnsaioGranulometriaIndividual,
     "EnsaioMRAF": EnsaioMRAF,
+    "EnsaioManchaPendulo": EnsaioManchaPendulo,
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "FaixasGranulometricas": FaixasGranulometricas,
     "Home": Home,
+    "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "MonitorProdutividade": MonitorProdutividade,
     "NaoConformidades": NaoConformidades,
@@ -145,8 +148,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "MeusEnsaios": MeusEnsaios,
-    "EnsaioManchaPendulo": EnsaioManchaPendulo,
+    "RelatorioManchaPendulo": RelatorioManchaPendulo,
 }
 
 export const pagesConfig = {
