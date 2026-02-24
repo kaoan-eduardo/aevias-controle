@@ -111,10 +111,10 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
           </div>
           
-          <table className="w-full border-collapse text-[9px]">
+          <table className="w-full border-collapse text-[8px]">
             <thead>
               <tr>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>DATA<br/>APLICAÇÃO</th>
+                <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>DATA<br/>APLICAÇÃO</th>
                 <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
                 <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
                 <th className="border px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
@@ -134,7 +134,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_mancha?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '17px' }}>
+                  <tr key={idx} style={{ height: '15px' }}>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
                     <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
