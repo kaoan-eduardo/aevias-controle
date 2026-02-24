@@ -36,7 +36,7 @@ export default function EnsaioManchaPendulo() {
     trecho: '',
     camada: '',
     pista: '',
-    orgao: 'DNIT',
+    orgao: 'ECO-RODOVIAS',
     ensaios_mancha: [],
     ensaios_pendulo: [],
     limites_mancha: '0,6mm ≤ HS ≤ 1,2mm',
@@ -44,6 +44,34 @@ export default function EnsaioManchaPendulo() {
     condicao_conformidade: '',
     observacoes: '',
     status: 'rascunho'
+  };
+
+  const getLimitesOrgao = (orgao) => {
+    const limites = {
+      'DER/PR': { hs_min: 0.6, hs_max: 1.2, vrd_min: 50 },
+      'DNIT': { hs_min: 0.6, hs_max: 1.2, vrd_min: 55 },
+      'ECO-RODOVIAS': { hs_min: 0.6, hs_max: 1.2, vrd_min: 47 }
+    };
+    return limites[orgao] || limites['ECO-RODOVIAS'];
+  };
+
+  const avaliarConformidade = (ensaios_mancha, ensaios_pendulo, orgao) => {
+    const limites = getLimitesOrgao(orgao);
+    
+    const manchaValidos = (ensaios_mancha || []).filter(e => e.hs_mm != null);
+    const penduloValidos = (ensaios_pendulo || []).filter(e => e.vrd != null);
+    
+    if (manchaValidos.length === 0 || penduloValidos.length === 0) {
+      return '';
+    }
+    
+    const mediaHS = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
+    const mediaVRD = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
+    
+    const manchaConforme = mediaHS >= limites.hs_min && mediaHS <= limites.hs_max;
+    const penduloConforme = mediaVRD >= limites.vrd_min;
+    
+    return (manchaConforme && penduloConforme) ? 'CONFORME' : 'NÃO CONFORME';
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -81,7 +109,22 @@ export default function EnsaioManchaPendulo() {
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'orgao') {
+      const limites = getLimitesOrgao(value);
+      const limites_mancha = '0,6mm ≤ HS ≤ 1,2mm';
+      const limites_pendulo = `VRD ≥ ${limites.vrd_min}`;
+      const novaConformidade = avaliarConformidade(formData.ensaios_mancha, formData.ensaios_pendulo, value);
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        [field]: value,
+        limites_mancha,
+        limites_pendulo,
+        condicao_conformidade: novaConformidade
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleObraChange = (obraId) => {
@@ -169,7 +212,13 @@ export default function EnsaioManchaPendulo() {
     }
     newEnsaios[index][field] = value;
     newEnsaios[index] = calcularManchaValores(newEnsaios[index]);
-    setFormData(prev => ({ ...prev, ensaios_mancha: newEnsaios }));
+    
+    const novaConformidade = avaliarConformidade(newEnsaios, formData.ensaios_pendulo, formData.orgao);
+    setFormData(prev => ({ 
+      ...prev, 
+      ensaios_mancha: newEnsaios,
+      condicao_conformidade: novaConformidade
+    }));
   };
 
   const handlePenduloChange = (index, field, value) => {
@@ -179,7 +228,13 @@ export default function EnsaioManchaPendulo() {
     }
     newEnsaios[index][field] = value;
     newEnsaios[index] = calcularPenduloValores(newEnsaios[index]);
-    setFormData(prev => ({ ...prev, ensaios_pendulo: newEnsaios }));
+    
+    const novaConformidade = avaliarConformidade(formData.ensaios_mancha, newEnsaios, formData.orgao);
+    setFormData(prev => ({ 
+      ...prev, 
+      ensaios_pendulo: newEnsaios,
+      condicao_conformidade: novaConformidade
+    }));
   };
 
   const handleSave = async (finalizar = false) => {
@@ -269,14 +324,15 @@ export default function EnsaioManchaPendulo() {
             </div>
 
             <div>
-              <Label>Órgão</Label>
+              <Label>Orgao</Label>
               <Select value={formData.orgao} onValueChange={(value) => handleInputChange('orgao', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="DER/PR">DER/PR</SelectItem>
                   <SelectItem value="DNIT">DNIT</SelectItem>
-                  <SelectItem value="Ecovias">Ecovias</SelectItem>
+                  <SelectItem value="ECO-RODOVIAS">ECO-RODOVIAS</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -469,15 +525,12 @@ export default function EnsaioManchaPendulo() {
 
           <div>
             <Label>Condição de Conformidade</Label>
-            <Select value={formData.condicao_conformidade} onValueChange={(value) => handleInputChange('condicao_conformidade', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CONFORME">CONFORME</SelectItem>
-                <SelectItem value="NÃO CONFORME">NÃO CONFORME</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="p-3 bg-slate-50 rounded border">
+              <p className={`text-lg font-bold ${formData.condicao_conformidade === 'CONFORME' ? 'text-green-700' : formData.condicao_conformidade === 'NÃO CONFORME' ? 'text-red-700' : 'text-slate-400'}`}>
+                {formData.condicao_conformidade || 'Aguardando dados dos ensaios'}
+              </p>
+              <p className="text-xs text-slate-500 mt-1">Avaliado automaticamente com base nos limites do órgão selecionado</p>
+            </div>
           </div>
 
           <div>
