@@ -17,13 +17,13 @@ const formatDateBrasilia = (dateString) => {
 const getClassificacaoVRD = (vrd) => {
   if (!vrd && vrd !== 0) return '';
   const valor = parseFloat(vrd);
-  if (valor < 25) return 'PERIGOSA';
-  if (valor >= 25 && valor <= 31) return 'MUITO LISA';
-  if (valor >= 32 && valor <= 39) return 'LISA';
-  if (valor >= 40 && valor <= 46) return 'INSUF. RUGOSA';
-  if (valor >= 47 && valor <= 54) return 'MEDIAN. RUGOSA';
-  if (valor >= 55 && valor <= 75) return 'RUGOSA';
-  if (valor > 75) return 'MUITO RUGOSA';
+  if (valor < 25) return 'Perigosa';
+  if (valor >= 25 && valor <= 31) return 'Muito Lisa';
+  if (valor >= 32 && valor <= 39) return 'Lisa';
+  if (valor >= 40 && valor <= 46) return 'Insuf. Rugosa';
+  if (valor >= 47 && valor <= 54) return 'Median. Rugosa';
+  if (valor >= 55 && valor <= 75) return 'Rugosa';
+  if (valor > 75) return 'Muito Rugosa';
   return '';
 };
 
