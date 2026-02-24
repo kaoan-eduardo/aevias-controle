@@ -61,8 +61,7 @@ export default function EnsaioManchaPendulo() {
       ]);
 
       setUser(userData);
-      const obrasConservacao = obrasData.filter(o => o.tipo_obra === 'conservacao');
-      setObras(obrasConservacao);
+      setObras(obrasData);
       setRegionais(regionaisData);
 
       if (isEditMode) {
