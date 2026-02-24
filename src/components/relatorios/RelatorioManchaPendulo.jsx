@@ -85,7 +85,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
 
   return (
     <div className="bg-white font-sans">
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-6 print:p-6 print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-3 print:p-3 print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
         <ReportHeader />
         <DadosCliente />
 
