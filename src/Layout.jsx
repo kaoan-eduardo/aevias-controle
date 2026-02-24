@@ -124,6 +124,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Granulometria + Equiv. Areia", url: createPageUrl("EnsaioGranAreia"), icon: FlaskConical },
         { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
+        { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
       ]
