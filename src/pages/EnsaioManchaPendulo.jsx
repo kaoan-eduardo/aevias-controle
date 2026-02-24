@@ -141,7 +141,8 @@ export default function EnsaioManchaPendulo() {
 
     const maxima = Math.max(...leituras);
     const minima = Math.min(...leituras);
-    const vrd = leituras.reduce((sum, l) => sum + l, 0) / leituras.length;
+    const soma = leituras.reduce((sum, l) => sum + l, 0);
+    const vrd = (soma - maxima - minima) / 3;
 
     let classe = '';
     if (vrd >= 47) classe = 'I';
@@ -149,8 +150,8 @@ export default function EnsaioManchaPendulo() {
 
     return {
       ...ensaio,
-      maxima,
-      minima,
+      maxima: parseFloat(maxima.toFixed(3)),
+      minima: parseFloat(minima.toFixed(3)),
       vrd: parseFloat(vrd.toFixed(1)),
       classe
     };
