@@ -33,7 +33,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   }
 
   const ReportHeader = () => (
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-1">
       <div className="flex justify-start">
         <img 
           src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
@@ -55,11 +55,11 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   );
 
   const DadosCliente = () => (
-    <div className="mb-2">
+    <div className="mb-1">
       <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">
         DADOS DO CLIENTE
       </div>
-      <div className="grid grid-cols-3 gap-x-4 gap-y-0 mb-0 text-[10px]">
+      <div className="grid grid-cols-3 gap-x-4 gap-y-0 mb-0 text-[10px] leading-tight">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
