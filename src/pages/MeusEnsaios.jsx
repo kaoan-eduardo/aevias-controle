@@ -1835,7 +1835,6 @@ export default function MeusEnsaios() {
         console.log("📊 [DEBUG] Gestor - IDs das regionais:", regionaisIds);
         const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
         console.log("📊 [DEBUG] Gestor - Obras permitidas (IDs):", obrasPermitidasIds);
-        console.log("📊 [DEBUG] Gestor - ChecklistAplicacao obra_ids:", checklistsAplicacaoData.map(c => ({id: c.id, obra_id: c.obra_id})));
         ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
         console.log("📊 [DEBUG] Gestor Contrato - Ensaios filtrados:", ensaiosForUser.length);
         console.log("📊 [DEBUG] Gestor - ChecklistAplicacao na lista:", ensaiosForUser.filter(e => e.entityType === 'ChecklistAplicacao'));
