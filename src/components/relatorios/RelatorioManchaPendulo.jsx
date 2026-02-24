@@ -134,21 +134,21 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_mancha?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '24px' }}>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? '25000' : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d1 ? e.d1.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d2 ? e.d2.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d3 ? e.d3.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d4 ? e.d4.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d_media ? e.d_media.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.area ? e.area.toFixed(2) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_cm ? e.hs_cm.toFixed(2) : ''}</td>
-                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_mm ? e.hs_mm.toFixed(2) : ''}</td>
-                    <td className="border px-1 py-1 text-center text-[7px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.tipo_superficie || ''}</td>
+                  <tr key={idx} style={{ height: '23px' }}>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? '25000' : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d1 ? e.d1.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d2 ? e.d2.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d3 ? e.d3.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d4 ? e.d4.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.d_media ? e.d_media.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.area ? e.area.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_cm ? e.hs_cm.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.hs_mm ? e.hs_mm.toFixed(2) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center text-[7px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.tipo_superficie || ''}</td>
                   </tr>
                 );
               })}
@@ -169,7 +169,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>ESTACA</th>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>FAIXA /<br/>PISTA</th>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>BORDO</th>
-                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
+                <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>1º</th>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>2º</th>
                 <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>3º</th>
@@ -185,21 +185,21 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 return (
-                  <tr key={idx} style={{ height: '24px' }}>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.temp_pavimento || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_1 || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_2 || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_3 || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_4 || ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_5 || ''}</td>
-                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.maxima ? e.maxima.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.minima ? e.minima.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? e.vrd.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? getClassificacaoVRD(e.vrd) : ''}</td>
+                  <tr key={idx} style={{ height: '23px' }}>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.estaca || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.faixa_pista || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.bordo || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px' }}>{e?.temp_pavimento || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_1 || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_2 || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_3 || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_4 || ''}</td>
+                    <td className="border px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.leitura_5 || ''}</td>
+                    <td className="border px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.maxima ? e.maxima.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.minima ? e.minima.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? e.vrd.toFixed(1) : ''}</td>
+                    <td className="border px-1 py-0.5 text-center text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? getClassificacaoVRD(e.vrd) : ''}</td>
                   </tr>
                 );
               })}
