@@ -14,6 +14,19 @@ const formatDateBrasilia = (dateString) => {
   return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
 };
 
+const getClassificacaoVRD = (vrd) => {
+  if (!vrd && vrd !== 0) return '';
+  const valor = parseFloat(vrd);
+  if (valor < 25) return 'PERIGOSA';
+  if (valor >= 25 && valor <= 31) return 'MUITO LISA';
+  if (valor >= 32 && valor <= 39) return 'LISA';
+  if (valor >= 40 && valor <= 46) return 'INSUF. RUGOSA';
+  if (valor >= 47 && valor <= 54) return 'MEDIAN. RUGOSA';
+  if (valor >= 55 && valor <= 75) return 'RUGOSA';
+  if (valor > 75) return 'MUITO RUGOSA';
+  return '';
+};
+
 export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   if (!ensaio) {
     return <div className="p-8 text-center">Carregando dados do ensaio...</div>;
@@ -186,7 +199,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                     <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.maxima ? e.maxima.toFixed(1) : ''}</td>
                     <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.minima ? e.minima.toFixed(1) : ''}</td>
                     <td className="border px-1 py-1 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? e.vrd.toFixed(1) : ''}</td>
-                    <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.classe || ''}</td>
+                    <td className="border px-1 py-1 text-center text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e?.vrd ? getClassificacaoVRD(e.vrd) : ''}</td>
                   </tr>
                 );
               })}
