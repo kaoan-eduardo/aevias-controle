@@ -125,10 +125,19 @@ export default function EnsaioManchaPendulo() {
   };
 
   const calcularPenduloValores = (ensaio) => {
-    const { leitura_1, leitura_2, leitura_3, leitura_4, leitura_5 } = ensaio;
-    const leituras = [leitura_1, leitura_2, leitura_3, leitura_4, leitura_5].filter(l => l != null && l !== '');
+    const { leitura_1, leitura_2, leitura_3, leitura_4, leitura_5, temp_pavimento } = ensaio;
+    let leituras = [leitura_1, leitura_2, leitura_3, leitura_4, leitura_5].filter(l => l != null && l !== '');
 
     if (leituras.length === 0) return ensaio;
+
+    // Aplicar correção de temperatura se temp < 20°C
+    if (temp_pavimento != null && temp_pavimento < 20) {
+      const a = -0.005;
+      const b = 0.45;
+      const c = -7;
+      const correcao = (a * Math.pow(temp_pavimento, 2)) + (b * temp_pavimento) + c;
+      leituras = leituras.map(l => l + correcao);
+    }
 
     const maxima = Math.max(...leituras);
     const minima = Math.min(...leituras);
