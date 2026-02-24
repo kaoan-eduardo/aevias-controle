@@ -150,8 +150,8 @@ export default function EnsaioManchaPendulo() {
 
     return {
       ...ensaio,
-      maxima: parseFloat(maxima.toFixed(3)),
-      minima: parseFloat(minima.toFixed(3)),
+      maxima: parseFloat(maxima.toFixed(1)),
+      minima: parseFloat(minima.toFixed(1)),
       vrd: parseFloat(vrd.toFixed(1)),
       classe
     };
