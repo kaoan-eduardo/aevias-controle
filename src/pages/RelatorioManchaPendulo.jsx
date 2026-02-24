@@ -62,32 +62,20 @@ export default function RelatorioManchaPenduloPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="print:hidden sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-slate-800">Relatório - Mancha + Pêndulo</h2>
-        <Button onClick={handlePrint} className="bg-[#00233B] hover:bg-[#00233B]/90 text-white">
-          <FileText className="w-4 h-4 mr-2" />
-          Gerar PDF
-        </Button>
+    <div className="bg-white min-h-screen">
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-800">
+            Relatório de Macrotextura e Microtextura
+          </h2>
+          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+            <FileText className="w-4 h-4 mr-2" />
+            Gerar PDF
+          </Button>
+        </div>
       </div>
 
       <RelatorioManchaPenduloComponent ensaio={ensaio} obra={obra} regional={regional} />
-
-      <style>{`
-        @media print {
-          @page {
-            size: A4;
-            margin: 10mm;
-          }
-          body {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-          }
-          .print\\:hidden {
-            display: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
