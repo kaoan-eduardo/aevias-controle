@@ -749,7 +749,7 @@ export default function Dashboard() {
             <StatCard 
               title="Registros Assinados" 
               value={stats.assinados} 
-              icon={CheckCircle}
+              icon={CheckCircle2}
               note={isEngenheiro ? `${approvalPercentage}% assinados` : undefined}
             />
             {isEngenheiro && (
