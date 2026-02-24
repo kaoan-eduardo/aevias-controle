@@ -1,31 +1,5 @@
 import React from 'react';
 
-const SectionTitle = ({ children }) => (
-  <div className="bg-slate-100 px-4 py-2 font-bold text-sm text-slate-700 border-b-2 border-slate-300 uppercase text-center">
-    {children}
-  </div>
-);
-
-const ReportPrintHeader = ({ regional, reportTitle, date }) => (
-  <>
-    <div className="flex justify-between items-start mb-6 print:mb-4">
-      <div className="flex-1 text-center">
-        {regional?.logo_url && (
-          <img
-            src={regional.logo_url}
-            alt="Logo Regional"
-            className="h-16 mx-auto mb-2 print:h-12"
-          />
-        )}
-      </div>
-    </div>
-    <div className="text-center mb-6 print:mb-4">
-      <h1 className="text-xl font-bold text-slate-800 mb-1 print:text-lg">{reportTitle}</h1>
-      <p className="text-sm text-slate-600 print:text-xs">Data: {date}</p>
-    </div>
-  </>
-);
-
 export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   if (!ensaio) {
     return <div className="p-8 text-center">Carregando dados do ensaio...</div>;
@@ -37,254 +11,233 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   };
 
   return (
-    <div className="bg-white p-8 max-w-[210mm] mx-auto print:p-4 print:max-w-full">
-      <ReportPrintHeader
-        regional={regional}
-        reportTitle="CONTROLE TECNOLÓGICO DE PAVIMENTOS - MACROTEXTURA E MICROTEXTURA"
-        date={formatDate(ensaio.data_ensaio)}
-      />
-
-      {/* Dados do Cliente */}
-      <div className="mb-6 border border-slate-300">
-        <SectionTitle>DADOS DO CLIENTE</SectionTitle>
-        <div className="p-4 grid grid-cols-3 gap-4 text-sm">
-          <div>
-            <span className="font-semibold">Obra/Contrato:</span>
-            <p>{obra?.name || 'N/A'} - {obra?.code || 'N/A'}</p>
+    <div className="w-full min-h-screen bg-white">
+      {/* Header com Logo e Título */}
+      <div className="border-2 border-black">
+        <div className="flex items-center justify-between p-3 border-b-2 border-black">
+          <div className="w-32">
+            {regional?.logo_url && (
+              <img src={regional.logo_url} alt="Logo" className="w-full h-auto" />
+            )}
           </div>
-          <div>
-            <span className="font-semibold">Cliente:</span>
-            <p>{regional?.cliente || 'N/A'}</p>
+          <div className="flex-1 text-center px-4">
+            <h1 className="text-sm font-bold uppercase">ENSAIO DE MACROTEXTURA E MICROTEXTURA</h1>
           </div>
-          <div>
-            <span className="font-semibold">Data do Ensaio:</span>
-            <p>{formatDate(ensaio.data_ensaio)}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Rodovia:</span>
-            <p>{ensaio.rodovia || 'N/A'}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Trecho:</span>
-            <p>{ensaio.trecho || 'N/A'}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Camada:</span>
-            <p>{ensaio.camada || 'N/A'}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Pista:</span>
-            <p>{ensaio.pista || 'N/A'}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Órgão:</span>
-            <p>{ensaio.orgao || 'N/A'}</p>
-          </div>
-          <div>
-            <span className="font-semibold">Laboratorista:</span>
-            <p>{ensaio.laboratorista_name || 'N/A'}</p>
+          <div className="w-24 text-right text-xs">
+            {formatDate(ensaio.data_ensaio)}
           </div>
         </div>
-      </div>
 
-      {/* Ensaio Mancha de Areia */}
-      {ensaio.ensaios_mancha && ensaio.ensaios_mancha.length > 0 && (
-        <div className="mb-6 border border-slate-300">
-          <SectionTitle>MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016</SectionTitle>
-          <div className="p-4">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-xs">
-                <thead className="bg-slate-100">
-                  <tr>
-                    <th className="border border-slate-300 p-2">#</th>
-                    <th className="border border-slate-300 p-2">Data Aplicação</th>
-                    <th className="border border-slate-300 p-2">Estaca</th>
-                    <th className="border border-slate-300 p-2">Faixa/Pista</th>
-                    <th className="border border-slate-300 p-2">Bordo</th>
-                    <th className="border border-slate-300 p-2">D1 (Ø) mm</th>
-                    <th className="border border-slate-300 p-2">D2 (Ø) mm</th>
-                    <th className="border border-slate-300 p-2">D3 (Ø) mm</th>
-                    <th className="border border-slate-300 p-2">D4 (Ø) mm</th>
-                    <th className="border border-slate-300 p-2">D(Ø) Média mm</th>
-                    <th className="border border-slate-300 p-2">Área cm²</th>
-                    <th className="border border-slate-300 p-2">HS cm</th>
-                    <th className="border border-slate-300 p-2">HS mm</th>
-                    <th className="border border-slate-300 p-2">Tipo Superfície</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ensaio.ensaios_mancha.map((e, idx) => (
-                    <tr key={idx}>
-                      <td className="border border-slate-300 p-2 text-center">{e.numero || idx + 1}</td>
-                      <td className="border border-slate-300 p-2">{formatDate(e.data_aplicacao)}</td>
-                      <td className="border border-slate-300 p-2">{e.estaca || ''}</td>
-                      <td className="border border-slate-300 p-2">{e.faixa_pista || ''}</td>
-                      <td className="border border-slate-300 p-2">{e.bordo || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.d1?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.d2?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.d3?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.d4?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.d_media?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.area?.toFixed(2) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.hs_cm?.toFixed(2) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.hs_mm?.toFixed(2) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50">{e.tipo_superficie || ''}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* Dados do Cliente */}
+        <div className="border-b-2 border-black">
+          <div className="bg-gray-100 px-3 py-1 text-xs font-bold uppercase border-b border-black">
+            DADOS DO CLIENTE
+          </div>
+          <div className="grid grid-cols-3 text-[10px]">
+            <div className="border-r border-black p-2">
+              <span className="font-semibold">CLIENTE:</span> {regional?.cliente || 'N/A'}
+            </div>
+            <div className="border-r border-black p-2">
+              <span className="font-semibold">RODOVIA:</span> {ensaio.rodovia || 'N/A'}
+            </div>
+            <div className="p-2">
+              <span className="font-semibold">PISTA:</span> {ensaio.pista || 'N/A'}
+            </div>
+          </div>
+          <div className="grid grid-cols-3 text-[10px] border-t border-black">
+            <div className="border-r border-black p-2">
+              <span className="font-semibold">OBRA:</span> {obra?.name || 'N/A'}
+            </div>
+            <div className="border-r border-black p-2">
+              <span className="font-semibold">TRECHO:</span> {ensaio.trecho || 'N/A'}
+            </div>
+            <div className="p-2">
+              <span className="font-semibold">LABORATORISTA:</span> {ensaio.laboratorista_name || 'N/A'}
+            </div>
+          </div>
+          <div className="grid grid-cols-3 text-[10px] border-t border-black">
+            <div className="border-r border-black p-2">
+              <span className="font-semibold">ÓRGÃO:</span> {ensaio.orgao || 'N/A'}
+            </div>
+            <div className="col-span-2 p-2">
+              <span className="font-semibold">CAMADA:</span> {ensaio.camada || 'N/A'}
             </div>
           </div>
         </div>
-      )}
 
-      {/* Ensaio Pêndulo Britânico */}
-      {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.length > 0 && (
-        <div className="mb-6 border border-slate-300">
-          <SectionTitle>PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019</SectionTitle>
-          <div className="p-4">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-xs">
-                <thead className="bg-slate-100">
-                  <tr>
-                    <th className="border border-slate-300 p-2">#</th>
-                    <th className="border border-slate-300 p-2">Data Aplicação</th>
-                    <th className="border border-slate-300 p-2">Estaca</th>
-                    <th className="border border-slate-300 p-2">Faixa/Pista</th>
-                    <th className="border border-slate-300 p-2">Bordo</th>
-                    <th className="border border-slate-300 p-2">Temp. Pavimento (°C)</th>
-                    <th className="border border-slate-300 p-2">1º</th>
-                    <th className="border border-slate-300 p-2">2º</th>
-                    <th className="border border-slate-300 p-2">3º</th>
-                    <th className="border border-slate-300 p-2">4º</th>
-                    <th className="border border-slate-300 p-2">5º</th>
-                    <th className="border border-slate-300 p-2">Máxima</th>
-                    <th className="border border-slate-300 p-2">Mínima</th>
-                    <th className="border border-slate-300 p-2">VRD</th>
-                    <th className="border border-slate-300 p-2">Classe</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ensaio.ensaios_pendulo.map((e, idx) => (
-                    <tr key={idx}>
-                      <td className="border border-slate-300 p-2 text-center">{e.numero || idx + 1}</td>
-                      <td className="border border-slate-300 p-2">{formatDate(e.data_aplicacao)}</td>
-                      <td className="border border-slate-300 p-2">{e.estaca || ''}</td>
-                      <td className="border border-slate-300 p-2">{e.faixa_pista || ''}</td>
-                      <td className="border border-slate-300 p-2">{e.bordo || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.temp_pavimento || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.leitura_1 || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.leitura_2 || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.leitura_3 || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.leitura_4 || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center">{e.leitura_5 || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.maxima?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.minima?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.vrd?.toFixed(1) || ''}</td>
-                      <td className="border border-slate-300 p-2 text-center bg-slate-50 font-semibold">{e.classe || ''}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Dados do Ensaio - Mancha de Areia */}
+        <div className="border-b-2 border-black">
+          <div className="bg-gray-100 px-3 py-1 text-xs font-bold uppercase border-b border-black">
+            DADOS DO ENSAIO
           </div>
+          <div className="bg-gray-100 px-3 py-1 text-[10px] font-bold border-b border-black">
+            MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
+          </div>
+          
+          <table className="w-full text-[8px] border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="border border-black p-1 font-semibold">DATA<br/>APLICAÇÃO</th>
+                <th className="border border-black p-1 font-semibold">ESTACA</th>
+                <th className="border border-black p-1 font-semibold">FAIXA /<br/>PISTA</th>
+                <th className="border border-black p-1 font-semibold">BORDO</th>
+                <th className="border border-black p-1 font-semibold">VOLUME<br/>DE AREIA<br/>(mm³)</th>
+                <th className="border border-black p-1 font-semibold">D1 (Ø)<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">D2 (Ø)<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">D3 (Ø)<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">D4 (Ø)<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">D(Ø) MÉDIA<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">ÁREA<br/>(cm²)</th>
+                <th className="border border-black p-1 font-semibold">HS<br/>(cm)</th>
+                <th className="border border-black p-1 font-semibold">HS<br/>(mm)</th>
+                <th className="border border-black p-1 font-semibold">TIPO DE<br/>SUPERFÍCIE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ensaio.ensaios_mancha && ensaio.ensaios_mancha.map((e, idx) => (
+                <tr key={idx}>
+                  <td className="border border-black p-1 text-center">{formatDate(e.data_aplicacao)}</td>
+                  <td className="border border-black p-1 text-center">{e.estaca}</td>
+                  <td className="border border-black p-1 text-center">{e.faixa_pista}</td>
+                  <td className="border border-black p-1 text-center">{e.bordo}</td>
+                  <td className="border border-black p-1 text-center">25000</td>
+                  <td className="border border-black p-1 text-center">{e.d1?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center">{e.d2?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center">{e.d3?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center">{e.d4?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center font-semibold">{e.d_media?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center">{e.area?.toFixed(2)}</td>
+                  <td className="border border-black p-1 text-center">{e.hs_cm?.toFixed(2)}</td>
+                  <td className="border border-black p-1 text-center font-semibold">{e.hs_mm?.toFixed(2)}</td>
+                  <td className="border border-black p-1 text-center text-[7px]">{e.tipo_superficie}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      )}
 
-      {/* Resultados e Conformidade */}
-      <div className="mb-6 border border-slate-300">
-        <SectionTitle>RESULTADOS E CONFORMIDADE</SectionTitle>
-        <div className="p-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <span className="font-semibold text-sm">Limites Estabelecidos - Mancha de Areia:</span>
-              <p className="text-sm">{ensaio.limites_mancha || 'N/A'}</p>
+        {/* Pêndulo Britânico */}
+        <div className="border-b-2 border-black">
+          <div className="bg-gray-100 px-3 py-1 text-[10px] font-bold border-b border-black">
+            PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019
+          </div>
+          
+          <table className="w-full text-[8px] border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="border border-black p-1 font-semibold">DATA<br/>APLICAÇÃO</th>
+                <th className="border border-black p-1 font-semibold">ESTACA</th>
+                <th className="border border-black p-1 font-semibold">FAIXA /<br/>PISTA</th>
+                <th className="border border-black p-1 font-semibold">BORDO</th>
+                <th className="border border-black p-1 font-semibold">TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
+                <th className="border border-black p-1 font-semibold">1º</th>
+                <th className="border border-black p-1 font-semibold">2º</th>
+                <th className="border border-black p-1 font-semibold">3º</th>
+                <th className="border border-black p-1 font-semibold">4º</th>
+                <th className="border border-black p-1 font-semibold">5º</th>
+                <th className="border border-black p-1 font-semibold">MÁXIMA</th>
+                <th className="border border-black p-1 font-semibold">MÍNIMA</th>
+                <th className="border border-black p-1 font-semibold">VRD</th>
+                <th className="border border-black p-1 font-semibold">CLASSE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.map((e, idx) => (
+                <tr key={idx}>
+                  <td className="border border-black p-1 text-center">{formatDate(e.data_aplicacao)}</td>
+                  <td className="border border-black p-1 text-center">{e.estaca}</td>
+                  <td className="border border-black p-1 text-center">{e.faixa_pista}</td>
+                  <td className="border border-black p-1 text-center">{e.bordo}</td>
+                  <td className="border border-black p-1 text-center">{e.temp_pavimento}</td>
+                  <td className="border border-black p-1 text-center">{e.leitura_1}</td>
+                  <td className="border border-black p-1 text-center">{e.leitura_2}</td>
+                  <td className="border border-black p-1 text-center">{e.leitura_3}</td>
+                  <td className="border border-black p-1 text-center">{e.leitura_4}</td>
+                  <td className="border border-black p-1 text-center">{e.leitura_5}</td>
+                  <td className="border border-black p-1 text-center font-semibold">{e.maxima?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center font-semibold">{e.minima?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center font-semibold">{e.vrd?.toFixed(1)}</td>
+                  <td className="border border-black p-1 text-center">{e.classe}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Resultados e Observações */}
+        <div className="border-b-2 border-black">
+          <div className="bg-gray-100 px-3 py-1 text-xs font-bold uppercase border-b border-black">
+            RESULTADOS
+          </div>
+          <div className="grid grid-cols-2 text-[10px]">
+            <div className="border-r border-black p-2">
+              <div className="mb-2">
+                <span className="font-semibold">MANCHA DE AREIA:</span>
+              </div>
+              <div className="border-t border-black pt-2">
+                <span className="font-semibold">LIMITES ESTABELECIDOS</span><br/>
+                {ensaio.limites_mancha || '0,6mm ≤ HS ≤ 1,2mm'}
+              </div>
             </div>
-            <div>
-              <span className="font-semibold text-sm">Limites Estabelecidos - Pêndulo Britânico:</span>
-              <p className="text-sm">{ensaio.limites_pendulo || 'N/A'}</p>
+            <div className="p-2">
+              <div className="mb-2">
+                <span className="font-semibold">PÊNDULO BRITÂNICO:</span>
+              </div>
+              <div className="border-t border-black pt-2">
+                <span className="font-semibold">LIMITES ESTABELECIDOS</span><br/>
+                {ensaio.limites_pendulo || 'VRD ≥ 47'}
+              </div>
             </div>
           </div>
-
-          <div>
-            <span className="font-semibold text-sm">Condição de Conformidade:</span>
-            <p className={`text-lg font-bold ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-600' : 'text-red-600'}`}>
+          <div className="border-t border-black p-2 text-[10px]">
+            <div className="text-center mb-1 font-semibold">CONDIÇÃO DE CONFORMIDADE</div>
+            <div className={`text-center font-bold text-sm ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-700' : 'text-red-700'}`}>
               {ensaio.condicao_conformidade || 'NÃO INFORMADO'}
-            </p>
-          </div>
-
-          {ensaio.observacoes && (
-            <div>
-              <span className="font-semibold text-sm">Observações:</span>
-              <p className="text-sm whitespace-pre-wrap">{ensaio.observacoes}</p>
             </div>
-          )}
+          </div>
+        </div>
+
+        {/* Observações */}
+        <div className="border-b-2 border-black">
+          <div className="bg-gray-100 px-3 py-1 text-xs font-bold uppercase border-b border-black">
+            OBSERVAÇÕES
+          </div>
+          <div className="p-2 text-[10px] min-h-[40px]">
+            <div className="mb-2 text-[9px] italic">
+              HS &lt; 0,2 mm: Muito Fina | 0,2 &lt; HS &lt; 0,4 mm: Fina | 0,4 &lt; HS &lt; 0,8 mm: Média | 
+              0,8 &lt; HS &lt; 1,2 mm: Grossa | HS &gt; 1,2 mm: Muito Grossa
+            </div>
+            {ensaio.observacoes && (
+              <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
+            )}
+          </div>
+        </div>
+
+        {/* Assinaturas */}
+        <div className="grid grid-cols-3 text-[10px]">
+          <div className="border-r border-black p-3 text-center">
+            <div className="h-12 border-b border-black mb-1"></div>
+            <div className="font-semibold">{ensaio.laboratorista_name || 'LABORATORISTA'}</div>
+            <div>LABORATORISTA RESPONSÁVEL</div>
+          </div>
+          <div className="border-r border-black p-3 text-center">
+            <div className="h-12 border-b border-black mb-1"></div>
+            <div className="font-semibold">{ensaio.approver_details?.name || 'ENGENHEIRO'}</div>
+            <div>ENGENHEIRO RESPONSÁVEL</div>
+            {ensaio.approver_details?.crea_number && (
+              <div className="text-[8px] mt-1">CREA: {ensaio.approver_details.crea_number}</div>
+            )}
+          </div>
+          <div className="p-3 text-center">
+            <div className="h-12 border-b border-black mb-1"></div>
+            <div className="font-semibold">{ensaio.client_signature?.engineer_name || 'ENGENHEIRO'}</div>
+            <div>ENGENHEIRO RESPONSÁVEL</div>
+            {ensaio.client_signature?.crea_number && (
+              <div className="text-[8px] mt-1">CREA: {ensaio.client_signature.crea_number}</div>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Assinaturas */}
-      <div className="mt-8 grid grid-cols-3 gap-8 print:mt-6">
-        <div className="text-center">
-          <div className="border-t-2 border-slate-800 pt-2">
-            <p className="font-semibold text-sm">{ensaio.laboratorista_name || 'Laboratorista'}</p>
-            <p className="text-xs text-slate-600">Laboratorista</p>
-          </div>
-        </div>
-
-        {ensaio.approver_details && (
-          <div className="text-center">
-            <div className="border-t-2 border-slate-800 pt-2">
-              <p className="font-semibold text-sm">{ensaio.approver_details.name}</p>
-              <p className="text-xs text-slate-600">{ensaio.approver_details.position || 'Engenheiro Responsável'}</p>
-              {ensaio.approver_details.crea_number && (
-                <p className="text-xs text-slate-600">CREA: {ensaio.approver_details.crea_number}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {ensaio.client_signature?.signed_by && (
-          <div className="text-center">
-            <div className="border-t-2 border-slate-800 pt-2">
-              <p className="font-semibold text-sm">{ensaio.client_signature.engineer_name}</p>
-              <p className="text-xs text-slate-600">Cliente/Fiscalização</p>
-              {ensaio.client_signature.crea_number && (
-                <p className="text-xs text-slate-600">CREA: {ensaio.client_signature.crea_number}</p>
-              )}
-              <p className="text-xs text-slate-500 mt-1">
-                Assinado em: {new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR')}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Status de Aprovação */}
-      {ensaio.approved !== null && (
-        <div className="mt-6 p-4 bg-slate-50 border border-slate-300 rounded">
-          <p className="text-sm">
-            <span className="font-semibold">Status:</span>{' '}
-            <span className={ensaio.approved ? 'text-green-600 font-bold' : 'text-red-600 font-bold'}>
-              {ensaio.approved ? 'APROVADO' : 'REPROVADO'}
-            </span>
-          </p>
-          {ensaio.approved_by && (
-            <p className="text-sm mt-1">
-              <span className="font-semibold">Por:</span> {ensaio.approved_by}
-            </p>
-          )}
-          {ensaio.approved_date && (
-            <p className="text-sm">
-              <span className="font-semibold">Em:</span> {new Date(ensaio.approved_date).toLocaleString('pt-BR')}
-            </p>
-          )}
-          {ensaio.rejection_reason && (
-            <p className="text-sm mt-2">
-              <span className="font-semibold">Motivo da Reprovação:</span> {ensaio.rejection_reason}
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
