@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import RelatorioManchaPenduloComponent from '@/components/relatorios/RelatorioManchaPendulo';
 
 export default function RelatorioManchaPenduloPage() {
@@ -47,16 +47,16 @@ export default function RelatorioManchaPenduloPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Carregando relatório...</p>
+      <div className="flex justify-center items-center h-screen bg-white">
+        <Loader2 className="w-8 h-8 animate-spin text-slate-500" />
       </div>
     );
   }
 
   if (!ensaio) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p>Ensaio não encontrado.</p>
+      <div className="flex justify-center items-center h-screen bg-white">
+        <p className="text-slate-700">Ensaio não encontrado.</p>
       </div>
     );
   }
@@ -69,7 +69,7 @@ export default function RelatorioManchaPenduloPage() {
             Relatório de Macrotextura e Microtextura
           </h2>
           <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <FileText className="w-4 h-4 mr-2" />
+            <Download className="w-4 h-4 mr-2" />
             Gerar PDF
           </Button>
         </div>

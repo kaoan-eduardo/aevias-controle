@@ -32,9 +32,9 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         <h1 className="text-sm font-bold text-gray-800 leading-tight">
           ENSAIO DE MACROTEXTURA E MICROTEXTURA
         </h1>
-        <p className="text-xs text-gray-500 mt-0.5">{formatDate(ensaio.data_ensaio)}</p>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end text-xs text-gray-600">
+        {formatDate(ensaio.data_ensaio)}
       </div>
     </header>
   );
@@ -215,11 +215,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         {ensaio.observacoes && (
           <div className="mb-3">
             <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px]">OBSERVAÇÕES</div>
-            <div className="border p-2 text-[10px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>
-              <div className="mb-2 text-[9px] italic text-gray-600">
-                HS &lt; 0,2 mm: Muito Fina | 0,2 &lt; HS &lt; 0,4 mm: Fina | 0,4 &lt; HS &lt; 0,8 mm: Média | 
-                0,8 &lt; HS &lt; 1,2 mm: Grossa | HS &gt; 1,2 mm: Muito Grossa
-              </div>
+            <div className="border p-2 text-[10px] min-h-[40px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>
               <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
             </div>
           </div>

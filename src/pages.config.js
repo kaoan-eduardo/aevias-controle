@@ -90,12 +90,12 @@ import RelatorioDensidadeInSitu from './pages/RelatorioDensidadeInSitu';
 import RelatorioDiario from './pages/RelatorioDiario';
 import RelatorioEnsaio from './pages/RelatorioEnsaio';
 import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
+import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
 import RelatorioSondagem from './pages/RelatorioSondagem';
 import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
 import __Layout from './Layout.jsx';
 
 
@@ -143,12 +143,12 @@ export const PAGES = {
     "RelatorioDiario": RelatorioDiario,
     "RelatorioEnsaio": RelatorioEnsaio,
     "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
+    "RelatorioManchaPendulo": RelatorioManchaPendulo,
     "RelatorioSondagem": RelatorioSondagem,
     "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "RelatorioManchaPendulo": RelatorioManchaPendulo,
 }
 
 export const pagesConfig = {
