@@ -95,46 +95,6 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
           <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">
             MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
           </div>
-          <div className="grid grid-cols-3 text-[10px]">
-            <div className="border-r border-black p-2">
-              <span className="font-semibold">CLIENTE:</span> {regional?.cliente || 'N/A'}
-            </div>
-            <div className="border-r border-black p-2">
-              <span className="font-semibold">RODOVIA:</span> {ensaio.rodovia || 'N/A'}
-            </div>
-            <div className="p-2">
-              <span className="font-semibold">PISTA:</span> {ensaio.pista || 'N/A'}
-            </div>
-          </div>
-          <div className="grid grid-cols-3 text-[10px] border-t border-black">
-            <div className="border-r border-black p-2">
-              <span className="font-semibold">OBRA:</span> {obra?.name || 'N/A'}
-            </div>
-            <div className="border-r border-black p-2">
-              <span className="font-semibold">TRECHO:</span> {ensaio.trecho || 'N/A'}
-            </div>
-            <div className="p-2">
-              <span className="font-semibold">LABORATORISTA:</span> {ensaio.laboratorista_name || 'N/A'}
-            </div>
-          </div>
-          <div className="grid grid-cols-3 text-[10px] border-t border-black">
-            <div className="border-r border-black p-2">
-              <span className="font-semibold">ÓRGÃO:</span> {ensaio.orgao || 'N/A'}
-            </div>
-            <div className="col-span-2 p-2">
-              <span className="font-semibold">CAMADA:</span> {ensaio.camada || 'N/A'}
-            </div>
-          </div>
-        </div>
-
-        {/* Dados do Ensaio - Mancha de Areia */}
-        <div className="border-b-2 border-black">
-          <div className="bg-gray-100 px-3 py-1 text-xs font-bold uppercase border-b border-black">
-            DADOS DO ENSAIO
-          </div>
-          <div className="bg-gray-100 px-3 py-1 text-[10px] font-bold border-b border-black">
-            MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
-          </div>
           
           <table className="w-full border-collapse text-[9px]">
             <thead>
