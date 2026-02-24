@@ -208,20 +208,20 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Resultados */}
-        <div className="mb-2">
+        <div className="mb-1">
           <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">
             RESULTADOS
           </div>
-          <div className="grid grid-cols-2 gap-2 text-[10px] p-2">
+          <div className="grid grid-cols-2 gap-2 text-[9px] p-1.5">
             <div>
               <p className="font-bold text-gray-700">MANCHA DE AREIA:</p>
-              <p className="text-gray-600 text-[9px] mt-1">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_mancha || '0,6mm ≤ HS ≤ 1,2mm'}</p>
               {ensaio.ensaios_mancha && ensaio.ensaios_mancha.length > 0 && (() => {
                 const validHs = ensaio.ensaios_mancha.filter(e => e.hs_mm != null).map(e => e.hs_mm);
                 const mediaHs = validHs.length > 0 ? (validHs.reduce((sum, val) => sum + val, 0) / validHs.length).toFixed(2) : null;
                 return mediaHs && (
-                  <p className="text-gray-900 mt-2">
+                  <p className="text-gray-900 mt-1">
                     <span className="font-semibold">MÉDIA:</span> {mediaHs} mm
                   </p>
                 );
@@ -229,22 +229,22 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             </div>
             <div>
               <p className="font-bold text-gray-700">PÊNDULO BRITÂNICO:</p>
-              <p className="text-gray-600 text-[9px] mt-1">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_pendulo || 'VRD ≥ 47'}</p>
               {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.length > 0 && (() => {
                 const validVrd = ensaio.ensaios_pendulo.filter(e => e.vrd != null).map(e => e.vrd);
                 const mediaVrd = validVrd.length > 0 ? (validVrd.reduce((sum, val) => sum + val, 0) / validVrd.length).toFixed(1) : null;
                 return mediaVrd && (
-                  <p className="text-gray-900 mt-2">
+                  <p className="text-gray-900 mt-1">
                     <span className="font-semibold">MÉDIA:</span> {mediaVrd}
                   </p>
                 );
               })()}
             </div>
           </div>
-          <div className="border-t px-2 py-2" style={{ borderColor: 'rgb(148, 163, 184)' }}>
-            <p className="text-[9px] font-bold text-center mb-1">CONDIÇÃO DE CONFORMIDADE</p>
-            <p className={`text-center font-bold text-sm ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-700' : 'text-red-700'}`}>
+          <div className="border-t px-2 py-1" style={{ borderColor: 'rgb(148, 163, 184)' }}>
+            <p className="text-[9px] font-bold text-center mb-0.5">CONDIÇÃO DE CONFORMIDADE</p>
+            <p className={`text-center font-bold text-xs ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-700' : 'text-red-700'}`}>
               {ensaio.condicao_conformidade || 'NÃO INFORMADO'}
             </p>
           </div>
@@ -252,50 +252,50 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="mb-3">
+          <div className="mb-1">
             <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px]">OBSERVAÇÕES</div>
-            <div className="border p-2 text-[10px] min-h-[40px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>
+            <div className="border p-1.5 text-[9px] min-h-[30px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>
               <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
             </div>
           </div>
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-4 pt-3 print:break-inside-avoid">
-          <div className="grid grid-cols-3 gap-4 items-end px-4">
+        <footer className="mt-2 pt-2 print:break-inside-avoid">
+          <div className="grid grid-cols-3 gap-3 items-end px-2">
             <div className="text-center">
-              <div className="text-[9px] text-slate-500 mb-1 min-h-[48px] flex flex-col justify-end items-center">
+              <div className="text-[9px] text-slate-500 mb-1 min-h-[36px] flex flex-col justify-end items-center">
                 {ensaio.laboratorista_name && (
                   <>
                     <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
-                    <p className="text-[8px]">{ensaio.created_by}</p>
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.created_date)}</p>
+                    <p className="text-[7px]">{ensaio.created_by}</p>
+                    <p className="text-[7px]">em {formatDateBrasilia(ensaio.created_date)}</p>
                   </>
                 )}
               </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[9px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+              <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                <p className="text-[8px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
               </div>
             </div>
 
             <div className="text-center">
               {ensaio.approver_details ? (
                 <>
-                  <div className="text-[9px] text-slate-500 mb-1 min-h-[48px] flex flex-col justify-end items-center">
+                  <div className="text-[9px] text-slate-500 mb-1 min-h-[36px] flex flex-col justify-end items-center">
                     <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
-                    <p className="text-[8px]">{ensaio.approved_by}</p>
-                    {ensaio.approver_details.crea_number && <p className="text-[8px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
+                    <p className="text-[7px]">{ensaio.approved_by}</p>
+                    {ensaio.approver_details.crea_number && <p className="text-[7px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                    <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                   </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[48px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  <div className="min-h-[36px] mb-1"></div>
+                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               )}
@@ -304,21 +304,21 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <div className="text-center">
               {ensaio.client_signature?.signed_by ? (
                 <>
-                  <div className="text-[9px] text-slate-500 mb-1 min-h-[48px] flex flex-col justify-end items-center">
+                  <div className="text-[9px] text-slate-500 mb-1 min-h-[36px] flex flex-col justify-end items-center">
                     <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
-                    <p className="text-[8px]">{ensaio.client_signature.signed_by}</p>
-                    {ensaio.client_signature.crea_number && <p className="text-[8px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
+                    <p className="text-[7px]">{ensaio.client_signature.signed_by}</p>
+                    {ensaio.client_signature.crea_number && <p className="text-[7px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                    <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                   </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[9px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[48px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[9px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  <div className="min-h-[36px] mb-1"></div>
+                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               )}
