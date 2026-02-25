@@ -135,7 +135,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const e = ensaio.ensaios_mancha?.[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} className={bgColor} style={{ height: '12px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '11px' }}>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
@@ -217,7 +217,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
           <div className="grid grid-cols-2 gap-1 text-[8px] p-0.5">
             <div>
               <p className="font-bold text-gray-700">MANCHA DE AREIA:</p>
-              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_mancha || '0,6mm ≤ HS ≤ 1,2mm'}</p>
               {ensaio.ensaios_mancha && ensaio.ensaios_mancha.length > 0 && (() => {
                 const validHs = ensaio.ensaios_mancha.filter(e => e.hs_mm != null).map(e => e.hs_mm);
@@ -231,7 +231,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             </div>
             <div>
               <p className="font-bold text-gray-700">PÊNDULO BRITÂNICO:</p>
-              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_pendulo || 'VRD ≥ 47'}</p>
               {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.length > 0 && (() => {
                 const validVrd = ensaio.ensaios_pendulo.filter(e => e.vrd != null).map(e => e.vrd);
