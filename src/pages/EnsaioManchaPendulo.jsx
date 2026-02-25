@@ -140,7 +140,27 @@ export default function EnsaioManchaPendulo() {
     }
   };
 
-  const obrasConservacao = obras.filter(o => o.tipo_obra === 'conservacao');
+  const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+  const isAdmin = userAccessLevel === 'admin' || user?.role === 'admin';
+
+  let obrasDisponiveis = obras.filter(o => 
+    o.tipo_obra === 'conservacao' || 
+    o.tipo_obra === 'supervisao' || 
+    o.tipo_obra === 'implantacao'
+  );
+
+  if (!isAdmin && userAccessLevel === 'user') {
+    const regionalDoLaboratorista = regionais.find(regional => {
+      const laboratoristas = regional.laboratoristas_responsaveis || [];
+      return laboratoristas.some(email => email.toLowerCase() === user.email.toLowerCase());
+    });
+
+    if (regionalDoLaboratorista) {
+      obrasDisponiveis = obrasDisponiveis.filter(obra => obra.regional_id === regionalDoLaboratorista.id);
+    } else {
+      obrasDisponiveis = [];
+    }
+  }
   
   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
   const rodoviasDaObra = obraSelecionada?.rodovias || [];
@@ -287,7 +307,7 @@ export default function EnsaioManchaPendulo() {
                   <SelectValue placeholder="Selecione a obra" />
                 </SelectTrigger>
                 <SelectContent>
-                  {obrasConservacao.map(obra => (
+                  {obrasDisponiveis.map(obra => (
                     <SelectItem key={obra.id} value={obra.id}>{obra.name}</SelectItem>
                   ))}
                 </SelectContent>
