@@ -133,8 +133,9 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <tbody>
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_mancha?.[idx];
+                const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} style={{ height: '15px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '15px' }}>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
@@ -184,8 +185,9 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <tbody>
               {Array.from({ length: 15 }, (_, idx) => {
                 const e = ensaio.ensaios_pendulo?.[idx];
+                const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} style={{ height: '15px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '15px' }}>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.5px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
@@ -273,7 +275,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                   </>
                 )}
               </div>
-              <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+              <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
                 <p className="text-[8px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
               </div>
             </div>
@@ -287,14 +289,14 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                     {ensaio.approver_details.crea_number && <p className="text-[7px]">CREA: {ensaio.approver_details.crea_number}</p>}
                     <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                   </div>
-                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
                     <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="min-h-[36px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
                     <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
@@ -310,14 +312,14 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                     {ensaio.client_signature.crea_number && <p className="text-[7px]">CREA: {ensaio.client_signature.crea_number}</p>}
                     <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                   </div>
-                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
                     <p className="text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="min-h-[36px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
                     <p className="text-[8px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
