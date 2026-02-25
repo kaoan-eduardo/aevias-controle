@@ -206,7 +206,8 @@ export const getEntityMap = () => ({
   "EnsaioGranulometriaIndividual": "EnsaioGranulometriaIndividual",
   "AcompanhamentoUsinagem": "AcompanhamentoUsinagem",
   "AcompanhamentoCarga": "AcompanhamentoCarga",
-  "EnsaioManchaPendulo": "EnsaioManchaPendulo"
+  "EnsaioManchaPendulo": "EnsaioManchaPendulo",
+  "EnsaioVigaBenkelman": "EnsaioVigaBenkelman"
 });
 
 export const typeOptions = [
