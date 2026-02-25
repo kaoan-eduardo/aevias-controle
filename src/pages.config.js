@@ -66,6 +66,7 @@ import EnsaioMRAF from './pages/EnsaioMRAF';
 import EnsaioManchaPendulo from './pages/EnsaioManchaPendulo';
 import EnsaioSondagem from './pages/EnsaioSondagem';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
+import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
@@ -96,7 +97,6 @@ import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimac
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
 import __Layout from './Layout.jsx';
 
 
@@ -120,6 +120,7 @@ export const PAGES = {
     "EnsaioManchaPendulo": EnsaioManchaPendulo,
     "EnsaioSondagem": EnsaioSondagem,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
+    "EnsaioVigaBenkelman": EnsaioVigaBenkelman,
     "FaixasGranulometricas": FaixasGranulometricas,
     "Home": Home,
     "MeusEnsaios": MeusEnsaios,
@@ -150,7 +151,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "EnsaioVigaBenkelman": EnsaioVigaBenkelman,
 }
 
 export const pagesConfig = {

@@ -104,9 +104,9 @@ export default function EnsaioVigaBenkelman() {
         ...prev.levantamentos,
         {
           estaca_km: '',
-          bordo_esquerdo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
-          eixo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
-          bordo_direito: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 }
+          bordo_esquerdo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+          eixo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+          bordo_direito: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
         }
       ]
     }));
