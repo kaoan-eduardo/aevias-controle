@@ -182,6 +182,8 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data;
     case "EnsaioManchaPendulo":
       return ensaio.data_ensaio;
+    case "EnsaioVigaBenkelman":
+      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
