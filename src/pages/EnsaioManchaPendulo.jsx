@@ -31,6 +31,7 @@ export default function EnsaioManchaPendulo() {
   const initialFormData = {
     obra_id: '',
     data_ensaio: new Date().toISOString().split('T')[0],
+    data_aplicacao: new Date().toISOString().split('T')[0],
     laboratorista_name: '',
     rodovia: '',
     trecho: '',
@@ -260,8 +261,24 @@ export default function EnsaioManchaPendulo() {
   const handleSave = async (finalizar = false) => {
     setSaving(true);
     try {
+      const ensaiosManchaComData = formData.ensaios_mancha.map(e => {
+        if (e && (e.d1 || e.d2 || e.d3 || e.d4 || e.estaca)) {
+          return { ...e, data_aplicacao: formData.data_aplicacao };
+        }
+        return e;
+      });
+
+      const ensaiosPenduloComData = formData.ensaios_pendulo.map(e => {
+        if (e && (e.leitura_1 || e.leitura_2 || e.leitura_3 || e.leitura_4 || e.leitura_5 || e.estaca)) {
+          return { ...e, data_aplicacao: formData.data_aplicacao };
+        }
+        return e;
+      });
+
       const dataToSave = {
         ...formData,
+        ensaios_mancha: ensaiosManchaComData,
+        ensaios_pendulo: ensaiosPenduloComData,
         status: finalizar ? 'finalizado' : 'rascunho'
       };
 
@@ -363,6 +380,11 @@ export default function EnsaioManchaPendulo() {
             </div>
 
             <div>
+              <Label>Data de Aplicação *</Label>
+              <Input type="date" value={formData.data_aplicacao} onChange={(e) => handleInputChange('data_aplicacao', e.target.value)} />
+            </div>
+
+            <div>
               <Label>Laboratorista</Label>
               <Input value={formData.laboratorista_name} readOnly className="bg-slate-50" />
             </div>
@@ -378,7 +400,6 @@ export default function EnsaioManchaPendulo() {
               <thead className="bg-slate-100">
                 <tr>
                   <th className="border border-slate-300 p-2">#</th>
-                  <th className="border border-slate-300 p-2">Data Aplicação</th>
                   <th className="border border-slate-300 p-2">Estaca</th>
                   <th className="border border-slate-300 p-2">Faixa/Pista</th>
                   <th className="border border-slate-300 p-2">Bordo</th>
@@ -399,9 +420,6 @@ export default function EnsaioManchaPendulo() {
                   return (
                     <tr key={index}>
                       <td className="border border-slate-300 p-1 text-center">{index + 1}</td>
-                      <td className="border border-slate-300 p-1">
-                        <Input type="date" value={ensaio.data_aplicacao || ''} onChange={(e) => handleManchaChange(index, 'data_aplicacao', e.target.value)} className="h-8 text-xs" />
-                      </td>
                       <td className="border border-slate-300 p-1">
                         <Input value={ensaio.estaca || ''} onChange={(e) => handleManchaChange(index, 'estaca', e.target.value)} className="h-8 text-xs" />
                       </td>
@@ -454,7 +472,6 @@ export default function EnsaioManchaPendulo() {
               <thead className="bg-slate-100">
                 <tr>
                   <th className="border border-slate-300 p-2">#</th>
-                  <th className="border border-slate-300 p-2">Data Aplicação</th>
                   <th className="border border-slate-300 p-2">Estaca</th>
                   <th className="border border-slate-300 p-2">Faixa/Pista</th>
                   <th className="border border-slate-300 p-2">Bordo</th>
@@ -476,9 +493,6 @@ export default function EnsaioManchaPendulo() {
                   return (
                     <tr key={index}>
                       <td className="border border-slate-300 p-1 text-center">{index + 1}</td>
-                      <td className="border border-slate-300 p-1">
-                        <Input type="date" value={ensaio.data_aplicacao || ''} onChange={(e) => handlePenduloChange(index, 'data_aplicacao', e.target.value)} className="h-8 text-xs" />
-                      </td>
                       <td className="border border-slate-300 p-1">
                         <Input value={ensaio.estaca || ''} onChange={(e) => handlePenduloChange(index, 'estaca', e.target.value)} className="h-8 text-xs" />
                       </td>
