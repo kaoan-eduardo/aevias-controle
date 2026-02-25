@@ -324,10 +324,9 @@ export default function EnsaioVigaBenkelman() {
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">CTE. VIGA</label>
                   <Input
-                    type="number"
-                    step="0.0001"
                     value={formData.cte_viga}
-                    onChange={(e) => handleInputChange('cte_viga', e.target.value ? parseFloat(e.target.value) : '')}
+                    onChange={(e) => handleInputChange('cte_viga', e.target.value)}
+                    placeholder="Digitar"
                     className="bg-white/10 border-white/20 text-[#00233B]"
                   />
                 </div>
@@ -335,10 +334,8 @@ export default function EnsaioVigaBenkelman() {
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">DEF. ADMISSÍVEL</label>
                   <Input
-                    type="number"
-                    inputMode="numeric"
                     value={formData.def_admissivel}
-                    onChange={(e) => handleInputChange('def_admissivel', e.target.value ? parseInt(e.target.value) : '')}
+                    onChange={(e) => handleInputChange('def_admissivel', e.target.value.replace(/[^\d]/g, ''))}
                     placeholder="Digitar"
                     className="bg-white/10 border-white/20 text-[#00233B]"
                   />
