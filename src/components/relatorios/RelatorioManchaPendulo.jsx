@@ -103,7 +103,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         <DadosCliente />
 
         {/* Dados do Ensaio - Mancha de Areia */}
-        <div className="mb-1">
+        <div className="mb-1 print:break-inside-avoid">
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">
             DADOS DO ENSAIO
           </div>
@@ -158,7 +158,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Pêndulo Britânico */}
-        <div className="mb-1">
+        <div className="mb-1 print:break-inside-avoid">
           <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019
           </div>
@@ -210,7 +210,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Resultados */}
-        <div className="mb-1">
+        <div className="mb-1 print:break-inside-avoid">
           <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">
             RESULTADOS
           </div>
@@ -254,7 +254,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="mb-1">
+          <div className="mb-1 print:break-inside-avoid">
             <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px]">OBSERVAÇÕES</div>
             <div className="p-1.5 text-[9px] min-h-[30px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
               <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
