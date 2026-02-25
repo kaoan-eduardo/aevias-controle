@@ -348,40 +348,40 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
             <SectionTitle>Acompanhamento Execução da Camada</SectionTitle>
             <table className="w-full border-collapse border border-slate-300 text-xs mb-0.5">
               <thead className="bg-white">
-                <tr>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-left">Controle</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Sim</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">Não</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14">N/A</th>
+                <tr style={{ height: '19.6px' }}>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Controle</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-14">Sim</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-14">Não</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-14">N/A</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado remoção de material existente?</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">Foi realizado remoção de material existente?</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.remocao_material_existente} column="na" />
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi espalhado material novo para construção da camada?</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">Foi espalhado material novo para construção da camada?</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.espalhamento_material_novo} column="na" />
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">
                     A compactação da camada foi realizada em conformidade à energia de projeto?
                     <div className="flex gap-1 mt-0.5 ml-1" style={{ fontSize: '7px' }}>
                       {checklist.acompanhamento_execucao?.compactacao_conforme_projeto?.rolo_liso && (
@@ -395,49 +395,49 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                       )}
                     </div>
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.compactacao_conforme_projeto} column="na" />
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">Foi realizado ensaio de viga Benkelman para liberação da camada?</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.ensaio_viga_benkelman} column="na" />
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">Foi realizado teste de carga para liberação da camada?</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">Foi realizado teste de carga para liberação da camada?</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.teste_carga} column="na" />
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white">Há algum ponto de falha de compactação (borrachudo)?</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="sim" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="nao" />
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     <CheckboxDisplay value={checklist.acompanhamento_execucao?.falha_compactacao} column="na" />
                   </td>
                 </tr>
@@ -447,13 +447,13 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
             <SectionTitle>Ensaios da Camada Realizados pela Empreiteira</SectionTitle>
             <table className="w-full border-collapse border border-slate-300 mb-0.5">
               <thead className="bg-white">
-                <tr>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-left text-xs">Ensaios</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-14 text-xs">Realizado</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-10 text-xs">Qtde</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center text-xs">Resultados</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-16 text-xs">Conforme</th>
-                  <th className="border border-slate-300 px-1 py-1 font-medium text-center w-20 text-xs">Não Conforme</th>
+                <tr style={{ height: '19.6px' }}>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-left text-xs">Ensaios</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-14 text-xs">Realizado</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-10 text-xs">Qtde</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center text-xs">Resultados</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16 text-xs">Conforme</th>
+                  <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-20 text-xs">Não Conforme</th>
                 </tr>
               </thead>
               <tbody>
@@ -461,54 +461,54 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                 {(() => {
                   const ensaio = checklist.ensaios_empreiteira?.compactacao_proctor;
                   return (
-                    <tr>
-                      <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Compactação - Proctor (g/cm³)</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                    <tr style={{ height: '19.6px' }}>
+                      <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Compactação - Proctor (g/cm³)</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center text-xs">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
                         {ensaio?.quantidade || '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados ? `${ensaio.resultados} g/cm³` : '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                     </tr>
                   );
                 })()}
                 
                 {/* Umidade Ótima */}
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Umidade Ótima (%)</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade Ótima (%)</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.umidade_otima_proctor ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                     {checklist.umidade_otima_proctor ? `${checklist.umidade_otima_proctor}%` : '-'}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                 </tr>
                 
                 {/* ISC */}
                 {(() => {
                   const ensaio = checklist.ensaios_empreiteira?.isc;
                   return (
-                    <tr>
-                      <td className="border border-slate-300 px-1 py-1 bg-white text-xs">ISC - Índice de Suporte Califórnia (%)</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                    <tr style={{ height: '19.6px' }}>
+                      <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">ISC - Índice de Suporte Califórnia (%)</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center text-xs">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
                         {ensaio?.quantidade || '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados ? `${ensaio.resultados}%` : '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                     </tr>
                   );
                 })()}
@@ -517,56 +517,56 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                 {(() => {
                   const ensaio = checklist.ensaios_empreiteira?.massa_especifica_in_situ;
                   return (
-                    <tr>
-                      <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Massa Específica In Situ (g/cm³)</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                    <tr style={{ height: '19.6px' }}>
+                      <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Massa Específica In Situ (g/cm³)</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center text-xs">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
                         {ensaio?.quantidade || '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados ? `${ensaio.resultados} g/cm³` : '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                     </tr>
                   );
                 })()}
                 
                 {/* Umidade In Situ */}
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Umidade In Situ (%)</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade In Situ (%)</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.umidade_in_situ ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                     {checklist.umidade_in_situ ? `${checklist.umidade_in_situ}%` : '-'}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                 </tr>
                 
                 {/* Análise Granulométrica */}
                 {(() => {
                   const ensaio = checklist.ensaios_empreiteira?.granulometria;
                   return (
-                    <tr>
-                      <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Análise Granulométrica por Peneiramento</td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                    <tr style={{ height: '19.6px' }}>
+                      <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Análise Granulométrica por Peneiramento</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.realizado ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center text-xs">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
                         {ensaio?.quantidade || '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados || '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
                       </td>
-                      <td className="border border-slate-300 px-1 py-1 text-center">
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
                       </td>
                     </tr>
@@ -574,37 +574,37 @@ export default function RelatorioChecklistTerraplanagem({ checklist }) {
                 })()}
                 
                 {/* Variação de Umidade - Calculado */}
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Variação de Umidade (%)</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Variação de Umidade (%)</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {variacaoUmidade !== null ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                     {variacaoUmidade !== null ? `${variacaoUmidade}%` : '-'}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.ensaios_empreiteira?.variacao_umidade_conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.ensaios_empreiteira?.variacao_umidade_conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
                   </td>
                 </tr>
                 
                 {/* Grau de Compactação - Calculado */}
-                <tr>
-                  <td className="border border-slate-300 px-1 py-1 bg-white text-xs">Grau de Compactação (%)</td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                <tr style={{ height: '19.6px' }}>
+                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Grau de Compactação (%)</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {grauCompactacao !== null ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-1 text-xs font-medium text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                     {grauCompactacao !== null ? `${grauCompactacao}%` : '-'}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.ensaios_empreiteira?.grau_compactacao_conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-1 text-center">
+                  <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.ensaios_empreiteira?.grau_compactacao_conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
                   </td>
                 </tr>
