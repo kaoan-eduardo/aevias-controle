@@ -119,19 +119,21 @@ export default function EnsaioVigaBenkelman() {
     }));
   };
 
-  useEffect(() => {
-    if (formData.leitura_inicial_global) {
+  const handleLeituraInicialChange = (value) => {
+    handleInputChange('leitura_inicial_global', value);
+    if (value) {
       setFormData(prev => ({
         ...prev,
+        leitura_inicial_global: value,
         levantamentos: prev.levantamentos.map(lev => ({
           ...lev,
-          bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: formData.leitura_inicial_global },
-          eixo: { ...lev.eixo, leitura_inicial: formData.leitura_inicial_global },
-          bordo_direito: { ...lev.bordo_direito, leitura_inicial: formData.leitura_inicial_global }
+          bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: value },
+          eixo: { ...lev.eixo, leitura_inicial: value },
+          bordo_direito: { ...lev.bordo_direito, leitura_inicial: value }
         }))
       }));
     }
-  }, [formData.leitura_inicial_global]);
+  };
 
   const updateLevantamento = (index, lado, field, value) => {
     setFormData(prev => {
@@ -359,7 +361,7 @@ export default function EnsaioVigaBenkelman() {
                   type="number"
                   step="0.01"
                   value={formData.leitura_inicial_global}
-                  onChange={(e) => handleInputChange('leitura_inicial_global', e.target.value)}
+                  onChange={(e) => handleLeituraInicialChange(e.target.value)}
                   placeholder="Digitar"
                   className="bg-white/10 border-white/20 text-[#00233B]"
                 />
