@@ -404,7 +404,7 @@ export default function EnsaioManchaPendulo() {
             </div>
 
             <div>
-              <Label>Órgão</Label>
+              <Label>Orgao</Label>
               <Select value={formData.orgao} onValueChange={(value) => handleInputChange('orgao', value)}>
                 <SelectTrigger>
                   <SelectValue />
