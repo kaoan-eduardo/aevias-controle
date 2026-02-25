@@ -33,21 +33,21 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   }
 
   const ReportHeader = () => (
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-0.5">
       <div className="flex justify-start">
         <img 
           src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
           alt="Logo Regional" 
-          className="h-8 object-contain" 
+          className="h-10 object-contain" 
         />
       </div>
       <div className="text-center">
-        <h1 className="text-[10px] font-bold text-gray-800 leading-tight">
+        <h1 className="text-xs font-bold text-gray-800 leading-tight">
           ENSAIO DE MACROTEXTURA E MICROTEXTURA
         </h1>
       </div>
       <div className="flex justify-end">
-        <div className="text-[8px] text-gray-600 border border-slate-300 rounded px-1 py-0">
+        <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1.5 py-0.5">
           {formatDate(ensaio.data_ensaio)}
         </div>
       </div>
@@ -55,11 +55,11 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   );
 
   const DadosCliente = () => (
-    <div className="mb-0">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1 py-0 font-bold text-center mb-0 text-[9px]">
+    <div className="mb-0.5">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0.5 font-bold text-center mb-0 text-[10px]">
         DADOS DO CLIENTE
       </div>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-0 mb-0 text-[8px] leading-tight py-0.5">
+      <div className="grid grid-cols-3 gap-x-3 gap-y-0 mb-0 text-[9px] leading-tight">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -103,31 +103,31 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         <DadosCliente />
 
         {/* Dados do Ensaio - Mancha de Areia */}
-        <div className="mb-0 print:break-inside-avoid">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1 py-0 font-bold text-center mb-0 text-[9px]">
+        <div className="mb-0.5 print:break-inside-avoid">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0.5 font-bold text-center mb-0 text-[10px]">
             DADOS DO ENSAIO
           </div>
-          <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[7px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
           </div>
           
-          <table className="w-full border-collapse text-[6.5px]" style={{ borderWidth: '0.05px' }}>
+          <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
             <thead>
               <tr>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DATA<br/>APLICAÇÃO</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ESTACA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>FAIXA /<br/>PISTA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>VOLUME<br/>DE AREIA<br/>(mm³)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D1 (Ø)<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D2 (Ø)<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D3 (Ø)<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D4 (Ø)<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D(Ø) MÉDIA<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ÁREA<br/>(cm²)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>HS<br/>(cm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>HS<br/>(mm)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>TIPO DE<br/>SUPERFÍCIE</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DATA<br/>APLICAÇÃO</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ESTACA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>FAIXA /<br/>PISTA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>VOLUME<br/>DE AREIA<br/>(mm³)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D1 (Ø)<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D2 (Ø)<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D3 (Ø)<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D4 (Ø)<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>D(Ø) MÉDIA<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ÁREA<br/>(cm²)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>HS<br/>(cm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>HS<br/>(mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>TIPO DE<br/>SUPERFÍCIE</th>
               </tr>
             </thead>
             <tbody>
@@ -135,7 +135,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const e = ensaio.ensaios_mancha?.[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} className={bgColor} style={{ height: '10px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '12px' }}>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
@@ -149,7 +149,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.area ? e.area.toFixed(2) : ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.hs_cm ? e.hs_cm.toFixed(2) : ''}</td>
                     <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.hs_mm ? e.hs_mm.toFixed(2) : ''}</td>
-                    <td className="px-0.5 py-0 text-center text-[5.5px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.tipo_superficie || ''}</td>
+                    <td className="px-0.5 py-0 text-center text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.tipo_superficie || ''}</td>
                   </tr>
                 );
               })}
@@ -158,28 +158,28 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Pêndulo Britânico */}
-        <div className="mb-0 print:break-inside-avoid">
-          <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[7px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+        <div className="mb-0.5 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019
           </div>
           
-          <table className="w-full border-collapse text-[6.5px]" style={{ borderWidth: '0.05px' }}>
+          <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
             <thead>
               <tr>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DATA<br/>APLICAÇÃO</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ESTACA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>FAIXA /<br/>PISTA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '40px', borderWidth: '0.05px', borderStyle: 'solid' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>1º</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>2º</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>3º</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>4º</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>5º</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÁXIMA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÍNIMA</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>VRD</th>
-                <th className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CLASSE</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DATA<br/>APLICAÇÃO</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>ESTACA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>FAIXA /<br/>PISTA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px', borderWidth: '0.05px', borderStyle: 'solid' }}>TEMP. DO<br/>PAVIMENTO<br/>(°C)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>1º</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>2º</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>3º</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>4º</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>5º</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÁXIMA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÍNIMA</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>VRD</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CLASSE</th>
               </tr>
             </thead>
             <tbody>
@@ -187,12 +187,12 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} className={bgColor} style={{ height: '10px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '12px' }}>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.bordo || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', width: '40px', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.temp_pavimento || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', width: '48px', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.temp_pavimento || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.leitura_1 || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.leitura_2 || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.leitura_3 || ''}</td>
@@ -201,7 +201,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                     <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.maxima ? e.maxima.toFixed(1) : ''}</td>
                     <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.minima ? e.minima.toFixed(1) : ''}</td>
                     <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.vrd ? e.vrd.toFixed(1) : ''}</td>
-                    <td className="px-0.5 py-0 text-center text-[5.5px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.vrd ? getClassificacaoVRD(e.vrd) : ''}</td>
+                    <td className="px-0.5 py-0 text-center text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.vrd ? getClassificacaoVRD(e.vrd) : ''}</td>
                   </tr>
                 );
               })}
@@ -210,20 +210,20 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Resultados */}
-        <div className="mb-0 print:break-inside-avoid">
-          <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[7px]">
+        <div className="mb-0.5 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px]">
             RESULTADOS
           </div>
-          <div className="grid grid-cols-2 gap-1 text-[7px] p-0.5">
+          <div className="grid grid-cols-2 gap-1.5 text-[8px] p-1">
             <div>
               <p className="font-bold text-gray-700">MANCHA DE AREIA:</p>
-              <p className="text-gray-600 text-[7px] mt-0">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_mancha || '0,6mm ≤ HS ≤ 1,2mm'}</p>
               {ensaio.ensaios_mancha && ensaio.ensaios_mancha.length > 0 && (() => {
                 const validHs = ensaio.ensaios_mancha.filter(e => e.hs_mm != null).map(e => e.hs_mm);
                 const mediaHs = validHs.length > 0 ? (validHs.reduce((sum, val) => sum + val, 0) / validHs.length).toFixed(2) : null;
                 return mediaHs && (
-                  <p className="text-gray-900 mt-0">
+                  <p className="text-gray-900 mt-1">
                     <span className="font-semibold">MÉDIA:</span> {mediaHs} mm
                   </p>
                 );
@@ -231,22 +231,22 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             </div>
             <div>
               <p className="font-bold text-gray-700">PÊNDULO BRITÂNICO:</p>
-              <p className="text-gray-600 text-[7px] mt-0">LIMITES ESTABELECIDOS</p>
+              <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
               <p className="text-gray-900">{ensaio.limites_pendulo || 'VRD ≥ 47'}</p>
               {ensaio.ensaios_pendulo && ensaio.ensaios_pendulo.length > 0 && (() => {
                 const validVrd = ensaio.ensaios_pendulo.filter(e => e.vrd != null).map(e => e.vrd);
                 const mediaVrd = validVrd.length > 0 ? (validVrd.reduce((sum, val) => sum + val, 0) / validVrd.length).toFixed(1) : null;
                 return mediaVrd && (
-                  <p className="text-gray-900 mt-0">
+                  <p className="text-gray-900 mt-1">
                     <span className="font-semibold">MÉDIA:</span> {mediaVrd}
                   </p>
                 );
               })()}
             </div>
           </div>
-          <div className="px-1 py-0 border-t" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
-            <p className="text-[7px] font-bold text-center mb-0">CONDIÇÃO DE CONFORMIDADE</p>
-            <p className={`text-center font-bold text-[9px] ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-700' : 'text-red-700'}`}>
+          <div className="px-1.5 py-0.5 border-t" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+            <p className="text-[8px] font-bold text-center mb-0">CONDIÇÃO DE CONFORMIDADE</p>
+            <p className={`text-center font-bold text-[10px] ${ensaio.condicao_conformidade === 'CONFORME' ? 'text-green-700' : 'text-red-700'}`}>
               {ensaio.condicao_conformidade || 'NÃO INFORMADO'}
             </p>
           </div>
@@ -254,50 +254,50 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="mb-0 print:break-inside-avoid">
-            <div className="bg-slate-200 px-1 py-0 font-bold text-[7px]">OBSERVAÇÕES</div>
-            <div className="p-0.5 text-[7px] min-h-[15px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+          <div className="mb-0.5 print:break-inside-avoid">
+            <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-[8px]">OBSERVAÇÕES</div>
+            <div className="p-1 text-[8px] min-h-[20px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
               <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
             </div>
           </div>
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-0.5 pt-0.5 print:break-inside-avoid">
-          <div className="grid grid-cols-3 gap-1.5 items-end px-1">
+        <footer className="mt-1 pt-1 print:break-inside-avoid">
+          <div className="grid grid-cols-3 gap-2 items-end px-1">
             <div className="text-center">
-              <div className="text-[7px] text-slate-500 mb-0 min-h-[22px] flex flex-col justify-end items-center">
+              <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
                 {ensaio.laboratorista_name && (
                   <>
-                    <p className="font-bold text-slate-600 text-[7px]">{ensaio.laboratorista_name}</p>
-                    <p className="text-[5.5px]">{ensaio.created_by}</p>
-                    <p className="text-[5.5px]">em {formatDateBrasilia(ensaio.created_date)}</p>
+                    <p className="font-bold text-slate-600 text-[8px]">{ensaio.laboratorista_name}</p>
+                    <p className="text-[6px]">{ensaio.created_by}</p>
+                    <p className="text-[6px]">em {formatDateBrasilia(ensaio.created_date)}</p>
                   </>
                 )}
               </div>
-              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                <p className="text-[6.5px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+              <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                <p className="text-[7px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
               </div>
             </div>
 
             <div className="text-center">
               {ensaio.approver_details ? (
                 <>
-                  <div className="text-[7px] text-slate-500 mb-0 min-h-[22px] flex flex-col justify-end items-center">
-                    <p className="font-bold text-slate-600 text-[7px]">{ensaio.approver_details.name}</p>
-                    <p className="text-[5.5px]">{ensaio.approved_by}</p>
-                    {ensaio.approver_details.crea_number && <p className="text-[5.5px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                    <p className="text-[5.5px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
+                  <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
+                    <p className="font-bold text-slate-600 text-[8px]">{ensaio.approver_details.name}</p>
+                    <p className="text-[6px]">{ensaio.approved_by}</p>
+                    {ensaio.approver_details.crea_number && <p className="text-[6px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                    <p className="text-[6px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                   </div>
-                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                    <p className="text-[6.5px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[22px] mb-0"></div>
-                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                    <p className="text-[6.5px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  <div className="min-h-[28px] mb-0.5"></div>
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               )}
@@ -306,21 +306,21 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <div className="text-center">
               {ensaio.client_signature?.signed_by ? (
                 <>
-                  <div className="text-[7px] text-slate-500 mb-0 min-h-[22px] flex flex-col justify-end items-center">
-                    <p className="font-bold text-slate-600 text-[7px]">{ensaio.client_signature.engineer_name}</p>
-                    <p className="text-[5.5px]">{ensaio.client_signature.signed_by}</p>
-                    {ensaio.client_signature.crea_number && <p className="text-[5.5px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                    <p className="text-[5.5px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
+                  <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
+                    <p className="font-bold text-slate-600 text-[8px]">{ensaio.client_signature.engineer_name}</p>
+                    <p className="text-[6px]">{ensaio.client_signature.signed_by}</p>
+                    {ensaio.client_signature.crea_number && <p className="text-[6px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                    <p className="text-[6px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                   </div>
-                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                    <p className="text-[6.5px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[22px] mb-0"></div>
-                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
-                    <p className="text-[6.5px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  <div className="min-h-[28px] mb-0.5"></div>
+                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                    <p className="text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               )}
