@@ -119,22 +119,19 @@ export default function EnsaioVigaBenkelman() {
     }));
   };
 
-  const replicarLeituraInicial = () => {
-    if (!formData.leitura_inicial_global) {
-      alert('Informe a leitura inicial para replicar');
-      return;
+  useEffect(() => {
+    if (formData.leitura_inicial_global) {
+      setFormData(prev => ({
+        ...prev,
+        levantamentos: prev.levantamentos.map(lev => ({
+          ...lev,
+          bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: formData.leitura_inicial_global },
+          eixo: { ...lev.eixo, leitura_inicial: formData.leitura_inicial_global },
+          bordo_direito: { ...lev.bordo_direito, leitura_inicial: formData.leitura_inicial_global }
+        }))
+      }));
     }
-
-    setFormData(prev => ({
-      ...prev,
-      levantamentos: prev.levantamentos.map(lev => ({
-        ...lev,
-        bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: formData.leitura_inicial_global },
-        eixo: { ...lev.eixo, leitura_inicial: formData.leitura_inicial_global },
-        bordo_direito: { ...lev.bordo_direito, leitura_inicial: formData.leitura_inicial_global }
-      }))
-    }));
-  };
+  }, [formData.leitura_inicial_global]);
 
   const updateLevantamento = (index, lado, field, value) => {
     setFormData(prev => {
@@ -326,8 +323,8 @@ export default function EnsaioVigaBenkelman() {
                   <label className="block text-sm font-medium text-[#00233B] mb-2">CTE. VIGA</label>
                   <Input
                     type="number"
-                    step="0.001"
-                    value={formData.cte_viga}
+                    step="0.0001"
+                    value={parseFloat(formData.cte_viga).toFixed(4)}
                     onChange={(e) => handleInputChange('cte_viga', parseFloat(e.target.value))}
                     className="bg-white/10 border-white/20 text-[#00233B]"
                   />
@@ -354,26 +351,18 @@ export default function EnsaioVigaBenkelman() {
             </CardHeader>
             <CardContent className="p-6 space-y-4">
               <p className="text-sm text-[#00233B]/80">
-                Informe a leitura inicial uma única vez e clique em "Replicar" para preenchê-la em todos os registros.
+                Informe a leitura inicial uma única vez. Ela será automaticamente preenchida em todos os registros.
               </p>
-              <div className="flex gap-4 items-end">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Leitura Inicial (A)</label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.leitura_inicial_global}
-                    onChange={(e) => handleInputChange('leitura_inicial_global', e.target.value)}
-                    placeholder="Digitar"
-                    className="bg-white/10 border-white/20 text-[#00233B]"
-                  />
-                </div>
-                <Button
-                  onClick={replicarLeituraInicial}
-                  className="bg-[#00233B] text-white hover:bg-[#00233B]/90"
-                >
-                  <Copy className="w-4 h-4 mr-2" /> Replicar
-                </Button>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-[#00233B] mb-2">Leitura Inicial (A)</label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={formData.leitura_inicial_global}
+                  onChange={(e) => handleInputChange('leitura_inicial_global', e.target.value)}
+                  placeholder="Digitar"
+                  className="bg-white/10 border-white/20 text-[#00233B]"
+                />
               </div>
             </CardContent>
           </Card>
@@ -435,6 +424,7 @@ export default function EnsaioVigaBenkelman() {
                                 step="0.01"
                                 value={lev[lado].leitura_final}
                                 onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
+                                placeholder="0"
                                 className="bg-white/10 border-white/20 text-[#00233B]"
                               />
                             </div>
