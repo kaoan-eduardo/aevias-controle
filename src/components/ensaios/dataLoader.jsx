@@ -103,7 +103,8 @@ export const loadAllData = async () => {
     ...granulometriaIndividualData.map((d) => ({ ...d, entityType: "EnsaioGranulometriaIndividual" })),
     ...acompanhamentoUsinagemData.map((d) => ({ ...d, entityType: "AcompanhamentoUsinagem" })),
     ...acompanhamentoCargaData.map((d) => ({ ...d, entityType: "AcompanhamentoCarga" })),
-    ...manchaPenduloData.map((d) => ({ ...d, entityType: "EnsaioManchaPendulo" }))
+    ...manchaPenduloData.map((d) => ({ ...d, entityType: "EnsaioManchaPendulo" })),
+    ...vigaBenkelmanData.map((d) => ({ ...d, entityType: "EnsaioVigaBenkelman" }))
   ].sort((a, b) => {
     const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
     
