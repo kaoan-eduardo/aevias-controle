@@ -38,6 +38,8 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Acompanhamento de Cargas", icon: FlaskConical };
     case "EnsaioManchaPendulo":
       return { name: "Mancha + Pêndulo", icon: Gauge };
+    case "EnsaioVigaBenkelman":
+      return { name: "Viga Benkelman", icon: Gauge };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }
