@@ -16,6 +16,7 @@ const TIPOS_ENSAIO = [
   { value: "EnsaioSondagem", label: "Sondagem" },
   { value: "EnsaioDensidadeInSitu", label: "Densidade In Situ" },
   { value: "EnsaioTaxaPinturaImprimacao", label: "Taxa de Pintura/Imprimação" },
+  { value: "EnsaioManchaPendulo", label: "Mancha + Pêndulo" },
   { value: "ChecklistUsina", label: "Checklist de Usina" },
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
   { value: "ChecklistMRAF", label: "Checklist MRAF" },
@@ -114,6 +115,21 @@ const CAMPOS_POR_TIPO = {
       { key: "ensaio_residuo.data", label: "Data Ensaio Resíduo" },
       { key: "ensaio_residuo.residuo", label: "% Resíduo" }
     ]}
+  ],
+  EnsaioManchaPendulo: [
+    { key: "laboratorista_name", label: "Laboratorista" },
+    { key: "rodovia", label: "Rodovia" },
+    { key: "trecho", label: "Trecho" },
+    { key: "camada", label: "Camada" },
+    { key: "pista", label: "Pista" },
+    { key: "orgao", label: "Órgão" },
+    { key: "data_ensaio", label: "Data Ensaio" },
+    { key: "data_aplicacao", label: "Data Aplicação" },
+    { key: "media_hs", label: "Média HS (mm)" },
+    { key: "classificacao_media_hs", label: "Classificação HS" },
+    { key: "media_vrd", label: "Média VRD" },
+    { key: "classificacao_media_vrd", label: "Classificação VRD" },
+    { key: "condicao_conformidade", label: "Conformidade" }
   ],
 
   ChecklistUsina: [
