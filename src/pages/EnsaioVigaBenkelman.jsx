@@ -443,7 +443,7 @@ export default function EnsaioVigaBenkelman() {
                               <Input
                                 type="number"
                                 step="0.01"
-                                value={lev[lado].deflexao.toFixed(4)}
+                                value={lev[lado].deflexao.toFixed(1)}
                                 disabled
                                 className="bg-white/10 border-white/20 text-[#00233B]/70"
                               />
