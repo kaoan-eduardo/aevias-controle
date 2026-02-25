@@ -85,7 +85,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
           <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
         </div>
         <div>
-          <p className="font-bold text-gray-700">ORGAO:</p>
+          <p className="font-bold text-gray-700">ÓRGÃO:</p>
           <p className="text-gray-900">{ensaio.orgao || 'N/A'}</p>
         </div>
         <div className="col-span-2">
