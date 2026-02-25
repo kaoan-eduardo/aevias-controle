@@ -46,7 +46,8 @@ export const loadAllData = async () => {
     granulometriaIndividualData,
     acompanhamentoUsinagemData,
     acompanhamentoCargaData,
-    manchaPenduloData
+    manchaPenduloData,
+    vigaBenkelmanData
   ] = await Promise.all([
     Obra.list(),
     Regional.list(),
@@ -67,7 +68,8 @@ export const loadAllData = async () => {
     base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
     base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
     base44.entities.AcompanhamentoCarga.list("-created_date", 1000),
-    base44.entities.EnsaioManchaPendulo.list("-created_date", 1000)
+    base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
+    base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000)
   ]);
 
   console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
