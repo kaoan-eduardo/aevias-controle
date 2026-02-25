@@ -82,6 +82,8 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioAcompanhamentoCarga?id=${ensaio.id}`);
     case "EnsaioManchaPendulo":
       return createPageUrl(`RelatorioManchaPendulo?id=${ensaio.id}`);
+    case "EnsaioVigaBenkelman":
+      return createPageUrl(`RelatorioVigaBenkelman?id=${ensaio.id}`);
     default:
       return "#";
   }
