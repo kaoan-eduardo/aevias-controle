@@ -122,7 +122,7 @@ const CAMPOS_POR_TIPO = {
     { key: "trecho", label: "Trecho" },
     { key: "camada", label: "Camada" },
     { key: "pista", label: "Pista" },
-    { key: "orgao", label: "Órgão" },
+    { key: "orgao", label: "Orgão" },
     { key: "data_ensaio", label: "Data Ensaio" },
     { key: "data_aplicacao", label: "Data Aplicação" },
     { key: "media_hs", label: "Média HS (mm)" },
