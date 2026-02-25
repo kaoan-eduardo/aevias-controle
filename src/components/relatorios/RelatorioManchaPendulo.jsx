@@ -263,7 +263,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-0 pt-0.5 print:break-inside-avoid">
+        <footer className="mt-4 pt-2 print:break-inside-avoid">
           <div className="grid grid-cols-3 gap-1.5 items-end px-1">
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
