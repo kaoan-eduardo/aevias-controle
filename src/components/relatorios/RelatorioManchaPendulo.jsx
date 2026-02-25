@@ -33,12 +33,12 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   }
 
   const ReportHeader = () => (
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-0.5">
+    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
       <div className="flex justify-start">
         <img 
           src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
           alt="Logo Regional" 
-          className="h-10 object-contain" 
+          className="h-9 object-contain" 
         />
       </div>
       <div className="text-center">
@@ -47,7 +47,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </h1>
       </div>
       <div className="flex justify-end">
-        <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1.5 py-0.5">
+        <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
           {formatDate(ensaio.data_ensaio)}
         </div>
       </div>
@@ -55,11 +55,11 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   );
 
   const DadosCliente = () => (
-    <div className="mb-0.5">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0.5 font-bold text-center mb-0 text-[10px]">
+    <div className="mb-0">
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
         DADOS DO CLIENTE
       </div>
-      <div className="grid grid-cols-3 gap-x-3 gap-y-0 mb-0 text-[9px] leading-tight">
+      <div className="grid grid-cols-3 gap-x-2 gap-y-0 mb-0 text-[9px] leading-tight">
         <div>
           <p className="font-bold text-gray-700">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
@@ -103,11 +103,11 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         <DadosCliente />
 
         {/* Dados do Ensaio - Mancha de Areia */}
-        <div className="mb-0.5 print:break-inside-avoid">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0.5 font-bold text-center mb-0 text-[10px]">
+        <div className="mb-0 print:break-inside-avoid">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
             DADOS DO ENSAIO
           </div>
-          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             MANCHA DE AREIA - MÉTODO ABNT NBR 16504:2016
           </div>
           
@@ -158,8 +158,8 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Pêndulo Britânico */}
-        <div className="mb-0.5 print:break-inside-avoid">
-          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+        <div className="mb-0 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             PÊNDULO BRITÂNICO - MÉTODO ABNT NBR 16780:2019
           </div>
           
@@ -187,7 +187,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const e = ensaio.ensaios_pendulo?.[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} className={bgColor} style={{ height: '12px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '11px' }}>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e ? formatDate(e.data_aplicacao) : ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.estaca || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{e?.faixa_pista || ''}</td>
@@ -210,11 +210,11 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
         </div>
 
         {/* Resultados */}
-        <div className="mb-0.5 print:break-inside-avoid">
-          <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-center text-[8px]">
+        <div className="mb-0 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px]">
             RESULTADOS
           </div>
-          <div className="grid grid-cols-2 gap-1.5 text-[8px] p-1">
+          <div className="grid grid-cols-2 gap-1 text-[8px] p-0.5">
             <div>
               <p className="font-bold text-gray-700">MANCHA DE AREIA:</p>
               <p className="text-gray-600 text-[8px] mt-0.5">LIMITES ESTABELECIDOS</p>
@@ -223,7 +223,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const validHs = ensaio.ensaios_mancha.filter(e => e.hs_mm != null).map(e => e.hs_mm);
                 const mediaHs = validHs.length > 0 ? (validHs.reduce((sum, val) => sum + val, 0) / validHs.length).toFixed(2) : null;
                 return mediaHs && (
-                  <p className="text-gray-900 mt-1">
+                  <p className="text-gray-900 mt-0">
                     <span className="font-semibold">MÉDIA:</span> {mediaHs} mm
                   </p>
                 );
@@ -237,7 +237,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                 const validVrd = ensaio.ensaios_pendulo.filter(e => e.vrd != null).map(e => e.vrd);
                 const mediaVrd = validVrd.length > 0 ? (validVrd.reduce((sum, val) => sum + val, 0) / validVrd.length).toFixed(1) : null;
                 return mediaVrd && (
-                  <p className="text-gray-900 mt-1">
+                  <p className="text-gray-900 mt-0">
                     <span className="font-semibold">MÉDIA:</span> {mediaVrd}
                   </p>
                 );
@@ -254,19 +254,19 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="mb-0.5 print:break-inside-avoid">
-            <div className="bg-slate-200 px-1.5 py-0.5 font-bold text-[8px]">OBSERVAÇÕES</div>
-            <div className="p-1 text-[8px] min-h-[20px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+          <div className="mb-0 print:break-inside-avoid">
+            <div className="bg-slate-200 px-1.5 py-0 font-bold text-[8px]">OBSERVAÇÕES</div>
+            <div className="p-0.5 text-[8px] min-h-[15px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
               <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
             </div>
           </div>
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-1 pt-1 print:break-inside-avoid">
-          <div className="grid grid-cols-3 gap-2 items-end px-1">
+        <footer className="mt-0 pt-0.5 print:break-inside-avoid">
+          <div className="grid grid-cols-3 gap-1.5 items-end px-1">
             <div className="text-center">
-              <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
+              <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
                 {ensaio.laboratorista_name && (
                   <>
                     <p className="font-bold text-slate-600 text-[8px]">{ensaio.laboratorista_name}</p>
@@ -275,7 +275,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
                   </>
                 )}
               </div>
-              <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+              <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                 <p className="text-[7px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
               </div>
             </div>
@@ -283,20 +283,20 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <div className="text-center">
               {ensaio.approver_details ? (
                 <>
-                  <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
+                  <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
                     <p className="font-bold text-slate-600 text-[8px]">{ensaio.approver_details.name}</p>
                     <p className="text-[6px]">{ensaio.approved_by}</p>
                     {ensaio.approver_details.crea_number && <p className="text-[6px]">CREA: {ensaio.approver_details.crea_number}</p>}
                     <p className="text-[6px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                   </div>
-                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                     <p className="text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[28px] mb-0.5"></div>
-                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="min-h-[24px] mb-0"></div>
+                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                     <p className="text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
                   </div>
                 </>
@@ -306,20 +306,20 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
             <div className="text-center">
               {ensaio.client_signature?.signed_by ? (
                 <>
-                  <div className="text-[8px] text-slate-500 mb-0.5 min-h-[28px] flex flex-col justify-end items-center">
+                  <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
                     <p className="font-bold text-slate-600 text-[8px]">{ensaio.client_signature.engineer_name}</p>
                     <p className="text-[6px]">{ensaio.client_signature.signed_by}</p>
                     {ensaio.client_signature.crea_number && <p className="text-[6px]">CREA: {ensaio.client_signature.crea_number}</p>}
                     <p className="text-[6px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                   </div>
-                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                     <p className="text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="min-h-[28px] mb-0.5"></div>
-                  <div className="border-t border-gray-500 pt-0.5 w-3/4 mx-auto">
+                  <div className="min-h-[24px] mb-0"></div>
+                  <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                     <p className="text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
                   </div>
                 </>
