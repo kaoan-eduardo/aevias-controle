@@ -229,4 +229,5 @@ export const typeOptions = [
   { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
   { value: 'AcompanhamentoCarga', label: 'Acompanhamento de Cargas' },
   { value: 'EnsaioManchaPendulo', label: 'Mancha + Pêndulo' },
+  { value: 'EnsaioVigaBenkelman', label: 'Viga Benkelman' },
 ];
