@@ -148,7 +148,7 @@ export default function EnsaioVigaBenkelman() {
 
         if (field === 'leitura_inicial' || field === 'leitura_final') {
           lev[lado].diferenca = (lev[lado].leitura_inicial || 0) - (lev[lado].leitura_final || 0);
-          lev[lado].deflexao = (lev[lado].diferenca || 0) * (novo.cte_viga || 0.01);
+          lev[lado].deflexao = (lev[lado].diferenca || 0) * (parseFloat(novo.cte_viga) || 0.01);
         }
       }
 
