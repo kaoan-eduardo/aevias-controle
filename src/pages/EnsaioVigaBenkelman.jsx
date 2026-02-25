@@ -90,9 +90,12 @@ export default function EnsaioVigaBenkelman() {
     handleInputChange('obra_id', obraId);
     const obra = obras.find(o => o.id === obraId);
     if (obra) {
-      handleInputChange('rodovia', obra.rodovia ? obra.rodovia[0] : '');
+      handleInputChange('rodovia', '');
     }
   };
+
+  const obraAtual = obras.find(o => o.id === formData.obra_id);
+  const rodoviasDaObra = obraAtual?.rodovias || [];
 
   const addLevantamento = () => {
     setFormData(prev => ({
@@ -227,12 +230,17 @@ export default function EnsaioVigaBenkelman() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Rodovia</label>
-                  <Input
+                  <select
                     value={formData.rodovia}
                     onChange={(e) => handleInputChange('rodovia', e.target.value)}
-                    placeholder="Selecionar ou digitar"
-                    className="bg-white/10 border-white/20 text-[#00233B]"
-                  />
+                    disabled={!formData.obra_id}
+                    className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <option value="">Selecionar rodovia...</option>
+                    {rodoviasDaObra.map((rodovia, idx) => (
+                      <option key={idx} value={rodovia}>{rodovia}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
