@@ -197,12 +197,14 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('');
   const [statusObraFilter, setStatusObraFilter] = useState('all');
   const [reprovingEnsaio, setReprovingEnsaio] = useState(null);
   const [deletingEnsaio, setDeletingEnsaio] = useState(null);
   const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc', or null
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
   
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
   const [selectedEnsaio, setSelectedEnsaio] = useState(null);
@@ -405,9 +407,10 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
-    setTypeFilter('all');
+    setTypeFilter('');
     setStatusObraFilter('all');
     setSortOrder('desc'); // Reset sorting to default
+    setCurrentPage(1);
   }, []);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
@@ -445,10 +448,16 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
-      typeFilter !== 'all' ||
+      typeFilter !== '' ||
       statusObraFilter !== 'all'
     );
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
+
+  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
+  const paginatedEnsaios = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredEnsaios, currentPage]);
 
   const statusColors = useMemo(() => ({
     planejamento: "bg-blue-100 text-blue-800",
