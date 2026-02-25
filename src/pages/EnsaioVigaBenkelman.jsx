@@ -166,6 +166,9 @@ export default function EnsaioVigaBenkelman() {
     try {
       const dataToSave = {
         ...formData,
+        cte_viga: parseFloat(formData.cte_viga) || 0,
+        def_admissivel: parseInt(formData.def_admissivel) || 0,
+        leitura_inicial_global: parseFloat(formData.leitura_inicial_global) || 0,
         status: asFinal ? 'finalizado' : 'rascunho'
       };
 
