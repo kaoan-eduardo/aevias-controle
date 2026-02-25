@@ -93,7 +93,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
-        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
+        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
+        { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
       ]
     },
     {
@@ -109,7 +110,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
-        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
+        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
+        { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
       ]
     },
     {
@@ -128,7 +130,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
-        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge }
+        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
+        { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
       ]
     },
     {
