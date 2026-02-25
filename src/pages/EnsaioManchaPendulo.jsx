@@ -56,6 +56,26 @@ export default function EnsaioManchaPendulo() {
     return limites[orgao] || limites['ECO-RODOVIAS'];
   };
 
+  const getClassificacaoHS = (mediaHS) => {
+    if (!mediaHS && mediaHS !== 0) return '';
+    if (mediaHS < 0.2) return 'Muito Fina';
+    if (mediaHS < 0.4) return 'Fina';
+    if (mediaHS < 0.8) return 'Média';
+    if (mediaHS < 1.2) return 'Grossa';
+    return 'Muito Grossa';
+  };
+
+  const getClassificacaoVRD = (mediaVRD) => {
+    if (!mediaVRD && mediaVRD !== 0) return '';
+    if (mediaVRD < 25) return 'Perigosa';
+    if (mediaVRD <= 31) return 'Muito Lisa';
+    if (mediaVRD <= 39) return 'Lisa';
+    if (mediaVRD <= 46) return 'Insuf. Rugosa';
+    if (mediaVRD <= 54) return 'Median. Rugosa';
+    if (mediaVRD <= 75) return 'Rugosa';
+    return 'Muito Rugosa';
+  };
+
   const avaliarConformidade = (ensaios_mancha, ensaios_pendulo, orgao) => {
     const limites = getLimitesOrgao(orgao);
     
@@ -275,10 +295,33 @@ export default function EnsaioManchaPendulo() {
         return e;
       });
 
+      // Calcular médias e classificações para resumos
+      const manchaValidos = ensaiosManchaComData.filter(e => e && e.hs_mm != null);
+      const penduloValidos = ensaiosPenduloComData.filter(e => e && e.vrd != null);
+      
+      let media_hs = null;
+      let classificacao_media_hs = '';
+      let media_vrd = null;
+      let classificacao_media_vrd = '';
+      
+      if (manchaValidos.length > 0) {
+        media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
+        classificacao_media_hs = getClassificacaoHS(media_hs);
+      }
+      
+      if (penduloValidos.length > 0) {
+        media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
+        classificacao_media_vrd = getClassificacaoVRD(media_vrd);
+      }
+
       const dataToSave = {
         ...formData,
         ensaios_mancha: ensaiosManchaComData,
         ensaios_pendulo: ensaiosPenduloComData,
+        media_hs,
+        classificacao_media_hs,
+        media_vrd,
+        classificacao_media_vrd,
         status: finalizar ? 'finalizado' : 'rascunho'
       };
 
