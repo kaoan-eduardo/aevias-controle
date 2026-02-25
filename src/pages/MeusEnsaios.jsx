@@ -300,8 +300,11 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       });
     }
 
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
+    if (typeFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const { name } = getEnsaioTypeInfo(ensaio);
+        return name.toLowerCase().includes(typeFilter.toLowerCase());
+      });
     }
 
     if (statusObraFilter !== 'all') {
@@ -322,7 +325,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     }
 
     setFilteredEnsaios(filtered);
-  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
+    setCurrentPage(1);
+  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
 
   const handleApprove = useCallback(async (ensaio) => {
     if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
@@ -668,7 +672,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                 </tr>
               </thead>
               <tbody>
-                {filteredEnsaios.map((ensaio, index) => {
+                {paginatedEnsaios.map((ensaio, index) => {
                   const obra = obras.find((o) => o.id === ensaio.obra_id);
                   const status = getStatusInfo(ensaio);
                   const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
@@ -821,6 +825,12 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
           </div>
         </CardContent>
       </Card>
+
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       <ReprovacaoModal
         ensaio={reprovingEnsaio}
@@ -1223,10 +1233,12 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('desc');
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
 
 
@@ -1312,8 +1324,11 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       });
     }
 
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
+    if (typeFilter) {
+      filtered = filtered.filter((ensaio) => {
+        const { name } = getEnsaioTypeInfo(ensaio);
+        return name.toLowerCase().includes(typeFilter.toLowerCase());
+      });
     }
 
     if (sortOrder) {
@@ -1326,7 +1341,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     }
 
     setFilteredEnsaios(filtered);
-  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, getDataEnsaio, sortOrder, allUsers]);
+    setCurrentPage(1);
+  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, sortOrder, allUsers]);
 
   const toggleSelectEnsaio = useCallback((ensaioId) => {
     setSelectedEnsaios(prev => 
@@ -1362,8 +1378,9 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
-    setTypeFilter('all');
+    setTypeFilter('');
     setSortOrder('desc');
+    setCurrentPage(1);
   }, []);
 
   const isAnyFilterActive = useMemo(() => {
@@ -1376,9 +1393,15 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
-      typeFilter !== 'all'
+      typeFilter !== ''
     );
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
+
+  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
+  const paginatedEnsaios = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredEnsaios, currentPage]);
 
   const handleAssinar = useCallback(async (ensaio) => {
     try {
@@ -1557,7 +1580,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                 </tr>
               </thead>
               <tbody>
-                {filteredEnsaios.map((ensaio, index) => {
+                {paginatedEnsaios.map((ensaio, index) => {
                   const obra = obras.find((o) => o.id === ensaio.obra_id);
                   const status = getStatusInfo(ensaio);
                   const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
@@ -1679,6 +1702,12 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
           </div>
         </CardContent>
       </Card>
+
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 });
