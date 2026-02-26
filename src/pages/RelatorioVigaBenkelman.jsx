@@ -207,9 +207,6 @@ export default function RelatorioVigaBenkelman() {
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
             DADOS DO ENSAIO
           </div>
-          <div className="p-2">
-            <p className="text-[8px] text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
-          </div>
         </div>
 
         {/* Tabela de Levantamentos */}
