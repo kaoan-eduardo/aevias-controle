@@ -247,25 +247,26 @@ export default function RelatorioVigaBenkelman() {
               </tr>
             </thead>
             <tbody>
-              {ensaio.levantamentos.map((lev, idx) => {
+              {Array.from({ length: Math.max(20, ensaio.levantamentos.length) }).map((_, idx) => {
+                const lev = ensaio.levantamentos[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
                   <tr key={idx} className={bgColor} style={{ height: '18px' }}>
                     <td className="px-0.5 py-0 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
-                      {lev.estaca_km}
+                      {lev?.estaca_km || ''}
                     </td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.deflexao?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.deflexao?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.deflexao?.toFixed(0) || ''}</td>
                   </tr>
                 );
               })}
@@ -324,8 +325,8 @@ export default function RelatorioVigaBenkelman() {
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             REPRESENTAÇÃO GRÁFICA
           </div>
-          <div className="p-6">
-            <ResponsiveContainer width="100%" height={400}>
+          <div className="p-3">
+            <ResponsiveContainer width="100%" height={200}>
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="estaca" angle={-45} textAnchor="end" height={80} />
@@ -335,7 +336,7 @@ export default function RelatorioVigaBenkelman() {
                 <Bar dataKey="Bordo Esquerdo" fill="#8b5cf6" />
                 <Bar dataKey="Eixo" fill="#3b82f6" />
                 <Bar dataKey="Bordo Direito" fill="#06b6d4" />
-                <Line dataKey="Def. Admissível" stroke="#dc2626" strokeDasharray="5 5" strokeWidth={2} isAnimationActive={false} />
+                <Line type="monotone" dataKey="Def. Admissível" stroke="#dc2626" strokeDasharray="5 5" strokeWidth={2} dot={false} />
               </BarChart>
             </ResponsiveContainer>
           </div>
