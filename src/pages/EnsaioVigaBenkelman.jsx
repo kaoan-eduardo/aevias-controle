@@ -408,9 +408,9 @@ export default function EnsaioVigaBenkelman() {
                     <thead>
                       <tr className="bg-[#00233B]/10 border border-[#00233B]/20">
                         <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold">Estaca / km</th>
-                        <th colSpan="4" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
-                        <th colSpan="4" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">EIXO</th>
-                        <th colSpan="4" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
+                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
+                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">EIXO</th>
+                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
                         <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2">Ação</th>
                       </tr>
                       <tr className="bg-[#00233B]/5 border border-[#00233B]/20">
@@ -418,7 +418,6 @@ export default function EnsaioVigaBenkelman() {
                           <React.Fragment key={`header-${i}`}>
                             <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Inicial (A)</th>
                             <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Final (B)</th>
-                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">Diferença (C)</th>
                             <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">Deflexão (D)</th>
                           </React.Fragment>
                         ))}
