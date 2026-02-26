@@ -85,98 +85,91 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Cabeçalho do Relatório */}
-        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-4">
-          <div className="flex justify-start">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" 
-              alt="Logo Afirmaevias" 
-              className="h-12 object-contain" 
-            />
-          </div>
-          <div className="text-center">
-            <h1 className="text-sm font-bold text-gray-800 leading-tight">
-              LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
-            </h1>
-            <p className="text-xs text-gray-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
-          </div>
-          <div className="flex justify-end">
-            <div className="text-xs text-gray-600 border border-slate-300 rounded px-2 py-1">
-              {ensaio.data_ensaio ? new Date(ensaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''}
+        <div className="border-2 border-slate-300 p-4 mb-4">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-lg font-bold">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h1>
+              <p className="text-sm text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm font-semibold">{ensaio.data_ensaio}</p>
             </div>
           </div>
-        </header>
+        </div>
 
         {/* Dados da Obra */}
-        <div className="mb-3">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-0 text-xs">
-            DADOS DA OBRA
+        <div className="border-2 border-slate-300 mb-4">
+          <div className="bg-slate-50 border-b border-slate-300 p-3">
+            <h2 className="text-sm font-semibold text-slate-700">DADOS DA OBRA</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-2 p-2 text-xs leading-tight">
-            <div>
-              <p className="font-bold text-gray-700">CLIENTE</p>
-              <p className="text-gray-900">Automático</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">OBRA</p>
-              <p className="text-gray-900">Selecionar</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">CAMADA</p>
-              <p className="text-gray-900">{ensaio.camada || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">DATA DA APLICAÇÃO</p>
-              <p className="text-gray-900">{ensaio.data_ensaio ? new Date(ensaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">RODOVIA</p>
-              <p className="text-gray-900">{ensaio.rodovia || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">MATERIAL</p>
-              <p className="text-gray-900">{ensaio.material || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">LABORATORISTA</p>
-              <p className="text-gray-900">{ensaio.laboratorista_name || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">CTE. VIGA</p>
-              <p className="text-gray-900">{ensaio.cte_viga || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">TRECHO</p>
-              <p className="text-gray-900">{ensaio.trecho || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">PROCEDÊNCIA</p>
-              <p className="text-gray-900">{ensaio.procedencia || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">PISTA/FAIXA</p>
-              <p className="text-gray-900">{ensaio.pista_faixa || '-'}</p>
-            </div>
-            <div>
-              <p className="font-bold text-gray-700">DEF. ADMISSÍVEL</p>
-              <p className="text-gray-900">{ensaio.def_admissivel || '-'}</p>
+          <div className="p-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <p className="font-semibold">CLIENTE</p>
+                <p className="text-slate-600">Automático</p>
+              </div>
+              <div>
+                <p className="font-semibold">OBRA</p>
+                <p className="text-slate-600">Selecionar</p>
+              </div>
+              <div>
+                <p className="font-semibold">CAMADA</p>
+                <p className="text-slate-600">{ensaio.camada || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">DATA DA APLICAÇÃO</p>
+                <p className="text-slate-600">{ensaio.data_ensaio || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">RODOVIA</p>
+                <p className="text-slate-600">{ensaio.rodovia || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">MATERIAL</p>
+                <p className="text-slate-600">{ensaio.material || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">LABORATORISTA</p>
+                <p className="text-slate-600">{ensaio.laboratorista_name || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">CTE. VIGA</p>
+                <p className="text-slate-600">{ensaio.cte_viga || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">TRECHO</p>
+                <p className="text-slate-600">{ensaio.trecho || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">PROCEDÊNCIA</p>
+                <p className="text-slate-600">{ensaio.procedencia || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">PISTA/FAIXA</p>
+                <p className="text-slate-600">{ensaio.pista_faixa || '-'}</p>
+              </div>
+              <div>
+                <p className="font-semibold">DEF. ADMISSÍVEL</p>
+                <p className="text-slate-600">{ensaio.def_admissivel || '-'}</p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Dados do Ensaio */}
-        <div className="mb-3">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-0 text-xs">
-            DADOS DO ENSAIO
+        <div className="border-2 border-slate-300 mb-4">
+          <div className="bg-slate-50 border-b border-slate-300 p-3">
+            <h2 className="text-sm font-semibold text-slate-700">DADOS DO ENSAIO</h2>
           </div>
-          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
-            MÉTODO DE ENSAIO DNER-ME-024/94
+          <div className="p-4">
+            <p className="text-xs text-slate-600 mb-3">MÉTODO DE ENSAIO DNER-ME-024/94</p>
           </div>
         </div>
 
         {/* Tabela de Levantamentos */}
-        <div className="mb-3 overflow-x-auto">
-          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
-            LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
+        <div className="border-2 border-slate-300 mb-4 overflow-x-auto">
+          <div className="bg-slate-50 border-b border-slate-300 p-3">
+            <h2 className="text-sm font-semibold text-slate-700">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h2>
           </div>
           <table className="w-full border-collapse text-xs">
             <thead>
@@ -232,9 +225,9 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Representação Gráfica */}
-        <div className="mb-3">
-          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
-            REPRESENTAÇÃO GRÁFICA
+        <div className="border-2 border-slate-300 mb-4">
+          <div className="bg-slate-50 border-b border-slate-300 p-3">
+            <h2 className="text-sm font-semibold text-slate-700">REPRESENTAÇÃO GRÁFICA</h2>
           </div>
           <div className="p-6">
             <ResponsiveContainer width="100%" height={400}>
@@ -254,9 +247,9 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Controle Estatístico */}
-        <div className="mb-3">
-          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
-            CONTROLE ESTATÍSTICO
+        <div className="border-2 border-slate-300 mb-4">
+          <div className="bg-slate-50 border-b border-slate-300 p-3">
+            <h2 className="text-sm font-semibold text-slate-700">CONTROLE ESTATÍSTICO</h2>
           </div>
           <div className="p-4">
             <div className="grid grid-cols-3 gap-6 text-sm">
@@ -278,85 +271,33 @@ export default function RelatorioVigaBenkelman() {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="mb-3">
-            <div className="bg-slate-200 px-2 py-1 font-bold text-xs border border-slate-400">OBSERVAÇÕES</div>
-            <div className="p-2 text-xs min-h-[15px] border border-slate-400">
-              <div className="whitespace-pre-wrap text-gray-900">{ensaio.observacoes}</div>
+          <div className="border-2 border-slate-300 mb-4">
+            <div className="bg-slate-50 border-b border-slate-300 p-3">
+              <h2 className="text-sm font-semibold text-slate-700">OBSERVAÇÕES</h2>
+            </div>
+            <div className="p-4">
+              <p className="text-sm text-slate-700">{ensaio.observacoes}</p>
             </div>
           </div>
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-6 pt-3 print:break-inside-avoid">
-          <div className="grid grid-cols-3 gap-4 items-end px-2">
-            <div className="text-center">
-              <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
-                {ensaio.laboratorista_name && (
-                  <>
-                    <p className="font-bold text-slate-600 text-xs">{ensaio.laboratorista_name}</p>
-                    <p className="text-[10px]">{ensaio.created_by}</p>
-                    <p className="text-[10px]">
-                      {ensaio.created_date ? new Date(ensaio.created_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
-                    </p>
-                  </>
-                )}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[10px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
-              </div>
+        <div className="border-2 border-slate-300 p-6 mt-8">
+          <div className="grid grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
+              <p className="text-sm font-semibold text-slate-700">LABORATORISTA</p>
             </div>
-
-            <div className="text-center">
-              {ensaio.approver_details ? (
-                <>
-                  <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
-                    <p className="font-bold text-slate-600 text-xs">{ensaio.approver_details.name}</p>
-                    <p className="text-[10px]">{ensaio.approved_by}</p>
-                    {ensaio.approver_details.crea_number && <p className="text-[10px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                    <p className="text-[10px]">
-                      {ensaio.approved_date ? new Date(ensaio.approved_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
-                    </p>
-                  </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[10px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="min-h-[30px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[10px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
-                  </div>
-                </>
-              )}
+            <div>
+              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
+              <p className="text-sm font-semibold text-slate-700">ENGENHEIRO RESPONSÁVEL</p>
             </div>
-
-            <div className="text-center">
-              {ensaio.client_signature?.signed_by ? (
-                <>
-                  <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
-                    <p className="font-bold text-slate-600 text-xs">{ensaio.client_signature.engineer_name}</p>
-                    <p className="text-[10px]">{ensaio.client_signature.signed_by}</p>
-                    {ensaio.client_signature.crea_number && <p className="text-[10px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                    <p className="text-[10px]">
-                      {ensaio.client_signature.signed_date ? new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
-                    </p>
-                  </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[10px] font-semibold">ENGENHEIRO CLIENTE</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="min-h-[30px] mb-1"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                    <p className="text-[10px] font-semibold">ENGENHEIRO CLIENTE</p>
-                  </div>
-                </>
-              )}
+            <div>
+              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
+              <p className="text-sm font-semibold text-slate-700">CLIENTE</p>
             </div>
           </div>
-        </footer>
+        </div>
       </div>
     </div>
   );
