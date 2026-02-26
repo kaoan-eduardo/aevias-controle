@@ -212,29 +212,32 @@ export default function RelatorioVigaBenkelman() {
               </tr>
             </thead>
             <tbody>
-              {ensaio.levantamentos.map((lev, idx) => (
-                <tr key={idx}>
-                  <td colSpan="13" className="border border-slate-300 p-2 font-semibold bg-slate-50">
-                    {lev.estaca_km}
-                  </td>
-                </tr>
-              ))}
-              {ensaio.levantamentos.map((lev, idx) => (
-                <tr key={`row-${idx}`}>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_esquerdo?.leitura_inicial.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_esquerdo?.leitura_final.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_esquerdo?.diferenca.toFixed(2)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_esquerdo?.deflexao.toFixed(1)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.eixo?.leitura_inicial.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.eixo?.leitura_final.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.eixo?.diferenca.toFixed(2)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.eixo?.deflexao.toFixed(1)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_direito?.leitura_inicial.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_direito?.leitura_final.toFixed(0)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_direito?.diferenca.toFixed(2)}</td>
-                  <td className="border border-slate-300 p-2 text-center">{lev.bordo_direito?.deflexao.toFixed(1)}</td>
-                </tr>
-              ))}
+              {ensaio.levantamentos.map((lev, idx) => {
+                const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
+                return (
+                  <React.Fragment key={idx}>
+                    <tr className={bgColor}>
+                      <td colSpan="13" className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
+                        {lev.estaca_km}
+                      </td>
+                    </tr>
+                    <tr className={bgColor} style={{ height: '18px' }}>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(2) || ''}</td>
+                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(1) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_final?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(2) || ''}</td>
+                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(1) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
+                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(2) || ''}</td>
+                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(1) || ''}</td>
+                    </tr>
+                  </React.Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
