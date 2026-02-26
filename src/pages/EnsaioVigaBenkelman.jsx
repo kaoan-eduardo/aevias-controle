@@ -206,8 +206,10 @@ export default function EnsaioVigaBenkelman() {
 
     setSaving(true);
     try {
+      const { nextFaixaId, controle_estatistico, pista_faixa, ...cleanData } = formData;
+
       const dataToSave = {
-        ...formData,
+        ...cleanData,
         cte_viga: parseFloat(formData.cte_viga) || 0,
         def_admissivel: parseInt(formData.def_admissivel) || 0,
         leitura_inicial_global: parseFloat(formData.leitura_inicial_global) || 0,
