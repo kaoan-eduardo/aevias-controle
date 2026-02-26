@@ -175,7 +175,7 @@ export default function RelatorioVigaBenkelman() {
             </div>
             <div>
               <p className="font-bold text-gray-700">CTE. VIGA</p>
-              <p className="text-gray-900">{ensaio.cte_viga || '-'}</p>
+              <p className="text-gray-900">{ensaio.cte_viga ? parseFloat(ensaio.cte_viga).toFixed(4) : '-'}</p>
             </div>
             <div>
               <p className="font-bold text-gray-700">TRECHO</p>
@@ -256,16 +256,16 @@ export default function RelatorioVigaBenkelman() {
                     </td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(2) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(1) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(0) || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(2) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(1) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(0) || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
                     <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(2) || ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(1) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(0) || ''}</td>
                   </tr>
                 );
               })}
@@ -301,19 +301,19 @@ export default function RelatorioVigaBenkelman() {
               </tr>
               <tr className="bg-white">
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.media.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.media.toFixed(0)}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatEixo.media.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatEixo.media.toFixed(0)}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.media.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.media.toFixed(0)}</td>
               </tr>
               <tr className="bg-white">
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DESV. PAD.:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.desvPad.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.desvPad.toFixed(0)}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DESV. PAD.:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatEixo.desvPad.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatEixo.desvPad.toFixed(0)}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>DESV. PAD.:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.desvPad.toFixed(2)}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.desvPad.toFixed(0)}</td>
               </tr>
             </tbody>
           </table>
