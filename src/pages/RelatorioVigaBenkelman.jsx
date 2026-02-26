@@ -372,7 +372,7 @@ export default function RelatorioVigaBenkelman() {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: Math.max(15, Math.min(faixa.levantamentos.length, 15)) }).map((_, idx) => {
+              {Array.from({ length: Math.max(20, faixa.levantamentos.length) }).map((_, idx) => {
                 const lev = faixa.levantamentos[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
