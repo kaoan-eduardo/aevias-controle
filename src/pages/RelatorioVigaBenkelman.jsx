@@ -208,7 +208,22 @@ export default function RelatorioVigaBenkelman() {
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
           </div>
-          <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
+          <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px', tableLayout: 'fixed' }}>
+            <colgroup>
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+              <col style={{ width: 'calc(100% / 13)' }} />
+            </colgroup>
             <thead>
               <tr className="bg-slate-100">
                 <th rowSpan="2" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Estaca / km</th>
