@@ -164,12 +164,12 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Dados do Ensaio */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">DADOS DO ENSAIO</h2>
+        <div className="mb-3">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-0 text-xs">
+            DADOS DO ENSAIO
           </div>
-          <div className="p-4">
-            <p className="text-xs text-slate-600 mb-3">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
+            MÉTODO DE ENSAIO DNER-ME-024/94
           </div>
         </div>
 
