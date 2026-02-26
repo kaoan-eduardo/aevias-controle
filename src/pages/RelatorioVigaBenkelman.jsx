@@ -91,6 +91,24 @@ export default function RelatorioVigaBenkelman() {
 
   return (
     <div className="bg-white min-h-screen">
+      <style>
+        {`
+          @media print {
+            body * {
+              visibility: hidden;
+            }
+            #report-content, #report-content * {
+              visibility: visible;
+            }
+            #report-content {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+            }
+          }
+        `}
+      </style>
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
