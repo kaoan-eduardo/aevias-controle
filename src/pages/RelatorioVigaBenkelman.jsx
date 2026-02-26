@@ -174,9 +174,9 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Tabela de Levantamentos */}
-        <div className="border-2 border-slate-300 mb-4 overflow-x-auto">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h2>
+        <div className="mb-3 overflow-x-auto">
+          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
+            LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
           </div>
           <table className="w-full border-collapse text-xs">
             <thead>
