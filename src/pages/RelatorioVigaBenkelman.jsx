@@ -15,6 +15,7 @@ export default function RelatorioVigaBenkelman() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('useEffect rodou, id:', id);
     loadEnsaio();
   }, [id]);
 
