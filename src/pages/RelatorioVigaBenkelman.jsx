@@ -71,13 +71,19 @@ export default function RelatorioVigaBenkelman() {
     );
   }
 
-  // Preparar dados para gráfico
-  const chartData = (ensaio.levantamentos || []).map(lev => ({
-    estaca: lev.estaca_km || '',
-    'Bordo Esquerdo': lev.bordo_esquerdo?.deflexao || 0,
-    'Eixo': lev.eixo?.deflexao || 0,
-    'Bordo Direito': lev.bordo_direito?.deflexao || 0,
-    'Def. Admissível': parseFloat(ensaio.def_admissivel) || 0
+  // Agrupar levantamentos por faixa
+  const faixas = {};
+  (ensaio.levantamentos || []).forEach(lev => {
+    const faixaNome = lev.estaca_km ? lev.estaca_km.toString().split('-')[0] : 'Sem Faixa';
+    if (!faixas[faixaNome]) {
+      faixas[faixaNome] = [];
+    }
+    faixas[faixaNome].push(lev);
+  });
+
+  const faixasArray = Object.entries(faixas).map(([nome, levs]) => ({
+    nome,
+    levantamentos: levs
   }));
 
   // Calcular controle estatístico por bordo
