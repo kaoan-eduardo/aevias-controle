@@ -425,40 +425,40 @@ export default function EnsaioVigaBenkelman() {
 
                           {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
                             <React.Fragment key={lado}>
-                              <td className="border border-[#00233B]/20 px-1 py-0.5">
+                              <td className="border border-[#00233B]/20 px-2 py-1">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_inicial}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center text-xs font-medium"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-1 py-0.5">
+                              <td className="border border-[#00233B]/20 px-2 py-1">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_final}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center text-xs font-medium"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-1 py-0.5 bg-white/5">
+                              <td className="border border-[#00233B]/20 px-0.5 py-0.5 bg-white/5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].diferenca.toFixed(2)}
                                   disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-7 text-center text-xs"
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-6 text-center text-xs"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-1 py-0.5 bg-white/5">
+                              <td className="border border-[#00233B]/20 px-0.5 py-0.5 bg-white/5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].deflexao.toFixed(1)}
                                   disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-7 text-center text-xs"
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-6 text-center text-xs"
                                 />
                               </td>
                             </React.Fragment>
