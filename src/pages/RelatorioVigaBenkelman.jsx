@@ -81,10 +81,12 @@ export default function RelatorioVigaBenkelman() {
     faixas[faixaNome].push(lev);
   });
 
-  const faixasArray = Object.entries(faixas).map(([nome, levs]) => ({
-    nome,
-    levantamentos: levs
-  }));
+  const faixasArray = Object.entries(faixas)
+    .filter(([, levs]) => levs.length > 0)
+    .map(([nome, levs]) => ({
+      nome,
+      levantamentos: levs
+    }));
 
   // Calcular controle estatístico por bordo
   const deflexoesBordoEsquerdo = (ensaio.levantamentos || [])
