@@ -185,35 +185,17 @@ export default function EnsaioVigaBenkelman() {
       setFormData(prev => ({
         ...prev,
         leitura_inicial_global: value,
-        levantamentos: prev.levantamentos.map(lev => ({
-          ...lev,
-          bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: value },
-          eixo: { ...lev.eixo, leitura_inicial: value },
-          bordo_direito: { ...lev.bordo_direito, leitura_inicial: value }
+        faixas: prev.faixas.map(faixa => ({
+          ...faixa,
+          levantamentos: faixa.levantamentos.map(lev => ({
+            ...lev,
+            bordo_esquerdo: { ...lev.bordo_esquerdo, leitura_inicial: value },
+            eixo: { ...lev.eixo, leitura_inicial: value },
+            bordo_direito: { ...lev.bordo_direito, leitura_inicial: value }
+          }))
         }))
       }));
     }
-  };
-
-  const updateLevantamento = (index, lado, field, value) => {
-    setFormData(prev => {
-      const novo = { ...prev };
-      const lev = novo.levantamentos[index];
-
-      if (field === 'estaca_km') {
-        lev.estaca_km = value;
-      } else {
-        const numValue = parseFloat(value) || 0;
-        lev[lado][field] = numValue;
-
-        if (field === 'leitura_inicial' || field === 'leitura_final') {
-          lev[lado].diferenca = (lev[lado].leitura_inicial || 0) - (lev[lado].leitura_final || 0);
-          lev[lado].deflexao = (lev[lado].diferenca || 0) * (parseFloat(novo.cte_viga) || 0.01);
-        }
-      }
-
-      return novo;
-    });
   };
 
   const handleSave = async (asFinal = false) => {
