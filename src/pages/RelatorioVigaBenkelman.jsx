@@ -67,18 +67,31 @@ export default function RelatorioVigaBenkelman() {
     'Def. Admissível': parseFloat(ensaio.def_admissivel) || 0
   }));
 
-  // Calcular controle estatístico
-  const todasAsDeflexoes = ensaio.levantamentos.flatMap(lev => [
-    lev.bordo_esquerdo?.deflexao || 0,
-    lev.eixo?.deflexao || 0,
-    lev.bordo_direito?.deflexao || 0
-  ]).filter(v => v > 0);
+  // Calcular controle estatístico por bordo
+  const deflexoesBordoEsquerdo = ensaio.levantamentos
+    .map(lev => lev.bordo_esquerdo?.deflexao || 0)
+    .filter(v => v > 0);
+  
+  const deflexoesEixo = ensaio.levantamentos
+    .map(lev => lev.eixo?.deflexao || 0)
+    .filter(v => v > 0);
+  
+  const deflexoesBordoDireito = ensaio.levantamentos
+    .map(lev => lev.bordo_direito?.deflexao || 0)
+    .filter(v => v > 0);
 
-  const qtLeituras = todasAsDeflexoes.length;
-  const media = qtLeituras > 0 ? todasAsDeflexoes.reduce((a, b) => a + b) / qtLeituras : 0;
-  const desvPad = qtLeituras > 0 
-    ? Math.sqrt(todasAsDeflexoes.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / qtLeituras)
-    : 0;
+  const calcularEstatisticas = (deflexoes) => {
+    const qt = deflexoes.length;
+    const media = qt > 0 ? deflexoes.reduce((a, b) => a + b) / qt : 0;
+    const desvPad = qt > 0 
+      ? Math.sqrt(deflexoes.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / qt)
+      : 0;
+    return { qt, media, desvPad };
+  };
+
+  const estatBordoEsquerdo = calcularEstatisticas(deflexoesBordoEsquerdo);
+  const estatEixo = calcularEstatisticas(deflexoesEixo);
+  const estatBordoDireito = calcularEstatisticas(deflexoesBordoDireito);
 
   const handlePrint = () => {
     window.print();
