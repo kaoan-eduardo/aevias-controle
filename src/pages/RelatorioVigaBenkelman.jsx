@@ -71,98 +71,113 @@ export default function RelatorioVigaBenkelman() {
     window.print();
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+  };
+
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 no-print">
-          <Button onClick={() => navigate(-1)} variant="ghost">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-          </Button>
-          <Button onClick={handlePrint} className="bg-slate-700 hover:bg-slate-800">
+    <div className="bg-white min-h-screen">
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Button onClick={() => navigate(-1)} variant="ghost">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+            </Button>
+          </div>
+          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
             Imprimir
           </Button>
         </div>
+      </div>
 
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-1 print:p-1 print:min-h-[297mm]">
         {/* Cabeçalho do Relatório */}
-        <div className="border-2 border-slate-300 p-4 mb-4">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-lg font-bold">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h1>
-              <p className="text-sm text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-semibold">{ensaio.data_ensaio}</p>
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+          <div className="flex justify-start">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" 
+              alt="Logo" 
+              className="h-9 object-contain" 
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-xs font-bold text-gray-800 leading-tight">
+              LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
+            </h1>
+            <p className="text-[9px] text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+          </div>
+          <div className="flex justify-end">
+            <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
+              {formatDate(ensaio.data_ensaio)}
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Dados da Obra */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">DADOS DA OBRA</h2>
+        <div className="mb-0">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
+            DADOS DA OBRA
           </div>
-          <div className="p-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <p className="font-semibold">CLIENTE</p>
-                <p className="text-slate-600">Automático</p>
-              </div>
-              <div>
-                <p className="font-semibold">OBRA</p>
-                <p className="text-slate-600">Selecionar</p>
-              </div>
-              <div>
-                <p className="font-semibold">CAMADA</p>
-                <p className="text-slate-600">{ensaio.camada || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">DATA DA APLICAÇÃO</p>
-                <p className="text-slate-600">{ensaio.data_ensaio || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">RODOVIA</p>
-                <p className="text-slate-600">{ensaio.rodovia || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">MATERIAL</p>
-                <p className="text-slate-600">{ensaio.material || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">LABORATORISTA</p>
-                <p className="text-slate-600">{ensaio.laboratorista_name || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">CTE. VIGA</p>
-                <p className="text-slate-600">{ensaio.cte_viga || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">TRECHO</p>
-                <p className="text-slate-600">{ensaio.trecho || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">PROCEDÊNCIA</p>
-                <p className="text-slate-600">{ensaio.procedencia || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">PISTA/FAIXA</p>
-                <p className="text-slate-600">{ensaio.pista_faixa || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">DEF. ADMISSÍVEL</p>
-                <p className="text-slate-600">{ensaio.def_admissivel || '-'}</p>
-              </div>
+          <div className="grid grid-cols-4 gap-x-2 gap-y-0 mb-0 text-[9px] leading-tight p-2">
+            <div>
+              <p className="font-bold text-gray-700">CLIENTE</p>
+              <p className="text-gray-900">Automático</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">OBRA</p>
+              <p className="text-gray-900">Selecionar</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">CAMADA</p>
+              <p className="text-gray-900">{ensaio.camada || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">DATA DA APLICAÇÃO</p>
+              <p className="text-gray-900">{formatDate(ensaio.data_ensaio) || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">RODOVIA</p>
+              <p className="text-gray-900">{ensaio.rodovia || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">MATERIAL</p>
+              <p className="text-gray-900">{ensaio.material || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">LABORATORISTA</p>
+              <p className="text-gray-900">{ensaio.laboratorista_name || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">CTE. VIGA</p>
+              <p className="text-gray-900">{ensaio.cte_viga || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">TRECHO</p>
+              <p className="text-gray-900">{ensaio.trecho || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">PROCEDÊNCIA</p>
+              <p className="text-gray-900">{ensaio.procedencia || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">PISTA/FAIXA</p>
+              <p className="text-gray-900">{ensaio.pista_faixa || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">DEF. ADMISSÍVEL</p>
+              <p className="text-gray-900">{ensaio.def_admissivel || '-'}</p>
             </div>
           </div>
         </div>
 
         {/* Dados do Ensaio */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">DADOS DO ENSAIO</h2>
+        <div className="mb-0">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
+            DADOS DO ENSAIO
           </div>
-          <div className="p-4">
-            <p className="text-xs text-slate-600 mb-3">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+          <div className="p-2">
+            <p className="text-[8px] text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
           </div>
         </div>
 
