@@ -391,22 +391,22 @@ export default function EnsaioVigaBenkelman() {
                 <p className="text-center text-[#00233B]/70 py-8">Clique em "Adicionar Estaca" para começar</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm min-w-max">
+                  <table className="w-full border-collapse text-xs min-w-max">
                     <thead>
                       <tr className="bg-[#00233B]/15 border border-[#00233B]/30">
-                        <th rowSpan="2" className="border border-[#00233B]/30 px-4 py-3 text-[#00233B] font-bold whitespace-nowrap">Estaca / km</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-3 py-3 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-3 py-3 text-[#00233B] font-bold text-center">EIXO</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-3 py-3 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
-                        <th rowSpan="2" className="border border-[#00233B]/30 px-3 py-3 text-[#00233B] font-bold">Ação</th>
+                        <th rowSpan="2" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold whitespace-nowrap text-xs">Estaca / km</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">BORDO ESQUERDO</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">EIXO</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">BORDO DIREITO</th>
+                        <th rowSpan="2" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-xs">Ação</th>
                       </tr>
                       <tr className="bg-[#00233B]/10 border border-[#00233B]/30">
                         {[0, 1, 2].map((i) => (
                           <React.Fragment key={`header-${i}`}>
-                            <th className="border border-[#00233B]/30 px-3 py-2 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Inicial (A)</th>
-                            <th className="border border-[#00233B]/30 px-3 py-2 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Final (B)</th>
-                            <th className="border border-[#00233B]/30 px-3 py-2 text-[#00233B] font-semibold text-xs whitespace-nowrap">Dif (C)</th>
-                            <th className="border border-[#00233B]/30 px-3 py-2 text-[#00233B] font-semibold text-xs whitespace-nowrap">Deflexão (D)</th>
+                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Inicial (A)</th>
+                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Final (B)</th>
+                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">Dif (C)</th>
+                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">Defl (D)</th>
                           </React.Fragment>
                         ))}
                       </tr>
@@ -414,64 +414,64 @@ export default function EnsaioVigaBenkelman() {
                     <tbody>
                       {formData.levantamentos.map((lev, idx) => (
                         <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
-                          <td className="border border-[#00233B]/20 px-4 py-2">
+                          <td className="border border-[#00233B]/20 px-2 py-0.5">
                             <Input
                               value={lev.estaca_km}
                               onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
-                              placeholder="Estaca/km"
-                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-10"
+                              placeholder="Est/km"
+                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-7 text-xs"
                             />
                           </td>
 
                           {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
                             <React.Fragment key={lado}>
-                              <td className="border border-[#00233B]/20 px-2 py-1">
+                              <td className="border border-[#00233B]/20 px-1 py-0.5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_inicial}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-1">
+                              <td className="border border-[#00233B]/20 px-1 py-0.5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_final}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-1 bg-white/5">
+                              <td className="border border-[#00233B]/20 px-1 py-0.5 bg-white/5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].diferenca.toFixed(2)}
                                   disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-7 text-center text-xs"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-1 bg-white/5">
+                              <td className="border border-[#00233B]/20 px-1 py-0.5 bg-white/5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].deflexao.toFixed(1)}
                                   disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-7 text-center text-xs"
                                 />
                               </td>
                             </React.Fragment>
                           ))}
 
-                          <td className="border border-[#00233B]/20 px-2 py-1">
+                          <td className="border border-[#00233B]/20 px-1 py-0.5">
                             <Button
                               onClick={() => removeLevantamento(idx)}
                               variant="destructive"
                               size="sm"
-                              className="h-10 px-2"
+                              className="h-7 px-1"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-3 h-3" />
                             </Button>
                           </td>
                         </tr>
