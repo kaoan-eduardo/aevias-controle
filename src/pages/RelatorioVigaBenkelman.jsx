@@ -419,11 +419,11 @@ export default function RelatorioVigaBenkelman() {
               <tr className="bg-white">
                 <td rowSpan="3" className="px-0.5 py-0.5 text-center font-semibold align-middle" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CONTROLE<br/>ESTATÍSTICO</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>QT. LEITURAS:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.qt}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{stats.bordoEsquerdo.qt}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>QT. LEITURAS:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatEixo.qt}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{stats.eixo.qt}</td>
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>QT. LEITURAS:</td>
-                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.qt}</td>
+                <td className="px-0.5 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{stats.bordoDireito.qt}</td>
               </tr>
               <tr className="bg-white">
                 <td colSpan="3" className="px-0.5 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
