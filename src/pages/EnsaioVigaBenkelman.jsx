@@ -98,18 +98,24 @@ export default function EnsaioVigaBenkelman() {
   const rodoviasDaObra = obraAtual?.rodovias || [];
 
   const addLevantamento = () => {
-    setFormData(prev => ({
-      ...prev,
-      levantamentos: [
-        ...prev.levantamentos,
-        {
-          estaca_km: '',
-          bordo_esquerdo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
-          eixo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
-          bordo_direito: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
-        }
-      ]
-    }));
+    setFormData(prev => {
+      if (prev.levantamentos.length >= 20) {
+        alert('Limite máximo de 20 estacas atingido.');
+        return prev;
+      }
+      return {
+        ...prev,
+        levantamentos: [
+          ...prev.levantamentos,
+          {
+            estaca_km: '',
+            bordo_esquerdo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+            eixo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+            bordo_direito: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
+          }
+        ]
+      };
+    });
   };
 
   const removeLevantamento = (index) => {
