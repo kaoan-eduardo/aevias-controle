@@ -214,24 +214,24 @@ export default function EnsaioVigaBenkelman() {
               Object.values(lev.eixo).some(v => v) || 
               Object.values(lev.bordo_direito).some(v => v)) {
             levantamentos.push({
-              estaca_km: lev.estaca_km || '',
+              estaca_km: lev.estaca_km ? String(lev.estaca_km).trim() : '',
               bordo_esquerdo: {
-                leitura_inicial: parseFloat(lev.bordo_esquerdo.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.bordo_esquerdo.leitura_final) || 0,
-                diferenca: parseFloat(lev.bordo_esquerdo.diferenca) || 0,
-                deflexao: parseFloat(lev.bordo_esquerdo.deflexao) || 0
+                leitura_inicial: Number(lev.bordo_esquerdo.leitura_inicial) || 0,
+                leitura_final: Number(lev.bordo_esquerdo.leitura_final) || 0,
+                diferenca: Number(lev.bordo_esquerdo.diferenca) || 0,
+                deflexao: Number(lev.bordo_esquerdo.deflexao) || 0
               },
               eixo: {
-                leitura_inicial: parseFloat(lev.eixo.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.eixo.leitura_final) || 0,
-                diferenca: parseFloat(lev.eixo.diferenca) || 0,
-                deflexao: parseFloat(lev.eixo.deflexao) || 0
+                leitura_inicial: Number(lev.eixo.leitura_inicial) || 0,
+                leitura_final: Number(lev.eixo.leitura_final) || 0,
+                diferenca: Number(lev.eixo.diferenca) || 0,
+                deflexao: Number(lev.eixo.deflexao) || 0
               },
               bordo_direito: {
-                leitura_inicial: parseFloat(lev.bordo_direito.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.bordo_direito.leitura_final) || 0,
-                diferenca: parseFloat(lev.bordo_direito.diferenca) || 0,
-                deflexao: parseFloat(lev.bordo_direito.deflexao) || 0
+                leitura_inicial: Number(lev.bordo_direito.leitura_inicial) || 0,
+                leitura_final: Number(lev.bordo_direito.leitura_final) || 0,
+                diferenca: Number(lev.bordo_direito.diferenca) || 0,
+                deflexao: Number(lev.bordo_direito.deflexao) || 0
               }
             });
           }
@@ -248,9 +248,9 @@ export default function EnsaioVigaBenkelman() {
         material: formData.material,
         procedencia: formData.procedencia,
         camada: formData.camada,
-        cte_viga: parseFloat(formData.cte_viga) || 0,
-        def_admissivel: parseInt(formData.def_admissivel) || 0,
-        leitura_inicial_global: parseFloat(formData.leitura_inicial_global) || 0,
+        cte_viga: Number(formData.cte_viga) || 0,
+        def_admissivel: Number(formData.def_admissivel) || 0,
+        leitura_inicial_global: Number(formData.leitura_inicial_global) || 0,
         levantamentos: levantamentos,
         observacoes: formData.observacoes,
         status: asFinal ? 'finalizado' : 'rascunho'
