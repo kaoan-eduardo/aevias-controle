@@ -23,7 +23,7 @@ export const getLocalInfo = (ensaio) => {
       detalhes: ensaio.usina || "Não informado",
       icon: Building
     };
-  } else if (entityType === "ChecklistAplicacao" || entityType === "ChecklistMRAF" || entityType === "ChecklistConcretagem" || entityType === "ChecklistTerraplanagem" || entityType === "ChecklistReciclagem" || entityType === "EnsaioSondagem" || entityType === "EnsaioTaxaPinturaImprimacao" || entityType === "EnsaioGranulometriaIndividual" || entityType === "EnsaioManchaPendulo") {
+  } else if (entityType === "ChecklistAplicacao" || entityType === "ChecklistMRAF" || entityType === "ChecklistConcretagem" || entityType === "ChecklistTerraplanagem" || entityType === "ChecklistReciclagem" || entityType === "EnsaioSondagem" || entityType === "EnsaioTaxaPinturaImprimacao" || entityType === "EnsaioGranulometriaIndividual" || entityType === "EnsaioManchaPendulo" || entityType === "EnsaioVigaBenkelman") {
     return {
       tipo: "Campo",
       detalhes: `${ensaio.rodovia || "Rodovia não informada"} - ${ensaio.trecho || ensaio.estaca || ensaio.local_coleta || "Trecho não informado"}`,
