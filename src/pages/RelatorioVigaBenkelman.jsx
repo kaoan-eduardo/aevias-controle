@@ -327,7 +327,7 @@ export default function RelatorioVigaBenkelman() {
           </div>
           <div className="p-1">
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={chartData} margin={{ top: 20, right: 60, left: 60, bottom: 40 }}>
+              <BarChart data={chartData} margin={{ top: 10, right: 60, left: 60, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="estaca" 
