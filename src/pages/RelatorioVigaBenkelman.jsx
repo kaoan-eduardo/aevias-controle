@@ -107,60 +107,58 @@ export default function RelatorioVigaBenkelman() {
         </header>
 
         {/* Dados da Obra */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">DADOS DA OBRA</h2>
+        <div className="mb-3">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-0 text-xs">
+            DADOS DA OBRA
           </div>
-          <div className="p-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <p className="font-semibold">CLIENTE</p>
-                <p className="text-slate-600">Automático</p>
-              </div>
-              <div>
-                <p className="font-semibold">OBRA</p>
-                <p className="text-slate-600">Selecionar</p>
-              </div>
-              <div>
-                <p className="font-semibold">CAMADA</p>
-                <p className="text-slate-600">{ensaio.camada || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">DATA DA APLICAÇÃO</p>
-                <p className="text-slate-600">{ensaio.data_ensaio || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">RODOVIA</p>
-                <p className="text-slate-600">{ensaio.rodovia || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">MATERIAL</p>
-                <p className="text-slate-600">{ensaio.material || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">LABORATORISTA</p>
-                <p className="text-slate-600">{ensaio.laboratorista_name || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">CTE. VIGA</p>
-                <p className="text-slate-600">{ensaio.cte_viga || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">TRECHO</p>
-                <p className="text-slate-600">{ensaio.trecho || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">PROCEDÊNCIA</p>
-                <p className="text-slate-600">{ensaio.procedencia || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">PISTA/FAIXA</p>
-                <p className="text-slate-600">{ensaio.pista_faixa || '-'}</p>
-              </div>
-              <div>
-                <p className="font-semibold">DEF. ADMISSÍVEL</p>
-                <p className="text-slate-600">{ensaio.def_admissivel || '-'}</p>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-2 p-2 text-xs leading-tight">
+            <div>
+              <p className="font-bold text-gray-700">CLIENTE</p>
+              <p className="text-gray-900">Automático</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">OBRA</p>
+              <p className="text-gray-900">Selecionar</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">CAMADA</p>
+              <p className="text-gray-900">{ensaio.camada || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">DATA DA APLICAÇÃO</p>
+              <p className="text-gray-900">{ensaio.data_ensaio ? new Date(ensaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">RODOVIA</p>
+              <p className="text-gray-900">{ensaio.rodovia || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">MATERIAL</p>
+              <p className="text-gray-900">{ensaio.material || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">LABORATORISTA</p>
+              <p className="text-gray-900">{ensaio.laboratorista_name || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">CTE. VIGA</p>
+              <p className="text-gray-900">{ensaio.cte_viga || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">TRECHO</p>
+              <p className="text-gray-900">{ensaio.trecho || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">PROCEDÊNCIA</p>
+              <p className="text-gray-900">{ensaio.procedencia || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">PISTA/FAIXA</p>
+              <p className="text-gray-900">{ensaio.pista_faixa || '-'}</p>
+            </div>
+            <div>
+              <p className="font-bold text-gray-700">DEF. ADMISSÍVEL</p>
+              <p className="text-gray-900">{ensaio.def_admissivel || '-'}</p>
             </div>
           </div>
         </div>
