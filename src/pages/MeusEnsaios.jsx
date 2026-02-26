@@ -1400,7 +1400,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
-      typeFilter !== ''
+      typeFilter !== 'all'
     );
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
 
