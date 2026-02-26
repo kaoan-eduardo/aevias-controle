@@ -431,7 +431,7 @@ export default function EnsaioVigaBenkelman() {
                               value={lev.estaca_km}
                               onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
                               placeholder="Estaca / km"
-                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-10 text-sm"
+                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-14 text-base"
                             />
                           </td>
 
