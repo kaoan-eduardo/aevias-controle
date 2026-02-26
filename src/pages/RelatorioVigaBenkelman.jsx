@@ -24,9 +24,14 @@ export default function RelatorioVigaBenkelman() {
       if (id) {
         const data = await base44.entities.EnsaioVigaBenkelman.get(id);
         console.log('Ensaio carregado:', data);
-        console.log('Levantamentos:', data.levantamentos);
-        console.log('Tipo levantamentos:', typeof data.levantamentos);
-        console.log('É array?', Array.isArray(data.levantamentos));
+        console.log('Levantamentos recebidos:', data.levantamentos);
+        console.log('Comprimento:', data.levantamentos?.length || 0);
+
+        // Se levantamentos for vazio ou não for array, trata como array vazio
+        if (!data.levantamentos) {
+          data.levantamentos = [];
+        }
+
         setEnsaio(data);
 
         // Carregar obra e regional
