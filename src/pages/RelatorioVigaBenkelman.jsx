@@ -229,13 +229,107 @@ export default function RelatorioVigaBenkelman() {
           </div>
         </div>
 
-        {/* Separar faixas por página */}
-        {ensaio.levantamentos && ensaio.levantamentos.length > 0 && (
-          <div className="print:break-before-page"></div>
-        )}
+        {/* Renderizar cada faixa em uma página separada */}
+        {faixasArray.map((faixa, faixaIdx) => {
+          const chartData = faixa.levantamentos.map(lev => ({
+            estaca: lev.estaca_km || '',
+            'Bordo Esquerdo': lev.bordo_esquerdo?.deflexao || 0,
+            'Eixo': lev.eixo?.deflexao || 0,
+            'Bordo Direito': lev.bordo_direito?.deflexao || 0,
+            'Def. Admissível': parseFloat(ensaio.def_admissivel) || 0
+          }));
+          const stats = calcularEstatisticasPorFaixa(faixa.levantamentos);
 
-        {/* Tabela de Levantamentos */}
-        <div className="mb-0 overflow-x-auto">
+          return (
+            <div key={faixaIdx} className={faixaIdx > 0 ? 'print:break-before-page' : ''}>
+              {/* Cabeçalho replicado para cada faixa */}
+              <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0 mt-4 print:mt-0">
+                <div className="flex justify-start">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" 
+                    alt="Logo" 
+                    className="h-9 object-contain" 
+                  />
+                </div>
+                <div className="text-center">
+                  <h1 className="text-xs font-bold text-gray-800 leading-tight">
+                    LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN - FAIXA {faixa.nome}
+                  </h1>
+                  <p className="text-[9px] text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+                </div>
+                <div className="flex justify-end">
+                  <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
+                    {formatDate(ensaio.data_ensaio)}
+                  </div>
+                </div>
+              </header>
+
+              {/* Dados da Obra */}
+              <div className="mb-0">
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
+                  DADOS DA OBRA
+                </div>
+                <div className="grid grid-cols-4 gap-x-2 gap-y-0 mb-0 text-[9px] leading-tight p-2">
+                  <div>
+                    <p className="font-bold text-gray-700">CLIENTE</p>
+                    <p className="text-gray-900">{regional?.cliente || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">OBRA</p>
+                    <p className="text-gray-900">{obra?.name || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">CAMADA</p>
+                    <p className="text-gray-900">{ensaio.camada || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">DATA DA APLICAÇÃO</p>
+                    <p className="text-gray-900">{formatDate(ensaio.data_ensaio) || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">RODOVIA</p>
+                    <p className="text-gray-900">{ensaio.rodovia || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">MATERIAL</p>
+                    <p className="text-gray-900">{ensaio.material || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">LABORATORISTA</p>
+                    <p className="text-gray-900">{ensaio.laboratorista_name || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">CTE. VIGA</p>
+                    <p className="text-gray-900">{ensaio.cte_viga ? parseFloat(ensaio.cte_viga).toFixed(4) : '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">TRECHO</p>
+                    <p className="text-gray-900">{ensaio.trecho || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">PROCEDÊNCIA</p>
+                    <p className="text-gray-900">{ensaio.procedencia || '-'}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">PISTA/FAIXA</p>
+                    <p className="text-gray-900">{faixa.nome}</p>
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">DEF. ADMISSÍVEL</p>
+                    <p className="text-gray-900">{ensaio.def_admissivel || '-'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dados do Ensaio */}
+              <div className="mb-0">
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
+                  DADOS DO ENSAIO
+                </div>
+              </div>
+
+              {/* Tabela de Levantamentos */}
+              <div className="mb-0 overflow-x-auto">
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
           </div>
