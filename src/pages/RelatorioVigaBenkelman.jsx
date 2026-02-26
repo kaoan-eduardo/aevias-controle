@@ -22,6 +22,10 @@ export default function RelatorioVigaBenkelman() {
     try {
       if (id) {
         const data = await base44.entities.EnsaioVigaBenkelman.get(id);
+        console.log('Ensaio carregado:', data);
+        console.log('Levantamentos:', data.levantamentos);
+        console.log('Tipo levantamentos:', typeof data.levantamentos);
+        console.log('É array?', Array.isArray(data.levantamentos));
         setEnsaio(data);
 
         // Carregar obra e regional
