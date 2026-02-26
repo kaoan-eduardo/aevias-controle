@@ -394,19 +394,19 @@ export default function EnsaioVigaBenkelman() {
                   <table className="w-full border-collapse text-xs min-w-max">
                     <thead>
                       <tr className="bg-[#00233B]/15 border border-[#00233B]/30">
-                        <th rowSpan="2" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold whitespace-nowrap text-xs">Estaca / km</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">BORDO ESQUERDO</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">EIXO</th>
-                        <th colSpan="4" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-center text-xs">BORDO DIREITO</th>
-                        <th rowSpan="2" className="border border-[#00233B]/30 px-2 py-1 text-[#00233B] font-bold text-xs">Ação</th>
+                        <th rowSpan="2" className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-bold whitespace-nowrap text-xs">Est/km</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-0.5 py-0.5 text-[#00233B] font-bold text-center text-xs">BORDO ESQ</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-0.5 py-0.5 text-[#00233B] font-bold text-center text-xs">EIXO</th>
+                        <th colSpan="4" className="border border-[#00233B]/30 px-0.5 py-0.5 text-[#00233B] font-bold text-center text-xs">BORDO DIR</th>
+                        <th rowSpan="2" className="border border-[#00233B]/30 px-0.5 py-0.5 text-[#00233B] font-bold text-xs">Ação</th>
                       </tr>
                       <tr className="bg-[#00233B]/10 border border-[#00233B]/30">
                         {[0, 1, 2].map((i) => (
                           <React.Fragment key={`header-${i}`}>
-                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Inicial (A)</th>
-                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">L. Final (B)</th>
-                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">Dif (C)</th>
-                            <th className="border border-[#00233B]/30 px-1 py-0.5 text-[#00233B] font-semibold text-xs whitespace-nowrap">Defl (D)</th>
+                            <th className="border border-[#00233B]/30 px-0.5 py-0 text-[#00233B] font-semibold text-xs">L.In</th>
+                            <th className="border border-[#00233B]/30 px-0.5 py-0 text-[#00233B] font-semibold text-xs">L.Fin</th>
+                            <th className="border border-[#00233B]/30 px-0.5 py-0 text-[#00233B] font-semibold text-xs">Dif</th>
+                            <th className="border border-[#00233B]/30 px-0.5 py-0 text-[#00233B] font-semibold text-xs">Defl</th>
                           </React.Fragment>
                         ))}
                       </tr>
