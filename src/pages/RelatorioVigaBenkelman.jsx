@@ -278,12 +278,10 @@ export default function RelatorioVigaBenkelman() {
 
         {/* Observações */}
         {ensaio.observacoes && (
-          <div className="border-2 border-slate-300 mb-4">
-            <div className="bg-slate-50 border-b border-slate-300 p-3">
-              <h2 className="text-sm font-semibold text-slate-700">OBSERVAÇÕES</h2>
-            </div>
-            <div className="p-4">
-              <p className="text-sm text-slate-700">{ensaio.observacoes}</p>
+          <div className="mb-3">
+            <div className="bg-slate-200 px-2 py-1 font-bold text-xs border border-slate-400">OBSERVAÇÕES</div>
+            <div className="p-2 text-xs min-h-[15px] border border-slate-400">
+              <div className="whitespace-pre-wrap text-gray-900">{ensaio.observacoes}</div>
             </div>
           </div>
         )}
