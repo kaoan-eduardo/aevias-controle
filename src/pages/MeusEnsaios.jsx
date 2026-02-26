@@ -302,10 +302,9 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       });
     }
 
-    if (typeFilter) {
+    if (typeFilter && typeFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
-        const { name } = getEnsaioTypeInfo(ensaio);
-        return name.toLowerCase().includes(typeFilter.toLowerCase());
+        return ensaio.entityType === typeFilter;
       });
     }
 
