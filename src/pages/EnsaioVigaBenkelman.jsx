@@ -379,8 +379,19 @@ export default function EnsaioVigaBenkelman() {
           {/* Levantamentos */}
           <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
             <CardHeader className="bg-[#BFCF99]/20 border-b border-white/10">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-[#00233B]">Levantamento Deflectométrico</CardTitle>
+              <div className="flex justify-between items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <CardTitle className="text-[#00233B]">Levantamento Deflectométrico</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</label>
+                    <Input
+                      value={formData.pista_faixa}
+                      onChange={(e) => handleInputChange('pista_faixa', e.target.value)}
+                      placeholder="Digitar"
+                      className="bg-white/20 border-white/30 text-[#00233B] h-8 w-32 text-sm"
+                    />
+                  </div>
+                </div>
                 <Button onClick={addLevantamento} size="sm" className="bg-[#00233B] text-white">
                   <Plus className="w-4 h-4 mr-1" /> Adicionar Estaca
                 </Button>
