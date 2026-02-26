@@ -260,16 +260,8 @@ export default function RelatorioVigaBenkelman() {
           {/* Controle Estatístico por Bordo - Logo abaixo da tabela */}
           <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
             <tbody>
-              <tr className="bg-slate-100">
-                <td rowSpan="3" className="px-1 py-0.5 text-center font-semibold align-middle" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CONTROLE<br/>ESTATÍSTICO</td>
-                <td colSpan="3" className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}></td>
-                <td className="px-1 py-0.5 text-center font-semibold bg-purple-100" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CONTROLE<br/>ESTATÍSTICO</td>
-                <td colSpan="3" className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}></td>
-                <td className="px-1 py-0.5 text-center font-semibold bg-blue-100" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CONTROLE<br/>ESTATÍSTICO</td>
-                <td colSpan="3" className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}></td>
-                <td className="px-1 py-0.5 text-center font-semibold bg-cyan-100" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>CONTROLE<br/>ESTATÍSTICO</td>
-              </tr>
               <tr className="bg-white">
+                <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}></td>
                 <td colSpan="3" className="px-1 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>QT. LEITURAS:</td>
                 <td className="px-1 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.qt}</td>
                 <td colSpan="3" className="px-1 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>QT. LEITURAS:</td>
@@ -278,6 +270,7 @@ export default function RelatorioVigaBenkelman() {
                 <td className="px-1 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoDireito.qt}</td>
               </tr>
               <tr className="bg-white">
+                <td className="px-1 py-0.5 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}></td>
                 <td colSpan="3" className="px-1 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
                 <td className="px-1 py-0.5 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{estatBordoEsquerdo.media.toFixed(2)}</td>
                 <td colSpan="3" className="px-1 py-0.5 text-left font-semibold text-[6px]" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>MÉDIA:</td>
