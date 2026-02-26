@@ -167,29 +167,29 @@ export default function RelatorioVigaBenkelman() {
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
           </div>
-          <table className="w-full border-collapse text-xs">
+          <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
             <thead>
               <tr className="bg-slate-100">
-                <th colSpan="4" className="border border-slate-300 p-2 text-center font-semibold">BORDO ESQUERDO</th>
-                <th colSpan="4" className="border border-slate-300 p-2 text-center font-semibold">EIXO</th>
-                <th colSpan="4" className="border border-slate-300 p-2 text-center font-semibold">BORDO DIREITO</th>
+                <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO ESQUERDO</th>
+                <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>EIXO</th>
+                <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO DIREITO</th>
               </tr>
               <tr className="bg-slate-100">
-                <th colSpan="13" className="border border-slate-300 p-2">Estaca / km</th>
+                <th colSpan="13" className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Estaca / km</th>
               </tr>
               <tr className="bg-slate-100">
-                <th className="border border-slate-300 p-2">Leitura Inicial (A)</th>
-                <th className="border border-slate-300 p-2">Leitura Final (B)</th>
-                <th className="border border-slate-300 p-2">Diferença (C = A - B)</th>
-                <th className="border border-slate-300 p-2">Deflexão (x10⁻²mm)</th>
-                <th className="border border-slate-300 p-2">Leitura Inicial (A)</th>
-                <th className="border border-slate-300 p-2">Leitura Final (B)</th>
-                <th className="border border-slate-300 p-2">Diferença (C = A - B)</th>
-                <th className="border border-slate-300 p-2">Deflexão (x10⁻²mm)</th>
-                <th className="border border-slate-300 p-2">Leitura Inicial (A)</th>
-                <th className="border border-slate-300 p-2">Leitura Final (B)</th>
-                <th className="border border-slate-300 p-2">Diferença (C = A - B)</th>
-                <th className="border border-slate-300 p-2">Deflexão (x10⁻²mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Inicial (A)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Final (B)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Diferença (C)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Deflexão<br/>(x10⁻²mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Inicial (A)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Final (B)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Diferença (C)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Deflexão<br/>(x10⁻²mm)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Inicial (A)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Final (B)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Diferença (C)</th>
+                <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Deflexão<br/>(x10⁻²mm)</th>
               </tr>
             </thead>
             <tbody>
