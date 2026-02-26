@@ -82,11 +82,12 @@ export default function RelatorioVigaBenkelman() {
   });
 
   const faixasArray = Object.entries(faixas)
-    .filter(([, levs]) => levs.length > 0)
+    .filter(([nome, levs]) => levs.length > 0 && nome !== 'Sem Faixa')
     .map(([nome, levs]) => ({
       nome,
       levantamentos: levs
-    }));
+    }))
+    .slice(0, 4);
 
   // Calcular controle estatístico por bordo
   const deflexoesBordoEsquerdo = (ensaio.levantamentos || [])
