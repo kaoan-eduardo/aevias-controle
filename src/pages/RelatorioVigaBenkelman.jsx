@@ -76,15 +76,15 @@ export default function RelatorioVigaBenkelman() {
   }));
 
   // Calcular controle estatístico por bordo
-  const deflexoesBordoEsquerdo = ensaio.levantamentos
+  const deflexoesBordoEsquerdo = (ensaio.levantamentos || [])
     .map(lev => lev.bordo_esquerdo?.deflexao || 0)
     .filter(v => v > 0);
-  
-  const deflexoesEixo = ensaio.levantamentos
+
+  const deflexoesEixo = (ensaio.levantamentos || [])
     .map(lev => lev.eixo?.deflexao || 0)
     .filter(v => v > 0);
-  
-  const deflexoesBordoDireito = ensaio.levantamentos
+
+  const deflexoesBordoDireito = (ensaio.levantamentos || [])
     .map(lev => lev.bordo_direito?.deflexao || 0)
     .filter(v => v > 0);
 
