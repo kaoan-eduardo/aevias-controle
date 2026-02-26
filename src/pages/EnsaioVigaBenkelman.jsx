@@ -206,13 +206,33 @@ export default function EnsaioVigaBenkelman() {
 
     setSaving(true);
     try {
-      const { nextFaixaId, controle_estatistico, pista_faixa, ...cleanData } = formData;
+      // Consolidar todos os levantamentos de todas as faixas em um array único
+      const levantamentos = [];
+      formData.faixas.forEach(faixa => {
+        faixa.levantamentos.forEach(lev => {
+          if (lev.estaca_km || Object.values(lev.bordo_esquerdo).some(v => v) || 
+              Object.values(lev.eixo).some(v => v) || 
+              Object.values(lev.bordo_direito).some(v => v)) {
+            levantamentos.push(lev);
+          }
+        });
+      });
 
       const dataToSave = {
-        ...cleanData,
+        obra_id: formData.obra_id,
+        project_id: formData.project_id,
+        data_ensaio: formData.data_ensaio,
+        laboratorista_name: formData.laboratorista_name,
+        rodovia: formData.rodovia,
+        trecho: formData.trecho,
+        material: formData.material,
+        procedencia: formData.procedencia,
+        camada: formData.camada,
         cte_viga: parseFloat(formData.cte_viga) || 0,
         def_admissivel: parseInt(formData.def_admissivel) || 0,
         leitura_inicial_global: parseFloat(formData.leitura_inicial_global) || 0,
+        levantamentos: levantamentos,
+        observacoes: formData.observacoes,
         status: asFinal ? 'finalizado' : 'rascunho'
       };
 
