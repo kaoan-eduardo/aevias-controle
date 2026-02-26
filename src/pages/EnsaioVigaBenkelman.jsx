@@ -459,15 +459,6 @@ export default function EnsaioVigaBenkelman() {
                                 <Input
                                   type="number"
                                   step="0.01"
-                                  value={lev[lado].diferenca.toFixed(2)}
-                                  disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
-                                />
-                              </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2 bg-white/5">
-                                <Input
-                                  type="number"
-                                  step="0.01"
                                   value={lev[lado].deflexao.toFixed(1)}
                                   disabled
                                   className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
