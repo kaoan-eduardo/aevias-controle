@@ -216,6 +216,11 @@ export default function RelatorioVigaBenkelman() {
           </div>
         </div>
 
+        {/* Separar faixas por página */}
+        {ensaio.levantamentos && ensaio.levantamentos.length > 0 && (
+          <div className="print:break-before-page"></div>
+        )}
+
         {/* Tabela de Levantamentos */}
         <div className="mb-0 overflow-x-auto">
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
