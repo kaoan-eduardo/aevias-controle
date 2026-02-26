@@ -329,7 +329,7 @@ export default function RelatorioVigaBenkelman() {
               </div>
 
               {/* Tabela de Levantamentos */}
-              <div className="mb-0 overflow-x-auto">
+              <div className="mb-0 overflow-x-auto print:break-inside-avoid">
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
           </div>
@@ -372,7 +372,7 @@ export default function RelatorioVigaBenkelman() {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: Math.max(20, faixa.levantamentos.length) }).map((_, idx) => {
+              {Array.from({ length: 15 }).map((_, idx) => {
                 const lev = faixa.levantamentos[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
