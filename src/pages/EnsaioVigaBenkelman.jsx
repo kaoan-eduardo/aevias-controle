@@ -392,6 +392,22 @@ export default function EnsaioVigaBenkelman() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-sm">
+                    <colgroup>
+                      <col style={{ width: '120px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '90px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '60px' }} />
+                      <col style={{ width: '60px' }} />
+                    </colgroup>
                     <thead>
                       <tr className="bg-[#00233B]/10 border border-[#00233B]/20">
                         <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold">Estaca / km</th>
