@@ -393,7 +393,7 @@ export default function EnsaioVigaBenkelman() {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-sm">
                     <colgroup>
-                      <col style={{ width: '120px' }} />
+                       <col style={{ width: '160px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '60px' }} />
