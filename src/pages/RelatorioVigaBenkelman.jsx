@@ -254,9 +254,9 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Controle Estatístico */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">CONTROLE ESTATÍSTICO</h2>
+        <div className="mb-3">
+          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-xs border border-slate-400">
+            CONTROLE ESTATÍSTICO
           </div>
           <div className="p-4">
             <div className="grid grid-cols-3 gap-6 text-sm">
