@@ -455,7 +455,7 @@ export default function EnsaioVigaBenkelman() {
                                   className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2 bg-white/5">
+                              <td className="border border-[#00233B]/20 px-2 py-2 bg-white/5 hidden">
                                 <Input
                                   type="number"
                                   step="0.01"
