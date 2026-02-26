@@ -72,35 +72,47 @@ export default function RelatorioVigaBenkelman() {
   };
 
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 no-print">
+    <div className="bg-white min-h-screen">
+      {/* Botões de navegação - não imprimem */}
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <Button onClick={() => navigate(-1)} variant="ghost">
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
-          <Button onClick={handlePrint} className="bg-slate-700 hover:bg-slate-800">
+          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
             Imprimir
           </Button>
         </div>
+      </div>
 
+      {/* Conteúdo do Relatório */}
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-1 print:p-1 print:min-h-[297mm]">
         {/* Cabeçalho do Relatório */}
-        <div className="border-2 border-slate-300 p-4 mb-4">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-lg font-bold">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h1>
-              <p className="text-sm text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-semibold">{ensaio.data_ensaio}</p>
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
+          <div className="flex justify-start">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"
+              alt="Logo Afirmaevias" 
+              className="h-9 object-contain" 
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-xs font-bold text-gray-800 leading-tight">
+              LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
+            </h1>
+            <p className="text-[9px] text-slate-600 mt-0">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+          </div>
+          <div className="flex justify-end">
+            <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
+              {ensaio.data_ensaio || 'N/A'}
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Dados da Obra */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">DADOS DA OBRA</h2>
+        <div className="mb-0">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
+            DADOS DA OBRA
           </div>
           <div className="p-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
