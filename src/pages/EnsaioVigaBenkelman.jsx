@@ -426,7 +426,7 @@ export default function EnsaioVigaBenkelman() {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeFaixaTab} onValueChange={setActiveFaixaTab} className="w-full">
-                <TabsList className="grid w-full gap-1 bg-transparent border-b border-white/20">
+                <TabsList className="flex flex-row gap-2 bg-transparent border-b border-white/20">
                   {formData.faixas.map((faixa) => (
                     <div key={faixa.id} className="relative">
                       <TabsTrigger
