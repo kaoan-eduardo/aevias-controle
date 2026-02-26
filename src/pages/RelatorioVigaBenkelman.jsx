@@ -153,11 +153,11 @@ export default function RelatorioVigaBenkelman() {
           <div className="grid grid-cols-4 gap-x-2 gap-y-0 mb-0 text-[9px] leading-tight p-2">
             <div>
               <p className="font-bold text-gray-700">CLIENTE</p>
-              <p className="text-gray-900">Automático</p>
+              <p className="text-gray-900">{regional?.cliente || '-'}</p>
             </div>
             <div>
               <p className="font-bold text-gray-700">OBRA</p>
-              <p className="text-gray-900">Selecionar</p>
+              <p className="text-gray-900">{obra?.name || '-'}</p>
             </div>
             <div>
               <p className="font-bold text-gray-700">CAMADA</p>
