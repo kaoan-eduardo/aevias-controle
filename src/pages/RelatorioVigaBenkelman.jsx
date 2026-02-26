@@ -58,8 +58,16 @@ export default function RelatorioVigaBenkelman() {
     );
   }
 
+  if (!ensaio.levantamentos || ensaio.levantamentos.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white">
+        <p className="text-slate-700">Nenhum levantamento encontrado no ensaio.</p>
+      </div>
+    );
+  }
+
   // Preparar dados para gráfico
-  const chartData = ensaio.levantamentos.map(lev => ({
+  const chartData = (ensaio.levantamentos || []).map(lev => ({
     estaca: lev.estaca_km || '',
     'Bordo Esquerdo': lev.bordo_esquerdo?.deflexao || 0,
     'Eixo': lev.eixo?.deflexao || 0,
