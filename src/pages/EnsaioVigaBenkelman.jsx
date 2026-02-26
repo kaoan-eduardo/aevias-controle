@@ -135,7 +135,7 @@ export default function EnsaioVigaBenkelman() {
         nextFaixaId: newFaixaId + 1
       };
     });
-    setActiveFaixaTab(String(formData.nextFaixaId));
+    setActiveFaixaTab(String(newFaixaId));
   };
 
   const removeFaixa = (faixaId) => {
