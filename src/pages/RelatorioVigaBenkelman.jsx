@@ -342,7 +342,7 @@ export default function RelatorioVigaBenkelman() {
                   domain={[0, 'dataMax + 10']}
                 />
                 <Tooltip contentStyle={{ fontSize: 10 }} />
-                <Legend wrapperStyle={{ fontSize: 9 }} verticalAlign="bottom" height={20} />
+                <Legend wrapperStyle={{ fontSize: 9 }} verticalAlign="bottom" height={4} />
                 <Bar dataKey="Bordo Esquerdo" fill="#8b5cf6" />
                 <Bar dataKey="Eixo" fill="#3b82f6" />
                 <Bar dataKey="Bordo Direito" fill="#06b6d4" />
