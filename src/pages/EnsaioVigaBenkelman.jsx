@@ -397,14 +397,11 @@ export default function EnsaioVigaBenkelman() {
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '60px' }} />
-                      <col style={{ width: '60px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '60px' }} />
-                      <col style={{ width: '60px' }} />
                       <col style={{ width: '90px' }} />
                       <col style={{ width: '90px' }} />
-                      <col style={{ width: '60px' }} />
                       <col style={{ width: '60px' }} />
                       <col style={{ width: '60px' }} />
                     </colgroup>
