@@ -548,7 +548,10 @@ export default function RelatorioVigaBenkelman() {
               )}
             </div>
           </div>
-        </footer>
+            </footer>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
