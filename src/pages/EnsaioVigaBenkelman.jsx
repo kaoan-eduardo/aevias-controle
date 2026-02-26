@@ -110,6 +110,23 @@ export default function EnsaioVigaBenkelman() {
   const obraAtual = obras.find(o => o.id === formData.obra_id);
   const rodoviasDaObra = obraAtual?.rodovias || [];
 
+  // Verificar se uma faixa tem dados preenchidos
+  const faixaTemDados = (faixa) => {
+    if (faixa.nome) return true;
+    return faixa.levantamentos.some(lev => 
+      lev.estaca_km || 
+      lev.bordo_esquerdo.leitura_inicial || 
+      lev.bordo_esquerdo.leitura_final ||
+      lev.eixo.leitura_inicial || 
+      lev.eixo.leitura_final ||
+      lev.bordo_direito.leitura_inicial || 
+      lev.bordo_direito.leitura_final
+    );
+  };
+
+  // Faixas com dados para exibição
+  const faixasComDados = formData.faixas.filter(faixaTemDados);
+
   const addFaixa = () => {
     setFormData(prev => {
       if (prev.faixas.length >= 4) {
