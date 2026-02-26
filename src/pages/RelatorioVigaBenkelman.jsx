@@ -91,33 +91,14 @@ export default function RelatorioVigaBenkelman() {
 
   return (
     <div className="bg-white min-h-screen">
-      <style>
-        {`
-          @media print {
-            body * {
-              visibility: hidden;
-            }
-            #report-content, #report-content * {
-              visibility: visible;
-            }
-            #report-content {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-            }
-          }
-        `}
-      </style>
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Button onClick={() => navigate(-1)} variant="ghost">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-            </Button>
-          </div>
+          <h2 className="text-lg font-semibold text-slate-800">
+            Relatório de Levantamento Deflectométrico por Viga Benkelman
+          </h2>
           <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            Imprimir
+            <Download className="w-4 h-4 mr-2" />
+            Gerar PDF
           </Button>
         </div>
       </div>
