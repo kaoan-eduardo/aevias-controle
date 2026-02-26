@@ -43,16 +43,17 @@ export default function RelatorioVigaBenkelman() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Carregando...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-white">
+        <Loader2 className="w-8 h-8 animate-spin text-slate-500" />
+      </div>
+    );
   }
 
   if (!ensaio) {
     return (
-      <div className="p-8">
-        <Button onClick={() => navigate(-1)} variant="ghost" className="mb-4">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-        </Button>
-        <p>Ensaio não encontrado.</p>
+      <div className="flex justify-center items-center h-screen bg-white">
+        <p className="text-slate-700">Ensaio não encontrado.</p>
       </div>
     );
   }
