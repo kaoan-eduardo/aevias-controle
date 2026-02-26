@@ -197,7 +197,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [statusObraFilter, setStatusObraFilter] = useState('all');
   const [reprovingEnsaio, setReprovingEnsaio] = useState(null);
   const [deletingEnsaio, setDeletingEnsaio] = useState(null);
@@ -401,15 +401,15 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const clearFilters = useCallback(() => {
     setNomeFilter('');
     setObraFilter('');
-    setProjetoFilter(''); // Clear project filter
+    setProjetoFilter('');
     setLocalFilter('');
     setEmpreiteiraFilter('');
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
-    setTypeFilter('');
+    setTypeFilter('all');
     setStatusObraFilter('all');
-    setSortOrder('desc'); // Reset sorting to default
+    setSortOrder('desc');
     setCurrentPage(1);
   }, []);
 
@@ -1242,7 +1242,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [dataInicioFilter, setDataInicioFilter] = useState('');
   const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('desc');
   const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
@@ -1333,10 +1333,9 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       });
     }
 
-    if (typeFilter) {
+    if (typeFilter && typeFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
-        const { name } = getEnsaioTypeInfo(ensaio);
-        return name.toLowerCase().includes(typeFilter.toLowerCase());
+        return ensaio.entityType === typeFilter;
       });
     }
 
@@ -1387,7 +1386,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     setDataInicioFilter('');
     setDataFimFilter('');
     setStatusFilter('all');
-    setTypeFilter('');
+    setTypeFilter('all');
     setSortOrder('desc');
     setCurrentPage(1);
   }, []);
