@@ -199,6 +199,10 @@ export default function EnsaioVigaBenkelman() {
   };
 
   const handleSave = async (asFinal = false) => {
+    console.log('=== INICIANDO SALVAMENTO ===');
+    console.log('asFinal:', asFinal);
+    console.log('obra_id:', formData.obra_id);
+
     if (!formData.obra_id) {
       alert('Selecione uma obra');
       return;
