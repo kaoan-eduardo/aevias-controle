@@ -217,12 +217,10 @@ export default function RelatorioVigaBenkelman() {
           <table className="w-full border-collapse text-[7px]" style={{ borderWidth: '0.05px' }}>
             <thead>
               <tr className="bg-slate-100">
+                <th rowSpan="2" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Estaca / km</th>
                 <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO ESQUERDO</th>
                 <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>EIXO</th>
                 <th colSpan="4" className="px-1 py-0.5 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>BORDO DIREITO</th>
-              </tr>
-              <tr className="bg-slate-100">
-                <th colSpan="13" className="px-1 py-0.5" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Estaca / km</th>
               </tr>
               <tr className="bg-slate-100">
                 <th className="px-1 py-0.5 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>Leitura Inicial (A)</th>
@@ -243,27 +241,23 @@ export default function RelatorioVigaBenkelman() {
               {ensaio.levantamentos.map((lev, idx) => {
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <React.Fragment key={idx}>
-                    <tr className={bgColor}>
-                      <td colSpan="13" className="px-0.5 py-0 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
-                        {lev.estaca_km}
-                      </td>
-                    </tr>
-                    <tr className={bgColor} style={{ height: '18px' }}>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(2) || ''}</td>
-                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(1) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_final?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(2) || ''}</td>
-                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(1) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
-                      <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(2) || ''}</td>
-                      <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(1) || ''}</td>
-                    </tr>
-                  </React.Fragment>
+                  <tr key={idx} className={bgColor} style={{ height: '18px' }}>
+                    <td className="px-0.5 py-0 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
+                      {lev.estaca_km}
+                    </td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.diferenca?.toFixed(2) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_esquerdo?.deflexao?.toFixed(1) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.diferenca?.toFixed(2) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.eixo?.deflexao?.toFixed(1) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_inicial?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.leitura_final?.toFixed(0) || ''}</td>
+                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.diferenca?.toFixed(2) || ''}</td>
+                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev.bordo_direito?.deflexao?.toFixed(1) || ''}</td>
+                  </tr>
                 );
               })}
             </tbody>
