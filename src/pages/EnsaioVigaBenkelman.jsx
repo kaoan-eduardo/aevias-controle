@@ -110,32 +110,73 @@ export default function EnsaioVigaBenkelman() {
   const obraAtual = obras.find(o => o.id === formData.obra_id);
   const rodoviasDaObra = obraAtual?.rodovias || [];
 
-  const addLevantamento = () => {
+  const addFaixa = () => {
     setFormData(prev => {
-      if (prev.levantamentos.length >= 20) {
-        alert('Limite máximo de 20 estacas atingido.');
+      if (prev.faixas.length >= 4) {
+        alert('Limite máximo de 4 faixas atingido.');
         return prev;
       }
+      const newFaixaId = prev.nextFaixaId;
       return {
         ...prev,
-        levantamentos: [
-          ...prev.levantamentos,
+        faixas: [
+          ...prev.faixas,
           {
-            estaca_km: '',
-            bordo_esquerdo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
-            eixo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
-            bordo_direito: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
+            id: newFaixaId,
+            nome: '',
+            levantamentos: Array(20).fill(null).map(() => ({
+              estaca_km: '',
+              bordo_esquerdo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+              eixo: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+              bordo_direito: { leitura_inicial: prev.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
+            }))
           }
-        ]
+        ],
+        nextFaixaId: newFaixaId + 1
       };
     });
+    setActiveFaixaTab(String(formData.nextFaixaId));
   };
 
-  const removeLevantamento = (index) => {
+  const removeFaixa = (faixaId) => {
     setFormData(prev => ({
       ...prev,
-      levantamentos: prev.levantamentos.filter((_, i) => i !== index)
+      faixas: prev.faixas.filter(f => f.id !== faixaId)
     }));
+    if (activeFaixaTab === String(faixaId)) {
+      setActiveFaixaTab('1');
+    }
+  };
+
+  const updateFaixaNome = (faixaId, nome) => {
+    setFormData(prev => ({
+      ...prev,
+      faixas: prev.faixas.map(f => f.id === faixaId ? { ...f, nome } : f)
+    }));
+  };
+
+  const updateLevantamento = (faixaId, levIndex, lado, field, value) => {
+    setFormData(prev => {
+      const novo = { ...prev };
+      const faixa = novo.faixas.find(f => f.id === faixaId);
+      if (!faixa) return prev;
+
+      const lev = faixa.levantamentos[levIndex];
+
+      if (field === 'estaca_km') {
+        lev.estaca_km = value;
+      } else {
+        const numValue = parseFloat(value) || 0;
+        lev[lado][field] = numValue;
+
+        if (field === 'leitura_inicial' || field === 'leitura_final') {
+          lev[lado].diferenca = (lev[lado].leitura_inicial || 0) - (lev[lado].leitura_final || 0);
+          lev[lado].deflexao = (lev[lado].diferenca || 0) * (parseFloat(novo.cte_viga) || 0.01);
+        }
+      }
+
+      return novo;
+    });
   };
 
   const handleLeituraInicialChange = (value) => {
