@@ -20,19 +20,22 @@ export default function RelatorioVigaBenkelman() {
   }, [id]);
 
   const loadEnsaio = async () => {
-    try {
-      if (id) {
-        const data = await base44.entities.EnsaioVigaBenkelman.get(id);
-        console.log('Ensaio carregado:', data);
-        console.log('Levantamentos recebidos:', data.levantamentos);
-        console.log('Comprimento:', data.levantamentos?.length || 0);
+     try {
+       if (id) {
+         console.log('Carregando ID:', id);
+         const data = await base44.entities.EnsaioVigaBenkelman.get(id);
+         console.log('Dados completos recebidos:', JSON.stringify(data, null, 2));
+         console.log('Levantamentos:', data.levantamentos);
+         console.log('Tipo:', typeof data.levantamentos);
+         console.log('É array?', Array.isArray(data.levantamentos));
+         console.log('Comprimento:', data.levantamentos?.length || 0);
 
-        // Se levantamentos for vazio ou não for array, trata como array vazio
-        if (!data.levantamentos) {
-          data.levantamentos = [];
-        }
+         // Se levantamentos não existir, inicializar como array
+         if (!data.levantamentos || !Array.isArray(data.levantamentos)) {
+           data.levantamentos = [];
+         }
 
-        setEnsaio(data);
+         setEnsaio(data);
 
         // Carregar obra e regional
         if (data.obra_id) {
