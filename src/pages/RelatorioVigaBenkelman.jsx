@@ -243,9 +243,9 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Representação Gráfica */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">REPRESENTAÇÃO GRÁFICA</h2>
+        <div className="mb-0 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+            REPRESENTAÇÃO GRÁFICA
           </div>
           <div className="p-6">
             <ResponsiveContainer width="100%" height={400}>
