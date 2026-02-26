@@ -418,7 +418,7 @@ export default function EnsaioVigaBenkelman() {
                           <React.Fragment key={`header-${i}`}>
                             <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Inicial (A)</th>
                             <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Final (B)</th>
-                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">Deflexão (D)</th>
+                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap hidden">Deflexão (D)</th>
                           </React.Fragment>
                         ))}
                       </tr>
