@@ -108,9 +108,16 @@ export default function RelatorioVigaBenkelman() {
     return { qt, media, desvPad };
   };
 
-  const estatBordoEsquerdo = calcularEstatisticas(deflexoesBordoEsquerdo);
-  const estatEixo = calcularEstatisticas(deflexoesEixo);
-  const estatBordoDireito = calcularEstatisticas(deflexoesBordoDireito);
+  const calcularEstatisticasPorFaixa = (levantamentos) => {
+    const bordoEsquerdo = levantamentos.map(lev => lev.bordo_esquerdo?.deflexao || 0).filter(v => v > 0);
+    const eixo = levantamentos.map(lev => lev.eixo?.deflexao || 0).filter(v => v > 0);
+    const bordoDireito = levantamentos.map(lev => lev.bordo_direito?.deflexao || 0).filter(v => v > 0);
+    return {
+      bordoEsquerdo: calcularEstatisticas(bordoEsquerdo),
+      eixo: calcularEstatisticas(eixo),
+      bordoDireito: calcularEstatisticas(bordoDireito)
+    };
+  };
 
   const handlePrint = () => {
     window.print();
