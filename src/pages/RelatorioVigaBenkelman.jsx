@@ -477,18 +477,18 @@ export default function RelatorioVigaBenkelman() {
           </div>
         </div>
 
-        {/* Observações */}
-        {ensaio.observacoes && (
-          <div className="mb-0 print:break-inside-avoid">
-            <div className="bg-slate-200 px-1.5 py-0 font-bold text-[8px]">OBSERVAÇÕES</div>
-            <div className="p-0.5 text-[8px] min-h-[15px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
-              <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
-            </div>
-          </div>
-        )}
+              {/* Observações */}
+              {ensaio.observacoes && (
+                <div className="mb-0 print:break-inside-avoid">
+                  <div className="bg-slate-200 px-1.5 py-0 font-bold text-[8px]">OBSERVAÇÕES</div>
+                  <div className="p-0.5 text-[8px] min-h-[15px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+                    <div className="whitespace-pre-wrap">{ensaio.observacoes}</div>
+                  </div>
+                </div>
+              )}
 
-        {/* Assinaturas */}
-        <footer className="mt-2 pt-2">
+              {/* Assinaturas */}
+              <footer className="mt-2 pt-2">
           <div className="grid grid-cols-3 gap-1.5 items-end px-1">
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
