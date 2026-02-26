@@ -372,8 +372,8 @@ export default function RelatorioVigaBenkelman() {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: Math.max(20, (ensaio.levantamentos || []).length) }).map((_, idx) => {
-                const lev = (ensaio.levantamentos || [])[idx];
+              {Array.from({ length: Math.max(20, faixa.levantamentos.length) }).map((_, idx) => {
+                const lev = faixa.levantamentos[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
                   <tr key={idx} className={bgColor} style={{ height: '18px' }}>
