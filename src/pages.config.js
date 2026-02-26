@@ -94,10 +94,10 @@ import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndi
 import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
 import RelatorioSondagem from './pages/RelatorioSondagem';
 import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
-import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import __Layout from './Layout.jsx';
 
 
@@ -149,10 +149,10 @@ export const PAGES = {
     "RelatorioManchaPendulo": RelatorioManchaPendulo,
     "RelatorioSondagem": RelatorioSondagem,
     "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
-    "RelatorioVigaBenkelman": RelatorioVigaBenkelman,
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "RelatorioVigaBenkelman": RelatorioVigaBenkelman,
 }
 
 export const pagesConfig = {

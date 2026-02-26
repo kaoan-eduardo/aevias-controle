@@ -321,12 +321,12 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Representação Gráfica */}
-        <div className="mb-0 print:break-inside-avoid">
+        <div className="mb-1 print:break-inside-avoid">
           <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
             REPRESENTAÇÃO GRÁFICA
           </div>
           <div className="p-3">
-            <ResponsiveContainer width="100%" height={250}>
+            <ResponsiveContainer width="100%" height={275}>
               <BarChart data={chartData} margin={{ top: 20, right: 60, left: 60, bottom: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
