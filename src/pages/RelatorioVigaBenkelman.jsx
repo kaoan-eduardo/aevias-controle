@@ -287,22 +287,76 @@ export default function RelatorioVigaBenkelman() {
         )}
 
         {/* Assinaturas */}
-        <div className="border-2 border-slate-300 p-6 mt-8">
-          <div className="grid grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
-              <p className="text-sm font-semibold text-slate-700">LABORATORISTA</p>
+        <footer className="mt-6 pt-3 print:break-inside-avoid">
+          <div className="grid grid-cols-3 gap-4 items-end px-2">
+            <div className="text-center">
+              <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
+                {ensaio.laboratorista_name && (
+                  <>
+                    <p className="font-bold text-slate-600 text-xs">{ensaio.laboratorista_name}</p>
+                    <p className="text-[10px]">{ensaio.created_by}</p>
+                    <p className="text-[10px]">
+                      {ensaio.created_date ? new Date(ensaio.created_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
+                    </p>
+                  </>
+                )}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="text-[10px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+              </div>
             </div>
-            <div>
-              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
-              <p className="text-sm font-semibold text-slate-700">ENGENHEIRO RESPONSÁVEL</p>
+
+            <div className="text-center">
+              {ensaio.approver_details ? (
+                <>
+                  <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
+                    <p className="font-bold text-slate-600 text-xs">{ensaio.approver_details.name}</p>
+                    <p className="text-[10px]">{ensaio.approved_by}</p>
+                    {ensaio.approver_details.crea_number && <p className="text-[10px]">CREA: {ensaio.approver_details.crea_number}</p>}
+                    <p className="text-[10px]">
+                      {ensaio.approved_date ? new Date(ensaio.approved_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
+                    </p>
+                  </div>
+                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                    <p className="text-[10px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="min-h-[30px] mb-1"></div>
+                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                    <p className="text-[10px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                  </div>
+                </>
+              )}
             </div>
-            <div>
-              <div className="border-t-2 border-slate-300 pt-2 h-16"></div>
-              <p className="text-sm font-semibold text-slate-700">CLIENTE</p>
+
+            <div className="text-center">
+              {ensaio.client_signature?.signed_by ? (
+                <>
+                  <div className="text-xs text-slate-500 mb-1 min-h-[30px] flex flex-col justify-end items-center">
+                    <p className="font-bold text-slate-600 text-xs">{ensaio.client_signature.engineer_name}</p>
+                    <p className="text-[10px]">{ensaio.client_signature.signed_by}</p>
+                    {ensaio.client_signature.crea_number && <p className="text-[10px]">CREA: {ensaio.client_signature.crea_number}</p>}
+                    <p className="text-[10px]">
+                      {ensaio.client_signature.signed_date ? new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' }) : ''}
+                    </p>
+                  </div>
+                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                    <p className="text-[10px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="min-h-[30px] mb-1"></div>
+                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                    <p className="text-[10px] font-semibold">ENGENHEIRO CLIENTE</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );
