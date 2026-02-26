@@ -11,6 +11,8 @@ export default function RelatorioVigaBenkelman() {
   const id = searchParams.get('id');
 
   const [ensaio, setEnsaio] = useState(null);
+  const [obra, setObra] = useState(null);
+  const [regional, setRegional] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,6 +24,17 @@ export default function RelatorioVigaBenkelman() {
       if (id) {
         const data = await base44.entities.EnsaioVigaBenkelman.get(id);
         setEnsaio(data);
+
+        // Carregar obra e regional
+        if (data.obra_id) {
+          const obraData = await base44.entities.Obra.get(data.obra_id);
+          setObra(obraData);
+
+          if (obraData.regional_id) {
+            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(regionalData);
+          }
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar ensaio:', error);
