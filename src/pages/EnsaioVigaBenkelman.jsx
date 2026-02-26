@@ -38,12 +38,23 @@ export default function EnsaioVigaBenkelman() {
     trecho: '',
     material: '',
     procedencia: '',
-    pista_faixa: '',
     camada: '',
     cte_viga: 0.01,
     def_admissivel: '',
     leitura_inicial_global: '',
-    levantamentos: [],
+    faixas: [
+      {
+        id: 1,
+        nome: '',
+        levantamentos: Array(20).fill(null).map(() => ({
+          estaca_km: '',
+          bordo_esquerdo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
+          eixo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
+          bordo_direito: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 }
+        }))
+      }
+    ],
+    nextFaixaId: 2,
     controle_estatistico: {
       qt_leituras: 0,
       media: 0,
@@ -52,6 +63,7 @@ export default function EnsaioVigaBenkelman() {
     observacoes: '',
     status: 'rascunho'
   });
+  const [activeFaixaTab, setActiveFaixaTab] = useState('1');
 
   useEffect(() => {
     loadInitialData();
