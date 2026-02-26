@@ -390,78 +390,94 @@ export default function EnsaioVigaBenkelman() {
               {formData.levantamentos.length === 0 ? (
                 <p className="text-center text-[#00233B]/70 py-8">Clique em "Adicionar Estaca" para começar</p>
               ) : (
-                <div className="space-y-6 overflow-x-auto">
-                  {formData.levantamentos.map((lev, idx) => (
-                    <div key={idx} className="border border-white/20 rounded-lg p-4">
-                      <div className="flex justify-between items-center mb-4">
-                        <Input
-                          value={lev.estaca_km}
-                          onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
-                          placeholder="Estaca / km"
-                          className="flex-1 bg-white/10 border-white/20 text-[#00233B] font-semibold"
-                        />
-                        <Button
-                          onClick={() => removeLevantamento(idx)}
-                          variant="destructive"
-                          size="sm"
-                          className="ml-2"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-[#00233B]/10 border border-[#00233B]/20">
+                        <th rowSpan="2" className="border border-[#00233B]/20 p-2 text-[#00233B] font-bold">Estaca / km</th>
+                        <th colSpan="4" className="border border-[#00233B]/20 p-2 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
+                        <th colSpan="4" className="border border-[#00233B]/20 p-2 text-[#00233B] font-bold text-center">EIXO</th>
+                        <th colSpan="4" className="border border-[#00233B]/20 p-2 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
+                        <th rowSpan="2" className="border border-[#00233B]/20 p-2">Ação</th>
+                      </tr>
+                      <tr className="bg-[#00233B]/5 border border-[#00233B]/20">
+                        {['', '', '', ''].map((_, i) => (
+                          <React.Fragment key={`header-${i}`}>
+                            <th className="border border-[#00233B]/20 p-2 text-[#00233B] font-semibold">L. Inicial (A)</th>
+                            <th className="border border-[#00233B]/20 p-2 text-[#00233B] font-semibold">L. Final (B)</th>
+                            <th className="border border-[#00233B]/20 p-2 text-[#00233B] font-semibold">Diferença (C)</th>
+                            <th className="border border-[#00233B]/20 p-2 text-[#00233B] font-semibold">Deflexão (D)</th>
+                          </React.Fragment>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.levantamentos.map((lev, idx) => (
+                        <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
+                          <td className="border border-[#00233B]/20 p-2">
+                            <Input
+                              value={lev.estaca_km}
+                              onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
+                              placeholder="Estaca / km"
+                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-8"
+                            />
+                          </td>
 
-                      {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
-                        <div key={lado} className="mb-4 pb-4 border-b border-white/10 last:border-0">
-                          <h4 className="font-semibold text-[#00233B] mb-3 text-sm uppercase">
-                            {lado === 'bordo_esquerdo' ? 'Bordo Esquerdo' : lado === 'eixo' ? 'Eixo' : 'Bordo Direito'}
-                          </h4>
-                          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                            <div>
-                              <label className="text-xs text-[#00233B]/70">Leitura Inicial (A)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={lev[lado].leitura_inicial}
-                                onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
-                                className="bg-white/10 border-white/20 text-[#00233B]"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs text-[#00233B]/70">Leitura Final (B)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={lev[lado].leitura_final}
-                                onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
-                                placeholder="0"
-                                className="bg-white/10 border-white/20 text-[#00233B]"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs text-[#00233B]/70">Diferença (C)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={lev[lado].diferenca.toFixed(2)}
-                                disabled
-                                className="bg-white/10 border-white/20 text-[#00233B]/70"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-xs text-[#00233B]/70">Deflexão (D)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={lev[lado].deflexao.toFixed(1)}
-                                disabled
-                                className="bg-white/10 border-white/20 text-[#00233B]/70"
-                              />
-                            </div>
-                          </div>
-                        </div>
+                          {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
+                            <React.Fragment key={lado}>
+                              <td className="border border-[#00233B]/20 p-1">
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={lev[lado].leitura_inicial}
+                                  onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center"
+                                />
+                              </td>
+                              <td className="border border-[#00233B]/20 p-1">
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={lev[lado].leitura_final}
+                                  onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center"
+                                />
+                              </td>
+                              <td className="border border-[#00233B]/20 p-1 bg-white/5">
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={lev[lado].diferenca.toFixed(2)}
+                                  disabled
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-8 text-center"
+                                />
+                              </td>
+                              <td className="border border-[#00233B]/20 p-1 bg-white/5">
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  value={lev[lado].deflexao.toFixed(1)}
+                                  disabled
+                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-8 text-center"
+                                />
+                              </td>
+                            </React.Fragment>
+                          ))}
+
+                          <td className="border border-[#00233B]/20 p-1">
+                            <Button
+                              onClick={() => removeLevantamento(idx)}
+                              variant="destructive"
+                              size="sm"
+                              className="h-8 px-2"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </td>
+                        </tr>
                       ))}
-                    </div>
-                  ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
