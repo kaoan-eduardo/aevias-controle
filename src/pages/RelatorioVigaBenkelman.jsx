@@ -343,9 +343,9 @@ export default function RelatorioVigaBenkelman() {
                 />
                 <Tooltip contentStyle={{ fontSize: 10 }} />
                 <Legend wrapperStyle={{ fontSize: 9 }} verticalAlign="bottom" height={4} />
-                <Bar dataKey="Bordo Esquerdo" fill="#8b5cf6" />
-                <Bar dataKey="Eixo" fill="#3b82f6" />
-                <Bar dataKey="Bordo Direito" fill="#06b6d4" />
+                <Bar dataKey="Bordo Esquerdo" fill="#566e3d" />
+                <Bar dataKey="Eixo" fill="#00233b" />
+                <Bar dataKey="Bordo Direito" fill="#bfcf99" />
                 <Line type="monotone" dataKey="Def. Admissível" stroke="#dc2626" strokeDasharray="5 5" strokeWidth={2} dot={false} />
               </BarChart>
             </ResponsiveContainer>
