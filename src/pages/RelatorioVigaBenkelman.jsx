@@ -265,23 +265,23 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Controle Estatístico */}
-        <div className="border-2 border-slate-300 mb-4">
-          <div className="bg-slate-50 border-b border-slate-300 p-3">
-            <h2 className="text-sm font-semibold text-slate-700">CONTROLE ESTATÍSTICO</h2>
+        <div className="mb-0 print:break-inside-avoid">
+          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
+            CONTROLE ESTATÍSTICO
           </div>
-          <div className="p-4">
-            <div className="grid grid-cols-3 gap-6 text-sm">
+          <div className="p-2">
+            <div className="grid grid-cols-3 gap-3 text-[9px]">
               <div>
-                <p className="font-semibold">QT. LEITURAS</p>
-                <p className="text-lg font-bold text-slate-700">{qtLeituras}</p>
+                <p className="font-bold text-gray-700">QT. LEITURAS</p>
+                <p className="text-[11px] font-bold text-slate-700">{qtLeituras}</p>
               </div>
               <div>
-                <p className="font-semibold">MÉDIA</p>
-                <p className="text-lg font-bold text-slate-700">{media.toFixed(2)}</p>
+                <p className="font-bold text-gray-700">MÉDIA</p>
+                <p className="text-[11px] font-bold text-slate-700">{media.toFixed(2)}</p>
               </div>
               <div>
-                <p className="font-semibold">DESV. PAD.</p>
-                <p className="text-lg font-bold text-slate-700">{desvPad.toFixed(2)}</p>
+                <p className="font-bold text-gray-700">DESV. PAD.</p>
+                <p className="text-[11px] font-bold text-slate-700">{desvPad.toFixed(2)}</p>
               </div>
             </div>
           </div>
