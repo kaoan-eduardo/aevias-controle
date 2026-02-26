@@ -68,7 +68,7 @@ export const getResponsavelInfo = (ensaio) => {
 export const getEmpireiteiraInfo = (ensaio) => {
   const entityType = ensaio.entityType;
   
-  if (entityType === "DiarioObra" || entityType === "ChecklistAplicacao" || entityType === "ChecklistMRAF" || entityType === "ChecklistConcretagem" || entityType === "ChecklistTerraplanagem" || entityType === "ChecklistReciclagem") {
+  if (entityType === "DiarioObra" || entityType === "ChecklistUsina" || entityType === "ChecklistAplicacao" || entityType === "ChecklistMRAF" || entityType === "ChecklistConcretagem" || entityType === "ChecklistTerraplanagem" || entityType === "ChecklistReciclagem") {
     return ensaio.empreiteira || null;
   }
   
