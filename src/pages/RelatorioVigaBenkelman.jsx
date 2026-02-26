@@ -326,13 +326,23 @@ export default function RelatorioVigaBenkelman() {
             REPRESENTAÇÃO GRÁFICA
           </div>
           <div className="p-3">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 50, bottom: 70 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="estaca" angle={-45} textAnchor="end" height={80} />
-                <YAxis label={{ value: 'Deflexão (x10⁻²mm)', angle: -90, position: 'insideLeft' }} />
-                <Tooltip />
-                <Legend />
+                <XAxis 
+                  dataKey="estaca" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={80} 
+                  tick={{ fontSize: 8 }}
+                />
+                <YAxis 
+                  label={{ value: 'Deflexão (x10⁻²mm)', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
+                  tick={{ fontSize: 8 }}
+                  domain={[0, 'dataMax + 10']}
+                />
+                <Tooltip contentStyle={{ fontSize: 10 }} />
+                <Legend wrapperStyle={{ fontSize: 9 }} />
                 <Bar dataKey="Bordo Esquerdo" fill="#8b5cf6" />
                 <Bar dataKey="Eixo" fill="#3b82f6" />
                 <Bar dataKey="Bordo Direito" fill="#06b6d4" />
