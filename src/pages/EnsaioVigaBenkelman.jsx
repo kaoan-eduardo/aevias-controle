@@ -414,33 +414,33 @@ export default function EnsaioVigaBenkelman() {
                     <tbody>
                       {formData.levantamentos.map((lev, idx) => (
                         <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
-                          <td className="border border-[#00233B]/20 px-2 py-0.5">
+                          <td className="border border-[#00233B]/20 px-1 py-0.5">
                             <Input
                               value={lev.estaca_km}
                               onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
-                              placeholder="Est/km"
+                              placeholder="Est"
                               className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-7 text-xs"
                             />
                           </td>
 
                           {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
                             <React.Fragment key={lado}>
-                              <td className="border border-[#00233B]/20 px-2 py-1">
+                              <td className="border border-[#00233B]/20 px-0.5 py-0.5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_inicial}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center text-xs font-medium"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs font-medium"
                                 />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-1">
+                              <td className="border border-[#00233B]/20 px-0.5 py-0.5">
                                 <Input
                                   type="number"
                                   step="0.01"
                                   value={lev[lado].leitura_final}
                                   onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-8 text-center text-xs font-medium"
+                                  className="bg-white/20 border-white/30 text-[#00233B] h-7 text-center text-xs font-medium"
                                 />
                               </td>
                               <td className="border border-[#00233B]/20 px-0.5 py-0.5 bg-white/5">
@@ -464,12 +464,12 @@ export default function EnsaioVigaBenkelman() {
                             </React.Fragment>
                           ))}
 
-                          <td className="border border-[#00233B]/20 px-1 py-0.5">
+                          <td className="border border-[#00233B]/20 px-0.5 py-0.5">
                             <Button
                               onClick={() => removeLevantamento(idx)}
                               variant="destructive"
                               size="sm"
-                              className="h-7 px-1"
+                              className="h-6 px-1"
                             >
                               <Trash2 className="w-3 h-3" />
                             </Button>
