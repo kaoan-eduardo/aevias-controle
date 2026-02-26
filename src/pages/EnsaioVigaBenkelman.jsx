@@ -494,7 +494,7 @@ export default function EnsaioVigaBenkelman() {
             <CardContent className="p-6">
               <Tabs value={activeFaixaTab} onValueChange={setActiveFaixaTab} className="w-full">
                 <TabsList className="flex flex-row gap-2 bg-transparent border-b border-white/20">
-                  {formData.faixas.map((faixa) => (
+                  {faixasComDados.map((faixa) => (
                     <div key={faixa.id} className="relative">
                       <TabsTrigger
                         value={String(faixa.id)}
@@ -506,7 +506,7 @@ export default function EnsaioVigaBenkelman() {
                   ))}
                 </TabsList>
 
-                {formData.faixas.map((faixa) => (
+                {faixasComDados.map((faixa) => (
                   <TabsContent key={faixa.id} value={String(faixa.id)} className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
                       <label className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</label>
