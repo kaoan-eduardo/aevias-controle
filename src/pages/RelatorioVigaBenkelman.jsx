@@ -122,7 +122,7 @@ export default function RelatorioVigaBenkelman() {
         </div>
       </div>
 
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-1 print:p-1 print:min-h-[297mm]">
+      <div id="report-content" className="w-full max-w-[210mm] mx-auto bg-white p-1 print:p-1 print:min-h-[297mm]">
         {/* Cabeçalho do Relatório */}
         <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
           <div className="flex justify-start">
