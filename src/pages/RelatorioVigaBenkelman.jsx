@@ -319,29 +319,6 @@ export default function RelatorioVigaBenkelman() {
           </div>
         </div>
 
-        {/* Controle Estatístico */}
-        <div className="mb-0 print:break-inside-avoid">
-          <div className="bg-slate-200 px-1.5 py-0 font-bold text-center text-[8px] border" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px' }}>
-            CONTROLE ESTATÍSTICO
-          </div>
-          <div className="p-2">
-            <div className="grid grid-cols-3 gap-3 text-[9px]">
-              <div>
-                <p className="font-bold text-gray-700">QT. LEITURAS</p>
-                <p className="text-[11px] font-bold text-slate-700">{qtLeituras}</p>
-              </div>
-              <div>
-                <p className="font-bold text-gray-700">MÉDIA</p>
-                <p className="text-[11px] font-bold text-slate-700">{media.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="font-bold text-gray-700">DESV. PAD.</p>
-                <p className="text-[11px] font-bold text-slate-700">{desvPad.toFixed(2)}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Observações */}
         {ensaio.observacoes && (
           <div className="mb-0 print:break-inside-avoid">
