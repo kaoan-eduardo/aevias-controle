@@ -363,7 +363,7 @@ export default function RelatorioVigaBenkelman() {
         )}
 
         {/* Assinaturas */}
-        <footer className="mt-4 pt-2 print:break-inside-avoid">
+        <footer className="mt-2 pt-2">
           <div className="grid grid-cols-3 gap-1.5 items-end px-1">
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
