@@ -412,124 +412,143 @@ export default function EnsaioVigaBenkelman() {
             </CardContent>
           </Card>
 
-          {/* Levantamentos */}
+          {/* Levantamentos com Faixas */}
           <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
             <CardHeader className="bg-[#BFCF99]/20 border-b border-white/10">
-              <div className="flex justify-between items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <CardTitle className="text-[#00233B]">Levantamento Deflectométrico</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</label>
-                    <Input
-                      value={formData.pista_faixa}
-                      onChange={(e) => handleInputChange('pista_faixa', e.target.value)}
-                      placeholder="Digitar"
-                      className="bg-white/20 border-white/30 text-[#00233B] h-8 w-32 text-sm"
-                    />
-                  </div>
-                </div>
-                <Button onClick={addLevantamento} size="sm" className="bg-[#00233B] text-white">
-                  <Plus className="w-4 h-4 mr-1" /> Adicionar Estaca
-                </Button>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-[#00233B]">Levantamento Deflectométrico</CardTitle>
+                {formData.faixas.length < 4 && (
+                  <Button onClick={addFaixa} size="sm" className="bg-[#00233B] text-white">
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Faixa
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className="p-6">
-              {formData.levantamentos.length === 0 ? (
-                <p className="text-center text-[#00233B]/70 py-8">Clique em "Adicionar Estaca" para começar</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm">
-                    <colgroup>
-                       <col style={{ width: '160px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '60px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '60px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '90px' }} />
-                      <col style={{ width: '60px' }} />
-                      <col style={{ width: '60px' }} />
-                    </colgroup>
-                    <thead>
-                      <tr className="bg-[#00233B]/10 border border-[#00233B]/20">
-                        <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold">Estaca / km</th>
-                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
-                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">EIXO</th>
-                        <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
-                        <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2">Ação</th>
-                      </tr>
-                      <tr className="bg-[#00233B]/5 border border-[#00233B]/20">
-                        {['', '', '', ''].map((_, i) => (
-                          <React.Fragment key={`header-${i}`}>
-                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Inicial (A)</th>
-                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Final (B)</th>
-                            <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap hidden">Deflexão (D)</th>
-                          </React.Fragment>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {formData.levantamentos.map((lev, idx) => (
-                        <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
-                          <td className="border border-[#00233B]/20 px-3 py-2">
-                            <Input
-                              value={lev.estaca_km}
-                              onChange={(e) => updateLevantamento(idx, null, 'estaca_km', e.target.value)}
-                              placeholder="Estaca / km"
-                              className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-10 text-base"
-                            />
-                          </td>
+              <Tabs value={activeFaixaTab} onValueChange={setActiveFaixaTab} className="w-full">
+                <TabsList className="grid w-full gap-1 bg-transparent border-b border-white/20">
+                  {formData.faixas.map((faixa) => (
+                    <div key={faixa.id} className="relative">
+                      <TabsTrigger
+                        value={String(faixa.id)}
+                        className="data-[state=active]:bg-[#00233B]/10 text-[#00233B] border-b-2 border-transparent data-[state=active]:border-[#00233B]"
+                      >
+                        {faixa.nome || `Faixa ${faixa.id}`}
+                      </TabsTrigger>
+                    </div>
+                  ))}
+                </TabsList>
 
-                          {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
-                            <React.Fragment key={lado}>
+                {formData.faixas.map((faixa) => (
+                  <TabsContent key={faixa.id} value={String(faixa.id)} className="space-y-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <label className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</label>
+                      <Input
+                        value={faixa.nome}
+                        onChange={(e) => updateFaixaNome(faixa.id, e.target.value)}
+                        placeholder="Digitar nome da faixa"
+                        className="bg-white/20 border-white/30 text-[#00233B] h-8 w-48 text-sm"
+                      />
+                      {formData.faixas.length > 1 && (
+                        <Button
+                          onClick={() => removeFaixa(faixa.id)}
+                          variant="destructive"
+                          size="sm"
+                          className="h-8 px-2 ml-auto"
+                        >
+                          <X className="w-4 h-4" /> Remover Faixa
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse text-sm">
+                        <colgroup>
+                          <col style={{ width: '160px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '60px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '60px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '90px' }} />
+                          <col style={{ width: '60px' }} />
+                          <col style={{ width: '60px' }} />
+                        </colgroup>
+                        <thead>
+                          <tr className="bg-[#00233B]/10 border border-[#00233B]/20">
+                            <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold">Estaca / km</th>
+                            <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO ESQUERDO</th>
+                            <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">EIXO</th>
+                            <th colSpan="3" className="border border-[#00233B]/20 px-3 py-2 text-[#00233B] font-bold text-center">BORDO DIREITO</th>
+                            <th rowSpan="2" className="border border-[#00233B]/20 px-3 py-2">Ação</th>
+                          </tr>
+                          <tr className="bg-[#00233B]/5 border border-[#00233B]/20">
+                            {['', '', '', ''].map((_, i) => (
+                              <React.Fragment key={`header-${i}`}>
+                                <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Inicial (A)</th>
+                                <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap">L. Final (B)</th>
+                                <th className="border border-[#00233B]/20 px-2 py-1 text-[#00233B] font-semibold whitespace-nowrap hidden">Deflexão (D)</th>
+                              </React.Fragment>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {faixa.levantamentos.map((lev, idx) => (
+                            <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
+                              <td className="border border-[#00233B]/20 px-3 py-2">
+                                <Input
+                                  value={lev.estaca_km}
+                                  onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)}
+                                  placeholder="Estaca / km"
+                                  className="bg-white/20 border-white/30 text-[#00233B] font-semibold h-10 text-base"
+                                />
+                              </td>
+
+                              {['bordo_esquerdo', 'eixo', 'bordo_direito'].map((lado) => (
+                                <React.Fragment key={lado}>
+                                  <td className="border border-[#00233B]/20 px-2 py-2">
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={lev[lado].leitura_inicial}
+                                      onChange={(e) => updateLevantamento(faixa.id, idx, lado, 'leitura_inicial', e.target.value)}
+                                      className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
+                                    />
+                                  </td>
+                                  <td className="border border-[#00233B]/20 px-2 py-2">
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={lev[lado].leitura_final}
+                                      onChange={(e) => updateLevantamento(faixa.id, idx, lado, 'leitura_final', e.target.value)}
+                                      className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
+                                    />
+                                  </td>
+                                  <td className="border border-[#00233B]/20 px-2 py-2 bg-white/5 hidden">
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={lev[lado].deflexao.toFixed(1)}
+                                      disabled
+                                      className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
+                                    />
+                                  </td>
+                                </React.Fragment>
+                              ))}
+
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev[lado].leitura_inicial}
-                                  onChange={(e) => updateLevantamento(idx, lado, 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
-                                />
+                                <div className="w-10" />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev[lado].leitura_final}
-                                  onChange={(e) => updateLevantamento(idx, lado, 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-10 text-center text-sm"
-                                />
-                              </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2 bg-white/5 hidden">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev[lado].deflexao.toFixed(1)}
-                                  disabled
-                                  className="bg-white/10 border-white/30 text-[#00233B]/70 h-10 text-center text-sm"
-                                />
-                              </td>
-                            </React.Fragment>
+                            </tr>
                           ))}
-
-                          <td className="border border-[#00233B]/20 px-2 py-2">
-                            <Button
-                              onClick={() => removeLevantamento(idx)}
-                              variant="destructive"
-                              size="sm"
-                              className="h-10 px-2"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </CardContent>
           </Card>
 
