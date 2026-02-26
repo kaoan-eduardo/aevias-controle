@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Plus, Trash2, Copy } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Copy, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const SectionTitle = ({ children }) => (
   <Card className="bg-[#BFCF99]/20 border border-[#BFCF99]/30 mb-4">
