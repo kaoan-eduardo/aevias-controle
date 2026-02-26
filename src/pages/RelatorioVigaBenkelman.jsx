@@ -85,17 +85,26 @@ export default function RelatorioVigaBenkelman() {
         </div>
 
         {/* Cabeçalho do Relatório */}
-        <div className="border-2 border-slate-300 p-4 mb-4">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-lg font-bold">LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN</h1>
-              <p className="text-sm text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-semibold">{ensaio.data_ensaio}</p>
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-4">
+          <div className="flex justify-start">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png" 
+              alt="Logo Afirmaevias" 
+              className="h-12 object-contain" 
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-sm font-bold text-gray-800 leading-tight">
+              LEVANTAMENTO DEFLECTOMÉTRICO POR VIGA BENKELMAN
+            </h1>
+            <p className="text-xs text-gray-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
+          </div>
+          <div className="flex justify-end">
+            <div className="text-xs text-gray-600 border border-slate-300 rounded px-2 py-1">
+              {ensaio.data_ensaio ? new Date(ensaio.data_ensaio).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''}
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Dados da Obra */}
         <div className="border-2 border-slate-300 mb-4">
