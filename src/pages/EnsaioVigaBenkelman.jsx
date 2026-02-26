@@ -281,15 +281,15 @@ export default function EnsaioVigaBenkelman() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Pista/Faixa</label>
-                  <Input
-                    value={formData.pista_faixa}
-                    onChange={(e) => handleInputChange('pista_faixa', e.target.value)}
-                    placeholder="Digitar"
-                    className="bg-white/10 border-white/20 text-[#00233B]"
-                  />
-                </div>
+                <div className="hidden">
+                   <label className="block text-sm font-medium text-[#00233B] mb-2">Pista/Faixa</label>
+                   <Input
+                     value={formData.pista_faixa}
+                     onChange={(e) => handleInputChange('pista_faixa', e.target.value)}
+                     placeholder="Digitar"
+                     className="bg-white/10 border-white/20 text-[#00233B]"
+                   />
+                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Camada</label>
