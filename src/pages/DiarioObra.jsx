@@ -1016,7 +1016,7 @@ const DiarioForm = ({
           <p className="text-sm text-gray-500 mt-2">Nenhuma foto adicionada.</p>
         )}
       </div>
-      </>}
+      </>)}
 
       <div className="flex justify-end gap-4 mt-6">
         <Button type="button" variant="outline" onClick={onCancel}>
