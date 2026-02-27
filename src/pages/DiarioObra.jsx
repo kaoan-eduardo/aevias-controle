@@ -1213,7 +1213,7 @@ export default function DiarioObraPage() {
         alert("Por favor, preencha todos os campos de data e horários.");
         return;
       }
-      if (!formData.empreiteira) {
+      if (formData.tipo_local !== 'escritorio' && !formData.empreiteira) {
         alert("Por favor, selecione uma empreiteira.");
         return;
       }
