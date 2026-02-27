@@ -140,7 +140,7 @@ export const getDataFormatted = (ensaio) => {
       dateField = ensaio.data_ensaio;
       break;
     case "EnsaioVigaBenkelman":
-      dateField = ensaio.data_ensaio;
+      dateField = ensaio.data_realizacao || ensaio.data_ensaio;
       break;
     case "AcompanhamentoUsinagem":
       dateField = ensaio.data;
