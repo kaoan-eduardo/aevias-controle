@@ -255,7 +255,7 @@ export default function RelatorioVigaBenkelman() {
                   </div>
                   <div>
                     <p className="font-bold text-gray-700">PISTA/FAIXA</p>
-                    <p className="text-gray-900">{faixa.nome}</p>
+                    <p className="text-gray-900">{faixa.nome || '-'}</p>
                   </div>
                   <div>
                     <p className="font-bold text-gray-700">DEF. ADMISSÍVEL</p>
