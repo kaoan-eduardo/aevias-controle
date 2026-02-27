@@ -71,19 +71,44 @@ export default function RelatorioVigaBenkelman() {
     );
   }
 
-  // Agrupar levantamentos por faixa usando o campo faixa_nome salvo
-  const faixasMap = {};
-  (ensaio.levantamentos || []).forEach(lev => {
-    const faixaNome = lev.faixa_nome || 'Faixa 1';
-    if (!faixasMap[faixaNome]) {
-      faixasMap[faixaNome] = [];
-    }
-    faixasMap[faixaNome].push(lev);
-  });
+  // Agrupar levantamentos por faixa
+  // Se todos têm faixa_nome preenchido e distintos, usa o campo
+  // Caso contrário (dados antigos sem faixa_nome), agrupa em blocos de 20
+  const levs = ensaio.levantamentos || [];
+  const todosTemFaixaNome = levs.length > 0 && levs.every(l => l.faixa_nome);
+  const todasIguais = todosTemFaixaNome && levs.every(l => l.faixa_nome === levs[0].faixa_nome);
 
-  const faixasArray = Object.entries(faixasMap)
-    .map(([nome, levs]) => ({ nome, levantamentos: levs }))
-    .slice(0, 4);
+  let faixasArray;
+  if (todosTemFaixaNome && !todasIguais) {
+    // Agrupar pelo campo faixa_nome
+    const faixasMap = {};
+    const faixasOrder = [];
+    levs.forEach(lev => {
+      const nome = lev.faixa_nome;
+      if (!faixasMap[nome]) {
+        faixasMap[nome] = [];
+        faixasOrder.push(nome);
+      }
+      faixasMap[nome].push(lev);
+    });
+    faixasArray = faixasOrder.map(nome => ({ nome, levantamentos: faixasMap[nome] })).slice(0, 4);
+  } else {
+    // Agrupar em blocos de 20 (compatibilidade com dados antigos)
+    const blocoSize = 20;
+    const numBlocos = Math.ceil(levs.length / blocoSize);
+    faixasArray = [];
+    for (let i = 0; i < numBlocos && i < 4; i++) {
+      const bloco = levs.slice(i * blocoSize, (i + 1) * blocoSize);
+      // Descobrir nome da faixa a partir do primeiro item com faixa_nome, ou usar índice
+      const nome = bloco.find(l => l.faixa_nome)?.faixa_nome || `Faixa ${i + 1}`;
+      faixasArray.push({ nome, levantamentos: bloco });
+    }
+  }
+
+  // Filtrar faixas que não têm nenhum dado real (sem estaca e sem leitura final)
+  faixasArray = faixasArray.filter(faixa =>
+    faixa.levantamentos.some(lev => lev.estaca_km || (lev.bordo_esquerdo?.leitura_final && lev.bordo_esquerdo.leitura_final !== 0))
+  );
 
   // Calcular controle estatístico por bordo
   const deflexoesBordoEsquerdo = (ensaio.levantamentos || [])
