@@ -280,13 +280,11 @@ export default function EnsaioVigaBenkelman() {
     setSaving(true);
     try {
       // Consolidar todos os levantamentos de todas as faixas em um array único, com nome da faixa
+      // Salvar TODOS os 20 registros de cada faixa (mesmo vazios), para manter a estrutura de blocos de 20
       const levantamentos = [];
       formData.faixas.forEach((faixa) => {
         faixa.levantamentos.forEach((lev) => {
-          if (lev.estaca_km || Object.values(lev.bordo_esquerdo).some(v => v) || 
-              Object.values(lev.eixo).some(v => v) || 
-              Object.values(lev.bordo_direito).some(v => v)) {
-            levantamentos.push({
+          levantamentos.push({
               faixa_nome: faixa.nome || `Faixa ${faixa.id}`,
               estaca_km: lev.estaca_km || '',
               bordo_esquerdo: {
