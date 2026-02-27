@@ -201,8 +201,9 @@ export default function RelatorioVigaBenkelman() {
                   <p className="text-[9px] text-slate-600">MÉTODO DE ENSAIO DNER-ME-024/94</p>
                 </div>
                 <div className="flex justify-end">
-                  <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
-                    {formatDate(ensaio.data_realizacao)}
+                  <div className="text-[9px] text-gray-600 border border-slate-300 rounded px-1 py-0 text-right">
+                    <p className="font-bold text-gray-700">DATA DO ENSAIO</p>
+                    <p>{formatDate(ensaio.data_realizacao) || '-'}</p>
                   </div>
                 </div>
               </header>
