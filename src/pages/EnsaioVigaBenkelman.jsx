@@ -285,27 +285,27 @@ export default function EnsaioVigaBenkelman() {
       formData.faixas.forEach((faixa) => {
         faixa.levantamentos.forEach((lev) => {
           levantamentos.push({
-              faixa_nome: faixa.nome || `Faixa ${faixa.id}`,
-              estaca_km: lev.estaca_km || '',
-              bordo_esquerdo: {
-                leitura_inicial: parseFloat(lev.bordo_esquerdo.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.bordo_esquerdo.leitura_final) || 0,
-                diferenca: parseFloat(lev.bordo_esquerdo.diferenca) || 0,
-                deflexao: parseFloat(lev.bordo_esquerdo.deflexao) || 0
-              },
-              eixo: {
-                leitura_inicial: parseFloat(lev.eixo.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.eixo.leitura_final) || 0,
-                diferenca: parseFloat(lev.eixo.diferenca) || 0,
-                deflexao: parseFloat(lev.eixo.deflexao) || 0
-              },
-              bordo_direito: {
-                leitura_inicial: parseFloat(lev.bordo_direito.leitura_inicial) || 0,
-                leitura_final: parseFloat(lev.bordo_direito.leitura_final) || 0,
-                diferenca: parseFloat(lev.bordo_direito.diferenca) || 0,
-                deflexao: parseFloat(lev.bordo_direito.deflexao) || 0
-              }
-            });
+            faixa_nome: faixa.nome || `Faixa ${faixa.id}`,
+            estaca_km: lev.estaca_km || '',
+            bordo_esquerdo: {
+              leitura_inicial: parseFloat(lev.bordo_esquerdo.leitura_inicial) || 0,
+              leitura_final: parseFloat(lev.bordo_esquerdo.leitura_final) || 0,
+              diferenca: parseFloat(lev.bordo_esquerdo.diferenca) || 0,
+              deflexao: parseFloat(lev.bordo_esquerdo.deflexao) || 0
+            },
+            eixo: {
+              leitura_inicial: parseFloat(lev.eixo.leitura_inicial) || 0,
+              leitura_final: parseFloat(lev.eixo.leitura_final) || 0,
+              diferenca: parseFloat(lev.eixo.diferenca) || 0,
+              deflexao: parseFloat(lev.eixo.deflexao) || 0
+            },
+            bordo_direito: {
+              leitura_inicial: parseFloat(lev.bordo_direito.leitura_inicial) || 0,
+              leitura_final: parseFloat(lev.bordo_direito.leitura_final) || 0,
+              diferenca: parseFloat(lev.bordo_direito.diferenca) || 0,
+              deflexao: parseFloat(lev.bordo_direito.deflexao) || 0
+            }
+          });
         });
       });
 
