@@ -229,17 +229,15 @@ export default function EnsaioVigaBenkelman() {
 
     setSaving(true);
     try {
-      // Consolidar todos os levantamentos de todas as faixas em um array único
+      // Consolidar todos os levantamentos de todas as faixas em um array único, com nome da faixa
       const levantamentos = [];
-      console.log('Faixas para salvar:', formData.faixas.length);
-      formData.faixas.forEach((faixa, faixaIdx) => {
-        console.log(`Faixa ${faixaIdx}:`, faixa.levantamentos.length, 'levantamentos');
-        faixa.levantamentos.forEach((lev, levIdx) => {
+      formData.faixas.forEach((faixa) => {
+        faixa.levantamentos.forEach((lev) => {
           if (lev.estaca_km || Object.values(lev.bordo_esquerdo).some(v => v) || 
               Object.values(lev.eixo).some(v => v) || 
               Object.values(lev.bordo_direito).some(v => v)) {
-            console.log(`Adicionando levantamento ${levIdx}:`, lev.estaca_km);
             levantamentos.push({
+              faixa_nome: faixa.nome || `Faixa ${faixa.id}`,
               estaca_km: lev.estaca_km || '',
               bordo_esquerdo: {
                 leitura_inicial: parseFloat(lev.bordo_esquerdo.leitura_inicial) || 0,
@@ -263,7 +261,6 @@ export default function EnsaioVigaBenkelman() {
           }
         });
       });
-      console.log('Total de levantamentos a salvar:', levantamentos.length);
 
       const dataToSave = {
         obra_id: formData.obra_id,
