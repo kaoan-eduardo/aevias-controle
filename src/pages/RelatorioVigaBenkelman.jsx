@@ -154,7 +154,7 @@ export default function RelatorioVigaBenkelman() {
           const stats = calcularEstatisticasPorFaixa(faixa.levantamentos);
 
           return (
-            <div key={faixaIdx} className="print:break-before-page">
+            <div key={faixaIdx} className={faixaIdx > 0 ? "print:break-before-page" : ""}>
               {/* Cabeçalho replicado para cada faixa */}
               <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0 mt-4 print:mt-0">
                 <div className="flex justify-start">
