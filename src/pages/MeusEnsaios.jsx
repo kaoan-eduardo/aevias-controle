@@ -1077,14 +1077,16 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
 
   const emExecucao = useMemo(() => {
     const filtered = ensaios.filter((e) => {
-      return e.status === 'rascunho' && e.approved !== true && !e.client_signature?.signed_by;
+      // Rascunhos OU reprovados (approved === false) vão para Em Execução
+      return (e.status === 'rascunho' || e.approved === false) && e.approved !== true && !e.client_signature?.signed_by;
     });
     return filtered;
   }, [ensaios]);
 
   const pendentes = useMemo(() => {
     const filtered = ensaios.filter((e) => {
-      return e.status === 'finalizado' && (e.approved === null || e.approved === false) && !e.client_signature?.signed_by;
+      // Apenas finalizados aguardando aprovação (não reprovados)
+      return e.status === 'finalizado' && e.approved === null && !e.client_signature?.signed_by;
     });
     return filtered;
   }, [ensaios]);
