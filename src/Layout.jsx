@@ -341,7 +341,7 @@ const AppLayout = ({ children }) => {
         const regionaisIds = regionaisDoGestor.map(r => r.id);
 
         const obrasPendentes = transferenciaObra.filter(t => 
-          t.status === 'pendente' && regionaisIds.includes(t.obra_destino_id)
+          t.status === 'pendente' && (regionaisIds.includes(t.obra_destino_id) || regionaisIds.includes(t.obra_atual_id))
         );
 
         const regionaisPendentes = transferenciaRegional.filter(t => 
