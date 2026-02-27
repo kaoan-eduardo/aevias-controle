@@ -238,118 +238,127 @@ const DiarioForm = ({
                 <input type="radio" name="tipo_local" value="usina" checked={formData.tipo_local === 'usina'} onChange={(e) => handleChange(e.target.name, e.target.value)} disabled={!isEditable || isApproved} className="mr-2"/>
                 Usina
             </label>
+            <label className="flex items-center">
+                <input type="radio" name="tipo_local" value="escritorio" checked={formData.tipo_local === 'escritorio'} onChange={(e) => handleChange(e.target.name, e.target.value)} disabled={!isEditable || isApproved} className="mr-2"/>
+                Escritório
+            </label>
         </div>
       </div>
 
-      {/* Campo Empreiteira - Obrigatório */}
-      <div className="space-y-2">
-        <Label htmlFor="empreiteira">Empreiteira *</Label>
-        <Select
-          value={formData.empreiteira || ""}
-          onValueChange={(value) => handleChange('empreiteira', value)}
-          required
-          disabled={!isEditable || isApproved}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Selecione a empreiteira" />
-          </SelectTrigger>
-          <SelectContent>
-            {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
-              obraSelecionada.empreiteiras.map(emp => (
-                <SelectItem key={emp} value={emp}>
-                  {emp}
-                </SelectItem>
-              ))
-            ) : (
-              <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
-            )}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {formData.tipo_local === 'campo' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Campos ocultados para Escritório */}
+      {formData.tipo_local !== 'escritorio' && (
+        <>
+          {/* Campo Empreiteira - Obrigatório */}
           <div className="space-y-2">
-            <Label htmlFor="rodovia">Rodovia *</Label>
+            <Label htmlFor="empreiteira">Empreiteira *</Label>
             <Select
-              value={formData.rodovia || ""}
-              onValueChange={(value) => handleChange('rodovia', value)}
+              value={formData.empreiteira || ""}
+              onValueChange={(value) => handleChange('empreiteira', value)}
               required
               disabled={!isEditable || isApproved}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a rodovia" />
+                <SelectValue placeholder="Selecione a empreiteira" />
               </SelectTrigger>
               <SelectContent>
-                {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
-                  obraSelecionada.rodovias.map(rodovia => (
-                    <SelectItem key={rodovia} value={rodovia}>
-                      {rodovia}
+                {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
+                  obraSelecionada.empreiteiras.map(emp => (
+                    <SelectItem key={emp} value={emp}>
+                      {emp}
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>
+                  <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
                 )}
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="trecho">Trecho *</Label>
-            <Input 
-              id="trecho" 
-              name="trecho" 
-              value={formData.trecho} 
-              onChange={(e) => handleChange(e.target.name, e.target.value)} 
-              placeholder="Ex: km 10 ao km 15" 
-              required
-              disabled={!isEditable || isApproved} 
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <Label htmlFor="usina_selecionada">Usina *</Label>
-          <Select
-            value={formData.usina_selecionada || ""}
-            onValueChange={(value) => handleChange('usina_selecionada', value)}
-            required
-            disabled={!isEditable || isApproved}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione a usina" />
-            </SelectTrigger>
-            <SelectContent>
-              {obraSelecionada?.usinas && obraSelecionada.usinas.length > 0 ? (
-                obraSelecionada.usinas.map(usina => (
-                  <SelectItem key={usina} value={usina}>
-                    {usina}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value={null} disabled>Nenhuma usina cadastrada</SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="condicoes_climaticas">Condições Climáticas *</Label>
-          <select id="condicoes_climaticas" name="condicoes_climaticas" value={formData.condicoes_climaticas} onChange={(e) => handleChange(e.target.name, e.target.value)} required disabled={!isEditable || isApproved} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-            <option value="ensolarado">Ensolarado</option>
-            <option value="nublado">Nublado</option>
-            <option value="chuvoso">Chuvoso</option>
-            <option value="garoa">Garoa</option>
-            <option value="vento_forte">Vento Forte</option>
-            <option value="neblina">Neblina</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="temperatura">Temperatura (°C)</Label>
-          <Input id="temperatura" name="temperatura" type="number" value={formData.temperatura} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: 25" disabled={!isEditable || isApproved} />
-        </div>
-      </div>
+          {formData.tipo_local === 'campo' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="rodovia">Rodovia *</Label>
+                <Select
+                  value={formData.rodovia || ""}
+                  onValueChange={(value) => handleChange('rodovia', value)}
+                  required
+                  disabled={!isEditable || isApproved}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a rodovia" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
+                      obraSelecionada.rodovias.map(rodovia => (
+                        <SelectItem key={rodovia} value={rodovia}>
+                          {rodovia}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="trecho">Trecho *</Label>
+                <Input 
+                  id="trecho" 
+                  name="trecho" 
+                  value={formData.trecho} 
+                  onChange={(e) => handleChange(e.target.name, e.target.value)} 
+                  placeholder="Ex: km 10 ao km 15" 
+                  required
+                  disabled={!isEditable || isApproved} 
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="usina_selecionada">Usina *</Label>
+              <Select
+                value={formData.usina_selecionada || ""}
+                onValueChange={(value) => handleChange('usina_selecionada', value)}
+                required
+                disabled={!isEditable || isApproved}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a usina" />
+                </SelectTrigger>
+                <SelectContent>
+                  {obraSelecionada?.usinas && obraSelecionada.usinas.length > 0 ? (
+                    obraSelecionada.usinas.map(usina => (
+                      <SelectItem key={usina} value={usina}>
+                        {usina}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value={null} disabled>Nenhuma usina cadastrada</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="condicoes_climaticas">Condições Climáticas *</Label>
+              <select id="condicoes_climaticas" name="condicoes_climaticas" value={formData.condicoes_climaticas} onChange={(e) => handleChange(e.target.name, e.target.value)} required disabled={!isEditable || isApproved} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                <option value="ensolarado">Ensolarado</option>
+                <option value="nublado">Nublado</option>
+                <option value="chuvoso">Chuvoso</option>
+                <option value="garoa">Garoa</option>
+                <option value="vento_forte">Vento Forte</option>
+                <option value="neblina">Neblina</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="temperatura">Temperatura (°C)</Label>
+              <Input id="temperatura" name="temperatura" type="number" value={formData.temperatura} onChange={(e) => handleChange(e.target.name, e.target.value)} placeholder="Ex: 25" disabled={!isEditable || isApproved} />
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="atividades_realizadas">Atividades Realizadas *</Label>
