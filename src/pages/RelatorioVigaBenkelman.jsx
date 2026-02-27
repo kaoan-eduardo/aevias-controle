@@ -169,12 +169,17 @@ export default function RelatorioVigaBenkelman() {
       <div id="report-content" className="w-full max-w-[210mm] mx-auto bg-white p-1 print:p-1">
         {/* Renderizar cada faixa em uma página separada */}
         {faixasArray.map((faixa, faixaIdx) => {
-          const chartData = faixa.levantamentos.map(lev => ({
+          // Filtrar apenas levantamentos com dados reais para o gráfico
+          const levantamentosComDados = faixa.levantamentos.filter(lev =>
+            lev.estaca_km || lev.bordo_esquerdo?.deflexao || lev.eixo?.deflexao || lev.bordo_direito?.deflexao
+          );
+          const defAdmissivel = parseFloat(ensaio.def_admissivel) || 0;
+          const chartData = levantamentosComDados.map(lev => ({
             estaca: lev.estaca_km || '',
             'Bordo Esquerdo': lev.bordo_esquerdo?.deflexao || 0,
             'Eixo': lev.eixo?.deflexao || 0,
             'Bordo Direito': lev.bordo_direito?.deflexao || 0,
-            'Def. Admissível': parseFloat(ensaio.def_admissivel) || 0
+            'Def. Admissível': defAdmissivel
           }));
           const stats = calcularEstatisticasPorFaixa(faixa.levantamentos);
 
