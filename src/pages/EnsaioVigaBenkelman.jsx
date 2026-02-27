@@ -86,7 +86,57 @@ export default function EnsaioVigaBenkelman() {
 
       if (editId) {
         const ensaio = await base44.entities.EnsaioVigaBenkelman.get(editId);
-        setFormData(ensaio);
+
+        // Reconstruir a estrutura de faixas a partir do array flat de levantamentos
+        const levamentosFlat = ensaio.levantamentos || [];
+        const faixasMap = {};
+        const faixasOrder = [];
+        levamentosFlat.forEach(lev => {
+          const nome = lev.faixa_nome || 'Faixa 1';
+          if (!faixasMap[nome]) {
+            faixasMap[nome] = [];
+            faixasOrder.push(nome);
+          }
+          faixasMap[nome].push(lev);
+        });
+
+        let faixasReconstruidas;
+        if (faixasOrder.length === 0) {
+          faixasReconstruidas = [{
+            id: 1,
+            nome: '',
+            levantamentos: Array(20).fill(null).map(() => ({
+              estaca_km: '',
+              bordo_esquerdo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
+              eixo: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 },
+              bordo_direito: { leitura_inicial: '', leitura_final: '', diferenca: 0, deflexao: 0 }
+            }))
+          }];
+        } else {
+          faixasReconstruidas = faixasOrder.map((nome, idx) => {
+            const levsDaFaixa = faixasMap[nome];
+            // Pad to 20 rows
+            const levantamentos = [...levsDaFaixa];
+            while (levantamentos.length < 20) {
+              levantamentos.push({
+                estaca_km: '',
+                bordo_esquerdo: { leitura_inicial: ensaio.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+                eixo: { leitura_inicial: ensaio.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 },
+                bordo_direito: { leitura_inicial: ensaio.leitura_inicial_global || '', leitura_final: '', diferenca: 0, deflexao: 0 }
+              });
+            }
+            return { id: idx + 1, nome, levantamentos };
+          });
+        }
+
+        setFormData({
+          ...ensaio,
+          faixas: faixasReconstruidas,
+          nextFaixaId: faixasReconstruidas.length + 1
+        });
+        if (faixasReconstruidas.length > 0) {
+          setActiveFaixaTab(String(faixasReconstruidas[0].id));
+        }
       }
 
       setLoading(false);
