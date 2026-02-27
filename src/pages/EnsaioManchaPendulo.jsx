@@ -482,16 +482,16 @@ export default function EnsaioManchaPendulo() {
                         </Select>
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" step="0.1" value={ensaio.d1 || ''} onChange={(e) => handleManchaChange(index, 'd1', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" step="0.1" value={ensaio.d1 || ''} onChange={(e) => handleManchaChange(index, 'd1', parseFloat(e.target.value))} className="h-8 text-xs min-w-[70px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" step="0.1" value={ensaio.d2 || ''} onChange={(e) => handleManchaChange(index, 'd2', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" step="0.1" value={ensaio.d2 || ''} onChange={(e) => handleManchaChange(index, 'd2', parseFloat(e.target.value))} className="h-8 text-xs min-w-[70px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" step="0.1" value={ensaio.d3 || ''} onChange={(e) => handleManchaChange(index, 'd3', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" step="0.1" value={ensaio.d3 || ''} onChange={(e) => handleManchaChange(index, 'd3', parseFloat(e.target.value))} className="h-8 text-xs min-w-[70px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" step="0.1" value={ensaio.d4 || ''} onChange={(e) => handleManchaChange(index, 'd4', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" step="0.1" value={ensaio.d4 || ''} onChange={(e) => handleManchaChange(index, 'd4', parseFloat(e.target.value))} className="h-8 text-xs min-w-[70px]" />
                       </td>
                       <td className="border border-slate-300 p-1 text-center bg-slate-50">{ensaio.d_media?.toFixed(1) || ''}</td>
                       <td className="border border-slate-300 p-1 text-center bg-slate-50">{ensaio.area?.toFixed(2) || ''}</td>
@@ -555,22 +555,22 @@ export default function EnsaioManchaPendulo() {
                         </Select>
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.temp_pavimento || ''} onChange={(e) => handlePenduloChange(index, 'temp_pavimento', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.temp_pavimento || ''} onChange={(e) => handlePenduloChange(index, 'temp_pavimento', parseFloat(e.target.value))} className="h-8 text-xs min-w-[70px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.leitura_1 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_1', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.leitura_1 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_1', parseFloat(e.target.value))} className="h-8 text-xs min-w-[60px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.leitura_2 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_2', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.leitura_2 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_2', parseFloat(e.target.value))} className="h-8 text-xs min-w-[60px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.leitura_3 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_3', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.leitura_3 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_3', parseFloat(e.target.value))} className="h-8 text-xs min-w-[60px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.leitura_4 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_4', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.leitura_4 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_4', parseFloat(e.target.value))} className="h-8 text-xs min-w-[60px]" />
                       </td>
                       <td className="border border-slate-300 p-1">
-                        <Input type="number" value={ensaio.leitura_5 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_5', parseFloat(e.target.value))} className="h-8 text-xs" />
+                        <Input type="number" value={ensaio.leitura_5 || ''} onChange={(e) => handlePenduloChange(index, 'leitura_5', parseFloat(e.target.value))} className="h-8 text-xs min-w-[60px]" />
                       </td>
                       <td className="border border-slate-300 p-1 text-center bg-slate-50">{ensaio.maxima || ''}</td>
                       <td className="border border-slate-300 p-1 text-center bg-slate-50">{ensaio.minima || ''}</td>
