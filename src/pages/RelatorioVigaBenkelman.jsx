@@ -231,10 +231,6 @@ export default function RelatorioVigaBenkelman() {
                     <p className="text-gray-900">{formatDate(ensaio.data_ensaio) || '-'}</p>
                   </div>
                   <div>
-                    <p className="font-bold text-gray-700">DATA DO ENSAIO</p>
-                    <p className="text-gray-900">{formatDate(ensaio.data_realizacao) || '-'}</p>
-                  </div>
-                  <div>
                     <p className="font-bold text-gray-700">RODOVIA</p>
                     <p className="text-gray-900">{ensaio.rodovia || '-'}</p>
                   </div>
