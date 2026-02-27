@@ -19,7 +19,7 @@ const SectionTitle = ({ children }) => (
 export default function EnsaioManchaPendulo() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const editId = searchParams.get('id');
+  const editId = searchParams.get('editId') || searchParams.get('id');
   const isEditMode = !!editId;
 
   const [loading, setLoading] = useState(true);
