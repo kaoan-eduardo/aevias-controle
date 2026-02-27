@@ -283,13 +283,16 @@ export default function SolicitacoesTransferenciaPage() {
       } 
       // Gestor de Contrato vê apenas solicitações para suas regionais
       else if (currentUserAccessLevel === 'gestor_contrato') {
-        const regionaisDoGestor = regionaisData.filter(regional => 
-          regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase()
-        );
+        const regionaisDoGestor = regionaisData.filter(regional => {
+          const isGestorUnico = regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
+          const isGestorArray = (regional.gestores_contrato_responsaveis || []).some(
+            email => email.toLowerCase() === userData.email.toLowerCase()
+          );
+          return isGestorUnico || isGestorArray;
+        });
         
         const regionaisIds = regionaisDoGestor.map(r => r.id);
         
-        // Filtra solicitações onde a regional de DESTINO é uma das regionais do gestor
         const solicitacoesFiltradas = solicitacoesData.filter(s => 
           regionaisIds.includes(s.regional_destino_id)
         );
@@ -305,7 +308,6 @@ export default function SolicitacoesTransferenciaPage() {
         
         const regionaisIds = regionaisDaSalaTecnica.map(r => r.id);
         
-        // Filtra solicitações onde a regional de DESTINO é uma das regionais da sala técnica
         const solicitacoesFiltradas = solicitacoesData.filter(s => 
           regionaisIds.includes(s.regional_destino_id)
         );
