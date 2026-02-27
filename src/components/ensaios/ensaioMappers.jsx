@@ -136,6 +136,15 @@ export const getDataFormatted = (ensaio) => {
     case "EnsaioSondagem":
       dateField = ensaio.data;
       break;
+    case "EnsaioManchaPendulo":
+      dateField = ensaio.data_ensaio;
+      break;
+    case "EnsaioVigaBenkelman":
+      dateField = ensaio.data_ensaio;
+      break;
+    case "AcompanhamentoUsinagem":
+      dateField = ensaio.data;
+      break;
     default:
       dateField = ensaio.created_date;
   }
