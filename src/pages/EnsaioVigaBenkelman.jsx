@@ -33,6 +33,7 @@ export default function EnsaioVigaBenkelman() {
     obra_id: '',
     project_id: '',
     data_ensaio: new Date().toISOString().split('T')[0],
+    data_realizacao: new Date().toISOString().split('T')[0],
     laboratorista_name: '',
     rodovia: '',
     trecho: '',
@@ -405,11 +406,21 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Data da Aplicação</label>
+                  <label className="block text-sm font-medium text-[#00233B] mb-2">Data de Aplicação da Camada</label>
                   <Input
                     type="date"
                     value={formData.data_ensaio}
                     onChange={(e) => handleInputChange('data_ensaio', e.target.value)}
+                    className="bg-white/10 border-white/20 text-[#00233B]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#00233B] mb-2">Data de Realização do Ensaio</label>
+                  <Input
+                    type="date"
+                    value={formData.data_realizacao}
+                    onChange={(e) => handleInputChange('data_realizacao', e.target.value)}
                     className="bg-white/10 border-white/20 text-[#00233B]"
                   />
                 </div>
