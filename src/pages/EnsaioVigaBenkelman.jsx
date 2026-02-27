@@ -601,7 +601,8 @@ export default function EnsaioVigaBenkelman() {
                       )}
                     </div>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop: tabela */}
+                    <div className="hidden md:block overflow-x-auto">
                       <table className="w-full border-collapse text-sm">
                         <colgroup>
                           <col style={{ width: '120px' }} />
@@ -632,71 +633,83 @@ export default function EnsaioVigaBenkelman() {
                           {faixa.levantamentos.map((lev, idx) => (
                             <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
                               <td className="border border-[#00233B]/20 px-3 py-2 text-center font-semibold">
-                                <Input
-                                  value={lev.estaca_km}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)}
-                                  placeholder="Estaca"
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm text-center"
-                                />
+                                <Input value={lev.estaca_km} onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)} placeholder="Estaca" className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm text-center" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.bordo_esquerdo.leitura_inicial}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.bordo_esquerdo.leitura_final}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.eixo.leitura_inicial}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.eixo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.eixo.leitura_final}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.eixo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.bordo_direito.leitura_inicial}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_inicial', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.bordo_direito.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  value={lev.bordo_direito.leitura_final}
-                                  onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_final', e.target.value)}
-                                  className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm"
-                                />
+                                <Input type="number" step="0.01" value={lev.bordo_direito.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
+                    </div>
+
+                    {/* Mobile: cards por estaca */}
+                    <div className="md:hidden space-y-4">
+                      {faixa.levantamentos.map((lev, idx) => (
+                        <div key={idx} className={`border border-[#00233B]/20 rounded-lg p-3 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
+                          <div className="mb-3">
+                            <label className="block text-xs font-bold text-[#00233B] mb-1">Estaca / km</label>
+                            <Input value={lev.estaca_km} onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)} placeholder="Estaca" className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                          </div>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="col-span-3">
+                              <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">BORDO ESQUERDO</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-span-3">
+                              <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">EIXO</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <Input type="number" step="0.01" value={lev.eixo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <Input type="number" step="0.01" value={lev.eixo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="col-span-3">
+                              <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">BORDO DIREITO</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <Input type="number" step="0.01" value={lev.bordo_direito.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                                <div>
+                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <Input type="number" step="0.01" value={lev.bordo_direito.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </TabsContent>
                 ))}
