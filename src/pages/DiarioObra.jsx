@@ -387,8 +387,8 @@ const DiarioForm = ({
         />
       </div>
 
-      {/* Ações Corretivas */}
-      <Card className="bg-orange-50 border-orange-200">
+      {/* Ações Corretivas, Efetivo, Checklist, Fotos - ocultos para Escritório */}
+      {formData.tipo_local !== 'escritorio' && <Card className="bg-orange-50 border-orange-200">
         <CardHeader>
           <CardTitle className="text-lg">Ações Corretivas</CardTitle>
         </CardHeader>
