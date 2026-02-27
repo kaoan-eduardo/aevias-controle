@@ -111,6 +111,16 @@ export default function Dashboard() {
         base44.entities.ChecklistMRAF.list("-created_date"),
         base44.entities.ChecklistConcretagem.list("-created_date"),
         base44.entities.ChecklistTerraplanagem.list("-created_date"),
+        base44.entities.ChecklistReciclagem.list("-created_date"),
+        base44.entities.EnsaioMRAF.list("-created_date"),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date"),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date"),
+        base44.entities.EnsaioSondagem.list("-created_date"),
+        base44.entities.EnsaioGranulometriaIndividual.list("-created_date"),
+        base44.entities.AcompanhamentoUsinagem.list("-created_date"),
+        base44.entities.AcompanhamentoCarga.list("-created_date"),
+        base44.entities.EnsaioManchaPendulo.list("-created_date"),
+        base44.entities.EnsaioVigaBenkelman.list("-created_date"),
       ];
 
       // Adicionar regionais e transferências apenas para clientes, gestores e salas técnicas
@@ -124,7 +134,7 @@ export default function Dashboard() {
         loadPromises.push(Promise.resolve([]));
       }
 
-      const [obras, projects, ensaiosCAUQ, ensaiosDensidade, diariosObra, checklistsUsina, checklistsAplicacao, checklistsMRAF, checklistsConcretagem, checklistsTerraplanagem, regionais, transferencias] = await Promise.all(loadPromises);
+      const [obras, projects, ensaiosCAUQ, ensaiosDensidade, diariosObra, checklistsUsina, checklistsAplicacao, checklistsMRAF, checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem, ensaiosMRAF, densidadeInSitu, taxaPintura, sondagem, granulometriaIndividual, acompanhamentoUsinagem, acompanhamentoCarga, manchaPendulo, vigaBenkelman, regionais, transferencias] = await Promise.all(loadPromises);
 
       let obrasFiltradas = obras;
       let projectsFiltrados = projects;
@@ -137,6 +147,16 @@ export default function Dashboard() {
         ...checklistsMRAF.map(e => ({...e, entityType: 'ChecklistMRAF'})),
         ...checklistsConcretagem.map(e => ({...e, entityType: 'ChecklistConcretagem'})),
         ...checklistsTerraplanagem.map(e => ({...e, entityType: 'ChecklistTerraplanagem'})),
+        ...checklistsReciclagem.map(e => ({...e, entityType: 'ChecklistReciclagem'})),
+        ...ensaiosMRAF.map(e => ({...e, entityType: 'EnsaioMRAF'})),
+        ...densidadeInSitu.map(e => ({...e, entityType: 'EnsaioDensidadeInSitu'})),
+        ...taxaPintura.map(e => ({...e, entityType: 'EnsaioTaxaPinturaImprimacao'})),
+        ...sondagem.map(e => ({...e, entityType: 'EnsaioSondagem'})),
+        ...granulometriaIndividual.map(e => ({...e, entityType: 'EnsaioGranulometriaIndividual'})),
+        ...acompanhamentoUsinagem.map(e => ({...e, entityType: 'AcompanhamentoUsinagem'})),
+        ...acompanhamentoCarga.map(e => ({...e, entityType: 'AcompanhamentoCarga'})),
+        ...manchaPendulo.map(e => ({...e, entityType: 'EnsaioManchaPendulo'})),
+        ...vigaBenkelman.map(e => ({...e, entityType: 'EnsaioVigaBenkelman'})),
       ];
 
       let regionalDoUsuario = null;
