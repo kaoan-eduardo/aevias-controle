@@ -1231,11 +1231,11 @@ export default function DiarioObraPage() {
         alert("Por favor, preencha as atividades realizadas.");
         return;
       }
-      if (formData.acoes_corretivas_realizado === null) {
+      if (formData.tipo_local !== 'escritorio' && formData.acoes_corretivas_realizado === null) {
         alert("Por favor, indique se foram realizadas ações corretivas.");
         return;
       }
-      if (formData.acoes_corretivas_realizado === true && !formData.acoes_corretivas_descricao?.trim()) {
+      if (formData.tipo_local !== 'escritorio' && formData.acoes_corretivas_realizado === true && !formData.acoes_corretivas_descricao?.trim()) {
         alert("Por favor, descreva as ações corretivas realizadas.");
         return;
       }
