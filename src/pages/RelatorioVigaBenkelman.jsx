@@ -172,7 +172,7 @@ export default function RelatorioVigaBenkelman() {
                 </div>
                 <div className="flex justify-end">
                   <div className="text-[10px] text-gray-600 border border-slate-300 rounded px-1 py-0">
-                    {formatDate(ensaio.data_realizacao || ensaio.data_ensaio)}
+                    {formatDate(ensaio.data_realizacao)}
                   </div>
                 </div>
               </header>
