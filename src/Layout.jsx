@@ -148,7 +148,10 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       cor: "text-[#00233B]",
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
       tipo_obra: "levantamentos",
-      ensaios: []
+      ensaios: [
+        { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
+        { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
+      ]
     }
   ], []);
 
