@@ -319,7 +319,7 @@ export default function RelatorioVigaBenkelman() {
                 const lev = faixa.levantamentos[idx];
                 const bgColor = idx % 2 === 0 ? 'bg-white' : 'bg-blue-50';
                 return (
-                  <tr key={idx} className={bgColor} style={{ height: '18px' }}>
+                  <tr key={idx} className={bgColor} style={{ height: '22px' }}>
                     <td className="px-0.5 py-0 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
                       {lev?.estaca_km || ''}
                     </td>
