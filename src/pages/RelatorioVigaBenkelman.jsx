@@ -323,18 +323,28 @@ export default function RelatorioVigaBenkelman() {
                     <td className="px-0.5 py-0 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>
                       {lev?.estaca_km || ''}
                     </td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.leitura_inicial && lev.bordo_esquerdo.leitura_inicial !== 0 ? lev.bordo_esquerdo.leitura_inicial.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.leitura_final && lev.bordo_esquerdo.leitura_final !== 0 ? lev.bordo_esquerdo.leitura_final.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.diferenca && lev.bordo_esquerdo.diferenca !== 0 ? lev.bordo_esquerdo.diferenca.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_esquerdo?.deflexao && lev.bordo_esquerdo.deflexao !== 0 ? lev.bordo_esquerdo.deflexao.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.leitura_inicial && lev.eixo.leitura_inicial !== 0 ? lev.eixo.leitura_inicial.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.leitura_final && lev.eixo.leitura_final !== 0 ? lev.eixo.leitura_final.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.diferenca && lev.eixo.diferenca !== 0 ? lev.eixo.diferenca.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.eixo?.deflexao && lev.eixo.deflexao !== 0 ? lev.eixo.deflexao.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.leitura_inicial && lev.bordo_direito.leitura_inicial !== 0 ? lev.bordo_direito.leitura_inicial.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.leitura_final && lev.bordo_direito.leitura_final !== 0 ? lev.bordo_direito.leitura_final.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.diferenca && lev.bordo_direito.diferenca !== 0 ? lev.bordo_direito.diferenca.toFixed(0) : ''}</td>
-                    <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{lev?.bordo_direito?.deflexao && lev.bordo_direito.deflexao !== 0 ? lev.bordo_direito.deflexao.toFixed(0) : ''}</td>
+                    {(() => {
+                      const temEstaca = !!lev?.estaca_km;
+                      const temBE = temEstaca && lev?.bordo_esquerdo?.leitura_final && lev.bordo_esquerdo.leitura_final !== 0;
+                      const temEixo = temEstaca && lev?.eixo?.leitura_final && lev.eixo.leitura_final !== 0;
+                      const temBD = temEstaca && lev?.bordo_direito?.leitura_final && lev.bordo_direito.leitura_final !== 0;
+                      return (
+                        <>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.leitura_inicial !== 0 ? lev.bordo_esquerdo.leitura_inicial.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE ? lev.bordo_esquerdo.leitura_final.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.diferenca !== 0 ? lev.bordo_esquerdo.diferenca.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.deflexao !== 0 ? lev.bordo_esquerdo.deflexao.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.leitura_inicial !== 0 ? lev.eixo.leitura_inicial.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo ? lev.eixo.leitura_final.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.diferenca !== 0 ? lev.eixo.diferenca.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.deflexao !== 0 ? lev.eixo.deflexao.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.leitura_inicial !== 0 ? lev.bordo_direito.leitura_inicial.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD ? lev.bordo_direito.leitura_final.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.diferenca !== 0 ? lev.bordo_direito.diferenca.toFixed(0) : ''}</td>
+                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.deflexao !== 0 ? lev.bordo_direito.deflexao.toFixed(0) : ''}</td>
+                        </>
+                      );
+                    })()}
                   </tr>
                 );
               })}
