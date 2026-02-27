@@ -76,12 +76,28 @@ export default function EnsaioVigaBenkelman() {
       setUser(currentUser);
       setFormData(prev => ({ ...prev, laboratorista_name: currentUser.laboratorista_name || currentUser.full_name }));
 
-      const [obrasData, projectsData] = await Promise.all([
+      const [obrasData, projectsData, regionaisData] = await Promise.all([
         base44.entities.Obra.list(),
-        base44.entities.Project.list()
+        base44.entities.Project.list(),
+        base44.entities.Regional.list()
       ]);
 
-      setObras(obrasData);
+      const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
+      let obrasFiltradas = obrasData;
+
+      if (userAccessLevel === 'user') {
+        const regionalDoLaboratorista = regionaisData.find(regional => {
+          const laboratoristas = regional.laboratoristas_responsaveis || [];
+          return laboratoristas.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
+        });
+        if (regionalDoLaboratorista) {
+          obrasFiltradas = obrasData.filter(obra => obra.regional_id === regionalDoLaboratorista.id);
+        } else {
+          obrasFiltradas = [];
+        }
+      }
+
+      setObras(obrasFiltradas);
       setProjects(projectsData);
 
       if (editId) {
