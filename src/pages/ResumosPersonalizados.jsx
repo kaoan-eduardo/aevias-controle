@@ -1159,6 +1159,35 @@ export default function ResumosPersonalizadosPage() {
           resultados.push(linha);
         } else {
           // Para outros tipos de ensaio
+          
+          // Para EnsaioManchaPendulo: calcular campos derivados on-the-fly se não estiverem salvos
+          if (tipo === 'EnsaioManchaPendulo') {
+            const manchaValidos = (ensaio.ensaios_mancha || []).filter(e => e && e.hs_mm != null);
+            const penduloValidos = (ensaio.ensaios_pendulo || []).filter(e => e && e.vrd != null);
+
+            if (!ensaio.media_hs && manchaValidos.length > 0) {
+              ensaio.media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
+            }
+            if (!ensaio.media_vrd && penduloValidos.length > 0) {
+              ensaio.media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
+            }
+            if (!ensaio.classificacao_media_hs && ensaio.media_hs != null) {
+              const v = ensaio.media_hs;
+              ensaio.classificacao_media_hs = v < 0.2 ? 'Muito Fina' : v < 0.4 ? 'Fina' : v < 0.8 ? 'Média' : v < 1.2 ? 'Grossa' : 'Muito Grossa';
+            }
+            if (!ensaio.classificacao_media_vrd && ensaio.media_vrd != null) {
+              const v = ensaio.media_vrd;
+              ensaio.classificacao_media_vrd = v < 25 ? 'Perigosa' : v <= 31 ? 'Muito Lisa' : v <= 39 ? 'Lisa' : v <= 46 ? 'Insuf. Rugosa' : v <= 54 ? 'Median. Rugosa' : v <= 75 ? 'Rugosa' : 'Muito Rugosa';
+            }
+            if (!ensaio.condicao_conformidade && ensaio.media_hs != null && ensaio.media_vrd != null) {
+              const limites = { 'DER/PR': 50, 'DNIT': 55, 'ECO-RODOVIAS': 47 };
+              const vrdMin = limites[ensaio.orgao] || 47;
+              const manchaOk = ensaio.media_hs >= 0.6 && ensaio.media_hs <= 1.2;
+              const penduloOk = ensaio.media_vrd >= vrdMin;
+              ensaio.condicao_conformidade = (manchaOk && penduloOk) ? 'CONFORME' : 'NÃO CONFORME';
+            }
+          }
+
           const linha = {
             tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
             id: ensaio.id,
