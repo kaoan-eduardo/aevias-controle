@@ -564,7 +564,7 @@ export default function ResumosPersonalizadosPage() {
     
     if (value === null || value === undefined) return '-';
     
-    if (campo.includes('data')) {
+    if (campo.toLowerCase().includes('data') || campo.toLowerCase().includes('date')) {
       try {
         return new Date(value).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
       } catch {
