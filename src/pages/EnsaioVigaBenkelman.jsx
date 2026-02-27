@@ -268,6 +268,7 @@ export default function EnsaioVigaBenkelman() {
         obra_id: formData.obra_id,
         project_id: formData.project_id,
         data_ensaio: formData.data_ensaio,
+        data_realizacao: formData.data_realizacao,
         laboratorista_name: formData.laboratorista_name,
         rodovia: formData.rodovia,
         trecho: formData.trecho,
