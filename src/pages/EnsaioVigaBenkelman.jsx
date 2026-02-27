@@ -135,6 +135,8 @@ export default function EnsaioVigaBenkelman() {
         return prev;
       }
       const newFaixaId = prev.nextFaixaId;
+      // Schedule tab change after state update
+      setTimeout(() => setActiveFaixaTab(String(newFaixaId)), 0);
       return {
         ...prev,
         faixas: [
@@ -153,7 +155,6 @@ export default function EnsaioVigaBenkelman() {
         nextFaixaId: newFaixaId + 1
       };
     });
-    setActiveFaixaTab(String(newFaixaId));
   };
 
   const removeFaixa = (faixaId) => {
