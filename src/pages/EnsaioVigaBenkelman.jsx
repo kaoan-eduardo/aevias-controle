@@ -306,7 +306,6 @@ export default function EnsaioVigaBenkelman() {
                 deflexao: parseFloat(lev.bordo_direito.deflexao) || 0
               }
             });
-          }
         });
       });
 
