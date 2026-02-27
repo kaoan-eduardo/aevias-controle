@@ -192,7 +192,7 @@ export const getDataEnsaio = (ensaio) => {
     case "EnsaioManchaPendulo":
       return ensaio.data_ensaio;
     case "EnsaioVigaBenkelman":
-      return ensaio.data_ensaio;
+      return ensaio.data_realizacao || ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
