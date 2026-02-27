@@ -1197,6 +1197,8 @@ export default function ResumosPersonalizadosPage() {
           campos.forEach(campoKey => {
             const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
             
+            if (!campo) return;
+
             if (campo?.subfields) {
               // Tratar granulometria de forma especial
               if (campoKey === 'granulometria') {
