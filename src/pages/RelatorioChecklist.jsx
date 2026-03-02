@@ -47,10 +47,21 @@ export default function RelatorioChecklistPage() {
           project = projects.find(p => p.id === checklist.project_id);
         }
 
+        let creatorUser = null;
+        if (checklist.created_by) {
+          try {
+            const { base44 } = await import('@/api/base44Client');
+            const allUsers = await base44.entities.User.list();
+            creatorUser = allUsers.find(u => u.email?.toLowerCase() === checklist.created_by?.toLowerCase()) || null;
+          } catch (err) {
+            console.warn("Não foi possível buscar dados do criador:", err);
+          }
+        }
+
         setState({
           loading: false,
           error: null,
-          data: { checklist, obra, regional, project, user }
+          data: { checklist, obra, regional, project, user, creatorUser }
         });
       } catch (error) {
         console.error('Erro ao carregar relatório do checklist:', error);
