@@ -485,10 +485,10 @@ const AppLayout = ({ children }) => {
                               asChild
                               className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === item.url ? 'bg-black/10' : ''}`}
                             >
-                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5">
+                              <NavLink to={item.url} className="flex items-center gap-3 px-3 py-2.5">
                                 <item.icon className="w-5 h-5 text-[#BFCF99]" />
                                 <span className="font-medium text-[#00233B]">{item.title}</span>
-                              </Link>
+                              </NavLink>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         );
@@ -514,10 +514,10 @@ const AppLayout = ({ children }) => {
                               asChild
                               className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === item.url ? 'bg-black/10' : ''}`}
                             >
-                              <Link to={item.url} className="flex items-center gap-3 px-3 py-2.5">
+                              <NavLink to={item.url} className="flex items-center gap-3 px-3 py-2.5">
                                 <item.icon className="w-5 h-5 text-[#BFCF99]" />
                                 <span className="font-medium text-[#00233B]">{item.title}</span>
-                              </Link>
+                              </NavLink>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
                         );
