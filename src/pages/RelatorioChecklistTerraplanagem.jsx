@@ -25,7 +25,18 @@ export default function RelatorioChecklistTerraplanamemPage() {
       }
 
       const checklist = await base44.entities.ChecklistTerraplanagem.get(checklistId);
-      setReportData(checklist);
+
+      let creatorUser = null;
+      if (checklist.created_by) {
+        try {
+          const allUsers = await base44.entities.User.list();
+          creatorUser = allUsers.find(u => u.email?.toLowerCase() === checklist.created_by?.toLowerCase()) || null;
+        } catch (err) {
+          console.warn("Não foi possível buscar dados do criador:", err);
+        }
+      }
+
+      setReportData({ checklist, creatorUser });
     } catch (error) {
       console.error("Erro ao carregar dados do relatório:", error);
       setError("Erro ao carregar dados do relatório");
