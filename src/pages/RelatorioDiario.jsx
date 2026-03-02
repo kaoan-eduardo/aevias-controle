@@ -35,6 +35,17 @@ export default function RelatorioDiarioPage() {
       const user = await User.me();
       const diario = await DiarioObra.get(id);
 
+      // Buscar o usuário que criou o diário para obter o cargo
+      let creatorUser = null;
+      if (diario.created_by) {
+        try {
+          const allUsers = await base44.entities.User.list();
+          creatorUser = allUsers.find(u => u.email?.toLowerCase() === diario.created_by?.toLowerCase()) || null;
+        } catch (err) {
+          console.warn("Não foi possível buscar dados do criador:", err);
+        }
+      }
+
       if (!diario) throw new Error(`Diário com ID ${id} não encontrado`);
 
       let obra = null;
