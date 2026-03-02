@@ -634,7 +634,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                     <p>{checklist.created_by}</p>
                     <p>em {formatDateBrasilia(checklist.created_date)}</p>
                   </div>
-                  <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Laboratorista Responsável</p></div>
+                  <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
                 </div>
                 
                 <div className="text-center">
