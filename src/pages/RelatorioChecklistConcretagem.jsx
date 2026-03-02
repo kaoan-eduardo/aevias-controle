@@ -8,6 +8,7 @@ import RelatorioChecklistConcretagemComponent from "../components/relatorios/Rel
 export default function RelatorioChecklistConcretagemPage() {
   const location = useLocation();
   const [checklist, setChecklist] = useState(null);
+  const [creatorUser, setCreatorUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

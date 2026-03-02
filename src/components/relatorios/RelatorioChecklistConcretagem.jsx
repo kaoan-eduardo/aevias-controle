@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
-export default function RelatorioChecklistConcretagem({ checklist }) {
+export default function RelatorioChecklistConcretagem({ checklist, creatorUser }) {
   const [obra, setObra] = useState(null);
   const [project, setProject] = useState(null);
   const [regional, setRegional] = useState(null);
