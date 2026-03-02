@@ -19,11 +19,12 @@ export default function RelatorioChecklistAplicacaoPage() {
 
         if (!id) throw new Error('ID do checklist é obrigatório na URL');
 
-        const [checklist, user, obras, regionais] = await Promise.all([
+        const [checklist, user, obras, regionais, allUsers] = await Promise.all([
           base44.entities.ChecklistAplicacao.get(id),
           base44.auth.me(),
           base44.entities.Obra.list(),
-          base44.entities.Regional.list()
+          base44.entities.Regional.list(),
+          base44.entities.User.list()
         ]);
 
         if (!checklist) throw new Error(`Checklist com ID ${id} não encontrado`);
@@ -37,10 +38,14 @@ export default function RelatorioChecklistAplicacaoPage() {
           }
         }
 
+        const creatorUser = checklist.created_by
+          ? allUsers.find(u => u.email?.toLowerCase() === checklist.created_by?.toLowerCase()) || null
+          : null;
+
         setState({
           loading: false,
           error: null,
-          data: { checklist, obra, regional, user }
+          data: { checklist, obra, regional, user, creatorUser }
         });
         } catch (error) {
         console.error('Erro ao carregar relatório do checklist:', error);
