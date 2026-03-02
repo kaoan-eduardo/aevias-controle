@@ -55,7 +55,7 @@ export default function RelatorioManchaPendulo({ ensaio, obra, regional }) {
   );
 
   const DadosCliente = () => (
-    <div className="mb-0">
+    <div className="mt-1.5">
       <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-1.5 py-0 font-bold text-center mb-0 text-[10px]">
         DADOS DO CLIENTE
       </div>
