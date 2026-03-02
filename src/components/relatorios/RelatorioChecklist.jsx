@@ -248,7 +248,7 @@ const ReportFooter = ({ checklist, formatDateBrasilia }) => (
 );
 
 
-export default function RelatorioChecklist({ checklist, obra, regional, project, user }) {
+export default function RelatorioChecklist({ checklist, obra, regional, project, user, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
