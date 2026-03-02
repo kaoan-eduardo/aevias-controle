@@ -27,6 +27,11 @@ export default function RelatorioChecklistConcretagemPage() {
 
       const checklistData = await base44.entities.ChecklistConcretagem.get(id);
       setChecklist(checklistData);
+
+      if (checklistData.created_by) {
+        const users = await base44.entities.User.filter({ email: checklistData.created_by });
+        if (users && users.length > 0) setCreatorUser(users[0]);
+      }
     } catch (error) {
       console.error("Erro ao carregar checklist:", error);
       alert("Erro ao carregar checklist");
