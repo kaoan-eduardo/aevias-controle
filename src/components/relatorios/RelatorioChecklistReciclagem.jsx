@@ -173,7 +173,7 @@ const ReportFooterWithSignatures = ({ checklist }) => {
   );
 };
 
-export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project }) {
+export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 

@@ -9,6 +9,7 @@ export default function RelatorioChecklistReciclagemPage() {
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);
   const [project, setProject] = useState(null);
+  const [creatorUser, setCreatorUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
