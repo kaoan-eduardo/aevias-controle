@@ -292,7 +292,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Fiscal</p></div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
         </div>
         <div className="text-center">
           {checklist.approver_details ? (

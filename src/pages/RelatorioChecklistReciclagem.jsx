@@ -44,6 +44,11 @@ export default function RelatorioChecklistReciclagemPage() {
         const projectData = await base44.entities.Project.get(checklistData.project_id);
         setProject(projectData);
       }
+
+      if (checklistData.created_by) {
+        const users = await base44.entities.User.filter({ email: checklistData.created_by });
+        if (users && users.length > 0) setCreatorUser(users[0]);
+      }
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       setError("Erro ao carregar dados do relatório");
