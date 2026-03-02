@@ -95,7 +95,8 @@ export default function RelatorioChecklistAplicacaoPage() {
             checklist={state.data.checklist} 
             obra={state.data.obra} 
             regional={state.data.regional} 
-            user={state.data.user} 
+            user={state.data.user}
+            creatorUser={state.data.creatorUser}
           />
         )}
       </div>
