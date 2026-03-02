@@ -104,7 +104,8 @@ export default function RelatorioChecklistMRAFPage() {
             obra={state.data.obra} 
             regional={state.data.regional}
             project={state.data.project}
-            user={state.data.user} 
+            user={state.data.user}
+            creatorUser={state.data.creatorUser}
           />
         )}
       </div>
