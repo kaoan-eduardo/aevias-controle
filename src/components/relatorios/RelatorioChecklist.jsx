@@ -213,7 +213,7 @@ const ReportFooter = ({ checklist, formatDateBrasilia, creatorUser }) => (
             <p>{checklist.created_by}</p>
             <p>em {formatDateBrasilia(checklist.created_date)}</p>
           </div>
-          <div className="border-t border-gray-500 pt-2"><p className="text-sm print:text-xs">Laboratorista Responsável</p></div>
+          <div className="border-t border-gray-500 pt-2"><p className="text-sm print:text-xs">{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
         </div>
         <div className="text-center">
            {checklist.approver_details ? (
