@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
-export default function RelatorioChecklistTerraplanagem({ checklist }) {
+export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser }) {
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);
   const [compressedPhotos, setCompressedPhotos] = useState([]);
