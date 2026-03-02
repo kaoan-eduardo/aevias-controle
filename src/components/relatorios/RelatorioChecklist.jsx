@@ -563,7 +563,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 </tbody>
               </table>
             </main>
-            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} creatorUser={creatorUser} />
             <footer className="pt-1 text-center text-sm print:text-xs text-gray-400">
               Página 3 de {totalPages}
             </footer>
