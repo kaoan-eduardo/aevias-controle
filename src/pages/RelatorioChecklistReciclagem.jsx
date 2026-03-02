@@ -98,6 +98,7 @@ export default function RelatorioChecklistReciclagemPage() {
             obra={obra} 
             regional={regional}
             project={project}
+            creatorUser={creatorUser}
           />
         </div>
       </div>
