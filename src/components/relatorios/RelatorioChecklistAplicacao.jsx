@@ -823,7 +823,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                       <p>em {formatDateBrasilia(checklist.created_date)}</p>
                     </div>
                     <div className="border-t border-slate-400 pt-1">
-                      <p className="font-semibold">Laboratorista Responsável</p>
+                      <p className="font-semibold">{creatorUser?.position || 'Laboratorista Responsável'}</p>
                     </div>
                   </>
                 )}
