@@ -233,7 +233,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser }
               </>
             )}
           </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Laboratorista Responsável</p></div>
+          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
         </div>
         <div className="text-center">
           {checklist.approver_details ? (

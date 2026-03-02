@@ -74,7 +74,7 @@ export default function RelatorioChecklistConcretagemPage() {
         </div>
       </div>
 
-      <RelatorioChecklistConcretagemComponent checklist={checklist} />
+      <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
     </div>
   );
 }
