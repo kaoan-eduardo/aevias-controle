@@ -262,6 +262,20 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
 
 CreateEnsaioDialog.displayName = 'CreateEnsaioDialog';
 
+// Componente de link que fecha a sidebar no mobile ao ser clicado
+const NavLink = ({ to, children, className }) => {
+  const { isMobile, setOpenMobile } = useSidebar();
+  return (
+    <Link
+      to={to}
+      className={className}
+      onClick={() => { if (isMobile) setOpenMobile(false); }}
+    >
+      {children}
+    </Link>
+  );
+};
+
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const [user, setUser] = React.useState(null);
