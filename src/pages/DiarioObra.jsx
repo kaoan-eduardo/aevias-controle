@@ -154,7 +154,7 @@ const DiarioForm = ({
             value={formData.obra_id || ""}
             onValueChange={(value) => handleChange('obra_id', value)}
             required
-            disabled={!isEditable || isApproved || !isCreatingNew} // Disable if not editable, approved, or if editing an existing entry
+            disabled={!isEditable || isApproved || (!isCreatingNew && formData.approved !== false)} // Disable if not editable, approved, or editing (unless rejected)
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione a obra" />
