@@ -258,7 +258,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
                 <p>em {formatDateBrasilia(diario.created_date)}</p>
               </div>
               <div className="border-t border-gray-500 pt-2">
-                <p className="text-xs text-gray-600">Laboratorista Responsável</p>
+                <p className="text-xs text-gray-600">{creatorUser?.cargo || 'Laboratorista Responsável'}</p>
               </div>
             </div>
 
