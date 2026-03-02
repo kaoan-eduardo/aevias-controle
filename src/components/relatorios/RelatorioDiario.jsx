@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function RelatorioDiario({ diario, obra, project, user, regional }) {
+export default function RelatorioDiario({ diario, obra, project, user, regional, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
