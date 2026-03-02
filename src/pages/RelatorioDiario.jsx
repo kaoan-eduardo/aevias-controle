@@ -120,6 +120,7 @@ export default function RelatorioDiarioPage() {
             project={state.data.project} 
             user={state.data.user}
             regional={state.data.regional}
+            creatorUser={state.data.creatorUser}
           />
         )}
       </div>
