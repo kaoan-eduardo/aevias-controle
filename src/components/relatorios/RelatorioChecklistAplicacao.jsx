@@ -178,7 +178,7 @@ const ReportFooter = ({ checklist, formatDateBrasilia, pageNumber, totalPages })
   </footer>
 );
 
-export default function RelatorioChecklistAplicacao({ checklist, obra, regional, user }) {
+export default function RelatorioChecklistAplicacao({ checklist, obra, regional, user, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [compressedMedicoes, setCompressedMedicoes] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
