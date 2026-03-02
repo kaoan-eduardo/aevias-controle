@@ -170,7 +170,7 @@ const ReportFooter = ({ checklist, formatDateBrasilia }) => (
   </footer>
 );
 
-export default function RelatorioChecklistMRAF({ checklist, obra, regional, project }) {
+export default function RelatorioChecklistMRAF({ checklist, obra, regional, project, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
