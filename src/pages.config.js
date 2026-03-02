@@ -82,6 +82,7 @@ import RelatorioCAUQ from './pages/RelatorioCAUQ';
 import RelatorioChecklist from './pages/RelatorioChecklist';
 import RelatorioChecklistAplicacao from './pages/RelatorioChecklistAplicacao';
 import RelatorioChecklistConcretagem from './pages/RelatorioChecklistConcretagem';
+import RelatorioChecklistMRAF from './pages/RelatorioChecklistMRAF';
 import RelatorioChecklistPage from './pages/RelatorioChecklistPage';
 import RelatorioChecklistReciclagem from './pages/RelatorioChecklistReciclagem';
 import RelatorioChecklistTerraplanagem from './pages/RelatorioChecklistTerraplanagem';
@@ -97,7 +98,6 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import RelatorioChecklistMRAF from './pages/RelatorioChecklistMRAF';
 import __Layout from './Layout.jsx';
 
 
@@ -137,6 +137,7 @@ export const PAGES = {
     "RelatorioChecklist": RelatorioChecklist,
     "RelatorioChecklistAplicacao": RelatorioChecklistAplicacao,
     "RelatorioChecklistConcretagem": RelatorioChecklistConcretagem,
+    "RelatorioChecklistMRAF": RelatorioChecklistMRAF,
     "RelatorioChecklistPage": RelatorioChecklistPage,
     "RelatorioChecklistReciclagem": RelatorioChecklistReciclagem,
     "RelatorioChecklistTerraplanagem": RelatorioChecklistTerraplanagem,
@@ -152,7 +153,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "RelatorioChecklistMRAF": RelatorioChecklistMRAF,
 }
 
 export const pagesConfig = {

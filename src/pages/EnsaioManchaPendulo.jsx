@@ -326,7 +326,16 @@ export default function EnsaioManchaPendulo() {
       };
 
       if (isEditMode) {
-        await base44.entities.EnsaioManchaPendulo.update(editId, dataToSave);
+        const updateData = { ...dataToSave };
+        // Se estava reprovado e está sendo finalizado, resetar aprovação para pendente
+        if (formData.approved === false && finalizar) {
+          updateData.approved = null;
+          updateData.rejection_reason = null;
+          updateData.approved_by = null;
+          updateData.approved_date = null;
+          updateData.was_rejected = true;
+        }
+        await base44.entities.EnsaioManchaPendulo.update(editId, updateData);
       } else {
         await base44.entities.EnsaioManchaPendulo.create(dataToSave);
       }
