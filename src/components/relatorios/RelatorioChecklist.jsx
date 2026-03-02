@@ -582,7 +582,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 <p className="text-base leading-relaxed whitespace-pre-wrap text-justify">{checklist.acoes_corretivas_descricao}</p>
               </div>
             </main>
-            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+            <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} creatorUser={creatorUser} />
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
               Página {temControleLigante ? 4 : 3} de {totalPages}
             </footer>
