@@ -44,16 +44,10 @@ export default function RelatorioChecklistMRAFPage() {
           project = projects.find(p => p.id === checklist.project_id);
         }
 
-        let creatorUser = null;
-        if (checklist.created_by) {
-          const users = await base44.entities.User.filter({ email: checklist.created_by });
-          if (users && users.length > 0) creatorUser = users[0];
-        }
-
         setState({
           loading: false,
           error: null,
-          data: { checklist, obra, regional, project, user, creatorUser }
+          data: { checklist, obra, regional, project, user }
         });
       } catch (error) {
         console.error('Erro ao carregar relatório do checklist:', error);
@@ -104,8 +98,7 @@ export default function RelatorioChecklistMRAFPage() {
             obra={state.data.obra} 
             regional={state.data.regional}
             project={state.data.project}
-            user={state.data.user}
-            creatorUser={state.data.creatorUser}
+            user={state.data.user} 
           />
         )}
       </div>

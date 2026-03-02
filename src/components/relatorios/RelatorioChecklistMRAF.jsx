@@ -170,7 +170,7 @@ const ReportFooter = ({ checklist, formatDateBrasilia }) => (
   </footer>
 );
 
-export default function RelatorioChecklistMRAF({ checklist, obra, regional, project, creatorUser }) {
+export default function RelatorioChecklistMRAF({ checklist, obra, regional, project }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
@@ -535,7 +535,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                 <p>{checklist.created_by}</p>
                 <p>em {formatDateBrasilia(checklist.created_date)}</p>
               </div>
-              <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
+              <div className="border-t border-gray-500 pt-0.5"><p style={{ fontSize: '9px' }}>Laboratorista Responsável</p></div>
             </div>
             
             <div className="text-center">
