@@ -78,7 +78,7 @@ export default function RelatorioDiarioPage() {
       setState({
         loading: false,
         error: null,
-        data: { diario, obra, project, user, regional }
+        data: { diario, obra, project, user, regional, creatorUser }
       });
     } catch (error) {
       console.error('Erro ao carregar relatório do diário:', error);
