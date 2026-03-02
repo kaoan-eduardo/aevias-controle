@@ -102,7 +102,7 @@ export default function RelatorioChecklistTerraplanamemPage() {
         }
       `}</style>
       
-      <RelatorioChecklistTerraplanagem checklist={reportData} />
+      <RelatorioChecklistTerraplanagem checklist={reportData.checklist} creatorUser={reportData.creatorUser} />
     </div>
   );
 }
