@@ -203,7 +203,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
   </div>
 );
 
-const ReportFooter = ({ checklist, formatDateBrasilia }) => (
+const ReportFooter = ({ checklist, formatDateBrasilia, creatorUser }) => (
     <footer className="mt-2">
        <div className="grid grid-cols-3 gap-8 items-end">
         <div className="text-center">
