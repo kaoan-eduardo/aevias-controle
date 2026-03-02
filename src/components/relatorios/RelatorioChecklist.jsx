@@ -410,7 +410,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             <TabelaControleCAUQ controle_cauq={checklist.controle_cauq} project={project} />
             <div className="mt-2"><strong className="font-medium">Observações Gerais:</strong> {checklist.observacoes?.substring(0, 500) || 'N/A'}</div>
           </main>
-          <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} />
+          <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} creatorUser={creatorUser} />
           <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
              Página 2 de {totalPages}
           </footer>
