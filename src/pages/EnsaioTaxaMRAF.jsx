@@ -219,6 +219,32 @@ export default function EnsaioTaxaMRAFPage() {
     }
   };
 
+  const renderResultados = (ensaio) => {
+    const taxaMin = formData.taxa_minima_projeto;
+    const naoConforme = taxaMin != null && ensaio.taxa_mraf_aplicada != null && ensaio.taxa_mraf_aplicada < taxaMin;
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t">
+        <div className={`p-3 rounded ${naoConforme ? 'bg-red-200 border border-red-400' : 'bg-blue-200'}`}>
+          <Label className={`text-xs ${naoConforme ? 'text-red-800' : 'text-blue-800'}`}>Tₓ - Taxa MRAF Aplicada (kg/m²)</Label>
+          <p className={`text-lg font-bold ${naoConforme ? 'text-red-900' : 'text-blue-900'}`}>{ensaio.taxa_mraf_aplicada?.toFixed(1) || '-'}</p>
+          {naoConforme && <p className="text-xs font-bold text-red-700 mt-1">⚠ NÃO CONFORME (mín: {taxaMin})</p>}
+        </div>
+        <div className="p-3 bg-blue-200 rounded">
+          <Label className="text-xs text-blue-800">T_L - Taxa de Ligante (L/m²)</Label>
+          <p className="text-lg font-bold text-blue-900">{ensaio.taxa_ligante?.toFixed(1) || '-'}</p>
+        </div>
+        <div className="p-3 bg-green-200 rounded">
+          <Label className="text-xs text-green-800">T_E - Taxa de Emulsão (L/m²)</Label>
+          <p className="text-lg font-bold text-green-900">{ensaio.taxa_emulsao?.toFixed(1) || '-'}</p>
+        </div>
+        <div className="p-3 bg-green-200 rounded">
+          <Label className="text-xs text-green-800">T_A - Taxa de Agregado (kg/m²)</Label>
+          <p className="text-lg font-bold text-green-900">{ensaio.taxa_agregado?.toFixed(1) || '-'}</p>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) return (
     <div className="flex justify-center items-center h-screen">
       <Loader2 className="w-8 h-8 animate-spin text-[#00233B]/50" />
