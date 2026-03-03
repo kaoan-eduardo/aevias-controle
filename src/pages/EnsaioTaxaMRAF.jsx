@@ -351,11 +351,11 @@ export default function EnsaioTaxaMRAFPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>Estaca do Ensaio</Label>
-                        <Input value={ensaio.estaca} onChange={e => handleEnsaioChange(index, 'estaca', e.target.value)} disabled={!isEditable} placeholder="Ex: E-245" />
+                        <Input value={ensaio.estaca} onChange={e => handleEnsaioChange(index, 'estaca', e.target.value)} disabled={!isEditable} placeholder="Ex: E-245" className="bg-white" />
                       </div>
                       <div>
                         <Label>Posição</Label>
-                        <Input value={ensaio.posicao} onChange={e => handleEnsaioChange(index, 'posicao', e.target.value)} disabled={!isEditable} placeholder="Ex: Faixa 1" />
+                        <Input value={ensaio.posicao} onChange={e => handleEnsaioChange(index, 'posicao', e.target.value)} disabled={!isEditable} placeholder="Ex: Faixa 1" className="bg-white" />
                       </div>
                     </div>
 
