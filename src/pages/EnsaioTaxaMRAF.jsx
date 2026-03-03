@@ -172,7 +172,7 @@ export default function EnsaioTaxaMRAFPage() {
 
   const adicionarEnsaio = () => {
     setFormData(prev => {
-      if (prev.ensaios.length >= 4) return prev;
+      if (prev.ensaios.length >= 3) return prev;
       return { ...prev, ensaios: [...prev.ensaios, getEnsaioInicial(prev.ensaios.length + 1)] };
     });
   };

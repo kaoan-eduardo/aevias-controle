@@ -65,6 +65,7 @@ import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual
 import EnsaioMRAF from './pages/EnsaioMRAF';
 import EnsaioManchaPendulo from './pages/EnsaioManchaPendulo';
 import EnsaioSondagem from './pages/EnsaioSondagem';
+import EnsaioTaxaMRAF from './pages/EnsaioTaxaMRAF';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
@@ -93,13 +94,12 @@ import RelatorioEnsaio from './pages/RelatorioEnsaio';
 import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
 import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
 import RelatorioSondagem from './pages/RelatorioSondagem';
+import RelatorioTaxaMRAF from './pages/RelatorioTaxaMRAF';
 import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
 import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import EnsaioTaxaMRAF from './pages/EnsaioTaxaMRAF';
-import RelatorioTaxaMRAF from './pages/RelatorioTaxaMRAF';
 import __Layout from './Layout.jsx';
 
 
@@ -122,6 +122,7 @@ export const PAGES = {
     "EnsaioMRAF": EnsaioMRAF,
     "EnsaioManchaPendulo": EnsaioManchaPendulo,
     "EnsaioSondagem": EnsaioSondagem,
+    "EnsaioTaxaMRAF": EnsaioTaxaMRAF,
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "EnsaioVigaBenkelman": EnsaioVigaBenkelman,
     "FaixasGranulometricas": FaixasGranulometricas,
@@ -150,13 +151,12 @@ export const PAGES = {
     "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
     "RelatorioManchaPendulo": RelatorioManchaPendulo,
     "RelatorioSondagem": RelatorioSondagem,
+    "RelatorioTaxaMRAF": RelatorioTaxaMRAF,
     "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
     "RelatorioVigaBenkelman": RelatorioVigaBenkelman,
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "EnsaioTaxaMRAF": EnsaioTaxaMRAF,
-    "RelatorioTaxaMRAF": RelatorioTaxaMRAF,
 }
 
 export const pagesConfig = {
