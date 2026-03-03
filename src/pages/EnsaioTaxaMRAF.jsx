@@ -372,7 +372,7 @@ export default function EnsaioTaxaMRAFPage() {
                       </div>
                       <div>
                         <Label>Pₐ - Peso da Amostra (g) <span className="text-slate-500 text-xs">(calculado)</span></Label>
-                        <Input value={ensaio.peso_amostra?.toFixed(2) ?? ''} readOnly className="bg-slate-100" />
+                        <Input value={ensaio.peso_amostra?.toFixed(2) ?? ''} readOnly className="bg-slate-200" />
                       </div>
                     </div>
 
