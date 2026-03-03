@@ -326,9 +326,9 @@ export default function EnsaioTaxaMRAFPage() {
             {/* Ensaios */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-[#00233B]">Execução dos Ensaios (máx. 4)</h3>
+                <h3 className="text-lg font-semibold text-[#00233B]">Execução dos Ensaios (máx. 3)</h3>
                 {isEditable && (
-                  <Button type="button" onClick={adicionarEnsaio} className="bg-[#00233B] text-[#F2F1EF]" disabled={formData.ensaios.length >= 4}>
+                  <Button type="button" onClick={adicionarEnsaio} className="bg-[#00233B] text-[#F2F1EF]" disabled={formData.ensaios.length >= 3}>
                     <Plus className="w-4 h-4 mr-2" /> Adicionar Bandeja
                   </Button>
                 )}
@@ -393,19 +393,19 @@ export default function EnsaioTaxaMRAFPage() {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t">
                       <div className="p-3 bg-blue-200 rounded">
                         <Label className="text-xs text-blue-800">Tₓ - Taxa MRAF Aplicada (kg/m²)</Label>
-                        <p className="text-lg font-bold text-blue-900">{ensaio.taxa_mraf_aplicada?.toFixed(3) || '-'}</p>
+                        <p className="text-lg font-bold text-blue-900">{ensaio.taxa_mraf_aplicada?.toFixed(1) || '-'}</p>
                       </div>
                       <div className="p-3 bg-blue-200 rounded">
                         <Label className="text-xs text-blue-800">T_L - Taxa de Ligante (L/m²)</Label>
-                        <p className="text-lg font-bold text-blue-900">{ensaio.taxa_ligante?.toFixed(3) || '-'}</p>
+                        <p className="text-lg font-bold text-blue-900">{ensaio.taxa_ligante?.toFixed(1) || '-'}</p>
                       </div>
                       <div className="p-3 bg-green-200 rounded">
                         <Label className="text-xs text-green-800">T_E - Taxa de Emulsão (L/m²)</Label>
-                        <p className="text-lg font-bold text-green-900">{ensaio.taxa_emulsao?.toFixed(3) || '-'}</p>
+                        <p className="text-lg font-bold text-green-900">{ensaio.taxa_emulsao?.toFixed(1) || '-'}</p>
                       </div>
                       <div className="p-3 bg-green-200 rounded">
                         <Label className="text-xs text-green-800">T_A - Taxa de Agregado (kg/m²)</Label>
-                        <p className="text-lg font-bold text-green-900">{ensaio.taxa_agregado?.toFixed(3) || '-'}</p>
+                        <p className="text-lg font-bold text-green-900">{ensaio.taxa_agregado?.toFixed(1) || '-'}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -413,26 +413,29 @@ export default function EnsaioTaxaMRAFPage() {
               ))}
             </div>
 
-            {/* Médias */}
-            <Card className="bg-slate-50">
-              <CardHeader><CardTitle className="text-base">Médias Gerais</CardTitle></CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-3 bg-blue-100 rounded text-center">
-                    <Label className="text-xs text-blue-800">Taxa de Emulsão Média (L/m²)</Label>
-                    <p className="text-xl font-bold text-blue-900">{formData.media_taxa_emulsao?.toFixed(3) || '-'}</p>
-                  </div>
-                  <div className="p-3 bg-green-100 rounded text-center">
-                    <Label className="text-xs text-green-800">Taxa de Agregado Média (kg/m²)</Label>
-                    <p className="text-xl font-bold text-green-900">{formData.media_taxa_agregado?.toFixed(3) || '-'}</p>
-                  </div>
-                  <div className="p-3 bg-purple-100 rounded text-center">
-                    <Label className="text-xs text-purple-800">Taxa MRAF Aplicada Média (kg/m²)</Label>
-                    <p className="text-xl font-bold text-purple-900">{formData.media_taxa_mraf?.toFixed(3) || '-'}</p>
-                  </div>
+            {/* Médias - Resumo */}
+            <div className="rounded-lg border border-[#2d3b4e]/30 overflow-hidden">
+              <div className="bg-[#2d3b4e] px-4 py-2">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Resumo - Médias Gerais</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#2d3b4e]/20 bg-[#e2e8f0]">
+                <div className="p-4 text-center">
+                  <p className="text-xs text-[#2d3b4e]/70 font-medium mb-1">Taxa de Emulsão Média</p>
+                  <p className="text-2xl font-bold text-[#2d3b4e]">{formData.media_taxa_emulsao?.toFixed(1) ?? '-'}</p>
+                  <p className="text-xs text-[#2d3b4e]/60">L/m²</p>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="p-4 text-center">
+                  <p className="text-xs text-[#2d3b4e]/70 font-medium mb-1">Taxa de Agregado Média</p>
+                  <p className="text-2xl font-bold text-[#2d3b4e]">{formData.media_taxa_agregado?.toFixed(1) ?? '-'}</p>
+                  <p className="text-xs text-[#2d3b4e]/60">kg/m²</p>
+                </div>
+                <div className="p-4 text-center">
+                  <p className="text-xs text-[#2d3b4e]/70 font-medium mb-1">Taxa MRAF Aplicada Média</p>
+                  <p className="text-2xl font-bold text-[#2d3b4e]">{formData.media_taxa_mraf?.toFixed(1) ?? '-'}</p>
+                  <p className="text-xs text-[#2d3b4e]/60">kg/m²</p>
+                </div>
+              </div>
+            </div>
 
             {/* Observações */}
             <div>
