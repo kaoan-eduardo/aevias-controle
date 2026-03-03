@@ -91,27 +91,30 @@ export default function RelatorioTaxaMRAF() {
         {/* Dados da Obra */}
         <div className="mb-2">
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">DADOS DA OBRA</div>
-          <div className="grid grid-cols-3 gap-x-4 gap-y-0.5 text-xs">
+          <div className="grid grid-cols-3 gap-x-4 gap-y-0 text-[10px]">
             <div>
-              <div className="flex gap-1"><span className="font-bold">CLIENTE:</span><span>{regional?.cliente || 'N/A'}</span></div>
-              <div className="flex gap-1"><span className="font-bold">OBRA:</span><span>{obra?.name || 'N/A'} {obra?.code ? `(${obra.code})` : ''}</span></div>
-              <div className="flex gap-1"><span className="font-bold">RODOVIA:</span><span>{ensaio.rodovia || 'N/A'}</span></div>
-              <div className="flex gap-1"><span className="font-bold">TRECHO:</span><span>{ensaio.trecho || 'N/A'}</span></div>
-              {ensaio.pedreira && <div className="flex gap-1"><span className="font-bold">PEDREIRA:</span><span>{ensaio.pedreira}</span></div>}
-              {ensaio.jornada && <div className="flex gap-1"><span className="font-bold">JORNADA:</span><span>{ensaio.jornada}</span></div>}
+              <p className="font-bold text-gray-700">CLIENTE:</p>
+              <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
+              <p className="font-bold text-gray-700 mt-0.5">OBRA:</p>
+              <p className="text-gray-900">{obra?.name || 'N/A'} {obra?.code ? `(${obra.code})` : ''}</p>
+              <p className="font-bold text-gray-700 mt-0.5">RODOVIA:</p>
+              <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
+              <p className="font-bold text-gray-700 mt-0.5">TRECHO:</p>
+              <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
             </div>
             <div>
-              {ensaio.numero_projeto && <div className="flex gap-1"><span className="font-bold">PROJETO UTILIZADO:</span><span>{ensaio.numero_projeto}</span></div>}
-              {ensaio.faixa_especificada && <div className="flex gap-1"><span className="font-bold">FAIXA ESPECIFICADA:</span><span>{ensaio.faixa_especificada}</span></div>}
-              {ensaio.ligante && <div className="flex gap-1"><span className="font-bold">LIGANTE:</span><span>{ensaio.ligante}</span></div>}
-              {ensaio.ensaio_realizado_por && <div className="flex gap-1"><span className="font-bold">ENSAIO REALIZADO POR:</span><span>{ensaio.ensaio_realizado_por}</span></div>}
+              {ensaio.numero_projeto && <><p className="font-bold text-gray-700">PROJETO UTILIZADO:</p><p className="text-gray-900">{ensaio.numero_projeto}</p></>}
+              {ensaio.faixa_especificada && <><p className="font-bold text-gray-700 mt-0.5">FAIXA ESPECIFICADA:</p><p className="text-gray-900">{ensaio.faixa_especificada}</p></>}
+              {ensaio.ligante && <><p className="font-bold text-gray-700 mt-0.5">LIGANTE:</p><p className="text-gray-900">{ensaio.ligante}</p></>}
+              {ensaio.ensaio_realizado_por && <><p className="font-bold text-gray-700 mt-0.5">ENSAIO REALIZADO POR:</p><p className="text-gray-900">{ensaio.ensaio_realizado_por}</p></>}
             </div>
             <div>
-              {ensaio.usina && <div className="flex gap-1"><span className="font-bold">USINA:</span><span>{ensaio.usina}</span></div>}
-              <div className="flex gap-1"><span className="font-bold">LABORATORISTA DE CAMPO:</span><span>{ensaio.laboratorista_name || 'N/A'}</span></div>
-              {ensaio.material && <div className="flex gap-1"><span className="font-bold">MATERIAL:</span><span>{ensaio.material}</span></div>}
-              {ensaio.empreiteira && <div className="flex gap-1"><span className="font-bold">EMPREITEIRA:</span><span>{ensaio.empreiteira}</span></div>}
-              {ensaio.placa_caminhao && <div className="flex gap-1"><span className="font-bold">PLACA CAMINHÃO:</span><span>{ensaio.placa_caminhao}</span></div>}
+              {ensaio.usina && <><p className="font-bold text-gray-700">USINA:</p><p className="text-gray-900">{ensaio.usina}</p></>}
+              <p className="font-bold text-gray-700 mt-0.5">LABORATORISTA DE CAMPO:</p>
+              <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
+              {ensaio.material && <><p className="font-bold text-gray-700 mt-0.5">MATERIAL:</p><p className="text-gray-900">{ensaio.material}</p></>}
+              {ensaio.empreiteira && <><p className="font-bold text-gray-700 mt-0.5">EMPREITEIRA:</p><p className="text-gray-900">{ensaio.empreiteira}</p></>}
+              {ensaio.placa_caminhao && <><p className="font-bold text-gray-700 mt-0.5">PLACA CAMINHÃO:</p><p className="text-gray-900">{ensaio.placa_caminhao}</p></>}
             </div>
           </div>
         </div>
