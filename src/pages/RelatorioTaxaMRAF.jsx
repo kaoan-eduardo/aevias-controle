@@ -200,9 +200,6 @@ export default function RelatorioTaxaMRAF() {
                       </td>
                     );
                   })}
-                  <td className="border border-slate-300 px-2 py-1 text-center font-bold" style={{backgroundColor:'#e2e8f0'}}>
-                    {row.media && ensaio[row.media_field] != null ? ensaio[row.media_field].toFixed(1) : '-'}
-                  </td>
                 </tr>
               ))}
             </tbody>
