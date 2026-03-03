@@ -112,8 +112,7 @@ export default function RelatorioTaxaMRAF() {
           <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
-                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Grandeza</th>
-                <th className="border border-slate-300 px-2 py-1 text-center font-medium">Cálculo</th>
+                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((_, i) => (
                   <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
@@ -123,7 +122,6 @@ export default function RelatorioTaxaMRAF() {
             <tbody>
               <tr>
                 <td className="border border-slate-300 px-2 py-1 bg-white">Lado 1</td>
-                <td className="border border-slate-300 px-2 py-1 text-center text-slate-500 italic">L₁</td>
                 <td className="border border-slate-300 px-2 py-1 text-center">cm</td>
                 {ensaio.ensaios?.map((_, i) => (
                   <td key={i} className="border border-slate-300 px-2 py-1 text-center">{ensaio.dimensoes_bandeja?.lado_1 ?? '-'}</td>
@@ -131,7 +129,6 @@ export default function RelatorioTaxaMRAF() {
               </tr>
               <tr>
                 <td className="border border-slate-300 px-2 py-1 bg-white">Lado 2</td>
-                <td className="border border-slate-300 px-2 py-1 text-center text-slate-500 italic">L₂</td>
                 <td className="border border-slate-300 px-2 py-1 text-center">cm</td>
                 {ensaio.ensaios?.map((_, i) => (
                   <td key={i} className="border border-slate-300 px-2 py-1 text-center">{ensaio.dimensoes_bandeja?.lado_2 ?? '-'}</td>
@@ -139,7 +136,6 @@ export default function RelatorioTaxaMRAF() {
               </tr>
               <tr>
                 <td className="border border-slate-300 px-2 py-1 bg-white font-medium">Área</td>
-                <td className="border border-slate-300 px-2 py-1 text-center text-slate-500 italic">A = L₁×L₂/10000</td>
                 <td className="border border-slate-300 px-2 py-1 text-center">m²</td>
                 {ensaio.ensaios?.map((_, i) => (
                   <td key={i} className="border border-slate-300 px-2 py-1 text-center font-bold">{ensaio.dimensoes_bandeja?.area?.toFixed(4) ?? '-'}</td>
