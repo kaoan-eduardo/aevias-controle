@@ -391,19 +391,19 @@ export default function EnsaioTaxaMRAFPage() {
 
                     {/* Resultados calculados */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t">
-                      <div className="p-3 bg-blue-50 rounded">
+                      <div className="p-3 bg-blue-200 rounded">
                         <Label className="text-xs text-blue-800">Tₓ - Taxa MRAF Aplicada (kg/m²)</Label>
                         <p className="text-lg font-bold text-blue-900">{ensaio.taxa_mraf_aplicada?.toFixed(3) || '-'}</p>
                       </div>
-                      <div className="p-3 bg-blue-50 rounded">
+                      <div className="p-3 bg-blue-200 rounded">
                         <Label className="text-xs text-blue-800">T_L - Taxa de Ligante (L/m²)</Label>
                         <p className="text-lg font-bold text-blue-900">{ensaio.taxa_ligante?.toFixed(3) || '-'}</p>
                       </div>
-                      <div className="p-3 bg-green-50 rounded">
+                      <div className="p-3 bg-green-200 rounded">
                         <Label className="text-xs text-green-800">T_E - Taxa de Emulsão (L/m²)</Label>
                         <p className="text-lg font-bold text-green-900">{ensaio.taxa_emulsao?.toFixed(3) || '-'}</p>
                       </div>
-                      <div className="p-3 bg-green-50 rounded">
+                      <div className="p-3 bg-green-200 rounded">
                         <Label className="text-xs text-green-800">T_A - Taxa de Agregado (kg/m²)</Label>
                         <p className="text-lg font-bold text-green-900">{ensaio.taxa_agregado?.toFixed(3) || '-'}</p>
                       </div>
