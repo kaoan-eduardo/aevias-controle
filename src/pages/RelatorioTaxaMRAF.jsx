@@ -209,7 +209,7 @@ export default function RelatorioTaxaMRAF() {
 
         {/* Resumo de Médias */}
         <div className="mb-2">
-          <div className="text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider text-white" style={{backgroundColor:'#2d3b4e'}}>Resumo — Médias Gerais</div>
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-1 text-xs">RESUMO — MÉDIAS GERAIS</div>
           <div className="grid grid-cols-3 border border-slate-300 text-xs">
             {[
               { label: 'Taxa de Emulsão Média', field: 'media_taxa_emulsao', unit: 'L/m²', isMain: false },
