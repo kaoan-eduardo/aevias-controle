@@ -381,11 +381,11 @@ export default function EnsaioTaxaMRAFPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>L - Teor de Ligante (%) <span className="text-slate-500 text-xs">(ensaio extração)</span></Label>
-                        <Input type="number" step="0.01" value={ensaio.teor_ligante ?? ''} onChange={e => handleEnsaioChange(index, 'teor_ligante', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                        <Input type="number" step="0.01" value={ensaio.teor_ligante ?? ''} onChange={e => handleEnsaioChange(index, 'teor_ligante', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                       </div>
                       <div>
                         <Label>R - Resíduo da Emulsão (%)</Label>
-                        <Input type="number" step="0.01" value={ensaio.residuo_emulsao ?? ''} onChange={e => handleEnsaioChange(index, 'residuo_emulsao', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                        <Input type="number" step="0.01" value={ensaio.residuo_emulsao ?? ''} onChange={e => handleEnsaioChange(index, 'residuo_emulsao', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                       </div>
                     </div>
 
