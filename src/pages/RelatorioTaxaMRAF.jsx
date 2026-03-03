@@ -93,7 +93,7 @@ export default function RelatorioTaxaMRAF() {
 
         {/* Dados da Obra */}
         <div className="mb-2">
-          <div className="bg-slate-100 text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider">Dados da Obra</div>
+          <div className="text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider text-white" style={{backgroundColor:'#2d3b4e'}}>Dados da Obra</div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
             <div className="flex gap-1"><span className="font-bold">CLIENTE:</span><span>{regional?.cliente || 'N/A'}</span></div>
             <div className="flex gap-1"><span className="font-bold">PLACA CAMINHÃO:</span><span>{ensaio.placa_caminhao || 'N/A'}</span></div>
