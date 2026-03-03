@@ -417,6 +417,8 @@ export default function EnsaioTaxaMRAFPage() {
                         <p className="text-lg font-bold text-green-900">{ensaio.taxa_agregado?.toFixed(1) || '-'}</p>
                       </div>
                     </div>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               ))}
