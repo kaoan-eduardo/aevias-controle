@@ -364,11 +364,11 @@ export default function EnsaioTaxaMRAFPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <Label>P₁ - Peso Bandeja+Amostra (g)</Label>
-                        <Input type="number" step="0.1" value={ensaio.peso_bandeja_amostra ?? ''} onChange={e => handleEnsaioChange(index, 'peso_bandeja_amostra', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                        <Input type="number" step="0.1" value={ensaio.peso_bandeja_amostra ?? ''} onChange={e => handleEnsaioChange(index, 'peso_bandeja_amostra', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                       </div>
                       <div>
                         <Label>P₂ - Peso da Bandeja (g)</Label>
-                        <Input type="number" step="0.1" value={ensaio.peso_bandeja ?? ''} onChange={e => handleEnsaioChange(index, 'peso_bandeja', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                        <Input type="number" step="0.1" value={ensaio.peso_bandeja ?? ''} onChange={e => handleEnsaioChange(index, 'peso_bandeja', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                       </div>
                       <div>
                         <Label>Pₐ - Peso da Amostra (g) <span className="text-slate-500 text-xs">(calculado)</span></Label>
