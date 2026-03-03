@@ -25,5 +25,6 @@ export const getEntityMap = () => ({
   "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
   "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
   "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga,
-  "EnsaioManchaPendulo": base44.entities.EnsaioManchaPendulo
+  "EnsaioManchaPendulo": base44.entities.EnsaioManchaPendulo,
+  "EnsaioTaxaMRAF": base44.entities.EnsaioTaxaMRAF
 });
