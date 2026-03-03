@@ -119,6 +119,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
     },
     {
       nome: "Conservação",
+
       icon: Wrench,
       cor: "text-[#00233B]",
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
