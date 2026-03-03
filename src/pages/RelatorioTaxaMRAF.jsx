@@ -108,12 +108,12 @@ export default function RelatorioTaxaMRAF() {
 
         {/* Dados do Ensaio */}
         <div className="mb-2">
-          <div className="bg-slate-100 text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider">Dados do Ensaio</div>
+          <div className="text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider text-white" style={{backgroundColor:'#2d3b4e'}}>Dados do Ensaio</div>
 
           {/* Área da Bandeja */}
-          <div className="bg-slate-50 text-center text-xs font-semibold py-0.5 mb-1">Área da Bandeja</div>
+          <div className="text-center text-xs font-semibold py-0.5 mb-1" style={{backgroundColor:'#e2e8f0'}}>Área da Bandeja</div>
           <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
-            <thead className="bg-slate-50">
+            <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
                 <th className="border border-slate-300 px-2 py-1 text-left font-medium">Grandeza</th>
                 <th className="border border-slate-300 px-2 py-1 text-center font-medium">Cálculo</th>
