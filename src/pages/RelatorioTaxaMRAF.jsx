@@ -169,7 +169,6 @@ export default function RelatorioTaxaMRAF() {
                 {ensaio.ensaios?.map((e, i) => (
                   <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
-                <th className="border border-slate-300 px-2 py-1 text-center font-medium">Média</th>
               </tr>
             </thead>
             <tbody>
