@@ -309,15 +309,15 @@ export default function EnsaioTaxaMRAFPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label>Lado 1 - L₁ (cm)</Label>
-                    <Input type="number" step="0.1" value={formData.dimensoes_bandeja.lado_1 || ''} onChange={e => handleDimensoesChange('lado_1', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                    <Input type="number" step="0.1" value={formData.dimensoes_bandeja.lado_1 || ''} onChange={e => handleDimensoesChange('lado_1', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                   </div>
                   <div>
                     <Label>Lado 2 - L₂ (cm)</Label>
-                    <Input type="number" step="0.1" value={formData.dimensoes_bandeja.lado_2 || ''} onChange={e => handleDimensoesChange('lado_2', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} />
+                    <Input type="number" step="0.1" value={formData.dimensoes_bandeja.lado_2 || ''} onChange={e => handleDimensoesChange('lado_2', e.target.value ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="bg-white" />
                   </div>
                   <div>
                     <Label>Área A = L₁×L₂/10000 (m²)</Label>
-                    <Input value={formData.dimensoes_bandeja.area?.toFixed(4) || ''} readOnly className="bg-slate-100" />
+                    <Input value={formData.dimensoes_bandeja.area?.toFixed(4) || ''} readOnly className="bg-slate-200" />
                   </div>
                 </div>
               </CardContent>
