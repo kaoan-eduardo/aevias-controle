@@ -124,7 +124,7 @@ export default function RelatorioTaxaMRAF() {
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-1 text-xs">DADOS DO ENSAIO</div>
 
           {/* Área da Bandeja */}
-          <div className="text-center text-xs font-semibold py-0.5 mb-1" style={{backgroundColor:'#e2e8f0'}}>Área da Bandeja</div>
+          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">ÁREA DA BANDEJA</div>
           <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
