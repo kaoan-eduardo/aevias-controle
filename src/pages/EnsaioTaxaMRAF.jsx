@@ -296,6 +296,10 @@ export default function EnsaioTaxaMRAFPage() {
                   <Input value={formData.numero_projeto} onChange={e => setFormData(prev => ({ ...prev, numero_projeto: e.target.value }))} disabled={!isEditable} />
                 </div>
                 <div>
+                  <Label>Taxa Mínima do Projeto (kg/m²)</Label>
+                  <Input type="number" step="0.1" value={formData.taxa_minima_projeto ?? ''} onChange={e => setFormData(prev => ({ ...prev, taxa_minima_projeto: e.target.value ? parseFloat(e.target.value) : null }))} disabled={!isEditable} placeholder="Ex: 12.0" className="bg-white" />
+                </div>
+                <div>
                   <Label>Laboratorista</Label>
                   <Input value={formData.laboratorista_name} readOnly className="bg-slate-100" />
                 </div>
