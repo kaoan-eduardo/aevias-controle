@@ -76,8 +76,8 @@ export default function RelatorioTaxaMRAF() {
       <div className="w-full max-w-[210mm] mx-auto bg-white py-3 px-4 print:py-2 print:px-3">
         {/* Header */}
         <header className="border-b-2 border-slate-900 pb-1 mb-2">
-          <div className="text-center mb-1">
-            <h1 className="text-sm font-bold text-gray-800 uppercase">Ensaio de Taxa de MRAF</h1>
+          <div className="text-center mb-2">
+            <h1 className="text-sm font-bold text-gray-800 uppercase">ENSAIO DE TAXA DE MRAF</h1>
             <p className="text-[10px] text-gray-500">ABNT NBR 14746 / Método da Bandeja</p>
           </div>
           <div className="flex items-center justify-between">
