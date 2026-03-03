@@ -161,7 +161,7 @@ export default function RelatorioTaxaMRAF() {
           </table>
 
           {/* Execução do Ensaio */}
-          <div className="text-center text-xs font-semibold py-0.5 mb-1" style={{backgroundColor:'#e2e8f0'}}>Execução do Ensaio</div>
+          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">EXECUÇÃO DO ENSAIO</div>
           <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
