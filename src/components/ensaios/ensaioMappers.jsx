@@ -40,6 +40,8 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Mancha + Pêndulo", icon: Gauge };
     case "EnsaioVigaBenkelman":
       return { name: "Viga Benkelman", icon: Gauge };
+    case "EnsaioTaxaMRAF":
+      return { name: "Taxa de MRAF", icon: FlaskConical };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }
@@ -84,6 +86,8 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioManchaPendulo?id=${ensaio.id}`);
     case "EnsaioVigaBenkelman":
       return createPageUrl(`RelatorioVigaBenkelman?id=${ensaio.id}`);
+    case "EnsaioTaxaMRAF":
+      return createPageUrl(`RelatorioTaxaMRAF?id=${ensaio.id}`);
     default:
       return "#";
   }
@@ -142,6 +146,9 @@ export const getDataFormatted = (ensaio) => {
     case "EnsaioVigaBenkelman":
       dateField = ensaio.data_realizacao || ensaio.data_ensaio;
       break;
+    case "EnsaioTaxaMRAF":
+      dateField = ensaio.data_ensaio;
+      break;
     case "AcompanhamentoUsinagem":
       dateField = ensaio.data;
       break;
@@ -193,6 +200,8 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data_ensaio;
     case "EnsaioVigaBenkelman":
       return ensaio.data_realizacao || ensaio.data_ensaio || ensaio.created_date;
+    case "EnsaioTaxaMRAF":
+      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
@@ -239,4 +248,5 @@ export const typeOptions = [
   { value: 'AcompanhamentoCarga', label: 'Acompanhamento de Cargas' },
   { value: 'EnsaioManchaPendulo', label: 'Mancha + Pêndulo' },
   { value: 'EnsaioVigaBenkelman', label: 'Viga Benkelman' },
+  { value: 'EnsaioTaxaMRAF', label: 'Taxa de MRAF' },
 ];
