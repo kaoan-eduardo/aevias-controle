@@ -149,8 +149,7 @@ export default function RelatorioTaxaMRAF() {
           <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
-                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Grandeza</th>
-                <th className="border border-slate-300 px-2 py-1 text-center font-medium">Cálculo</th>
+                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((e, i) => (
                   <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
