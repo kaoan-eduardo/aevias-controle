@@ -98,6 +98,8 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import EnsaioTaxaMRAF from './pages/EnsaioTaxaMRAF';
+import RelatorioTaxaMRAF from './pages/RelatorioTaxaMRAF';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +155,8 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "EnsaioTaxaMRAF": EnsaioTaxaMRAF,
+    "RelatorioTaxaMRAF": RelatorioTaxaMRAF,
 }
 
 export const pagesConfig = {
