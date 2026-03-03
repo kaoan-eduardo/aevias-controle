@@ -93,15 +93,28 @@ export default function RelatorioTaxaMRAF() {
         {/* Dados da Obra */}
         <div className="mb-2">
           <div className="text-center text-xs font-bold py-0.5 mb-1 uppercase tracking-wider text-white" style={{backgroundColor:'#2d3b4e'}}>Dados da Obra</div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
-            <div className="flex gap-1"><span className="font-bold">CLIENTE:</span><span>{regional?.cliente || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">PLACA CAMINHÃO:</span><span>{ensaio.placa_caminhao || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">OBRA:</span><span>{obra?.name || 'N/A'} {obra?.code ? `(${obra.code})` : ''}</span></div>
-            <div className="flex gap-1"><span className="font-bold">MATERIAL:</span><span>{ensaio.material || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">RODOVIA:</span><span>{ensaio.rodovia || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">Nº DO PROJETO:</span><span>{ensaio.numero_projeto || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">TRECHO:</span><span>{ensaio.trecho || 'N/A'}</span></div>
-            <div className="flex gap-1"><span className="font-bold">LABORATORISTA:</span><span>{ensaio.laboratorista_name || 'N/A'}</span></div>
+          <div className="grid grid-cols-3 gap-x-4 gap-y-0.5 text-xs">
+            <div>
+              <div className="flex gap-1"><span className="font-bold">CLIENTE:</span><span>{regional?.cliente || 'N/A'}</span></div>
+              <div className="flex gap-1"><span className="font-bold">OBRA:</span><span>{obra?.name || 'N/A'} {obra?.code ? `(${obra.code})` : ''}</span></div>
+              <div className="flex gap-1"><span className="font-bold">RODOVIA:</span><span>{ensaio.rodovia || 'N/A'}</span></div>
+              <div className="flex gap-1"><span className="font-bold">TRECHO:</span><span>{ensaio.trecho || 'N/A'}</span></div>
+              {ensaio.pedreira && <div className="flex gap-1"><span className="font-bold">PEDREIRA:</span><span>{ensaio.pedreira}</span></div>}
+              {ensaio.jornada && <div className="flex gap-1"><span className="font-bold">JORNADA:</span><span>{ensaio.jornada}</span></div>}
+            </div>
+            <div>
+              {ensaio.numero_projeto && <div className="flex gap-1"><span className="font-bold">PROJETO UTILIZADO:</span><span>{ensaio.numero_projeto}</span></div>}
+              {ensaio.faixa_especificada && <div className="flex gap-1"><span className="font-bold">FAIXA ESPECIFICADA:</span><span>{ensaio.faixa_especificada}</span></div>}
+              {ensaio.ligante && <div className="flex gap-1"><span className="font-bold">LIGANTE:</span><span>{ensaio.ligante}</span></div>}
+              {ensaio.ensaio_realizado_por && <div className="flex gap-1"><span className="font-bold">ENSAIO REALIZADO POR:</span><span>{ensaio.ensaio_realizado_por}</span></div>}
+            </div>
+            <div>
+              {ensaio.usina && <div className="flex gap-1"><span className="font-bold">USINA:</span><span>{ensaio.usina}</span></div>}
+              <div className="flex gap-1"><span className="font-bold">LABORATORISTA DE CAMPO:</span><span>{ensaio.laboratorista_name || 'N/A'}</span></div>
+              {ensaio.material && <div className="flex gap-1"><span className="font-bold">MATERIAL:</span><span>{ensaio.material}</span></div>}
+              {ensaio.empreiteira && <div className="flex gap-1"><span className="font-bold">EMPREITEIRA:</span><span>{ensaio.empreiteira}</span></div>}
+              {ensaio.placa_caminhao && <div className="flex gap-1"><span className="font-bold">PLACA CAMINHÃO:</span><span>{ensaio.placa_caminhao}</span></div>}
+            </div>
           </div>
         </div>
 
