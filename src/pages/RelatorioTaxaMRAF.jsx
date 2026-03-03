@@ -173,7 +173,6 @@ export default function RelatorioTaxaMRAF() {
               ].map((row, rowIdx) => (
                 <tr key={rowIdx}>
                   <td className="border border-slate-300 px-2 py-1 bg-white font-medium">{row.label}</td>
-                  <td className="border border-slate-300 px-2 py-1 text-center text-slate-500 italic text-[10px]">{row.calc}</td>
                   <td className="border border-slate-300 px-2 py-1 text-center">{row.unit}</td>
                   {ensaio.ensaios?.map((e, i) => {
                     const val = e[row.field];
