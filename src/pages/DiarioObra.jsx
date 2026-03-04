@@ -278,27 +278,35 @@ const DiarioForm = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="rodovia">Rodovia *</Label>
-                <Select
-                  value={formData.rodovia || ""}
-                  onValueChange={(value) => handleChange('rodovia', value)}
-                  required
-                  disabled={!isEditable || isApproved}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a rodovia" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
-                      obraSelecionada.rodovias.map(rodovia => (
-                        <SelectItem key={rodovia} value={rodovia}>
-                          {rodovia}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value={null} disabled>Nenhuma rodovia cadastrada</SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
+                {obraSelecionada?.rodovias && obraSelecionada.rodovias.length > 0 ? (
+                  <div className="border rounded-md p-2 space-y-1 max-h-40 overflow-y-auto bg-background">
+                    {obraSelecionada.rodovias.map(rodovia => {
+                      const selected = (formData.rodovia || '').split(' - ').map(r => r.trim()).filter(Boolean);
+                      const isChecked = selected.includes(rodovia);
+                      return (
+                        <label key={rodovia} className={`flex items-center gap-2 px-2 py-1 rounded cursor-pointer hover:bg-slate-50 ${!isEditable || isApproved ? 'opacity-50 pointer-events-none' : ''}`}>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                              const newSelected = isChecked
+                                ? selected.filter(r => r !== rodovia)
+                                : [...selected, rodovia];
+                              handleChange('rodovia', newSelected.join(' - '));
+                            }}
+                            className="rounded"
+                          />
+                          <span className="text-sm">{rodovia}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="border rounded-md p-2 text-sm text-gray-500">Nenhuma rodovia cadastrada</div>
+                )}
+                {formData.rodovia && (
+                  <p className="text-xs text-gray-500">Selecionadas: {formData.rodovia}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="trecho">Trecho *</Label>
