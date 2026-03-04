@@ -327,6 +327,35 @@ export default function EnsaioTaxaMRAFPage() {
                   <Input value={formData.numero_projeto} onChange={e => setFormData(prev => ({ ...prev, numero_projeto: e.target.value }))} disabled={!isEditable} />
                 </div>
                 <div>
+                  <Label>Empreiteira</Label>
+                  <Input value={formData.empreiteira} onChange={e => setFormData(prev => ({ ...prev, empreiteira: e.target.value }))} disabled={!isEditable} />
+                </div>
+                <div>
+                  <Label>Usina</Label>
+                  <Input value={formData.usina} onChange={e => setFormData(prev => ({ ...prev, usina: e.target.value }))} disabled={!isEditable} />
+                </div>
+                <div>
+                  <Label>Faixa Especificada</Label>
+                  <Input value={formData.faixa_especificada} onChange={e => setFormData(prev => ({ ...prev, faixa_especificada: e.target.value }))} disabled={!isEditable} />
+                </div>
+                <div>
+                  <Label>Ligante</Label>
+                  <Input value={formData.ligante} onChange={e => setFormData(prev => ({ ...prev, ligante: e.target.value }))} disabled={!isEditable} />
+                </div>
+                <div>
+                  <Label>Ensaio Realizado Por</Label>
+                  <select
+                    value={formData.ensaio_realizado_por}
+                    onChange={e => setFormData(prev => ({ ...prev, ensaio_realizado_por: e.target.value }))}
+                    disabled={!isEditable}
+                    className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="Afirma Evias">Afirma Evias</option>
+                    <option value="Empreiteira">Empreiteira</option>
+                  </select>
+                </div>
+                <div>
                   <Label>Taxa Mínima do Projeto (kg/m²)</Label>
                   <Input type="number" step="0.1" value={formData.taxa_minima_projeto ?? ''} onChange={e => setFormData(prev => ({ ...prev, taxa_minima_projeto: e.target.value ? parseFloat(e.target.value) : null }))} disabled={!isEditable} placeholder="Ex: 12.0" className="bg-white" />
                 </div>
