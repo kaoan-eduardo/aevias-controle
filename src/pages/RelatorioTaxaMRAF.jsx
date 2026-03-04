@@ -104,7 +104,7 @@ export default function RelatorioTaxaMRAF() {
               </div>
             </div>
             {/* Coluna 2: Rodovia, Trecho */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div>
                 <p className="font-bold text-gray-700">RODOVIA:</p>
                 <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
