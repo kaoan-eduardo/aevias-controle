@@ -364,10 +364,11 @@ export default function Projects() {
               </DialogTitle>
             </DialogHeader>
             <ProjectForm
+              key={editingProject?.id || 'new'}
               project={editingProject}
               faixas={faixas}
-              regionais={regionais} // Passed regionais
-              user={user} // Passed user
+              regionais={regionais}
+              user={user}
               onSave={handleSaveProject}
               onCancel={() => {
                 setIsFormOpen(false);
