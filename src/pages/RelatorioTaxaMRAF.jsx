@@ -243,7 +243,7 @@ export default function RelatorioTaxaMRAF() {
               return (
                 <div key={idx} className={`p-2 text-center border-r last:border-r-0 border-slate-300 ${naoConforme ? 'bg-red-50' : ''}`}>
                   <p className="text-[10px] font-semibold mb-0.5" style={{color:'#2d3b4e'}}>{item.label}</p>
-                  <p className={`text-base font-bold ${naoConforme ? 'text-red-700' : ''}`} style={!naoConforme ? {color:'#2d3b4e'} : {}}>
+                  <p className={`text-sm font-bold ${naoConforme ? 'text-red-700' : ''}`} style={!naoConforme ? {color:'#2d3b4e'} : {}}>
                     {val != null ? val.toFixed(1) : '-'}
                   </p>
                   <p className="text-[9px] text-slate-500">{item.unit}</p>
