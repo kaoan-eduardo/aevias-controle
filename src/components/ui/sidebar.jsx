@@ -554,6 +554,7 @@ const SidebarMenuSubButton = React.forwardRef(
 )
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
 
+// v8
 export {
   Sidebar,
   SidebarContent,
