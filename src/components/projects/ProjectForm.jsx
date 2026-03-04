@@ -240,7 +240,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     }
   }, [project]);
 
-  const lastTipoProjetoRef = React.useRef(null);
+
 
   // Limpa a faixa SOMENTE quando o usuário muda manualmente o tipo do projeto
   const handleTipoProjeto = (value) => {
