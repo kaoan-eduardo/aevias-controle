@@ -228,8 +228,8 @@ export default function RelatorioTaxaMRAF() {
         </div>
 
         {/* Resumo de Médias */}
-        <div className="mb-2">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-1 text-xs">RESUMO — MÉDIAS GERAIS</div>
+        <div className="mb-3">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-1 text-xs">RESUMO — MÉDIAS GERAIS</div>
           <div className="grid grid-cols-3 border border-slate-300 text-xs">
             {[
               { label: 'Taxa de Emulsão Média', field: 'media_taxa_emulsao', unit: 'L/m²', isMain: false },
@@ -241,7 +241,7 @@ export default function RelatorioTaxaMRAF() {
               const naoConforme = item.isMain && taxaMin != null && val != null && val < taxaMin;
               const conforme = item.isMain && taxaMin != null && val != null && val >= taxaMin;
               return (
-                <div key={idx} className={`p-2 text-center border-r last:border-r-0 border-slate-300 ${naoConforme ? 'bg-red-50' : ''}`}>
+                <div key={idx} className={`p-4 text-center border-r last:border-r-0 border-slate-300 ${naoConforme ? 'bg-red-50' : ''}`}>
                   <p className="text-[10px] font-semibold mb-0.5" style={{color:'#2d3b4e'}}>{item.label}</p>
                   <p className={`text-base font-bold ${naoConforme ? 'text-red-700' : ''}`} style={!naoConforme ? {color:'#2d3b4e'} : {}}>
                     {val != null ? val.toFixed(1) : '-'}
