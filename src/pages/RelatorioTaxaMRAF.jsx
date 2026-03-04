@@ -89,9 +89,9 @@ export default function RelatorioTaxaMRAF() {
         </header>
 
         {/* Dados da Obra */}
-        <div className="mb-2">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">DADOS DA OBRA</div>
-          <div className="grid grid-cols-4 gap-x-4 text-[10px] border border-t-0 border-slate-300 px-2 py-1">
+        <div className="mb-3">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-0 text-xs">DADOS DA OBRA</div>
+          <div className="grid grid-cols-4 gap-x-4 text-[10px] border border-t-0 border-slate-300 px-2 py-2">
             {/* Coluna 1: Cliente, Obra */}
             <div className="space-y-1">
               <div>
