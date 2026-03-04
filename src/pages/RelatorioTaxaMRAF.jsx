@@ -140,16 +140,16 @@ export default function RelatorioTaxaMRAF() {
         </div>
 
         {/* Dados do Ensaio */}
-        <div className="mb-2">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-1 text-xs">DADOS DO ENSAIO</div>
+        <div className="mb-3">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-1 font-bold text-center mb-1 text-xs">DADOS DO ENSAIO</div>
 
           {/* Área da Bandeja */}
-          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">ÁREA DA BANDEJA</div>
-          <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
+          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-[9px]">ÁREA DA BANDEJA</div>
+          <table className="w-full border-collapse border border-slate-300 text-xs mb-3">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
-                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Parâmetro</th>
-                <th className="border border-slate-300 px-2 py-1 text-center font-medium">Unidade</th>
+                <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
+                <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((_, i) => (
                   <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
