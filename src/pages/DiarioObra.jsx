@@ -1346,7 +1346,7 @@ export default function DiarioObraPage() {
           setEditingDiarioOriginal(diarioToEdit);
 
           // Check permissions to edit
-          if (currentUser.role === 'admin' || (diarioToEdit.created_by === currentUser.email && (diarioToEdit.status === 'rascunho' || diarioToEdit.approved === false))) {
+          if (currentUser.role === 'admin' || (diarioToEdit.created_by === currentUser.email && diarioToEdit.approved !== true)) {
             setFormData({
               ...getInitialFormData(), // Start with default to ensure all fields are present
               ...diarioToEdit,
