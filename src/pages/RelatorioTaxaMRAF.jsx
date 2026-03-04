@@ -262,7 +262,7 @@ export default function RelatorioTaxaMRAF() {
         )}
 
         {/* Assinaturas */}
-        <footer className="pt-4">
+        <footer className="pt-8">
           <div className="grid grid-cols-3 gap-2 items-end">
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-0.5 min-h-[32px] flex flex-col justify-end items-center">
