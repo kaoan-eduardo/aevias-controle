@@ -240,25 +240,12 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     }
   }, [project]);
 
-  const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const lastTipoProjetoRef = React.useRef(null);
 
-  useEffect(() => {
-    if (faixas && faixas.length > 0) {
-      setInitialLoadDone(true);
-    }
-  }, [faixas]);
-
-  // Quando o tipo do projeto mudar, limpar a faixa selecionada se ela não for compatível
-  // Só limpa após a carga inicial para não apagar ao editar
-  useEffect(() => {
-    if (!initialLoadDone) return;
-    if (formData.faixa_granulometrica_id) {
-      const isCurrentFaixaCompatible = faixasFiltradas.some(f => f.id === formData.faixa_granulometrica_id);
-      if (!isCurrentFaixaCompatible) {
-        setFormData(prev => ({ ...prev, faixa_granulometrica_id: "" }));
-      }
-    }
-  }, [formData.tipo_projeto]);
+  // Limpa a faixa SOMENTE quando o usuário muda manualmente o tipo do projeto
+  const handleTipoProjeto = (value) => {
+    setFormData(prev => ({ ...prev, tipo_projeto: value, faixa_granulometrica_id: "" }));
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
