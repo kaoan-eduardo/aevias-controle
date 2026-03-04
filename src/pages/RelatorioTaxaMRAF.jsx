@@ -107,13 +107,13 @@ export default function RelatorioTaxaMRAF() {
               {ensaio.faixa_especificada && <><p className="font-bold text-gray-700 mt-0.5">FAIXA ESPECIFICADA:</p><p className="text-gray-900">{ensaio.faixa_especificada}</p></>}
               {ensaio.ligante && <><p className="font-bold text-gray-700 mt-0.5">LIGANTE:</p><p className="text-gray-900">{ensaio.ligante}</p></>}
               {ensaio.ensaio_realizado_por && <><p className="font-bold text-gray-700 mt-0.5">ENSAIO REALIZADO POR:</p><p className="text-gray-900">{ensaio.ensaio_realizado_por}</p></>}
+              {ensaio.empreiteira && <><p className="font-bold text-gray-700 mt-0.5">EMPREITEIRA:</p><p className="text-gray-900">{ensaio.empreiteira}</p></>}
             </div>
             <div>
               {ensaio.usina && <><p className="font-bold text-gray-700">USINA:</p><p className="text-gray-900">{ensaio.usina}</p></>}
               <p className="font-bold text-gray-700 mt-0.5">LABORATORISTA DE CAMPO:</p>
               <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
               {ensaio.material && <><p className="font-bold text-gray-700 mt-0.5">MATERIAL:</p><p className="text-gray-900">{ensaio.material}</p></>}
-              {ensaio.empreiteira && <><p className="font-bold text-gray-700 mt-0.5">EMPREITEIRA:</p><p className="text-gray-900">{ensaio.empreiteira}</p></>}
               {ensaio.placa_caminhao && <><p className="font-bold text-gray-700 mt-0.5">PLACA CAMINHÃO:</p><p className="text-gray-900">{ensaio.placa_caminhao}</p></>}
             </div>
           </div>
