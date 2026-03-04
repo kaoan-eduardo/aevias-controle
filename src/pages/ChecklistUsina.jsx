@@ -1044,10 +1044,10 @@ export default function ChecklistUsinaPage() {
                 </CardContent>
               </Card>
 
-              {/* CONTROLE DE AGREGADOS */}
+              {/* HOMOGENEIZAÇÃO DE AGREGADOS */}
               <Card className="bg-slate-50">
                 <CardHeader>
-                  <CardTitle className="text-lg">Controle de Agregados</CardTitle>
+                  <CardTitle className="text-lg">Homogeneização de Agregados</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
