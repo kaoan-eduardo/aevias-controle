@@ -152,6 +152,28 @@ export const getNaoConformidades = (ensaio) => {
     });
   }
   
+  if (ensaio.entityType === "EnsaioVigaBenkelman") {
+    const def_admissivel = parseFloat(ensaio.def_admissivel) || 0;
+    if (def_admissivel > 0) {
+      const levantamentos = ensaio.levantamentos || [];
+      const pontosNC = [];
+      
+      levantamentos.forEach((lev, idx) => {
+        if (lev.bordo_esquerdo?.deflexao > def_admissivel ||
+            lev.eixo?.deflexao > def_admissivel ||
+            lev.bordo_direito?.deflexao > def_admissivel) {
+          if (lev.estaca_km) {
+            pontosNC.push(`Estaca ${lev.estaca_km}`);
+          }
+        }
+      });
+      
+      if (pontosNC.length > 0) {
+        naoConformidades.push(`Deflexão acima do limite em ${pontosNC.length} ponto(s)`);
+      }
+    }
+  }
+  
   return naoConformidades;
 };
 

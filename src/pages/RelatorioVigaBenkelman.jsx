@@ -328,20 +328,26 @@ export default function RelatorioVigaBenkelman() {
                       const temBE = temEstaca && lev?.bordo_esquerdo?.leitura_final && lev.bordo_esquerdo.leitura_final !== 0;
                       const temEixo = temEstaca && lev?.eixo?.leitura_final && lev.eixo.leitura_final !== 0;
                       const temBD = temEstaca && lev?.bordo_direito?.leitura_final && lev.bordo_direito.leitura_final !== 0;
+                      
+                      const def_admissivel = parseFloat(ensaio.def_admissivel) || 0;
+                      const beExcede = def_admissivel > 0 && lev?.bordo_esquerdo?.deflexao > def_admissivel;
+                      const eixoExcede = def_admissivel > 0 && lev?.eixo?.deflexao > def_admissivel;
+                      const bdExcede = def_admissivel > 0 && lev?.bordo_direito?.deflexao > def_admissivel;
+                      
                       return (
                         <>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.leitura_inicial !== 0 ? lev.bordo_esquerdo.leitura_inicial.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE ? lev.bordo_esquerdo.leitura_final.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.diferenca !== 0 ? lev.bordo_esquerdo.diferenca.toFixed(0) : ''}</td>
-                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.deflexao !== 0 ? lev.bordo_esquerdo.deflexao.toFixed(0) : ''}</td>
+                          <td className={`px-0.5 py-0 text-center font-semibold ${beExcede ? 'text-red-600' : ''}`} style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBE && lev.bordo_esquerdo.deflexao !== 0 ? lev.bordo_esquerdo.deflexao.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.leitura_inicial !== 0 ? lev.eixo.leitura_inicial.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo ? lev.eixo.leitura_final.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.diferenca !== 0 ? lev.eixo.diferenca.toFixed(0) : ''}</td>
-                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.deflexao !== 0 ? lev.eixo.deflexao.toFixed(0) : ''}</td>
+                          <td className={`px-0.5 py-0 text-center font-semibold ${eixoExcede ? 'text-red-600' : ''}`} style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temEixo && lev.eixo.deflexao !== 0 ? lev.eixo.deflexao.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.leitura_inicial !== 0 ? lev.bordo_direito.leitura_inicial.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD ? lev.bordo_direito.leitura_final.toFixed(0) : ''}</td>
                           <td className="px-0.5 py-0 text-center" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.diferenca !== 0 ? lev.bordo_direito.diferenca.toFixed(0) : ''}</td>
-                          <td className="px-0.5 py-0 text-center font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.deflexao !== 0 ? lev.bordo_direito.deflexao.toFixed(0) : ''}</td>
+                          <td className={`px-0.5 py-0 text-center font-semibold ${bdExcede ? 'text-red-600' : ''}`} style={{ borderColor: 'rgb(148, 163, 184)', borderWidth: '0.05px', borderStyle: 'solid' }}>{temBD && lev.bordo_direito.deflexao !== 0 ? lev.bordo_direito.deflexao.toFixed(0) : ''}</td>
                         </>
                       );
                     })()}
