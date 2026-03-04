@@ -379,15 +379,24 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(
-  { asChild, isActive, variant, size, tooltip, className, ...props },
-  ref
-) {
-  const isAsChild = asChild === true
-  const isActiveVal = isActive === true
+function SidebarMenuButtonInner(allProps, ref) {
+  const asChild = allProps.asChild
+  const isActive = allProps.isActive
+  const variant = allProps.variant
+  const size = allProps.size
+  const tooltip = allProps.tooltip
+  const className = allProps.className
+  const props = Object.assign({}, allProps)
+  delete props.asChild
+  delete props.isActive
+  delete props.variant
+  delete props.size
+  delete props.tooltip
+  delete props.className
+
+  const Comp = asChild ? Slot : "button"
   const variantVal = variant || "default"
   const sizeVal = size || "default"
-  const Comp = isAsChild ? Slot : "button"
   const { isMobile, state } = useSidebar()
 
   const button = (
@@ -395,7 +404,7 @@ const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(
       ref={ref}
       data-sidebar="menu-button"
       data-size={sizeVal}
-      data-active={isActiveVal}
+      data-active={isActive ? true : false}
       className={cn(sidebarMenuButtonVariants({ variant: variantVal, size: sizeVal }), className)}
       {...props}
     />
@@ -411,7 +420,9 @@ const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(
       <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltipProps} />
     </Tooltip>
   )
-})
+}
+
+const SidebarMenuButton = React.forwardRef(SidebarMenuButtonInner)
 SidebarMenuButton.displayName = "SidebarMenuButton"
 
 const SidebarMenuAction = React.forwardRef(function SidebarMenuAction(
