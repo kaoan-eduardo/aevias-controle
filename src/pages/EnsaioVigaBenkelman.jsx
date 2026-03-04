@@ -298,8 +298,22 @@ export default function EnsaioVigaBenkelman() {
       // Consolidar todos os levantamentos de todas as faixas em um array único, com nome da faixa
       // Salvar TODOS os 20 registros de cada faixa (mesmo vazios), para manter a estrutura de blocos de 20
       const levantamentos = [];
+      const def_admissivel = parseFloat(formData.def_admissivel) || 0;
+      let temDeflexaoExcessiva = false;
+
       formData.faixas.forEach((faixa) => {
         faixa.levantamentos.forEach((lev) => {
+          // Verificar se alguma deflexão ultrapassa o limite admissível
+          const deflexoes = [
+            lev.bordo_esquerdo.deflexao,
+            lev.eixo.deflexao,
+            lev.bordo_direito.deflexao
+          ];
+          
+          if (def_admissivel > 0 && deflexoes.some(d => d > def_admissivel)) {
+            temDeflexaoExcessiva = true;
+          }
+
           levantamentos.push({
             faixa_nome: faixa.nome || `Faixa ${faixa.id}`,
             estaca_km: lev.estaca_km || '',
