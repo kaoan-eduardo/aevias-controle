@@ -1588,61 +1588,14 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
               </Card>
 
               {/* Agregados para MRAF */}
-              <Card>
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle>Agregados Utilizados</CardTitle>
-                    <Button type="button" onClick={adicionarAgregado} size="sm" className="bg-green-600 hover:bg-green-700">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Adicionar Agregado
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {formData.agregados.length > 0 ? (
-                    formData.agregados.map((agregado, index) => (
-                      <div key={index} className="p-4 border rounded-lg bg-slate-50">
-                        <div className="flex justify-between items-center mb-3">
-                          <h5 className="font-semibold text-sm">Agregado {index + 1}</h5>
-                          <Button
-                            type="button"
-                            onClick={() => removerAgregado(index)}
-                            size="sm"
-                            variant="ghost"
-                            className="text-red-500"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div>
-                            <Label className="text-xs">Nome/Tipo</Label>
-                            <Input
-                              value={agregado.nome}
-                              onChange={(e) => handleAgregadoChange(index, 'nome', e.target.value)}
-                              placeholder="Ex: Areia fina"
-                              className="text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Pedreira</Label>
-                            <Input
-                              value={agregado.pedreira}
-                              onChange={(e) => handleAgregadoChange(index, 'pedreira', e.target.value)}
-                              placeholder="Ex: Pedreira Central"
-                              className="text-sm"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center text-slate-400 py-8 italic text-sm">
-                      Nenhum agregado adicionado ainda.
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
+              <AgregadosForm
+                agregados={formData.agregados}
+                peneirasDisponiveis={peneirasDisponiveis}
+                onAdd={adicionarAgregado}
+                onRemove={removerAgregado}
+                onChange={handleAgregadoChange}
+                onGranChange={handleAgregadoGranChange}
+              />
             </>
           )}
 
