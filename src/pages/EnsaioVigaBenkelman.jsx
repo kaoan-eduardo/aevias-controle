@@ -355,6 +355,9 @@ export default function EnsaioVigaBenkelman() {
         leitura_inicial_global: parseFloat(formData.leitura_inicial_global) || 0,
         levantamentos: levantamentos,
         observacoes: formData.observacoes,
+        // Marcar como NC se houver deflexão excessiva
+        approved: temDeflexaoExcessiva ? false : null,
+        rejection_reason: temDeflexaoExcessiva ? 'Pontos com deflexão acima do limite admissível' : null,
         status: asFinal ? 'finalizado' : 'rascunho'
       };
 
