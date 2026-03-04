@@ -1588,14 +1588,24 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
               </Card>
 
               {/* Agregados para MRAF */}
-              <AgregadosForm
-                agregados={formData.agregados}
-                peneirasDisponiveis={peneirasDisponiveis}
-                onAdd={adicionarAgregado}
-                onRemove={removerAgregado}
-                onChange={handleAgregadoChange}
-                onGranChange={handleAgregadoGranChange}
-              />
+              {peneirasCarregadas ? (
+                <AgregadosForm
+                  agregados={formData.agregados}
+                  peneirasDisponiveis={peneirasDisponiveis}
+                  onAdd={adicionarAgregado}
+                  onRemove={removerAgregado}
+                  onChange={handleAgregadoChange}
+                  onGranChange={handleAgregadoGranChange}
+                />
+              ) : (
+                <Card className="bg-amber-50 border-amber-200">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-amber-800">
+                      ⚠️ Selecione uma faixa granulométrica primeiro para cadastrar os agregados.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
             </>
           )}
 
