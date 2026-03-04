@@ -241,15 +241,15 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
   }, [project]);
 
   // Quando o tipo do projeto mudar, limpar a faixa selecionada se ela não for compatível
+  // Só limpa se faixas já foram carregadas (faixas.length > 0) para não apagar ao editar
   useEffect(() => {
-    if (formData.faixa_granulometrica_id) {
-      // Check if the current faixa_granulometrica_id is still present in the filtered list
+    if (formData.faixa_granulometrica_id && faixas && faixas.length > 0) {
       const isCurrentFaixaCompatible = faixasFiltradas.some(f => f.id === formData.faixa_granulometrica_id);
       if (!isCurrentFaixaCompatible) {
         setFormData(prev => ({ ...prev, faixa_granulometrica_id: "" }));
       }
     }
-  }, [formData.tipo_projeto, formData.faixa_granulometrica_id, faixasFiltradas]);
+  }, [formData.tipo_projeto, formData.faixa_granulometrica_id, faixasFiltradas, faixas]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
