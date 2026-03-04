@@ -44,7 +44,7 @@ const SidebarProvider = React.forwardRef(function SidebarProvider(
   const open = openProp ?? _open
 
   const setOpen = React.useCallback(
-    (value) => {
+    function(value) {
       const openState = typeof value === "function" ? value(open) : value
       if (setOpenProp) {
         setOpenProp(openState)
@@ -56,25 +56,25 @@ const SidebarProvider = React.forwardRef(function SidebarProvider(
     [setOpenProp, open]
   )
 
-  const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((o) => !o) : setOpen((o) => !o)
+  const toggleSidebar = React.useCallback(function() {
+    return isMobile ? setOpenMobile(function(o) { return !o }) : setOpen(function(o) { return !o })
   }, [isMobile, setOpen])
 
-  React.useEffect(() => {
-    const handleKeyDown = (event) => {
+  React.useEffect(function() {
+    const handleKeyDown = function(event) {
       if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
         event.preventDefault()
         toggleSidebar()
       }
     }
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    return function() { window.removeEventListener("keydown", handleKeyDown) }
   }, [toggleSidebar])
 
   const state = open ? "expanded" : "collapsed"
 
   const contextValue = React.useMemo(
-    () => ({ state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar }),
+    function() { return { state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar } },
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
 
@@ -173,7 +173,10 @@ const Sidebar = React.forwardRef(function Sidebar(
 })
 Sidebar.displayName = "Sidebar"
 
-const SidebarTrigger = React.forwardRef(function SidebarTrigger({ className, onClick, asChild = false, ...props }, ref) {
+const SidebarTrigger = React.forwardRef(function SidebarTrigger(
+  { className, onClick, asChild = false, ...props },
+  ref
+) {
   const { toggleSidebar } = useSidebar()
   return (
     <Button
@@ -182,8 +185,8 @@ const SidebarTrigger = React.forwardRef(function SidebarTrigger({ className, onC
       variant="ghost"
       size="icon"
       className={cn("h-7 w-7", className)}
-      onClick={(event) => {
-        onClick?.(event)
+      onClick={function(event) {
+        if (onClick) onClick(event)
         toggleSidebar()
       }}
       asChild={asChild}
@@ -294,7 +297,10 @@ const SidebarGroup = React.forwardRef(function SidebarGroup({ className, ...prop
 })
 SidebarGroup.displayName = "SidebarGroup"
 
-const SidebarGroupLabel = React.forwardRef(function SidebarGroupLabel({ className, asChild = false, ...props }, ref) {
+const SidebarGroupLabel = React.forwardRef(function SidebarGroupLabel(
+  { className, asChild = false, ...props },
+  ref
+) {
   const Comp = asChild ? Slot : "div"
   return (
     <Comp
@@ -311,7 +317,10 @@ const SidebarGroupLabel = React.forwardRef(function SidebarGroupLabel({ classNam
 })
 SidebarGroupLabel.displayName = "SidebarGroupLabel"
 
-const SidebarGroupAction = React.forwardRef(function SidebarGroupAction({ className, asChild = false, ...props }, ref) {
+const SidebarGroupAction = React.forwardRef(function SidebarGroupAction(
+  { className, asChild = false, ...props },
+  ref
+) {
   const Comp = asChild ? Slot : "button"
   return (
     <Comp
@@ -370,35 +379,36 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-// v2
 const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(
-  { asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props },
+  { asChild, isActive, variant, size, tooltip, className, ...props },
   ref
 ) {
-  const Comp = asChild ? Slot : "button"
+  const isAsChild = asChild === true
+  const isActiveVal = isActive === true
+  const variantVal = variant || "default"
+  const sizeVal = size || "default"
+  const Comp = isAsChild ? Slot : "button"
   const { isMobile, state } = useSidebar()
 
   const button = (
     <Comp
       ref={ref}
       data-sidebar="menu-button"
-      data-size={size}
-      data-active={isActive}
-      className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      data-size={sizeVal}
+      data-active={isActiveVal}
+      className={cn(sidebarMenuButtonVariants({ variant: variantVal, size: sizeVal }), className)}
       {...props}
     />
   )
 
   if (!tooltip) return button
 
-  if (typeof tooltip === "string") {
-    tooltip = { children: tooltip }
-  }
+  const tooltipProps = typeof tooltip === "string" ? { children: tooltip } : tooltip
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltip} />
+      <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltipProps} />
     </Tooltip>
   )
 })
@@ -450,8 +460,11 @@ const SidebarMenuBadge = React.forwardRef(function SidebarMenuBadge({ className,
 })
 SidebarMenuBadge.displayName = "SidebarMenuBadge"
 
-const SidebarMenuSkeleton = React.forwardRef(function SidebarMenuSkeleton({ className, showIcon = false, ...props }, ref) {
-  const width = React.useMemo(() => `${Math.floor(Math.random() * 40) + 50}%`, [])
+const SidebarMenuSkeleton = React.forwardRef(function SidebarMenuSkeleton(
+  { className, showIcon = false, ...props },
+  ref
+) {
+  const width = React.useMemo(function() { return `${Math.floor(Math.random() * 40) + 50}%` }, [])
   return (
     <div ref={ref} data-sidebar="menu-skeleton" className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)} {...props}>
       {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
@@ -477,7 +490,7 @@ const SidebarMenuSub = React.forwardRef(function SidebarMenuSub({ className, ...
 })
 SidebarMenuSub.displayName = "SidebarMenuSub"
 
-const SidebarMenuSubItem = React.forwardRef(function SidebarMenuSubItem({ ...props }, ref) {
+const SidebarMenuSubItem = React.forwardRef(function SidebarMenuSubItem(props, ref) {
   return <li ref={ref} {...props} />
 })
 SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
