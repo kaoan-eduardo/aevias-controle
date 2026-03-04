@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, AlertCircle, FileUp, Sparkles, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
+import AgregadosForm from "@/components/projects/AgregadosForm";
 
 // ========================================
 // MAPEAMENTO FIXO E FINAL DE PENEIRAS DNIT/ASTM
