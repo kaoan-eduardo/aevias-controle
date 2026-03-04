@@ -115,7 +115,7 @@ export default function RelatorioTaxaMRAF() {
               </div>
             </div>
             {/* Coluna 3: Projeto, Faixa Especificada */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div>
                 <p className="font-bold text-gray-700">Nº DO PROJETO:</p>
                 <p className="text-gray-900">{ensaio.numero_projeto || 'N/A'}</p>
