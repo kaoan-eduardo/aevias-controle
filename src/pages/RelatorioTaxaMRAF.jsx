@@ -151,44 +151,44 @@ export default function RelatorioTaxaMRAF() {
                 <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((_, i) => (
-                  <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
+                  <th key={i} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-slate-300 px-2 py-1 bg-white">Lado 1</td>
-                <td className="border border-slate-300 px-2 py-1 text-center">cm</td>
+                <td className="border border-slate-300 px-2 py-2 bg-white">Lado 1</td>
+                <td className="border border-slate-300 px-2 py-2 text-center">cm</td>
                 {ensaio.ensaios?.map((_, i) => (
-                  <td key={i} className="border border-slate-300 px-2 py-1 text-center">{ensaio.dimensoes_bandeja?.lado_1 ?? '-'}</td>
+                  <td key={i} className="border border-slate-300 px-2 py-2 text-center">{ensaio.dimensoes_bandeja?.lado_1 ?? '-'}</td>
                 ))}
               </tr>
               <tr>
-                <td className="border border-slate-300 px-2 py-1 bg-white">Lado 2</td>
-                <td className="border border-slate-300 px-2 py-1 text-center">cm</td>
+                <td className="border border-slate-300 px-2 py-2 bg-white">Lado 2</td>
+                <td className="border border-slate-300 px-2 py-2 text-center">cm</td>
                 {ensaio.ensaios?.map((_, i) => (
-                  <td key={i} className="border border-slate-300 px-2 py-1 text-center">{ensaio.dimensoes_bandeja?.lado_2 ?? '-'}</td>
+                  <td key={i} className="border border-slate-300 px-2 py-2 text-center">{ensaio.dimensoes_bandeja?.lado_2 ?? '-'}</td>
                 ))}
               </tr>
               <tr>
-                <td className="border border-slate-300 px-2 py-1 bg-white font-medium">Área</td>
-                <td className="border border-slate-300 px-2 py-1 text-center">m²</td>
+                <td className="border border-slate-300 px-2 py-2 bg-white font-medium">Área</td>
+                <td className="border border-slate-300 px-2 py-2 text-center">m²</td>
                 {ensaio.ensaios?.map((_, i) => (
-                  <td key={i} className="border border-slate-300 px-2 py-1 text-center font-bold">{ensaio.dimensoes_bandeja?.area?.toFixed(4) ?? '-'}</td>
+                  <td key={i} className="border border-slate-300 px-2 py-2 text-center font-bold">{ensaio.dimensoes_bandeja?.area?.toFixed(4) ?? '-'}</td>
                 ))}
               </tr>
             </tbody>
           </table>
 
           {/* Execução do Ensaio */}
-          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">EXECUÇÃO DO ENSAIO</div>
-          <table className="w-full border-collapse border border-slate-300 text-xs mb-2">
+          <div className="bg-slate-200 px-2 py-1 font-bold text-center text-[9px]">EXECUÇÃO DO ENSAIO</div>
+          <table className="w-full border-collapse border border-slate-300 text-xs mb-3">
             <thead style={{backgroundColor:'#e2e8f0'}}>
               <tr>
-                <th className="border border-slate-300 px-2 py-1 text-left font-medium">Parâmetro</th>
-                <th className="border border-slate-300 px-2 py-1 text-center font-medium">Unidade</th>
+                <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
+                <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((e, i) => (
-                  <th key={i} className="border border-slate-300 px-2 py-1 text-center font-medium">Bandeja {i + 1}</th>
+                  <th key={i} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
               </tr>
             </thead>
