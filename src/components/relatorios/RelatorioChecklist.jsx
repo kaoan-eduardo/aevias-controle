@@ -345,7 +345,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
         <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
             <main className="flex-grow">
-              <SectionTitle>Homogeneização de Agregados</SectionTitle>
+              <SectionTitle>Controle de Agregados</SectionTitle>
               <TabelaControleAgregados controle_agregados={checklist.controle_agregados} />
               
               <div className="mt-4 space-y-2">
