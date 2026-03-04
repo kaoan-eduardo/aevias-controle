@@ -370,6 +370,7 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
+// v2
 const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(
   { asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props },
   ref
