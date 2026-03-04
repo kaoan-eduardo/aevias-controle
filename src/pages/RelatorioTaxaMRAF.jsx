@@ -91,30 +91,23 @@ export default function RelatorioTaxaMRAF() {
         {/* Dados da Obra */}
         <div className="mb-2">
           <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">DADOS DA OBRA</div>
-          <div className="grid grid-cols-3 gap-x-4 gap-y-0 text-[10px]">
-            <div>
-              <p className="font-bold text-gray-700">CLIENTE:</p>
-              <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
-              <p className="font-bold text-gray-700 mt-0.5">OBRA:</p>
-              <p className="text-gray-900">{obra?.name || 'N/A'} {obra?.code ? `(${obra.code})` : ''}</p>
-              <p className="font-bold text-gray-700 mt-0.5">RODOVIA:</p>
-              <p className="text-gray-900">{ensaio.rodovia || 'N/A'}</p>
-              <p className="font-bold text-gray-700 mt-0.5">TRECHO:</p>
-              <p className="text-gray-900">{ensaio.trecho || 'N/A'}</p>
+          <div className="grid grid-cols-2 gap-x-6 text-[10px] border border-t-0 border-slate-300 px-2 py-1">
+            <div className="space-y-0.5">
+              <p><span className="font-bold text-gray-700">CLIENTE: </span><span className="text-gray-900">{regional?.cliente || 'N/A'}</span></p>
+              <p><span className="font-bold text-gray-700">OBRA: </span><span className="text-gray-900">{obra?.name || 'N/A'}{obra?.code ? ` (${obra.code})` : ''}</span></p>
+              <p><span className="font-bold text-gray-700">RODOVIA: </span><span className="text-gray-900">{ensaio.rodovia || 'N/A'}</span></p>
+              <p><span className="font-bold text-gray-700">TRECHO: </span><span className="text-gray-900">{ensaio.trecho || 'N/A'}</span></p>
+              {ensaio.empreiteira && <p><span className="font-bold text-gray-700">EMPREITEIRA: </span><span className="text-gray-900">{ensaio.empreiteira}</span></p>}
+              {ensaio.usina && <p><span className="font-bold text-gray-700">USINA: </span><span className="text-gray-900">{ensaio.usina}</span></p>}
             </div>
-            <div>
-              {ensaio.numero_projeto && <><p className="font-bold text-gray-700">PROJETO UTILIZADO:</p><p className="text-gray-900">{ensaio.numero_projeto}</p></>}
-              {ensaio.faixa_especificada && <><p className="font-bold text-gray-700 mt-0.5">FAIXA ESPECIFICADA:</p><p className="text-gray-900">{ensaio.faixa_especificada}</p></>}
-              {ensaio.ligante && <><p className="font-bold text-gray-700 mt-0.5">LIGANTE:</p><p className="text-gray-900">{ensaio.ligante}</p></>}
-              {ensaio.ensaio_realizado_por && <><p className="font-bold text-gray-700 mt-0.5">ENSAIO REALIZADO POR:</p><p className="text-gray-900">{ensaio.ensaio_realizado_por}</p></>}
-              {ensaio.empreiteira && <><p className="font-bold text-gray-700 mt-0.5">EMPREITEIRA:</p><p className="text-gray-900">{ensaio.empreiteira}</p></>}
-            </div>
-            <div>
-              {ensaio.usina && <><p className="font-bold text-gray-700">USINA:</p><p className="text-gray-900">{ensaio.usina}</p></>}
-              <p className="font-bold text-gray-700 mt-0.5">LABORATORISTA DE CAMPO:</p>
-              <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
-              {ensaio.material && <><p className="font-bold text-gray-700 mt-0.5">MATERIAL:</p><p className="text-gray-900">{ensaio.material}</p></>}
-              {ensaio.placa_caminhao && <><p className="font-bold text-gray-700 mt-0.5">PLACA CAMINHÃO:</p><p className="text-gray-900">{ensaio.placa_caminhao}</p></>}
+            <div className="space-y-0.5">
+              <p><span className="font-bold text-gray-700">PLACA CAMINHÃO: </span><span className="text-gray-900">{ensaio.placa_caminhao || 'N/A'}</span></p>
+              <p><span className="font-bold text-gray-700">MATERIAL: </span><span className="text-gray-900">{ensaio.material || 'N/A'}</span></p>
+              <p><span className="font-bold text-gray-700">Nº DO PROJETO: </span><span className="text-gray-900">{ensaio.numero_projeto || 'N/A'}</span></p>
+              <p><span className="font-bold text-gray-700">LABORATORISTA: </span><span className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</span></p>
+              {ensaio.faixa_especificada && <p><span className="font-bold text-gray-700">FAIXA ESPECIFICADA: </span><span className="text-gray-900">{ensaio.faixa_especificada}</span></p>}
+              {ensaio.ligante && <p><span className="font-bold text-gray-700">LIGANTE: </span><span className="text-gray-900">{ensaio.ligante}</span></p>}
+              {ensaio.ensaio_realizado_por && <p><span className="font-bold text-gray-700">ENSAIO REALIZADO POR: </span><span className="text-gray-900">{ensaio.ensaio_realizado_por}</span></p>}
             </div>
           </div>
         </div>
