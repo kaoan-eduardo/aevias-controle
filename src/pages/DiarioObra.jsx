@@ -48,7 +48,8 @@ const getInitialFormData = () => ({
   efetivo_colaboradores: {
     encarregado: 0, greidista: 0, operadores: 0, motorista: 0, pedreiro: 0,
     armador: 0, carpinteiro: 0, ajudante: 0, topografo: 0, aux_topografia: 0,
-    laboratorista: 0, aux_laboratorio: 0, spoter: 0, seguranca: 0, apontador: 0
+    laboratorista: 0, aux_laboratorio: 0, spoter: 0, seguranca: 0, apontador: 0,
+    pintor: 0, eletricista: 0
   },
   fotos: [],
   cliente: "",
