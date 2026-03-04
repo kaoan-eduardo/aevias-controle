@@ -73,9 +73,9 @@ export default function RelatorioTaxaMRAF() {
         }
       `}</style>
 
-      <div className="w-full max-w-[210mm] mx-auto bg-white py-3 px-4 print:py-2 print:px-3">
+      <div className="w-full max-w-[210mm] mx-auto bg-white py-4 px-4 print:py-3 print:px-3">
         {/* Header */}
-        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2 mb-3">
           <div className="flex justify-start">
             <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-12 object-contain" />
           </div>
