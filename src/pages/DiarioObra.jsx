@@ -552,7 +552,9 @@ const DiarioForm = ({
                     { key: 'apontador', label: 'Apontador' },
                     { key: 'motorista', label: 'Motorista' },
                     { key: 'ajudante', label: 'Ajudante' },
-                    { key: 'aux_laboratorio', label: 'Aux. Laboratório' }
+                    { key: 'aux_laboratorio', label: 'Aux. Laboratório' },
+                    { key: 'pintor', label: 'Pintor' },
+                    { key: 'eletricista', label: 'Eletricista' }
                   ].map(item => (
                     <div key={item.key}>
                       <Label className="text-sm">{item.label}</Label>
