@@ -54,6 +54,7 @@ import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
 import ChecklistReciclagem from './pages/ChecklistReciclagem';
 import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
+import ChecklistUsina from './pages/ChecklistUsina';
 import ControleLaboratoristas from './pages/ControleLaboratoristas';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
@@ -99,7 +100,6 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import ChecklistUsina from './pages/ChecklistUsina';
 import __Layout from './Layout.jsx';
 
 
@@ -111,6 +111,7 @@ export const PAGES = {
     "ChecklistMRAF": ChecklistMRAF,
     "ChecklistReciclagem": ChecklistReciclagem,
     "ChecklistTerraplanagem": ChecklistTerraplanagem,
+    "ChecklistUsina": ChecklistUsina,
     "ControleLaboratoristas": ControleLaboratoristas,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
@@ -156,7 +157,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "ChecklistUsina": ChecklistUsina,
 }
 
 export const pagesConfig = {
