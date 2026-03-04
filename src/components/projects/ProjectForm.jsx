@@ -541,7 +541,7 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
             <Label htmlFor="tipo_projeto">Tipo de Projeto *</Label>
             <Select 
               value={formData.tipo_projeto} 
-              onValueChange={(value) => handleInputChange('tipo_projeto', value)}
+              onValueChange={handleTipoProjeto}
               disabled={!!project}
             >
               <SelectTrigger>
