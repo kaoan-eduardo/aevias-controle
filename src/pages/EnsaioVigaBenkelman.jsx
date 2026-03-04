@@ -647,8 +647,16 @@ export default function EnsaioVigaBenkelman() {
                           </tr>
                         </thead>
                         <tbody>
-                          {faixa.levantamentos.map((lev, idx) => (
-                            <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
+                          {faixa.levantamentos.map((lev, idx) => {
+                            const def_admissivel = parseFloat(formData.def_admissivel) || 0;
+                            const temExcesso = def_admissivel > 0 && (
+                              lev.bordo_esquerdo.deflexao > def_admissivel ||
+                              lev.eixo.deflexao > def_admissivel ||
+                              lev.bordo_direito.deflexao > def_admissivel
+                            );
+                            
+                            return (
+                            <tr key={idx} className={`border border-[#00233B]/20 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'} ${temExcesso ? 'bg-red-100/20' : ''}`}>
                               <td className="border border-[#00233B]/20 px-3 py-2 text-center font-semibold">
                                 <Input value={lev.estaca_km} onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)} placeholder="Estaca" className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm text-center" />
                               </td>
@@ -658,10 +666,10 @@ export default function EnsaioVigaBenkelman() {
                               <td className="border border-[#00233B]/20 px-2 py-2">
                                 <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2">
+                              <td className={`border border-[#00233B]/20 px-2 py-2 ${lev.eixo.deflexao > def_admissivel && def_admissivel > 0 ? 'text-red-700 font-bold' : ''}`}>
                                 <Input type="number" step="0.01" value={lev.eixo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
-                              <td className="border border-[#00233B]/20 px-2 py-2">
+                              <td className={`border border-[#00233B]/20 px-2 py-2 ${lev.eixo.deflexao > def_admissivel && def_admissivel > 0 ? 'text-red-700 font-bold' : ''}`}>
                                 <Input type="number" step="0.01" value={lev.eixo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                               <td className="border border-[#00233B]/20 px-2 py-2">
@@ -671,7 +679,8 @@ export default function EnsaioVigaBenkelman() {
                                 <Input type="number" step="0.01" value={lev.bordo_direito.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-center text-sm" />
                               </td>
                             </tr>
-                          ))}
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
