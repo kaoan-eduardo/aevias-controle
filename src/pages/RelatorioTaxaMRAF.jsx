@@ -207,15 +207,15 @@ export default function RelatorioTaxaMRAF() {
                 { label: 'Taxa de Agregado', calc: 'T_A = Tₓ − T_L', unit: 'kg/m²', field: 'taxa_agregado', media: true, media_field: 'media_taxa_agregado' },
               ].map((row, rowIdx) => (
                 <tr key={rowIdx}>
-                  <td className="border border-slate-300 px-2 py-1 bg-white font-medium">{row.label}</td>
-                  <td className="border border-slate-300 px-2 py-1 text-center">{row.unit}</td>
+                  <td className="border border-slate-300 px-2 py-2 bg-white font-medium">{row.label}</td>
+                  <td className="border border-slate-300 px-2 py-2 text-center">{row.unit}</td>
                   {ensaio.ensaios?.map((e, i) => {
                     const val = e[row.field];
                     const taxaMin = ensaio.taxa_minima_projeto;
                     const isRateField = ['taxa_mraf_aplicada','taxa_ligante','taxa_emulsao','taxa_agregado'].includes(row.field);
                     const naoConforme = row.field === 'taxa_mraf_aplicada' && taxaMin != null && val != null && val < taxaMin;
                     return (
-                      <td key={i} className={`border border-slate-300 px-2 py-1 text-center ${naoConforme ? 'bg-red-100 text-red-700 font-bold' : ''}`}>
+                      <td key={i} className={`border border-slate-300 px-2 py-2 text-center ${naoConforme ? 'bg-red-100 text-red-700 font-bold' : ''}`}>
                         {val != null ? (typeof val === 'number' ? (isRateField ? val.toFixed(1) : val.toFixed(['estaca','posicao'].includes(row.field) ? 0 : 3).replace(/\.?0+$/, '')) : val) : '-'}
                         {naoConforme && <span className="block text-[9px] text-red-600">NC</span>}
                       </td>
