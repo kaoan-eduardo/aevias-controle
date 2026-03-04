@@ -430,7 +430,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
                 ['Pedreiro', 'pedreiro', 'Spoter', 'spoter'],
                 ['Armador', 'armador', 'Segurança', 'seguranca'],
                 ['Carpinteiro', 'carpinteiro', 'Apontador', 'apontador'],
-                ['Ajudante', 'ajudante', '', '']
+                ['Ajudante', 'ajudante', 'Pintor', 'pintor'],
+                ['Eletricista', 'eletricista', '', '']
               ].map((row, idx) => (
                 <tr key={idx} className="even:bg-gray-50/50">
                   {[0, 2].map(i => (

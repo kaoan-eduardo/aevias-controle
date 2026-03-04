@@ -123,7 +123,9 @@ const DiarioForm = ({
     if (regionalSelecionada && regionalSelecionada.cliente !== formData.cliente) {
       handleChange('cliente', regionalSelecionada.cliente || "");
     }
-  }, [obraSelecionada?.id, regionalSelecionada?.cliente]);
+    // Limpar rodovia ao trocar de obra
+    handleChange('rodovia', "");
+  }, [obraSelecionada?.id]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
