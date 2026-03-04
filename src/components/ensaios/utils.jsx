@@ -174,6 +174,12 @@ export const getNaoConformidades = (ensaio) => {
     }
   }
   
+  if (ensaio.entityType === "EnsaioManchaPendulo") {
+    if (ensaio.condicao_conformidade === "NÃO CONFORME") {
+      naoConformidades.push("Resultado não conforme");
+    }
+  }
+  
   return naoConformidades;
 };
 
