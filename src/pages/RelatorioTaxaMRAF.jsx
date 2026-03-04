@@ -126,7 +126,7 @@ export default function RelatorioTaxaMRAF() {
               </div>
             </div>
             {/* Coluna 4: Placa Caminhão, Laboratorista */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <div>
                 <p className="font-bold text-gray-700">PLACA CAMINHÃO:</p>
                 <p className="text-gray-900">{ensaio.placa_caminhao || 'N/A'}</p>
