@@ -241,14 +241,14 @@ export default function RelatorioTaxaMRAF() {
               const naoConforme = item.isMain && taxaMin != null && val != null && val < taxaMin;
               const conforme = item.isMain && taxaMin != null && val != null && val >= taxaMin;
               return (
-                <div key={idx} className={`p-2 text-center border-r last:border-r-0 border-slate-300 ${naoConforme ? 'bg-red-50' : ''}`}>
-                  <p className="text-[10px] font-semibold mb-0.5" style={{color:'#2d3b4e'}}>{item.label}</p>
-                  <p className={`text-sm font-bold ${naoConforme ? 'text-red-700' : ''}`} style={!naoConforme ? {color:'#2d3b4e'} : {}}>
+                <div key={idx} className={`py-1 px-1.5 text-center border-r last:border-r-0 border-slate-300 ${naoConforme ? 'bg-red-50' : ''}`}>
+                  <p className="text-[9px] font-semibold leading-tight" style={{color:'#2d3b4e'}}>{item.label}</p>
+                  <p className={`text-xs font-bold leading-tight ${naoConforme ? 'text-red-700' : ''}`} style={!naoConforme ? {color:'#2d3b4e'} : {}}>
                     {val != null ? val.toFixed(1) : '-'}
                   </p>
-                  <p className="text-[9px] text-slate-500">{item.unit}</p>
-                  {naoConforme && <p className="text-[9px] font-bold text-red-600 mt-0.5">⚠ NC — mín: {taxaMin} {item.unit}</p>}
-                  {conforme && <p className="text-[9px] font-bold text-green-700 mt-0.5">✓ Conforme — mín: {taxaMin} {item.unit}</p>}
+                  <p className="text-[8px] text-slate-500">{item.unit}</p>
+                  {naoConforme && <p className="text-[8px] font-bold text-red-600">⚠ NC — mín: {taxaMin} {item.unit}</p>}
+                  {conforme && <p className="text-[8px] font-bold text-green-700">✓ Conforme — mín: {taxaMin} {item.unit}</p>}
                 </div>
               );
             })}
