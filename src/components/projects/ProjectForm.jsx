@@ -108,8 +108,13 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
   
   const faixasFiltradas = React.useMemo(() => {
     if (!faixas) return [];
-    return faixas.filter(f => f.tipo === formData.tipo_projeto && f.status === 'ativo');
-  }, [faixas, formData.tipo_projeto]);
+    return faixas.filter(f => {
+      const tipoMatch = f.tipo === formData.tipo_projeto;
+      const ativa = f.status === 'ativo';
+      const isCurrentSelection = f.id === formData.faixa_granulometrica_id;
+      return tipoMatch && (ativa || isCurrentSelection);
+    });
+  }, [faixas, formData.tipo_projeto, formData.faixa_granulometrica_id]);
 
   const faixaSelecionada = React.useMemo(() => {
     return faixasFiltradas?.find(f => f.id === formData.faixa_granulometrica_id);
