@@ -1349,11 +1349,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         <div>
           <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
             <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
-            {selectedEnsaios.length > 0 && (
-              <Badge className="bg-[#BFCF99] text-[#00233B]">
-                {selectedEnsaios.length} selecionado(s)
-              </Badge>
-            )}
             {isAnyFilterActive && (
               <Button
                 variant="ghost"
@@ -1366,15 +1361,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
             )}
           </div>
         </div>
-        {selectedEnsaios.length > 0 && (
-          <Button
-            onClick={handleGerarPDFConsolidado}
-            className="bg-[#566E3D] text-white hover:bg-[#566E3D]/90"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF Consolidado ({selectedEnsaios.length})
-          </Button>
-        )}
       </div>
 
       <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
@@ -1383,14 +1369,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
             <table className="w-full text-sm">
               <thead className="bg-black/5 border-b border-white/10">
                 <tr>
-                  <th className="text-center px-1 py-2 font-medium text-[#00233B]" style={{ width: '30px' }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedEnsaios.length === filteredEnsaios.length && filteredEnsaios.length > 0}
-                      onChange={toggleSelectAll}
-                      className="cursor-pointer"
-                    />
-                  </th>
+                  <th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Tipo</span>
