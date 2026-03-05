@@ -1055,7 +1055,6 @@ EnsaioCard.displayName = 'EnsaioCard';
 
 // Componente para laboratoristas (cards) - Memoizado
 const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) => {
-  const [selectedEnsaios, setSelectedEnsaios] = useState([]);
 
   const emExecucao = useMemo(() => {
     const filtered = ensaios.filter((e) => {
