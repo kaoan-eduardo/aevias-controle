@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
-export default function RelatorioChecklistConcretagem({ checklist, creatorUser }) {
-  const [obra, setObra] = useState(null);
-  const [project, setProject] = useState(null);
-  const [regional, setRegional] = useState(null);
+export default function RelatorioChecklistConcretagem({ checklist, creatorUser, obra: obraProp, regional: regionalProp, project: projectProp }) {
+  const [obra, setObra] = useState(obraProp || null);
+  const [project, setProject] = useState(projectProp || null);
+  const [regional, setRegional] = useState(regionalProp || null);
   const [compressedPhotos, setCompressedPhotos] = useState([]);
   const [isCompressing, setIsCompressing] = useState(true);
 
   useEffect(() => {
-    loadRelatedData();
+    if (!obraProp) loadRelatedData();
   }, [checklist]);
 
   useEffect(() => {
