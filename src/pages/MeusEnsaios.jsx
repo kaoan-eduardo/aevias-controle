@@ -428,15 +428,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     }
   }, [selectedEnsaios, filteredEnsaios]);
 
-  const handleGerarPDFConsolidado = useCallback(() => {
-    if (selectedEnsaios.length === 0) {
-      alert('Selecione pelo menos um ensaio para gerar o PDF consolidado.');
-      return;
-    }
-    const idsParam = selectedEnsaios.join(',');
-    window.open(createPageUrl(`RelatorioConsolidado?ids=${idsParam}`), '_blank');
-  }, [selectedEnsaios]);
-
   const isAnyFilterActive = useMemo(() => {
     return (
       nomeFilter !== '' ||
