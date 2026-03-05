@@ -1078,37 +1078,8 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
     return filtered;
   }, [ensaios]);
 
-  const toggleSelectEnsaio = useCallback((ensaioId) => {
-    setSelectedEnsaios(prev => 
-      prev.includes(ensaioId) 
-        ? prev.filter(id => id !== ensaioId)
-        : [...prev, ensaioId]
-    );
-  }, []);
-
-  const handleGerarPDFConsolidado = useCallback(() => {
-    if (selectedEnsaios.length === 0) {
-      alert('Selecione pelo menos um ensaio para gerar o PDF consolidado.');
-      return;
-    }
-    const idsParam = selectedEnsaios.join(',');
-    window.open(createPageUrl(`RelatorioConsolidado?ids=${idsParam}`), '_blank');
-  }, [selectedEnsaios]);
-
   return (
     <div className="space-y-4">
-      {selectedEnsaios.length > 0 && (
-        <div className="flex justify-end">
-          <Button
-            onClick={handleGerarPDFConsolidado}
-            className="bg-[#566E3D] text-white hover:bg-[#566E3D]/90"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF Consolidado ({selectedEnsaios.length})
-          </Button>
-        </div>
-      )}
-      
       <Tabs defaultValue="emExecucao" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20">
         <TabsTrigger value="emExecucao" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
