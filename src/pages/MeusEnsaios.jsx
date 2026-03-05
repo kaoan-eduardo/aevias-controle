@@ -1170,12 +1170,9 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('desc');
-  const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
-
-
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder(prev => {
