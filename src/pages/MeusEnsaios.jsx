@@ -1380,6 +1380,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       />
                     </div>
                   </th>
+
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
