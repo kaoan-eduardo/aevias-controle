@@ -87,7 +87,6 @@ import RelatorioChecklistMRAF from './pages/RelatorioChecklistMRAF';
 import RelatorioChecklistPage from './pages/RelatorioChecklistPage';
 import RelatorioChecklistReciclagem from './pages/RelatorioChecklistReciclagem';
 import RelatorioChecklistTerraplanagem from './pages/RelatorioChecklistTerraplanagem';
-import RelatorioConsolidado from './pages/RelatorioConsolidado';
 import RelatorioDensidadeInSitu from './pages/RelatorioDensidadeInSitu';
 import RelatorioDiario from './pages/RelatorioDiario';
 import RelatorioEnsaio from './pages/RelatorioEnsaio';
@@ -144,7 +143,6 @@ export const PAGES = {
     "RelatorioChecklistPage": RelatorioChecklistPage,
     "RelatorioChecklistReciclagem": RelatorioChecklistReciclagem,
     "RelatorioChecklistTerraplanagem": RelatorioChecklistTerraplanagem,
-    "RelatorioConsolidado": RelatorioConsolidado,
     "RelatorioDensidadeInSitu": RelatorioDensidadeInSitu,
     "RelatorioDiario": RelatorioDiario,
     "RelatorioEnsaio": RelatorioEnsaio,
