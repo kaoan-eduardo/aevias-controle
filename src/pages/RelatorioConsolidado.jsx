@@ -105,7 +105,7 @@ export default function RelatorioConsolidadoPage() {
 
     switch (entityType) {
       case 'DiarioObra':
-        return <RelatorioDiario ensaio={ensaio} obra={obra} regional={regional} />;
+        return <RelatorioDiario diario={ensaio} obra={obra} regional={regional} />;
       case 'EnsaioDensidade':
         return <RelatorioDensidade ensaio={ensaio} obra={obra} regional={regional} project={project} />;
       case 'EnsaioDensidadeInSitu':
@@ -113,15 +113,15 @@ export default function RelatorioConsolidadoPage() {
       case 'EnsaioTaxaPinturaImprimacao':
         return <RelatorioTaxaPinturaImprimacao ensaio={ensaio} obra={obra} regional={regional} />;
       case 'ChecklistUsina':
-        return <RelatorioChecklist ensaio={ensaio} obra={obra} regional={regional} project={project} />;
+        return <RelatorioChecklist checklist={ensaio} obra={obra} regional={regional} project={project} />;
       case 'ChecklistAplicacao':
-        return <RelatorioChecklistAplicacao ensaio={ensaio} obra={obra} regional={regional} project={project} />;
+        return <RelatorioChecklistAplicacao checklist={ensaio} obra={obra} regional={regional} project={project} />;
       case 'ChecklistMRAF':
-        return <RelatorioChecklistMRAF ensaio={ensaio} obra={obra} regional={regional} project={project} />;
+        return <RelatorioChecklistMRAF checklist={ensaio} obra={obra} regional={regional} project={project} />;
       case 'ChecklistConcretagem':
-        return <RelatorioChecklistConcretagem ensaio={ensaio} obra={obra} regional={regional} project={project} />;
+        return <RelatorioChecklistConcretagem checklist={ensaio} obra={obra} regional={regional} project={project} />;
       case 'ChecklistTerraplanagem':
-        return <RelatorioChecklistTerraplanagem ensaio={ensaio} obra={obra} regional={regional} project={project} />;
+        return <RelatorioChecklistTerraplanagem checklist={ensaio} obra={obra} regional={regional} project={project} />;
       default:
         return <div className="p-6 text-center">Tipo de relatório não suportado</div>;
     }
