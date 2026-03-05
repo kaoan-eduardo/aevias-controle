@@ -1275,31 +1275,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     setCurrentPage(1);
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, sortOrder, allUsers]);
 
-  const toggleSelectEnsaio = useCallback((ensaioId) => {
-    setSelectedEnsaios(prev => 
-      prev.includes(ensaioId) 
-        ? prev.filter(id => id !== ensaioId)
-        : [...prev, ensaioId]
-    );
-  }, []);
-
-  const toggleSelectAll = useCallback(() => {
-    if (selectedEnsaios.length === filteredEnsaios.length) {
-      setSelectedEnsaios([]);
-    } else {
-      setSelectedEnsaios(filteredEnsaios.map(e => e.id));
-    }
-  }, [selectedEnsaios, filteredEnsaios]);
-
-  const handleGerarPDFConsolidado = useCallback(() => {
-    if (selectedEnsaios.length === 0) {
-      alert('Selecione pelo menos um ensaio para gerar o PDF consolidado.');
-      return;
-    }
-    const idsParam = selectedEnsaios.join(',');
-    window.open(createPageUrl(`RelatorioConsolidado?ids=${idsParam}`), '_blank');
-  }, [selectedEnsaios]);
-
   const clearFilters = useCallback(() => {
     setNomeFilter('');
     setObraFilter('');
