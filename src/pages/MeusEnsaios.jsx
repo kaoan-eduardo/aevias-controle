@@ -498,15 +498,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
           </div>
         </div>
         <div className="flex gap-2">
-          {selectedEnsaios.length > 0 && (
-            <Button
-              onClick={handleGerarPDFConsolidado}
-              className="bg-[#566E3D] text-white hover:bg-[#566E3D]/90"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Gerar PDF Consolidado ({selectedEnsaios.length})
-            </Button>
-          )}
           {canCreate &&
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
