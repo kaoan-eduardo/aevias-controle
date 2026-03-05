@@ -1115,21 +1115,12 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
       <TabsContent value="pendentes" className="mt-4 space-y-4">
         {pendentes.length > 0 ?
           pendentes.map((ensaio) => (
-            <div key={ensaio.id} className="flex gap-2 items-start">
-              <input
-                type="checkbox"
-                checked={selectedEnsaios.includes(ensaio.id)}
-                onChange={() => toggleSelectEnsaio(ensaio.id)}
-                className="cursor-pointer mt-4"
-              />
-              <div className="flex-1">
-                <EnsaioCard
-                  ensaio={ensaio}
-                  obra={obras.find((o) => o.id === ensaio.obra_id)}
-                  user={user}
-                  allUsers={allUsers} />
-              </div>
-            </div>
+            <EnsaioCard
+              key={ensaio.id}
+              ensaio={ensaio}
+              obra={obras.find((o) => o.id === ensaio.obra_id)}
+              user={user}
+              allUsers={allUsers} />
           )) :
           <div className="text-center py-12 text-[#00233B]/70">
             <FileText className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
