@@ -289,6 +289,7 @@ const AppLayout = ({ children }) => {
   const [isCreateEnsaioOpen, setIsCreateEnsaioOpen] = React.useState(false);
   const [loadingUser, setLoadingUser] = React.useState(true);
   const [pendingTransfers, setPendingTransfers] = React.useState(0);
+  const [naoConformidadesOpen, setNaoConformidadesOpen] = React.useState(false);
 
   useEffect(() => {
     // Desabilitar tradução automática
