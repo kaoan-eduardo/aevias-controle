@@ -50,7 +50,7 @@ function NCReport({ nc, obra, regional }) {
       <main className="flex-grow space-y-6 text-sm">
         {/* Dados Gerais */}
         <section>
-          <h2 className="text-xs font-bold text-gray-700 uppercase tracking-wider bg-slate-100 px-3 py-1 mb-3 flex items-center">Dados Gerais</h2>
+          <h2 className="text-xs font-bold text-gray-700 uppercase tracking-wider bg-slate-100 px-3 py-1 mb-3">Dados Gerais</h2>
           <div className="grid grid-cols-3 gap-x-6 gap-y-3">
             <div>
               <p className="text-xs text-gray-500 uppercase font-semibold">Cliente</p>
