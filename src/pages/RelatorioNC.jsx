@@ -236,6 +236,14 @@ export default function RelatorioNCPage() {
       }
 
       setData({ nc, obra, regional, user, registroVinculado, project, creatorUser });
+
+      // Comprimir fotos
+      if (nc.fotos?.length > 0) {
+        setCompressingFotos(true);
+        const compressed = await Promise.all(nc.fotos.map(url => compressImage(url)));
+        setCompressedFotos(compressed);
+        setCompressingFotos(false);
+      }
     } catch (e) {
       setError(e.message);
     } finally {
