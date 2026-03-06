@@ -244,10 +244,6 @@ export default function NovaNcPage() {
                 <Input value={form.trecho} onChange={e => setForm(f => ({ ...f, trecho: e.target.value }))} className="bg-white/50 border-white/20 text-[#00233B]" />
               </div>
               <div>
-                <Label className="text-[#00233B]">Fiscal</Label>
-                <Input value={form.fiscal} onChange={e => setForm(f => ({ ...f, fiscal: e.target.value }))} className="bg-white/50 border-white/20 text-[#00233B]" />
-              </div>
-              <div>
                 <Label className="text-[#00233B]">Data da NC *</Label>
                 <Input type="date" value={form.data_nc} onChange={e => setForm(f => ({ ...f, data_nc: e.target.value }))} className="bg-white/50 border-white/20 text-[#00233B]" />
               </div>
