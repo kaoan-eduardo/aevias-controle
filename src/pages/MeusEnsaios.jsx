@@ -1504,6 +1504,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                         <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
                           <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
+                          <CopyIdButton id={ensaio.id} />
                           {(() => {
                             const naoConformidades = getNaoConformidades(ensaio);
                             const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
