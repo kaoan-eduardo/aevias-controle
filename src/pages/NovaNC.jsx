@@ -68,6 +68,11 @@ export default function NovaNcPage() {
     acoes: ""
   });
 
+  const [fotos, setFotos] = useState([]);
+  const [pdfs, setPdfs] = useState([]);
+  const [uploadingFotos, setUploadingFotos] = useState(false);
+  const [uploadingPdfs, setUploadingPdfs] = useState(false);
+
   useEffect(() => {
     loadInitialData();
   }, []);
