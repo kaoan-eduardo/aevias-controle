@@ -265,6 +265,56 @@ export default function RelatorioNCPage() {
             />
           </div>
         )}
+
+        {/* Fotos do gestor */}
+        {data.nc.fotos?.length > 0 && (
+          <div className="break-before-page p-8 bg-white font-sans">
+            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
+              <div className="flex justify-start">
+                <img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-16 object-contain" />
+              </div>
+              <div className="text-center">
+                <h1 className="text-xl font-bold text-gray-800 uppercase">Relatório Fotográfico</h1>
+                <p className="text-sm text-gray-600">{data.nc.numero_rnc ? `RNC: ${data.nc.numero_rnc}` : "Não Conformidade"}</p>
+              </div>
+              <div></div>
+            </header>
+            <div className="grid grid-cols-2 gap-4">
+              {data.nc.fotos.map((url, i) => (
+                <div key={i} className="border border-slate-200 rounded p-2 flex flex-col items-center break-inside-avoid">
+                  <img src={url} alt={`Foto ${i + 1}`} className="max-h-64 object-contain w-full" />
+                  <p className="text-xs text-center text-gray-500 mt-1">Foto {i + 1}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* PDFs do gestor */}
+        {data.nc.pdfs?.length > 0 && (
+          <div className="break-before-page p-8 bg-white font-sans">
+            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
+              <div className="flex justify-start">
+                <img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-16 object-contain" />
+              </div>
+              <div className="text-center">
+                <h1 className="text-xl font-bold text-gray-800 uppercase">Documentos Anexados</h1>
+                <p className="text-sm text-gray-600">{data.nc.numero_rnc ? `RNC: ${data.nc.numero_rnc}` : "Não Conformidade"}</p>
+              </div>
+              <div></div>
+            </header>
+            <ul className="space-y-3">
+              {data.nc.pdfs.map((pdf, i) => (
+                <li key={i} className="flex items-center gap-3 border border-slate-200 rounded p-3">
+                  <span className="text-sm font-medium text-gray-700">{i + 1}.</span>
+                  <span className="flex-1 text-sm text-gray-800">{pdf.nome}</span>
+                  <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline print:hidden">Abrir</a>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-gray-400 mt-6 italic print:block hidden">Os documentos PDF listados foram anexados pelo gestor ao relatório de não conformidade e estão disponíveis digitalmente no sistema.</p>
+          </div>
+        )}
       </div>
 
       <style>{`
