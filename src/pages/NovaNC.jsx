@@ -32,6 +32,7 @@ function CopyIdButton({ id }) {
 }
 
 const TIPOS_CHECKLIST = [
+  { value: "DiarioObra", label: "Diário de Obra" },
   { value: "ChecklistUsina", label: "Checklist de Usina" },
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
   { value: "ChecklistMRAF", label: "Checklist MRAF" },

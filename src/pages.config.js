@@ -69,11 +69,13 @@ import EnsaioTaxaMRAF from './pages/EnsaioTaxaMRAF';
 import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
 import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
+import GestaoNC from './pages/GestaoNC';
 import Home from './pages/Home';
 import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import MonitorProdutividade from './pages/MonitorProdutividade';
 import NaoConformidades from './pages/NaoConformidades';
+import NovaNC from './pages/NovaNC';
 import Produtividade from './pages/Produtividade';
 import Projects from './pages/Projects';
 import Regionais from './pages/Regionais';
@@ -99,8 +101,6 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import NovaNC from './pages/NovaNC';
-import GestaoNC from './pages/GestaoNC';
 import __Layout from './Layout.jsx';
 
 
@@ -127,11 +127,13 @@ export const PAGES = {
     "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
     "EnsaioVigaBenkelman": EnsaioVigaBenkelman,
     "FaixasGranulometricas": FaixasGranulometricas,
+    "GestaoNC": GestaoNC,
     "Home": Home,
     "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "MonitorProdutividade": MonitorProdutividade,
     "NaoConformidades": NaoConformidades,
+    "NovaNC": NovaNC,
     "Produtividade": Produtividade,
     "Projects": Projects,
     "Regionais": Regionais,
@@ -157,8 +159,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "NovaNC": NovaNC,
-    "GestaoNC": GestaoNC,
 }
 
 export const pagesConfig = {
