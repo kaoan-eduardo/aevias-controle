@@ -20,7 +20,9 @@ import {
   Gauge,
   ArrowLeftRight,
   BarChart3,
-  TrendingUp
+  TrendingUp,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import {
   Sidebar,
