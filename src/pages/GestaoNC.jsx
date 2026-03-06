@@ -206,6 +206,15 @@ export default function GestaoNCPage() {
                           <Eye className="w-4 h-4 mr-1" />
                           Ver
                         </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => window.open(createPageUrl(`RelatorioNC?id=${nc.id}`), "_blank")}
+                          className="border-white/20 text-[#00233B] hover:bg-white/20"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          Relatório
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
