@@ -472,6 +472,40 @@ const AppLayout = ({ children }) => {
                         </SidebarMenuItem>
                       );
                     })}
+
+                    {/* Não Conformidades - menu expansível */}
+                    {(['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'].includes(userAccessLevel)) && (
+                      <>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 cursor-pointer`}
+                            onClick={() => setNaoConformidadesOpen(prev => !prev)}
+                          >
+                            <div className="flex items-center gap-3 px-3 py-2.5 w-full">
+                              <AlertTriangle className="w-5 h-5 text-[#BFCF99]" />
+                              <span className="font-medium text-[#00233B] flex-1">Não Conformidades</span>
+                              {naoConformidadesOpen
+                                ? <ChevronDown className="w-4 h-4 text-[#00233B]/60" />
+                                : <ChevronRight className="w-4 h-4 text-[#00233B]/60" />
+                              }
+                            </div>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        {naoConformidadesOpen && (
+                          <SidebarMenuItem>
+                            <SidebarMenuButton
+                              asChild
+                              className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("NaoConformidades") ? 'bg-black/10' : ''}`}
+                            >
+                              <NavLink to={createPageUrl("NaoConformidades")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                <BarChart3 className="w-4 h-4 text-[#BFCF99]" />
+                                <span className="font-medium text-[#00233B] text-sm">Dashboard de NCs</span>
+                              </NavLink>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )}
+                      </>
+                    )}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
