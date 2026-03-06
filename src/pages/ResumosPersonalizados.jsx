@@ -351,7 +351,7 @@ const CAMPOS_POR_TIPO = {
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   DiarioObra: [
-    { key: "data", label: "Data" },
+    { key: "laboratorista_name", label: "Colaborador" },
     { key: "tipo_local", label: "Tipo Local" },
     { key: "rodovia", label: "Rodovia" },
     { key: "trecho", label: "Trecho" },
