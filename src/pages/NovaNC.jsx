@@ -66,7 +66,10 @@ export default function NovaNcPage() {
     executora: "",
     contrato: "",
     descricao_nc: "",
-    acoes: ""
+    acoes: "",
+    local_nc: "",
+    categoria_nc: "",
+    parametro_nc: ""
   });
 
   const [fotos, setFotos] = useState([]);
