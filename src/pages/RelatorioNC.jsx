@@ -326,14 +326,10 @@ export default function RelatorioNCPage() {
           </div>
         )}
 
-        {/* PDFs do gestor — cada PDF embutido em iframe fullpage */}
+        {/* PDFs do gestor — renderizados como imagens via PDF.js */}
         {data.nc.pdfs?.map((pdf, i) => (
-          <div key={i} className="break-before-page bg-white" style={{ height: "29.7cm" }}>
-            <iframe
-              src={pdf.url}
-              title={pdf.nome}
-              className="w-full h-full border-0"
-            />
+          <div key={i} className="break-before-page bg-white">
+            <PdfRenderer url={pdf.url} />
           </div>
         ))}
       </div>
