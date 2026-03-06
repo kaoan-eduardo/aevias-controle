@@ -358,8 +358,7 @@ const CAMPOS_POR_TIPO = {
     { key: "condicoes_climaticas", label: "Condições Climáticas" },
     { key: "temperatura", label: "Temperatura (°C)" },
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" },
-    { key: "acoes_corretivas_descricao", label: "Descrição Ações Corretivas" },
-    { key: "approved", label: "Status Aprovação" }
+    { key: "acoes_corretivas_descricao", label: "Descrição Ações Corretivas" }
   ]
 };
 
