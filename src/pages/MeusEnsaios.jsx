@@ -41,6 +41,28 @@ import { Pagination } from "@/components/ensaios/Pagination";
 import { ReprovacaoModal } from "@/components/ensaios/ReprovacaoModal";
 import { ExclusaoModal } from "@/components/ensaios/ExclusaoModal";
 
+// Botão copiar ID
+const CopyIdButton = React.memo(({ id }) => {
+  const [copied, setCopied] = React.useState(false);
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(id);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      title={`Copiar ID: ${id}`}
+      className="inline-flex items-center gap-1 text-[9px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors text-[#00233B]/70 hover:text-[#00233B]"
+    >
+      {copied ? <Check className="w-2.5 h-2.5 text-green-600" /> : <Copy className="w-2.5 h-2.5" />}
+      <span className="truncate max-w-[60px]">{id.slice(0, 8)}…</span>
+    </button>
+  );
+});
+CopyIdButton.displayName = 'CopyIdButton';
+
 // Componente de Date Range Picker compacto
 const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndChange }) => {
   const [isOpen, setIsOpen] = React.useState(false);
