@@ -218,34 +218,69 @@ export default function NovaNcPage() {
             </div>
 
             {/* Checklist de referência */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-white/20 pt-4">
-              <div>
-                <Label className="text-[#00233B]">Tipo de Checklist (referência)</Label>
-                <select
-                  value={tipoChecklist}
-                  onChange={e => handleTipoChecklistChange(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                >
-                  <option value="">Nenhum</option>
-                  {TIPOS_CHECKLIST.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                </select>
-              </div>
-              {tipoChecklist && (
+            <div className="border-t border-white/20 pt-4 space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-[#00233B]">Checklist</Label>
-                  {loadingChecklists ? (
-                    <div className="flex items-center gap-2 mt-2"><Loader2 className="w-4 h-4 animate-spin" /><span className="text-sm">Carregando...</span></div>
-                  ) : (
-                    <select
+                  <Label className="text-[#00233B]">Tipo de Checklist (referência)</Label>
+                  <select
+                    value={tipoChecklist}
+                    onChange={e => handleTipoChecklistChange(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                  >
+                    <option value="">Nenhum</option>
+                    {TIPOS_CHECKLIST.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+                {tipoChecklist && (
+                  <div>
+                    <Label className="text-[#00233B]">Selecionar Checklist pelo ID</Label>
+                    <Input
                       value={checklistId}
                       onChange={e => handleChecklistChange(e.target.value)}
-                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-                    >
-                      <option value="">Selecione</option>
+                      placeholder="Cole o ID do checklist aqui..."
+                      className="bg-white/50 border-white/20 text-[#00233B] font-mono text-sm"
+                    />
+                    {checklistId && checklists.find(c => c.id === checklistId) && (
+                      <p className="text-xs text-green-700 mt-1">
+                        ✓ Checklist encontrado: {checklists.find(c => c.id === checklistId)?.data} {checklists.find(c => c.id === checklistId)?.rodovia ? `– ${checklists.find(c => c.id === checklistId).rodovia}` : ""}
+                      </p>
+                    )}
+                    {checklistId && !checklists.find(c => c.id === checklistId) && (
+                      <p className="text-xs text-orange-600 mt-1">ID não encontrado nos checklists carregados.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Lista de checklists disponíveis com botão copiar ID */}
+              {tipoChecklist && (
+                <div>
+                  <Label className="text-[#00233B] text-xs mb-1 block">Checklists disponíveis (clique no ID para copiar):</Label>
+                  {loadingChecklists ? (
+                    <div className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /><span className="text-sm">Carregando...</span></div>
+                  ) : checklists.length === 0 ? (
+                    <p className="text-xs text-[#00233B]/60 italic">Nenhum checklist encontrado para esta obra.</p>
+                  ) : (
+                    <div className="max-h-40 overflow-y-auto border border-white/20 rounded-md divide-y divide-white/10">
                       {checklists.map(c => (
-                        <option key={c.id} value={c.id}>{c.data} {c.rodovia ? `- ${c.rodovia}` : ""} {c.trecho ? `- ${c.trecho}` : ""}</option>
+                        <div key={c.id} className={`flex items-center justify-between px-3 py-2 text-xs hover:bg-white/20 transition-colors ${checklistId === c.id ? 'bg-[#BFCF99]/20' : ''}`}>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-[#00233B]">{c.data}</span>
+                            {c.rodovia && <span className="text-[#00233B]/70"> – {c.rodovia}</span>}
+                            {c.trecho && <span className="text-[#00233B]/60"> / {c.trecho}</span>}
+                          </div>
+                          <div className="flex items-center gap-2 ml-2">
+                            <CopyIdButton id={c.id} />
+                            <button
+                              onClick={() => handleChecklistChange(c.id)}
+                              className="text-[10px] bg-[#00233B]/10 hover:bg-[#00233B]/20 text-[#00233B] px-2 py-0.5 rounded transition-colors"
+                            >
+                              Usar
+                            </button>
+                          </div>
+                        </div>
                       ))}
-                    </select>
+                    </div>
                   )}
                 </div>
               )}
