@@ -94,6 +94,7 @@ import RelatorioDiario from './pages/RelatorioDiario';
 import RelatorioEnsaio from './pages/RelatorioEnsaio';
 import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
 import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
+import RelatorioNC from './pages/RelatorioNC';
 import RelatorioSondagem from './pages/RelatorioSondagem';
 import RelatorioTaxaMRAF from './pages/RelatorioTaxaMRAF';
 import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
@@ -101,7 +102,6 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import RelatorioNC from './pages/RelatorioNC';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +153,7 @@ export const PAGES = {
     "RelatorioEnsaio": RelatorioEnsaio,
     "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
     "RelatorioManchaPendulo": RelatorioManchaPendulo,
+    "RelatorioNC": RelatorioNC,
     "RelatorioSondagem": RelatorioSondagem,
     "RelatorioTaxaMRAF": RelatorioTaxaMRAF,
     "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
@@ -160,7 +161,6 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "RelatorioNC": RelatorioNC,
 }
 
 export const pagesConfig = {

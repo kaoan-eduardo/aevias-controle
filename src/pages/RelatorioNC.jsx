@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
+import PdfRenderer from "@/components/relatorios/PdfRenderer";
 
 // Importar componentes de relatório de registros vinculados
 import RelatorioDiarioComponent from "@/components/relatorios/RelatorioDiario";
