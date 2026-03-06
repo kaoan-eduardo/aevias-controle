@@ -143,6 +143,30 @@ export default function NovaNcPage() {
     }));
   };
 
+  const handleUploadFotos = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingFotos(true);
+    const urls = await Promise.all(files.map(async (file) => {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      return file_url;
+    }));
+    setFotos(prev => [...prev, ...urls]);
+    setUploadingFotos(false);
+  };
+
+  const handleUploadPdfs = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingPdfs(true);
+    const results = await Promise.all(files.map(async (file) => {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      return { url: file_url, nome: file.name };
+    }));
+    setPdfs(prev => [...prev, ...results]);
+    setUploadingPdfs(false);
+  };
+
   const handleSave = async () => {
     if (!obraId || !form.descricao_nc || !form.data_nc) {
       alert("Preencha os campos obrigatórios: Obra, Data da NC e Descrição.");
@@ -156,6 +180,8 @@ export default function NovaNcPage() {
       relatorio_criador: user?.laboratorista_name || user?.full_name || "",
       checklist_ref_tipo: tipoChecklist,
       checklist_ref_id: checklistId,
+      fotos,
+      pdfs,
       status: "aberta"
     });
     setSaving(false);
