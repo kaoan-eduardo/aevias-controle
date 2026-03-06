@@ -168,10 +168,30 @@ function VinculadoReport({ tipo, registro, obra, regional, project, creatorUser,
   return null;
 }
 
+// Comprime uma imagem via canvas e retorna data URL
+function compressImage(url, maxWidth = 1200, quality = 0.7) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.onerror = () => resolve(url); // fallback original
+    img.src = url;
+  });
+}
+
 export default function RelatorioNCPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+  const [compressedFotos, setCompressedFotos] = useState([]);
+  const [compressingFotos, setCompressingFotos] = useState(false);
 
   useEffect(() => {
     load();
