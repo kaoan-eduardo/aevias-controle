@@ -357,6 +357,7 @@ const CAMPOS_POR_TIPO = {
     { key: "trecho", label: "Trecho" },
     { key: "condicoes_climaticas", label: "Condições Climáticas" },
     { key: "temperatura", label: "Temperatura (°C)" },
+    { key: "acoes_corretivas_realizado", label: "Ações Corretivas" },
     { key: "approved", label: "Status Aprovação" }
   ]
 };
