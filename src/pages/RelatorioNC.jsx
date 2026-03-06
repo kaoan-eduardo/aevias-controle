@@ -124,16 +124,7 @@ function NCReport({ nc, obra, regional }) {
           </section>
         )}
 
-        {/* Registro vinculado */}
-        {nc.checklist_ref_tipo && nc.checklist_ref_id && (
-          <section>
-            <h2 className="text-xs font-bold text-gray-700 uppercase tracking-wider bg-slate-100 px-3 py-1 mb-2">Registro de Referência</h2>
-            <p className="text-gray-700">
-              Tipo: <span className="font-semibold">{TIPO_LABELS[nc.checklist_ref_tipo] || nc.checklist_ref_tipo}</span>
-              {" — "}ID: <span className="font-mono text-xs bg-slate-100 px-1 py-0.5 rounded">{nc.checklist_ref_id}</span>
-            </p>
-          </section>
-        )}
+
       </main>
 
       {/* Assinaturas */}
