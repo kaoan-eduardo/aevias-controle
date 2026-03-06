@@ -100,6 +100,7 @@ import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
 import NovaNC from './pages/NovaNC';
+import GestaoNC from './pages/GestaoNC';
 import __Layout from './Layout.jsx';
 
 
@@ -157,6 +158,7 @@ export const PAGES = {
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
     "NovaNC": NovaNC,
+    "GestaoNC": GestaoNC,
 }
 
 export const pagesConfig = {
