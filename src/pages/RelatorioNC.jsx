@@ -73,20 +73,8 @@ function NCReport({ nc, obra, regional }) {
               <p className="text-gray-800">{nc.trecho || "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase font-semibold">Fiscal</p>
-              <p className="text-gray-800">{nc.fiscal || "—"}</p>
-            </div>
-            <div>
               <p className="text-xs text-gray-500 uppercase font-semibold">Campo (Afirma Evias)</p>
               <p className="text-gray-800">{nc.campo || "—"}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase font-semibold">Criado por</p>
-              <p className="text-gray-800">{nc.relatorio_criador || "—"}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase font-semibold">Status</p>
-              <p className="text-gray-800 capitalize">{nc.status?.replace("_", " ") || "—"}</p>
             </div>
           </div>
         </section>
