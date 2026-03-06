@@ -128,14 +128,10 @@ function NCReport({ nc, obra, regional }) {
       </main>
 
       {/* Assinaturas */}
-      <footer className="mt-10 pt-6 grid grid-cols-3 gap-8">
+      <footer className="mt-10 pt-6 grid grid-cols-2 gap-16">
         <div className="text-center">
           <div className="h-16 mb-2 border-b border-gray-500"></div>
           <p className="text-xs text-gray-600">{nc.relatorio_criador || "Gestor Responsável"}</p>
-        </div>
-        <div className="text-center">
-          <div className="h-16 mb-2 border-b border-gray-500"></div>
-          <p className="text-xs text-gray-600">{nc.fiscal || "Fiscal"}</p>
         </div>
         <div className="text-center">
           {nc.client_signature?.signed_by ? (
