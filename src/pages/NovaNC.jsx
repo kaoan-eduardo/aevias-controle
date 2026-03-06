@@ -143,7 +143,7 @@ export default function NovaNcPage() {
       campo: cl.laboratorista_name || f.campo,
       data_nc: cl.data || f.data_nc,
       executora: cl.empreiteira || cl.usina || f.executora,
-      fiscal: cl.engenheiro_responsavel || cl.inspetor_campo || f.fiscal
+      // fiscal removed
     }));
   };
 
