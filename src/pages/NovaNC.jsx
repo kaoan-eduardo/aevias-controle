@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, AlertTriangle, Save, Copy, Check, ImagePlus, FileUp, X } from "lucide-react";
 import { createPageUrl } from "@/utils";
+import { LOCAIS, getCategoriasByLocal, getParametrosByLocalCategoria } from "@/components/nc/ncData";
 
 function CopyIdButton({ id }) {
   const [copied, setCopied] = React.useState(false);
