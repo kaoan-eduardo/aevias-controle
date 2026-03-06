@@ -358,6 +358,67 @@ export default function NovaNcPage() {
           </CardContent>
         </Card>
 
+        {/* Local / Categoria / Parâmetro */}
+        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+          <CardHeader>
+            <CardTitle className="text-[#00233B] text-base bg-[#BFCF99]/30 px-3 py-1 rounded">CLASSIFICAÇÃO DA NÃO CONFORMIDADE</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* LOCAL */}
+              <div>
+                <Label className="text-[#00233B]">Local</Label>
+                <select
+                  value={form.local_nc}
+                  onChange={e => setForm(f => ({ ...f, local_nc: e.target.value, categoria_nc: "", parametro_nc: "" }))}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
+                >
+                  <option value="">Selecione o local</option>
+                  {LOCAIS.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+
+              {/* CATEGORIA */}
+              <div>
+                <Label className="text-[#00233B]">Categoria</Label>
+                <select
+                  value={form.categoria_nc}
+                  onChange={e => setForm(f => ({ ...f, categoria_nc: e.target.value, parametro_nc: "" }))}
+                  disabled={!form.local_nc}
+                  className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B] disabled:opacity-50"
+                >
+                  <option value="">Selecione a categoria</option>
+                  {getCategoriasByLocal(form.local_nc).map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              {/* PARÂMETRO */}
+              <div>
+                <Label className="text-[#00233B]">Parâmetro</Label>
+                {getParametrosByLocalCategoria(form.local_nc, form.categoria_nc).length > 0 ? (
+                  <select
+                    value={form.parametro_nc}
+                    onChange={e => setForm(f => ({ ...f, parametro_nc: e.target.value }))}
+                    disabled={!form.categoria_nc}
+                    className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B] disabled:opacity-50"
+                  >
+                    <option value="">Selecione o parâmetro</option>
+                    {getParametrosByLocalCategoria(form.local_nc, form.categoria_nc).map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                ) : (
+                  <Input
+                    value={form.parametro_nc}
+                    onChange={e => setForm(f => ({ ...f, parametro_nc: e.target.value }))}
+                    disabled={!form.categoria_nc}
+                    placeholder={form.categoria_nc === "Usina - Diversos" ? "Descreva o parâmetro..." : "Sem parâmetros específicos"}
+                    className="bg-white/50 border-white/20 text-[#00233B] disabled:opacity-50"
+                  />
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Descrição NC */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
           <CardHeader>
