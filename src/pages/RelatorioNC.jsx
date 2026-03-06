@@ -307,14 +307,21 @@ export default function RelatorioNCPage() {
               </div>
               <div></div>
             </header>
-            <div className="grid grid-cols-2 gap-4">
-              {data.nc.fotos.map((url, i) => (
-                <div key={i} className="border border-slate-200 rounded p-2 flex flex-col items-center break-inside-avoid">
-                  <img src={url} alt={`Foto ${i + 1}`} className="max-h-64 object-contain w-full" />
-                  <p className="text-xs text-center text-gray-500 mt-1">Foto {i + 1}</p>
-                </div>
-              ))}
-            </div>
+            {compressingFotos ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-slate-400 mr-2" />
+                <span className="text-slate-500 text-sm">Comprimindo imagens...</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                {(compressedFotos.length > 0 ? compressedFotos : data.nc.fotos).map((url, i) => (
+                  <div key={i} className="border border-slate-200 rounded p-2 flex flex-col items-center break-inside-avoid">
+                    <img src={url} alt={`Foto ${i + 1}`} className="max-h-64 object-contain w-full" />
+                    <p className="text-xs text-center text-gray-500 mt-1">Foto {i + 1}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
