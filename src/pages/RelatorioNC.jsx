@@ -325,31 +325,30 @@ export default function RelatorioNCPage() {
           </div>
         )}
 
-        {/* PDFs do gestor */}
-        {data.nc.pdfs?.length > 0 && (
-          <div className="break-before-page p-8 bg-white font-sans">
-            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
+        {/* PDFs do gestor — cada PDF embutido em um iframe por página */}
+        {data.nc.pdfs?.map((pdf, i) => (
+          <div key={i} className="break-before-page bg-white font-sans flex flex-col" style={{ height: "29.7cm" }}>
+            <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-4 px-8 pt-8">
               <div className="flex justify-start">
-                <img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-16 object-contain" />
+                <img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-14 object-contain" />
               </div>
               <div className="text-center">
-                <h1 className="text-xl font-bold text-gray-800 uppercase">Documentos Anexados</h1>
-                <p className="text-sm text-gray-600">{data.nc.numero_rnc ? `RNC: ${data.nc.numero_rnc}` : "Não Conformidade"}</p>
+                <h1 className="text-lg font-bold text-gray-800 uppercase">Documento Anexado</h1>
+                <p className="text-sm text-gray-600">{pdf.nome}</p>
+                {data.nc.numero_rnc && <p className="text-xs text-gray-400">RNC: {data.nc.numero_rnc}</p>}
               </div>
               <div></div>
             </header>
-            <ul className="space-y-3">
-              {data.nc.pdfs.map((pdf, i) => (
-                <li key={i} className="flex items-center gap-3 border border-slate-200 rounded p-3">
-                  <span className="text-sm font-medium text-gray-700">{i + 1}.</span>
-                  <span className="flex-1 text-sm text-gray-800">{pdf.nome}</span>
-                  <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline print:hidden">Abrir</a>
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs text-gray-400 mt-6 italic print:block hidden">Os documentos PDF listados foram anexados pelo gestor ao relatório de não conformidade e estão disponíveis digitalmente no sistema.</p>
+            <div className="flex-1 px-8 pb-8">
+              <iframe
+                src={pdf.url}
+                title={pdf.nome}
+                className="w-full h-full border border-slate-200 rounded"
+                style={{ minHeight: "600px" }}
+              />
+            </div>
           </div>
-        )}
+        ))}
       </div>
 
       <style>{`
