@@ -222,7 +222,7 @@ export default function NovaNcPage() {
             <div className="border-t border-white/20 pt-4 space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-[#00233B]">Tipo de Checklist (referência)</Label>
+                  <Label className="text-[#00233B]">Tipo de Registro (referência)</Label>
                   <select
                     value={tipoChecklist}
                     onChange={e => handleTipoChecklistChange(e.target.value)}
