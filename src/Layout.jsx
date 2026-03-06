@@ -492,17 +492,43 @@ const AppLayout = ({ children }) => {
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                         {naoConformidadesOpen && (
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              asChild
-                              className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("NaoConformidades") ? 'bg-black/10' : ''}`}
-                            >
-                              <NavLink to={createPageUrl("NaoConformidades")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
-                                <BarChart3 className="w-4 h-4 text-[#BFCF99]" />
-                                <span className="font-medium text-[#00233B] text-sm">Dashboard de NCs</span>
-                              </NavLink>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
+                          <>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("NaoConformidades") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("NaoConformidades")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <BarChart3 className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Dashboard de NCs</span>
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("GestaoNC") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("GestaoNC")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <FileText className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Gestão de NCs</span>
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            {(isGestorContrato || isAdmin) && (
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  asChild
+                                  className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("NovaNC") ? 'bg-black/10' : ''}`}
+                                >
+                                  <NavLink to={createPageUrl("NovaNC")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                    <AlertTriangle className="w-4 h-4 text-[#BFCF99]" />
+                                    <span className="font-medium text-[#00233B] text-sm">Nova NC</span>
+                                  </NavLink>
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                            )}
+                          </>
                         )}
                       </>
                     )}
