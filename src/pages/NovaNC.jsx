@@ -11,6 +11,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, AlertTriangle, Save, Copy, Check } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
+function CopyIdButton({ id }) {
+  const [copied, setCopied] = React.useState(false);
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(id);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      title="Copiar ID"
+      className="inline-flex items-center gap-1 text-[10px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors"
+    >
+      {copied ? <Check className="w-3 h-3 text-green-600" /> : <Copy className="w-3 h-3" />}
+      <span className="truncate max-w-[80px]">{id}</span>
+    </button>
+  );
+}
+
 const TIPOS_CHECKLIST = [
   { value: "ChecklistUsina", label: "Checklist de Usina" },
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
