@@ -204,15 +204,16 @@ export default function GestaoNCPage() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => window.location.href = createPageUrl(`NovaNC?id=${nc.id}`)}
-                          className="border-white/20 text-[#00233B] hover:bg-white/20"
+                        <select
+                          value={nc.status || "aberta"}
+                          onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
+                          className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
                         >
-                          <Eye className="w-4 h-4 mr-1" />
-                          Ver
-                        </Button>
+                          <option value="aberta">Aberta</option>
+                          <option value="em_tratativa">Em Tratativa</option>
+                          <option value="encerrada">Finalizada</option>
+                          <option value="cancelada">Cancelada</option>
+                        </select>
                         <Button
                           size="sm"
                           variant="outline"
