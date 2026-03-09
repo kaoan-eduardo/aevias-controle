@@ -8,6 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, AlertTriangle, Search, Plus, Eye } from "lucide-react";
+
+async function updateNCStatus(id, status, setNcs) {
+  await base44.entities.RelatorioNC.update(id, { status });
+  setNcs(prev => prev.map(n => n.id === id ? { ...n, status } : n));
+}
 import { createPageUrl } from "@/utils";
 
 const STATUS_COLORS = {
