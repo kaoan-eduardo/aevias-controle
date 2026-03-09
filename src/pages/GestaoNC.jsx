@@ -13,13 +13,15 @@ import { createPageUrl } from "@/utils";
 const STATUS_COLORS = {
   aberta: "bg-red-100 text-red-700",
   em_tratativa: "bg-yellow-100 text-yellow-700",
-  encerrada: "bg-green-100 text-green-700"
+  encerrada: "bg-green-100 text-green-700",
+  cancelada: "bg-gray-100 text-gray-600"
 };
 
 const STATUS_LABELS = {
   aberta: "Aberta",
   em_tratativa: "Em Tratativa",
-  encerrada: "Encerrada"
+  encerrada: "Finalizada",
+  cancelada: "Cancelada"
 };
 
 export default function GestaoNCPage() {
