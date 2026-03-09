@@ -132,7 +132,7 @@ function NCReport({ nc, obra, regional }) {
         {/* Assinatura do Gestor */}
         <div className="flex flex-col items-center">
           {nc.manager_signature?.signed_by ? (
-            <div className="w-full border border-gray-400 rounded p-3 text-center text-xs text-gray-600 mb-2">
+            <div className="w-full p-3 text-center text-xs text-gray-600 mb-2">
               <p className="text-gray-500">Assinado digitalmente por</p>
               <p className="font-bold text-gray-800 mt-0.5">{nc.manager_signature.manager_name || nc.relatorio_criador}</p>
               <p className="text-gray-500">{nc.manager_signature.signed_by}</p>
