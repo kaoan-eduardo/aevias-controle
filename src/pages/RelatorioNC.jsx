@@ -129,35 +129,46 @@ function NCReport({ nc, obra, regional }) {
 
       {/* Assinaturas */}
       <footer className="mt-10 pt-6 grid grid-cols-2 gap-16">
+        {/* Assinatura do Gestor */}
         <div className="text-center">
-          {nc.manager_signature?.signed_by ? (
-            <div className="h-16 mb-2 flex flex-col justify-end items-center text-xs text-gray-500">
-              <p className="font-semibold text-gray-700">{nc.manager_signature.manager_name || nc.relatorio_criador}</p>
-              <p>Assinado em {new Date(nc.manager_signature.signed_date).toLocaleDateString("pt-BR")}</p>
-            </div>
-          ) : (
-            <div className="h-16 mb-2"></div>
-          )}
-          <div className="border-b border-gray-500 pt-1"></div>
+          <div className="h-16 flex flex-col justify-end items-center pb-2">
+            {nc.manager_signature?.signed_by && (
+              <div className="text-xs text-gray-500 text-center">
+                <p className="font-semibold text-gray-700">{nc.manager_signature.manager_name || nc.relatorio_criador}</p>
+                {nc.manager_signature.crea_number && <p>CREA: {nc.manager_signature.crea_number}</p>}
+                <p>
+                  {new Date(nc.manager_signature.signed_date).toLocaleString("pt-BR", {
+                    timeZone: "America/Sao_Paulo",
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="border-b border-gray-500"></div>
           <p className="text-xs text-gray-600 mt-1">{nc.relatorio_criador || "Gestor Responsável"}</p>
         </div>
+
+        {/* Assinatura do Cliente */}
         <div className="text-center">
-          {nc.client_signature?.signed_by ? (
-            <>
-              <div className="h-16 mb-2 flex flex-col justify-end items-center text-xs text-gray-500">
-                <p className="font-semibold">{nc.client_signature.engineer_name}</p>
+          <div className="h-16 flex flex-col justify-end items-center pb-2">
+            {nc.client_signature?.signed_by && (
+              <div className="text-xs text-gray-500 text-center">
+                <p className="font-semibold text-gray-700">{nc.client_signature.engineer_name}</p>
                 {nc.client_signature.crea_number && <p>CREA: {nc.client_signature.crea_number}</p>}
+                <p>
+                  {new Date(nc.client_signature.signed_date).toLocaleString("pt-BR", {
+                    timeZone: "America/Sao_Paulo",
+                    day: "2-digit", month: "2-digit", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                  })}
+                </p>
               </div>
-              <div className="border-b border-gray-500 pt-2">
-                <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="h-16 mb-2 border-b border-gray-500"></div>
-              <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-            </>
-          )}
+            )}
+          </div>
+          <div className="border-b border-gray-500"></div>
+          <p className="text-xs text-gray-600 mt-1">Engenheiro Cliente</p>
         </div>
       </footer>
     </div>
