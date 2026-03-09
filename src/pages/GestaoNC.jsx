@@ -150,7 +150,7 @@ export default function GestaoNCPage() {
         </Card>
 
         {/* Resumo */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {["aberta", "em_tratativa", "encerrada", "cancelada"].map(s => (
             <Card key={s} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-4">
