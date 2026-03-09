@@ -142,7 +142,8 @@ export default function GestaoNCPage() {
                 <option value="">Todos os Status</option>
                 <option value="aberta">Aberta</option>
                 <option value="em_tratativa">Em Tratativa</option>
-                <option value="encerrada">Encerrada</option>
+                <option value="encerrada">Finalizada</option>
+                <option value="cancelada">Cancelada</option>
               </select>
             </div>
           </CardContent>
