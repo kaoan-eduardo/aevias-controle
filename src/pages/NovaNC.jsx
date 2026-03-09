@@ -177,16 +177,22 @@ export default function NovaNcPage() {
       return;
     }
     setSaving(true);
+    const managerName = user?.laboratorista_name || user?.full_name || "";
     await base44.entities.RelatorioNC.create({
       ...form,
       obra_id: obraId,
       obra_nome: obras.find(o => o.id === obraId)?.name || "",
-      relatorio_criador: user?.laboratorista_name || user?.full_name || "",
+      relatorio_criador: managerName,
       checklist_ref_tipo: tipoChecklist,
       checklist_ref_id: checklistId,
       fotos,
       pdfs,
-      status: "aberta"
+      status: "aberta",
+      manager_signature: {
+        signed_by: user?.email || "",
+        signed_date: new Date().toISOString(),
+        manager_name: managerName
+      }
     });
     setSaving(false);
     window.location.href = createPageUrl("GestaoNC");
