@@ -82,6 +82,8 @@ export default function GestaoNCPage() {
   const userAccessLevel = user?.access_level || (user?.role === "admin" ? "admin" : "user");
   const isGestor = userAccessLevel === "gestor_contrato";
   const isAdmin = userAccessLevel === "admin";
+  const isCliente = userAccessLevel === "cliente";
+  const canChangeStatus = isGestor || isCliente || isAdmin;
 
   if (loading) {
     return (
