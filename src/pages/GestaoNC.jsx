@@ -155,7 +155,7 @@ export default function GestaoNCPage() {
             <Card key={s} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-4">
                 <p className="text-xs text-[#00233B]/70 font-medium uppercase tracking-wide">{STATUS_LABELS[s]}</p>
-                <p className={`text-3xl font-bold mt-1 ${s === "aberta" ? "text-red-600" : s === "em_tratativa" ? "text-yellow-600" : "text-green-600"}`}>
+                <p className={`text-3xl font-bold mt-1 ${s === "aberta" ? "text-red-600" : s === "em_tratativa" ? "text-yellow-600" : s === "encerrada" ? "text-green-600" : "text-gray-500"}`}>
                   {ncs.filter(n => n.status === s).length}
                 </p>
               </CardContent>
