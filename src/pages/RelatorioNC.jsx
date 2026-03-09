@@ -155,7 +155,7 @@ function NCReport({ nc, obra, regional }) {
         {/* Assinatura do Cliente */}
         <div className="flex flex-col items-center">
           {nc.client_signature?.signed_by ? (
-            <div className="w-full border border-gray-400 rounded p-3 text-center text-xs text-gray-600 mb-2">
+            <div className="w-full p-3 text-center text-xs text-gray-600 mb-2">
               <p className="text-gray-500">Assinado digitalmente por</p>
               <p className="font-bold text-gray-800 mt-0.5">{nc.client_signature.engineer_name}</p>
               <p className="text-gray-500">{nc.client_signature.signed_by}</p>
