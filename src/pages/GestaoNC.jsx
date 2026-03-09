@@ -207,16 +207,22 @@ export default function GestaoNCPage() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
-                        <select
-                          value={nc.status || "aberta"}
-                          onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
-                          className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
-                        >
-                          <option value="aberta">Aberta</option>
-                          <option value="em_tratativa">Em Tratativa</option>
-                          <option value="encerrada">Finalizada</option>
-                          <option value="cancelada">Cancelada</option>
-                        </select>
+                        {canChangeStatus ? (
+                          <select
+                            value={nc.status || "aberta"}
+                            onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
+                            className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
+                          >
+                            <option value="aberta">Aberta</option>
+                            <option value="em_tratativa">Em Tratativa</option>
+                            <option value="encerrada">Finalizada</option>
+                            <option value="cancelada">Cancelada</option>
+                          </select>
+                        ) : (
+                          <Badge className={STATUS_COLORS[nc.status] || "bg-gray-100 text-gray-700"}>
+                            {STATUS_LABELS[nc.status] || nc.status}
+                          </Badge>
+                        )}
                         <Button
                           size="sm"
                           variant="outline"
