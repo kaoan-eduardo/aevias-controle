@@ -191,7 +191,8 @@ export default function NovaNcPage() {
       manager_signature: {
         signed_by: user?.email || "",
         signed_date: new Date().toISOString(),
-        manager_name: managerName
+        manager_name: managerName,
+        crea_number: user?.crea_number || ""
       }
     });
     setSaving(false);
