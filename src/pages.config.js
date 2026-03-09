@@ -47,124 +47,14 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AcompanhamentoCarga from './pages/AcompanhamentoCarga';
-import AcompanhamentoUsinagem from './pages/AcompanhamentoUsinagem';
-import ChecklistAplicacao from './pages/ChecklistAplicacao';
-import ChecklistConcretagem from './pages/ChecklistConcretagem';
-import ChecklistMRAF from './pages/ChecklistMRAF';
-import ChecklistReciclagem from './pages/ChecklistReciclagem';
-import ChecklistTerraplanagem from './pages/ChecklistTerraplanagem';
-import ChecklistUsina from './pages/ChecklistUsina';
-import ControleLaboratoristas from './pages/ControleLaboratoristas';
-import Dashboard from './pages/Dashboard';
-import DiarioObra from './pages/DiarioObra';
-import EnsaioCAUQ from './pages/EnsaioCAUQ';
-import EnsaioDensidade from './pages/EnsaioDensidade';
-import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
-import EnsaioGranulometriaIndividual from './pages/EnsaioGranulometriaIndividual';
-import EnsaioMRAF from './pages/EnsaioMRAF';
-import EnsaioManchaPendulo from './pages/EnsaioManchaPendulo';
-import EnsaioSondagem from './pages/EnsaioSondagem';
-import EnsaioTaxaMRAF from './pages/EnsaioTaxaMRAF';
-import EnsaioTaxaPinturaImprimacao from './pages/EnsaioTaxaPinturaImprimacao';
-import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
-import FaixasGranulometricas from './pages/FaixasGranulometricas';
-import GestaoNC from './pages/GestaoNC';
-import Home from './pages/Home';
-import MeusEnsaios from './pages/MeusEnsaios';
-import MigracaoDados from './pages/MigracaoDados';
-import MonitorProdutividade from './pages/MonitorProdutividade';
 import NaoConformidades from './pages/NaoConformidades';
-import NovaNC from './pages/NovaNC';
-import Produtividade from './pages/Produtividade';
-import Projects from './pages/Projects';
-import Regionais from './pages/Regionais';
-import RelatorioAcompanhamentoCarga from './pages/RelatorioAcompanhamentoCarga';
-import RelatorioAcompanhamentoUsinagem from './pages/RelatorioAcompanhamentoUsinagem';
-import RelatorioCAUQ from './pages/RelatorioCAUQ';
-import RelatorioChecklist from './pages/RelatorioChecklist';
-import RelatorioChecklistAplicacao from './pages/RelatorioChecklistAplicacao';
-import RelatorioChecklistConcretagem from './pages/RelatorioChecklistConcretagem';
-import RelatorioChecklistMRAF from './pages/RelatorioChecklistMRAF';
-import RelatorioChecklistPage from './pages/RelatorioChecklistPage';
-import RelatorioChecklistReciclagem from './pages/RelatorioChecklistReciclagem';
-import RelatorioChecklistTerraplanagem from './pages/RelatorioChecklistTerraplanagem';
-import RelatorioDensidadeInSitu from './pages/RelatorioDensidadeInSitu';
-import RelatorioDiario from './pages/RelatorioDiario';
-import RelatorioEnsaio from './pages/RelatorioEnsaio';
-import RelatorioGranulometriaIndividual from './pages/RelatorioGranulometriaIndividual';
-import RelatorioManchaPendulo from './pages/RelatorioManchaPendulo';
-import RelatorioNC from './pages/RelatorioNC';
-import RelatorioSondagem from './pages/RelatorioSondagem';
-import RelatorioTaxaMRAF from './pages/RelatorioTaxaMRAF';
-import RelatorioTaxaPinturaImprimacao from './pages/RelatorioTaxaPinturaImprimacao';
-import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
-import ResumosPersonalizados from './pages/ResumosPersonalizados';
-import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
-import Users from './pages/Users';
-import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AcompanhamentoCarga": AcompanhamentoCarga,
-    "AcompanhamentoUsinagem": AcompanhamentoUsinagem,
-    "ChecklistAplicacao": ChecklistAplicacao,
-    "ChecklistConcretagem": ChecklistConcretagem,
-    "ChecklistMRAF": ChecklistMRAF,
-    "ChecklistReciclagem": ChecklistReciclagem,
-    "ChecklistTerraplanagem": ChecklistTerraplanagem,
-    "ChecklistUsina": ChecklistUsina,
-    "ControleLaboratoristas": ControleLaboratoristas,
-    "Dashboard": Dashboard,
-    "DiarioObra": DiarioObra,
-    "EnsaioCAUQ": EnsaioCAUQ,
-    "EnsaioDensidade": EnsaioDensidade,
-    "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
-    "EnsaioGranulometriaIndividual": EnsaioGranulometriaIndividual,
-    "EnsaioMRAF": EnsaioMRAF,
-    "EnsaioManchaPendulo": EnsaioManchaPendulo,
-    "EnsaioSondagem": EnsaioSondagem,
-    "EnsaioTaxaMRAF": EnsaioTaxaMRAF,
-    "EnsaioTaxaPinturaImprimacao": EnsaioTaxaPinturaImprimacao,
-    "EnsaioVigaBenkelman": EnsaioVigaBenkelman,
-    "FaixasGranulometricas": FaixasGranulometricas,
-    "GestaoNC": GestaoNC,
-    "Home": Home,
-    "MeusEnsaios": MeusEnsaios,
-    "MigracaoDados": MigracaoDados,
-    "MonitorProdutividade": MonitorProdutividade,
     "NaoConformidades": NaoConformidades,
-    "NovaNC": NovaNC,
-    "Produtividade": Produtividade,
-    "Projects": Projects,
-    "Regionais": Regionais,
-    "RelatorioAcompanhamentoCarga": RelatorioAcompanhamentoCarga,
-    "RelatorioAcompanhamentoUsinagem": RelatorioAcompanhamentoUsinagem,
-    "RelatorioCAUQ": RelatorioCAUQ,
-    "RelatorioChecklist": RelatorioChecklist,
-    "RelatorioChecklistAplicacao": RelatorioChecklistAplicacao,
-    "RelatorioChecklistConcretagem": RelatorioChecklistConcretagem,
-    "RelatorioChecklistMRAF": RelatorioChecklistMRAF,
-    "RelatorioChecklistPage": RelatorioChecklistPage,
-    "RelatorioChecklistReciclagem": RelatorioChecklistReciclagem,
-    "RelatorioChecklistTerraplanagem": RelatorioChecklistTerraplanagem,
-    "RelatorioDensidadeInSitu": RelatorioDensidadeInSitu,
-    "RelatorioDiario": RelatorioDiario,
-    "RelatorioEnsaio": RelatorioEnsaio,
-    "RelatorioGranulometriaIndividual": RelatorioGranulometriaIndividual,
-    "RelatorioManchaPendulo": RelatorioManchaPendulo,
-    "RelatorioNC": RelatorioNC,
-    "RelatorioSondagem": RelatorioSondagem,
-    "RelatorioTaxaMRAF": RelatorioTaxaMRAF,
-    "RelatorioTaxaPinturaImprimacao": RelatorioTaxaPinturaImprimacao,
-    "RelatorioVigaBenkelman": RelatorioVigaBenkelman,
-    "ResumosPersonalizados": ResumosPersonalizados,
-    "SolicitacoesTransferencia": SolicitacoesTransferencia,
-    "Users": Users,
 }
 
 export const pagesConfig = {
-    mainPage: "Dashboard",
+    mainPage: "NaoConformidades",
     Pages: PAGES,
-    Layout: __Layout,
 };
