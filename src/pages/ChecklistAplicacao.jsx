@@ -954,6 +954,7 @@ export default function ChecklistAplicacaoPage() {
                     <thead className="bg-black/5">
                       <tr>
                         <th className="border border-slate-300 px-2 py-2 text-left">Serviço</th>
+                        <th className="border border-slate-300 px-2 py-2 text-center">Realizado</th>
                         <th className="border border-slate-300 px-2 py-2 text-center">Resultado</th>
                         <th className="border border-slate-300 px-2 py-2 text-center">Conformidade</th>
                       </tr>
@@ -961,6 +962,15 @@ export default function ChecklistAplicacaoPage() {
                     <tbody>
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Pintura na barra espargidora</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.pintura_ligacao.pintura_barra_espargidora.realizado}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.pintura_barra_espargidora.realizado', e.target.checked)}
+                            disabled={!isEditable}
+                            className="w-4 h-4"
+                          />
+                        </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.pintura_barra_espargidora.resultado}
@@ -981,6 +991,15 @@ export default function ChecklistAplicacaoPage() {
 
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Aguardado tempo para rompimento/cura</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.pintura_ligacao.tempo_rompimento_cura.realizado}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.tempo_rompimento_cura.realizado', e.target.checked)}
+                            disabled={!isEditable}
+                            className="w-4 h-4"
+                          />
+                        </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.tempo_rompimento_cura.resultado}
@@ -1001,26 +1020,36 @@ export default function ChecklistAplicacaoPage() {
 
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Taxa de Pintura (l/m²)</td>
-                        <td className="border border-slate-300 px-2 py-1">
-                          <Select
-                            value={formData.pintura_ligacao.taxa_pintura.resultado}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura.resultado', value)}
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.pintura_ligacao.taxa_pintura.realizado}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.taxa_pintura.realizado', e.target.checked)}
                             disabled={!isEditable}
-                          >
-                            <SelectTrigger className="h-8">
-                              <SelectValue placeholder="Selecione" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Sim">Sim</SelectItem>
-                              <SelectItem value="Não">Não</SelectItem>
-                            </SelectContent>
-                          </Select>
+                            className="w-4 h-4"
+                          />
+                        </td>
+                        <td className="border border-slate-300 px-2 py-1">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            value={formData.pintura_ligacao.taxa_pintura.resultado !== null && formData.pintura_ligacao.taxa_pintura.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura.resultado : ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(',', '.');
+                              if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                                handleNestedChange('pintura_ligacao.taxa_pintura.resultado', value === '' ? null : parseFloat(value) || value);
+                              }
+                            }}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
+                            placeholder="Ex: 0.9"
+                            className="h-8"
+                          />
                         </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.taxa_pintura.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura.conforme === false ? "nao" : ""}
                             onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura.conforme', value === "sim" ? true : value === "nao" ? false : null)}
-                            disabled={!isEditable}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
                           >
                             <SelectTrigger className="h-8">
                               <SelectValue placeholder="-" />
@@ -1035,46 +1064,61 @@ export default function ChecklistAplicacaoPage() {
 
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Resíduo da Emulsão (%)</td>
-                        <td className="border border-slate-300 px-2 py-1">
-                          <Select
-                            value={formData.pintura_ligacao.residuo_emulsao.resultado}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.residuo_emulsao.resultado', value)}
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.pintura_ligacao.residuo_emulsao.realizado}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.residuo_emulsao.realizado', e.target.checked)}
                             disabled={!isEditable}
-                          >
-                            <SelectTrigger className="h-8">
-                              <SelectValue placeholder="Selecione" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Sim">Sim</SelectItem>
-                              <SelectItem value="Não">Não</SelectItem>
-                            </SelectContent>
-                          </Select>
+                            className="w-4 h-4"
+                          />
+                        </td>
+                        <td className="border border-slate-300 px-2 py-1">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={formData.pintura_ligacao.residuo_emulsao.resultado || ''}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.residuo_emulsao.resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                            disabled={!isEditable}
+                            placeholder="Ex: 60"
+                            className="h-8"
+                          />
                         </td>
                         <td className="border border-slate-300 px-2 py-2 text-center text-xs">-</td>
                       </tr>
 
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Taxa de Pintura Residual (l/m²)</td>
-                        <td className="border border-slate-300 px-2 py-1">
-                          <Select
-                            value={formData.pintura_ligacao.taxa_pintura_residual.resultado}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.resultado', value)}
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <input
+                            type="checkbox"
+                            checked={formData.pintura_ligacao.taxa_pintura_residual.realizado}
+                            onChange={(e) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.realizado', e.target.checked)}
                             disabled={!isEditable}
-                          >
-                            <SelectTrigger className="h-8">
-                              <SelectValue placeholder="Selecione" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Sim">Sim</SelectItem>
-                              <SelectItem value="Não">Não</SelectItem>
-                            </SelectContent>
-                          </Select>
+                            className="w-4 h-4"
+                          />
+                        </td>
+                        <td className="border border-slate-300 px-2 py-1">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            value={formData.pintura_ligacao.taxa_pintura_residual.resultado !== null && formData.pintura_ligacao.taxa_pintura_residual.resultado !== undefined ? formData.pintura_ligacao.taxa_pintura_residual.resultado : ''}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(',', '.');
+                              if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                                handleNestedChange('pintura_ligacao.taxa_pintura_residual.resultado', value === '' ? null : parseFloat(value) || value);
+                              }
+                            }}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
+                            placeholder="Ex: 0.35"
+                            className="h-8"
+                          />
                         </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.taxa_pintura_residual.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura_residual.conforme === false ? "nao" : ""}
                             onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.conforme', value === "sim" ? true : value === "nao" ? false : null)}
-                            disabled={!isEditable}
+                            disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
                           >
                             <SelectTrigger className="h-8">
                               <SelectValue placeholder="-" />
