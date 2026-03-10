@@ -546,55 +546,103 @@ export default function NaoConformidadesPage() {
           </PizzaCard>
         </div>
 
-        {/* Tabela simplificada de ocorrências */}
-        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-          <CardHeader>
-            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-              <ClipboardList className="w-4 h-4 text-[#BFCF99]" />
-              Ocorrências Detalhadas — Checklists
-              {cncsVisiveis.length > 0 && <Badge className="bg-[#BFCF99]/40 text-[#00233B] text-xs ml-2">{cncsVisiveis.length}</Badge>}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {cncsVisiveis.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/20">
-                      {["Tipo de Registro","Criado por","Data","Parâmetro","Rodovia","Usina","Empreiteira"].map(h => (
-                        <th key={h} className="text-left py-2 px-3 text-[#00233B] font-semibold text-xs uppercase tracking-wide whitespace-nowrap">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cncsVisiveis.slice(0, 100).map((nc, i) => {
-                      const tipoLabel = TIPOS_CHECKLIST.find(t => t.value === nc.tipo)?.label || nc.tipo || '—';
-                      return (
-                        <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
-                          <td className="py-2 px-3 text-[#00233B] whitespace-nowrap">{tipoLabel}</td>
-                          <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{nc.laboratorista_name || '—'}</td>
-                          <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{nc.data ? new Date(nc.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—'}</td>
-                          <td className="py-2 px-3"><Badge className="bg-blue-100 text-blue-800 font-normal">{nc.parametro}</Badge></td>
-                          <td className="py-2 px-3 text-[#00233B]/70">{nc.rodovia || '—'}</td>
-                          <td className="py-2 px-3 text-[#00233B]/70">{nc.usina || '—'}</td>
-                          <td className="py-2 px-3 text-[#00233B]/70">{nc.empreiteira || '—'}</td>
+        {/* Tabela unificada de ocorrências */}
+        {(() => {
+          // Merge RNCs + checklist NCs into unified rows
+          const rncRows = rncsVisiveis.map(r => ({
+            _kind: 'rnc',
+            id: r.id,
+            tipo: 'RNC',
+            tipoLabel: 'Relatório NC',
+            criador: r.relatorio_criador || r.fiscal || '',
+            data: r.data_nc || '',
+            parametro: r.parametro_nc || r.categoria_nc || '',
+            rodovia: r.rodovia || '',
+            usina: '',
+            empreiteira: r.executora || '',
+            page: RNC_PAGE,
+          }));
+          const checklistRows = cncsVisiveis.map(nc => {
+            const t = TIPOS_CHECKLIST.find(t => t.value === nc.tipo);
+            return {
+              _kind: 'checklist',
+              id: nc.id,
+              tipo: nc.tipo,
+              tipoLabel: t?.label || nc.tipo,
+              criador: nc.laboratorista_name || '',
+              data: nc.data || '',
+              parametro: nc.parametro || '',
+              rodovia: nc.rodovia || '',
+              usina: nc.usina || '',
+              empreiteira: nc.empreiteira || '',
+              page: t?.page || '',
+            };
+          });
+          const allRows = [...rncRows, ...checklistRows].slice(0, 200);
+          const total = rncRows.length + checklistRows.length;
+
+          return (
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+              <CardHeader>
+                <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+                  <ClipboardList className="w-4 h-4 text-[#BFCF99]" />
+                  Ocorrências Detalhadas
+                  {total > 0 && <Badge className="bg-[#BFCF99]/40 text-[#00233B] text-xs ml-2">{total}</Badge>}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {allRows.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-white/20">
+                          {["Tipo de Registro","Criado por","Data","Parâmetro / NC","Rodovia","Usina","Empreiteira",""].map(h => (
+                            <th key={h} className="text-left py-2 px-3 text-[#00233B] font-semibold text-xs uppercase tracking-wide whitespace-nowrap">{h}</th>
+                          ))}
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                {cncsVisiveis.length > 100 && (
-                  <p className="text-xs text-[#00233B]/50 text-center mt-3">Exibindo 100 de {cncsVisiveis.length} ocorrências</p>
+                      </thead>
+                      <tbody>
+                        {allRows.map((row, i) => (
+                          <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
+                            <td className="py-2 px-3 whitespace-nowrap">
+                              <Badge className={row._kind === 'rnc' ? "bg-red-100 text-red-800 font-normal" : "bg-blue-100 text-blue-800 font-normal"}>
+                                {row.tipoLabel}
+                              </Badge>
+                            </td>
+                            <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{row.criador || '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{row.data ? new Date(row.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B] max-w-[180px] truncate">{row.parametro || '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B]/70 whitespace-nowrap">{row.rodovia || '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B]/70 whitespace-nowrap">{row.usina || '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B]/70 whitespace-nowrap">{row.empreiteira || '—'}</td>
+                            <td className="py-2 px-3">
+                              {row.page && row.id && (
+                                <a href={createPageUrl(row.page) + `?id=${row.id}`} target="_blank" rel="noreferrer">
+                                  <Button size="sm" variant="ghost" className="h-7 px-2 text-[#00233B]/70 hover:text-[#00233B] gap-1">
+                                    <Eye className="w-3.5 h-3.5" />
+                                    <span className="text-xs">Ver</span>
+                                  </Button>
+                                </a>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {total > 200 && (
+                      <p className="text-xs text-[#00233B]/50 text-center mt-3">Exibindo 200 de {total} ocorrências</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-10 text-[#00233B]/50">
+                    <ClipboardList className="w-10 h-10 mb-2 opacity-30" />
+                    <p className="text-sm">Nenhuma ocorrência para os filtros selecionados</p>
+                  </div>
                 )}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-10 text-[#00233B]/50">
-                <ClipboardList className="w-10 h-10 mb-2 opacity-30" />
-                <p className="text-sm">Nenhuma ocorrência de checklist para os filtros selecionados</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          );
+        })()}
 
         {/* Tabela Resumo */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
