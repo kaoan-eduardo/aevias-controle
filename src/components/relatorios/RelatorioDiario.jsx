@@ -98,6 +98,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
   const tipoLocal = diario.tipo_local || "campo";
   const rodovia = tipoLocal === "usina" ? (diario.usina_selecionada || "N/A") : (diario.rodovia || "N/A");
   const trecho = diario.trecho || "N/A";
+  const isObraClienteType = obra?.tipo_obra === 'levantamentos' || obra?.tipo_obra === 'sondagem';
+  const clienteDisplay = isObraClienteType ? (diario.empreiteira || 'N/A') : (diario.cliente || regional?.cliente || 'N/A');
 
   const renderTextArea = (label, value) => (
     <div className="col-span-1 md:col-span-2">
