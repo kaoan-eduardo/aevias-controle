@@ -566,6 +566,18 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                             </div>
                           </div>
                         )}
+                        {(obra.tipo_obra === "levantamentos" || obra.tipo_obra === "sondagem") && obra.clientes && obra.clientes.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-xs text-[#00233B]/60 mb-1">Clientes:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {obra.clientes.map((cliente, idx) => (
+                                <Badge key={idx} variant="secondary" className="bg-teal-100 text-teal-800 text-xs">
+                                  {cliente}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         {obra.usinas && obra.usinas.length > 0 && (
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Usinas:</p>

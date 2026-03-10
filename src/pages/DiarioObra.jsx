@@ -117,6 +117,7 @@ const DiarioForm = ({
   // Calculate selected obra and regional here for display purposes
   const obraSelecionada = obras.find(o => o.id === formData.obra_id);
   const regionalSelecionada = obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null;
+  const isObraClienteType = obraSelecionada?.tipo_obra === 'levantamentos' || obraSelecionada?.tipo_obra === 'sondagem';
 
   // Effect to auto-fill cliente when obra changes
   React.useEffect(() => {
