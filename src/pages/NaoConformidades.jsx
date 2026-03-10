@@ -659,9 +659,9 @@ export default function NaoConformidadesPage() {
                       type="monotone"
                       dataKey={obraNome}
                       stroke={TIMELINE_COLORS[i % TIMELINE_COLORS.length]}
-                      strokeWidth={2}
+                      strokeWidth={3}
                       fillOpacity={1}
-                      fill={`url(#color${i})`}
+                      fill={TIMELINE_COLORS[i % TIMELINE_COLORS.length]}
                       stackId="1"
                     />
                   ))}
