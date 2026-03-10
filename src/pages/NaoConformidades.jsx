@@ -192,6 +192,9 @@ export default function NaoConformidadesPage() {
           allCNCs.push({
             obra_id: cl.obra_id,
             parametro: param.charAt(0).toUpperCase() + param.slice(1),
+            tipo: cl._tipo,
+            laboratorista_name: cl.laboratorista_name || '',
+            data: cl.data || '',
             empreiteira: cl.empreiteira || '',
             rodovia: cl.rodovia || '',
             usina: cl.usina || cl.usina_selecionada || '',
