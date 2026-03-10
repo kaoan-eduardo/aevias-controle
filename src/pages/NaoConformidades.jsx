@@ -693,9 +693,8 @@ export default function NaoConformidadesPage() {
                       type="monotone"
                       dataKey={obraNome}
                       stroke="none"
-                      fillOpacity={1}
+                      fillOpacity={0.7}
                       fill={`url(#color${i})`}
-                      stackId="1"
                     />
                   ))}
                 </AreaChart>
