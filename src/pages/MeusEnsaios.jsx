@@ -433,22 +433,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     setCurrentPage(1);
   }, []);
 
-  const toggleSelectEnsaio = useCallback((ensaioId) => {
-    setSelectedEnsaios(prev => 
-      prev.includes(ensaioId) 
-        ? prev.filter(id => id !== ensaioId)
-        : [...prev, ensaioId]
-    );
-  }, []);
-
-  const toggleSelectAll = useCallback(() => {
-    if (selectedEnsaios.length === filteredEnsaios.length) {
-      setSelectedEnsaios([]);
-    } else {
-      setSelectedEnsaios(filteredEnsaios.map(e => e.id));
-    }
-  }, [selectedEnsaios, filteredEnsaios]);
-
   const isAnyFilterActive = useMemo(() => {
     return (
       nomeFilter !== '' ||
