@@ -23,6 +23,23 @@ const TIPOS_CHECKLIST = [
 // RNC maps to RelatorioNC page
 const RNC_PAGE = "RelatorioNC";
 
+// Ensaios que podem ter approved===false como NC
+const TIPOS_ENSAIO = [
+  { value: "EnsaioCAUQ", label: "Ensaio CAUQ", page: "RelatorioCAUQ" },
+  { value: "EnsaioSondagem", label: "Ensaio de Sondagem", page: "RelatorioSondagem" },
+  { value: "EnsaioDensidade", label: "Ensaio de Densidade", page: "RelatorioEnsaio" },
+  { value: "EnsaioDensidadeInSitu", label: "Densidade In Situ", page: "RelatorioDensidadeInSitu" },
+  { value: "EnsaioGranAreia", label: "Granulometria+EA", page: "RelatorioEnsaio" },
+  { value: "EnsaioMRAF", label: "Ensaio MRAF", page: "RelatorioMRAF" },
+  { value: "EnsaioManchaPendulo", label: "Mancha + Pêndulo", page: "RelatorioManchaPendulo" },
+  { value: "EnsaioVigaBenkelman", label: "Viga Benkelman", page: "RelatorioVigaBenkelman" },
+  { value: "EnsaioTaxaPinturaImprimacao", label: "Taxa Pintura/Imprimação", page: "RelatorioTaxaPinturaImprimacao" },
+  { value: "EnsaioTaxaMRAF", label: "Taxa MRAF", page: "RelatorioTaxaMRAF" },
+];
+
+// Combined lookup for table rendering
+const ALL_TIPOS = [...TIPOS_CHECKLIST, ...TIPOS_ENSAIO];
+
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
