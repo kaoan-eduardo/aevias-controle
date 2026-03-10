@@ -156,17 +156,13 @@ export default function NaoConformidadesPage() {
   const [loading, setLoading] = useState(true);
   const [obras, setObras] = useState([]);
   const [rncs, setRncs] = useState([]);
-  const [checklistNCs, setChecklistNCs] = useState([]); // [{ obra_id, parametro, empreiteira, rodovia, usina }]
-
-  // 6 filter dimensions
+  const [checklistNCs, setChecklistNCs] = useState([]);
   const [filtroStatus, setFiltroStatus] = useState(null);
   const [filtroParametro, setFiltroParametro] = useState(null);
   const [filtroObraId, setFiltroObraId] = useState(null);
   const [filtroEmpreiteira, setFiltroEmpreiteira] = useState(null);
   const [filtroRodovia, setFiltroRodovia] = useState(null);
   const [filtroUsina, setFiltroUsina] = useState(null);
-
-  // Filtros locais da tabela de ocorrências
   const [tabelaBusca, setTabelaBusca] = useState('');
   const [tabelaTipo, setTabelaTipo] = useState('_all');
 
