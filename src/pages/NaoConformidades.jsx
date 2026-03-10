@@ -49,6 +49,7 @@ const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
 const CHART_COLORS = ["#00233B","#566E3D","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e","#4ade80","#fb923c","#1e3a5f"];
+const TIMELINE_COLORS = ["#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#06b6d4","#f97316","#14b8a6","#6366f1","#ef4444","#84cc16","#d946ef"];
 
 // ---- Pure cross-filter functions ----
 // Each chart calls these with `skip = 'its_own_dimension'` so it shows distribution of itself
@@ -629,10 +630,10 @@ export default function NaoConformidadesPage() {
               <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={dadosTemporais}>
                   <defs>
-                    {obras.slice(0, 6).map((obra, i) => (
-                      <linearGradient key={obra.id} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.1}/>
+                    {Object.keys(dadosTemporais[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
+                      <linearGradient key={obraNome} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={TIMELINE_COLORS[i % TIMELINE_COLORS.length]} stopOpacity={0.9}/>
+                        <stop offset="95%" stopColor={TIMELINE_COLORS[i % TIMELINE_COLORS.length]} stopOpacity={0.2}/>
                       </linearGradient>
                     ))}
                   </defs>
@@ -657,7 +658,8 @@ export default function NaoConformidadesPage() {
                       key={obraNome}
                       type="monotone"
                       dataKey={obraNome}
-                      stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                      stroke={TIMELINE_COLORS[i % TIMELINE_COLORS.length]}
+                      strokeWidth={2}
                       fillOpacity={1}
                       fill={`url(#color${i})`}
                       stackId="1"
