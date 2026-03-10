@@ -483,14 +483,9 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
-            <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
-            {selectedEnsaios.length > 0 && (
-              <Badge className="bg-[#BFCF99] text-[#00233B]">
-                {selectedEnsaios.length} selecionado(s)
-              </Badge>
-            )}
-            {isAnyFilterActive && (
+           <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
+             <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
+             {isAnyFilterActive && (
               <Button
                 variant="ghost"
                 size="sm"
