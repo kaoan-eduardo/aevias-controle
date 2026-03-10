@@ -962,59 +962,43 @@ export default function ChecklistAplicacaoPage() {
                     <tbody>
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Pintura na barra espargidora</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center">
-                          <input
-                            type="checkbox"
-                            checked={formData.pintura_ligacao.pintura_barra_espargidora.realizado}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.pintura_barra_espargidora.realizado', e.target.checked)}
-                            disabled={!isEditable}
-                            className="w-4 h-4"
-                          />
-                        </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
-                            value={formData.pintura_ligacao.pintura_barra_espargidora.resultado}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.pintura_barra_espargidora.resultado', value)}
+                            value={formData.pintura_ligacao.pintura_barra_espargidora.realizado === true ? "sim" : formData.pintura_ligacao.pintura_barra_espargidora.realizado === false ? "nao" : ""}
+                            onValueChange={(value) => handleNestedChange('pintura_ligacao.pintura_barra_espargidora.realizado', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable}
                           >
                             <SelectTrigger className="h-8">
                               <SelectValue placeholder="Selecione" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Sim">Sim</SelectItem>
-                              <SelectItem value="Não">Não</SelectItem>
+                              <SelectItem value="sim">Sim</SelectItem>
+                              <SelectItem value="nao">Não</SelectItem>
                             </SelectContent>
                           </Select>
                         </td>
+                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">-</td>
                         <td className="border border-slate-300 px-2 py-2 text-center text-xs">N/A</td>
                       </tr>
 
                       <tr>
                         <td className="border border-slate-300 px-2 py-2">Aguardado tempo para rompimento/cura</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center">
-                          <input
-                            type="checkbox"
-                            checked={formData.pintura_ligacao.tempo_rompimento_cura.realizado}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.tempo_rompimento_cura.realizado', e.target.checked)}
-                            disabled={!isEditable}
-                            className="w-4 h-4"
-                          />
-                        </td>
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
-                            value={formData.pintura_ligacao.tempo_rompimento_cura.resultado}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.tempo_rompimento_cura.resultado', value)}
+                            value={formData.pintura_ligacao.tempo_rompimento_cura.realizado === true ? "sim" : formData.pintura_ligacao.tempo_rompimento_cura.realizado === false ? "nao" : ""}
+                            onValueChange={(value) => handleNestedChange('pintura_ligacao.tempo_rompimento_cura.realizado', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable}
                           >
                             <SelectTrigger className="h-8">
                               <SelectValue placeholder="Selecione" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Sim">Sim</SelectItem>
-                              <SelectItem value="Não">Não</SelectItem>
+                              <SelectItem value="sim">Sim</SelectItem>
+                              <SelectItem value="nao">Não</SelectItem>
                             </SelectContent>
                           </Select>
                         </td>
+                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">-</td>
                         <td className="border border-slate-300 px-2 py-2 text-center text-xs">N/A</td>
                       </tr>
 
