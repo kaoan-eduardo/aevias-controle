@@ -696,7 +696,7 @@ export default function NaoConformidadesPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {allRows.map((row, i) => (
+                        {displayRows.map((row, i) => (
                           <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
                             <td className="py-2 px-3 whitespace-nowrap">
                               <Badge className={row._kind === 'rnc' ? "bg-red-100 text-red-800 font-normal" : "bg-blue-100 text-blue-800 font-normal"}>
