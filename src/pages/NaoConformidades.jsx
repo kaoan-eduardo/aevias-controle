@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, Loader2, FileText, ClipboardList, X, Filter, HardHat, MapPin, Building2, Eye, Search } from "lucide-react";
+import { AlertTriangle, Loader2, FileText, ClipboardList, X, Filter, HardHat, MapPin, Building2, Eye, Search, Calendar as CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -59,13 +62,18 @@ function applyRncFilters(rncs, cncs, f, skip = null) {
     const ids = new Set(cncs.filter(nc => nc.parametro === f.parametro).map(nc => nc.obra_id));
     r = r.filter(x => ids.has(x.obra_id));
   }
-  if (skip !== 'periodo' && f.periodo) {
-    const now = new Date();
-    let cutoff;
-    if (f.periodo === '7d') cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    else if (f.periodo === '30d') cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    else if (f.periodo === '90d') cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-    if (cutoff) r = r.filter(x => x.data_nc && new Date(x.data_nc) >= cutoff);
+  if (skip !== 'data' && (f.dataInicial || f.dataFinal)) {
+    r = r.filter(x => {
+      if (!x.data_nc) return false;
+      const dataRnc = new Date(x.data_nc);
+      if (f.dataInicial && dataRnc < f.dataInicial) return false;
+      if (f.dataFinal) {
+        const dataFinalMidnight = new Date(f.dataFinal);
+        dataFinalMidnight.setHours(23, 59, 59, 999);
+        if (dataRnc > dataFinalMidnight) return false;
+      }
+      return true;
+    });
   }
   // usina not applicable to RNCs
   return r;
@@ -82,13 +90,18 @@ function applyCncFilters(cncs, rncs, f, skip = null) {
     const ids = new Set(rncs.filter(x => x.status === f.status).map(x => x.obra_id));
     r = r.filter(nc => ids.has(nc.obra_id));
   }
-  if (skip !== 'periodo' && f.periodo) {
-    const now = new Date();
-    let cutoff;
-    if (f.periodo === '7d') cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    else if (f.periodo === '30d') cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    else if (f.periodo === '90d') cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-    if (cutoff) r = r.filter(nc => nc.data && new Date(nc.data) >= cutoff);
+  if (skip !== 'data' && (f.dataInicial || f.dataFinal)) {
+    r = r.filter(nc => {
+      if (!nc.data) return false;
+      const dataNc = new Date(nc.data);
+      if (f.dataInicial && dataNc < f.dataInicial) return false;
+      if (f.dataFinal) {
+        const dataFinalMidnight = new Date(f.dataFinal);
+        dataFinalMidnight.setHours(23, 59, 59, 999);
+        if (dataNc > dataFinalMidnight) return false;
+      }
+      return true;
+    });
   }
   return r;
 }
@@ -179,7 +192,8 @@ export default function NaoConformidadesPage() {
   const [filtroEmpreiteira, setFiltroEmpreiteira] = useState(null);
   const [filtroRodovia, setFiltroRodovia] = useState(null);
   const [filtroUsina, setFiltroUsina] = useState(null);
-  const [filtroPeriodo, setFiltroPeriodo] = useState(null);
+  const [filtroDataInicial, setFiltroDataInicial] = useState(null);
+  const [filtroDataFinal, setFiltroDataFinal] = useState(null);
   const [tabelaBusca, setTabelaBusca] = useState('');
   const [tabelaTipo, setTabelaTipo] = useState('_all');
 
@@ -308,8 +322,9 @@ export default function NaoConformidadesPage() {
   // Each chart skips its own filter dimension so it shows its own distribution
   const f = useMemo(() => ({
     status: filtroStatus, parametro: filtroParametro, obraId: filtroObraId,
-    empreiteira: filtroEmpreiteira, rodovia: filtroRodovia, usina: filtroUsina, periodo: filtroPeriodo
-  }), [filtroStatus, filtroParametro, filtroObraId, filtroEmpreiteira, filtroRodovia, filtroUsina, filtroPeriodo]);
+    empreiteira: filtroEmpreiteira, rodovia: filtroRodovia, usina: filtroUsina,
+    dataInicial: filtroDataInicial, dataFinal: filtroDataFinal
+  }), [filtroStatus, filtroParametro, filtroObraId, filtroEmpreiteira, filtroRodovia, filtroUsina, filtroDataInicial, filtroDataFinal]);
 
   const dadosStatusRNC = useMemo(() => {
     const filtered = applyRncFilters(rncs, checklistNCs, f, 'status');
@@ -416,10 +431,11 @@ export default function NaoConformidadesPage() {
 
   const clearFilters = useCallback(() => {
     setFiltroStatus(null); setFiltroParametro(null); setFiltroObraId(null);
-    setFiltroEmpreiteira(null); setFiltroRodovia(null); setFiltroUsina(null); setFiltroPeriodo(null);
+    setFiltroEmpreiteira(null); setFiltroRodovia(null); setFiltroUsina(null);
+    setFiltroDataInicial(null); setFiltroDataFinal(null);
   }, []);
 
-  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina || filtroPeriodo);
+  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina || filtroDataInicial || filtroDataFinal);
 
   const tiposDisponiveis = useMemo(() => {
     const s = new Set([...rncsVisiveis.map(() => 'Relatório NC'), ...cncsVisiveis.map(nc => {
@@ -462,7 +478,7 @@ export default function NaoConformidadesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
                 <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><HardHat className="w-3 h-3" /> Empreiteira</label>
                 <Select value={filtroEmpreiteira || '_all'} onValueChange={v => setFiltroEmpreiteira(v === '_all' ? null : v)}>
@@ -500,18 +516,32 @@ export default function NaoConformidadesPage() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block">Período</label>
-                <Select value={filtroPeriodo || '_all'} onValueChange={v => setFiltroPeriodo(v === '_all' ? null : v)}>
-                  <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
-                    <SelectValue placeholder="Todos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Todos</SelectItem>
-                    <SelectItem value="7d">Últimos 7 dias</SelectItem>
-                    <SelectItem value="30d">Últimos 30 dias</SelectItem>
-                    <SelectItem value="90d">Últimos 90 dias</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Inicial</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
+                      {filtroDataInicial ? format(filtroDataInicial, 'dd/MM/yyyy') : 'Selecionar'}
+                      <CalendarIcon className="w-4 h-4 text-[#00233B]/50" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-white" align="start">
+                    <Calendar mode="single" selected={filtroDataInicial} onSelect={setFiltroDataInicial} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Final</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
+                      {filtroDataFinal ? format(filtroDataFinal, 'dd/MM/yyyy') : 'Selecionar'}
+                      <CalendarIcon className="w-4 h-4 text-[#00233B]/50" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-white" align="start">
+                    <Calendar mode="single" selected={filtroDataFinal} onSelect={setFiltroDataFinal} disabled={(date) => filtroDataInicial ? date < filtroDataInicial : false} />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </CardContent>
@@ -526,7 +556,8 @@ export default function NaoConformidadesPage() {
             {filtroEmpreiteira && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroEmpreiteira(null)}>Empreiteira: {filtroEmpreiteira} <X className="w-3 h-3"/></Badge>}
             {filtroRodovia && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroRodovia(null)}>Rodovia: {filtroRodovia} <X className="w-3 h-3"/></Badge>}
             {filtroUsina && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroUsina(null)}>Usina: {filtroUsina} <X className="w-3 h-3"/></Badge>}
-            {filtroPeriodo && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroPeriodo(null)}>Período: {filtroPeriodo === '7d' ? 'Últimos 7 dias' : filtroPeriodo === '30d' ? 'Últimos 30 dias' : 'Últimos 90 dias'} <X className="w-3 h-3"/></Badge>}
+            {filtroDataInicial && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroDataInicial(null)}>De: {format(filtroDataInicial, 'dd/MM/yyyy')} <X className="w-3 h-3"/></Badge>}
+            {filtroDataFinal && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroDataFinal(null)}>Até: {format(filtroDataFinal, 'dd/MM/yyyy')} <X className="w-3 h-3"/></Badge>}
           </div>
         )}
 
