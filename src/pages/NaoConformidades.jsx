@@ -484,7 +484,7 @@ export default function NaoConformidadesPage() {
             { label: "Total de RNCs", value: rncsVisiveis.length, color: "text-[#00233B]" },
             { label: "RNCs Abertas", value: rncsVisiveis.filter(r => r.status === 'aberta').length, color: "text-red-600" },
             { label: "Em Tratativa", value: rncsVisiveis.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
-            { label: "NCs em Checklists", value: cncsVisiveis.length, color: "text-blue-600" },
+            { label: "NCs em Registros", value: cncsVisiveis.length, color: "text-blue-600" },
           ].map(kpi => (
             <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-3">
