@@ -23,6 +23,24 @@ const TIPOS_CHECKLIST = [
 // RNC maps to RelatorioNC page
 const RNC_PAGE = "RelatorioNC";
 
+// Outros registros: NC = approved === false
+const OUTROS_TIPOS_REGISTRO = [
+  { value: "AcompanhamentoCarga", label: "Acomp. de Cargas", page: "RelatorioAcompanhamentoCarga" },
+  { value: "AcompanhamentoUsinagem", label: "Acomp. Usinagem", page: "RelatorioAcompanhamentoUsinagem" },
+  { value: "EnsaioCAUQ", label: "Ensaio CAUQ", page: "RelatorioCAUQ" },
+  { value: "EnsaioDensidade", label: "Ensaio de Densidade", page: "RelatorioEnsaio" },
+  { value: "EnsaioDensidadeInSitu", label: "Densidade In Situ", page: "RelatorioDensidadeInSitu" },
+  { value: "EnsaioGranAreia", label: "Granulometria + EA", page: "RelatorioEnsaio" },
+  { value: "EnsaioGranulometriaIndividual", label: "Gran. Individual", page: "RelatorioGranulometriaIndividual" },
+  { value: "EnsaioMRAF", label: "Ensaio MRAF", page: "RelatorioMRAF" },
+  { value: "EnsaioManchaPendulo", label: "Mancha + Pêndulo", page: "RelatorioManchaPendulo" },
+  { value: "EnsaioSondagem", label: "Sondagem", page: "RelatorioSondagem" },
+  { value: "EnsaioTaxaMRAF", label: "Taxa MRAF", page: "RelatorioTaxaMRAF" },
+  { value: "EnsaioTaxaPinturaImprimacao", label: "Taxa Pintura/Imprim.", page: "RelatorioTaxaPinturaImprimacao" },
+  { value: "EnsaioVigaBenkelman", label: "Viga Benkelman", page: "RelatorioVigaBenkelman" },
+  { value: "ChecklistReciclagem", label: "Checklist de Reciclagem", page: "RelatorioChecklistReciclagem" },
+];
+
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
