@@ -12,7 +12,7 @@ import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 import { createPageUrl } from "@/utils";
 
 // ---- Constants ----
@@ -385,6 +385,43 @@ export default function NaoConformidadesPage() {
   const rncsVisiveis = useMemo(() => applyRncFilters(rncs, checklistNCs, f), [rncs, checklistNCs, f]);
   const cncsVisiveis = useMemo(() => applyCncFilters(checklistNCs, rncs, f), [checklistNCs, rncs, f]);
 
+  // ---- Timeline data: NCs por obra ao longo do tempo ----
+  const dadosTemporais = useMemo(() => {
+    const filteredR = applyRncFilters(rncs, checklistNCs, f, 'data');
+    const filteredC = applyCncFilters(checklistNCs, rncs, f, 'data');
+
+    // Collect all dates
+    const allDates = new Set();
+    filteredR.forEach(r => { if (r.data_nc) allDates.add(r.data_nc); });
+    filteredC.forEach(nc => { if (nc.data) allDates.add(nc.data); });
+
+    if (allDates.size === 0) return [];
+
+    // Sort dates
+    const sortedDates = [...allDates].sort();
+
+    // Get top obras by NC count
+    const obraCount = {};
+    filteredR.forEach(r => { obraCount[r.obra_id] = (obraCount[r.obra_id] || 0) + 1; });
+    filteredC.forEach(nc => { obraCount[nc.obra_id] = (obraCount[nc.obra_id] || 0) + 1; });
+    const topObras = Object.entries(obraCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([id]) => id);
+
+    // Build time series
+    return sortedDates.map(date => {
+      const point = { date: new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) };
+      topObras.forEach(obraId => {
+        const obraNome = obras.find(o => o.id === obraId)?.name || obraId;
+        const count = filteredR.filter(r => r.obra_id === obraId && r.data_nc === date).length +
+                      filteredC.filter(nc => nc.obra_id === obraId && nc.data === date).length;
+        point[obraNome] = count;
+      });
+      return point;
+    });
+  }, [rncs, checklistNCs, obras, f]);
+
   // ---- Table ----
   const tabelaResumo = useMemo(() => {
     return obras.map(obra => {
@@ -577,6 +614,62 @@ export default function NaoConformidadesPage() {
             </Card>
           ))}
         </div>
+
+        {/* Timeline Chart */}
+        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+              <CalendarIcon className="w-4 h-4 text-[#BFCF99]" />
+              Evolução Temporal de NCs por Obra
+              <span className="text-xs font-normal text-[#00233B]/50 ml-1">(top 6 obras)</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {dadosTemporais.length > 0 ? (
+              <ResponsiveContainer width="100%" height={350}>
+                <AreaChart data={dadosTemporais}>
+                  <defs>
+                    {obras.slice(0, 6).map((obra, i) => (
+                      <linearGradient key={obra.id} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.1}/>
+                      </linearGradient>
+                    ))}
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,35,59,0.1)" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fill: '#00233B', fontSize: 11 }}
+                    tickLine={{ stroke: '#00233B' }}
+                  />
+                  <YAxis 
+                    tick={{ fill: '#00233B', fontSize: 11 }}
+                    tickLine={{ stroke: '#00233B' }}
+                    label={{ value: 'Nº de NCs', angle: -90, position: 'insideLeft', style: { fill: '#00233B', fontSize: 12 } }}
+                  />
+                  <Tooltip 
+                    contentStyle={tooltipStyle}
+                    labelStyle={{ color: '#00233B', fontWeight: 'bold', marginBottom: 4 }}
+                  />
+                  <Legend formatter={legendFmt} />
+                  {Object.keys(dadosTemporais[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
+                    <Area
+                      key={obraNome}
+                      type="monotone"
+                      dataKey={obraNome}
+                      stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                      fillOpacity={1}
+                      fill={`url(#color${i})`}
+                      stackId="1"
+                    />
+                  ))}
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <EmptyChart text="Nenhum dado temporal disponível para os filtros selecionados" height={350} />
+            )}
+          </CardContent>
+        </Card>
 
         {/* Row 1: Status + Parâmetros */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
