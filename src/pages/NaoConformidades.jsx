@@ -658,8 +658,7 @@ export default function NaoConformidadesPage() {
                       key={obraNome}
                       type="monotone"
                       dataKey={obraNome}
-                      stroke={TIMELINE_COLORS[i % TIMELINE_COLORS.length]}
-                      strokeWidth={2}
+                      stroke="none"
                       fillOpacity={1}
                       fill={`url(#color${i})`}
                       stackId="1"
