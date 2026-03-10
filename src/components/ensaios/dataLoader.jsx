@@ -25,7 +25,7 @@ export const loadAllData = async () => {
 
   const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
-  // Carregar dados em paralelo
+  // Carregar dados em paralelo com limite reduzido (100 por tipo)
   const [
     obrasData,
     regionaisData,
@@ -53,25 +53,25 @@ export const loadAllData = async () => {
     Obra.list(),
     Regional.list(),
     Project.list(),
-    DiarioObra.list("-created_date", 1000),
-    base44.entities.EnsaioCAUQ.list("-created_date", 1000),
-    base44.entities.EnsaioMRAF.list("-created_date", 1000),
-    EnsaioDensidade.list("-created_date", 1000),
-    base44.entities.EnsaioDensidadeInSitu.list("-created_date", 1000),
-    base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 1000),
-    ChecklistUsina.list("-created_date", 1000),
-    ChecklistAplicacao.list("-created_date", 1000),
-    ChecklistMRAF.list("-created_date", 1000),
-    ChecklistConcretagem.list("-created_date", 1000),
-    base44.entities.ChecklistTerraplanagem.list("-created_date", 1000),
-    base44.entities.ChecklistReciclagem.list("-created_date", 1000),
-    base44.entities.EnsaioSondagem.list("-created_date", 1000),
-    base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
-    base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
-    base44.entities.AcompanhamentoCarga.list("-created_date", 1000),
-    base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
-    base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000),
-    base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000)
+    DiarioObra.list("-created_date", 100),
+    base44.entities.EnsaioCAUQ.list("-created_date", 100),
+    base44.entities.EnsaioMRAF.list("-created_date", 100),
+    EnsaioDensidade.list("-created_date", 100),
+    base44.entities.EnsaioDensidadeInSitu.list("-created_date", 100),
+    base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 100),
+    ChecklistUsina.list("-created_date", 100),
+    ChecklistAplicacao.list("-created_date", 100),
+    ChecklistMRAF.list("-created_date", 100),
+    ChecklistConcretagem.list("-created_date", 100),
+    base44.entities.ChecklistTerraplanagem.list("-created_date", 100),
+    base44.entities.ChecklistReciclagem.list("-created_date", 100),
+    base44.entities.EnsaioSondagem.list("-created_date", 100),
+    base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 100),
+    base44.entities.AcompanhamentoUsinagem.list("-created_date", 100),
+    base44.entities.AcompanhamentoCarga.list("-created_date", 100),
+    base44.entities.EnsaioManchaPendulo.list("-created_date", 100),
+    base44.entities.EnsaioVigaBenkelman.list("-created_date", 100),
+    base44.entities.EnsaioTaxaMRAF.list("-created_date", 100)
   ]);
 
   console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
