@@ -400,34 +400,30 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-slate-300 p-0.5">Pintura realizada na barra espargidora?</td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    <CheckmarkColumn value={checklist.pintura_ligacao?.pintura_barra_espargidora?.realizado} isYesColumn={true} />
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    <CheckmarkColumn value={checklist.pintura_ligacao?.pintura_barra_espargidora?.realizado} isYesColumn={false} />
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    {checklist.pintura_ligacao?.pintura_barra_espargidora?.resultado || 'NA'}
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">NA</td>
-                  <td className="border border-slate-300 p-0.5" rowSpan="5" style={{ fontSize: '8px' }}>
-                    {checklist.pintura_ligacao?.observacoes || '-'}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-slate-300 p-0.5">Aguardado tempo necessário para rompimento/cura?</td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    <CheckmarkColumn value={checklist.pintura_ligacao?.tempo_rompimento_cura?.realizado} isYesColumn={true} />
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    <CheckmarkColumn value={checklist.pintura_ligacao?.tempo_rompimento_cura?.realizado} isYesColumn={false} />
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">
-                    {checklist.pintura_ligacao?.tempo_rompimento_cura?.resultado || 'NA'}
-                  </td>
-                  <td className="border border-slate-300 p-0.5 text-center">NA</td>
-                </tr>
+                   <td className="border border-slate-300 p-0.5">Pintura realizada na barra espargidora?</td>
+                   <td className="border border-slate-300 p-0.5 text-center">
+                     <CheckmarkColumn value={checklist.pintura_ligacao?.pintura_barra_espargidora?.realizado} isYesColumn={true} />
+                   </td>
+                   <td className="border border-slate-300 p-0.5 text-center">
+                     <CheckmarkColumn value={checklist.pintura_ligacao?.pintura_barra_espargidora?.realizado} isYesColumn={false} />
+                   </td>
+                   <td className="border border-slate-300 p-0.5 text-center">-</td>
+                   <td className="border border-slate-300 p-0.5 text-center">NA</td>
+                   <td className="border border-slate-300 p-0.5" rowSpan="5" style={{ fontSize: '8px' }}>
+                     {checklist.pintura_ligacao?.observacoes || '-'}
+                   </td>
+                 </tr>
+                 <tr>
+                   <td className="border border-slate-300 p-0.5">Aguardado tempo necessário para rompimento/cura?</td>
+                   <td className="border border-slate-300 p-0.5 text-center">
+                     <CheckmarkColumn value={checklist.pintura_ligacao?.tempo_rompimento_cura?.realizado} isYesColumn={true} />
+                   </td>
+                   <td className="border border-slate-300 p-0.5 text-center">
+                     <CheckmarkColumn value={checklist.pintura_ligacao?.tempo_rompimento_cura?.realizado} isYesColumn={false} />
+                   </td>
+                   <td className="border border-slate-300 p-0.5 text-center">-</td>
+                   <td className="border border-slate-300 p-0.5 text-center">NA</td>
+                 </tr>
                 <tr>
                   <td className="border border-slate-300 p-0.5">Taxa de Pintura:</td>
                   <td className="border border-slate-300 p-0.5 text-center">
