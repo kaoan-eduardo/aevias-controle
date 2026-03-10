@@ -634,8 +634,20 @@ export default function NaoConformidadesPage() {
               page: nc._page || t?.page || '',
             };
           });
-          const allRows = [...rncRows, ...checklistRows].slice(0, 200);
-          const total = rncRows.length + checklistRows.length;
+
+          const busca = tabelaBusca.toLowerCase().trim();
+          let allRows = [...rncRows, ...checklistRows];
+          if (tabelaTipo !== '_all') allRows = allRows.filter(r => r.tipoLabel === tabelaTipo);
+          if (busca) allRows = allRows.filter(r =>
+            r.tipoLabel.toLowerCase().includes(busca) ||
+            r.criador.toLowerCase().includes(busca) ||
+            r.parametro.toLowerCase().includes(busca) ||
+            r.rodovia.toLowerCase().includes(busca) ||
+            r.usina.toLowerCase().includes(busca) ||
+            r.empreiteira.toLowerCase().includes(busca)
+          );
+          const total = allRows.length;
+          const displayRows = allRows.slice(0, 200);
 
           return (
             <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
@@ -647,7 +659,33 @@ export default function NaoConformidadesPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {allRows.length > 0 ? (
+                {/* Filtros locais da tabela */}
+                <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#00233B]/40" />
+                    <Input
+                      value={tabelaBusca}
+                      onChange={e => setTabelaBusca(e.target.value)}
+                      placeholder="Buscar por criador, parâmetro, rodovia, usina..."
+                      className="pl-8 h-9 text-sm bg-white/50 border-white/30 text-[#00233B] placeholder:text-[#00233B]/40"
+                    />
+                  </div>
+                  <Select value={tabelaTipo} onValueChange={setTabelaTipo}>
+                    <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm w-full sm:w-52">
+                      <SelectValue placeholder="Tipo de registro" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="_all">Todos os tipos</SelectItem>
+                      {tiposDisponiveis.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  {(tabelaBusca || tabelaTipo !== '_all') && (
+                    <Button size="sm" variant="ghost" onClick={() => { setTabelaBusca(''); setTabelaTipo('_all'); }} className="h-9 px-3 text-[#00233B]/60 hover:text-[#00233B] gap-1 whitespace-nowrap">
+                      <X className="w-3.5 h-3.5" /> Limpar
+                    </Button>
+                  )}
+                </div>
+                {displayRows.length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
