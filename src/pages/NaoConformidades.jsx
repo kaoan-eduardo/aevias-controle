@@ -23,23 +23,6 @@ const TIPOS_CHECKLIST = [
 // RNC maps to RelatorioNC page
 const RNC_PAGE = "RelatorioNC";
 
-// Ensaios que podem ter approved===false como NC
-const TIPOS_ENSAIO = [
-  { value: "EnsaioCAUQ", label: "Ensaio CAUQ", page: "RelatorioCAUQ" },
-  { value: "EnsaioSondagem", label: "Ensaio de Sondagem", page: "RelatorioSondagem" },
-  { value: "EnsaioDensidade", label: "Ensaio de Densidade", page: "RelatorioEnsaio" },
-  { value: "EnsaioDensidadeInSitu", label: "Densidade In Situ", page: "RelatorioDensidadeInSitu" },
-  { value: "EnsaioGranAreia", label: "Granulometria+EA", page: "RelatorioEnsaio" },
-  { value: "EnsaioMRAF", label: "Ensaio MRAF", page: "RelatorioMRAF" },
-  { value: "EnsaioManchaPendulo", label: "Mancha + Pêndulo", page: "RelatorioManchaPendulo" },
-  { value: "EnsaioVigaBenkelman", label: "Viga Benkelman", page: "RelatorioVigaBenkelman" },
-  { value: "EnsaioTaxaPinturaImprimacao", label: "Taxa Pintura/Imprimação", page: "RelatorioTaxaPinturaImprimacao" },
-  { value: "EnsaioTaxaMRAF", label: "Taxa MRAF", page: "RelatorioTaxaMRAF" },
-];
-
-// Combined lookup for table rendering
-const ALL_TIPOS = [...TIPOS_CHECKLIST, ...TIPOS_ENSAIO];
-
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
@@ -222,30 +205,6 @@ export default function NaoConformidadesPage() {
             rodovia: cl.rodovia || '',
             usina: cl.usina || cl.usina_selecionada || '',
           });
-        });
-      });
-
-      // Also fetch reprovados ensaios as NCs
-      const allEnsaios = await Promise.all(
-        TIPOS_ENSAIO.map(t =>
-          base44.entities[t.value].list('-created_date', 2000)
-            .catch(() => [])
-            .then(res => res.filter(e => e.approved === false && availableIds.has(e.obra_id)).map(e => ({ ...e, _tipo: t.value })))
-        )
-      );
-
-      allEnsaios.flat().forEach(ensaio => {
-        const t = TIPOS_ENSAIO.find(x => x.value === ensaio._tipo);
-        allCNCs.push({
-          id: ensaio.id,
-          obra_id: ensaio.obra_id,
-          parametro: t?.label || ensaio._tipo,
-          tipo: ensaio._tipo,
-          laboratorista_name: ensaio.laboratorista_name || '',
-          data: ensaio.extraction_date || ensaio.data_ensaio || ensaio.data || ensaio.collection_date || '',
-          empreiteira: '',
-          rodovia: ensaio.rodovia || '',
-          usina: ensaio.usina_fornecedora || '',
         });
       });
 
@@ -484,7 +443,7 @@ export default function NaoConformidadesPage() {
             { label: "Total de RNCs", value: rncsVisiveis.length, color: "text-[#00233B]" },
             { label: "RNCs Abertas", value: rncsVisiveis.filter(r => r.status === 'aberta').length, color: "text-red-600" },
             { label: "Em Tratativa", value: rncsVisiveis.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
-            { label: "NCs em Registros", value: cncsVisiveis.length, color: "text-blue-600" },
+            { label: "NCs em Checklists", value: cncsVisiveis.length, color: "text-blue-600" },
           ].map(kpi => (
             <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-3">
@@ -511,7 +470,7 @@ export default function NaoConformidadesPage() {
             ) : <EmptyChart text="Nenhum RNC para os filtros selecionados" />}
           </PizzaCard>
 
-          <PizzaCard title="Parâmetros Não Conformes" icon={ClipboardList} subtitle="registros • clique para filtrar">
+          <PizzaCard title="Parâmetros Não Conformes" icon={ClipboardList} subtitle="checklists • clique para filtrar">
             {dadosParametros.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
@@ -522,7 +481,7 @@ export default function NaoConformidadesPage() {
                   <Legend formatter={smallLegendFmt} />
                 </PieChart>
               </ResponsiveContainer>
-            ) : <EmptyChart text="Nenhuma NC de registro para os filtros" />}
+            ) : <EmptyChart text="Nenhuma NC de checklist para os filtros" />}
           </PizzaCard>
         </div>
 
@@ -605,7 +564,7 @@ export default function NaoConformidadesPage() {
             page: RNC_PAGE,
           }));
           const checklistRows = cncsVisiveis.map(nc => {
-            const t = ALL_TIPOS.find(t => t.value === nc.tipo);
+            const t = TIPOS_CHECKLIST.find(t => t.value === nc.tipo);
             return {
               _kind: 'checklist',
               id: nc.id,
@@ -707,7 +666,7 @@ export default function NaoConformidadesPage() {
                       <th className="text-center py-2 px-3 text-amber-600 font-semibold text-xs uppercase tracking-wide">Em Tratativa</th>
                       <th className="text-center py-2 px-3 text-green-600 font-semibold text-xs uppercase tracking-wide">Finalizadas</th>
                       <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">Canceladas</th>
-                      <th className="text-center py-2 px-3 text-blue-600 font-semibold text-xs uppercase tracking-wide">NCs Registros</th>
+                      <th className="text-center py-2 px-3 text-blue-600 font-semibold text-xs uppercase tracking-wide">NCs Checklist</th>
                     </tr>
                   </thead>
                   <tbody>
