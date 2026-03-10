@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, Loader2, FileText, ClipboardList, X, Filter, HardHat, MapPin, Building2 } from "lucide-react";
+import { AlertTriangle, Loader2, FileText, ClipboardList, X, Filter, HardHat, MapPin, Building2, Eye } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
+import { createPageUrl } from "@/utils";
 
 // ---- Constants ----
 const TIPOS_CHECKLIST = [
