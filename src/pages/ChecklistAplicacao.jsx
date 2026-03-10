@@ -977,7 +977,9 @@ export default function ChecklistAplicacaoPage() {
                             </SelectContent>
                           </Select>
                         </td>
-                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">-</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <span className="text-xs">-</span>
+                        </td>
                         <td className="border border-slate-300 px-2 py-2 text-center text-xs">N/A</td>
                       </tr>
 
@@ -998,7 +1000,9 @@ export default function ChecklistAplicacaoPage() {
                             </SelectContent>
                           </Select>
                         </td>
-                        <td className="border border-slate-300 px-2 py-2 text-center text-xs">-</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center">
+                          <span className="text-xs">-</span>
+                        </td>
                         <td className="border border-slate-300 px-2 py-2 text-center text-xs">N/A</td>
                       </tr>
 
