@@ -227,12 +227,22 @@ export default function NaoConformidadesPage() {
         });
       });
 
-      // Fetch todos os outros tipos de registro (approved === false = NC)
+      // Fetch todos os outros tipos de registro
+      // Para a maioria: approved === false indica NC
+      // Para EnsaioManchaPendulo e EnsaioVigaBenkelman: condicao_conformidade === 'NÃO CONFORME' indica NC
       const fetchOutro = (entityName, label, page) =>
         base44.entities[entityName].list('-created_date', 2000)
           .catch(() => [])
           .then(res => res
-            .filter(c => availableIds.has(c.obra_id) && c.approved === false)
+            .filter(c => {
+              if (!availableIds.has(c.obra_id)) return false;
+              // Mancha+Pêndulo e Viga Benkelman usam campo específico
+              if (entityName === 'EnsaioManchaPendulo' || entityName === 'EnsaioVigaBenkelman') {
+                return c.condicao_conformidade === 'NÃO CONFORME';
+              }
+              // Outros ensaios usam approved
+              return c.approved === false;
+            })
             .map(c => ({
               id: c.id, obra_id: c.obra_id,
               parametro: label, tipo: entityName,
