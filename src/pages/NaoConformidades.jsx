@@ -622,7 +622,7 @@ export default function NaoConformidadesPage() {
               tipo: nc.tipo,
               tipoLabel: t?.label || nc.tipo,
               criador: nc.laboratorista_name || '',
-              data: nc.data || '',
+              data: nc.data || nc.data_ensaio || nc.extraction_date || nc.collection_date || '',
               parametro: nc.parametro || '',
               rodovia: nc.rodovia || '',
               usina: nc.usina || '',
