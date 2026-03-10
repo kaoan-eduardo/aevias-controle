@@ -581,25 +581,17 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
             <table className="w-full text-sm">
               <thead className="bg-black/5 border-b border-white/10">
                 <tr>
-                  <th className="text-center px-1 py-2 font-medium text-[#00233B]" style={{ width: '30px' }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedEnsaios.length === filteredEnsaios.length && filteredEnsaios.length > 0}
-                      onChange={toggleSelectAll}
-                      className="cursor-pointer"
-                    />
-                  </th>
-                  <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
-                    <div className="flex items-center gap-1">
-                      <span>Tipo</span>
-                      <SelectColumnFilter
-                        value={typeFilter}
-                        onChange={setTypeFilter}
-                        options={typeOptions}
-                        placeholder="Filtrar por tipo"
-                      />
-                    </div>
-                  </th>
+                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
+                     <div className="flex items-center gap-1">
+                       <span>Tipo</span>
+                       <SelectColumnFilter
+                         value={typeFilter}
+                         onChange={setTypeFilter}
+                         options={typeOptions}
+                         placeholder="Filtrar por tipo"
+                       />
+                     </div>
+                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
