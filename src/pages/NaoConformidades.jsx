@@ -2,13 +2,15 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Loader2, FileText, ClipboardList, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AlertTriangle, Loader2, FileText, ClipboardList, X, Filter, HardHat, MapPin, Building2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
+// ---- Constants ----
 const TIPOS_CHECKLIST = [
   { value: "ChecklistUsina", label: "Checklist de Usina" },
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
@@ -20,22 +22,40 @@ const TIPOS_CHECKLIST = [
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
-const OBRA_COLORS = ["#00233B","#566E3D","#BFCF99","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e"];
+const CHART_COLORS = ["#00233B","#566E3D","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e","#4ade80","#fb923c","#1e3a5f"];
 
-const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-  if (percent < 0.04) return null;
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  return (
-    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+// ---- Pure cross-filter functions ----
+// Each chart calls these with `skip = 'its_own_dimension'` so it shows distribution of itself
+function applyRncFilters(rncs, cncs, f, skip = null) {
+  let r = rncs;
+  if (skip !== 'obraId' && f.obraId) r = r.filter(x => x.obra_id === f.obraId);
+  if (skip !== 'status' && f.status) r = r.filter(x => x.status === f.status);
+  if (skip !== 'empreiteira' && f.empreiteira) r = r.filter(x => (x.executora || '') === f.empreiteira);
+  if (skip !== 'rodovia' && f.rodovia) r = r.filter(x => (x.rodovia || '') === f.rodovia);
+  if (skip !== 'parametro' && f.parametro) {
+    const ids = new Set(cncs.filter(nc => nc.parametro === f.parametro).map(nc => nc.obra_id));
+    r = r.filter(x => ids.has(x.obra_id));
+  }
+  // usina not applicable to RNCs
+  return r;
+}
 
-const extrairNaoConformidadesChecklist = (checklist, tipo) => {
+function applyCncFilters(cncs, rncs, f, skip = null) {
+  let r = cncs;
+  if (skip !== 'obraId' && f.obraId) r = r.filter(nc => nc.obra_id === f.obraId);
+  if (skip !== 'parametro' && f.parametro) r = r.filter(nc => nc.parametro === f.parametro);
+  if (skip !== 'empreiteira' && f.empreiteira) r = r.filter(nc => (nc.empreiteira || '') === f.empreiteira);
+  if (skip !== 'rodovia' && f.rodovia) r = r.filter(nc => (nc.rodovia || '') === f.rodovia);
+  if (skip !== 'usina' && f.usina) r = r.filter(nc => (nc.usina || '') === f.usina);
+  if (skip !== 'status' && f.status) {
+    const ids = new Set(rncs.filter(x => x.status === f.status).map(x => x.obra_id));
+    r = r.filter(nc => ids.has(nc.obra_id));
+  }
+  return r;
+}
+
+// ---- Checklist NC extractor ----
+function extrairNaoConformidadesChecklist(checklist, tipo) {
   const ncs = [];
   if (tipo === 'ChecklistUsina' && checklist.controle_cauq) {
     ['extracao_ligante_rotarex','extracao_ligante_soxhlet','granulometria','volume_vazios','rbv','rtcd_25c','estabilidade','fluencia'].forEach(key => {
@@ -72,19 +92,56 @@ const extrairNaoConformidadesChecklist = (checklist, tipo) => {
     });
   }
   return ncs;
+}
+
+// ---- Small reusable UI components ----
+const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.04) return null;
+  const RADIAN = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">{`${(percent * 100).toFixed(0)}%`}</text>;
 };
 
+const PizzaCard = ({ title, icon: Icon, subtitle, children }) => (
+  <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+    <CardHeader className="pb-2">
+      <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+        <Icon className="w-4 h-4 text-[#BFCF99]" />
+        {title}
+        {subtitle && <span className="text-xs font-normal text-[#00233B]/50 ml-1">({subtitle})</span>}
+      </CardTitle>
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+  </Card>
+);
+
+const EmptyChart = ({ text, height = 280 }) => (
+  <div className={`flex flex-col items-center justify-center text-[#00233B]/50`} style={{ height }}>
+    <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
+    <p className="text-sm text-center px-4">{text}</p>
+  </div>
+);
+
+const tooltipStyle = { backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px', border: '1px solid rgba(0,35,59,0.15)' };
+const legendFmt = (v) => <span style={{ color: '#00233B', fontSize: 12 }}>{v}</span>;
+const smallLegendFmt = (v) => <span style={{ color: '#00233B', fontSize: 11 }}>{v}</span>;
+
+// ---- Main Page ----
 export default function NaoConformidadesPage() {
   const [loading, setLoading] = useState(true);
   const [obras, setObras] = useState([]);
   const [rncs, setRncs] = useState([]);
-  // checklistNCs: lista completa de { obra_id, parametro } para cross-filtering
-  const [checklistNCs, setChecklistNCs] = useState([]);
+  const [checklistNCs, setChecklistNCs] = useState([]); // [{ obra_id, parametro, empreiteira, rodovia, usina }]
 
-  // Filtros simultâneos e independentes
+  // 6 filter dimensions
   const [filtroStatus, setFiltroStatus] = useState(null);
   const [filtroParametro, setFiltroParametro] = useState(null);
   const [filtroObraId, setFiltroObraId] = useState(null);
+  const [filtroEmpreiteira, setFiltroEmpreiteira] = useState(null);
+  const [filtroRodovia, setFiltroRodovia] = useState(null);
+  const [filtroUsina, setFiltroUsina] = useState(null);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -95,49 +152,50 @@ export default function NaoConformidadesPage() {
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
       const [obrasData, regionaisData, rncsData] = await Promise.all([
-        Obra.list(),
-        Regional.list(),
+        Obra.list(), Regional.list(),
         base44.entities.RelatorioNC.list("-created_date", 500)
       ]);
 
       let availableObras = obrasData;
       if (userAccessLevel === 'cliente') {
-        const regionaisDoCliente = regionaisData.filter(r => (r.clientes_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
-        const ids = new Set(regionaisDoCliente.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        const regs = regionaisData.filter(r => (r.clientes_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
+        const ids = new Set(regs.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
         availableObras = obrasData.filter(o => ids.has(o.id));
       } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
-        const regionaisDaSala = regionaisData.filter(r => (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
-        const ids = new Set(regionaisDaSala.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        const regs = regionaisData.filter(r => (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
+        const ids = new Set(regs.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
         availableObras = obrasData.filter(o => ids.has(o.id));
       } else if (userAccessLevel === 'gestor_contrato') {
-        const regionaisDoGestor = regionaisData.filter(r =>
+        const regs = regionaisData.filter(r =>
           r.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
           (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase())
         );
-        const ids = new Set(regionaisDoGestor.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        const ids = new Set(regs.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
         availableObras = obrasData.filter(o => ids.has(o.id));
       }
 
       setObras(availableObras);
-
-      const availableObraIds = new Set(availableObras.map(o => o.id));
-      setRncs(rncsData.filter(r => availableObraIds.has(r.obra_id)));
+      const availableIds = new Set(availableObras.map(o => o.id));
+      setRncs(rncsData.filter(r => availableIds.has(r.obra_id)));
 
       const obraIds = availableObras.map(o => o.id);
       const allCNCs = [];
-
-      const allChecklistData = await Promise.all(
+      const allData = await Promise.all(
         TIPOS_CHECKLIST.map(t =>
           Promise.all(obraIds.map(oId => base44.entities[t.value].filter({ obra_id: oId }).catch(() => [])))
-            .then(results => results.flat().map(c => ({ ...c, _tipo: t.value })))
+            .then(res => res.flat().map(c => ({ ...c, _tipo: t.value })))
         )
       );
 
-      allChecklistData.flat().forEach(checklist => {
-        const ncs = extrairNaoConformidadesChecklist(checklist, checklist._tipo);
-        ncs.forEach(param => {
-          const label = param.charAt(0).toUpperCase() + param.slice(1);
-          allCNCs.push({ obra_id: checklist.obra_id, parametro: label });
+      allData.flat().forEach(cl => {
+        extrairNaoConformidadesChecklist(cl, cl._tipo).forEach(param => {
+          allCNCs.push({
+            obra_id: cl.obra_id,
+            parametro: param.charAt(0).toUpperCase() + param.slice(1),
+            empreiteira: cl.empreiteira || '',
+            rodovia: cl.rodovia || '',
+            usina: cl.usina || cl.usina_selecionada || '',
+          });
         });
       });
 
@@ -149,150 +207,149 @@ export default function NaoConformidadesPage() {
     }
   };
 
-  // -------------------------------------------------------
-  // CROSS-FILTERING: cada gráfico é filtrado pelos outros 2
-  // -------------------------------------------------------
+  const supervisaoIds = useMemo(() => new Set(obras.filter(o => o.tipo_obra === 'supervisao').map(o => o.id)), [obras]);
 
-  // Gráfico 1: Status dos RNCs — filtrado por filtroObraId + filtroParametro
-  // (filtroParametro filtra por obras que têm esse param → filtra os RNCs por essas obras)
+  // ---- Dropdown options (from full dataset) ----
+  const opcoesEmpreiteira = useMemo(() => {
+    const s = new Set([...checklistNCs.map(nc => nc.empreiteira), ...rncs.map(r => r.executora || '')].filter(Boolean));
+    return [...s].sort();
+  }, [checklistNCs, rncs]);
+
+  const opcoesRodovia = useMemo(() => {
+    const s = new Set([...checklistNCs.map(nc => nc.rodovia), ...rncs.map(r => r.rodovia || '')].filter(Boolean));
+    return [...s].sort();
+  }, [checklistNCs, rncs]);
+
+  const opcoesUsina = useMemo(() => {
+    const s = new Set(checklistNCs.map(nc => nc.usina).filter(Boolean));
+    return [...s].sort();
+  }, [checklistNCs]);
+
+  // ---- Cross-filtered chart data ----
+  // Each chart skips its own filter dimension so it shows its own distribution
+  const f = useMemo(() => ({
+    status: filtroStatus, parametro: filtroParametro, obraId: filtroObraId,
+    empreiteira: filtroEmpreiteira, rodovia: filtroRodovia, usina: filtroUsina
+  }), [filtroStatus, filtroParametro, filtroObraId, filtroEmpreiteira, filtroRodovia, filtroUsina]);
+
   const dadosStatusRNC = useMemo(() => {
-    let filteredRncs = rncs;
-    if (filtroObraId) {
-      filteredRncs = filteredRncs.filter(r => r.obra_id === filtroObraId);
-    }
-    if (filtroParametro) {
-      const obrasComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
-      filteredRncs = filteredRncs.filter(r => obrasComParam.has(r.obra_id));
-    }
+    const filtered = applyRncFilters(rncs, checklistNCs, f, 'status');
     const counts = { aberta: 0, em_tratativa: 0, encerrada: 0, cancelada: 0 };
-    filteredRncs.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
-    return Object.entries(counts)
-      .filter(([, v]) => v > 0)
+    filtered.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+    return Object.entries(counts).filter(([,v]) => v > 0)
       .map(([status, value]) => ({ name: STATUS_LABELS[status], statusKey: status, value, color: STATUS_COLORS[status] }));
-  }, [rncs, checklistNCs, filtroObraId, filtroParametro]);
+  }, [rncs, checklistNCs, f]);
 
-  // Gráfico 2: Parâmetros não conformes — filtrado por filtroObraId + filtroStatus
-  // (filtroStatus filtra por obras que têm RNCs com esse status → filtra os checklistNCs por essas obras)
   const dadosParametros = useMemo(() => {
-    let filteredCNCs = checklistNCs;
-    if (filtroObraId) {
-      filteredCNCs = filteredCNCs.filter(nc => nc.obra_id === filtroObraId);
-    }
-    if (filtroStatus) {
-      const obrasComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
-      filteredCNCs = filteredCNCs.filter(nc => obrasComStatus.has(nc.obra_id));
-    }
-    const paramCount = {};
-    filteredCNCs.forEach(nc => { paramCount[nc.parametro] = (paramCount[nc.parametro] || 0) + 1; });
-    return Object.entries(paramCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
+    const filtered = applyCncFilters(checklistNCs, rncs, f, 'parametro');
+    const count = {};
+    filtered.forEach(nc => { count[nc.parametro] = (count[nc.parametro] || 0) + 1; });
+    return Object.entries(count).sort((a,b) => b[1]-a[1]).slice(0,10)
       .map(([name, value], i) => ({ name, value, color: PARAM_COLORS[i % PARAM_COLORS.length] }));
-  }, [checklistNCs, rncs, filtroObraId, filtroStatus]);
+  }, [checklistNCs, rncs, f]);
 
-  // Gráfico 3: NCs por Obra — filtrado por filtroStatus + filtroParametro
   const dadosPorObra = useMemo(() => {
-    const obraCount = {};
-    // Contar RNCs filtrados por status
-    let filteredRncs = filtroStatus ? rncs.filter(r => r.status === filtroStatus) : rncs;
-    filteredRncs.forEach(r => { obraCount[r.obra_id] = (obraCount[r.obra_id] || 0) + 1; });
-    // Contar checklist NCs filtrados por parametro
-    let filteredCNCs = filtroParametro ? checklistNCs.filter(nc => nc.parametro === filtroParametro) : checklistNCs;
-    filteredCNCs.forEach(nc => { obraCount[nc.obra_id] = (obraCount[nc.obra_id] || 0) + 1; });
+    const filteredR = applyRncFilters(rncs, checklistNCs, f, 'obraId');
+    const filteredC = applyCncFilters(checklistNCs, rncs, f, 'obraId');
+    const count = {};
+    filteredR.forEach(r => { count[r.obra_id] = (count[r.obra_id] || 0) + 1; });
+    filteredC.forEach(nc => { count[nc.obra_id] = (count[nc.obra_id] || 0) + 1; });
+    return Object.entries(count)
+      .map(([obraId, value], i) => ({ name: obras.find(o => o.id === obraId)?.name || obraId, obraId, value, color: CHART_COLORS[i % CHART_COLORS.length] }))
+      .sort((a,b) => b.value - a.value);
+  }, [rncs, checklistNCs, obras, f]);
 
-    return Object.entries(obraCount)
-      .map(([obraId, value], i) => {
-        const obra = obras.find(o => o.id === obraId);
-        return { name: obra?.name || obraId, obraId, value, color: OBRA_COLORS[i % OBRA_COLORS.length] };
-      })
-      .sort((a, b) => b.value - a.value);
-  }, [rncs, checklistNCs, obras, filtroStatus, filtroParametro]);
+  const dadosPorEmpreiteira = useMemo(() => {
+    const filteredC = applyCncFilters(checklistNCs, rncs, f, 'empreiteira').filter(nc => supervisaoIds.has(nc.obra_id));
+    const filteredR = applyRncFilters(rncs, checklistNCs, f, 'empreiteira').filter(r => supervisaoIds.has(r.obra_id));
+    const count = {};
+    filteredC.forEach(nc => { if (nc.empreiteira) count[nc.empreiteira] = (count[nc.empreiteira] || 0) + 1; });
+    filteredR.forEach(r => { if (r.executora) count[r.executora] = (count[r.executora] || 0) + 1; });
+    return Object.entries(count).sort((a,b) => b[1]-a[1])
+      .map(([name, value], i) => ({ name, value, color: CHART_COLORS[i % CHART_COLORS.length] }));
+  }, [checklistNCs, rncs, supervisaoIds, f]);
 
-  // -------------------------------------------------------
-  // Handlers — toggleam sem limpar os outros filtros
-  // -------------------------------------------------------
-  const handleStatusClick = useCallback((data) => {
-    setFiltroStatus(prev => prev === data.statusKey ? null : data.statusKey);
-  }, []);
+  const dadosPorRodovia = useMemo(() => {
+    const filteredC = applyCncFilters(checklistNCs, rncs, f, 'rodovia');
+    const filteredR = applyRncFilters(rncs, checklistNCs, f, 'rodovia');
+    const count = {};
+    filteredC.forEach(nc => { if (nc.rodovia) count[nc.rodovia] = (count[nc.rodovia] || 0) + 1; });
+    filteredR.forEach(r => { if (r.rodovia) count[r.rodovia] = (count[r.rodovia] || 0) + 1; });
+    return Object.entries(count).sort((a,b) => b[1]-a[1])
+      .map(([name, value], i) => ({ name, value, color: CHART_COLORS[i % CHART_COLORS.length] }));
+  }, [checklistNCs, rncs, f]);
 
-  const handleParametroClick = useCallback((data) => {
-    setFiltroParametro(prev => prev === data.name ? null : data.name);
-  }, []);
+  const dadosPorUsina = useMemo(() => {
+    const filtered = applyCncFilters(checklistNCs, rncs, f, 'usina');
+    const count = {};
+    filtered.forEach(nc => { if (nc.usina) count[nc.usina] = (count[nc.usina] || 0) + 1; });
+    return Object.entries(count).sort((a,b) => b[1]-a[1])
+      .map(([name, value], i) => ({ name, value, color: CHART_COLORS[i % CHART_COLORS.length] }));
+  }, [checklistNCs, rncs, f]);
 
-  const handleObraClick = useCallback((data) => {
-    setFiltroObraId(prev => prev === data.obraId ? null : data.obraId);
-  }, []);
+  // ---- KPIs (all filters applied) ----
+  const rncsVisiveis = useMemo(() => applyRncFilters(rncs, checklistNCs, f), [rncs, checklistNCs, f]);
+  const cncsVisiveis = useMemo(() => applyCncFilters(checklistNCs, rncs, f), [checklistNCs, rncs, f]);
 
-  const clearFilters = useCallback(() => {
-    setFiltroStatus(null);
-    setFiltroParametro(null);
-    setFiltroObraId(null);
-  }, []);
-
-  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId);
-
-  // -------------------------------------------------------
-  // Tabela resumo — todos os filtros ativos simultaneamente
-  // -------------------------------------------------------
+  // ---- Table ----
   const tabelaResumo = useMemo(() => {
     return obras.map(obra => {
-      // RNCs da obra filtrados por status
+      if (f.obraId && obra.id !== f.obraId) return null;
+
       let rncsObra = rncs.filter(r => r.obra_id === obra.id);
-      if (filtroStatus) rncsObra = rncsObra.filter(r => r.status === filtroStatus);
-      // Checklist NCs da obra filtrados por parametro
+      if (f.status) rncsObra = rncsObra.filter(r => r.status === f.status);
+      if (f.empreiteira) rncsObra = rncsObra.filter(r => (r.executora || '') === f.empreiteira);
+      if (f.rodovia) rncsObra = rncsObra.filter(r => (r.rodovia || '') === f.rodovia);
+      if (f.parametro) {
+        if (!checklistNCs.some(nc => nc.parametro === f.parametro && nc.obra_id === obra.id)) rncsObra = [];
+      }
+
       let cncsObra = checklistNCs.filter(nc => nc.obra_id === obra.id);
-      if (filtroParametro) cncsObra = cncsObra.filter(nc => nc.parametro === filtroParametro);
-      // Filtro de obra
-      if (filtroObraId && obra.id !== filtroObraId) return null;
+      if (f.parametro) cncsObra = cncsObra.filter(nc => nc.parametro === f.parametro);
+      if (f.empreiteira) cncsObra = cncsObra.filter(nc => (nc.empreiteira || '') === f.empreiteira);
+      if (f.rodovia) cncsObra = cncsObra.filter(nc => (nc.rodovia || '') === f.rodovia);
+      if (f.usina) cncsObra = cncsObra.filter(nc => (nc.usina || '') === f.usina);
+      if (f.status) {
+        if (!rncs.some(r => r.obra_id === obra.id && r.status === f.status)) cncsObra = [];
+      }
 
       const totalRnc = rncsObra.length;
       const paramChecklist = cncsObra.length;
       if (totalRnc === 0 && paramChecklist === 0) return null;
 
-      const abertas = rncsObra.filter(r => r.status === 'aberta').length;
-      const emTratativa = rncsObra.filter(r => r.status === 'em_tratativa').length;
-      const finalizadas = rncsObra.filter(r => r.status === 'encerrada').length;
-      const canceladas = rncsObra.filter(r => r.status === 'cancelada').length;
-      return { obra, totalRnc, abertas, emTratativa, finalizadas, canceladas, paramChecklist };
+      return {
+        obra, totalRnc, paramChecklist,
+        abertas: rncsObra.filter(r => r.status === 'aberta').length,
+        emTratativa: rncsObra.filter(r => r.status === 'em_tratativa').length,
+        finalizadas: rncsObra.filter(r => r.status === 'encerrada').length,
+        canceladas: rncsObra.filter(r => r.status === 'cancelada').length,
+      };
     }).filter(Boolean);
-  }, [obras, rncs, checklistNCs, filtroStatus, filtroParametro, filtroObraId]);
+  }, [obras, rncs, checklistNCs, f]);
 
-  // KPIs baseados nos filtros ativos
-  const rncsVisiveis = useMemo(() => {
-    let f = rncs;
-    if (filtroStatus) f = f.filter(r => r.status === filtroStatus);
-    if (filtroObraId) f = f.filter(r => r.obra_id === filtroObraId);
-    if (filtroParametro) {
-      const obrasComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
-      f = f.filter(r => obrasComParam.has(r.obra_id));
-    }
-    return f;
-  }, [rncs, checklistNCs, filtroStatus, filtroObraId, filtroParametro]);
+  // ---- Handlers ----
+  const handleStatusClick = useCallback((d) => setFiltroStatus(p => p === d.statusKey ? null : d.statusKey), []);
+  const handleParametroClick = useCallback((d) => setFiltroParametro(p => p === d.name ? null : d.name), []);
+  const handleObraClick = useCallback((d) => setFiltroObraId(p => p === d.obraId ? null : d.obraId), []);
+  const handleEmpreiteiraClick = useCallback((d) => setFiltroEmpreiteira(p => p === d.name ? null : d.name), []);
+  const handleRodoviaClick = useCallback((d) => setFiltroRodovia(p => p === d.name ? null : d.name), []);
+  const handleUsinaClick = useCallback((d) => setFiltroUsina(p => p === d.name ? null : d.name), []);
 
-  const checklistNCsVisiveis = useMemo(() => {
-    let f = checklistNCs;
-    if (filtroParametro) f = f.filter(nc => nc.parametro === filtroParametro);
-    if (filtroObraId) f = f.filter(nc => nc.obra_id === filtroObraId);
-    if (filtroStatus) {
-      const obrasComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
-      f = f.filter(nc => obrasComStatus.has(nc.obra_id));
-    }
-    return f;
-  }, [checklistNCs, rncs, filtroParametro, filtroObraId, filtroStatus]);
+  const clearFilters = useCallback(() => {
+    setFiltroStatus(null); setFiltroParametro(null); setFiltroObraId(null);
+    setFiltroEmpreiteira(null); setFiltroRodovia(null); setFiltroUsina(null);
+  }, []);
+
+  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-slate-500" />
-      </div>
-    );
+    return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   }
-
-  const tooltipStyle = { backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px', border: '1px solid rgba(0,35,59,0.15)' };
 
   return (
     <div className="p-6 bg-transparent min-h-screen">
       <div className="max-w-7xl mx-auto space-y-6">
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -304,30 +361,70 @@ export default function NaoConformidadesPage() {
           </div>
           {hasActiveFilter && (
             <Button variant="outline" size="sm" onClick={clearFilters} className="text-[#00233B] border-white/30 hover:bg-white/20 gap-2">
-              <X className="w-4 h-4" />
-              Limpar Filtros
+              <X className="w-4 h-4" /> Limpar Filtros
             </Button>
           )}
         </div>
 
-        {/* Filtros ativos */}
+        {/* Filter dropdowns */}
+        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[#00233B] text-sm flex items-center gap-2">
+              <Filter className="w-4 h-4 text-[#BFCF99]" />
+              Filtros
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><HardHat className="w-3 h-3" /> Empreiteira</label>
+                <Select value={filtroEmpreiteira || '_all'} onValueChange={v => setFiltroEmpreiteira(v === '_all' ? null : v)}>
+                  <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todas</SelectItem>
+                    {opcoesEmpreiteira.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><MapPin className="w-3 h-3" /> Rodovia</label>
+                <Select value={filtroRodovia || '_all'} onValueChange={v => setFiltroRodovia(v === '_all' ? null : v)}>
+                  <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todas</SelectItem>
+                    {opcoesRodovia.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><Building2 className="w-3 h-3" /> Usina</label>
+                <Select value={filtroUsina || '_all'} onValueChange={v => setFiltroUsina(v === '_all' ? null : v)}>
+                  <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todas</SelectItem>
+                    {opcoesUsina.map(u => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Active filter badges */}
         {hasActiveFilter && (
           <div className="flex flex-wrap gap-2">
-            {filtroStatus && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroStatus(null)}>
-                Status: {STATUS_LABELS[filtroStatus]} <X className="w-3 h-3" />
-              </Badge>
-            )}
-            {filtroParametro && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroParametro(null)}>
-                Parâmetro: {filtroParametro} <X className="w-3 h-3" />
-              </Badge>
-            )}
-            {filtroObraId && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroObraId(null)}>
-                Obra: {obras.find(o => o.id === filtroObraId)?.name} <X className="w-3 h-3" />
-              </Badge>
-            )}
+            {filtroStatus && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroStatus(null)}>Status: {STATUS_LABELS[filtroStatus]} <X className="w-3 h-3"/></Badge>}
+            {filtroParametro && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroParametro(null)}>Parâmetro: {filtroParametro} <X className="w-3 h-3"/></Badge>}
+            {filtroObraId && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroObraId(null)}>Obra: {obras.find(o => o.id === filtroObraId)?.name} <X className="w-3 h-3"/></Badge>}
+            {filtroEmpreiteira && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroEmpreiteira(null)}>Empreiteira: {filtroEmpreiteira} <X className="w-3 h-3"/></Badge>}
+            {filtroRodovia && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroRodovia(null)}>Rodovia: {filtroRodovia} <X className="w-3 h-3"/></Badge>}
+            {filtroUsina && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroUsina(null)}>Usina: {filtroUsina} <X className="w-3 h-3"/></Badge>}
           </div>
         )}
 
@@ -337,7 +434,7 @@ export default function NaoConformidadesPage() {
             { label: "Total de RNCs", value: rncsVisiveis.length, color: "text-[#00233B]" },
             { label: "RNCs Abertas", value: rncsVisiveis.filter(r => r.status === 'aberta').length, color: "text-red-600" },
             { label: "Em Tratativa", value: rncsVisiveis.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
-            { label: "NCs em Checklists", value: checklistNCsVisiveis.length, color: "text-blue-600" },
+            { label: "NCs em Checklists", value: cncsVisiveis.length, color: "text-blue-600" },
           ].map(kpi => (
             <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-3">
@@ -348,116 +445,98 @@ export default function NaoConformidadesPage() {
           ))}
         </div>
 
-        {/* Gráficos de Pizza - linha 1 */}
+        {/* Row 1: Status + Parâmetros */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pizza 1: Status dos RNCs */}
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader>
-              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#BFCF99]" />
-                Status dos RNCs
-                <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {dadosStatusRNC.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={dadosStatusRNC}
-                      cx="50%" cy="50%" outerRadius={100}
-                      dataKey="value" labelLine={false} label={<CustomLabel />}
-                      onClick={handleStatusClick} style={{ cursor: 'pointer' }}
-                    >
-                      {dadosStatusRNC.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} opacity={filtroStatus && filtroStatus !== entry.statusKey ? 0.3 : 1} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(v, n) => [v, n]} contentStyle={tooltipStyle} />
-                    <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 12 }}>{v}</span>} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
-                  <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">Nenhum RNC para os filtros selecionados</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Pizza 2: Parâmetros não conformes */}
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardHeader>
-              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-                <ClipboardList className="w-4 h-4 text-[#BFCF99]" />
-                Parâmetros Não Conformes (checklists)
-                <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {dadosParametros.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={dadosParametros}
-                      cx="50%" cy="50%" outerRadius={100}
-                      dataKey="value" labelLine={false} label={<CustomLabel />}
-                      onClick={handleParametroClick} style={{ cursor: 'pointer' }}
-                    >
-                      {dadosParametros.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} opacity={filtroParametro && filtroParametro !== entry.name ? 0.3 : 1} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(v, n) => [v + ' ocorrência(s)', n]} contentStyle={tooltipStyle} />
-                    <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 11 }}>{v}</span>} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
-                  <ClipboardList className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">Nenhuma NC de checklist para os filtros selecionados</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Pizza 3: NCs por Obra */}
-        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-          <CardHeader>
-            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-[#BFCF99]" />
-              Total de NCs por Obra (RNCs + Checklists)
-              <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {dadosPorObra.length > 0 ? (
-              <ResponsiveContainer width="100%" height={320}>
+          <PizzaCard title="Status dos RNCs" icon={FileText} subtitle="clique para filtrar">
+            {dadosStatusRNC.length > 0 ? (
+              <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
-                  <Pie
-                    data={dadosPorObra}
-                    cx="50%" cy="50%" outerRadius={120}
-                    dataKey="value" labelLine={false} label={<CustomLabel />}
-                    onClick={handleObraClick} style={{ cursor: 'pointer' }}
-                  >
-                    {dadosPorObra.map((entry, i) => (
-                      <Cell key={i} fill={entry.color} opacity={filtroObraId && filtroObraId !== entry.obraId ? 0.3 : 1} />
-                    ))}
+                  <Pie data={dadosStatusRNC} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleStatusClick} style={{ cursor: 'pointer' }}>
+                    {dadosStatusRNC.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroStatus && filtroStatus !== e.statusKey ? 0.3 : 1} />)}
                   </Pie>
-                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
-                  <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 12 }}>{v}</span>} />
+                  <Tooltip formatter={(v, n) => [v, n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={legendFmt} />
                 </PieChart>
               </ResponsiveContainer>
-            ) : (
-              <div className="h-[320px] flex flex-col items-center justify-center text-[#00233B]/50">
-                <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
-                <p className="text-sm">Nenhuma NC para os filtros selecionados</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            ) : <EmptyChart text="Nenhum RNC para os filtros selecionados" />}
+          </PizzaCard>
+
+          <PizzaCard title="Parâmetros Não Conformes" icon={ClipboardList} subtitle="checklists • clique para filtrar">
+            {dadosParametros.length > 0 ? (
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie data={dadosParametros} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleParametroClick} style={{ cursor: 'pointer' }}>
+                    {dadosParametros.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroParametro && filtroParametro !== e.name ? 0.3 : 1} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [v + ' ocorrência(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={smallLegendFmt} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : <EmptyChart text="Nenhuma NC de checklist para os filtros" />}
+          </PizzaCard>
+        </div>
+
+        {/* Row 2: Por Obra + Por Empreiteira */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <PizzaCard title="NCs por Obra" icon={AlertTriangle} subtitle="RNCs + Checklists • clique para filtrar">
+            {dadosPorObra.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={dadosPorObra} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleObraClick} style={{ cursor: 'pointer' }}>
+                    {dadosPorObra.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroObraId && filtroObraId !== e.obraId ? 0.3 : 1} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={legendFmt} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : <EmptyChart text="Nenhuma NC para os filtros selecionados" height={300} />}
+          </PizzaCard>
+
+          <PizzaCard title="NCs por Empreiteira" icon={HardHat} subtitle="obras de supervisão • clique para filtrar">
+            {dadosPorEmpreiteira.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={dadosPorEmpreiteira} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleEmpreiteiraClick} style={{ cursor: 'pointer' }}>
+                    {dadosPorEmpreiteira.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroEmpreiteira && filtroEmpreiteira !== e.name ? 0.3 : 1} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={legendFmt} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : <EmptyChart text="Nenhuma NC por empreiteira para os filtros" height={300} />}
+          </PizzaCard>
+        </div>
+
+        {/* Row 3: Por Rodovia + Por Usina */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <PizzaCard title="NCs por Rodovia" icon={MapPin} subtitle="todos os tipos • clique para filtrar">
+            {dadosPorRodovia.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={dadosPorRodovia} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleRodoviaClick} style={{ cursor: 'pointer' }}>
+                    {dadosPorRodovia.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroRodovia && filtroRodovia !== e.name ? 0.3 : 1} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={legendFmt} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : <EmptyChart text="Nenhuma NC com rodovia para os filtros" height={300} />}
+          </PizzaCard>
+
+          <PizzaCard title="NCs por Usina" icon={Building2} subtitle="todos os tipos • clique para filtrar">
+            {dadosPorUsina.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={dadosPorUsina} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleUsinaClick} style={{ cursor: 'pointer' }}>
+                    {dadosPorUsina.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroUsina && filtroUsina !== e.name ? 0.3 : 1} />)}
+                  </Pie>
+                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={legendFmt} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : <EmptyChart text="Nenhuma NC com usina para os filtros" height={300} />}
+          </PizzaCard>
+        </div>
 
         {/* Tabela Resumo */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
@@ -485,11 +564,7 @@ export default function NaoConformidadesPage() {
                   </thead>
                   <tbody>
                     {tabelaResumo.map((row, i) => (
-                      <tr
-                        key={i}
-                        className={`border-b border-white/10 transition-colors cursor-pointer ${filtroObraId === row.obra.id ? 'bg-[#BFCF99]/20' : 'hover:bg-white/10'}`}
-                        onClick={() => handleObraClick({ obraId: row.obra.id })}
-                      >
+                      <tr key={i} className={`border-b border-white/10 transition-colors cursor-pointer ${filtroObraId === row.obra.id ? 'bg-[#BFCF99]/20' : 'hover:bg-white/10'}`} onClick={() => handleObraClick({ obraId: row.obra.id })}>
                         <td className="py-2.5 px-3">
                           <p className="font-medium text-[#00233B]">{row.obra.name}</p>
                           <p className="text-xs text-[#00233B]/60">{row.obra.code}</p>
@@ -513,6 +588,7 @@ export default function NaoConformidadesPage() {
             )}
           </CardContent>
         </Card>
+
       </div>
     </div>
   );
