@@ -1635,15 +1635,17 @@ export default function MeusEnsaios() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const { currentUser, allUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
-      
-      setUser(currentUser);
-      setAllUsers(allUsers);
-      setObras(obrasData);
-      setRegionais(regionaisData);
-      setProjects(projectsData);
+      // Usar timeout para evitar múltiplas chamadas simultâneas
+      const timeoutId = setTimeout(async () => {
+        const { currentUser, allUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
+        
+        setUser(currentUser);
+        setAllUsers(allUsers);
+        setObras(obrasData);
+        setRegionais(regionaisData);
+        setProjects(projectsData);
 
-      let ensaiosForUser = combinedEnsaios;
+        let ensaiosForUser = combinedEnsaios;
 
       // Apply access level filtering logic
       if (currentUserAccessLevel === 'sala_tecnica_afirmaevias') {
