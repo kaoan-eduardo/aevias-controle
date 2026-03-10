@@ -713,7 +713,7 @@ export default function NaoConformidadesPage() {
             {dadosStatusRNC.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
-                  <Pie data={dadosStatusRNC} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleStatusClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosStatusRNC} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleStatusClick} style={{ cursor: 'pointer' }}>
                     {dadosStatusRNC.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroStatus && filtroStatus !== e.statusKey ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v, n]} contentStyle={tooltipStyle} />
@@ -727,7 +727,7 @@ export default function NaoConformidadesPage() {
             {dadosParametros.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
-                  <Pie data={dadosParametros} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleParametroClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosParametros} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleParametroClick} style={{ cursor: 'pointer' }}>
                     {dadosParametros.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroParametro && filtroParametro !== e.name ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v + ' ocorrência(s)', n]} contentStyle={tooltipStyle} />
@@ -744,7 +744,7 @@ export default function NaoConformidadesPage() {
             {dadosPorObra.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={dadosPorObra} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleObraClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosPorObra} cx="50%" cy="50%" innerRadius={65} outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleObraClick} style={{ cursor: 'pointer' }}>
                     {dadosPorObra.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroObraId && filtroObraId !== e.obraId ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
@@ -758,7 +758,7 @@ export default function NaoConformidadesPage() {
             {dadosPorEmpreiteira.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={dadosPorEmpreiteira} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleEmpreiteiraClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosPorEmpreiteira} cx="50%" cy="50%" innerRadius={65} outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleEmpreiteiraClick} style={{ cursor: 'pointer' }}>
                     {dadosPorEmpreiteira.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroEmpreiteira && filtroEmpreiteira !== e.name ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
@@ -775,7 +775,7 @@ export default function NaoConformidadesPage() {
             {dadosPorRodovia.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={dadosPorRodovia} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleRodoviaClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosPorRodovia} cx="50%" cy="50%" innerRadius={65} outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleRodoviaClick} style={{ cursor: 'pointer' }}>
                     {dadosPorRodovia.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroRodovia && filtroRodovia !== e.name ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
@@ -789,7 +789,7 @@ export default function NaoConformidadesPage() {
             {dadosPorUsina.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={dadosPorUsina} cx="50%" cy="50%" outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleUsinaClick} style={{ cursor: 'pointer' }}>
+                  <Pie data={dadosPorUsina} cx="50%" cy="50%" innerRadius={65} outerRadius={110} dataKey="value" labelLine={false} label={<CustomLabel />} onClick={handleUsinaClick} style={{ cursor: 'pointer' }}>
                     {dadosPorUsina.map((e, i) => <Cell key={i} fill={e.color} opacity={filtroUsina && filtroUsina !== e.name ? 0.3 : 1} />)}
                   </Pie>
                   <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
