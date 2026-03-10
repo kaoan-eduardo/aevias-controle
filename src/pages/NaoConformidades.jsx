@@ -59,6 +59,14 @@ function applyRncFilters(rncs, cncs, f, skip = null) {
     const ids = new Set(cncs.filter(nc => nc.parametro === f.parametro).map(nc => nc.obra_id));
     r = r.filter(x => ids.has(x.obra_id));
   }
+  if (skip !== 'periodo' && f.periodo) {
+    const now = new Date();
+    let cutoff;
+    if (f.periodo === '7d') cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    else if (f.periodo === '30d') cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    else if (f.periodo === '90d') cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    if (cutoff) r = r.filter(x => x.data_nc && new Date(x.data_nc) >= cutoff);
+  }
   // usina not applicable to RNCs
   return r;
 }
@@ -73,6 +81,14 @@ function applyCncFilters(cncs, rncs, f, skip = null) {
   if (skip !== 'status' && f.status) {
     const ids = new Set(rncs.filter(x => x.status === f.status).map(x => x.obra_id));
     r = r.filter(nc => ids.has(nc.obra_id));
+  }
+  if (skip !== 'periodo' && f.periodo) {
+    const now = new Date();
+    let cutoff;
+    if (f.periodo === '7d') cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    else if (f.periodo === '30d') cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    else if (f.periodo === '90d') cutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    if (cutoff) r = r.filter(nc => nc.data && new Date(nc.data) >= cutoff);
   }
   return r;
 }
@@ -163,6 +179,7 @@ export default function NaoConformidadesPage() {
   const [filtroEmpreiteira, setFiltroEmpreiteira] = useState(null);
   const [filtroRodovia, setFiltroRodovia] = useState(null);
   const [filtroUsina, setFiltroUsina] = useState(null);
+  const [filtroPeriodo, setFiltroPeriodo] = useState(null);
   const [tabelaBusca, setTabelaBusca] = useState('');
   const [tabelaTipo, setTabelaTipo] = useState('_all');
 
@@ -291,8 +308,8 @@ export default function NaoConformidadesPage() {
   // Each chart skips its own filter dimension so it shows its own distribution
   const f = useMemo(() => ({
     status: filtroStatus, parametro: filtroParametro, obraId: filtroObraId,
-    empreiteira: filtroEmpreiteira, rodovia: filtroRodovia, usina: filtroUsina
-  }), [filtroStatus, filtroParametro, filtroObraId, filtroEmpreiteira, filtroRodovia, filtroUsina]);
+    empreiteira: filtroEmpreiteira, rodovia: filtroRodovia, usina: filtroUsina, periodo: filtroPeriodo
+  }), [filtroStatus, filtroParametro, filtroObraId, filtroEmpreiteira, filtroRodovia, filtroUsina, filtroPeriodo]);
 
   const dadosStatusRNC = useMemo(() => {
     const filtered = applyRncFilters(rncs, checklistNCs, f, 'status');
@@ -399,10 +416,10 @@ export default function NaoConformidadesPage() {
 
   const clearFilters = useCallback(() => {
     setFiltroStatus(null); setFiltroParametro(null); setFiltroObraId(null);
-    setFiltroEmpreiteira(null); setFiltroRodovia(null); setFiltroUsina(null);
+    setFiltroEmpreiteira(null); setFiltroRodovia(null); setFiltroUsina(null); setFiltroPeriodo(null);
   }, []);
 
-  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina);
+  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina || filtroPeriodo);
 
   const tiposDisponiveis = useMemo(() => {
     const s = new Set([...rncsVisiveis.map(() => 'Relatório NC'), ...cncsVisiveis.map(nc => {
@@ -445,7 +462,7 @@ export default function NaoConformidadesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><HardHat className="w-3 h-3" /> Empreiteira</label>
                 <Select value={filtroEmpreiteira || '_all'} onValueChange={v => setFiltroEmpreiteira(v === '_all' ? null : v)}>
@@ -482,6 +499,20 @@ export default function NaoConformidadesPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block">Período</label>
+                <Select value={filtroPeriodo || '_all'} onValueChange={v => setFiltroPeriodo(v === '_all' ? null : v)}>
+                  <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todos</SelectItem>
+                    <SelectItem value="7d">Últimos 7 dias</SelectItem>
+                    <SelectItem value="30d">Últimos 30 dias</SelectItem>
+                    <SelectItem value="90d">Últimos 90 dias</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -495,6 +526,7 @@ export default function NaoConformidadesPage() {
             {filtroEmpreiteira && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroEmpreiteira(null)}>Empreiteira: {filtroEmpreiteira} <X className="w-3 h-3"/></Badge>}
             {filtroRodovia && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroRodovia(null)}>Rodovia: {filtroRodovia} <X className="w-3 h-3"/></Badge>}
             {filtroUsina && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroUsina(null)}>Usina: {filtroUsina} <X className="w-3 h-3"/></Badge>}
+            {filtroPeriodo && <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroPeriodo(null)}>Período: {filtroPeriodo === '7d' ? 'Últimos 7 dias' : filtroPeriodo === '30d' ? 'Últimos 30 dias' : 'Últimos 90 dias'} <X className="w-3 h-3"/></Badge>}
           </div>
         )}
 
