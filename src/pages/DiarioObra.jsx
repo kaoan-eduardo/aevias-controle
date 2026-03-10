@@ -128,13 +128,6 @@ const DiarioForm = ({
     handleChange('rodovia', "");
   }, [obraSelecionada?.id]);
 
-  // Para obras de sondagem/levantamentos, sincronizar o cliente com o valor selecionado no dropdown
-  React.useEffect(() => {
-    if (isObraClienteType && formData.empreiteira) {
-      handleChange('cliente', formData.empreiteira);
-    }
-  }, [formData.empreiteira, isObraClienteType]);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {status === 'rascunho' && (
