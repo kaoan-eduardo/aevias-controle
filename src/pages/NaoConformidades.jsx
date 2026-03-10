@@ -439,19 +439,29 @@ export default function NaoConformidadesPage() {
 
     // Build time series
     let maxValue = 0;
-    const data = sortedDates.map(date => {
-      const point = { date: new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) };
-      let totalForDate = 0;
-      topObras.forEach(obraId => {
-        const obraNome = obras.find(o => o.id === obraId)?.name || obraId;
-        const count = filteredR.filter(r => r.obra_id === obraId && r.data_nc === date).length +
-                      filteredC.filter(nc => nc.obra_id === obraId && nc.data === date).length;
-        point[obraNome] = count;
-        totalForDate += count;
+    const data = sortedDates
+      .filter(date => {
+        // Validate date format
+        try {
+          const d = new Date(date + 'T12:00:00');
+          return !isNaN(d.getTime());
+        } catch {
+          return false;
+        }
+      })
+      .map(date => {
+        const point = { date: new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) };
+        let totalForDate = 0;
+        topObras.forEach(obraId => {
+          const obraNome = obras.find(o => o.id === obraId)?.name || obraId;
+          const count = filteredR.filter(r => r.obra_id === obraId && r.data_nc === date).length +
+                        filteredC.filter(nc => nc.obra_id === obraId && nc.data === date).length;
+          point[obraNome] = count;
+          totalForDate += count;
+        });
+        if (totalForDate > maxValue) maxValue = totalForDate;
+        return point;
       });
-      if (totalForDate > maxValue) maxValue = totalForDate;
-      return point;
-    });
     return { data, maxValue };
   }, [rncs, checklistNCs, obras, f]);
 
