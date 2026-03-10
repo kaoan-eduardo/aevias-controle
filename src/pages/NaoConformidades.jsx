@@ -13,12 +13,15 @@ import { createPageUrl } from "@/utils";
 
 // ---- Constants ----
 const TIPOS_CHECKLIST = [
-  { value: "ChecklistUsina", label: "Checklist de Usina" },
-  { value: "ChecklistAplicacao", label: "Checklist de Aplicação" },
-  { value: "ChecklistMRAF", label: "Checklist MRAF" },
-  { value: "ChecklistConcretagem", label: "Checklist de Concretagem" },
-  { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem" }
+  { value: "ChecklistUsina", label: "Checklist de Usina", page: "RelatorioChecklist" },
+  { value: "ChecklistAplicacao", label: "Checklist de Aplicação", page: "RelatorioChecklistAplicacao" },
+  { value: "ChecklistMRAF", label: "Checklist MRAF", page: "RelatorioChecklistMRAF" },
+  { value: "ChecklistConcretagem", label: "Checklist de Concretagem", page: "RelatorioChecklistConcretagem" },
+  { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem", page: "RelatorioChecklistTerraplanagem" }
 ];
+
+// RNC maps to RelatorioNC page
+const RNC_PAGE = "RelatorioNC";
 
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
