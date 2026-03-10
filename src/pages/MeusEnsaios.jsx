@@ -224,7 +224,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [reprovingEnsaio, setReprovingEnsaio] = useState(null);
   const [deletingEnsaio, setDeletingEnsaio] = useState(null);
   const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc', or null
-  const [selectedEnsaios, setSelectedEnsaios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   
