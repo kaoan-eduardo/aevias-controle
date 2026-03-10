@@ -674,6 +674,7 @@ export default function NaoConformidadesPage() {
                     dataKey="date" 
                     tick={{ fill: '#00233B', fontSize: 11 }}
                     tickLine={{ stroke: '#00233B' }}
+                    interval={(f.dataInicial || f.dataFinal) ? 0 : 4}
                   />
                   <YAxis 
                     domain={[0, dadosTemporais.maxValue + 5]}
