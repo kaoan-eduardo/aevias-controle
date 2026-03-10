@@ -511,7 +511,7 @@ export default function NaoConformidadesPage() {
             ) : <EmptyChart text="Nenhum RNC para os filtros selecionados" />}
           </PizzaCard>
 
-          <PizzaCard title="Parâmetros Não Conformes" icon={ClipboardList} subtitle="checklists • clique para filtrar">
+          <PizzaCard title="Parâmetros Não Conformes" icon={ClipboardList} subtitle="registros • clique para filtrar">
             {dadosParametros.length > 0 ? (
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
