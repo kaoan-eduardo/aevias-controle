@@ -194,6 +194,7 @@ export default function NaoConformidadesPage() {
       allData.flat().forEach(cl => {
         extrairNaoConformidadesChecklist(cl, cl._tipo).forEach(param => {
           allCNCs.push({
+            id: cl.id,
             obra_id: cl.obra_id,
             parametro: param.charAt(0).toUpperCase() + param.slice(1),
             tipo: cl._tipo,
