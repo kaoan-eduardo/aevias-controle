@@ -161,7 +161,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
               {/* Coluna 1 */}
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Cliente</p>
-                <p className="text-gray-800">{diario.cliente || regional?.cliente || 'N/A'}</p>
+                 <p className="text-gray-800">{clienteDisplay}</p>
               </div>
 
               {/* Coluna 2 */}
@@ -347,7 +347,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
               <div className="space-y-2">
                 <div>
                   <p className="text-gray-500 text-[10px] font-semibold uppercase">Cliente</p>
-                  <p className="text-gray-800 font-medium">{diario.cliente || regional?.cliente || 'N/A'}</p>
+                  <p className="text-gray-800 font-medium">{clienteDisplay}</p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-[10px] font-semibold uppercase">Obra</p>
