@@ -34,11 +34,13 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
     tipo_obra: obra?.tipo_obra || "implantacao",
     status: obra?.status || "planejamento",
     empreiteiras: obra?.empreiteiras || [],
+    clientes: obra?.clientes || [],
     usinas: obra?.usinas || [],
     rodovias: obra?.rodovias || []
   });
 
   const [novaEmpreiteira, setNovaEmpreiteira] = useState("");
+  const [novoCliente, setNovoCliente] = useState("");
   const [novaUsina, setNovaUsina] = useState("");
   const [novaRodovia, setNovaRodovia] = useState("");
 
@@ -170,6 +172,56 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, empreiteiras: formData.empreiteiras.filter((_, i) => i !== index) })}
+                  className="ml-1 hover:text-red-600"
+                >
+                  ×
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Clientes - apenas para Levantamentos e Sondagem */}
+      {(formData.tipo_obra === "levantamentos" || formData.tipo_obra === "sondagem") && (
+        <div className="space-y-2">
+          <Label>Clientes da Obra</Label>
+          <div className="flex gap-2">
+            <Input
+              value={novoCliente}
+              onChange={(e) => setNovoCliente(e.target.value)}
+              placeholder="Nome do cliente"
+              className="bg-white border-[#00233B]/20 text-[#00233B]"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (novoCliente.trim()) {
+                    setFormData({ ...formData, clientes: [...formData.clientes, novoCliente.trim()] });
+                    setNovoCliente("");
+                  }
+                }
+              }}
+            />
+            <Button
+              type="button"
+              onClick={() => {
+                if (novoCliente.trim()) {
+                  setFormData({ ...formData, clientes: [...formData.clientes, novoCliente.trim()] });
+                  setNovoCliente("");
+                }
+              }}
+              className="bg-[#566E3D] hover:bg-[#566E3D]/90 text-white"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {formData.clientes.map((cliente, index) => (
+              <Badge key={index} variant="secondary" className="bg-teal-100 text-teal-800 flex items-center gap-1">
+                {cliente}
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, clientes: formData.clientes.filter((_, i) => i !== index) })}
                   className="ml-1 hover:text-red-600"
                 >
                   ×
