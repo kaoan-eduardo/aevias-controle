@@ -608,7 +608,7 @@ export default function NaoConformidadesPage() {
             page: RNC_PAGE,
           }));
           const checklistRows = cncsVisiveis.map(nc => {
-            const t = TIPOS_CHECKLIST.find(t => t.value === nc.tipo);
+            const t = [...TIPOS_CHECKLIST, ...OUTROS_TIPOS_REGISTRO].find(t => t.value === nc.tipo);
             return {
               _kind: 'checklist',
               id: nc.id,
@@ -620,7 +620,7 @@ export default function NaoConformidadesPage() {
               rodovia: nc.rodovia || '',
               usina: nc.usina || '',
               empreiteira: nc.empreiteira || '',
-              page: t?.page || '',
+              page: nc._page || t?.page || '',
             };
           });
           const allRows = [...rncRows, ...checklistRows].slice(0, 200);
