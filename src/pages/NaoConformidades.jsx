@@ -182,12 +182,13 @@ export default function NaoConformidadesPage() {
       const availableIds = new Set(availableObras.map(o => o.id));
       setRncs(rncsData.filter(r => availableIds.has(r.obra_id)));
 
-      const obraIds = availableObras.map(o => o.id);
       const allCNCs = [];
+      // Fetch all records for each checklist type at once (avoids per-obra pagination limits)
       const allData = await Promise.all(
         TIPOS_CHECKLIST.map(t =>
-          Promise.all(obraIds.map(oId => base44.entities[t.value].filter({ obra_id: oId }).catch(() => [])))
-            .then(res => res.flat().map(c => ({ ...c, _tipo: t.value })))
+          base44.entities[t.value].list('-created_date', 2000)
+            .catch(() => [])
+            .then(res => res.filter(c => availableIds.has(c.obra_id)).map(c => ({ ...c, _tipo: t.value })))
         )
       );
 
