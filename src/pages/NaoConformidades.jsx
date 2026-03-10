@@ -394,6 +394,18 @@ export default function NaoConformidadesPage() {
 
   const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId || filtroEmpreiteira || filtroRodovia || filtroUsina);
 
+  // ---- Filtros locais da tabela de ocorrências ----
+  const [tabelaBusca, setTabelaBusca] = useState('');
+  const [tabelaTipo, setTabelaTipo] = useState('_all');
+
+  const tiposDisponiveis = useMemo(() => {
+    const s = new Set([...rncsVisiveis.map(() => 'Relatório NC'), ...cncsVisiveis.map(nc => {
+      const t = [...TIPOS_CHECKLIST, ...OUTROS_TIPOS_REGISTRO].find(t => t.value === nc.tipo);
+      return t?.label || nc.tipo;
+    })]);
+    return [...s].sort();
+  }, [rncsVisiveis, cncsVisiveis]);
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   }
