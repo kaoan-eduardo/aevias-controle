@@ -19,8 +19,6 @@ const TIPOS_CHECKLIST = [
 
 const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
 const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
-const STATUS_KEYS = { "Aberta": "aberta", "Em Tratativa": "em_tratativa", "Finalizada": "encerrada", "Cancelada": "cancelada" };
-
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
 const OBRA_COLORS = ["#00233B","#566E3D","#BFCF99","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e"];
 
@@ -80,15 +78,13 @@ export default function NaoConformidadesPage() {
   const [loading, setLoading] = useState(true);
   const [obras, setObras] = useState([]);
   const [rncs, setRncs] = useState([]);
-  const [parametrosNC, setParametrosNC] = useState({});
-  const [ncPorObra, setNcPorObra] = useState({});
-  // checklistNCs: [{ obra_id, parametro }] para filtros
+  // checklistNCs: lista completa de { obra_id, parametro } para cross-filtering
   const [checklistNCs, setChecklistNCs] = useState([]);
 
-  // Filtros ativos
-  const [filtroStatus, setFiltroStatus] = useState(null);   // e.g. "aberta"
-  const [filtroParametro, setFiltroParametro] = useState(null); // nome do parâmetro
-  const [filtroObraId, setFiltroObraId] = useState(null);   // obra_id
+  // Filtros simultâneos e independentes
+  const [filtroStatus, setFiltroStatus] = useState(null);
+  const [filtroParametro, setFiltroParametro] = useState(null);
+  const [filtroObraId, setFiltroObraId] = useState(null);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -128,9 +124,7 @@ export default function NaoConformidadesPage() {
       setRncs(rncsData.filter(r => availableObraIds.has(r.obra_id)));
 
       const obraIds = availableObras.map(o => o.id);
-      const paramCount = {};
-      const obraCount = {};
-      const allChecklistNCs = [];
+      const allCNCs = [];
 
       const allChecklistData = await Promise.all(
         TIPOS_CHECKLIST.map(t =>
@@ -141,25 +135,13 @@ export default function NaoConformidadesPage() {
 
       allChecklistData.flat().forEach(checklist => {
         const ncs = extrairNaoConformidadesChecklist(checklist, checklist._tipo);
-        if (ncs.length > 0) {
-          obraCount[checklist.obra_id] = (obraCount[checklist.obra_id] || 0) + ncs.length;
-          ncs.forEach(param => {
-            const label = param.charAt(0).toUpperCase() + param.slice(1);
-            paramCount[label] = (paramCount[label] || 0) + 1;
-            allChecklistNCs.push({ obra_id: checklist.obra_id, parametro: label });
-          });
-        }
+        ncs.forEach(param => {
+          const label = param.charAt(0).toUpperCase() + param.slice(1);
+          allCNCs.push({ obra_id: checklist.obra_id, parametro: label });
+        });
       });
 
-      rncsData.forEach(rnc => {
-        if (availableObraIds.has(rnc.obra_id)) {
-          obraCount[rnc.obra_id] = (obraCount[rnc.obra_id] || 0) + 1;
-        }
-      });
-
-      setParametrosNC(paramCount);
-      setNcPorObra(obraCount);
-      setChecklistNCs(allChecklistNCs);
+      setChecklistNCs(allCNCs);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     } finally {
@@ -167,48 +149,78 @@ export default function NaoConformidadesPage() {
     }
   };
 
-  // --- Dados para gráficos ---
+  // -------------------------------------------------------
+  // CROSS-FILTERING: cada gráfico é filtrado pelos outros 2
+  // -------------------------------------------------------
+
+  // Gráfico 1: Status dos RNCs — filtrado por filtroObraId + filtroParametro
+  // (filtroParametro filtra por obras que têm esse param → filtra os RNCs por essas obras)
   const dadosStatusRNC = useMemo(() => {
+    let filteredRncs = rncs;
+    if (filtroObraId) {
+      filteredRncs = filteredRncs.filter(r => r.obra_id === filtroObraId);
+    }
+    if (filtroParametro) {
+      const obrasComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
+      filteredRncs = filteredRncs.filter(r => obrasComParam.has(r.obra_id));
+    }
     const counts = { aberta: 0, em_tratativa: 0, encerrada: 0, cancelada: 0 };
-    rncs.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+    filteredRncs.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
     return Object.entries(counts)
       .filter(([, v]) => v > 0)
       .map(([status, value]) => ({ name: STATUS_LABELS[status], statusKey: status, value, color: STATUS_COLORS[status] }));
-  }, [rncs]);
+  }, [rncs, checklistNCs, filtroObraId, filtroParametro]);
 
+  // Gráfico 2: Parâmetros não conformes — filtrado por filtroObraId + filtroStatus
+  // (filtroStatus filtra por obras que têm RNCs com esse status → filtra os checklistNCs por essas obras)
   const dadosParametros = useMemo(() => {
-    return Object.entries(parametrosNC)
+    let filteredCNCs = checklistNCs;
+    if (filtroObraId) {
+      filteredCNCs = filteredCNCs.filter(nc => nc.obra_id === filtroObraId);
+    }
+    if (filtroStatus) {
+      const obrasComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
+      filteredCNCs = filteredCNCs.filter(nc => obrasComStatus.has(nc.obra_id));
+    }
+    const paramCount = {};
+    filteredCNCs.forEach(nc => { paramCount[nc.parametro] = (paramCount[nc.parametro] || 0) + 1; });
+    return Object.entries(paramCount)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([name, value], i) => ({ name, value, color: PARAM_COLORS[i % PARAM_COLORS.length] }));
-  }, [parametrosNC]);
+  }, [checklistNCs, rncs, filtroObraId, filtroStatus]);
 
+  // Gráfico 3: NCs por Obra — filtrado por filtroStatus + filtroParametro
   const dadosPorObra = useMemo(() => {
-    return Object.entries(ncPorObra)
+    const obraCount = {};
+    // Contar RNCs filtrados por status
+    let filteredRncs = filtroStatus ? rncs.filter(r => r.status === filtroStatus) : rncs;
+    filteredRncs.forEach(r => { obraCount[r.obra_id] = (obraCount[r.obra_id] || 0) + 1; });
+    // Contar checklist NCs filtrados por parametro
+    let filteredCNCs = filtroParametro ? checklistNCs.filter(nc => nc.parametro === filtroParametro) : checklistNCs;
+    filteredCNCs.forEach(nc => { obraCount[nc.obra_id] = (obraCount[nc.obra_id] || 0) + 1; });
+
+    return Object.entries(obraCount)
       .map(([obraId, value], i) => {
         const obra = obras.find(o => o.id === obraId);
         return { name: obra?.name || obraId, obraId, value, color: OBRA_COLORS[i % OBRA_COLORS.length] };
       })
       .sort((a, b) => b.value - a.value);
-  }, [ncPorObra, obras]);
+  }, [rncs, checklistNCs, obras, filtroStatus, filtroParametro]);
 
-  // --- Handlers de clique nos gráficos ---
+  // -------------------------------------------------------
+  // Handlers — toggleam sem limpar os outros filtros
+  // -------------------------------------------------------
   const handleStatusClick = useCallback((data) => {
     setFiltroStatus(prev => prev === data.statusKey ? null : data.statusKey);
-    setFiltroObraId(null);
-    setFiltroParametro(null);
   }, []);
 
   const handleParametroClick = useCallback((data) => {
     setFiltroParametro(prev => prev === data.name ? null : data.name);
-    setFiltroStatus(null);
-    setFiltroObraId(null);
   }, []);
 
   const handleObraClick = useCallback((data) => {
     setFiltroObraId(prev => prev === data.obraId ? null : data.obraId);
-    setFiltroStatus(null);
-    setFiltroParametro(null);
   }, []);
 
   const clearFilters = useCallback(() => {
@@ -217,51 +229,56 @@ export default function NaoConformidadesPage() {
     setFiltroObraId(null);
   }, []);
 
-  const hasActiveFilter = filtroStatus || filtroParametro || filtroObraId;
+  const hasActiveFilter = !!(filtroStatus || filtroParametro || filtroObraId);
 
-  // --- Tabela resumo filtrada ---
+  // -------------------------------------------------------
+  // Tabela resumo — todos os filtros ativos simultaneamente
+  // -------------------------------------------------------
   const tabelaResumo = useMemo(() => {
-    // Obras que passam no filtro
-    let obrasFiltradas = obras;
+    return obras.map(obra => {
+      // RNCs da obra filtrados por status
+      let rncsObra = rncs.filter(r => r.obra_id === obra.id);
+      if (filtroStatus) rncsObra = rncsObra.filter(r => r.status === filtroStatus);
+      // Checklist NCs da obra filtrados por parametro
+      let cncsObra = checklistNCs.filter(nc => nc.obra_id === obra.id);
+      if (filtroParametro) cncsObra = cncsObra.filter(nc => nc.parametro === filtroParametro);
+      // Filtro de obra
+      if (filtroObraId && obra.id !== filtroObraId) return null;
 
-    if (filtroObraId) {
-      obrasFiltradas = obras.filter(o => o.id === filtroObraId);
-    } else if (filtroStatus) {
-      // mostrar obras que têm RNCs com esse status
-      const obraIdsComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
-      obrasFiltradas = obras.filter(o => obraIdsComStatus.has(o.id));
-    } else if (filtroParametro) {
-      // mostrar obras que têm esse parâmetro não conforme
-      const obraIdsComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
-      obrasFiltradas = obras.filter(o => obraIdsComParam.has(o.id));
-    }
+      const totalRnc = rncsObra.length;
+      const paramChecklist = cncsObra.length;
+      if (totalRnc === 0 && paramChecklist === 0) return null;
 
-    return obrasFiltradas.map(obra => {
-      const rncsObra = rncs.filter(r => r.obra_id === obra.id);
       const abertas = rncsObra.filter(r => r.status === 'aberta').length;
       const emTratativa = rncsObra.filter(r => r.status === 'em_tratativa').length;
       const finalizadas = rncsObra.filter(r => r.status === 'encerrada').length;
       const canceladas = rncsObra.filter(r => r.status === 'cancelada').length;
-      const paramChecklist = ncPorObra[obra.id] || 0;
-      const totalRnc = rncsObra.length;
-      if (totalRnc === 0 && paramChecklist === 0) return null;
       return { obra, totalRnc, abertas, emTratativa, finalizadas, canceladas, paramChecklist };
     }).filter(Boolean);
-  }, [obras, rncs, ncPorObra, checklistNCs, filtroStatus, filtroParametro, filtroObraId]);
+  }, [obras, rncs, checklistNCs, filtroStatus, filtroParametro, filtroObraId]);
 
-  // KPIs filtrados
+  // KPIs baseados nos filtros ativos
   const rncsVisiveis = useMemo(() => {
-    if (!hasActiveFilter) return rncs;
-    return tabelaResumo.flatMap(row => rncs.filter(r => r.obra_id === row.obra.id));
-  }, [rncs, tabelaResumo, hasActiveFilter]);
+    let f = rncs;
+    if (filtroStatus) f = f.filter(r => r.status === filtroStatus);
+    if (filtroObraId) f = f.filter(r => r.obra_id === filtroObraId);
+    if (filtroParametro) {
+      const obrasComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
+      f = f.filter(r => obrasComParam.has(r.obra_id));
+    }
+    return f;
+  }, [rncs, checklistNCs, filtroStatus, filtroObraId, filtroParametro]);
 
-  const totalRncs = rncsVisiveis.length;
-  const totalAbertos = rncsVisiveis.filter(r => r.status === 'aberta').length;
-  const totalParametros = useMemo(() => {
-    if (!hasActiveFilter) return Object.values(parametrosNC).reduce((a, b) => a + b, 0);
-    const obraIds = new Set(tabelaResumo.map(r => r.obra.id));
-    return checklistNCs.filter(nc => obraIds.has(nc.obra_id)).length;
-  }, [parametrosNC, checklistNCs, tabelaResumo, hasActiveFilter]);
+  const checklistNCsVisiveis = useMemo(() => {
+    let f = checklistNCs;
+    if (filtroParametro) f = f.filter(nc => nc.parametro === filtroParametro);
+    if (filtroObraId) f = f.filter(nc => nc.obra_id === filtroObraId);
+    if (filtroStatus) {
+      const obrasComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
+      f = f.filter(nc => obrasComStatus.has(nc.obra_id));
+    }
+    return f;
+  }, [checklistNCs, rncs, filtroParametro, filtroObraId, filtroStatus]);
 
   if (loading) {
     return (
@@ -288,27 +305,27 @@ export default function NaoConformidadesPage() {
           {hasActiveFilter && (
             <Button variant="outline" size="sm" onClick={clearFilters} className="text-[#00233B] border-white/30 hover:bg-white/20 gap-2">
               <X className="w-4 h-4" />
-              Limpar Filtro
+              Limpar Filtros
             </Button>
           )}
         </div>
 
-        {/* Filtro ativo badge */}
+        {/* Filtros ativos */}
         {hasActiveFilter && (
           <div className="flex flex-wrap gap-2">
             {filtroStatus && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroStatus(null)}>
-                Status: {STATUS_LABELS[filtroStatus]} <X className="w-3 h-3 ml-1" />
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroStatus(null)}>
+                Status: {STATUS_LABELS[filtroStatus]} <X className="w-3 h-3" />
               </Badge>
             )}
             {filtroParametro && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroParametro(null)}>
-                Parâmetro: {filtroParametro} <X className="w-3 h-3 ml-1" />
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroParametro(null)}>
+                Parâmetro: {filtroParametro} <X className="w-3 h-3" />
               </Badge>
             )}
             {filtroObraId && (
-              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroObraId(null)}>
-                Obra: {obras.find(o => o.id === filtroObraId)?.name} <X className="w-3 h-3 ml-1" />
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer gap-1" onClick={() => setFiltroObraId(null)}>
+                Obra: {obras.find(o => o.id === filtroObraId)?.name} <X className="w-3 h-3" />
               </Badge>
             )}
           </div>
@@ -317,10 +334,10 @@ export default function NaoConformidadesPage() {
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total de RNCs", value: totalRncs, color: "text-[#00233B]" },
-            { label: "RNCs Abertas", value: totalAbertos, color: "text-red-600" },
+            { label: "Total de RNCs", value: rncsVisiveis.length, color: "text-[#00233B]" },
+            { label: "RNCs Abertas", value: rncsVisiveis.filter(r => r.status === 'aberta').length, color: "text-red-600" },
             { label: "Em Tratativa", value: rncsVisiveis.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
-            { label: "NCs em Checklists", value: totalParametros, color: "text-blue-600" },
+            { label: "NCs em Checklists", value: checklistNCsVisiveis.length, color: "text-blue-600" },
           ].map(kpi => (
             <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
               <CardContent className="pt-4 pb-3">
@@ -349,24 +366,21 @@ export default function NaoConformidadesPage() {
                     <Pie
                       data={dadosStatusRNC}
                       cx="50%" cy="50%" outerRadius={100}
-                      dataKey="value"
-                      labelLine={false}
-                      label={<CustomLabel />}
-                      onClick={handleStatusClick}
-                      style={{ cursor: 'pointer' }}
+                      dataKey="value" labelLine={false} label={<CustomLabel />}
+                      onClick={handleStatusClick} style={{ cursor: 'pointer' }}
                     >
                       {dadosStatusRNC.map((entry, i) => (
                         <Cell key={i} fill={entry.color} opacity={filtroStatus && filtroStatus !== entry.statusKey ? 0.3 : 1} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value, name) => [value, name]} contentStyle={tooltipStyle} />
-                    <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
+                    <Tooltip formatter={(v, n) => [v, n]} contentStyle={tooltipStyle} />
+                    <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 12 }}>{v}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
                 <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
                   <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">Nenhum RNC cadastrado</p>
+                  <p className="text-sm">Nenhum RNC para os filtros selecionados</p>
                 </div>
               )}
             </CardContent>
@@ -388,24 +402,21 @@ export default function NaoConformidadesPage() {
                     <Pie
                       data={dadosParametros}
                       cx="50%" cy="50%" outerRadius={100}
-                      dataKey="value"
-                      labelLine={false}
-                      label={<CustomLabel />}
-                      onClick={handleParametroClick}
-                      style={{ cursor: 'pointer' }}
+                      dataKey="value" labelLine={false} label={<CustomLabel />}
+                      onClick={handleParametroClick} style={{ cursor: 'pointer' }}
                     >
                       {dadosParametros.map((entry, i) => (
                         <Cell key={i} fill={entry.color} opacity={filtroParametro && filtroParametro !== entry.name ? 0.3 : 1} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value, name) => [value + ' ocorrência(s)', name]} contentStyle={tooltipStyle} />
-                    <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 11 }}>{value}</span>} />
+                    <Tooltip formatter={(v, n) => [v + ' ocorrência(s)', n]} contentStyle={tooltipStyle} />
+                    <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 11 }}>{v}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
                 <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
                   <ClipboardList className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">Nenhuma NC de checklist encontrada</p>
+                  <p className="text-sm">Nenhuma NC de checklist para os filtros selecionados</p>
                 </div>
               )}
             </CardContent>
@@ -428,24 +439,21 @@ export default function NaoConformidadesPage() {
                   <Pie
                     data={dadosPorObra}
                     cx="50%" cy="50%" outerRadius={120}
-                    dataKey="value"
-                    labelLine={false}
-                    label={<CustomLabel />}
-                    onClick={handleObraClick}
-                    style={{ cursor: 'pointer' }}
+                    dataKey="value" labelLine={false} label={<CustomLabel />}
+                    onClick={handleObraClick} style={{ cursor: 'pointer' }}
                   >
                     {dadosPorObra.map((entry, i) => (
                       <Cell key={i} fill={entry.color} opacity={filtroObraId && filtroObraId !== entry.obraId ? 0.3 : 1} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value, name) => [value + ' NC(s)', name]} contentStyle={tooltipStyle} />
-                  <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
+                  <Tooltip formatter={(v, n) => [v + ' NC(s)', n]} contentStyle={tooltipStyle} />
+                  <Legend formatter={(v) => <span style={{ color: '#00233B', fontSize: 12 }}>{v}</span>} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
               <div className="h-[320px] flex flex-col items-center justify-center text-[#00233B]/50">
                 <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
-                <p className="text-sm">Nenhuma NC encontrada nas obras</p>
+                <p className="text-sm">Nenhuma NC para os filtros selecionados</p>
               </div>
             )}
           </CardContent>
@@ -454,13 +462,11 @@ export default function NaoConformidadesPage() {
         {/* Tabela Resumo */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#BFCF99]" />
-                Tabela Resumo de NCs por Obra
-                {hasActiveFilter && <Badge className="bg-[#BFCF99]/40 text-[#00233B] text-xs ml-2">{tabelaResumo.length} obra(s)</Badge>}
-              </CardTitle>
-            </div>
+            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#BFCF99]" />
+              Tabela Resumo de NCs por Obra
+              {hasActiveFilter && <Badge className="bg-[#BFCF99]/40 text-[#00233B] text-xs ml-2">{tabelaResumo.length} obra(s)</Badge>}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {tabelaResumo.length > 0 ? (
@@ -485,29 +491,15 @@ export default function NaoConformidadesPage() {
                         onClick={() => handleObraClick({ obraId: row.obra.id })}
                       >
                         <td className="py-2.5 px-3">
-                          <div>
-                            <p className="font-medium text-[#00233B]">{row.obra.name}</p>
-                            <p className="text-xs text-[#00233B]/60">{row.obra.code}</p>
-                          </div>
+                          <p className="font-medium text-[#00233B]">{row.obra.name}</p>
+                          <p className="text-xs text-[#00233B]/60">{row.obra.code}</p>
                         </td>
-                        <td className="text-center py-2.5 px-3">
-                          <span className="font-bold text-[#00233B]">{row.totalRnc}</span>
-                        </td>
-                        <td className="text-center py-2.5 px-3">
-                          {row.abertas > 0 ? <Badge className="bg-red-100 text-red-700">{row.abertas}</Badge> : <span className="text-[#00233B]/30">—</span>}
-                        </td>
-                        <td className="text-center py-2.5 px-3">
-                          {row.emTratativa > 0 ? <Badge className="bg-amber-100 text-amber-700">{row.emTratativa}</Badge> : <span className="text-[#00233B]/30">—</span>}
-                        </td>
-                        <td className="text-center py-2.5 px-3">
-                          {row.finalizadas > 0 ? <Badge className="bg-green-100 text-green-700">{row.finalizadas}</Badge> : <span className="text-[#00233B]/30">—</span>}
-                        </td>
-                        <td className="text-center py-2.5 px-3">
-                          {row.canceladas > 0 ? <Badge className="bg-gray-100 text-gray-600">{row.canceladas}</Badge> : <span className="text-[#00233B]/30">—</span>}
-                        </td>
-                        <td className="text-center py-2.5 px-3">
-                          {row.paramChecklist > 0 ? <Badge className="bg-blue-100 text-blue-700">{row.paramChecklist}</Badge> : <span className="text-[#00233B]/30">—</span>}
-                        </td>
+                        <td className="text-center py-2.5 px-3 font-bold text-[#00233B]">{row.totalRnc}</td>
+                        <td className="text-center py-2.5 px-3">{row.abertas > 0 ? <Badge className="bg-red-100 text-red-700">{row.abertas}</Badge> : <span className="text-[#00233B]/30">—</span>}</td>
+                        <td className="text-center py-2.5 px-3">{row.emTratativa > 0 ? <Badge className="bg-amber-100 text-amber-700">{row.emTratativa}</Badge> : <span className="text-[#00233B]/30">—</span>}</td>
+                        <td className="text-center py-2.5 px-3">{row.finalizadas > 0 ? <Badge className="bg-green-100 text-green-700">{row.finalizadas}</Badge> : <span className="text-[#00233B]/30">—</span>}</td>
+                        <td className="text-center py-2.5 px-3">{row.canceladas > 0 ? <Badge className="bg-gray-100 text-gray-600">{row.canceladas}</Badge> : <span className="text-[#00233B]/30">—</span>}</td>
+                        <td className="text-center py-2.5 px-3">{row.paramChecklist > 0 ? <Badge className="bg-blue-100 text-blue-700">{row.paramChecklist}</Badge> : <span className="text-[#00233B]/30">—</span>}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -516,7 +508,7 @@ export default function NaoConformidadesPage() {
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-[#00233B]/50">
                 <FileText className="w-12 h-12 mb-3 opacity-30" />
-                <p className="text-sm">{hasActiveFilter ? 'Nenhuma obra corresponde ao filtro selecionado' : 'Nenhuma não conformidade registrada'}</p>
+                <p className="text-sm">{hasActiveFilter ? 'Nenhuma obra corresponde aos filtros selecionados' : 'Nenhuma não conformidade registrada'}</p>
               </div>
             )}
           </CardContent>
