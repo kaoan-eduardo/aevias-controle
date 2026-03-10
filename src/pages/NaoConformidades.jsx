@@ -226,6 +226,32 @@ export default function NaoConformidadesPage() {
         });
       });
 
+      // Fetch todos os outros tipos de registro (approved === false = NC)
+      const todosOutrosData = await Promise.all(
+        [...TIPOS_CHECKLIST.filter(t => !['ChecklistUsina','ChecklistAplicacao','ChecklistMRAF','ChecklistConcretagem','ChecklistTerraplanagem'].includes(t.value)), ...OUTROS_TIPOS_REGISTRO].map(t =>
+          base44.entities[t.value]
+            ? base44.entities[t.value].list('-created_date', 2000)
+                .catch(() => [])
+                .then(res => res.filter(c => availableIds.has(c.obra_id) && c.approved === false).map(c => ({ ...c, _tipo: t.value, _label: t.label, _page: t.page })))
+            : Promise.resolve([])
+        )
+      );
+
+      todosOutrosData.flat().forEach(reg => {
+        allCNCs.push({
+          id: reg.id,
+          obra_id: reg.obra_id,
+          parametro: reg._label,
+          tipo: reg._tipo,
+          laboratorista_name: reg.laboratorista_name || '',
+          data: reg.data || reg.data_ensaio || reg.extraction_date || reg.collection_date || '',
+          empreiteira: reg.empreiteira || '',
+          rodovia: reg.rodovia || '',
+          usina: reg.usina || reg.usina_fornecedora || reg.usina_selecionada || '',
+          _page: reg._page,
+        });
+      });
+
       setChecklistNCs(allCNCs);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
