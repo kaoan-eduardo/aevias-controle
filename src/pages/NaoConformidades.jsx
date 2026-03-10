@@ -131,7 +131,10 @@ export default function NaoConformidadesPage() {
       }
 
       setObras(availableObras);
-      setRncs(rncsData);
+
+      const availableObraIds = new Set(availableObras.map(o => o.id));
+      const filteredRncs = rncsData.filter(r => availableObraIds.has(r.obra_id));
+      setRncs(filteredRncs);
 
       // Processar NCs de checklists para todas as obras disponíveis
       const obraIds = availableObras.map(o => o.id);
