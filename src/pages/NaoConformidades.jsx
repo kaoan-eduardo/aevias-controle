@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Loader2, FileText, ClipboardList } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, Loader2, FileText, ClipboardList, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -16,25 +17,14 @@ const TIPOS_CHECKLIST = [
   { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem" }
 ];
 
-const STATUS_COLORS = {
-  aberta: "#dc2626",
-  em_tratativa: "#d97706",
-  encerrada: "#16a34a",
-  cancelada: "#6b7280"
-};
-
-const STATUS_LABELS = {
-  aberta: "Aberta",
-  em_tratativa: "Em Tratativa",
-  encerrada: "Finalizada",
-  cancelada: "Cancelada"
-};
+const STATUS_COLORS = { aberta: "#dc2626", em_tratativa: "#d97706", encerrada: "#16a34a", cancelada: "#6b7280" };
+const STATUS_LABELS = { aberta: "Aberta", em_tratativa: "Em Tratativa", encerrada: "Finalizada", cancelada: "Cancelada" };
+const STATUS_KEYS = { "Aberta": "aberta", "Em Tratativa": "em_tratativa", "Finalizada": "encerrada", "Cancelada": "cancelada" };
 
 const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
-
 const OBRA_COLORS = ["#00233B","#566E3D","#BFCF99","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e"];
 
-const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
+const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
   if (percent < 0.04) return null;
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -89,14 +79,18 @@ const extrairNaoConformidadesChecklist = (checklist, tipo) => {
 export default function NaoConformidadesPage() {
   const [loading, setLoading] = useState(true);
   const [obras, setObras] = useState([]);
-  const [regionais, setRegionais] = useState([]);
   const [rncs, setRncs] = useState([]);
-  const [parametrosNC, setParametrosNC] = useState({}); // { parametro: count }
-  const [ncPorObra, setNcPorObra] = useState({}); // { obra_id: count (checklist NCs) }
+  const [parametrosNC, setParametrosNC] = useState({});
+  const [ncPorObra, setNcPorObra] = useState({});
+  // checklistNCs: [{ obra_id, parametro }] para filtros
+  const [checklistNCs, setChecklistNCs] = useState([]);
 
-  useEffect(() => {
-    loadAll();
-  }, []);
+  // Filtros ativos
+  const [filtroStatus, setFiltroStatus] = useState(null);   // e.g. "aberta"
+  const [filtroParametro, setFiltroParametro] = useState(null); // nome do parâmetro
+  const [filtroObraId, setFiltroObraId] = useState(null);   // obra_id
+
+  useEffect(() => { loadAll(); }, []);
 
   const loadAll = async () => {
     setLoading(true);
@@ -109,8 +103,6 @@ export default function NaoConformidadesPage() {
         Regional.list(),
         base44.entities.RelatorioNC.list("-created_date", 500)
       ]);
-
-      setRegionais(regionaisData);
 
       let availableObras = obrasData;
       if (userAccessLevel === 'cliente') {
@@ -133,15 +125,13 @@ export default function NaoConformidadesPage() {
       setObras(availableObras);
 
       const availableObraIds = new Set(availableObras.map(o => o.id));
-      const filteredRncs = rncsData.filter(r => availableObraIds.has(r.obra_id));
-      setRncs(filteredRncs);
+      setRncs(rncsData.filter(r => availableObraIds.has(r.obra_id)));
 
-      // Processar NCs de checklists para todas as obras disponíveis
       const obraIds = availableObras.map(o => o.id);
       const paramCount = {};
       const obraCount = {};
+      const allChecklistNCs = [];
 
-      // Carregar todos os checklists de todas as obras disponíveis em paralelo
       const allChecklistData = await Promise.all(
         TIPOS_CHECKLIST.map(t =>
           Promise.all(obraIds.map(oId => base44.entities[t.value].filter({ obra_id: oId }).catch(() => [])))
@@ -156,19 +146,20 @@ export default function NaoConformidadesPage() {
           ncs.forEach(param => {
             const label = param.charAt(0).toUpperCase() + param.slice(1);
             paramCount[label] = (paramCount[label] || 0) + 1;
+            allChecklistNCs.push({ obra_id: checklist.obra_id, parametro: label });
           });
         }
       });
 
-      // Também contabilizar RNCs por obra
       rncsData.forEach(rnc => {
-        if (obraIds.includes(rnc.obra_id)) {
+        if (availableObraIds.has(rnc.obra_id)) {
           obraCount[rnc.obra_id] = (obraCount[rnc.obra_id] || 0) + 1;
         }
       });
 
       setParametrosNC(paramCount);
       setNcPorObra(obraCount);
+      setChecklistNCs(allChecklistNCs);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     } finally {
@@ -176,16 +167,15 @@ export default function NaoConformidadesPage() {
     }
   };
 
-  // Gráfico 1: Status dos RNCs
+  // --- Dados para gráficos ---
   const dadosStatusRNC = useMemo(() => {
     const counts = { aberta: 0, em_tratativa: 0, encerrada: 0, cancelada: 0 };
     rncs.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
     return Object.entries(counts)
       .filter(([, v]) => v > 0)
-      .map(([status, value]) => ({ name: STATUS_LABELS[status], value, color: STATUS_COLORS[status] }));
+      .map(([status, value]) => ({ name: STATUS_LABELS[status], statusKey: status, value, color: STATUS_COLORS[status] }));
   }, [rncs]);
 
-  // Gráfico 2: Parâmetros não conformes (checklists)
   const dadosParametros = useMemo(() => {
     return Object.entries(parametrosNC)
       .sort((a, b) => b[1] - a[1])
@@ -193,19 +183,60 @@ export default function NaoConformidadesPage() {
       .map(([name, value], i) => ({ name, value, color: PARAM_COLORS[i % PARAM_COLORS.length] }));
   }, [parametrosNC]);
 
-  // Gráfico 3: Total de NC por obra
   const dadosPorObra = useMemo(() => {
     return Object.entries(ncPorObra)
       .map(([obraId, value], i) => {
         const obra = obras.find(o => o.id === obraId);
-        return { name: obra?.name || obraId, value, color: OBRA_COLORS[i % OBRA_COLORS.length] };
+        return { name: obra?.name || obraId, obraId, value, color: OBRA_COLORS[i % OBRA_COLORS.length] };
       })
       .sort((a, b) => b.value - a.value);
   }, [ncPorObra, obras]);
 
-  // Tabela resumo: RNCs por obra
+  // --- Handlers de clique nos gráficos ---
+  const handleStatusClick = useCallback((data) => {
+    setFiltroStatus(prev => prev === data.statusKey ? null : data.statusKey);
+    setFiltroObraId(null);
+    setFiltroParametro(null);
+  }, []);
+
+  const handleParametroClick = useCallback((data) => {
+    setFiltroParametro(prev => prev === data.name ? null : data.name);
+    setFiltroStatus(null);
+    setFiltroObraId(null);
+  }, []);
+
+  const handleObraClick = useCallback((data) => {
+    setFiltroObraId(prev => prev === data.obraId ? null : data.obraId);
+    setFiltroStatus(null);
+    setFiltroParametro(null);
+  }, []);
+
+  const clearFilters = useCallback(() => {
+    setFiltroStatus(null);
+    setFiltroParametro(null);
+    setFiltroObraId(null);
+  }, []);
+
+  const hasActiveFilter = filtroStatus || filtroParametro || filtroObraId;
+
+  // --- Tabela resumo filtrada ---
   const tabelaResumo = useMemo(() => {
-    return obras.map(obra => {
+    // Obras que passam no filtro
+    let obrasFiltradas = obras;
+
+    if (filtroObraId) {
+      obrasFiltradas = obras.filter(o => o.id === filtroObraId);
+    } else if (filtroStatus) {
+      // mostrar obras que têm RNCs com esse status
+      const obraIdsComStatus = new Set(rncs.filter(r => r.status === filtroStatus).map(r => r.obra_id));
+      obrasFiltradas = obras.filter(o => obraIdsComStatus.has(o.id));
+    } else if (filtroParametro) {
+      // mostrar obras que têm esse parâmetro não conforme
+      const obraIdsComParam = new Set(checklistNCs.filter(nc => nc.parametro === filtroParametro).map(nc => nc.obra_id));
+      obrasFiltradas = obras.filter(o => obraIdsComParam.has(o.id));
+    }
+
+    return obrasFiltradas.map(obra => {
       const rncsObra = rncs.filter(r => r.obra_id === obra.id);
       const abertas = rncsObra.filter(r => r.status === 'aberta').length;
       const emTratativa = rncsObra.filter(r => r.status === 'em_tratativa').length;
@@ -216,11 +247,21 @@ export default function NaoConformidadesPage() {
       if (totalRnc === 0 && paramChecklist === 0) return null;
       return { obra, totalRnc, abertas, emTratativa, finalizadas, canceladas, paramChecklist };
     }).filter(Boolean);
-  }, [obras, rncs, ncPorObra]);
+  }, [obras, rncs, ncPorObra, checklistNCs, filtroStatus, filtroParametro, filtroObraId]);
 
-  const totalRncs = rncs.length;
-  const totalAbertos = rncs.filter(r => r.status === 'aberta').length;
-  const totalParametros = Object.values(parametrosNC).reduce((a, b) => a + b, 0);
+  // KPIs filtrados
+  const rncsVisiveis = useMemo(() => {
+    if (!hasActiveFilter) return rncs;
+    return tabelaResumo.flatMap(row => rncs.filter(r => r.obra_id === row.obra.id));
+  }, [rncs, tabelaResumo, hasActiveFilter]);
+
+  const totalRncs = rncsVisiveis.length;
+  const totalAbertos = rncsVisiveis.filter(r => r.status === 'aberta').length;
+  const totalParametros = useMemo(() => {
+    if (!hasActiveFilter) return Object.values(parametrosNC).reduce((a, b) => a + b, 0);
+    const obraIds = new Set(tabelaResumo.map(r => r.obra.id));
+    return checklistNCs.filter(nc => obraIds.has(nc.obra_id)).length;
+  }, [parametrosNC, checklistNCs, tabelaResumo, hasActiveFilter]);
 
   if (loading) {
     return (
@@ -230,24 +271,55 @@ export default function NaoConformidadesPage() {
     );
   }
 
+  const tooltipStyle = { backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px', border: '1px solid rgba(0,35,59,0.15)' };
+
   return (
     <div className="p-6 bg-transparent min-h-screen">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-7 h-7 text-red-600" />
-          <div>
-            <h1 className="text-3xl font-bold text-[#00233B]">Dashboard de Não Conformidades</h1>
-            <p className="text-[#00233B]/70 text-sm mt-1">Visão geral de todas as obras</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-7 h-7 text-red-600" />
+            <div>
+              <h1 className="text-3xl font-bold text-[#00233B]">Dashboard de Não Conformidades</h1>
+              <p className="text-[#00233B]/70 text-sm mt-1">Visão geral de todas as obras</p>
+            </div>
           </div>
+          {hasActiveFilter && (
+            <Button variant="outline" size="sm" onClick={clearFilters} className="text-[#00233B] border-white/30 hover:bg-white/20 gap-2">
+              <X className="w-4 h-4" />
+              Limpar Filtro
+            </Button>
+          )}
         </div>
+
+        {/* Filtro ativo badge */}
+        {hasActiveFilter && (
+          <div className="flex flex-wrap gap-2">
+            {filtroStatus && (
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroStatus(null)}>
+                Status: {STATUS_LABELS[filtroStatus]} <X className="w-3 h-3 ml-1" />
+              </Badge>
+            )}
+            {filtroParametro && (
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroParametro(null)}>
+                Parâmetro: {filtroParametro} <X className="w-3 h-3 ml-1" />
+              </Badge>
+            )}
+            {filtroObraId && (
+              <Badge className="bg-[#BFCF99]/30 text-[#00233B] border border-[#BFCF99]/50 cursor-pointer" onClick={() => setFiltroObraId(null)}>
+                Obra: {obras.find(o => o.id === filtroObraId)?.name} <X className="w-3 h-3 ml-1" />
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: "Total de RNCs", value: totalRncs, color: "text-[#00233B]" },
             { label: "RNCs Abertas", value: totalAbertos, color: "text-red-600" },
-            { label: "Em Tratativa", value: rncs.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
+            { label: "Em Tratativa", value: rncsVisiveis.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
             { label: "NCs em Checklists", value: totalParametros, color: "text-blue-600" },
           ].map(kpi => (
             <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
@@ -266,17 +338,28 @@ export default function NaoConformidadesPage() {
             <CardHeader>
               <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[#BFCF99]" />
-                Status dos RNCs (todas as obras)
+                Status dos RNCs
+                <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {dadosStatusRNC.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
-                    <Pie data={dadosStatusRNC} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />}>
-                      {dadosStatusRNC.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    <Pie
+                      data={dadosStatusRNC}
+                      cx="50%" cy="50%" outerRadius={100}
+                      dataKey="value"
+                      labelLine={false}
+                      label={<CustomLabel />}
+                      onClick={handleStatusClick}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {dadosStatusRNC.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} opacity={filtroStatus && filtroStatus !== entry.statusKey ? 0.3 : 1} />
+                      ))}
                     </Pie>
-                    <Tooltip formatter={(value, name) => [value, name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                    <Tooltip formatter={(value, name) => [value, name]} contentStyle={tooltipStyle} />
                     <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -295,16 +378,27 @@ export default function NaoConformidadesPage() {
               <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
                 <ClipboardList className="w-4 h-4 text-[#BFCF99]" />
                 Parâmetros Não Conformes (checklists)
+                <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {dadosParametros.length > 0 ? (
                 <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
-                    <Pie data={dadosParametros} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />}>
-                      {dadosParametros.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    <Pie
+                      data={dadosParametros}
+                      cx="50%" cy="50%" outerRadius={100}
+                      dataKey="value"
+                      labelLine={false}
+                      label={<CustomLabel />}
+                      onClick={handleParametroClick}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {dadosParametros.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} opacity={filtroParametro && filtroParametro !== entry.name ? 0.3 : 1} />
+                      ))}
                     </Pie>
-                    <Tooltip formatter={(value, name) => [value + ' ocorrência(s)', name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                    <Tooltip formatter={(value, name) => [value + ' ocorrência(s)', name]} contentStyle={tooltipStyle} />
                     <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 11 }}>{value}</span>} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -324,16 +418,27 @@ export default function NaoConformidadesPage() {
             <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-[#BFCF99]" />
               Total de NCs por Obra (RNCs + Checklists)
+              <span className="text-xs font-normal text-[#00233B]/50 ml-1">(clique para filtrar)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {dadosPorObra.length > 0 ? (
               <ResponsiveContainer width="100%" height={320}>
                 <PieChart>
-                  <Pie data={dadosPorObra} cx="50%" cy="50%" outerRadius={120} dataKey="value" labelLine={false} label={<CustomLabel />}>
-                    {dadosPorObra.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                  <Pie
+                    data={dadosPorObra}
+                    cx="50%" cy="50%" outerRadius={120}
+                    dataKey="value"
+                    labelLine={false}
+                    label={<CustomLabel />}
+                    onClick={handleObraClick}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {dadosPorObra.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} opacity={filtroObraId && filtroObraId !== entry.obraId ? 0.3 : 1} />
+                    ))}
                   </Pie>
-                  <Tooltip formatter={(value, name) => [value + ' NC(s)', name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                  <Tooltip formatter={(value, name) => [value + ' NC(s)', name]} contentStyle={tooltipStyle} />
                   <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
                 </PieChart>
               </ResponsiveContainer>
@@ -349,10 +454,13 @@ export default function NaoConformidadesPage() {
         {/* Tabela Resumo */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
           <CardHeader>
-            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#BFCF99]" />
-              Tabela Resumo de NCs por Obra
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#BFCF99]" />
+                Tabela Resumo de NCs por Obra
+                {hasActiveFilter && <Badge className="bg-[#BFCF99]/40 text-[#00233B] text-xs ml-2">{tabelaResumo.length} obra(s)</Badge>}
+              </CardTitle>
+            </div>
           </CardHeader>
           <CardContent>
             {tabelaResumo.length > 0 ? (
@@ -371,7 +479,11 @@ export default function NaoConformidadesPage() {
                   </thead>
                   <tbody>
                     {tabelaResumo.map((row, i) => (
-                      <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
+                      <tr
+                        key={i}
+                        className={`border-b border-white/10 transition-colors cursor-pointer ${filtroObraId === row.obra.id ? 'bg-[#BFCF99]/20' : 'hover:bg-white/10'}`}
+                        onClick={() => handleObraClick({ obraId: row.obra.id })}
+                      >
                         <td className="py-2.5 px-3">
                           <div>
                             <p className="font-medium text-[#00233B]">{row.obra.name}</p>
@@ -404,7 +516,7 @@ export default function NaoConformidadesPage() {
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-[#00233B]/50">
                 <FileText className="w-12 h-12 mb-3 opacity-30" />
-                <p className="text-sm">Nenhuma não conformidade registrada</p>
+                <p className="text-sm">{hasActiveFilter ? 'Nenhuma obra corresponde ao filtro selecionado' : 'Nenhuma não conformidade registrada'}</p>
               </div>
             )}
           </CardContent>
