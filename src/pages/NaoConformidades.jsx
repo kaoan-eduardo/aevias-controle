@@ -522,7 +522,7 @@ export default function NaoConformidadesPage() {
                   <Legend formatter={smallLegendFmt} />
                 </PieChart>
               </ResponsiveContainer>
-            ) : <EmptyChart text="Nenhuma NC de checklist para os filtros" />}
+            ) : <EmptyChart text="Nenhuma NC de registro para os filtros" />}
           </PizzaCard>
         </div>
 
