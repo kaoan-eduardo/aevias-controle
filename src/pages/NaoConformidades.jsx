@@ -166,6 +166,10 @@ export default function NaoConformidadesPage() {
   const [filtroRodovia, setFiltroRodovia] = useState(null);
   const [filtroUsina, setFiltroUsina] = useState(null);
 
+  // Filtros locais da tabela de ocorrências
+  const [tabelaBusca, setTabelaBusca] = useState('');
+  const [tabelaTipo, setTabelaTipo] = useState('_all');
+
   useEffect(() => { loadAll(); }, []);
 
   const loadAll = async () => {
