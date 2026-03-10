@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Filter, Loader2, TrendingDown, CheckCircle2, XCircle, Calendar } from "lucide-react";
-import { createPageUrl } from "@/utils";
+import { AlertTriangle, Loader2, FileText, ClipboardList } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
 const TIPOS_CHECKLIST = [
   { value: "ChecklistUsina", label: "Checklist de Usina" },
@@ -20,107 +16,156 @@ const TIPOS_CHECKLIST = [
   { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem" }
 ];
 
-const COLORS = {
-  conforme: '#566E3D',
-  nao_conforme: '#dc2626',
-  pendente: '#FBBF24'
+const STATUS_COLORS = {
+  aberta: "#dc2626",
+  em_tratativa: "#d97706",
+  encerrada: "#16a34a",
+  cancelada: "#6b7280"
+};
+
+const STATUS_LABELS = {
+  aberta: "Aberta",
+  em_tratativa: "Em Tratativa",
+  encerrada: "Finalizada",
+  cancelada: "Cancelada"
+};
+
+const PARAM_COLORS = ["#dc2626","#d97706","#2563eb","#7c3aed","#0891b2","#be185d","#065f46","#92400e","#1e3a5f","#6b21a8"];
+
+const OBRA_COLORS = ["#00233B","#566E3D","#BFCF99","#d97706","#0891b2","#7c3aed","#dc2626","#be185d","#065f46","#92400e"];
+
+const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
+  if (percent < 0.04) return null;
+  const RADIAN = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return (
+    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
+const extrairNaoConformidadesChecklist = (checklist, tipo) => {
+  const ncs = [];
+  if (tipo === 'ChecklistUsina' && checklist.controle_cauq) {
+    ['extracao_ligante_rotarex','extracao_ligante_soxhlet','granulometria','volume_vazios','rbv','rtcd_25c','estabilidade','fluencia'].forEach(key => {
+      const e = checklist.controle_cauq[key];
+      if (e?.realizado && e.conforme === false) ncs.push(key.replace(/_/g,' '));
+    });
+    if (checklist.equivalente_areia_status === 'realizado') {
+      const limite = checklist.projeto_equivalente_areia_minimo || 55;
+      (checklist.equivalente_areia_resultados || []).forEach(r => { if (r < limite) ncs.push('Equivalente de Areia'); });
+    }
+  }
+  if (tipo === 'ChecklistAplicacao') {
+    if (checklist.pintura_ligacao?.taxa_pintura?.realizado && checklist.pintura_ligacao.taxa_pintura.conforme === false) ncs.push('Taxa de Pintura');
+    if (checklist.pintura_ligacao?.taxa_pintura_residual?.realizado && checklist.pintura_ligacao.taxa_pintura_residual.conforme === false) ncs.push('Taxa de Pintura Residual');
+    if (checklist.controle_aplicacao?.temp_aplicacao_cargas?.realizado && checklist.controle_aplicacao.temp_aplicacao_cargas.conforme === false) ncs.push('Temperatura de Aplicação');
+    if (checklist.controle_aplicacao?.espessura_camada?.realizado && checklist.controle_aplicacao.espessura_camada.conforme === false) ncs.push('Espessura da Camada');
+  }
+  if (tipo === 'ChecklistConcretagem') {
+    (checklist.cargas_concreto || []).forEach(carga => {
+      if (carga.slump_test?.realizado && carga.slump_test.conforme === false) ncs.push('Slump Test');
+      if (carga.espessura_camada?.realizado && carga.espessura_camada.conforme === false) ncs.push('Espessura (Concretagem)');
+    });
+  }
+  if (tipo === 'ChecklistTerraplanagem' && checklist.ensaios_empreiteira) {
+    ['compactacao_proctor','isc','umidade_frigideira','massa_especifica_in_situ','granulometria'].forEach(key => {
+      const d = checklist.ensaios_empreiteira[key];
+      if (d?.realizado && d.conforme === false) ncs.push(key.replace(/_/g,' '));
+    });
+  }
+  if (tipo === 'ChecklistMRAF' && checklist.acompanhamento_aplicacao) {
+    ['taxa_aplicacao','residuo_emulsao','espessura_camada'].forEach(key => {
+      const d = checklist.acompanhamento_aplicacao[key];
+      if (d?.realizado && d.conforme === false) ncs.push(key.replace(/_/g,' ') + ' (MRAF)');
+    });
+  }
+  return ncs;
 };
 
 export default function NaoConformidadesPage() {
-  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [obras, setObras] = useState([]);
   const [regionais, setRegionais] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingData, setLoadingData] = useState(false);
-
-  // Filtros
-  const [obraId, setObraId] = useState("");
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
-
-  // Dados
-  const [naoConformidades, setNaoConformidades] = useState([]);
-  const [estatisticas, setEstatisticas] = useState({
-    total: 0,
-    conformes: 0,
-    naoConformes: 0,
-    pendentes: 0
-  });
+  const [rncs, setRncs] = useState([]);
+  const [parametrosNC, setParametrosNC] = useState({}); // { parametro: count }
+  const [ncPorObra, setNcPorObra] = useState({}); // { obra_id: count (checklist NCs) }
 
   useEffect(() => {
-    loadInitialData();
+    loadAll();
   }, []);
 
-  // Executar análise automaticamente quando obra ou período mudar
-  useEffect(() => {
-    if (obraId) {
-      analisarDados();
-    }
-  }, [obraId, dataInicio, dataFim]);
-
-  const loadInitialData = async () => {
+  const loadAll = async () => {
     setLoading(true);
     try {
       const userData = await User.me();
-      setUser(userData);
-
       const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
 
-      const [obrasData, regionaisData] = await Promise.all([
+      const [obrasData, regionaisData, rncsData] = await Promise.all([
         Obra.list(),
-        Regional.list()
+        Regional.list(),
+        base44.entities.RelatorioNC.list("-created_date", 500)
       ]);
 
       setRegionais(regionaisData);
 
-      // Filtrar obras por permissão
       let availableObras = obrasData;
-
       if (userAccessLevel === 'cliente') {
-        const regionaisDoCliente = regionaisData.filter(regional => {
-          const clientes = regional.clientes_responsaveis || [];
-          return clientes.some(email => email.toLowerCase() === userData.email.toLowerCase());
-        });
-
-        const obraIds = new Set();
-        regionaisDoCliente.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
+        const regionaisDoCliente = regionaisData.filter(r => (r.clientes_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
+        const ids = new Set(regionaisDoCliente.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        availableObras = obrasData.filter(o => ids.has(o.id));
       } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
-        const regionaisDaSala = regionaisData.filter(regional => {
-          const salas = regional.salas_tecnicas_responsaveis || [];
-          return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-        });
-
-        const obraIds = new Set();
-        regionaisDaSala.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
+        const regionaisDaSala = regionaisData.filter(r => (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase()));
+        const ids = new Set(regionaisDaSala.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        availableObras = obrasData.filter(o => ids.has(o.id));
       } else if (userAccessLevel === 'gestor_contrato') {
-        const regionaisDoGestor = regionaisData.filter(regional => {
-          return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
-        });
-
-        const obraIds = new Set();
-        regionaisDoGestor.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
+        const regionaisDoGestor = regionaisData.filter(r =>
+          r.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
+          (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase())
+        );
+        const ids = new Set(regionaisDoGestor.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        availableObras = obrasData.filter(o => ids.has(o.id));
       }
 
       setObras(availableObras);
+      setRncs(rncsData);
 
-      if (availableObras.length === 1) {
-        setObraId(availableObras[0].id);
-      }
+      // Processar NCs de checklists para todas as obras disponíveis
+      const obraIds = availableObras.map(o => o.id);
+      const paramCount = {};
+      const obraCount = {};
+
+      // Carregar todos os checklists de todas as obras disponíveis em paralelo
+      const allChecklistData = await Promise.all(
+        TIPOS_CHECKLIST.map(t =>
+          Promise.all(obraIds.map(oId => base44.entities[t.value].filter({ obra_id: oId }).catch(() => [])))
+            .then(results => results.flat().map(c => ({ ...c, _tipo: t.value })))
+        )
+      );
+
+      allChecklistData.flat().forEach(checklist => {
+        const ncs = extrairNaoConformidadesChecklist(checklist, checklist._tipo);
+        if (ncs.length > 0) {
+          obraCount[checklist.obra_id] = (obraCount[checklist.obra_id] || 0) + ncs.length;
+          ncs.forEach(param => {
+            const label = param.charAt(0).toUpperCase() + param.slice(1);
+            paramCount[label] = (paramCount[label] || 0) + 1;
+          });
+        }
+      });
+
+      // Também contabilizar RNCs por obra
+      rncsData.forEach(rnc => {
+        if (obraIds.includes(rnc.obra_id)) {
+          obraCount[rnc.obra_id] = (obraCount[rnc.obra_id] || 0) + 1;
+        }
+      });
+
+      setParametrosNC(paramCount);
+      setNcPorObra(obraCount);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     } finally {
@@ -128,284 +173,51 @@ export default function NaoConformidadesPage() {
     }
   };
 
-  const extrairNaoConformidades = (checklist, tipo) => {
-    const naoConformidadesEncontradas = [];
+  // Gráfico 1: Status dos RNCs
+  const dadosStatusRNC = useMemo(() => {
+    const counts = { aberta: 0, em_tratativa: 0, encerrada: 0, cancelada: 0 };
+    rncs.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+    return Object.entries(counts)
+      .filter(([, v]) => v > 0)
+      .map(([status, value]) => ({ name: STATUS_LABELS[status], value, color: STATUS_COLORS[status] }));
+  }, [rncs]);
 
-    if (tipo === 'ChecklistUsina') {
-      // Controle CAUQ
-      if (checklist.controle_cauq) {
-        const campos = [
-          { key: 'extracao_ligante_rotarex', label: 'Extração Ligante (Rotarex)' },
-          { key: 'extracao_ligante_soxhlet', label: 'Extração Ligante (Soxhlet)' },
-          { key: 'granulometria', label: 'Granulometria' },
-          { key: 'volume_vazios', label: 'Volume de Vazios' },
-          { key: 'rbv', label: 'RBV' },
-          { key: 'rtcd_25c', label: 'RTCD 25°C' },
-          { key: 'estabilidade', label: 'Estabilidade' },
-          { key: 'fluencia', label: 'Fluência' }
-        ];
+  // Gráfico 2: Parâmetros não conformes (checklists)
+  const dadosParametros = useMemo(() => {
+    return Object.entries(parametrosNC)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, value], i) => ({ name, value, color: PARAM_COLORS[i % PARAM_COLORS.length] }));
+  }, [parametrosNC]);
 
-        campos.forEach(campo => {
-          const ensaio = checklist.controle_cauq[campo.key];
-          if (ensaio?.realizado && ensaio.conforme === false) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Controle CAUQ',
-              campo: campo.label,
-              valor: ensaio.resultados ? `Resultados: ${JSON.stringify(ensaio.resultados)}` : 'Não conforme'
-            });
-          }
-        });
-      }
+  // Gráfico 3: Total de NC por obra
+  const dadosPorObra = useMemo(() => {
+    return Object.entries(ncPorObra)
+      .map(([obraId, value], i) => {
+        const obra = obras.find(o => o.id === obraId);
+        return { name: obra?.name || obraId, value, color: OBRA_COLORS[i % OBRA_COLORS.length] };
+      })
+      .sort((a, b) => b.value - a.value);
+  }, [ncPorObra, obras]);
 
-      // Equivalente de areia
-      if (checklist.equivalente_areia_status === 'realizado' && checklist.equivalente_areia_resultados) {
-        const limite = checklist.projeto_equivalente_areia_minimo || 55;
-        checklist.equivalente_areia_resultados.forEach((resultado, idx) => {
-          if (resultado < limite) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Equivalente de Areia',
-              campo: `Ensaio ${idx + 1}`,
-              valor: `${resultado}% (Mínimo: ${limite}%)`
-            });
-          }
-        });
-      }
-    }
+  // Tabela resumo: RNCs por obra
+  const tabelaResumo = useMemo(() => {
+    return obras.map(obra => {
+      const rncsObra = rncs.filter(r => r.obra_id === obra.id);
+      const abertas = rncsObra.filter(r => r.status === 'aberta').length;
+      const emTratativa = rncsObra.filter(r => r.status === 'em_tratativa').length;
+      const finalizadas = rncsObra.filter(r => r.status === 'encerrada').length;
+      const canceladas = rncsObra.filter(r => r.status === 'cancelada').length;
+      const paramChecklist = ncPorObra[obra.id] || 0;
+      const totalRnc = rncsObra.length;
+      if (totalRnc === 0 && paramChecklist === 0) return null;
+      return { obra, totalRnc, abertas, emTratativa, finalizadas, canceladas, paramChecklist };
+    }).filter(Boolean);
+  }, [obras, rncs, ncPorObra]);
 
-    if (tipo === 'ChecklistAplicacao') {
-      // Taxa de Pintura
-      if (checklist.pintura_ligacao?.taxa_pintura?.realizado && 
-          checklist.pintura_ligacao.taxa_pintura.conforme === false) {
-        naoConformidadesEncontradas.push({
-          tipo: 'Pintura de Ligação',
-          campo: 'Taxa de Pintura',
-          valor: `${checklist.pintura_ligacao.taxa_pintura.resultado} l/m² (Limite: 0,8 a 1,0 l/m²)`
-        });
-      }
-
-      // Taxa de Pintura Residual
-      if (checklist.pintura_ligacao?.taxa_pintura_residual?.realizado && 
-          checklist.pintura_ligacao.taxa_pintura_residual.conforme === false) {
-        naoConformidadesEncontradas.push({
-          tipo: 'Pintura de Ligação',
-          campo: 'Taxa de Pintura Residual',
-          valor: `${checklist.pintura_ligacao.taxa_pintura_residual.resultado} l/m² (Limite: 0,3 a 0,4 l/m²)`
-        });
-      }
-
-      // Temperatura de aplicação
-      if (checklist.controle_aplicacao?.temp_aplicacao_cargas?.realizado && 
-          checklist.controle_aplicacao.temp_aplicacao_cargas.conforme === false) {
-        naoConformidadesEncontradas.push({
-          tipo: 'Temperatura de Aplicação',
-          campo: 'Temperatura das Cargas',
-          valor: checklist.controle_aplicacao.temp_aplicacao_cargas.resultados ? 
-            `${checklist.controle_aplicacao.temp_aplicacao_cargas.resultados.join(', ')}°C` : 'Não conforme'
-        });
-      }
-
-      // Espessura da camada
-      if (checklist.controle_aplicacao?.espessura_camada?.realizado && 
-          checklist.controle_aplicacao.espessura_camada.conforme === false) {
-        naoConformidadesEncontradas.push({
-          tipo: 'Espessura da Camada',
-          campo: 'Medições de Espessura',
-          valor: checklist.controle_aplicacao.espessura_camada.resultados ? 
-            `${checklist.controle_aplicacao.espessura_camada.resultados.join(', ')} cm` : 'Não conforme'
-        });
-      }
-    }
-
-    if (tipo === 'ChecklistConcretagem') {
-      // Verificar slump e espessura em cada carga
-      if (checklist.cargas_concreto) {
-        checklist.cargas_concreto.forEach((carga, idx) => {
-          if (carga.slump_test?.realizado && carga.slump_test.conforme === false) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Slump Test',
-              campo: `Carga ${carga.numero_carga || idx + 1}`,
-              valor: `${carga.slump_test.resultado} cm (Limite: ${carga.slump_test.limite || 'N/A'})`
-            });
-          }
-
-          if (carga.espessura_camada?.realizado && carga.espessura_camada.conforme === false) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Espessura da Camada',
-              campo: `Carga ${carga.numero_carga || idx + 1}`,
-              valor: `${carga.espessura_camada.resultado} cm (Limite: ${carga.espessura_camada.limite || 'N/A'})`
-            });
-          }
-        });
-      }
-    }
-
-    if (tipo === 'ChecklistTerraplanagem') {
-      // Verificar ensaios da empreiteira
-      if (checklist.ensaios_empreiteira) {
-        const ensaios = [
-          { key: 'compactacao_proctor', label: 'Compactação Proctor' },
-          { key: 'isc', label: 'ISC' },
-          { key: 'umidade_frigideira', label: 'Umidade (Frigideira)' },
-          { key: 'massa_especifica_in_situ', label: 'Massa Específica In Situ' },
-          { key: 'granulometria', label: 'Granulometria' }
-        ];
-
-        ensaios.forEach(ensaio => {
-          const dados = checklist.ensaios_empreiteira[ensaio.key];
-          if (dados?.realizado && dados.conforme === false) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Ensaio Empreiteira',
-              campo: ensaio.label,
-              valor: dados.resultados || dados.observacoes || 'Não conforme'
-            });
-          }
-        });
-      }
-    }
-
-    if (tipo === 'ChecklistMRAF') {
-      // Verificar acompanhamento de aplicação
-      if (checklist.acompanhamento_aplicacao) {
-        const ensaios = [
-          { key: 'taxa_aplicacao', label: 'Taxa de Aplicação', unidade: 'kg/m²', limites: '8 a 16' },
-          { key: 'residuo_emulsao', label: 'Resíduo da Emulsão', unidade: '%', limites: '6,5% a 12,0%' },
-          { key: 'espessura_camada', label: 'Espessura da Camada', unidade: 'mm', limites: '6 a 20' }
-        ];
-
-        ensaios.forEach(ensaio => {
-          const dados = checklist.acompanhamento_aplicacao[ensaio.key];
-          if (dados?.realizado && dados.conforme === false) {
-            naoConformidadesEncontradas.push({
-              tipo: 'Acompanhamento Aplicação MRAF',
-              campo: ensaio.label,
-              valor: `${dados.resultado} ${ensaio.unidade} (Limite: ${ensaio.limites})`
-            });
-          }
-        });
-      }
-    }
-
-    return naoConformidadesEncontradas;
-  };
-
-  const analisarDados = async () => {
-    if (!obraId) {
-      return;
-    }
-
-    setLoadingData(true);
-    try {
-      const todasNaoConformidades = [];
-      let totalConformes = 0;
-      let totalNaoConformes = 0;
-      let totalPendentes = 0;
-
-      // Analisar todos os tipos de checklist automaticamente
-      const todosTipos = TIPOS_CHECKLIST.map(t => t.value);
-
-      for (const tipo of todosTipos) {
-        const checklists = await base44.entities[tipo].filter({ obra_id: obraId });
-
-        // Filtrar por período
-        let checklistsFiltrados = checklists;
-        if (dataInicio || dataFim) {
-          checklistsFiltrados = checklists.filter(c => {
-            const dataChecklist = c.data;
-            if (!dataChecklist) return false;
-
-            const dataChecklistObj = new Date(dataChecklist);
-            
-            if (dataInicio) {
-              const dataInicioObj = new Date(dataInicio);
-              if (dataChecklistObj < dataInicioObj) return false;
-            }
-            
-            if (dataFim) {
-              const dataFimObj = new Date(dataFim);
-              if (dataChecklistObj > dataFimObj) return false;
-            }
-            
-            return true;
-          });
-        }
-
-        checklistsFiltrados.forEach(checklist => {
-          const naoConformidadesItem = extrairNaoConformidades(checklist, tipo);
-          
-          if (naoConformidadesItem.length > 0) {
-            totalNaoConformes += naoConformidadesItem.length;
-            
-            // Extrair informações de localização e responsável
-            let responsavel = '';
-            if (tipo === 'ChecklistUsina') {
-              responsavel = checklist.usina || '';
-            } else if (tipo === 'ChecklistAplicacao') {
-              responsavel = checklist.usina || '';
-            } else if (tipo === 'ChecklistMRAF') {
-              responsavel = checklist.usina || '';
-            } else if (tipo === 'ChecklistConcretagem') {
-              responsavel = checklist.concreteira || '';
-            } else if (tipo === 'ChecklistTerraplanagem') {
-              responsavel = checklist.empreiteira || '';
-            }
-            
-            todasNaoConformidades.push({
-              id: checklist.id,
-              tipo: TIPOS_CHECKLIST.find(t => t.value === tipo)?.label || tipo,
-              data: checklist.data,
-              obra_id: checklist.obra_id,
-              rodovia: checklist.rodovia || '',
-              trecho: checklist.trecho || '',
-              responsavel: responsavel,
-              naoConformidades: naoConformidadesItem
-            });
-          } else if (checklist.approved === true) {
-            totalConformes++;
-          } else if (checklist.approved === null) {
-            totalPendentes++;
-          }
-        });
-      }
-
-      setNaoConformidades(todasNaoConformidades);
-      setEstatisticas({
-        total: todasNaoConformidades.length + totalConformes + totalPendentes,
-        conformes: totalConformes,
-        naoConformes: totalNaoConformes,
-        pendentes: totalPendentes
-      });
-    } catch (error) {
-      console.error("Erro ao analisar dados:", error);
-      alert("Erro ao carregar dados de não conformidades.");
-    } finally {
-      setLoadingData(false);
-    }
-  };
-
-
-
-  // Dados para gráficos
-  const dadosPorTipo = useMemo(() => {
-    const contagem = {};
-    naoConformidades.forEach(item => {
-      item.naoConformidades.forEach(nc => {
-        const tipo = nc.tipo;
-        contagem[tipo] = (contagem[tipo] || 0) + 1;
-      });
-    });
-
-    return Object.entries(contagem)
-      .map(([tipo, quantidade]) => ({ tipo, quantidade }))
-      .sort((a, b) => b.quantidade - a.quantidade);
-  }, [naoConformidades]);
-
-  const dadosDistribuicao = useMemo(() => [
-    { name: 'Conformes', value: estatisticas.conformes, color: COLORS.conforme },
-    { name: 'Não Conformes', value: estatisticas.naoConformes, color: COLORS.nao_conforme },
-    { name: 'Pendentes', value: estatisticas.pendentes, color: COLORS.pendente }
-  ], [estatisticas]);
-
-  const obraSelecionada = useMemo(() => obras.find(o => o.id === obraId), [obras, obraId]);
+  const totalRncs = rncs.length;
+  const totalAbertos = rncs.filter(r => r.status === 'aberta').length;
+  const totalParametros = Object.values(parametrosNC).reduce((a, b) => a + b, 0);
 
   if (loading) {
     return (
@@ -418,299 +230,182 @@ export default function NaoConformidadesPage() {
   return (
     <div className="p-6 bg-transparent min-h-screen">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-[#00233B]">Análise de Não Conformidades</h1>
-          <p className="text-[#00233B]/80 mt-1">
-            Identifique e analise não conformidades nos checklists de campo
-          </p>
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <AlertTriangle className="w-7 h-7 text-red-600" />
+          <div>
+            <h1 className="text-3xl font-bold text-[#00233B]">Dashboard de Não Conformidades</h1>
+            <p className="text-[#00233B]/70 text-sm mt-1">Visão geral de todas as obras</p>
+          </div>
         </div>
 
-        {/* Filtros */}
+        {/* KPIs */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: "Total de RNCs", value: totalRncs, color: "text-[#00233B]" },
+            { label: "RNCs Abertas", value: totalAbertos, color: "text-red-600" },
+            { label: "Em Tratativa", value: rncs.filter(r => r.status === 'em_tratativa').length, color: "text-amber-600" },
+            { label: "NCs em Checklists", value: totalParametros, color: "text-blue-600" },
+          ].map(kpi => (
+            <Card key={kpi.label} className="bg-white/20 backdrop-blur-lg border border-white/20">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-[#00233B]/70 font-medium uppercase tracking-wide">{kpi.label}</p>
+                <p className={`text-3xl font-bold mt-1 ${kpi.color}`}>{kpi.value}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Gráficos de Pizza - linha 1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Pizza 1: Status dos RNCs */}
+          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+            <CardHeader>
+              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#BFCF99]" />
+                Status dos RNCs (todas as obras)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {dadosStatusRNC.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie data={dadosStatusRNC} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />}>
+                      {dadosStatusRNC.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    </Pie>
+                    <Tooltip formatter={(value, name) => [value, name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                    <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
+                  <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
+                  <p className="text-sm">Nenhum RNC cadastrado</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Pizza 2: Parâmetros não conformes */}
+          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+            <CardHeader>
+              <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+                <ClipboardList className="w-4 h-4 text-[#BFCF99]" />
+                Parâmetros Não Conformes (checklists)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {dadosParametros.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie data={dadosParametros} cx="50%" cy="50%" outerRadius={100} dataKey="value" labelLine={false} label={<CustomLabel />}>
+                      {dadosParametros.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                    </Pie>
+                    <Tooltip formatter={(value, name) => [value + ' ocorrência(s)', name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                    <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 11 }}>{value}</span>} />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[280px] flex flex-col items-center justify-center text-[#00233B]/50">
+                  <ClipboardList className="w-10 h-10 mb-2 opacity-30" />
+                  <p className="text-sm">Nenhuma NC de checklist encontrada</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Pizza 3: NCs por Obra */}
         <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
           <CardHeader>
-            <CardTitle className="text-[#00233B] flex items-center gap-2">
-              <Filter className="w-5 h-5 text-[#BFCF99]" />
-              Filtros de Análise
+            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-[#BFCF99]" />
+              Total de NCs por Obra (RNCs + Checklists)
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Obra */}
-            <div>
-              <Label htmlFor="obra" className="text-[#00233B]">Obra *</Label>
-              <select
-                id="obra"
-                value={obraId}
-                onChange={(e) => setObraId(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-white/20 bg-white/50 px-3 py-2 text-sm text-[#00233B]"
-              >
-                <option value="">Selecione uma obra</option>
-                {obras.map(obra => {
-                  const regional = regionais.find(r => r.id === obra.regional_id);
-                  return (
-                    <option key={obra.id} value={obra.id}>
-                      {obra.name} - {obra.code} {regional && `(${regional.nome})`}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-
-            {/* Período */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="dataInicio" className="text-[#00233B]">Data Início</Label>
-                <Input
-                  id="dataInicio"
-                  type="date"
-                  value={dataInicio}
-                  onChange={(e) => setDataInicio(e.target.value)}
-                  className="bg-white/50 border-white/20 text-[#00233B]"
-                />
-              </div>
-              <div>
-                <Label htmlFor="dataFim" className="text-[#00233B]">Data Fim</Label>
-                <Input
-                  id="dataFim"
-                  type="date"
-                  value={dataFim}
-                  onChange={(e) => setDataFim(e.target.value)}
-                  className="bg-white/50 border-white/20 text-[#00233B]"
-                />
-              </div>
-            </div>
-
-            {loadingData && (
-              <div className="flex items-center gap-2 text-[#00233B]">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Analisando não conformidades...</span>
+          <CardContent>
+            {dadosPorObra.length > 0 ? (
+              <ResponsiveContainer width="100%" height={320}>
+                <PieChart>
+                  <Pie data={dadosPorObra} cx="50%" cy="50%" outerRadius={120} dataKey="value" labelLine={false} label={<CustomLabel />}>
+                    {dadosPorObra.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                  </Pie>
+                  <Tooltip formatter={(value, name) => [value + ' NC(s)', name]} contentStyle={{ backgroundColor: 'rgba(242,241,239,0.97)', borderRadius: '8px' }} />
+                  <Legend formatter={(value) => <span style={{ color: '#00233B', fontSize: 12 }}>{value}</span>} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-[320px] flex flex-col items-center justify-center text-[#00233B]/50">
+                <AlertTriangle className="w-10 h-10 mb-2 opacity-30" />
+                <p className="text-sm">Nenhuma NC encontrada nas obras</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Estatísticas */}
-        {estatisticas.total > 0 && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-[#00233B]/80">Total Analisado</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-[#00233B]">{estatisticas.total}</div>
-                  <p className="text-xs text-[#00233B]/70 mt-1">Checklists analisados</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#566E3D]" />
-                    Conformes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-[#566E3D]">{estatisticas.conformes}</div>
-                  <p className="text-xs text-[#00233B]/70 mt-1">
-                    {estatisticas.total > 0 ? ((estatisticas.conformes / estatisticas.total) * 100).toFixed(1) : 0}% do total
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                    <XCircle className="w-4 h-4 text-red-600" />
-                    Não Conformes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-red-600">{estatisticas.naoConformes}</div>
-                  <p className="text-xs text-[#00233B]/70 mt-1">Itens com desvio</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-[#00233B]/80 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#FBBF24]" />
-                    Pendentes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-[#854d0e]">{estatisticas.pendentes}</div>
-                  <p className="text-xs text-[#00233B]/70 mt-1">Aguardando análise</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Gráficos */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Gráfico de Barras - Não Conformidades por Tipo */}
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-[#00233B]">Não Conformidades por Tipo</CardTitle>
-                  <p className="text-sm text-[#00233B]/70">Distribuição dos tipos de desvios encontrados</p>
-                </CardHeader>
-                <CardContent>
-                  {dadosPorTipo.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={dadosPorTipo}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" />
-                        <XAxis dataKey="tipo" stroke="#00233B" angle={-45} textAnchor="end" height={100} />
-                        <YAxis stroke="#00233B" />
-                        <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.95)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px' }} />
-                        <Bar dataKey="quantidade" fill="#dc2626" name="Quantidade" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="h-[300px] flex items-center justify-center text-[#00233B]/60">
-                      Nenhuma não conformidade encontrada
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Gráfico de Pizza - Distribuição Geral */}
-              <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-[#00233B]">Distribuição de Status</CardTitle>
-                  <p className="text-sm text-[#00233B]/70">Proporção entre conformes, não conformes e pendentes</p>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={dadosDistribuicao}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={100}
-                        dataKey="value"
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {dadosDistribuicao.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: 'rgba(242, 241, 239, 0.95)', border: '1px solid rgba(0, 35, 59, 0.2)', borderRadius: '8px' }} />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Lista de Não Conformidades */}
-            <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-[#00233B]">
-                    Detalhamento das Não Conformidades
-                  </CardTitle>
-                  {obraSelecionada && (
-                    <Badge className="bg-[#566E3D] text-white">
-                      {obraSelecionada.name}
-                    </Badge>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                {naoConformidades.length > 0 ? (
-                  <div className="space-y-4">
-                    {naoConformidades.map((item, idx) => (
-                      <div key={idx} className="border border-red-200 rounded-lg p-4 bg-red-50/50">
-                        <div className="flex justify-between items-start mb-3">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h4 className="font-semibold text-[#00233B]">{item.tipo}</h4>
-                              <Badge variant="destructive" className="bg-red-600 shrink-0">
-                                {item.naoConformidades.length} desvio(s)
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-[#00233B]/70">
-                              <div>
-                                <span className="font-bold text-[#00233B]">Data:</span> {new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
-                              </div>
-                              {item.responsavel && (
-                                <div>
-                                  <span className="font-bold text-[#00233B]">Responsável:</span> {item.responsavel}
-                                </div>
-                              )}
-                              {item.rodovia && (
-                                <div>
-                                  <span className="font-bold text-[#00233B]">Rodovia:</span> {item.rodovia}
-                                </div>
-                              )}
-                              {item.trecho && (
-                                <div>
-                                  <span className="font-bold text-[#00233B]">Trecho:</span> {item.trecho}
-                                </div>
-                              )}
-                            </div>
+        {/* Tabela Resumo */}
+        <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+          <CardHeader>
+            <CardTitle className="text-[#00233B] text-base flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#BFCF99]" />
+              Tabela Resumo de NCs por Obra
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {tabelaResumo.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/20">
+                      <th className="text-left py-2 px-3 text-[#00233B] font-semibold text-xs uppercase tracking-wide">Obra</th>
+                      <th className="text-center py-2 px-3 text-[#00233B] font-semibold text-xs uppercase tracking-wide">Total RNC</th>
+                      <th className="text-center py-2 px-3 text-red-600 font-semibold text-xs uppercase tracking-wide">Abertas</th>
+                      <th className="text-center py-2 px-3 text-amber-600 font-semibold text-xs uppercase tracking-wide">Em Tratativa</th>
+                      <th className="text-center py-2 px-3 text-green-600 font-semibold text-xs uppercase tracking-wide">Finalizadas</th>
+                      <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">Canceladas</th>
+                      <th className="text-center py-2 px-3 text-blue-600 font-semibold text-xs uppercase tracking-wide">NCs Checklist</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tabelaResumo.map((row, i) => (
+                      <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
+                        <td className="py-2.5 px-3">
+                          <div>
+                            <p className="font-medium text-[#00233B]">{row.obra.name}</p>
+                            <p className="text-xs text-[#00233B]/60">{row.obra.code}</p>
                           </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              const reportUrl = (() => {
-                                if (item.tipo.includes('Usina')) return createPageUrl(`RelatorioChecklist?id=${item.id}`);
-                                if (item.tipo.includes('Aplicação')) return createPageUrl(`RelatorioChecklistAplicacao?id=${item.id}`);
-                                if (item.tipo.includes('MRAF')) return createPageUrl(`RelatorioChecklistMRAF?id=${item.id}`);
-                                if (item.tipo.includes('Concretagem')) return createPageUrl(`RelatorioChecklistConcretagem?id=${item.id}`);
-                                if (item.tipo.includes('Terraplanagem')) return createPageUrl(`RelatorioChecklistTerraplanagem?id=${item.id}`);
-                                return '#';
-                              })();
-                              window.open(reportUrl, '_blank');
-                            }}
-                            className="text-[#00233B] hover:bg-[#00233B]/10 border-white/20"
-                          >
-                            Ver Registro
-                          </Button>
-                        </div>
-                        <div className="space-y-2">
-                          {item.naoConformidades.map((nc, ncIdx) => (
-                            <div key={ncIdx} className="bg-white/50 rounded p-3 border border-red-200">
-                              <div className="flex items-start gap-2">
-                                <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium text-[#00233B]">
-                                    {nc.tipo} - {nc.campo}
-                                  </p>
-                                  <p className="text-xs text-[#00233B]/80 mt-1">{nc.valor}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          <span className="font-bold text-[#00233B]">{row.totalRnc}</span>
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          {row.abertas > 0 ? <Badge className="bg-red-100 text-red-700">{row.abertas}</Badge> : <span className="text-[#00233B]/30">—</span>}
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          {row.emTratativa > 0 ? <Badge className="bg-amber-100 text-amber-700">{row.emTratativa}</Badge> : <span className="text-[#00233B]/30">—</span>}
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          {row.finalizadas > 0 ? <Badge className="bg-green-100 text-green-700">{row.finalizadas}</Badge> : <span className="text-[#00233B]/30">—</span>}
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          {row.canceladas > 0 ? <Badge className="bg-gray-100 text-gray-600">{row.canceladas}</Badge> : <span className="text-[#00233B]/30">—</span>}
+                        </td>
+                        <td className="text-center py-2.5 px-3">
+                          {row.paramChecklist > 0 ? <Badge className="bg-blue-100 text-blue-700">{row.paramChecklist}</Badge> : <span className="text-[#00233B]/30">—</span>}
+                        </td>
+                      </tr>
                     ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <CheckCircle2 className="w-16 h-16 text-[#566E3D] mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-[#00233B] mb-2">
-                      Nenhuma não conformidade encontrada
-                    </h3>
-                    <p className="text-[#00233B]/70">
-                      Todos os checklists analisados estão em conformidade ou pendentes de análise.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </>
-        )}
-
-        {estatisticas.total === 0 && !loadingData && obraId && (
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <TrendingDown className="w-16 h-16 text-[#00233B]/30 mb-4" />
-              <p className="text-[#00233B]/80 text-center">
-                Selecione uma obra para visualizar as não conformidades
-              </p>
-            </CardContent>
-          </Card>
-        )}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 text-[#00233B]/50">
+                <FileText className="w-12 h-12 mb-3 opacity-30" />
+                <p className="text-sm">Nenhuma não conformidade registrada</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
