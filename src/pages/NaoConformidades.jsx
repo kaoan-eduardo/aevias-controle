@@ -605,7 +605,7 @@ export default function NaoConformidadesPage() {
             page: RNC_PAGE,
           }));
           const checklistRows = cncsVisiveis.map(nc => {
-            const t = TIPOS_CHECKLIST.find(t => t.value === nc.tipo);
+            const t = ALL_TIPOS.find(t => t.value === nc.tipo);
             return {
               _kind: 'checklist',
               id: nc.id,
