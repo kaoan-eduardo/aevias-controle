@@ -678,6 +678,7 @@ export default function NaoConformidadesPage() {
                   <YAxis 
                     domain={[0, dadosTemporais.maxValue + 5]}
                     allowDecimals={false}
+                    ticks={Array.from({ length: Math.ceil(dadosTemporais.maxValue + 5) + 1 }, (_, i) => i)}
                     tick={{ fill: '#00233B', fontSize: 11 }}
                     tickLine={{ stroke: '#00233B' }}
                     label={{ value: 'Nº de NCs', angle: -90, position: 'insideLeft', style: { fill: '#00233B', fontSize: 12 } }}
