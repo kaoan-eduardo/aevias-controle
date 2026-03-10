@@ -225,6 +225,30 @@ export default function NaoConformidadesPage() {
         });
       });
 
+      // Also fetch reprovados ensaios as NCs
+      const allEnsaios = await Promise.all(
+        TIPOS_ENSAIO.map(t =>
+          base44.entities[t.value].list('-created_date', 2000)
+            .catch(() => [])
+            .then(res => res.filter(e => e.approved === false && availableIds.has(e.obra_id)).map(e => ({ ...e, _tipo: t.value })))
+        )
+      );
+
+      allEnsaios.flat().forEach(ensaio => {
+        const t = TIPOS_ENSAIO.find(x => x.value === ensaio._tipo);
+        allCNCs.push({
+          id: ensaio.id,
+          obra_id: ensaio.obra_id,
+          parametro: t?.label || ensaio._tipo,
+          tipo: ensaio._tipo,
+          laboratorista_name: ensaio.laboratorista_name || '',
+          data: ensaio.extraction_date || ensaio.data_ensaio || ensaio.data || ensaio.collection_date || '',
+          empreiteira: '',
+          rodovia: ensaio.rodovia || '',
+          usina: ensaio.usina_fornecedora || '',
+        });
+      });
+
       setChecklistNCs(allCNCs);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
