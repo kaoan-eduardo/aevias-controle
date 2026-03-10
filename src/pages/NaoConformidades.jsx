@@ -388,8 +388,35 @@ export default function NaoConformidadesPage() {
 
   // ---- Timeline data: NCs por obra ao longo do tempo ----
   const dadosTemporais = useMemo(() => {
-    const filteredR = applyRncFilters(rncs, checklistNCs, f, 'data');
-    const filteredC = applyCncFilters(checklistNCs, rncs, f, 'data');
+    // Apply all filters EXCEPT date for initial filtering
+    let filteredR = applyRncFilters(rncs, checklistNCs, { ...f, dataInicial: null, dataFinal: null }, null);
+    let filteredC = applyCncFilters(checklistNCs, rncs, { ...f, dataInicial: null, dataFinal: null }, null);
+
+    // Now apply date filter
+    if (f.dataInicial || f.dataFinal) {
+      filteredR = filteredR.filter(r => {
+        if (!r.data_nc) return false;
+        const dataRnc = new Date(r.data_nc);
+        if (f.dataInicial && dataRnc < f.dataInicial) return false;
+        if (f.dataFinal) {
+          const dataFinalMidnight = new Date(f.dataFinal);
+          dataFinalMidnight.setHours(23, 59, 59, 999);
+          if (dataRnc > dataFinalMidnight) return false;
+        }
+        return true;
+      });
+      filteredC = filteredC.filter(nc => {
+        if (!nc.data) return false;
+        const dataNc = new Date(nc.data);
+        if (f.dataInicial && dataNc < f.dataInicial) return false;
+        if (f.dataFinal) {
+          const dataFinalMidnight = new Date(f.dataFinal);
+          dataFinalMidnight.setHours(23, 59, 59, 999);
+          if (dataNc > dataFinalMidnight) return false;
+        }
+        return true;
+      });
+    }
 
     // Collect all dates
     const allDates = new Set();
