@@ -396,7 +396,7 @@ export default function NaoConformidadesPage() {
     filteredR.forEach(r => { if (r.data_nc) allDates.add(r.data_nc); });
     filteredC.forEach(nc => { if (nc.data) allDates.add(nc.data); });
 
-    if (allDates.size === 0) return [];
+    if (allDates.size === 0) return { data: [], maxValue: 0 };
 
     // Sort dates
     const sortedDates = [...allDates].sort();
@@ -411,16 +411,21 @@ export default function NaoConformidadesPage() {
       .map(([id]) => id);
 
     // Build time series
-    return sortedDates.map(date => {
+    let maxValue = 0;
+    const data = sortedDates.map(date => {
       const point = { date: new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) };
+      let totalForDate = 0;
       topObras.forEach(obraId => {
         const obraNome = obras.find(o => o.id === obraId)?.name || obraId;
         const count = filteredR.filter(r => r.obra_id === obraId && r.data_nc === date).length +
                       filteredC.filter(nc => nc.obra_id === obraId && nc.data === date).length;
         point[obraNome] = count;
+        totalForDate += count;
       });
+      if (totalForDate > maxValue) maxValue = totalForDate;
       return point;
     });
+    return { data, maxValue };
   }, [rncs, checklistNCs, obras, f]);
 
   // ---- Table ----
@@ -626,11 +631,11 @@ export default function NaoConformidadesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {dadosTemporais.length > 0 ? (
+            {dadosTemporais.data?.length > 0 ? (
               <ResponsiveContainer width="100%" height={350}>
-                <AreaChart data={dadosTemporais}>
+                <AreaChart data={dadosTemporais.data}>
                   <defs>
-                    {Object.keys(dadosTemporais[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
+                    {Object.keys(dadosTemporais.data[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
                       <linearGradient key={obraNome} id={`color${i}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor={TIMELINE_COLORS[i % TIMELINE_COLORS.length]} stopOpacity={0.9}/>
                         <stop offset="95%" stopColor={TIMELINE_COLORS[i % TIMELINE_COLORS.length]} stopOpacity={0.2}/>
@@ -644,6 +649,8 @@ export default function NaoConformidadesPage() {
                     tickLine={{ stroke: '#00233B' }}
                   />
                   <YAxis 
+                    domain={[0, dadosTemporais.maxValue + 5]}
+                    allowDecimals={false}
                     tick={{ fill: '#00233B', fontSize: 11 }}
                     tickLine={{ stroke: '#00233B' }}
                     label={{ value: 'Nº de NCs', angle: -90, position: 'insideLeft', style: { fill: '#00233B', fontSize: 12 } }}
@@ -653,7 +660,7 @@ export default function NaoConformidadesPage() {
                     labelStyle={{ color: '#00233B', fontWeight: 'bold', marginBottom: 4 }}
                   />
                   <Legend formatter={legendFmt} />
-                  {Object.keys(dadosTemporais[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
+                  {Object.keys(dadosTemporais.data[0] || {}).filter(k => k !== 'date').map((obraNome, i) => (
                     <Area
                       key={obraNome}
                       type="monotone"
