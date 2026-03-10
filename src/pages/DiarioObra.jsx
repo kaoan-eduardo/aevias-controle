@@ -252,9 +252,9 @@ const DiarioForm = ({
       {/* Campos ocultados para Escritório */}
       {formData.tipo_local !== 'escritorio' && (
         <>
-          {/* Campo Empreiteira - Obrigatório */}
+          {/* Campo Empreiteira / Cliente - depende do tipo de obra */}
           <div className="space-y-2">
-            <Label htmlFor="empreiteira">Empreiteira *</Label>
+            <Label htmlFor="empreiteira">{isObraClienteType ? "Cliente *" : "Empreiteira *"}</Label>
             <Select
               value={formData.empreiteira || ""}
               onValueChange={(value) => handleChange('empreiteira', value)}
@@ -262,17 +262,25 @@ const DiarioForm = ({
               disabled={!isEditable || isApproved}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a empreiteira" />
+                <SelectValue placeholder={isObraClienteType ? "Selecione o cliente" : "Selecione a empreiteira"} />
               </SelectTrigger>
               <SelectContent>
-                {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
-                  obraSelecionada.empreiteiras.map(emp => (
-                    <SelectItem key={emp} value={emp}>
-                      {emp}
-                    </SelectItem>
-                  ))
+                {isObraClienteType ? (
+                  obraSelecionada?.clientes && obraSelecionada.clientes.length > 0 ? (
+                    obraSelecionada.clientes.map(cliente => (
+                      <SelectItem key={cliente} value={cliente}>{cliente}</SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="__none__" disabled>Nenhum cliente cadastrado</SelectItem>
+                  )
                 ) : (
-                  <SelectItem value={null} disabled>Nenhuma empreiteira cadastrada</SelectItem>
+                  obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
+                    obraSelecionada.empreiteiras.map(emp => (
+                      <SelectItem key={emp} value={emp}>{emp}</SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="__none__" disabled>Nenhuma empreiteira cadastrada</SelectItem>
+                  )
                 )}
               </SelectContent>
             </Select>
