@@ -114,14 +114,14 @@ export default function EnsaioGranMisturaPage() {
           availableObras = obrasData.filter(obra => 
             obra.regional_id === regionalDoLaboratorista.id &&
             obra.status === 'em_andamento' &&
-            (obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'implantacao')
+            (obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'supervisao')
           );
         } else {
           availableObras = [];
         }
       } else {
         availableObras = obrasData.filter(obra => 
-          obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'implantacao'
+          obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'supervisao'
         );
       }
 
