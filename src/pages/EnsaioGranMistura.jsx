@@ -235,6 +235,19 @@ export default function EnsaioGranMisturaPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const getPeneirasVisiveis = () => {
+    if (selectedProject?.faixa_granulometrica_id && faixasGranulometricas.length > 0) {
+      const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
+      if (faixa?.peneiras) {
+        return faixa.peneiras.map(p => {
+          const mmValue = p.abertura.replace(',', '_').replace('.', '_');
+          return `peneira_${mmValue}mm`;
+        });
+      }
+    }
+    return Object.keys(PENEIRAS_MAP);
+  };
+
   const handleGranulometriaChange = (peneira, field, value) => {
     const newGranulometria = { ...formData.granulometria };
     if (!newGranulometria[peneira]) {
@@ -244,9 +257,7 @@ export default function EnsaioGranMisturaPage() {
 
     if (field === 'retido' && formData.peso_amostra) {
       const pesoAmostra = parseFloat(formData.peso_amostra) || 0;
-      const peneirasVisiveis = selectedProject?.faixa_trabalho 
-        ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
-        : Object.keys(PENEIRAS_MAP);
+      const peneirasVisiveis = getPeneirasVisiveis();
 
       let retidoAcumulado = 0;
       peneirasVisiveis.forEach(pKey => {
@@ -361,22 +372,7 @@ export default function EnsaioGranMisturaPage() {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin" /></div>;
   }
 
-  // Determinar peneiras visíveis baseado na faixa do projeto
-  let peneirasVisiveis = [];
-  if (selectedProject?.faixa_granulometrica_id && faixasGranulometricas.length > 0) {
-    const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
-    if (faixa?.peneiras) {
-      peneirasVisiveis = faixa.peneiras.map(p => {
-        const mmValue = p.abertura.replace(',', '_').replace('.', '_');
-        return `peneira_${mmValue}mm`;
-      });
-    }
-  }
-  
-  // Se não houver projeto ou faixa, mostrar todas as peneiras
-  if (peneirasVisiveis.length === 0) {
-    peneirasVisiveis = Object.keys(PENEIRAS_MAP);
-  }
+  const peneirasVisiveis = getPeneirasVisiveis();
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
@@ -639,8 +635,9 @@ export default function EnsaioGranMisturaPage() {
                         if (formData.granulometria && Object.keys(formData.granulometria).length > 0) {
                           const pesoAmostra = parseFloat(e.target.value) || 0;
                           const newGran = { ...formData.granulometria };
+                          const peneiras = getPeneirasVisiveis();
                           let retidoAcumulado = 0;
-                          peneirasVisiveis.forEach(pKey => {
+                          peneiras.forEach(pKey => {
                             const retido = parseFloat(newGran[pKey]?.retido) || 0;
                             retidoAcumulado += retido;
                             const passante = pesoAmostra - retidoAcumulado;
