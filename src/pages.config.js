@@ -58,6 +58,7 @@ import ChecklistUsina from './pages/ChecklistUsina';
 import ControleLaboratoristas from './pages/ControleLaboratoristas';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
+import EditarNC from './pages/EditarNC';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
@@ -102,7 +103,7 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import EditarNC from './pages/EditarNC';
+import EnsaioGranMistura from './pages/EnsaioGranMistura';
 import __Layout from './Layout.jsx';
 
 
@@ -118,6 +119,7 @@ export const PAGES = {
     "ControleLaboratoristas": ControleLaboratoristas,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
+    "EditarNC": EditarNC,
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
@@ -162,7 +164,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "EditarNC": EditarNC,
+    "EnsaioGranMistura": EnsaioGranMistura,
 }
 
 export const pagesConfig = {
