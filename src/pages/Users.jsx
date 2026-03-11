@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { User } from "@/entities/User";
 import { Regional } from "@/entities/Regional";
@@ -476,6 +475,27 @@ export default function UsersPage() {
     }
   }, []);
 
+  const getRegionalForUser = useCallback((userEmail) => {
+    if (!userEmail || !regionais) return null;
+    
+    const emailLower = userEmail.toLowerCase();
+    const regional = regionais.find(r => {
+      // Verificar laboratoristas
+      if (r.laboratoristas_responsaveis?.some(e => e.toLowerCase() === emailLower)) return true;
+      // Verificar gestor
+      if (r.gestor_contrato_responsavel?.toLowerCase() === emailLower) return true;
+      // Verificar gestores array
+      if (r.gestores_contrato_responsaveis?.some(e => e.toLowerCase() === emailLower)) return true;
+      // Verificar salas técnicas
+      if (r.salas_tecnicas_responsaveis?.some(e => e.toLowerCase() === emailLower)) return true;
+      // Verificar clientes
+      if (r.clientes_responsaveis?.some(e => e.toLowerCase() === emailLower)) return true;
+      return false;
+    });
+    
+    return regional;
+  }, [regionais]);
+
   if (loading) {
     return (
       <div className="p-6 space-y-6 bg-transparent min-h-screen">
@@ -560,6 +580,7 @@ export default function UsersPage() {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Usuário</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Empresa/Cargo</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Regional</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Nível</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Status</th>
                 {(canManageUsers && !isCliente) && (
@@ -570,40 +591,53 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-black/5">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-[#00233B]">{user.laboratorista_name}</div>
-                      <div className="text-sm text-[#00233B]/80">{user.email}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm text-[#00233B]">{user.company || "—"}</div>
-                      <div className="text-sm text-[#00233B]/80">{user.position || "—"}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Badge variant={getAccessLevelBadgeVariant(user.access_level)}>
-                      {getAccessLevelLabel(user.access_level)}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Badge variant={user.is_active ? 'success' : 'destructive'}>
-                      {user.is_active ? 'Ativo' : 'Inativo'}
-                    </Badge>
-                  </td>
-                  {(canManageUsers && !isCliente) && (
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Button variant="ghost" size="sm" onClick={() => handleEdit(user)} className="hover:bg-black/10">
-                        <Edit className="w-4 h-4 mr-1" />
-                        Editar
-                      </Button>
+              {filteredUsers.map((user) => {
+                const regional = getRegionalForUser(user.email);
+                return (
+                  <tr key={user.id} className="hover:bg-black/5">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-[#00233B]">{user.laboratorista_name}</div>
+                        <div className="text-sm text-[#00233B]/80">{user.email}</div>
+                      </div>
                     </td>
-                  )}
-                </tr>
-              ))}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm text-[#00233B]">{user.company || "—"}</div>
+                        <div className="text-sm text-[#00233B]/80">{user.position || "—"}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      {regional ? (
+                        <div>
+                          <div className="text-sm font-medium text-[#00233B]">{regional.nome}</div>
+                          <div className="text-xs text-[#00233B]/60">{regional.codigo}</div>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-[#00233B]/40">—</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Badge variant={getAccessLevelBadgeVariant(user.access_level)}>
+                        {getAccessLevelLabel(user.access_level)}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Badge variant={user.is_active ? 'success' : 'destructive'}>
+                        {user.is_active ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </td>
+                    {(canManageUsers && !isCliente) && (
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(user)} className="hover:bg-black/10">
+                          <Edit className="w-4 h-4 mr-1" />
+                          Editar
+                        </Button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
