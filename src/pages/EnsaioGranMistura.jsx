@@ -239,22 +239,26 @@ export default function EnsaioGranMisturaPage() {
     // Se houver projeto selecionado, usar a faixa do projeto
     if (selectedProject?.faixa_granulometrica_id && faixasGranulometricas.length > 0) {
       const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
-      if (faixa?.peneiras) {
-        return faixa.peneiras.map(p => {
+      if (faixa?.peneiras && faixa.peneiras.length > 0) {
+        const peneiras = faixa.peneiras.map(p => {
           const mmValue = p.abertura.replace(',', '_').replace('.', '_');
           return `peneira_${mmValue}mm`;
-        });
+        }).filter(key => PENEIRAS_MAP[key]);
+        
+        if (peneiras.length > 0) return peneiras;
       }
     }
     
     // Se não houver projeto, mas houver faixa selecionada manualmente
     if (!formData.project_id && formData.faixa && faixasGranulometricas.length > 0) {
       const faixa = faixasGranulometricas.find(f => f.nome === formData.faixa);
-      if (faixa?.peneiras) {
-        return faixa.peneiras.map(p => {
+      if (faixa?.peneiras && faixa.peneiras.length > 0) {
+        const peneiras = faixa.peneiras.map(p => {
           const mmValue = p.abertura.replace(',', '_').replace('.', '_');
           return `peneira_${mmValue}mm`;
-        });
+        }).filter(key => PENEIRAS_MAP[key]);
+        
+        if (peneiras.length > 0) return peneiras;
       }
     }
     
