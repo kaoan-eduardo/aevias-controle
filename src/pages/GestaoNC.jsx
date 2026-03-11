@@ -7,13 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, AlertTriangle, Search, Plus, Eye } from "lucide-react";
+import { Loader2, AlertTriangle, Search, Plus, Eye, CheckCircle, XCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { createPageUrl } from "@/utils";
 
 async function updateNCStatus(id, status, setNcs) {
-  await base44.entities.RelatorioNC.update(id, { status });
-  setNcs(prev => prev.map(n => n.id === id ? { ...n, status } : n));
+  await base44.entities.RelatorioNC.update(id, { status, pendente_aprovacao_cliente: true });
+  setNcs(prev => prev.map(n => n.id === id ? { ...n, status, pendente_aprovacao_cliente: true } : n));
 }
-import { createPageUrl } from "@/utils";
 
 const STATUS_COLORS = {
   aberta: "bg-red-100 text-red-700",
@@ -39,6 +41,11 @@ export default function GestaoNCPage() {
   const [filtroObra, setFiltroObra] = useState("");
   const [filtroStatus, setFiltroStatus] = useState("");
   const [filtroTexto, setFiltroTexto] = useState("");
+  
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [selectedNC, setSelectedNC] = useState(null);
+  const [approvalAction, setApprovalAction] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   useEffect(() => {
     loadData();
@@ -83,7 +90,63 @@ export default function GestaoNCPage() {
   const isGestor = userAccessLevel === "gestor_contrato";
   const isAdmin = userAccessLevel === "admin";
   const isCliente = userAccessLevel === "cliente";
-  const canChangeStatus = isGestor || isCliente || isAdmin;
+  const canChangeStatus = isGestor || isAdmin;
+
+  const handleApproval = async (approve) => {
+    if (!selectedNC) return;
+
+    try {
+      if (approve) {
+        await base44.entities.RelatorioNC.update(selectedNC.id, {
+          pendente_aprovacao_cliente: false,
+          cliente_aprovacao: "aprovada",
+          cliente_aprovacao_data: new Date().toISOString(),
+          cliente_aprovacao_responsavel: user.email
+        });
+        setNcs(prev => prev.map(n => n.id === selectedNC.id ? {
+          ...n,
+          pendente_aprovacao_cliente: false,
+          cliente_aprovacao: "aprovada",
+          cliente_aprovacao_data: new Date().toISOString(),
+          cliente_aprovacao_responsavel: user.email
+        } : n));
+      } else {
+        if (!rejectionReason.trim()) {
+          alert("Por favor, informe o motivo da reprovação");
+          return;
+        }
+        await base44.entities.RelatorioNC.update(selectedNC.id, {
+          status: "aberta",
+          pendente_aprovacao_cliente: false,
+          cliente_aprovacao: "reprovada",
+          cliente_aprovacao_data: new Date().toISOString(),
+          cliente_aprovacao_responsavel: user.email,
+          cliente_reprovacao_motivo: rejectionReason
+        });
+        setNcs(prev => prev.map(n => n.id === selectedNC.id ? {
+          ...n,
+          status: "aberta",
+          pendente_aprovacao_cliente: false,
+          cliente_aprovacao: "reprovada",
+          cliente_aprovacao_data: new Date().toISOString(),
+          cliente_aprovacao_responsavel: user.email,
+          cliente_reprovacao_motivo: rejectionReason
+        } : n));
+      }
+      setShowApprovalModal(false);
+      setSelectedNC(null);
+      setRejectionReason("");
+    } catch (error) {
+      console.error("Erro ao processar aprovação:", error);
+      alert("Erro ao processar aprovação");
+    }
+  };
+
+  const openApprovalModal = (nc, action) => {
+    setSelectedNC(nc);
+    setApprovalAction(action);
+    setShowApprovalModal(true);
+  };
 
   if (loading) {
     return (
@@ -207,11 +270,36 @@ export default function GestaoNCPage() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
-                        {canChangeStatus ? (
+                        {nc.pendente_aprovacao_cliente && isCliente ? (
+                          <div className="flex flex-col gap-2">
+                            <Badge className="bg-orange-100 text-orange-700 text-center">
+                              Aguardando Aprovação
+                            </Badge>
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                onClick={() => openApprovalModal(nc, 'approve')}
+                                className="flex-1 bg-green-600 hover:bg-green-700 text-white h-7 px-2"
+                              >
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Aprovar
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => openApprovalModal(nc, 'reject')}
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white h-7 px-2"
+                              >
+                                <XCircle className="w-3 h-3 mr-1" />
+                                Reprovar
+                              </Button>
+                            </div>
+                          </div>
+                        ) : canChangeStatus && (!nc.pendente_aprovacao_cliente || isAdmin) ? (
                           <select
                             value={nc.status || "aberta"}
                             onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
                             className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
+                            disabled={nc.pendente_aprovacao_cliente && !isAdmin}
                           >
                             <option value="aberta">Aberta</option>
                             <option value="em_tratativa">Em Tratativa</option>
@@ -223,6 +311,20 @@ export default function GestaoNCPage() {
                             {STATUS_LABELS[nc.status] || nc.status}
                           </Badge>
                         )}
+                        
+                        {nc.cliente_aprovacao === "reprovada" && nc.cliente_reprovacao_motivo && (
+                          <div className="bg-red-50 border border-red-200 rounded p-2 text-xs">
+                            <p className="font-semibold text-red-800 mb-1">Reprovada pelo Cliente:</p>
+                            <p className="text-red-700">{nc.cliente_reprovacao_motivo}</p>
+                          </div>
+                        )}
+                        
+                        {nc.pendente_aprovacao_cliente && !isCliente && (
+                          <Badge className="bg-orange-100 text-orange-700 text-center text-xs">
+                            Aguardando Cliente
+                          </Badge>
+                        )}
+                        
                         <Button
                           size="sm"
                           variant="outline"
@@ -240,6 +342,58 @@ export default function GestaoNCPage() {
             })
           )}
         </div>
+
+        {/* Modal de Aprovação */}
+        <Dialog open={showApprovalModal} onOpenChange={setShowApprovalModal}>
+          <DialogContent className="bg-white/95 backdrop-blur-lg border-white/20">
+            <DialogHeader>
+              <DialogTitle className="text-[#00233B]">
+                {approvalAction === 'approve' ? 'Aprovar NC' : 'Reprovar NC'}
+              </DialogTitle>
+              <DialogDescription>
+                {approvalAction === 'approve' 
+                  ? 'Ao aprovar, o gestor poderá alterar o status da NC.'
+                  : 'Ao reprovar, a NC retornará para status "Aberta" e o gestor será notificado do motivo.'}
+              </DialogDescription>
+            </DialogHeader>
+
+            {approvalAction === 'reject' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#00233B]">
+                  Motivo da reprovação *
+                </label>
+                <Textarea
+                  value={rejectionReason}
+                  onChange={e => setRejectionReason(e.target.value)}
+                  placeholder="Descreva o motivo da reprovação..."
+                  className="min-h-[100px] bg-white/50 border-white/30 text-[#00233B]"
+                />
+              </div>
+            )}
+
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowApprovalModal(false);
+                  setSelectedNC(null);
+                  setRejectionReason("");
+                }}
+                className="border-white/30 text-[#00233B]"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => handleApproval(approvalAction === 'approve')}
+                className={approvalAction === 'approve' 
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-red-600 hover:bg-red-700 text-white"}
+              >
+                {approvalAction === 'approve' ? 'Confirmar Aprovação' : 'Confirmar Reprovação'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
