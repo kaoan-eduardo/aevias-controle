@@ -366,10 +366,10 @@ export default function GestaoNCPage() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => handleSolicitarAprovacao(nc)}
+                                onClick={() => window.location.href = createPageUrl(`EditarNC?id=${nc.id}`)}
                                 className="h-7 text-xs border-white/30 text-[#00233B] hover:bg-white/20"
                               >
-                                Solicitar Nova Aprovação
+                                Editar NC
                               </Button>
                             )}
                           </div>

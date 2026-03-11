@@ -102,6 +102,7 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
+import EditarNC from './pages/EditarNC';
 import __Layout from './Layout.jsx';
 
 
@@ -161,6 +162,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
+    "EditarNC": EditarNC,
 }
 
 export const pagesConfig = {
