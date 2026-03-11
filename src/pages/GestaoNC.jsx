@@ -101,18 +101,27 @@ export default function GestaoNCPage() {
 
     try {
       if (approve) {
+        const clientSignature = {
+          signed_by: user.email,
+          signed_date: new Date().toISOString(),
+          engineer_name: user.full_name || user.email,
+          crea_number: user.crea_number || ''
+        };
+
         await base44.entities.RelatorioNC.update(selectedNC.id, {
           pendente_aprovacao_cliente: false,
           cliente_aprovacao: "aprovada",
           cliente_aprovacao_data: new Date().toISOString(),
-          cliente_aprovacao_responsavel: user.email
+          cliente_aprovacao_responsavel: user.email,
+          client_signature: clientSignature
         });
         setNcs(prev => prev.map(n => n.id === selectedNC.id ? {
           ...n,
           pendente_aprovacao_cliente: false,
           cliente_aprovacao: "aprovada",
           cliente_aprovacao_data: new Date().toISOString(),
-          cliente_aprovacao_responsavel: user.email
+          cliente_aprovacao_responsavel: user.email,
+          client_signature: clientSignature
         } : n));
       } else {
         if (!rejectionReason.trim()) {
