@@ -855,7 +855,9 @@ export default function NaoConformidadesPage() {
             r.empreiteira.toLowerCase().includes(busca)
           );
           const total = allRows.length;
-          const displayRows = allRows.slice(0, 200);
+          const totalPages = Math.ceil(total / tabelaItemsPerPage);
+          const startIndex = (tabelaPage - 1) * tabelaItemsPerPage;
+          const displayRows = allRows.slice(startIndex, startIndex + tabelaItemsPerPage);
 
           return (
             <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
@@ -888,7 +890,7 @@ export default function NaoConformidadesPage() {
                     </SelectContent>
                   </Select>
                   {(tabelaBusca || tabelaTipo !== '_all') && (
-                    <Button size="sm" variant="ghost" onClick={() => { setTabelaBusca(''); setTabelaTipo('_all'); }} className="h-9 px-3 text-[#00233B]/60 hover:text-[#00233B] gap-1 whitespace-nowrap">
+                    <Button size="sm" variant="ghost" onClick={() => { setTabelaBusca(''); setTabelaTipo('_all'); setTabelaPage(1); }} className="h-9 px-3 text-[#00233B]/60 hover:text-[#00233B] gap-1 whitespace-nowrap">
                       <X className="w-3.5 h-3.5" /> Limpar
                     </Button>
                   )}
@@ -931,8 +933,30 @@ export default function NaoConformidadesPage() {
                         ))}
                       </tbody>
                     </table>
-                    {total > 200 && (
-                      <p className="text-xs text-[#00233B]/50 text-center mt-3">Exibindo 200 de {total} ocorrências</p>
+                    {total > tabelaItemsPerPage && (
+                      <div className="flex justify-center items-center gap-2 mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setTabelaPage(p => Math.max(1, p - 1))}
+                          disabled={tabelaPage === 1}
+                          className="h-8 px-3 text-[#00233B] border-white/30 disabled:opacity-50"
+                        >
+                          Anterior
+                        </Button>
+                        <span className="text-xs text-[#00233B]/70">
+                          Página {tabelaPage} de {totalPages} ({total} registros)
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setTabelaPage(p => Math.min(totalPages, p + 1))}
+                          disabled={tabelaPage === totalPages}
+                          className="h-8 px-3 text-[#00233B] border-white/30 disabled:opacity-50"
+                        >
+                          Próxima
+                        </Button>
+                      </div>
                     )}
                   </div>
                 ) : (
