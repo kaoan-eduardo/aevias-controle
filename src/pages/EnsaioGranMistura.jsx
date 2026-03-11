@@ -685,6 +685,8 @@ export default function EnsaioGranMisturaPage() {
                       <tbody>
                         {peneirasVisiveis.map((peneiraKey, index) => {
                           const peneiraInfo = PENEIRAS_MAP[peneiraKey];
+                          if (!peneiraInfo) return null;
+                          
                           const fxTrabalhoMin = selectedProject?.faixa_trabalho_min?.[peneiraKey];
                           const fxTrabalhoMax = selectedProject?.faixa_trabalho_max?.[peneiraKey];
                           
