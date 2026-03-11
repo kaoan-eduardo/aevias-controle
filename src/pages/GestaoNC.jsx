@@ -284,44 +284,82 @@ export default function GestaoNCPage() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
-                        {nc.pendente_aprovacao_cliente && isCliente ? (
+                        {nc.pendente_aprovacao_cliente ? (
                           <div className="flex flex-col gap-2">
                             <Badge className="bg-orange-100 text-orange-700 text-center">
-                              Aguardando Aprovação
+                              Aguardando Aprovação do Cliente
                             </Badge>
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                onClick={() => openApprovalModal(nc, 'approve')}
-                                className="flex-1 bg-green-600 hover:bg-green-700 text-white h-7 px-2"
-                              >
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                Aprovar
-                              </Button>
-                              <Button
-                                size="sm"
-                                onClick={() => openApprovalModal(nc, 'reject')}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white h-7 px-2"
-                              >
-                                <XCircle className="w-3 h-3 mr-1" />
-                                Reprovar
-                              </Button>
-                            </div>
+                            {isCliente && (
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  onClick={() => openApprovalModal(nc, 'approve')}
+                                  className="flex-1 bg-green-600 hover:bg-green-700 text-white h-7 px-2"
+                                >
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  Aprovar
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => openApprovalModal(nc, 'reject')}
+                                  className="flex-1 bg-red-600 hover:bg-red-700 text-white h-7 px-2"
+                                >
+                                  <XCircle className="w-3 h-3 mr-1" />
+                                  Reprovar
+                                </Button>
+                              </div>
+                            )}
                           </div>
-                        ) : null}
-                        
-                        {canChangeStatus && !nc.pendente_aprovacao_cliente ? (
+                        ) : nc.cliente_aprovacao === 'aprovada' ? (
                           <div className="flex flex-col gap-1">
-                            <select
-                              value={nc.status || "aberta"}
-                              onChange={e => updateNCStatus(nc.id, e.target.value, setNcs, false)}
-                              className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
-                            >
-                              <option value="aberta">Aberta</option>
-                              <option value="em_tratativa">Em Tratativa</option>
-                              <option value="encerrada">Finalizada</option>
-                              <option value="cancelada">Cancelada</option>
-                            </select>
+                            {canChangeStatus ? (
+                              <>
+                                <select
+                                  value={nc.status || "aberta"}
+                                  onChange={e => updateNCStatus(nc.id, e.target.value, setNcs, false)}
+                                  className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
+                                >
+                                  <option value="aberta">Aberta</option>
+                                  <option value="em_tratativa">Em Tratativa</option>
+                                  <option value="encerrada">Finalizada</option>
+                                  <option value="cancelada">Cancelada</option>
+                                </select>
+                                <Badge className="bg-green-100 text-green-700 text-center text-xs">
+                                  ✓ Aprovada pelo Cliente
+                                </Badge>
+                              </>
+                            ) : (
+                              <>
+                                <Badge className={STATUS_COLORS[nc.status] || "bg-gray-100 text-gray-700"}>
+                                  {STATUS_LABELS[nc.status] || nc.status}
+                                </Badge>
+                                <Badge className="bg-green-100 text-green-700 text-center text-xs">
+                                  ✓ Aprovada pelo Cliente
+                                </Badge>
+                              </>
+                            )}
+                          </div>
+                        ) : nc.cliente_aprovacao === 'reprovada' ? (
+                          <div className="flex flex-col gap-1">
+                            <Badge className="bg-red-100 text-red-700 text-center">
+                              Reprovada - Editar e Reenviar
+                            </Badge>
+                            {(isGestor || isAdmin) && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleSolicitarAprovacao(nc)}
+                                className="h-7 text-xs border-white/30 text-[#00233B] hover:bg-white/20"
+                              >
+                                Solicitar Nova Aprovação
+                              </Button>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-1">
+                            <Badge className={STATUS_COLORS[nc.status] || "bg-gray-100 text-gray-700"}>
+                              {STATUS_LABELS[nc.status] || nc.status}
+                            </Badge>
                             {(isGestor || isAdmin) && (
                               <Button
                                 size="sm"
@@ -333,23 +371,13 @@ export default function GestaoNCPage() {
                               </Button>
                             )}
                           </div>
-                        ) : !canChangeStatus ? (
-                          <Badge className={STATUS_COLORS[nc.status] || "bg-gray-100 text-gray-700"}>
-                            {STATUS_LABELS[nc.status] || nc.status}
-                          </Badge>
-                        ) : null}
+                        )}
                         
                         {nc.cliente_aprovacao === "reprovada" && nc.cliente_reprovacao_motivo && (
                           <div className="bg-red-50 border border-red-200 rounded p-2 text-xs">
-                            <p className="font-semibold text-red-800 mb-1">Reprovada pelo Cliente:</p>
+                            <p className="font-semibold text-red-800 mb-1">Motivo da Reprovação:</p>
                             <p className="text-red-700">{nc.cliente_reprovacao_motivo}</p>
                           </div>
-                        )}
-                        
-                        {nc.pendente_aprovacao_cliente && !isCliente && (
-                          <Badge className="bg-orange-100 text-orange-700 text-center text-xs">
-                            Aguardando Cliente
-                          </Badge>
                         )}
                         
                         <Button
