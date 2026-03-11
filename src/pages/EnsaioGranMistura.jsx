@@ -255,16 +255,26 @@ export default function EnsaioGranMisturaPage() {
     if (faixaId) {
       const faixa = faixasGranulometricas.find(f => f.id === faixaId);
       if (faixa?.peneiras && faixa.peneiras.length > 0) {
-        const peneiras = faixa.peneiras.map(p => {
-          const mmValue = p.abertura.replace(',', '_').replace('.', '_');
-          return `peneira_${mmValue}mm`;
-        }).filter(key => PENEIRAS_MAP[key]);
+        const peneiras = faixa.peneiras
+          .map(p => {
+            // Buscar a chave correspondente no PENEIRAS_MAP pela abertura em mm
+            const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
+              const peneiraInfo = PENEIRAS_MAP[key];
+              return peneiraInfo.mm === p.abertura;
+            });
+            return peneiraKey;
+          })
+          .filter(Boolean);
         
-        if (peneiras.length > 0) return peneiras;
+        if (peneiras.length > 0) {
+          console.log('Peneiras filtradas:', peneiras);
+          return peneiras;
+        }
       }
     }
     
     // Se não há faixa ou filtro falhou, mostrar todas
+    console.log('Mostrando todas as peneiras');
     return Object.keys(PENEIRAS_MAP);
   };
 
