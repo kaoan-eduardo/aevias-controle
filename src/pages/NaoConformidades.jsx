@@ -916,7 +916,17 @@ export default function NaoConformidadesPage() {
                               </Badge>
                             </td>
                             <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{row.criador || '—'}</td>
-                            <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">{row.data ? new Date(row.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—'}</td>
+                            <td className="py-2 px-3 text-[#00233B]/80 whitespace-nowrap">
+                              {(() => {
+                                if (!row.data) return '—';
+                                try {
+                                  const date = new Date(row.data + 'T12:00:00');
+                                  return isNaN(date.getTime()) ? '—' : date.toLocaleDateString('pt-BR');
+                                } catch {
+                                  return '—';
+                                }
+                              })()}
+                            </td>
                             <td className="py-2 px-3 text-[#00233B] max-w-[180px] truncate">{row.parametro || '—'}</td>
                             <td className="py-2 px-3 text-[#00233B]/70 whitespace-nowrap">{row.rodovia || '—'}</td>
                             <td className="py-2 px-3 text-[#00233B]/70 whitespace-nowrap">{row.usina || '—'}</td>
