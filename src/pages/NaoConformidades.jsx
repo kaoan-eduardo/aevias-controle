@@ -197,6 +197,8 @@ export default function NaoConformidadesPage() {
   const [filtroDataFinal, setFiltroDataFinal] = useState(null);
   const [tabelaBusca, setTabelaBusca] = useState('');
   const [tabelaTipo, setTabelaTipo] = useState('_all');
+  const [tabelaPage, setTabelaPage] = useState(1);
+  const tabelaItemsPerPage = 20;
 
   useEffect(() => { loadAll(); }, []);
 
