@@ -163,8 +163,17 @@ export default function GestaoNCPage() {
 
   const handleSolicitarAprovacao = async (nc) => {
     try {
-      await base44.entities.RelatorioNC.update(nc.id, { pendente_aprovacao_cliente: true });
-      setNcs(prev => prev.map(n => n.id === nc.id ? { ...n, pendente_aprovacao_cliente: true } : n));
+      await base44.entities.RelatorioNC.update(nc.id, { 
+        pendente_aprovacao_cliente: true,
+        cliente_aprovacao: null,
+        cliente_reprovacao_motivo: null
+      });
+      setNcs(prev => prev.map(n => n.id === nc.id ? { 
+        ...n, 
+        pendente_aprovacao_cliente: true,
+        cliente_aprovacao: null,
+        cliente_reprovacao_motivo: null
+      } : n));
     } catch (error) {
       console.error("Erro ao solicitar aprovação:", error);
       alert("Erro ao solicitar aprovação do cliente");

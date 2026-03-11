@@ -188,6 +188,7 @@ export default function NovaNcPage() {
       fotos,
       pdfs,
       status: "aberta",
+      pendente_aprovacao_cliente: true,
       manager_signature: {
         signed_by: user?.email || "",
         signed_date: new Date().toISOString(),
