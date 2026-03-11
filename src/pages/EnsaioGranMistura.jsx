@@ -199,7 +199,7 @@ export default function EnsaioGranMisturaPage() {
 
   useEffect(() => {
     const loadProjectData = async () => {
-      if (formData.project_id) {
+      if (formData.project_id && formData.project_id !== "nenhum") {
         const proj = projects.find(p => p.id === formData.project_id);
         setSelectedProject(proj);
 
@@ -236,28 +236,12 @@ export default function EnsaioGranMisturaPage() {
   };
 
   const getPeneirasVisiveis = () => {
-    // Determinar qual faixa usar
-    let faixaId = null;
-    
-    // Se projeto selecionado, usar faixa do projeto
-    if (formData.project_id && selectedProject?.faixa_granulometrica_id) {
-      faixaId = selectedProject.faixa_granulometrica_id;
-    }
-    // Se não houver projeto mas houver faixa manual, buscar pelo nome
-    else if (!formData.project_id && formData.faixa) {
+    // Se projeto == "nenhum", usar faixa manual
+    if (formData.project_id === "nenhum" && formData.faixa) {
       const faixaManual = faixasGranulometricas.find(f => f.nome === formData.faixa);
-      if (faixaManual) {
-        faixaId = faixaManual.id;
-      }
-    }
-    
-    // Se temos uma faixa definida, retornar suas peneiras
-    if (faixaId) {
-      const faixa = faixasGranulometricas.find(f => f.id === faixaId);
-      if (faixa?.peneiras && faixa.peneiras.length > 0) {
-        const peneiras = faixa.peneiras
+      if (faixaManual?.peneiras && faixaManual.peneiras.length > 0) {
+        const peneiras = faixaManual.peneiras
           .map(p => {
-            // Buscar a chave correspondente no PENEIRAS_MAP pela abertura em mm
             const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
               const peneiraInfo = PENEIRAS_MAP[key];
               return peneiraInfo.mm === p.abertura;
@@ -266,15 +250,29 @@ export default function EnsaioGranMisturaPage() {
           })
           .filter(Boolean);
         
-        if (peneiras.length > 0) {
-          console.log('Peneiras filtradas:', peneiras);
-          return peneiras;
-        }
+        if (peneiras.length > 0) return peneiras;
       }
     }
     
-    // Se não há faixa ou filtro falhou, mostrar todas
-    console.log('Mostrando todas as peneiras');
+    // Se projeto selecionado (diferente de "nenhum"), usar faixa do projeto
+    if (formData.project_id && formData.project_id !== "nenhum" && selectedProject?.faixa_granulometrica_id) {
+      const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
+      if (faixa?.peneiras && faixa.peneiras.length > 0) {
+        const peneiras = faixa.peneiras
+          .map(p => {
+            const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
+              const peneiraInfo = PENEIRAS_MAP[key];
+              return peneiraInfo.mm === p.abertura;
+            });
+            return peneiraKey;
+          })
+          .filter(Boolean);
+        
+        if (peneiras.length > 0) return peneiras;
+      }
+    }
+    
+    // Fallback: mostrar todas
     return Object.keys(PENEIRAS_MAP);
   };
 
@@ -461,7 +459,7 @@ export default function EnsaioGranMisturaPage() {
                     </div>
                     <div>
                       <Label>Faixa</Label>
-                      {formData.project_id ? (
+                      {formData.project_id && formData.project_id !== "nenhum" ? (
                         <Input
                           value={formData.faixa}
                           disabled
@@ -554,6 +552,7 @@ export default function EnsaioGranMisturaPage() {
                           <SelectValue placeholder="Selecione o projeto (opcional)" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="nenhum">Nenhum</SelectItem>
                           {filteredProjects.map(proj => (
                             <SelectItem key={proj.id} value={proj.id}>
                               {proj.name}
