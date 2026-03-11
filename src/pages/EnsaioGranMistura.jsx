@@ -236,9 +236,24 @@ export default function EnsaioGranMisturaPage() {
   };
 
   const getPeneirasVisiveis = () => {
-    // Se houver projeto selecionado, usar a faixa do projeto
-    if (selectedProject?.faixa_granulometrica_id && faixasGranulometricas.length > 0) {
-      const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
+    // Determinar qual faixa usar
+    let faixaId = null;
+    
+    // Se projeto selecionado, usar faixa do projeto
+    if (formData.project_id && selectedProject?.faixa_granulometrica_id) {
+      faixaId = selectedProject.faixa_granulometrica_id;
+    }
+    // Se não houver projeto mas houver faixa manual, buscar pelo nome
+    else if (!formData.project_id && formData.faixa) {
+      const faixaManual = faixasGranulometricas.find(f => f.nome === formData.faixa);
+      if (faixaManual) {
+        faixaId = faixaManual.id;
+      }
+    }
+    
+    // Se temos uma faixa definida, retornar suas peneiras
+    if (faixaId) {
+      const faixa = faixasGranulometricas.find(f => f.id === faixaId);
       if (faixa?.peneiras && faixa.peneiras.length > 0) {
         const peneiras = faixa.peneiras.map(p => {
           const mmValue = p.abertura.replace(',', '_').replace('.', '_');
@@ -249,19 +264,7 @@ export default function EnsaioGranMisturaPage() {
       }
     }
     
-    // Se não houver projeto, mas houver faixa selecionada manualmente
-    if (!formData.project_id && formData.faixa && faixasGranulometricas.length > 0) {
-      const faixa = faixasGranulometricas.find(f => f.nome === formData.faixa);
-      if (faixa?.peneiras && faixa.peneiras.length > 0) {
-        const peneiras = faixa.peneiras.map(p => {
-          const mmValue = p.abertura.replace(',', '_').replace('.', '_');
-          return `peneira_${mmValue}mm`;
-        }).filter(key => PENEIRAS_MAP[key]);
-        
-        if (peneiras.length > 0) return peneiras;
-      }
-    }
-    
+    // Se não há faixa ou filtro falhou, mostrar todas
     return Object.keys(PENEIRAS_MAP);
   };
 
