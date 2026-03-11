@@ -172,6 +172,12 @@ export default function EnsaioGranMisturaPage() {
       const obraSelecionada = obras.find(o => o.id === formData.obra_id);
       if (obraSelecionada) {
         const regionalSelecionada = regionais.find(r => r.id === obraSelecionada.regional_id);
+        
+        // Preencher cliente automaticamente
+        if (regionalSelecionada?.cliente && !formData.project_id) {
+          handleChange('cliente', regionalSelecionada.cliente);
+        }
+        
         if (regionalSelecionada?.project_ids) {
           let projsFiltered = projects.filter(p => regionalSelecionada.project_ids.includes(p.id));
           
