@@ -236,27 +236,42 @@ export default function EnsaioGranMisturaPage() {
   };
 
   const getPeneirasVisiveis = () => {
+    console.log('=== DEBUG getPeneirasVisiveis ===');
+    console.log('formData.project_id:', formData.project_id);
+    console.log('formData.faixa:', formData.faixa);
+    console.log('faixasGranulometricas:', faixasGranulometricas);
+    
     // Se projeto == "nenhum", usar faixa manual
     if (formData.project_id === "nenhum" && formData.faixa) {
+      console.log('Caso 1: Projeto = nenhum, buscando faixa manual');
       const faixaManual = faixasGranulometricas.find(f => f.nome === formData.faixa);
+      console.log('Faixa encontrada:', faixaManual);
+      
       if (faixaManual?.peneiras && faixaManual.peneiras.length > 0) {
+        console.log('Peneiras da faixa:', faixaManual.peneiras);
         const peneiras = faixaManual.peneiras
           .map(p => {
+            console.log('Procurando peneira com abertura:', p.abertura);
             const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
               const peneiraInfo = PENEIRAS_MAP[key];
               return peneiraInfo.mm === p.abertura;
             });
+            console.log('Chave encontrada:', peneiraKey);
             return peneiraKey;
           })
           .filter(Boolean);
         
+        console.log('Peneiras filtradas final:', peneiras);
         if (peneiras.length > 0) return peneiras;
       }
     }
     
     // Se projeto selecionado (diferente de "nenhum"), usar faixa do projeto
     if (formData.project_id && formData.project_id !== "nenhum" && selectedProject?.faixa_granulometrica_id) {
+      console.log('Caso 2: Projeto selecionado');
       const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
+      console.log('Faixa do projeto:', faixa);
+      
       if (faixa?.peneiras && faixa.peneiras.length > 0) {
         const peneiras = faixa.peneiras
           .map(p => {
@@ -268,11 +283,13 @@ export default function EnsaioGranMisturaPage() {
           })
           .filter(Boolean);
         
+        console.log('Peneiras do projeto:', peneiras);
         if (peneiras.length > 0) return peneiras;
       }
     }
     
     // Fallback: mostrar todas
+    console.log('Fallback: mostrando todas as peneiras');
     return Object.keys(PENEIRAS_MAP);
   };
 
