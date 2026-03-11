@@ -90,7 +90,7 @@ export default function GestaoNCPage() {
   const isGestor = userAccessLevel === "gestor_contrato";
   const isAdmin = userAccessLevel === "admin";
   const isCliente = userAccessLevel === "cliente";
-  const canChangeStatus = isGestor || isAdmin;
+  const canChangeStatus = isGestor || isAdmin || isCliente;
 
   const handleApproval = async (approve) => {
     if (!selectedNC) return;
@@ -294,12 +294,11 @@ export default function GestaoNCPage() {
                               </Button>
                             </div>
                           </div>
-                        ) : canChangeStatus && (!nc.pendente_aprovacao_cliente || isAdmin) ? (
+                        ) : canChangeStatus && (!nc.pendente_aprovacao_cliente || nc.cliente_aprovacao === 'aprovada' || isAdmin) ? (
                           <select
                             value={nc.status || "aberta"}
                             onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
                             className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
-                            disabled={nc.pendente_aprovacao_cliente && !isAdmin}
                           >
                             <option value="aberta">Aberta</option>
                             <option value="em_tratativa">Em Tratativa</option>
