@@ -12,9 +12,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Textarea } from "@/components/ui/textarea";
 import { createPageUrl } from "@/utils";
 
-async function updateNCStatus(id, status, setNcs) {
-  await base44.entities.RelatorioNC.update(id, { status, pendente_aprovacao_cliente: true });
-  setNcs(prev => prev.map(n => n.id === id ? { ...n, status, pendente_aprovacao_cliente: true } : n));
+async function updateNCStatus(id, status, setNcs, requestApproval = false) {
+  const updateData = { status };
+  if (requestApproval) {
+    updateData.pendente_aprovacao_cliente = true;
+  }
+  await base44.entities.RelatorioNC.update(id, updateData);
+  setNcs(prev => prev.map(n => n.id === id ? { ...n, ...updateData } : n));
 }
 
 const STATUS_COLORS = {
@@ -146,6 +150,16 @@ export default function GestaoNCPage() {
     setSelectedNC(nc);
     setApprovalAction(action);
     setShowApprovalModal(true);
+  };
+
+  const handleSolicitarAprovacao = async (nc) => {
+    try {
+      await base44.entities.RelatorioNC.update(nc.id, { pendente_aprovacao_cliente: true });
+      setNcs(prev => prev.map(n => n.id === nc.id ? { ...n, pendente_aprovacao_cliente: true } : n));
+    } catch (error) {
+      console.error("Erro ao solicitar aprovação:", error);
+      alert("Erro ao solicitar aprovação do cliente");
+    }
   };
 
   if (loading) {
@@ -294,22 +308,36 @@ export default function GestaoNCPage() {
                               </Button>
                             </div>
                           </div>
-                        ) : canChangeStatus && (!nc.pendente_aprovacao_cliente || nc.cliente_aprovacao === 'aprovada' || isAdmin) ? (
-                          <select
-                            value={nc.status || "aberta"}
-                            onChange={e => updateNCStatus(nc.id, e.target.value, setNcs)}
-                            className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
-                          >
-                            <option value="aberta">Aberta</option>
-                            <option value="em_tratativa">Em Tratativa</option>
-                            <option value="encerrada">Finalizada</option>
-                            <option value="cancelada">Cancelada</option>
-                          </select>
-                        ) : (
+                        ) : null}
+                        
+                        {canChangeStatus && !nc.pendente_aprovacao_cliente ? (
+                          <div className="flex flex-col gap-1">
+                            <select
+                              value={nc.status || "aberta"}
+                              onChange={e => updateNCStatus(nc.id, e.target.value, setNcs, false)}
+                              className="h-8 rounded-md border border-white/20 bg-white/50 px-2 text-xs text-[#00233B] cursor-pointer"
+                            >
+                              <option value="aberta">Aberta</option>
+                              <option value="em_tratativa">Em Tratativa</option>
+                              <option value="encerrada">Finalizada</option>
+                              <option value="cancelada">Cancelada</option>
+                            </select>
+                            {(isGestor || isAdmin) && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleSolicitarAprovacao(nc)}
+                                className="h-7 text-xs border-white/30 text-[#00233B] hover:bg-white/20"
+                              >
+                                Solicitar Aprovação
+                              </Button>
+                            )}
+                          </div>
+                        ) : !canChangeStatus ? (
                           <Badge className={STATUS_COLORS[nc.status] || "bg-gray-100 text-gray-700"}>
                             {STATUS_LABELS[nc.status] || nc.status}
                           </Badge>
-                        )}
+                        ) : null}
                         
                         {nc.cliente_aprovacao === "reprovada" && nc.cliente_reprovacao_motivo && (
                           <div className="bg-red-50 border border-red-200 rounded p-2 text-xs">
