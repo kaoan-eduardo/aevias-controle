@@ -361,9 +361,22 @@ export default function EnsaioGranMisturaPage() {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin" /></div>;
   }
 
-  const peneirasVisiveis = selectedProject?.faixa_trabalho 
-    ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
-    : Object.keys(PENEIRAS_MAP);
+  // Determinar peneiras visíveis baseado na faixa do projeto
+  let peneirasVisiveis = [];
+  if (selectedProject?.faixa_granulometrica_id && faixasGranulometricas.length > 0) {
+    const faixa = faixasGranulometricas.find(f => f.id === selectedProject.faixa_granulometrica_id);
+    if (faixa?.peneiras) {
+      peneirasVisiveis = faixa.peneiras.map(p => {
+        const mmValue = p.abertura.replace(',', '_').replace('.', '_');
+        return `peneira_${mmValue}mm`;
+      });
+    }
+  }
+  
+  // Se não houver projeto ou faixa, mostrar todas as peneiras
+  if (peneirasVisiveis.length === 0) {
+    peneirasVisiveis = Object.keys(PENEIRAS_MAP);
+  }
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
