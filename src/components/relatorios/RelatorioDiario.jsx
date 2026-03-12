@@ -251,9 +251,9 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
 
           {/* Não Conformidades */}
           {diario.nao_conformidades && diario.nao_conformidades.length > 0 && (
-            <section className="mt-6">
-              <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Não Conformidades</h2>
-              <table className="w-full border-collapse text-sm mb-6">
+            <section className="mt-4">
+              <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-2">Não Conformidades</h2>
+              <table className="w-full border-collapse text-sm mb-3">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">LOCAL</th>
