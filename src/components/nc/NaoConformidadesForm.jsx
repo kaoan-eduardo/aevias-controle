@@ -15,8 +15,7 @@ export default function NaoConformidadesForm({
     onChange([...naoConformidades, {
       local_nc: locaisPermitidos.length === 1 ? locaisPermitidos[0] : "",
       categoria_nc: "",
-      parametro_nc: "",
-      descricao: ""
+      parametro_nc: ""
     }]);
   };
 
@@ -141,18 +140,7 @@ export default function NaoConformidadesForm({
                 </div>
               </div>
 
-              {/* Descrição da NC */}
-              <div>
-                <Label className="text-xs">Descrição da NC *</Label>
-                <Textarea
-                  value={nc.descricao || ""}
-                  onChange={(e) => handleNCChange(index, 'descricao', e.target.value)}
-                  disabled={disabled}
-                  rows={3}
-                  placeholder="Descreva a não conformidade identificada..."
-                  className="text-sm"
-                />
-              </div>
+
             </div>
           ))}
         </div>
