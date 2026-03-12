@@ -1239,6 +1239,13 @@ export default function DiarioObraPage() {
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura)
     };
     
+    console.log("📋 Dados a salvar (DiarioObra):", {
+      acoes_corretivas_realizado: dataToSave.acoes_corretivas_realizado,
+      acoes_corretivas_descricao: dataToSave.acoes_corretivas_descricao,
+      nao_conformidades: dataToSave.nao_conformidades,
+      total_ncs: dataToSave.nao_conformidades?.length
+    });
+    
     try {
       if (editingDiarioOriginal?.id) {
         const updateData = { ...dataToSave };
