@@ -14,6 +14,7 @@ import { User } from "@/entities/User";
 import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import NaoConformidadesForm from "@/components/nc/NaoConformidadesForm";
 
 
 
@@ -36,6 +37,7 @@ const getInitialFormData = () => ({
   observacoes: "",
   acoes_corretivas_realizado: null,
   acoes_corretivas_descricao: "",
+  nao_conformidades: [],
   efetivo_obra_ativo: false,
   efetivo_maquinas: {
     motoniveladora: 0, pa_carregadeira: 0, retroescavadeira: 0, escavadeira_hidraulica: 0,
@@ -407,57 +409,70 @@ const DiarioForm = ({
         />
       </div>
 
-      {/* Ações Corretivas, Efetivo, Checklist, Fotos - ocultos para Escritório */}
+      {/* Ações Corretivas / Não Conformidades - ocultos para Escritório */}
       {formData.tipo_local !== 'escritorio' && (
       <><Card className="bg-orange-50 border-orange-200">
         <CardHeader>
-          <CardTitle className="text-lg">Ações Corretivas</CardTitle>
+          <CardTitle className="text-lg">Ações Corretivas / Não Conformidades</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Foram realizadas ações corretivas? *</Label>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input 
-                  type="radio" 
-                  checked={formData.acoes_corretivas_realizado === true}
-                  onChange={() => handleChange('acoes_corretivas_realizado', true)}
-                  disabled={!isEditable || isApproved}
-                  className="mr-2"
-                />
-                Sim
-              </label>
-              <label className="flex items-center">
-                <input 
-                  type="radio" 
-                  checked={formData.acoes_corretivas_realizado === false}
-                  onChange={() => {
-                    handleChange('acoes_corretivas_realizado', false);
-                    handleChange('acoes_corretivas_descricao', '');
-                  }}
-                  disabled={!isEditable || isApproved}
-                  className="mr-2"
-                />
-                Não
-              </label>
+        <CardContent className="space-y-6">
+          {/* Ações Corretivas */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="font-semibold">Foram realizadas ações corretivas? *</Label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    checked={formData.acoes_corretivas_realizado === true}
+                    onChange={() => handleChange('acoes_corretivas_realizado', true)}
+                    disabled={!isEditable || isApproved}
+                    className="mr-2"
+                  />
+                  Sim
+                </label>
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    checked={formData.acoes_corretivas_realizado === false}
+                    onChange={() => {
+                      handleChange('acoes_corretivas_realizado', false);
+                      handleChange('acoes_corretivas_descricao', '');
+                    }}
+                    disabled={!isEditable || isApproved}
+                    className="mr-2"
+                  />
+                  Não
+                </label>
+              </div>
             </div>
+
+            {formData.acoes_corretivas_realizado === true && (
+              <div className="space-y-2 p-4 border-2 border-orange-300 rounded-lg bg-white">
+                <Label htmlFor="acoes_corretivas_descricao">Descrição das Ações Corretivas *</Label>
+                <Textarea
+                  id="acoes_corretivas_descricao"
+                  name="acoes_corretivas_descricao"
+                  value={formData.acoes_corretivas_descricao || ""}
+                  onChange={(e) => handleChange('acoes_corretivas_descricao', e.target.value)}
+                  placeholder="Descreva detalhadamente as ações corretivas que foram realizadas..."
+                  rows={4}
+                  required={formData.acoes_corretivas_realizado === true}
+                  disabled={!isEditable || isApproved}
+                />
+              </div>
+            )}
           </div>
 
-          {formData.acoes_corretivas_realizado === true && (
-            <div className="space-y-2 p-4 border-2 border-orange-300 rounded-lg bg-white">
-              <Label htmlFor="acoes_corretivas_descricao">Descrição das Ações Corretivas *</Label>
-              <Textarea
-                id="acoes_corretivas_descricao"
-                name="acoes_corretivas_descricao"
-                value={formData.acoes_corretivas_descricao || ""}
-                onChange={(e) => handleChange('acoes_corretivas_descricao', e.target.value)}
-                placeholder="Descreva detalhadamente as ações corretivas que foram realizadas..."
-                rows={4}
-                required={formData.acoes_corretivas_realizado === true}
-                disabled={!isEditable || isApproved}
-              />
-            </div>
-          )}
+          {/* Não Conformidades */}
+          <div className="border-t pt-4">
+            <NaoConformidadesForm
+              naoConformidades={formData.nao_conformidades || []}
+              onChange={(ncs) => handleChange('nao_conformidades', ncs)}
+              disabled={!isEditable || isApproved}
+              locaisPermitidos={["CAMPO", "USINA"]}
+            />
+          </div>
         </CardContent>
       </Card>
 
