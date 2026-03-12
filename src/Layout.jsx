@@ -290,6 +290,7 @@ const AppLayout = ({ children }) => {
   const [loadingUser, setLoadingUser] = React.useState(true);
   const [pendingTransfers, setPendingTransfers] = React.useState(0);
   const [naoConformidadesOpen, setNaoConformidadesOpen] = React.useState(false);
+  const [minhasObrasOpen, setMinhasObrasOpen] = React.useState(false);
 
   useEffect(() => {
     // Desabilitar tradução automática
@@ -398,12 +399,7 @@ const AppLayout = ({ children }) => {
 
   const mainNavigation = useMemo(() => [
     { title: "Dashboard", url: createPageUrl("Dashboard"), icon: LayoutDashboard, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
-    { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] },
-    { title: "Projetos", url: createPageUrl("Projects"), icon: FolderOpen, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
-    { title: "Ensaios Realizados", url: createPageUrl("MeusEnsaios"), icon: FileText, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'] },
-
-    { title: "Resumos", url: createPageUrl("ResumosPersonalizados"), icon: BarChart3, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'] },
-    { title: "Transferências", url: createPageUrl("SolicitacoesTransferencia"), icon: ArrowLeftRight, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'], showBadge: true }
+    { title: "Regionais", url: createPageUrl("Regionais"), icon: Grid, allowedLevels: ['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'user'] }
   ], []);
 
   const adminNavigation = useMemo(() => [
@@ -472,6 +468,80 @@ const AppLayout = ({ children }) => {
                         </SidebarMenuItem>
                       );
                     })}
+
+                    {/* Minhas Obras - menu expansível */}
+                    {(['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'].includes(userAccessLevel)) && (
+                      <>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 cursor-pointer`}
+                            onClick={() => setMinhasObrasOpen(prev => !prev)}
+                          >
+                            <div className="flex items-center gap-3 px-3 py-2.5 w-full">
+                              <FolderOpen className="w-5 h-5 text-[#BFCF99]" />
+                              <span className="font-medium text-[#00233B] flex-1">Minhas Obras</span>
+                              {minhasObrasOpen
+                                ? <ChevronDown className="w-4 h-4 text-[#00233B]/60" />
+                                : <ChevronRight className="w-4 h-4 text-[#00233B]/60" />
+                              }
+                            </div>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        {minhasObrasOpen && (
+                          <>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("Projects") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("Projects")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <FolderOpen className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Projetos</span>
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("MeusEnsaios") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("MeusEnsaios")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <FileText className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Ensaios Realizados</span>
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("ResumosPersonalizados") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("ResumosPersonalizados")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <BarChart3 className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Resumos</span>
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === createPageUrl("SolicitacoesTransferencia") ? 'bg-black/10' : ''}`}
+                              >
+                                <NavLink to={createPageUrl("SolicitacoesTransferencia")} className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                  <ArrowLeftRight className="w-4 h-4 text-[#BFCF99]" />
+                                  <span className="font-medium text-[#00233B] text-sm">Transferências</span>
+                                  {pendingTransfers > 0 && (isGestorContrato || isSalaTecnica) && (
+                                    <Badge className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                                      {pendingTransfers}
+                                    </Badge>
+                                  )}
+                                </NavLink>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          </>
+                        )}
+                      </>
+                    )}
 
                     {/* Não Conformidades - menu expansível */}
                     {(['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'].includes(userAccessLevel)) && (
