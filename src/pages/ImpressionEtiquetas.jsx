@@ -7,6 +7,7 @@ export default function ImpressionEtiquetas() {
   const [etiquetas, setEtiquetas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
+  const [showRender, setShowRender] = useState(false);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -48,7 +49,7 @@ export default function ImpressionEtiquetas() {
     window.print();
   };
 
-  if (etiquetas.length === 0) {
+  if (!showRender) {
     return (
       <div className="min-h-screen bg-[#F2F1EF] p-6">
         <div className="max-w-2xl mx-auto">
@@ -88,6 +89,23 @@ export default function ImpressionEtiquetas() {
                 </div>
               )}
             </div>
+
+            {etiquetas.length > 0 && (
+              <div className="mt-8 p-6 bg-[#F2F1EF] rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#00233B] font-semibold">Arquivo carregado com sucesso!</p>
+                    <p className="text-[#00233B]/70 text-sm">{etiquetas.length} etiquetas prontas para gerar</p>
+                  </div>
+                  <Button
+                    onClick={() => setShowRender(true)}
+                    className="bg-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/90 font-semibold"
+                  >
+                    Gerar Etiquetas →
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
