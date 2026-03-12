@@ -253,32 +253,26 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
           {diario.nao_conformidades && diario.nao_conformidades.length > 0 && (
             <section className="mt-6 mb-4">
               <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Não Conformidades</h2>
-              <div className="space-y-2">
-                {diario.nao_conformidades.map((nc, index) => (
-                  <div key={index} className="p-2 border rounded-md bg-gray-50 max-w-4xl">
-                    <div className="grid grid-cols-3 gap-2 mb-1">
-                      <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase">Local</p>
-                        <p className="text-sm text-gray-800">{nc.local_nc || 'N/A'}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase">Categoria</p>
-                        <p className="text-sm text-gray-800">{nc.categoria_nc || 'N/A'}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-gray-500 uppercase">Parâmetro</p>
-                        <p className="text-sm text-gray-800">{nc.parametro_nc || 'N/A'}</p>
-                      </div>
-                    </div>
-                    {nc.descricao && (
-                      <div className="mt-1">
-                        <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Descrição</p>
-                        <p className="text-sm text-gray-800 whitespace-pre-wrap">{nc.descricao}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">LOCAL</th>
+                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">CATEGORIA</th>
+                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">PARÂMETRO</th>
+                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">DESCRIÇÃO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {diario.nao_conformidades.map((nc, index) => (
+                    <tr key={index} className="bg-white">
+                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.local_nc || 'N/A'}</td>
+                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.categoria_nc || 'N/A'}</td>
+                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.parametro_nc || 'N/A'}</td>
+                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.descricao || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </section>
           )}
         </main>
