@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, Loader } from 'lucide-react';
 
-// Import XLSX dynamically to avoid build issues
-let XLSX;
-(async () => {
-  XLSX = (await import('xlsx')).default;
-})();
-
 export default function ImpressionEtiquetas() {
   const [etiquetas, setEtiquetas] = useState([]);
   const [loading, setLoading] = useState(false);
