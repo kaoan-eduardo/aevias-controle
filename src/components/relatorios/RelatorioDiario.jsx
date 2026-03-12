@@ -255,23 +255,23 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
               <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Não Conformidades</h2>
               <div className="space-y-3">
                 {diario.nao_conformidades.map((nc, index) => (
-                  <div key={index} className="border border-orange-300 rounded-lg p-3 bg-orange-50">
+                  <div key={index} className="p-2 border rounded-md bg-gray-50">
                     <div className="grid grid-cols-3 gap-3 mb-2">
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase">Local</p>
-                        <p className="text-sm text-gray-800 font-medium">{nc.local_nc || 'N/A'}</p>
+                        <p className="text-sm text-gray-800">{nc.local_nc || 'N/A'}</p>
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase">Categoria</p>
-                        <p className="text-sm text-gray-800 font-medium">{nc.categoria_nc || 'N/A'}</p>
+                        <p className="text-sm text-gray-800">{nc.categoria_nc || 'N/A'}</p>
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-gray-500 uppercase">Parâmetro</p>
-                        <p className="text-sm text-gray-800 font-medium">{nc.parametro_nc || 'N/A'}</p>
+                        <p className="text-sm text-gray-800">{nc.parametro_nc || 'N/A'}</p>
                       </div>
                     </div>
                     {nc.descricao && (
-                      <div>
+                      <div className="mt-2">
                         <p className="text-xs font-semibold text-gray-500 uppercase mb-1">Descrição</p>
                         <p className="text-sm text-gray-800 whitespace-pre-wrap">{nc.descricao}</p>
                       </div>
