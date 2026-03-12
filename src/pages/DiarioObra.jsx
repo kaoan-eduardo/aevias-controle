@@ -1239,12 +1239,12 @@ export default function DiarioObraPage() {
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura)
     };
     
-    console.log("📋 Dados a salvar (DiarioObra):", {
-      acoes_corretivas_realizado: dataToSave.acoes_corretivas_realizado,
-      acoes_corretivas_descricao: dataToSave.acoes_corretivas_descricao,
-      nao_conformidades: dataToSave.nao_conformidades,
-      total_ncs: dataToSave.nao_conformidades?.length
-    });
+    console.log("🔴🔴🔴 ===== DIÁRIO OBRA - DADOS SALVOS ===== 🔴🔴🔴");
+    console.log("📋 Ações Corretivas Realizado:", dataToSave.acoes_corretivas_realizado);
+    console.log("📝 Ações Corretivas Descrição:", dataToSave.acoes_corretivas_descricao);
+    console.log("⚠️ Não Conformidades:", dataToSave.nao_conformidades);
+    console.log("🔢 Total de NCs:", dataToSave.nao_conformidades?.length || 0);
+    console.log("🔴🔴🔴 ===== FIM DOS DADOS ===== 🔴🔴🔴");
     
     try {
       if (editingDiarioOriginal?.id) {
