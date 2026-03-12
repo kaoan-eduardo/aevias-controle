@@ -253,7 +253,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
           {diario.nao_conformidades && diario.nao_conformidades.length > 0 && (
             <section className="mt-6">
               <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-3">Não Conformidades</h2>
-              <div className="space-y-3 max-w-4xl">
+              <div className="space-y-3 max-w-3xl">
                 {diario.nao_conformidades.map((nc, index) => (
                   <div key={index} className="p-2 border rounded-md bg-gray-50">
                     <div className="grid grid-cols-3 gap-3 mb-2">
@@ -283,7 +283,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
           )}
         </main>
 
-        <footer className="mt-12 pt-8">
+        <footer className="mt-6 pt-8">
           <div className="grid grid-cols-3 gap-8 items-end">
             <div className="text-center">
               <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
