@@ -11,6 +11,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Project } from "@/entities/Project";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
 const SectionTitle = ({ children }) => (
   <CardHeader>
@@ -147,6 +148,7 @@ export default function ChecklistReciclagem() {
     observacoes_gerais: "",
     acoes_corretivas_realizado: null,
     acoes_corretivas_descricao: "",
+    nao_conformidades: [],
     fotos: [],
     status: "rascunho"
   });
@@ -1125,50 +1127,17 @@ export default function ChecklistReciclagem() {
                 </p>
               </div>
 
-              {/* AÇÕES CORRETIVAS */}
-              <Card className="bg-slate-50">
-                <CardHeader>
-                  <CardTitle className="text-lg">Ações Corretivas</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label>Foram realizadas ações corretivas?</Label>
-                    <div className="flex gap-4 mt-2">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={formData.acoes_corretivas_realizado === true}
-                          onChange={() => setFormData({ ...formData, acoes_corretivas_realizado: true })}
-                          className="w-4 h-4"
-                        />
-                        <span>Sim</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={formData.acoes_corretivas_realizado === false}
-                          onChange={() => setFormData({ ...formData, acoes_corretivas_realizado: false, acoes_corretivas_descricao: "" })}
-                          className="w-4 h-4"
-                        />
-                        <span>Não</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {formData.acoes_corretivas_realizado === true && (
-                    <div>
-                      <Label htmlFor="acoes_corretivas_descricao">Descrição das Ações Corretivas</Label>
-                      <Textarea
-                        id="acoes_corretivas_descricao"
-                        value={formData.acoes_corretivas_descricao}
-                        onChange={(e) => setFormData({ ...formData, acoes_corretivas_descricao: e.target.value })}
-                        rows={4}
-                        placeholder="Descreva as ações corretivas realizadas..."
-                      />
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              {/* AÇÕES CORRETIVAS / NÃO CONFORMIDADES */}
+              <AcoesCorretivasNC
+                acoesRealizadas={formData.acoes_corretivas_realizado}
+                acoesDescricao={formData.acoes_corretivas_descricao}
+                naoConformidades={formData.nao_conformidades || []}
+                onAcoesRealizadasChange={(value) => setFormData({ ...formData, acoes_corretivas_realizado: value, acoes_corretivas_descricao: value === false ? "" : formData.acoes_corretivas_descricao })}
+                onAcoesDescricaoChange={(value) => setFormData({ ...formData, acoes_corretivas_descricao: value })}
+                onNaoConformidadesChange={(ncs) => setFormData({ ...formData, nao_conformidades: ncs })}
+                disabled={false}
+                locaisPermitidos={["CAMPO"]}
+              />
 
               {/* FOTOS */}
               <div>
