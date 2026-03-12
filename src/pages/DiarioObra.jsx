@@ -1082,17 +1082,12 @@ export default function DiarioObraPage() {
   const uploadFileWithRetry = async (file, maxRetries = 3) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`Tentativa ${attempt}/${maxRetries} para upload: ${file.name}`);
         const result = await UploadFile({ file });
-        console.log(`Upload bem-sucedido: ${file.name}`, result);
         return result;
       } catch (error) {
-        console.error(`Tentativa ${attempt} falhou para ${file.name}:`, error);
-        
         if (attempt === maxRetries) {
           throw new Error(`Upload falhou após ${maxRetries} tentativas: ${error.message}`);
         }
-        
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
@@ -1104,8 +1099,6 @@ export default function DiarioObraPage() {
         setSelectedFileNames("Nenhum ficheiro selecionado");
         return;
     }
-
-    console.log(`Iniciando upload de ${files.length} arquivo(s)`);
     
     try {
       files.forEach(file => validateFile(file));
@@ -1133,8 +1126,6 @@ export default function DiarioObraPage() {
         const currentFileId = `${file.name}-${i}`;
 
         try {
-          console.log(`Processando arquivo ${i + 1}/${files.length}: ${file.name}`);
-          
           setUploadProgress(prev => 
             prev.map(p => p.id === currentFileId ? { ...p, status: 'uploading' } : p)
           );
@@ -1147,7 +1138,6 @@ export default function DiarioObraPage() {
           );
           
         } catch (error) {
-          console.error(`Erro no upload do arquivo ${file.name}:`, error);
           errors.push({ fileName: file.name, error: error.message });
           
           setUploadProgress(prev => 
@@ -1167,12 +1157,9 @@ export default function DiarioObraPage() {
         const errorMessage = `${uploadedUrls.length} de ${files.length} arquivos enviados com sucesso.\n\nErros:\n` +
           errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n');
         alert(errorMessage);
-      } else {
-        console.log(`Todos os ${files.length} arquivo(s) enviados com sucesso!`);
       }
 
     } catch (error) {
-      console.error("Erro geral no upload:", error);
       alert(`Erro geral no upload: ${error.message}`);
     } finally {
       setLoadingUpload(false);
@@ -1268,54 +1255,43 @@ export default function DiarioObraPage() {
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao salvar diário:", error);
       alert("Ocorreu um erro ao salvar o diário.");
     }
   };
 
 
   useEffect(() => {
-    const loadData = async () => { // Renamed from loadInitialData
+    const loadData = async () => {
       setLoading(true);
       try {
-        console.log("🚀 === DIÁRIO OBRA: INÍCIO DO CARREGAMENTO ===");
         const currentUser = await User.me();
         setUser(currentUser);
 
-        console.log("📥 Carregando obras e regionais...");
         const [obrasData, regionaisData] = await Promise.all([
           Obra.list(),
           Regional.list()
         ]);
-        console.log("✅ Obras carregadas:", obrasData.length, "Regionais carregadas:", regionaisData.length);
-        setRegionais(regionaisData); // Set regionals once
+        setRegionais(regionaisData);
 
         const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
         let availableObras = obrasData;
         
         if (currentUserAccessLevel === 'user') {
-          console.log("🔍 Filtrando obras para laboratorista...");
           const regionalDoLaboratorista = regionaisData.find(regional => {
             const laboratoristas = regional.laboratoristas_responsaveis || [];
             return laboratoristas.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
           });
           
           if (regionalDoLaboratorista) {
-            console.log("✅ Regional encontrada:", regionalDoLaboratorista.nome);
-            // Filtrar apenas obras em andamento
             availableObras = obrasData.filter(obra => 
               obra.regional_id === regionalDoLaboratorista.id &&
               obra.status === 'em_andamento'
             );
-            console.log("✅ Obras em andamento da regional:", availableObras.length);
           } else {
-            console.log("⚠️ Laboratorista não atribuído a nenhuma regional. Nenhuma obra disponível.");
             availableObras = [];
           }
-        } else {
-          console.log("✅ Usuário pode ver todas as obras");
         }
-        setObras(availableObras); // Set filtered obras
+        setObras(availableObras);
 
         const params = new URLSearchParams(location.search);
         const editId = params.get('editId');
@@ -1334,7 +1310,6 @@ export default function DiarioObraPage() {
               fotos: Array.isArray(diarioToEdit.fotos) ? diarioToEdit.fotos : [],
               temperatura: diarioToEdit.temperatura ?? "",
             });
-            console.log("📝 Editando diário:", editId);
           } else {
             alert("Você não tem permissão para editar este registro.");
             navigate(createPageUrl('MeusEnsaios'));
@@ -1347,11 +1322,9 @@ export default function DiarioObraPage() {
             initialNewFormData.obra_id = availableObras[0].id;
           }
           setFormData(initialNewFormData);
-          setEditingDiarioOriginal(null); // Ensure no original diario is set when creating new
-          console.log("➕ Criando novo diário.");
+          setEditingDiarioOriginal(null);
         }
       } catch (error) {
-        console.error("❌ DiarioObra - Erro ao carregar dados:", error);
         alert("Não foi possível carregar os dados. Verifique sua conexão e tente novamente.");
         navigate(createPageUrl('MeusEnsaios'));
       } finally {
