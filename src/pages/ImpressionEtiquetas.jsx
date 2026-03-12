@@ -22,11 +22,12 @@ export default function ImpressionEtiquetas() {
     setErro('');
     
     try {
+      const xlsxModule = await import('xlsx');
       const reader = new FileReader();
       reader.onload = (event) => {
-        const workbook = XLSX.read(event.target?.result, { type: 'binary' });
+        const workbook = xlsxModule.read(event.target?.result, { type: 'binary' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(worksheet);
+        const data = xlsxModule.utils.sheet_to_json(worksheet);
 
         // Mapear colunas da planilha
         const processadas = data.map((row) => ({
