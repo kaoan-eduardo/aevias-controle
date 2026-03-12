@@ -58,6 +58,14 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route 
+        path="/ImpressionEtiquetas" 
+        element={
+          <LayoutWrapper currentPageName="ImpressionEtiquetas">
+            <Pages.ImpressionEtiquetas />
+          </LayoutWrapper>
+        } 
+      />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
