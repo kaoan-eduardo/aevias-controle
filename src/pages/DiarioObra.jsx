@@ -14,7 +14,7 @@ import { User } from "@/entities/User";
 import { UploadFile } from "@/integrations/Core";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import NaoConformidadesForm from "@/components/nc/NaoConformidadesForm";
+import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
 
 
