@@ -245,36 +245,38 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {renderTextArea("Atividades Realizadas", diario.atividades_realizadas)}
               {diario.observacoes && renderTextArea("Observações", diario.observacoes)}
-              {diario.acoes_corretivas_realizado === true && diario.acoes_corretivas_descricao && renderTextArea("Ações Corretivas", diario.acoes_corretivas_descricao)}
             </div>
           </section>
 
-          {/* Não Conformidades */}
-          {diario.nao_conformidades && diario.nao_conformidades.length > 0 && (
-            <section className="mt-4">
-              <h2 className="text-lg font-bold text-gray-700 border-b pb-2 mb-2">Não Conformidades</h2>
-              <table className="w-full border-collapse text-sm mb-3">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">LOCAL</th>
-                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">CATEGORIA</th>
-                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">PARÂMETRO</th>
-                    <th className="border border-gray-300 px-3 py-2 text-left font-semibold text-gray-700">DESCRIÇÃO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {diario.nao_conformidades.map((nc, index) => (
-                    <tr key={index} className="bg-white">
-                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.local_nc || 'N/A'}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.categoria_nc || 'N/A'}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.parametro_nc || 'N/A'}</td>
-                      <td className="border border-gray-300 px-3 py-2 text-gray-800">{nc.descricao || '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )}
+          <section className="mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {diario.acoes_corretivas_realizado === true && diario.acoes_corretivas_descricao && renderTextArea("Ações Corretivas", diario.acoes_corretivas_descricao)}
+              
+              {diario.nao_conformidades && diario.nao_conformidades.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Não Conformidades</p>
+                  <table className="w-full border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-2 py-1 text-left font-semibold text-gray-700">LOCAL</th>
+                        <th className="border border-gray-300 px-2 py-1 text-left font-semibold text-gray-700">CATEGORIA</th>
+                        <th className="border border-gray-300 px-2 py-1 text-left font-semibold text-gray-700">PARÂMETRO</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {diario.nao_conformidades.map((nc, index) => (
+                        <tr key={index} className="bg-white">
+                          <td className="border border-gray-300 px-2 py-1 text-gray-800">{nc.local_nc || 'N/A'}</td>
+                          <td className="border border-gray-300 px-2 py-1 text-gray-800">{nc.categoria_nc || 'N/A'}</td>
+                          <td className="border border-gray-300 px-2 py-1 text-gray-800">{nc.parametro_nc || 'N/A'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </section>
         </main>
 
         <footer className="mt-auto pt-4 flex-shrink-0">
