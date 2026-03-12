@@ -591,7 +591,6 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                         <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">LOCAL</th>
                         <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">CATEGORIA</th>
                         <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">PARÂMETRO</th>
-                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">DESCRIÇÃO</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -600,7 +599,6 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
-                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.descricao || '-'}</td>
                         </tr>
                       ))}
                     </tbody>
