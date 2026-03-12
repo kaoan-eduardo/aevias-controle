@@ -538,6 +538,19 @@ const AppLayout = ({ children }) => {
                                 </NavLink>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
+                            {(isGestorContrato || isAdmin) && (
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  asChild
+                                  className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === '/ImpressionEtiquetas' ? 'bg-black/10' : ''}`}
+                                >
+                                  <NavLink to="/ImpressionEtiquetas" className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                    <FileText className="w-4 h-4 text-[#BFCF99]" />
+                                    <span className="font-medium text-[#00233B] text-sm">Impressão de Etiquetas</span>
+                                  </NavLink>
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                            )}
                           </>
                         )}
                       </>
