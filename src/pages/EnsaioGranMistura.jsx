@@ -235,11 +235,13 @@ export default function EnsaioGranMisturaPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const getPeneirasVisiveis = () => {
+  const getPeneirasVisiveis = useMemo(() => {
     console.log('=== DEBUG getPeneirasVisiveis ===');
     console.log('formData.project_id:', formData.project_id);
     console.log('formData.faixa:', formData.faixa);
-    console.log('faixasGranulometricas:', faixasGranulometricas);
+    console.log('formData.material:', formData.material);
+    console.log('Total faixasGranulometricas:', faixasGranulometricas.length);
+    console.log('faixasGranulometricas completo:', faixasGranulometricas);
     
     // Se projeto == "nenhum", usar faixa manual
     if (formData.project_id === "nenhum" && formData.faixa) {
@@ -291,7 +293,7 @@ export default function EnsaioGranMisturaPage() {
     // Fallback: mostrar todas
     console.log('Fallback: mostrando todas as peneiras');
     return Object.keys(PENEIRAS_MAP);
-  };
+  }, [formData.project_id, formData.faixa, formData.material, selectedProject, faixasGranulometricas]);
 
   const handleGranulometriaChange = (peneira, field, value) => {
     const newGranulometria = { ...formData.granulometria };
@@ -302,7 +304,6 @@ export default function EnsaioGranMisturaPage() {
 
     if (field === 'retido' && formData.peso_amostra) {
       const pesoAmostra = parseFloat(formData.peso_amostra) || 0;
-      const peneirasVisiveis = getPeneirasVisiveis();
 
       let retidoAcumulado = 0;
       peneirasVisiveis.forEach(pKey => {
@@ -416,8 +417,6 @@ export default function EnsaioGranMisturaPage() {
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin" /></div>;
   }
-
-  const peneirasVisiveis = getPeneirasVisiveis();
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
@@ -681,9 +680,8 @@ export default function EnsaioGranMisturaPage() {
                         if (formData.granulometria && Object.keys(formData.granulometria).length > 0) {
                           const pesoAmostra = parseFloat(e.target.value) || 0;
                           const newGran = { ...formData.granulometria };
-                          const peneiras = getPeneirasVisiveis();
                           let retidoAcumulado = 0;
-                          peneiras.forEach(pKey => {
+                          peneirasVisiveis.forEach(pKey => {
                             const retido = parseFloat(newGran[pKey]?.retido) || 0;
                             retidoAcumulado += retido;
                             const passante = pesoAmostra - retidoAcumulado;
