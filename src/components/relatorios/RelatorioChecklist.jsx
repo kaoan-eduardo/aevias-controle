@@ -578,9 +578,35 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
             <main className="flex-grow mt-6">
               <SectionTitle>Ações Corretivas Realizadas</SectionTitle>
-              <div className="border-2 border-slate-300 rounded-lg p-6 bg-white min-h-48">
+              <div className="border-2 border-slate-300 rounded-lg p-6 bg-white min-h-48 mb-6">
                 <p className="text-base leading-relaxed whitespace-pre-wrap text-justify">{checklist.acoes_corretivas_descricao}</p>
               </div>
+
+              {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
+                <div>
+                  <SectionTitle>Não Conformidades</SectionTitle>
+                  <table className="w-full border-collapse border border-slate-300 text-sm">
+                    <thead>
+                      <tr className="bg-slate-100">
+                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">LOCAL</th>
+                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">CATEGORIA</th>
+                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">PARÂMETRO</th>
+                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">DESCRIÇÃO</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {checklist.nao_conformidades.map((nc, index) => (
+                        <tr key={index} className="bg-white">
+                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
+                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
+                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
+                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.descricao || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </main>
             <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} creatorUser={creatorUser} />
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-400">
