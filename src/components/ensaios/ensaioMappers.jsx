@@ -32,8 +32,6 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Ensaio de Sondagem", icon: Gauge };
     case "EnsaioGranulometriaIndividual":
       return { name: "Granulometria Individual", icon: FlaskConical };
-    case "EnsaioGranMistura":
-      return { name: "Granulometria da Mistura", icon: FlaskConical };
     case "AcompanhamentoUsinagem":
       return { name: "Acompanhamento de Usinagem", icon: FlaskConical };
     case "AcompanhamentoCarga":
@@ -80,8 +78,6 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioSondagem?id=${ensaio.id}`);
     case "EnsaioGranulometriaIndividual":
       return createPageUrl(`RelatorioGranulometriaIndividual?id=${ensaio.id}`);
-    case "EnsaioGranMistura":
-      return createPageUrl(`RelatorioGranMistura?id=${ensaio.id}`);
     case "AcompanhamentoUsinagem":
       return createPageUrl(`RelatorioAcompanhamentoUsinagem?id=${ensaio.id}`);
     case "AcompanhamentoCarga":
@@ -118,9 +114,6 @@ export const getDataFormatted = (ensaio) => {
       dateField = ensaio.data_ensaio;
       break;
     case "EnsaioGranulometriaIndividual":
-      dateField = ensaio.data_ensaio;
-      break;
-    case "EnsaioGranMistura":
       dateField = ensaio.data_ensaio;
       break;
     case "AcompanhamentoCarga":
@@ -199,8 +192,6 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data;
     case "EnsaioGranulometriaIndividual":
       return ensaio.data_ensaio;
-    case "EnsaioGranMistura":
-      return ensaio.data_ensaio;
     case "AcompanhamentoUsinagem":
       return ensaio.data;
     case "AcompanhamentoCarga":
@@ -231,7 +222,6 @@ export const getEntityMap = () => ({
   "ChecklistReciclagem": "ChecklistReciclagem",
   "EnsaioSondagem": "EnsaioSondagem",
   "EnsaioGranulometriaIndividual": "EnsaioGranulometriaIndividual",
-  "EnsaioGranMistura": "EnsaioGranMistura",
   "AcompanhamentoUsinagem": "AcompanhamentoUsinagem",
   "AcompanhamentoCarga": "AcompanhamentoCarga",
   "EnsaioManchaPendulo": "EnsaioManchaPendulo",
@@ -254,7 +244,6 @@ export const typeOptions = [
   { value: 'ChecklistReciclagem', label: 'Checklist Reciclagem' },
   { value: 'EnsaioSondagem', label: 'Ensaio Sondagem' },
   { value: 'EnsaioGranulometriaIndividual', label: 'Granulometria Individual' },
-  { value: 'EnsaioGranMistura', label: 'Granulometria da Mistura' },
   { value: 'AcompanhamentoUsinagem', label: 'Acompanhamento de Usinagem' },
   { value: 'AcompanhamentoCarga', label: 'Acompanhamento de Cargas' },
   { value: 'EnsaioManchaPendulo', label: 'Mancha + Pêndulo' },

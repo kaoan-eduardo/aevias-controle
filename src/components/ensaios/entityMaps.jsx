@@ -1,3 +1,4 @@
+
 import { base44 } from "@/api/base44Client";
 import { DiarioObra } from "@/entities/DiarioObra";
 import { EnsaioDensidade } from "@/entities/EnsaioDensidade";
@@ -22,7 +23,6 @@ export const getEntityMap = () => ({
   "ChecklistReciclagem": base44.entities.ChecklistReciclagem,
   "EnsaioSondagem": base44.entities.EnsaioSondagem,
   "EnsaioGranulometriaIndividual": base44.entities.EnsaioGranulometriaIndividual,
-  "EnsaioGranMistura": base44.entities.EnsaioGranMistura,
   "AcompanhamentoUsinagem": base44.entities.AcompanhamentoUsinagem,
   "AcompanhamentoCarga": base44.entities.AcompanhamentoCarga,
   "EnsaioManchaPendulo": base44.entities.EnsaioManchaPendulo,
