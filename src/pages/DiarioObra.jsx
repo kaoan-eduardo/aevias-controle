@@ -411,19 +411,20 @@ const DiarioForm = ({
 
       {/* Ações Corretivas / Não Conformidades - ocultos para Escritório */}
       {formData.tipo_local !== 'escritorio' && (
-      <AcoesCorretivasNC
-        acoesRealizadas={formData.acoes_corretivas_realizado}
-        acoesDescricao={formData.acoes_corretivas_descricao}
-        naoConformidades={formData.nao_conformidades || []}
-        onAcoesRealizadasChange={(value) => {
-          handleChange('acoes_corretivas_realizado', value);
-          if (value === false) handleChange('acoes_corretivas_descricao', '');
-        }}
-        onAcoesDescricaoChange={(value) => handleChange('acoes_corretivas_descricao', value)}
-        onNaoConformidadesChange={(ncs) => handleChange('nao_conformidades', ncs)}
-        disabled={!isEditable || isApproved}
-        locaisPermitidos={["CAMPO", "USINA"]}
-      />
+        <AcoesCorretivasNC
+          acoesRealizadas={formData.acoes_corretivas_realizado}
+          acoesDescricao={formData.acoes_corretivas_descricao}
+          naoConformidades={formData.nao_conformidades || []}
+          onAcoesRealizadasChange={(value) => {
+            handleChange('acoes_corretivas_realizado', value);
+            if (value === false) handleChange('acoes_corretivas_descricao', '');
+          }}
+          onAcoesDescricaoChange={(value) => handleChange('acoes_corretivas_descricao', value)}
+          onNaoConformidadesChange={(ncs) => handleChange('nao_conformidades', ncs)}
+          disabled={!isEditable || isApproved}
+          locaisPermitidos={["CAMPO", "USINA"]}
+        />
+      )}
 
       {/* Efetivo de Obra */}
       <Card className="bg-green-50 border-green-200">
