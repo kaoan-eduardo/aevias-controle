@@ -132,7 +132,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
   return (
     <div className="bg-white font-sans">
       {/* Primeira Página - Dados do Diário */}
-      <div className="p-8 print:p-8 min-h-[29.7cm] relative flex flex-col">
+      <div className="p-8 print:p-8 min-h-[29.7cm] flex flex-col">
         <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4">
           <div className="flex justify-start">
             <img 
