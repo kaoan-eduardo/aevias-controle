@@ -139,73 +139,74 @@ export default function ImpressionEtiquetas() {
             <div className="grid grid-cols-2 gap-3 print:gap-4">
               {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
                 <div key={pageIdx * 6 + idx} className="border-2 border-[#00233B] p-3 print:p-4 bg-white">
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-2 print:mb-1.5">
-              <div className="flex-shrink-0">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/b2878d2bd_image.png"
-                  alt="Afirmaevias"
-                  className="h-6 print:h-5 object-contain"
-                />
-              </div>
-              <div className="flex-1 border-b border-[#00233B]">
-                <h2 className="text-xs print:text-[10px] font-bold text-[#00233B]">
-                  ETIQUETA COLETA AMOSTRA SOLO
-                </h2>
-              </div>
-            </div>
+                  {/* Header */}
+                  <div className="flex items-center gap-2 mb-2 print:mb-1.5">
+                    <div className="flex-shrink-0">
+                      <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/b2878d2bd_image.png"
+                        alt="Afirmaevias"
+                        className="h-6 print:h-5 object-contain"
+                      />
+                    </div>
+                    <div className="flex-1 border-b border-[#00233B]">
+                      <h2 className="text-xs print:text-[10px] font-bold text-[#00233B]">
+                        ETIQUETA COLETA AMOSTRA SOLO
+                      </h2>
+                    </div>
+                  </div>
 
-            {/* Dados Principais */}
-            <table className="w-full mb-2 print:mb-1 text-xs print:text-[9px] border-collapse">
-              <tbody>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">ROD:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.rodovia}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">KM:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.km}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#BFCF99]">FUR:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 bg-[#BFCF99]">{etiqueta.furo}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PIS:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.pista}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">AMO:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.amostra}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PROF:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.profundidade}</td>
-                </tr>
-                <tr className="border border-[#00233B]">
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">MAT:</td>
-                  <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.material}</td>
-                </tr>
-              </tbody>
-            </table>
+                  {/* Dados Principais */}
+                  <table className="w-full mb-2 print:mb-1 text-xs print:text-[9px] border-collapse">
+                    <tbody>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">ROD:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.rodovia}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">KM:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.km}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#BFCF99]">FUR:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 bg-[#BFCF99]">{etiqueta.furo}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PIS:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.pista}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">AMO:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.amostra}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PROF:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.profundidade}</td>
+                      </tr>
+                      <tr className="border border-[#00233B]">
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">MAT:</td>
+                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.material}</td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-            {/* Ensaios Solicitados */}
-            <div className="border border-[#00233B] mb-1 print:mb-0.5">
-              <div className="bg-[#BFCF99] px-1 py-0.5 print:py-0 font-bold text-[#00233B] text-xs print:text-[9px] border-b border-[#00233B]">
-                ENSAIOS
-              </div>
-              <div className="px-1 py-0.5 print:py-0 space-y-0 text-xs print:text-[8px]">
-                <div><span className="font-bold">✓</span> COMPACT + CBR</div>
-                <div><span className="font-bold">✓</span> CARACT COMPLETA</div>
-                <div><span className="font-bold">✓</span> CLASS MCT</div>
-              </div>
-            </div>
+                  {/* Ensaios Solicitados */}
+                  <div className="border border-[#00233B] mb-1 print:mb-0.5">
+                    <div className="bg-[#BFCF99] px-1 py-0.5 print:py-0 font-bold text-[#00233B] text-xs print:text-[9px] border-b border-[#00233B]">
+                      ENSAIOS
+                    </div>
+                    <div className="px-1 py-0.5 print:py-0 space-y-0 text-xs print:text-[8px]">
+                      <div><span className="font-bold">✓</span> COMPACT + CBR</div>
+                      <div><span className="font-bold">✓</span> CARACT COMPLETA</div>
+                      <div><span className="font-bold">✓</span> CLASS MCT</div>
+                    </div>
+                  </div>
 
-            {/* Rodapé */}
-            <div className="border border-[#00233B] px-1 py-0.5 print:py-0 space-y-0 text-xs print:text-[8px]">
-              <div><span className="font-bold">R.C.:</span> ___</div>
-              <div><span className="font-bold">Data:</span> ___</div>
-            </div>
+                  {/* Rodapé */}
+                  <div className="border border-[#00233B] px-1 py-0.5 print:py-0 space-y-0 text-xs print:text-[8px]">
+                    <div><span className="font-bold">R.C.:</span> ___</div>
+                    <div><span className="font-bold">Data:</span> ___</div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
