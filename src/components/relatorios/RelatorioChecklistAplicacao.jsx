@@ -608,8 +608,8 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         </div>
       </div>
 
-      {/* --- Página 2: Ações Corretivas (se houver) --- */}
-      {temAcoesCorretivas && (
+      {/* --- Página 2: Ações Corretivas e/ou Não Conformidades (se houver) --- */}
+      {(temAcoesCorretivas || (checklist.nao_conformidades && checklist.nao_conformidades.length > 0)) && (
         <div className="p-3 print:p-3 break-before-page relative" style={{ minHeight: '297mm', height: '297mm' }}>
           <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />

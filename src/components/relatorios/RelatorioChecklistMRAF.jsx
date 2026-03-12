@@ -581,20 +581,24 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
         </footer>
       </div>
 
-      {/* PÁGINA DE AÇÕES CORRETIVAS - Inserida ANTES das fotos */}
-      {checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao && (
+      {/* PÁGINA DE AÇÕES CORRETIVAS E/OU NÃO CONFORMIDADES - Inserida ANTES das fotos */}
+      {(checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao) || (checklist.nao_conformidades && checklist.nao_conformidades.length > 0) ? (
         <div className="break-before-page relative p-3 print:p-3" style={{ minHeight: '297mm', height: '297mm' }}>
           <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
             <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} project={project} />
 
             <main className="mt-2">
-              <SectionTitle>Ações Corretivas</SectionTitle>
-              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
-                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {checklist.acoes_corretivas_descricao}
-                </p>
-              </div>
+              {checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao && (
+                <>
+                  <SectionTitle>Ações Corretivas</SectionTitle>
+                  <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
+                    <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                      {checklist.acoes_corretivas_descricao}
+                    </p>
+                  </div>
+                </>
+              )}
 
               {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
                 <div className="mt-4">
@@ -674,7 +678,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* PÁGINAS DE FOTOS - CADA UMA COM HEADER */}
       {photoPages.map((photos, pageIndex) => (
