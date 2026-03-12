@@ -95,7 +95,7 @@ export default function ImpressionEtiquetas() {
   }
 
   return (
-    <div className="bg-white min-h-screen p-4 print:p-2">
+    <div className="bg-white min-h-screen p-4 print:p-0">
       <div className="mb-4 print:hidden flex gap-2">
         <Button 
           onClick={handlePrint}
@@ -112,9 +112,12 @@ export default function ImpressionEtiquetas() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 print:gap-2">
-        {etiquetas.map((etiqueta, idx) => (
-          <div key={idx} className="page-break border-2 border-[#00233B] p-4 print:p-3 bg-white">
+      <div>
+        {Array.from({ length: Math.ceil(etiquetas.length / 6) }).map((_, pageIdx) => (
+          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-4 min-h-screen print:min-h-[297mm]">
+            <div className="grid grid-cols-2 gap-3 print:gap-4">
+              {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
+                <div key={pageIdx * 6 + idx} className="border-2 border-[#00233B] p-3 print:p-4 bg-white">
             {/* Header */}
             <div className="grid grid-cols-3 items-center mb-3 print:mb-2">
               <div className="flex items-center gap-1">
@@ -182,6 +185,8 @@ export default function ImpressionEtiquetas() {
             <div className="border border-[#00233B] p-1 print:p-0.5 space-y-0.5 print:space-y-0 text-sm print:text-xs">
               <div><span className="font-bold">Resp. Coleta:</span> _________________________</div>
               <div><span className="font-bold">Data da coleta:</span> _________________________</div>
+              </div>
+              ))}
             </div>
           </div>
         ))}
@@ -193,7 +198,7 @@ export default function ImpressionEtiquetas() {
             margin: 0;
             padding: 0;
           }
-          .page-break {
+          .print\\:page-break-after {
             page-break-after: always;
             break-after: page;
           }
