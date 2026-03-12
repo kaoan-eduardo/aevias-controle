@@ -251,17 +251,17 @@ export default function EnsaioGranMisturaPage() {
       
       if (faixaManual?.peneiras && faixaManual.peneiras.length > 0) {
         console.log('Peneiras da faixa:', faixaManual.peneiras);
-        const peneiras = faixaManual.peneiras
-          .map(p => {
-            console.log('Procurando peneira com abertura:', p.abertura);
-            const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
-              const peneiraInfo = PENEIRAS_MAP[key];
-              return peneiraInfo.mm === p.abertura;
-            });
-            console.log('Chave encontrada:', peneiraKey);
-            return peneiraKey;
-          })
-          .filter(Boolean);
+        
+        // Mapear usando ASTM ao invés de mm
+        const peneirasComAstm = faixaManual.peneiras.map(p => p.astm);
+        console.log('ASTM das peneiras da faixa:', peneirasComAstm);
+        
+        const peneiras = Object.keys(PENEIRAS_MAP).filter(key => {
+          const peneiraInfo = PENEIRAS_MAP[key];
+          const matched = peneirasComAstm.includes(peneiraInfo.astm);
+          console.log(`Comparando ${key}: ASTM=${peneiraInfo.astm}, Match=${matched}`);
+          return matched;
+        });
         
         console.log('Peneiras filtradas final:', peneiras);
         if (peneiras.length > 0) return peneiras;
@@ -275,15 +275,14 @@ export default function EnsaioGranMisturaPage() {
       console.log('Faixa do projeto:', faixa);
       
       if (faixa?.peneiras && faixa.peneiras.length > 0) {
-        const peneiras = faixa.peneiras
-          .map(p => {
-            const peneiraKey = Object.keys(PENEIRAS_MAP).find(key => {
-              const peneiraInfo = PENEIRAS_MAP[key];
-              return peneiraInfo.mm === p.abertura;
-            });
-            return peneiraKey;
-          })
-          .filter(Boolean);
+        // Mapear usando ASTM
+        const peneirasComAstm = faixa.peneiras.map(p => p.astm);
+        console.log('ASTM das peneiras do projeto:', peneirasComAstm);
+        
+        const peneiras = Object.keys(PENEIRAS_MAP).filter(key => {
+          const peneiraInfo = PENEIRAS_MAP[key];
+          return peneirasComAstm.includes(peneiraInfo.astm);
+        });
         
         console.log('Peneiras do projeto:', peneiras);
         if (peneiras.length > 0) return peneiras;
