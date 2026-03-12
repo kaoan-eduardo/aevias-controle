@@ -213,7 +213,17 @@ export default function ImpressionEtiquetas() {
       </div>
 
       <style>{`
+        @page {
+          size: A4;
+          margin: 0;
+          padding: 0;
+        }
         @media print {
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
           body {
             margin: 0;
             padding: 0;
@@ -221,6 +231,9 @@ export default function ImpressionEtiquetas() {
           .print\\:page-break-after {
             page-break-after: always;
             break-after: page;
+          }
+          .print\\:hidden {
+            display: none;
           }
         }
       `}</style>
