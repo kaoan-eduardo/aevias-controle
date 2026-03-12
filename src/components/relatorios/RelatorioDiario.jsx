@@ -154,7 +154,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
           </div>
         </header>
 
-        <main className="flex-grow">
+        <main className="flex-grow overflow-y-auto">
           <section className="mt-6">
             <h2 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Informações Gerais</h2>
             <div className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm">
