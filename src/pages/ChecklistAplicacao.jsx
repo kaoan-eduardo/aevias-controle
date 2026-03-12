@@ -12,6 +12,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -65,6 +66,7 @@ const getInitialFormData = () => ({
   observacoes_gerais: "",
   acoes_corretivas_realizado: null,
   acoes_corretivas_descricao: "",
+  nao_conformidades: [],
   fotos: [],
   medicoes_geometricas: {
     subtrecho: "",
@@ -1359,57 +1361,17 @@ export default function ChecklistAplicacaoPage() {
                   </p>
                 </div>
 
-                {/* AÇÕES CORRETIVAS */}
-                <div className="border-t pt-4">
-                  <Label className="text-base font-semibold mb-3">Ações Corretivas Realizadas?</Label>
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        id="acoes_sim"
-                        name="acoes_corretivas"
-                        checked={formData.acoes_corretivas_realizado === true}
-                        onChange={() => handleInputChange('acoes_corretivas_realizado', true)}
-                        disabled={!isEditable}
-                        className="w-4 h-4"
-                      />
-                      <Label htmlFor="acoes_sim" className="font-normal cursor-pointer">Sim</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        id="acoes_nao"
-                        name="acoes_corretivas"
-                        checked={formData.acoes_corretivas_realizado === false}
-                        onChange={() => {
-                          handleInputChange('acoes_corretivas_realizado', false);
-                          handleInputChange('acoes_corretivas_descricao', '');
-                        }}
-                        disabled={!isEditable}
-                        className="w-4 h-4"
-                      />
-                      <Label htmlFor="acoes_nao" className="font-normal cursor-pointer">Não</Label>
-                    </div>
-                  </div>
-
-                  {formData.acoes_corretivas_realizado === true && (
-                    <div className="mt-4">
-                      <Label htmlFor="acoes_descricao">Descrever as ações corretivas realizadas</Label>
-                      <Textarea
-                        id="acoes_descricao"
-                        value={formData.acoes_corretivas_descricao}
-                        onChange={(e) => handleInputChange('acoes_corretivas_descricao', e.target.value)}
-                        disabled={!isEditable}
-                        rows={2}
-                        placeholder="Descreva as ações corretivas..."
-                        maxLength="500"
-                      />
-                      <p className="text-xs text-right text-[#00233B]/60 mt-1">
-                        {formData.acoes_corretivas_descricao?.length || 0} / 500
-                      </p>
-                    </div>
-                  )}
-                </div>
+                {/* AÇÕES CORRETIVAS / NÃO CONFORMIDADES */}
+                <AcoesCorretivasNC
+                  acoesRealizadas={formData.acoes_corretivas_realizado}
+                  acoesDescricao={formData.acoes_corretivas_descricao}
+                  naoConformidades={formData.nao_conformidades || []}
+                  onAcoesRealizadasChange={(value) => handleInputChange('acoes_corretivas_realizado', value)}
+                  onAcoesDescricaoChange={(value) => handleInputChange('acoes_corretivas_descricao', value)}
+                  onNaoConformidadesChange={(ncs) => handleInputChange('nao_conformidades', ncs)}
+                  disabled={!isEditable}
+                  locaisPermitidos={["CAMPO"]}
+                />
 
                 <div>
                   <Label>Registro Fotográfico</Label>
