@@ -142,7 +142,7 @@ export default function ImpressionEtiquetas() {
                   <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 border-b-2 border-[#00233B] pb-2 print:pb-1.5">
                     <div className="flex items-center justify-center border-r-2 border-[#00233B] pr-2">
                       <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/8a050ebfc_image.png"
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
                         alt="AfirmaEvias"
                         className="h-10 print:h-9 w-auto object-contain"
                       />
