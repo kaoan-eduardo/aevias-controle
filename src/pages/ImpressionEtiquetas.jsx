@@ -134,7 +134,7 @@ export default function ImpressionEtiquetas() {
 
       <div>
         {Array.from({ length: Math.ceil(etiquetas.length / 4) }).map((_, pageIdx) => (
-          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-1 min-h-screen print:min-h-[297mm]">
+          <div key={pageIdx} className={`p-2 print:p-1 min-h-screen print:min-h-[297mm] ${pageIdx < Math.ceil(etiquetas.length / 4) - 1 ? 'print:page-break-after' : ''}`} style={{ pageBreakAfter: pageIdx < Math.ceil(etiquetas.length / 4) - 1 ? 'always' : 'auto' }}>
             <div className="grid grid-cols-2 gap-2 print:gap-1.5">
               {etiquetas.slice(pageIdx * 4, (pageIdx + 1) * 4).map((etiqueta, idx) => (
                 <div key={pageIdx * 4 + idx} className="p-4 print:p-5 bg-white" style={{ border: '0.5mm solid #000' }}>
