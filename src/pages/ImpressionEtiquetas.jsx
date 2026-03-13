@@ -213,8 +213,8 @@ export default function ImpressionEtiquetas() {
 
                   {/* Rodapé */}
                   <div className="bg-white text-sm print:text-xs" style={{ border: '0.5mm solid #000' }}>
-                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center', paddingLeft: '6mm', paddingRight: '6mm' }}>RESPONSÁVEL COLETA:</div>
-                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center', paddingLeft: '6mm', paddingRight: '6mm' }}>DATA:</div>
+                    <div className="font-bold" style={{ height: '49px', display: 'flex', alignItems: 'center', paddingLeft: '6mm', paddingRight: '6mm' }}>RESPONSÁVEL COLETA:</div>
+                    <div className="font-bold" style={{ height: '49px', display: 'flex', alignItems: 'center', paddingLeft: '6mm', paddingRight: '6mm' }}>DATA:</div>
                   </div>
                 </div>
               ))}
