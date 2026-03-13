@@ -197,7 +197,7 @@ export default function ImpressionEtiquetas() {
                     <div className="bg-[#BFCF99] px-2 py-1.5 print:py-1 font-bold text-[#00233B] text-xs print:text-[10px] text-center" style={{ borderBottom: '0.5mm solid #000' }}>
                       ENSAIOS SOLICITADOS
                     </div>
-                    <div className="bg-white px-2 py-3 print:py-3 space-y-2 text-xs print:text-[9px] min-h-[60px] print:min-h-[70px]">
+                    <div className="bg-white px-2 py-3 print:py-3 space-y-2 text-xs print:text-[9px] min-h-[60px] print:min-h-[50px]">
                       {etiqueta.ensaios && etiqueta.ensaios.length > 0 ? (
                         etiqueta.ensaios.map((ensaio, ensaioIdx) => (
                           <div key={ensaioIdx} className="flex items-start gap-2 py-1">
