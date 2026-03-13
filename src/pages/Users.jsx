@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Edit, Users as UsersIcon, Loader2 } from "lucide-react";
+import { format, isAfter, subMinutes } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -496,6 +497,27 @@ export default function UsersPage() {
     return regional;
   }, [regionais]);
 
+  const getLoginStatus = useCallback((lastLogin) => {
+    if (!lastLogin) {
+      return { status: 'offline', text: 'Nunca acessou', variant: 'secondary' };
+    }
+
+    try {
+      const lastLoginDate = new Date(lastLogin);
+      const now = new Date();
+      const fiveMinutesAgo = subMinutes(now, 5);
+
+      if (isAfter(lastLoginDate, fiveMinutesAgo)) {
+        return { status: 'online', text: 'Online', variant: 'default' };
+      } else {
+        const formatted = format(lastLoginDate, "dd/MM/yyyy 'às' HH:mm");
+        return { status: 'offline', text: `Último acesso: ${formatted}`, variant: 'secondary' };
+      }
+    } catch (error) {
+      return { status: 'offline', text: 'Nunca acessou', variant: 'secondary' };
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="p-6 space-y-6 bg-transparent min-h-screen">
@@ -582,6 +604,7 @@ export default function UsersPage() {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Empresa/Cargo</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Regional</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Nível</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Ativo</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Status</th>
                 {(canManageUsers && !isCliente) && (
                   <th scope="col" className="relative px-6 py-3">
@@ -593,6 +616,7 @@ export default function UsersPage() {
             <tbody className="divide-y divide-white/10">
               {filteredUsers.map((user) => {
                 const regional = getRegionalForUser(user.email);
+                const loginStatus = getLoginStatus(user.last_login);
                 return (
                   <tr key={user.id} className="hover:bg-black/5">
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -626,6 +650,14 @@ export default function UsersPage() {
                       <Badge variant={user.is_active ? 'success' : 'destructive'}>
                         {user.is_active ? 'Ativo' : 'Inativo'}
                       </Badge>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        {loginStatus.status === 'online' && (
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        )}
+                        <span className="text-sm text-[#00233B]/80">{loginStatus.text}</span>
+                      </div>
                     </td>
                     {(canManageUsers && !isCliente) && (
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
