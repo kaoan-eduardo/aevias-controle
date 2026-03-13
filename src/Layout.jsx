@@ -310,6 +310,19 @@ const AppLayout = ({ children }) => {
     loadUserAndObras();
   }, []);
 
+  // Atualizar last_login quando o usuário carrega a aplicação
+  React.useEffect(() => {
+    const updateLastLogin = async () => {
+      try {
+        await base44.functions.invoke('updateLastLogin', {});
+      } catch (error) {
+        console.error('Erro ao atualizar último login:', error);
+      }
+    };
+
+    updateLastLogin();
+  }, []);
+
   const loadUserAndObras = useCallback(async () => {
     setLoadingUser(true);
     try {
