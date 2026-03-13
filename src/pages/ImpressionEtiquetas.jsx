@@ -133,75 +133,75 @@ export default function ImpressionEtiquetas() {
       </div>
 
       <div>
-        {Array.from({ length: Math.ceil(etiquetas.length / 6) }).map((_, pageIdx) => (
+        {Array.from({ length: Math.ceil(etiquetas.length / 4) }).map((_, pageIdx) => (
           <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-2 min-h-screen print:min-h-[297mm]">
             <div className="grid grid-cols-2 gap-2 print:gap-2">
-              {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
-                <div key={pageIdx * 6 + idx} className="p-3 print:p-4 bg-white" style={{ border: '0.5mm solid #000' }}>
+              {etiquetas.slice(pageIdx * 4, (pageIdx + 1) * 4).map((etiqueta, idx) => (
+                <div key={pageIdx * 4 + idx} className="p-4 print:p-5 bg-white" style={{ border: '0.5mm solid #000' }}>
                   {/* Header */}
-                  <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 pb-2 print:pb-1.5" style={{ borderBottom: '0.5mm solid #000', alignItems: 'stretch' }}>
+                  <div className="grid grid-cols-[140px_1fr] gap-0 mb-4 print:mb-3 pb-3 print:pb-2" style={{ borderBottom: '0.5mm solid #000', alignItems: 'stretch' }}>
                     <div className="flex items-center justify-center pr-2" style={{ borderRight: '0.5mm solid #000' }}>
                       <img 
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
                         alt="AfirmaEvias"
-                        className="h-10 print:h-9 w-auto object-contain"
+                        className="h-12 print:h-11 w-auto object-contain"
                       />
                     </div>
                     <div className="flex items-center justify-center px-2">
-                      <h2 className="text-sm print:text-xs font-bold text-[#00233B] text-center leading-tight">
+                      <h2 className="text-base print:text-sm font-bold text-[#00233B] text-center leading-tight">
                         ETIQUETA PARA COLETA DE AMOSTRA SOLO
                       </h2>
                     </div>
                   </div>
 
                   {/* Dados Principais */}
-                  <table className="w-full mb-3 print:mb-2 text-xs print:text-[10px]" style={{ borderCollapse: 'collapse', borderSpacing: 0 }}>
+                  <table className="w-full mb-4 print:mb-3 text-sm print:text-xs" style={{ borderCollapse: 'collapse', borderSpacing: 0 }}>
                     <colgroup>
                       <col style={{ width: '35%' }} />
                       <col style={{ width: '65%' }} />
                     </colgroup>
                     <tbody>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>RODOVIA:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.rodovia}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>RODOVIA:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.rodovia}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>KM:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.km}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>KM:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.km}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>FURO:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.furo}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5' }}>FURO:</td>
+                        <td className="px-3 bg-white font-bold" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5' }}>{etiqueta.furo}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>PISTA:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.pista}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>PISTA:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.pista}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>AMOSTRA:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.amostra}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>AMOSTRA:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.amostra}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>PROFUNDIDADE:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.profundidade}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>PROFUNDIDADE:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.profundidade}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>MATERIAL:</td>
-                        <td className="px-2 bg-white" style={{ border: '0.5mm solid #000', height: '32px' }}>{etiqueta.material}</td>
+                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>MATERIAL:</td>
+                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.material}</td>
                       </tr>
                     </tbody>
                   </table>
 
                   {/* Ensaios Solicitados */}
-                  <div className="mb-2 print:mb-1.5" style={{ border: '0.5mm solid #000' }}>
-                    <div className="bg-[#BFCF99] px-2 py-1.5 print:py-1 font-bold text-[#00233B] text-xs print:text-[10px] text-center" style={{ borderBottom: '0.5mm solid #000' }}>
+                  <div className="mb-3 print:mb-2" style={{ border: '0.5mm solid #000' }}>
+                    <div className="bg-[#BFCF99] px-3 py-2 print:py-1.5 font-bold text-[#00233B] text-sm print:text-xs text-center" style={{ borderBottom: '0.5mm solid #000' }}>
                       ENSAIOS SOLICITADOS
                     </div>
-                    <div className="bg-white px-2 py-3 print:py-3 space-y-2 text-xs print:text-[9px] min-h-[60px] print:min-h-[50px]">
+                    <div className="bg-white px-3 py-4 print:py-4 space-y-2 text-sm print:text-xs min-h-[80px] print:min-h-[90px]">
                       {etiqueta.ensaios && etiqueta.ensaios.length > 0 ? (
                         etiqueta.ensaios.map((ensaio, ensaioIdx) => (
                           <div key={ensaioIdx} className="flex items-start gap-2 py-1">
-                            <span className="font-bold text-base">✓</span>
+                            <span className="font-bold text-lg">✓</span>
                             <span className="flex-1">{ensaio}</span>
                           </div>
                         ))
@@ -212,9 +212,9 @@ export default function ImpressionEtiquetas() {
                   </div>
 
                   {/* Rodapé */}
-                  <div className="bg-white px-2 text-xs print:text-[9px]" style={{ border: '0.5mm solid #000' }}>
-                    <div className="font-bold" style={{ height: '40px', display: 'flex', alignItems: 'center' }}>RESPONSÁVEL COLETA:</div>
-                    <div className="font-bold" style={{ height: '40px', display: 'flex', alignItems: 'center' }}>DATA:</div>
+                  <div className="bg-white px-3 text-sm print:text-xs" style={{ border: '0.5mm solid #000' }}>
+                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center' }}>RESPONSÁVEL COLETA:</div>
+                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center' }}>DATA:</div>
                   </div>
                 </div>
               ))}
