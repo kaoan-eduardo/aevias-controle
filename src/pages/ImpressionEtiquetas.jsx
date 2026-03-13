@@ -139,7 +139,7 @@ export default function ImpressionEtiquetas() {
               {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
                 <div key={pageIdx * 6 + idx} className="p-3 print:p-4 bg-white" style={{ border: '0.5mm solid #000' }}>
                   {/* Header */}
-                  <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 pb-2 print:pb-1.5" style={{ borderBottom: '0.5mm solid #000' }}>
+                  <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 pb-2 print:pb-1.5" style={{ borderBottom: '0.5mm solid #000', alignItems: 'stretch' }}>
                     <div className="flex items-center justify-center pr-2" style={{ borderRight: '0.5mm solid #000' }}>
                       <img 
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
