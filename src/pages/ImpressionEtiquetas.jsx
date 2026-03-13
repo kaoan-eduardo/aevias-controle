@@ -134,7 +134,7 @@ export default function ImpressionEtiquetas() {
 
       <div>
         {Array.from({ length: Math.ceil(etiquetas.length / 6) }).map((_, pageIdx) => (
-          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-4 print:pt-8 min-h-screen print:min-h-[297mm]">
+          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-8 min-h-screen print:min-h-[297mm]">
             <div className="grid grid-cols-2 gap-3 print:gap-4">
               {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
                 <div key={pageIdx * 6 + idx} className="p-3 print:p-4 bg-white border border-gray-300">
