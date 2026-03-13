@@ -162,32 +162,32 @@ export default function ImpressionEtiquetas() {
                     </colgroup>
                     <tbody>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>RODOVIA:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.rodovia}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>RODOVIA:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.rodovia}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>KM:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.km}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>KM:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.km}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>FURO:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.furo}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>FURO:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.furo}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>PISTA:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.pista}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>PISTA:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.pista}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>AMOSTRA:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.amostra}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>AMOSTRA:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.amostra}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>PROFUNDIDADE:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.profundidade}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>PROFUNDIDADE:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.profundidade}</td>
                       </tr>
                       <tr>
-                        <td className="px-2 py-4 print:py-4 font-bold bg-white" style={{ border: '1px solid #000' }}>MATERIAL:</td>
-                        <td className="px-2 py-4 print:py-4 bg-white" style={{ border: '1px solid #000' }}>{etiqueta.material}</td>
+                        <td className="px-2 font-bold bg-white" style={{ border: '1px solid #000', height: '32px' }}>MATERIAL:</td>
+                        <td className="px-2 bg-white" style={{ border: '1px solid #000', height: '32px' }}>{etiqueta.material}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -212,9 +212,9 @@ export default function ImpressionEtiquetas() {
                   </div>
 
                   {/* Rodapé */}
-                  <div className="bg-white px-2 py-4 print:py-5 space-y-3 text-xs print:text-[9px]" style={{ border: '1px solid #000' }}>
-                    <div className="py-2"><span className="font-bold">RESPONSÁVEL COLETA:</span></div>
-                    <div className="py-2"><span className="font-bold">DATA:</span></div>
+                  <div className="bg-white px-2 text-xs print:text-[9px]" style={{ border: '1px solid #000' }}>
+                    <div className="font-bold" style={{ height: '40px', display: 'flex', alignItems: 'center' }}>RESPONSÁVEL COLETA:</div>
+                    <div className="font-bold" style={{ height: '40px', display: 'flex', alignItems: 'center' }}>DATA:</div>
                   </div>
                 </div>
               ))}
