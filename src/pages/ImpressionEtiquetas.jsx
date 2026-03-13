@@ -248,6 +248,14 @@ export default function ImpressionEtiquetas() {
         @media print {
           html, body {
             height: auto !important;
+            overflow: hidden !important;
+          }
+          body::-webkit-scrollbar {
+            display: none !important;
+          }
+          body {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
           }
           .page-container {
             padding: 4px;
