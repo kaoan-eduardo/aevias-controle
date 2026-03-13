@@ -32,7 +32,7 @@ export default function ImpressionEtiquetas() {
           amostra: row.AMOSTRA || '',
           profundidade: row['PROFUNDIDADE(M)'] || '',
           material: row.MATERIAL || '',
-          ensaios: row['ENSAIOS SOLICITADOS'] ? row['ENSAIOS SOLICITADOS'].split(';').map(e => e.trim()).filter(e => e) : [],
+          ensaios: row.ENSAIOS ? row.ENSAIOS.split(';').map(e => e.trim()).filter(e => e) : [],
         }));
 
         setEtiquetas(processadas);
@@ -61,7 +61,7 @@ export default function ImpressionEtiquetas() {
               <Upload className="w-16 h-16 text-[#BFCF99] mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-[#00233B] mb-2">Carregue a Planilha de Etiquetas</h2>
               <p className="text-[#00233B]/70 mb-6">
-                Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, AMOSTRA, PROFUNDIDADE(M), MATERIAL, ENSAIOS SOLICITADOS (separados por ponto e vírgula)
+                Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, AMOSTRA, PROFUNDIDADE(M), MATERIAL, ENSAIOS (separados por ponto e vírgula)
               </p>
               
               <input
@@ -134,13 +134,13 @@ export default function ImpressionEtiquetas() {
 
       <div>
         {Array.from({ length: Math.ceil(etiquetas.length / 6) }).map((_, pageIdx) => (
-          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-4 min-h-screen print:min-h-[297mm]">
+          <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-4 print:pt-8 min-h-screen print:min-h-[297mm]">
             <div className="grid grid-cols-2 gap-3 print:gap-4">
               {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
-                <div key={pageIdx * 6 + idx} className="border-2 border-[#00233B] p-3 print:p-4 bg-white" style={{ marginTop: '0.5px' }}>
+                <div key={pageIdx * 6 + idx} className="border border-[#00233B] p-3 print:p-4 bg-white">
                   {/* Header */}
-                  <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 border-b-2 border-[#00233B] pb-2 print:pb-1.5">
-                    <div className="flex items-center justify-center border-r-2 border-[#00233B] pr-2">
+                  <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 border-b border-[#00233B] pb-2 print:pb-1.5">
+                    <div className="flex items-center justify-center border-r border-[#00233B] pr-2">
                       <img 
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
                         alt="AfirmaEvias"
@@ -193,8 +193,8 @@ export default function ImpressionEtiquetas() {
                   </table>
 
                   {/* Ensaios Solicitados */}
-                  <div className="border-2 border-[#00233B] mb-2 print:mb-1.5">
-                    <div className="bg-[#BFCF99] px-2 py-1.5 print:py-1 font-bold text-[#00233B] text-xs print:text-[10px] border-b-2 border-[#00233B] text-center">
+                  <div className="border border-[#00233B] mb-2 print:mb-1.5">
+                    <div className="bg-[#BFCF99] px-2 py-1.5 print:py-1 font-bold text-[#00233B] text-xs print:text-[10px] border-b border-[#00233B] text-center">
                       ENSAIOS SOLICITADOS
                     </div>
                     <div className="px-2 py-2 print:py-2 space-y-1 text-xs print:text-[9px] min-h-[70px] print:min-h-[90px]">
@@ -212,7 +212,7 @@ export default function ImpressionEtiquetas() {
                   </div>
 
                   {/* Rodapé */}
-                  <div className="border-2 border-[#00233B] px-2 py-1.5 print:py-1 space-y-1 text-xs print:text-[9px]">
+                  <div className="border border-[#00233B] px-2 py-1.5 print:py-1 space-y-1 text-xs print:text-[9px]">
                     <div><span className="font-bold">RESPONSÁVEL COLETA:</span> ___________</div>
                     <div><span className="font-bold">DATA:</span> ___________</div>
                   </div>
