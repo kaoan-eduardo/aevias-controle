@@ -226,7 +226,7 @@ export default function ImpressionEtiquetas() {
       <style>{`
         @page {
           size: A4;
-          margin: 0;
+          margin: 15mm 10mm;
         }
         @media print {
           * {
