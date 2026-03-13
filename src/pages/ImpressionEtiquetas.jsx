@@ -137,7 +137,7 @@ export default function ImpressionEtiquetas() {
           <div key={pageIdx} className="print:page-break-after page-break p-2 print:p-2 min-h-screen print:min-h-[297mm]">
             <div className="grid grid-cols-2 gap-2 print:gap-2">
               {etiquetas.slice(pageIdx * 6, (pageIdx + 1) * 6).map((etiqueta, idx) => (
-                <div key={pageIdx * 6 + idx} className="p-3 print:p-4 bg-white" style={{ border: '0.5mm solid #000' }}>
+                <div key={pageIdx * 6 + idx} className="p-3 print:p-4 bg-white border-collapse" style={{ outline: '0.5mm solid #000' }}>
                   {/* Header */}
                   <div className="grid grid-cols-[120px_1fr] gap-0 mb-3 print:mb-2 pb-2 print:pb-1.5" style={{ borderBottom: '0.5mm solid #000' }}>
                     <div className="flex items-center justify-center pr-2" style={{ borderRight: '0.5mm solid #000' }}>
@@ -226,7 +226,7 @@ export default function ImpressionEtiquetas() {
       <style>{`
         @page {
           size: A4;
-          margin: 8mm 6mm;
+          margin: 8mm 3mm;
         }
         @media print {
           * {
