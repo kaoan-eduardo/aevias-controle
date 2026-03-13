@@ -162,32 +162,32 @@ export default function ImpressionEtiquetas() {
                     </colgroup>
                     <tbody>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>RODOVIA:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.rodovia}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>RODOVIA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.rodovia}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>KM:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.km}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>KM:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.km}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5' }}>FURO:</td>
-                        <td className="px-3 bg-white font-bold" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5' }}>{etiqueta.furo}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', padding: '8px 12px' }}>FURO:</td>
+                        <td className="bg-white font-bold" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', padding: '8px 12px' }}>{etiqueta.furo}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>PISTA:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.pista}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>PISTA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.pista}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>AMOSTRA:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.amostra}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>AMOSTRA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.amostra}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>PROFUNDIDADE:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.profundidade}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>PROFUNDIDADE:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.profundidade}</td>
                       </tr>
                       <tr>
-                        <td className="px-3 font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>MATERIAL:</td>
-                        <td className="px-3 bg-white" style={{ border: '0.5mm solid #000', height: '40px' }}>{etiqueta.material}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>MATERIAL:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.material}</td>
                       </tr>
                     </tbody>
                   </table>
