@@ -162,42 +162,42 @@ export default function ImpressionEtiquetas() {
                     </colgroup>
                     <tbody>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>RODOVIA:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.rodovia}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>RODOVIA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.rodovia}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>KM:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.km}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>KM:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.km}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', padding: '8px 12px' }}>FURO:</td>
-                        <td className="bg-white font-bold" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', padding: '8px 12px' }}>{etiqueta.furo}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>FURO:</td>
+                        <td className="bg-white font-bold" style={{ border: '0.5mm solid #000', height: '40px', backgroundColor: '#f4f4f5', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.furo}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>PISTA:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.pista}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>PISTA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.pista}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>AMOSTRA:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.amostra}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>AMOSTRA:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.amostra}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>PROFUNDIDADE:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.profundidade}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>PROFUNDIDADE:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.profundidade}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>MATERIAL:</td>
-                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', padding: '8px 12px' }}>{etiqueta.material}</td>
+                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>MATERIAL:</td>
+                        <td className="bg-white" style={{ border: '0.5mm solid #000', height: '40px', paddingLeft: '12px', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' }}>{etiqueta.material}</td>
                       </tr>
                     </tbody>
                   </table>
 
                   {/* Ensaios Solicitados */}
                   <div className="mb-3 print:mb-2" style={{ border: '0.5mm solid #000' }}>
-                    <div className="bg-[#BFCF99] px-3 py-2 print:py-1.5 font-bold text-[#00233B] text-sm print:text-xs text-center" style={{ borderBottom: '0.5mm solid #000' }}>
+                    <div className="bg-[#BFCF99] font-bold text-[#00233B] text-sm print:text-xs text-center" style={{ borderBottom: '0.5mm solid #000', paddingLeft: '12px', paddingRight: '12px', paddingTop: '8px', paddingBottom: '8px' }}>
                       ENSAIOS SOLICITADOS
                     </div>
-                    <div className="bg-white px-3 py-4 print:py-4 space-y-2 text-sm print:text-xs min-h-[80px] print:min-h-[90px]">
+                    <div className="bg-white space-y-2 text-sm print:text-xs min-h-[80px] print:min-h-[90px]" style={{ paddingLeft: '12px', paddingRight: '12px', paddingTop: '16px', paddingBottom: '16px' }}>
                       {etiqueta.ensaios && etiqueta.ensaios.length > 0 ? (
                         etiqueta.ensaios.map((ensaio, ensaioIdx) => (
                           <div key={ensaioIdx} className="flex items-start gap-2 py-1">
@@ -212,9 +212,9 @@ export default function ImpressionEtiquetas() {
                   </div>
 
                   {/* Rodapé */}
-                  <div className="bg-white px-3 text-sm print:text-xs" style={{ border: '0.5mm solid #000' }}>
-                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center' }}>RESPONSÁVEL COLETA:</div>
-                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center' }}>DATA:</div>
+                  <div className="bg-white text-sm print:text-xs" style={{ border: '0.5mm solid #000' }}>
+                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingRight: '12px' }}>RESPONSÁVEL COLETA:</div>
+                    <div className="font-bold" style={{ height: '50px', display: 'flex', alignItems: 'center', paddingLeft: '12px', paddingRight: '12px' }}>DATA:</div>
                   </div>
                 </div>
               ))}
