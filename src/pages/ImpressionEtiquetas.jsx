@@ -65,7 +65,7 @@ export default function ImpressionEtiquetas() {
               
               <input
                 type="file"
-                accept=".xlsx,.xls,.csv"
+                accept=".xlsx,.xlsm,.xls,.csv"
                 onChange={handleFileUpload}
                 disabled={loading}
                 className="hidden"
