@@ -497,24 +497,28 @@ export default function UsersPage() {
     return regional;
   }, [regionais]);
 
-  const getLoginStatus = useCallback((lastLogin) => {
-    if (!lastLogin) {
-      return { status: 'offline', text: 'Nunca acessou', variant: 'secondary' };
+  const getLoginStatus = useCallback((user) => {
+    // Priorizar last_login se existir, caso contrário usar updated_date como fallback
+    const activityDate = user.last_login || user.updated_date;
+    
+    if (!activityDate) {
+      return { status: 'offline', text: 'Sem atividade registrada', variant: 'secondary' };
     }
 
     try {
-      const lastLoginDate = new Date(lastLogin);
+      const date = new Date(activityDate);
       const now = new Date();
       const fiveMinutesAgo = subMinutes(now, 5);
 
-      if (isAfter(lastLoginDate, fiveMinutesAgo)) {
+      if (isAfter(date, fiveMinutesAgo)) {
         return { status: 'online', text: 'Online', variant: 'default' };
       } else {
-        const formatted = format(lastLoginDate, "dd/MM/yyyy 'às' HH:mm");
-        return { status: 'offline', text: `Último acesso: ${formatted}`, variant: 'secondary' };
+        const formatted = format(date, "dd/MM/yyyy 'às' HH:mm");
+        const label = user.last_login ? 'Último acesso' : 'Última atividade';
+        return { status: 'offline', text: `${label}: ${formatted}`, variant: 'secondary' };
       }
     } catch (error) {
-      return { status: 'offline', text: 'Nunca acessou', variant: 'secondary' };
+      return { status: 'offline', text: 'Sem atividade registrada', variant: 'secondary' };
     }
   }, []);
 
@@ -616,7 +620,7 @@ export default function UsersPage() {
             <tbody className="divide-y divide-white/10">
               {filteredUsers.map((user) => {
                 const regional = getRegionalForUser(user.email);
-                const loginStatus = getLoginStatus(user.last_login);
+                const loginStatus = getLoginStatus(user);
                 return (
                   <tr key={user.id} className="hover:bg-black/5">
                     <td className="px-6 py-4 whitespace-nowrap">
