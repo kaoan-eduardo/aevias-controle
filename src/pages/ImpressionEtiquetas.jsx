@@ -154,35 +154,35 @@ export default function ImpressionEtiquetas() {
                   </div>
 
                   {/* Dados Principais */}
-                  <table className="w-full mb-2 print:mb-1 text-xs print:text-[9px] border-collapse">
+                  <table className="w-full mb-2 print:mb-1 text-xs print:text-[10px] border-collapse">
                     <tbody>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">RODOVIA:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.rodovia}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">RODOVIA:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.rodovia}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">KM:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.km}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">KM:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.km}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#BFCF99]">FURO:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 bg-[#BFCF99]">{etiqueta.furo}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#BFCF99]">FURO:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 bg-[#BFCF99]">{etiqueta.furo}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PISTA:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.pista}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">PISTA:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.pista}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">AMOSTRA:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.amostra}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">AMOSTRA:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.amostra}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">PROFUNDIDADE:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.profundidade}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">PROFUNDIDADE:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.profundidade}</td>
                       </tr>
                       <tr className="border border-[#00233B]">
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0 font-bold bg-[#F2F1EF]">MATERIAL:</td>
-                        <td className="border border-[#00233B] px-1 py-0.5 print:py-0">{etiqueta.material}</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">MATERIAL:</td>
+                        <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5">{etiqueta.material}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -231,6 +231,14 @@ export default function ImpressionEtiquetas() {
           }
           .print\\:hidden {
             display: none;
+          }
+          /* Remove cabeçalhos e rodapés padrão da impressão */
+          @page {
+            margin: 0;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
         }
       `}</style>
