@@ -134,7 +134,7 @@ export default function ImpressionEtiquetas() {
 
       <div>
         {Array.from({ length: Math.ceil(etiquetas.length / 4) }).map((_, pageIdx) => (
-          <div key={pageIdx} className={`p-2 print:p-1 min-h-screen print:min-h-[297mm] ${pageIdx < Math.ceil(etiquetas.length / 4) - 1 ? 'print:page-break-after' : ''}`} style={{ pageBreakAfter: pageIdx < Math.ceil(etiquetas.length / 4) - 1 ? 'always' : 'auto' }}>
+          <div key={pageIdx} className="page-container">
             <div className="grid grid-cols-2 gap-2 print:gap-1.5">
               {etiquetas.slice(pageIdx * 4, (pageIdx + 1) * 4).map((etiqueta, idx) => (
                 <div key={pageIdx * 4 + idx} className="p-4 print:p-5 bg-white" style={{ border: '0.5mm solid #000' }}>
@@ -224,11 +224,25 @@ export default function ImpressionEtiquetas() {
       </div>
 
       <style>{`
+        .page-container {
+          padding: 8px;
+          min-height: 100vh;
+          page-break-after: always;
+          break-after: page;
+        }
+        .page-container:last-child {
+          page-break-after: auto;
+          break-after: auto;
+        }
         @page {
           size: A4;
           margin: 6mm 3mm;
         }
         @media print {
+          .page-container {
+            padding: 4px;
+            min-height: 297mm;
+          }
           .print\\:hidden {
             display: none !important;
           }
