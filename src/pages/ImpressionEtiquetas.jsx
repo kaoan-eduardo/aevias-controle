@@ -155,6 +155,10 @@ export default function ImpressionEtiquetas() {
 
                   {/* Dados Principais */}
                   <table className="w-full mb-2 print:mb-1 text-xs print:text-[10px] border-collapse">
+                    <colgroup>
+                      <col style={{ width: '35%' }} />
+                      <col style={{ width: '65%' }} />
+                    </colgroup>
                     <tbody>
                       <tr className="border border-[#00233B]">
                         <td className="border border-[#00233B] px-2 py-1.5 print:py-1.5 font-bold bg-[#F2F1EF]">RODOVIA:</td>
@@ -213,28 +217,28 @@ export default function ImpressionEtiquetas() {
         @page {
           size: A4;
           margin: 0;
-          padding: 0;
         }
         @media print {
           * {
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
             box-sizing: border-box;
           }
-          body {
-            margin: 0;
-            padding: 0;
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            height: 100% !important;
           }
           .print\\:page-break-after {
             page-break-after: always;
             break-after: page;
           }
           .print\\:hidden {
-            display: none;
+            display: none !important;
           }
-          /* Remove cabeçalhos e rodapés padrão da impressão */
-          @page {
-            margin: 0;
+          header, nav, .no-print {
+            display: none !important;
           }
           body {
             -webkit-print-color-adjust: exact;
