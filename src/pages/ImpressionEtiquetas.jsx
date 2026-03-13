@@ -229,21 +229,6 @@ export default function ImpressionEtiquetas() {
           margin: 6mm 3mm;
         }
         @media print {
-          * {
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box;
-          }
-          html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-            height: 100% !important;
-          }
-          .print\\:page-break-after {
-            page-break-after: always;
-            break-after: page;
-          }
           .print\\:hidden {
             display: none !important;
           }
