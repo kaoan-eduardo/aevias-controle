@@ -246,20 +246,25 @@ export default function ImpressionEtiquetas() {
           }
         }
         @media print {
-          html, body {
-            height: auto !important;
-            overflow: hidden !important;
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            overflow: visible !important;
           }
-          body::-webkit-scrollbar {
+          *::-webkit-scrollbar {
             display: none !important;
+            width: 0 !important;
+            height: 0 !important;
           }
-          body {
+          html, body, div, section, main {
+            overflow: visible !important;
             -ms-overflow-style: none !important;
             scrollbar-width: none !important;
           }
           .page-container {
             padding: 4px;
             page-break-after: always !important;
+            overflow: visible !important;
           }
           .page-container:last-child {
             page-break-after: auto !important;
@@ -269,10 +274,6 @@ export default function ImpressionEtiquetas() {
           }
           header, nav, .no-print {
             display: none !important;
-          }
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
           }
         }
       `}</style>
