@@ -72,16 +72,14 @@ export default function ImpressionEtiquetas() {
                 id="file-input"
               />
               
-              <label htmlFor="file-input">
-                <Button
-                  as="span"
-                  className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 cursor-pointer"
-                  disabled={loading}
-                >
-                  {loading ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
-                  {loading ? 'Processando...' : 'Selecionar Arquivo'}
-                </Button>
-              </label>
+              <Button
+                onClick={() => document.getElementById('file-input').click()}
+                className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                {loading ? 'Processando...' : 'Selecionar Arquivo'}
+              </Button>
 
               {erro && (
                 <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded text-red-700">
