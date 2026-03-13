@@ -363,13 +363,12 @@ const AppLayout = ({ children }) => {
         setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
       }
 
-      // Carregar transferências pendentes e verificar obras de sondagem para gestores
+      // Carregar transferências pendentes para gestores
       if (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
-        const [regionaisData, transferenciaObra, transferenciaRegional, obrasData] = await Promise.all([
+        const [regionaisData, transferenciaObra, transferenciaRegional] = await Promise.all([
           Regional.list(),
           base44.entities.SolicitacaoTransferenciaObra.list(),
-          base44.entities.SolicitacaoTransferenciaRegional.list(),
-          Obra.list()
+          base44.entities.SolicitacaoTransferenciaRegional.list()
         ]);
 
         const regionaisDoGestor = regionaisData.filter(r => 
@@ -389,12 +388,6 @@ const AppLayout = ({ children }) => {
         );
 
         setPendingTransfers(obrasPendentes.length + regionaisPendentes.length);
-
-        // Verificar se há obras de sondagem nas regionais do gestor
-        const temObraSondagem = obrasData.some(obra => 
-          regionaisIds.includes(obra.regional_id) && obra.tipo_obra === 'sondagem'
-        );
-        setUser(prev => ({ ...prev, hasObraSondagem: temObraSondagem }));
       }
     } catch (error) {
       console.error("Erro ao carregar usuário e obras:", error);
@@ -558,7 +551,7 @@ const AppLayout = ({ children }) => {
                                 </NavLink>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
-                            {((isGestorContrato && user?.hasObraSondagem) || isAdmin) && (
+                            {(isGestorContrato || isAdmin) && (
                               <SidebarMenuItem>
                                 <SidebarMenuButton
                                   asChild
