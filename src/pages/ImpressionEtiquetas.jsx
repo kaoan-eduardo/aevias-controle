@@ -170,8 +170,8 @@ export default function ImpressionEtiquetas() {
                         <td className="bg-white" style={{ border: '0.5mm solid #000', height: '28px', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>{etiqueta.km}</td>
                       </tr>
                       <tr>
-                        <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '28px', backgroundColor: '#f4f4f5', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>FURO:</td>
-                        <td className="bg-white font-bold" style={{ border: '0.5mm solid #000', height: '28px', backgroundColor: '#f4f4f5', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>{etiqueta.furo}</td>
+                        <td className="font-bold bg-white text-base print:text-sm" style={{ border: '0.5mm solid #000', height: '28px', backgroundColor: '#f4f4f5', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>FURO:</td>
+                        <td className="bg-white font-bold text-base print:text-sm" style={{ border: '0.5mm solid #000', height: '28px', backgroundColor: '#f4f4f5', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>{etiqueta.furo}</td>
                       </tr>
                       <tr>
                         <td className="font-bold bg-white" style={{ border: '0.5mm solid #000', height: '28px', paddingLeft: '4mm', paddingRight: '2mm', paddingTop: '1.5mm', paddingBottom: '1.5mm' }}>PISTA:</td>
