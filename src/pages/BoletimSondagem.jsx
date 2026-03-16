@@ -31,7 +31,7 @@ const getInitialFormData = () => ({
   km: "",
   furo: "",
   operador: "",
-  camadas: CAMADAS_PADRAO.map(c => ({ ...c })),
+  camadas: CAMADAS_PADRAO.map(c => ({ ...c, classificacao_2: null })),
   umidade_natural: {
     camada_ensaiada_1: "", camada_ensaiada_2: "",
     no_capsula_1: "", no_capsula_2: "",
