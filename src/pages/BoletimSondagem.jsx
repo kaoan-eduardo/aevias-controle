@@ -248,20 +248,28 @@ export default function BoletimSondagemPage() {
   const adicionarCamada = useCallback(() => {
     setFormData(prev => {
       if (prev.camadas.length >= 15) return prev;
-      return {
-        ...prev,
-        camadas: [...prev.camadas, getCamadaInicial(prev.camadas.length + 1, null, null)]
-      };
+      const ultima = prev.camadas[prev.camadas.length - 1];
+      const novaDe = ultima?.prof_ate ?? null;
+      const novaCamada = { ...getCamadaInicial(prev.camadas.length + 1), prof_de: novaDe };
+      return { ...prev, camadas: [...prev.camadas, novaCamada] };
     });
   }, []);
 
   const removerCamada = useCallback((index) => {
     setFormData(prev => {
       if (prev.camadas.length <= 1) return prev;
-      return {
-        ...prev,
-        camadas: prev.camadas.filter((_, i) => i !== index).map((c, i) => ({ ...c, numero: i + 1 }))
-      };
+      const newCamadas = prev.camadas.filter((_, i) => i !== index).map((c, i) => ({ ...c, numero: i + 1 }));
+      // Recalcular propagação a partir do index removido
+      for (let i = index; i < newCamadas.length; i++) {
+        if (i === 0) {
+          newCamadas[0].prof_de = 0;
+        } else {
+          newCamadas[i].prof_de = newCamadas[i - 1].prof_ate ?? null;
+        }
+        const { prof_de, prof_ate } = newCamadas[i];
+        newCamadas[i].espessura = prof_de !== null && prof_ate !== null ? parseFloat((prof_ate - prof_de).toFixed(2)) : null;
+      }
+      return { ...prev, camadas: newCamadas };
     });
   }, []);
 
