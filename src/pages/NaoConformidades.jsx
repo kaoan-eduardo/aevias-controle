@@ -21,7 +21,19 @@ const TIPOS_CHECKLIST = [
   { value: "ChecklistAplicacao", label: "Checklist de Aplicação", page: "RelatorioChecklistAplicacao" },
   { value: "ChecklistMRAF", label: "Checklist MRAF", page: "RelatorioChecklistMRAF" },
   { value: "ChecklistConcretagem", label: "Checklist de Concretagem", page: "RelatorioChecklistConcretagem" },
-  { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem", page: "RelatorioChecklistTerraplanagem" }
+  { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem", page: "RelatorioChecklistTerraplanagem" },
+  { value: "ChecklistReciclagem", label: "Checklist de Reciclagem", page: "RelatorioChecklistReciclagem" },
+];
+
+// Tipos que possuem campo nao_conformidades explícito
+const TIPOS_COM_NC_EXPLICITA = [
+  { value: "ChecklistUsina", label: "Checklist de Usina", page: "RelatorioChecklist" },
+  { value: "ChecklistAplicacao", label: "Checklist de Aplicação", page: "RelatorioChecklistAplicacao" },
+  { value: "ChecklistMRAF", label: "Checklist MRAF", page: "RelatorioChecklistMRAF" },
+  { value: "ChecklistConcretagem", label: "Checklist de Concretagem", page: "RelatorioChecklistConcretagem" },
+  { value: "ChecklistTerraplanagem", label: "Checklist de Terraplanagem", page: "RelatorioChecklistTerraplanagem" },
+  { value: "ChecklistReciclagem", label: "Checklist de Reciclagem", page: "RelatorioChecklistReciclagem" },
+  { value: "DiarioObra", label: "Diário de Obra", page: "RelatorioDiario" },
 ];
 
 // RNC maps to RelatorioNC page
