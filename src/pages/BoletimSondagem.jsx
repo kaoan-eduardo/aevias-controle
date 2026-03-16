@@ -42,6 +42,7 @@ const getInitialFormData = () => ({
     massa_solo_seco_1: null, massa_solo_seco_2: null,
     umidade_1: null, umidade_2: null
   },
+  umidade_natural_2: null,
   densidade_in_situ: {
     camada_ensaiada: "",
     peso_frasco_antes: null, peso_frasco_depois: null,
