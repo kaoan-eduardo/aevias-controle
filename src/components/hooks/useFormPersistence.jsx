@@ -7,32 +7,34 @@ import { useEffect, useRef } from 'react';
 export function useFormPersistence(formKey, formData, setFormData, isEditing = false) {
   const storageKey = `form_autosave_${formKey}`;
   const isInitialMount = useRef(true);
+  const hasRestoredRef = useRef(false);
 
-  // Verificar se há editId na URL — se sim, nunca usar sessionStorage
+  // Verificar se há editId na URL para não restaurar sessionStorage quando editando
   const hasEditId = typeof window !== 'undefined'
     ? new URLSearchParams(window.location.search).has('editId')
     : false;
 
-  // Recuperar dados salvos ao montar (apenas se for novo registro, sem editId na URL)
+  // Recuperar dados salvos ao montar (apenas se não estiver editando e não houver editId na URL)
   useEffect(() => {
-    if (!hasEditId && isInitialMount.current) {
+    if (!isEditing && !hasEditId && isInitialMount.current && !hasRestoredRef.current) {
       try {
         const savedData = sessionStorage.getItem(storageKey);
         if (savedData) {
           const parsed = JSON.parse(savedData);
           console.log('📥 Recuperando dados salvos do formulário:', formKey);
           setFormData(parsed);
+          hasRestoredRef.current = true;
         }
       } catch (error) {
         console.error('Erro ao recuperar dados do formulário:', error);
       }
+      isInitialMount.current = false;
     }
-    isInitialMount.current = false;
-  }, []); // Roda apenas uma vez na montagem
+  }, [storageKey, setFormData, isEditing, formKey, hasEditId]);
 
-  // Auto-save quando formData muda (debounced) — apenas para novos registros
+  // Auto-save quando formData muda (debounced)
   useEffect(() => {
-    if (isInitialMount.current || hasEditId) return;
+    if (isInitialMount.current) return;
 
     const timeoutId = setTimeout(() => {
       try {
@@ -41,10 +43,10 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
       } catch (error) {
         console.error('Erro ao salvar dados do formulário:', error);
       }
-    }, 500);
+    }, 500); // Debounce de 500ms
 
     return () => clearTimeout(timeoutId);
-  }, [formData, storageKey, formKey, hasEditId]);
+  }, [formData, storageKey, formKey]);
 
   // Função para limpar dados salvos (chamar após submissão ou cancelamento)
   const clearSavedData = () => {
