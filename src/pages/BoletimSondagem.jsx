@@ -699,7 +699,7 @@ export default function BoletimSondagemPage() {
                                           }
                                           return { ...prev, camadas_2: newCamadas2 };
                                         });
-                                      }} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" placeholder="0,00" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
                                       <Input type="number" step="0.01" value={camada.prof_ate ?? ''} onChange={e => {
@@ -715,9 +715,9 @@ export default function BoletimSondagemPage() {
                                           }
                                           return { ...prev, camadas_2: newCamadas2 };
                                         });
-                                      }} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" placeholder="0,00" />
                                     </td>
-                                    <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70">
+                                    <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70 bg-black/10">
                                       {camada.espessura !== null && camada.espessura !== undefined ? camada.espessura.toFixed(2) : ''}
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
@@ -728,7 +728,7 @@ export default function BoletimSondagemPage() {
                                           newCamadas2[index].na = newVal;
                                           return { ...prev, camadas_2: newCamadas2 };
                                         });
-                                      }} disabled={!isEditable} className="h-8 text-xs text-center" />
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
                                       <Input value={camada.classificacao_2 ?? ''} onChange={e => {
@@ -737,7 +737,7 @@ export default function BoletimSondagemPage() {
                                           newCamadas2[index].classificacao_2 = e.target.value;
                                           return { ...prev, camadas_2: newCamadas2 };
                                         });
-                                      }} disabled={!isEditable} className="h-8 text-xs" placeholder="Escrever" />
+                                      }} disabled={!isEditable} className="h-8 text-xs bg-white/50" placeholder="Escrever" />
                                     </td>
                                     {isEditable && (
                                       <td className="border border-[#00233B]/20 px-1 py-1 text-center">
