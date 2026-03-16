@@ -250,6 +250,17 @@ export default function BoletimSondagemPage() {
         } else {
           newCamadas[index].espessura_2 = null;
         }
+        // Propagar: o "DE_2" da próxima linha = "ATÉ_2" da atual
+        if (index + 1 < newCamadas.length) {
+          newCamadas[index + 1].prof_de_2 = prof_ate_2;
+          // Recalcular espessura da próxima se tiver ATÉ_2
+          const nextAte2 = newCamadas[index + 1].prof_ate_2;
+          if (prof_ate_2 !== null && nextAte2 !== null) {
+            newCamadas[index + 1].espessura_2 = parseFloat((nextAte2 - prof_ate_2).toFixed(2));
+          } else {
+            newCamadas[index + 1].espessura_2 = null;
+          }
+        }
       }
 
       if (field === 'prof_de_2') {
