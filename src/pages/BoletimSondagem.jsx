@@ -9,26 +9,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 
-const getCamadaInicial = (numero, profDe, profAte) => ({
+const getCamadaInicial = (numero) => ({
   numero,
-  prof_de: profDe,
-  prof_ate: profAte,
-  espessura: profAte !== undefined && profDe !== undefined ? parseFloat((profAte - profDe).toFixed(2)) : null,
+  prof_de: numero === 1 ? 0 : null,
+  prof_ate: null,
+  espessura: null,
   na: null,
   classificacao_1: "",
   classificacao_2: ""
 });
 
-const CAMADAS_PADRAO = [
-  getCamadaInicial(1, 0.00, 0.15),
-  getCamadaInicial(2, 0.15, 0.30),
-  getCamadaInicial(3, 0.30, 0.60),
-  getCamadaInicial(4, 0.60, 0.80),
-  getCamadaInicial(5, 0.80, 1.00),
-  getCamadaInicial(6, null, null),
-  getCamadaInicial(7, null, null),
-  getCamadaInicial(8, null, null),
-];
+const CAMADAS_PADRAO = [1, 2, 3, 4, 5].map(getCamadaInicial);
 
 const getInitialFormData = () => ({
   obra_id: "",
