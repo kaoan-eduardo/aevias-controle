@@ -221,7 +221,7 @@ export default function BoletimSondagemPage() {
       const newCamadas = prev.camadas.map(c => ({ ...c }));
       newCamadas[index] = { ...newCamadas[index], [field]: value };
 
-      // Recalcular espessura da camada atual
+      // Recalcular espessura da camada atual (classificação 1)
       if (field === 'prof_ate') {
         const { prof_de, prof_ate } = newCamadas[index];
         if (prof_de !== null && prof_ate !== null) {
@@ -239,6 +239,25 @@ export default function BoletimSondagemPage() {
           } else {
             newCamadas[index + 1].espessura = null;
           }
+        }
+      }
+
+      // Recalcular espessura para classificação 2
+      if (field === 'prof_ate_2') {
+        const { prof_de_2, prof_ate_2 } = newCamadas[index];
+        if (prof_de_2 !== null && prof_ate_2 !== null) {
+          newCamadas[index].espessura_2 = parseFloat((prof_ate_2 - prof_de_2).toFixed(2));
+        } else {
+          newCamadas[index].espessura_2 = null;
+        }
+      }
+
+      if (field === 'prof_de_2') {
+        const { prof_de_2, prof_ate_2 } = newCamadas[index];
+        if (prof_de_2 !== null && prof_ate_2 !== null) {
+          newCamadas[index].espessura_2 = parseFloat((prof_ate_2 - prof_de_2).toFixed(2));
+        } else {
+          newCamadas[index].espessura_2 = null;
         }
       }
 
