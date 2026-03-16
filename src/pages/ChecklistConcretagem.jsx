@@ -96,23 +96,21 @@ export default function ChecklistConcretagem() {
       if (selectedProject) {
         setFormData(prev => ({
           ...prev,
-          concreteira: selectedProject.concreteira || prev.concreteira,
-          fck: selectedProject.fck ? selectedProject.fck.toString() : prev.fck,
-          // Atualizar limites de slump em todas as cargas
+          // Só preencher concreteira/fck se estiver vazio (não sobrescrever edição existente)
+          concreteira: prev.concreteira || selectedProject.concreteira || "",
+          fck: prev.fck || (selectedProject.fck ? selectedProject.fck.toString() : ""),
+          // Atualizar apenas o limite de slump nas cargas, sem sobrescrever outros campos
           cargas_concreto: prev.cargas_concreto.map(carga => {
-            const newCarga = { ...carga };
             const slumpLimite = selectedProject.slump_minimo && selectedProject.slump_maximo
               ? `${selectedProject.slump_minimo} a ${selectedProject.slump_maximo} cm`
               : "";
-            newCarga.slump_test = {
-              ...carga.slump_test,
-              limite: slumpLimite
+            return {
+              ...carga,
+              slump_test: {
+                ...carga.slump_test,
+                limite: slumpLimite
+              }
             };
-            // Re-evaluate conformity if a result is already present
-            if (newCarga.slump_test.resultado !== null && newCarga.slump_test.resultado !== '') {
-              newCarga.slump_test.conforme = checkSlumpConformidade(newCarga.slump_test.resultado, formData.project_id);
-            }
-            return newCarga;
           })
         }));
       }
