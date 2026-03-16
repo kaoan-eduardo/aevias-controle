@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { getRegionalUsers } from "@/functions/getRegionalUsers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, ChevronLeft, ChevronRight, Loader2, Edit2 } from "lucide-react";
@@ -31,12 +30,11 @@ export default function ProdutividadePage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [regionais, regionalUsersResponse, obras] = await Promise.all([
+      const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
-        getRegionalUsers({}),
+        base44.entities.User.list(),
         base44.entities.Obra.list()
       ]);
-      const allUsers = regionalUsersResponse?.data?.users || [];
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
 
@@ -61,9 +59,11 @@ export default function ProdutividadePage() {
         labs.forEach(email => labEmails.add(email.toLowerCase()));
       });
 
-      console.log('Emails de laboratoristas encontrados:', Array.from(labEmails));
+      console.log('Regionais do gestor:', regionaisDoGestor.map(r => r.nome));
+      console.log('Emails de laboratoristas encontrados nas regionais:', Array.from(labEmails));
 
-      // Buscar dados dos usuários laboratoristas
+      // Também incluir todos os users com role 'user' ou access_level 'user' 
+      // que tenham registros em obras dessas regionais (identificados pelo created_by)
       const labUsers = allUsers.filter(u => 
         labEmails.has(u.email.toLowerCase())
       );
@@ -128,37 +128,26 @@ export default function ProdutividadePage() {
         ...acompanhamentoCarga
       ];
       
-      const labEmailsComRegistrosNoMes = new Set();
+      const labEmailsComRegistros = new Set();
       
-      // Coletar laboratoristas com registros no mês atual
+      // Coletar laboratoristas com QUALQUER registro nas obras do gestor (retroativo, sem filtro de mês)
       todosRegistros.forEach(reg => {
-        if (!obrasDoGestorIds.includes(reg.obra_id) || !reg.created_by || reg.status !== 'finalizado') return;
-        
-        const regDateStr = reg.data;
-        if (!regDateStr) return;
-        
-        const [year, month, day] = regDateStr.split('-').map(Number);
-        const regDate = new Date(year, month - 1, day);
-        
-        if (regDate >= startDate && regDate <= endDate) {
-          labEmailsComRegistrosNoMes.add(reg.created_by.toLowerCase());
-        }
+        if (!obrasDoGestorIds.includes(reg.obra_id) || !reg.created_by) return;
+        labEmailsComRegistros.add(reg.created_by.toLowerCase());
       });
-      
-      // Adicionar laboratoristas com marcadores de dia no mês atual
+
+      // Adicionar laboratoristas com marcadores de qualquer data
       produtividadeDiaria.forEach(marc => {
-        const dateStr = marc.data;
-        const [year, month, day] = dateStr.split('-').map(Number);
-        const marcDate = new Date(year, month - 1, day);
-        
-        if (marcDate >= startDate && marcDate <= endDate) {
-          labEmailsComRegistrosNoMes.add(marc.laboratorista_email.toLowerCase());
+        if (marc.laboratorista_email) {
+          labEmailsComRegistros.add(marc.laboratorista_email.toLowerCase());
         }
       });
 
+      console.log('Emails de laboratoristas com registros (retroativo):', Array.from(labEmailsComRegistros));
+
       // Mostrar todos os laboratoristas das regionais do gestor,
-      // mais qualquer um que tenha registros/marcadores no mês (mesmo que não esteja em regional)
-      const todosEmailsLabs = new Set([...labEmails, ...labEmailsComRegistrosNoMes]);
+      // mais qualquer um que tenha registros em obras do gestor
+      const todosEmailsLabs = new Set([...labEmails, ...labEmailsComRegistros]);
       const todosLabUsers = allUsers.filter(u => 
         todosEmailsLabs.has(u.email.toLowerCase())
       );
