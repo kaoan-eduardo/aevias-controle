@@ -217,15 +217,30 @@ export default function BoletimSondagemPage() {
 
   const handleCamadaChange = useCallback((index, field, value) => {
     setFormData(prev => {
-      const newCamadas = [...prev.camadas];
+      const newCamadas = prev.camadas.map(c => ({ ...c }));
       newCamadas[index] = { ...newCamadas[index], [field]: value };
-      // Recalcular espessura
-      if (field === 'prof_de' || field === 'prof_ate') {
+
+      // Recalcular espessura da camada atual
+      if (field === 'prof_ate') {
         const { prof_de, prof_ate } = newCamadas[index];
         if (prof_de !== null && prof_ate !== null) {
           newCamadas[index].espessura = parseFloat((prof_ate - prof_de).toFixed(2));
+        } else {
+          newCamadas[index].espessura = null;
+        }
+        // Propagar: o "DE" da próxima linha = "ATÉ" da atual
+        if (index + 1 < newCamadas.length) {
+          newCamadas[index + 1].prof_de = prof_ate;
+          // Recalcular espessura da próxima se tiver ATÉ
+          const nextAte = newCamadas[index + 1].prof_ate;
+          if (prof_ate !== null && nextAte !== null) {
+            newCamadas[index + 1].espessura = parseFloat((nextAte - prof_ate).toFixed(2));
+          } else {
+            newCamadas[index + 1].espessura = null;
+          }
         }
       }
+
       return { ...prev, camadas: newCamadas };
     });
   }, []);
