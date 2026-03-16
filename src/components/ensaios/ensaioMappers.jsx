@@ -90,6 +90,8 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioVigaBenkelman?id=${ensaio.id}`);
     case "EnsaioTaxaMRAF":
       return createPageUrl(`RelatorioTaxaMRAF?id=${ensaio.id}`);
+    case "BoletimSondagem":
+      return createPageUrl(`RelatorioSondagem?id=${ensaio.id}`);
     default:
       return "#";
   }
@@ -204,6 +206,8 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data_realizacao || ensaio.data_ensaio || ensaio.created_date;
     case "EnsaioTaxaMRAF":
       return ensaio.data_ensaio;
+    case "BoletimSondagem":
+      return ensaio.data;
     default:
       return ensaio.created_date;
   }
@@ -251,4 +255,5 @@ export const typeOptions = [
   { value: 'EnsaioManchaPendulo', label: 'Mancha + Pêndulo' },
   { value: 'EnsaioVigaBenkelman', label: 'Viga Benkelman' },
   { value: 'EnsaioTaxaMRAF', label: 'Taxa de MRAF' },
+  { value: 'BoletimSondagem', label: 'Boletim de Sondagem (PI)' },
 ];

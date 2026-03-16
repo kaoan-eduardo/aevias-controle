@@ -48,7 +48,8 @@ export const loadAllData = async () => {
     acompanhamentoCargaData,
     manchaPenduloData,
     vigaBenkelmanData,
-    taxaMRAFData
+    taxaMRAFData,
+    boletimSondagemData
   ] = await Promise.all([
     Obra.list(),
     Regional.list(),
@@ -108,7 +109,8 @@ export const loadAllData = async () => {
     ...acompanhamentoCargaData.map((d) => ({ ...d, entityType: "AcompanhamentoCarga" })),
     ...manchaPenduloData.map((d) => ({ ...d, entityType: "EnsaioManchaPendulo" })),
     ...vigaBenkelmanData.map((d) => ({ ...d, entityType: "EnsaioVigaBenkelman" })),
-    ...taxaMRAFData.map((d) => ({ ...d, entityType: "EnsaioTaxaMRAF" }))
+    ...taxaMRAFData.map((d) => ({ ...d, entityType: "EnsaioTaxaMRAF" })),
+    ...boletimSondagemData.map((d) => ({ ...d, entityType: "BoletimSondagem" }))
   ].sort((a, b) => {
     const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
     
