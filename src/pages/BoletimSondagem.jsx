@@ -304,6 +304,35 @@ export default function BoletimSondagemPage() {
     });
   }, []);
 
+  const adicionarCamada2 = useCallback(() => {
+    setFormData(prev => {
+      if (!prev.camadas_2) prev.camadas_2 = [];
+      if (prev.camadas_2.length >= 15) return prev;
+      const ultima = prev.camadas_2[prev.camadas_2.length - 1];
+      const novaDe = ultima?.prof_ate ?? null;
+      const novaCamada = { numero: prev.camadas_2.length + 1, prof_de: novaDe, prof_ate: null, espessura: null, na: null, classificacao_2: "" };
+      return { ...prev, camadas_2: [...(prev.camadas_2 || []), novaCamada] };
+    });
+  }, []);
+
+  const removerCamada2 = useCallback((index) => {
+    setFormData(prev => {
+      if (!prev.camadas_2 || prev.camadas_2.length <= 1) return prev;
+      const newCamadas = prev.camadas_2.filter((_, i) => i !== index).map((c, i) => ({ ...c, numero: i + 1 }));
+      // Recalcular propagação
+      for (let i = index; i < newCamadas.length; i++) {
+        if (i === 0) {
+          newCamadas[0].prof_de = 0;
+        } else {
+          newCamadas[i].prof_de = newCamadas[i - 1].prof_ate ?? null;
+        }
+        const { prof_de, prof_ate } = newCamadas[i];
+        newCamadas[i].espessura = prof_de !== null && prof_ate !== null ? parseFloat((prof_ate - prof_de).toFixed(2)) : null;
+      }
+      return { ...prev, camadas_2: newCamadas };
+    });
+  }, []);
+
   const handleUmidadeChange = useCallback((field, value) => {
     setFormData(prev => {
       const un = { ...prev.umidade_natural, [field]: value };
