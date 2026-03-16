@@ -484,12 +484,12 @@ export default function ChecklistReciclagem() {
   }
 
   const CheckboxGroup = ({ value, onChange }) => (
-    <div className="flex gap-4 justify-center">
+    <div className="flex gap-4 justify-center" onClick={(e) => e.stopPropagation()}>
       <label className="flex items-center gap-1 cursor-pointer">
         <input
           type="checkbox"
           checked={value?.sim || false}
-          onChange={() => onChange('sim')}
+          onChange={(e) => { e.stopPropagation(); onChange('sim'); }}
           className="w-4 h-4 accent-green-500"
         />
         <span className="text-xs">Sim</span>
@@ -498,7 +498,7 @@ export default function ChecklistReciclagem() {
         <input
           type="checkbox"
           checked={value?.nao || false}
-          onChange={() => onChange('nao')}
+          onChange={(e) => { e.stopPropagation(); onChange('nao'); }}
           className="w-4 h-4 accent-red-500"
         />
         <span className="text-xs">Não</span>
@@ -507,7 +507,7 @@ export default function ChecklistReciclagem() {
         <input
           type="checkbox"
           checked={value?.na || false}
-          onChange={() => onChange('na')}
+          onChange={(e) => { e.stopPropagation(); onChange('na'); }}
           className="w-4 h-4 accent-gray-500"
         />
         <span className="text-xs">N/A</span>
