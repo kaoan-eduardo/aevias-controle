@@ -1,0 +1,311 @@
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
+import { Download, Loader2 } from "lucide-react";
+
+export default function RelatorioBoletimSondagem() {
+  const [boletim, setBoletim] = useState(null);
+  const [obra, setObra] = useState(null);
+  const [regional, setRegional] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => { loadData(); }, []);
+
+  const loadData = async () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) { setError("ID não fornecido"); return; }
+
+      const data = await base44.entities.BoletimSondagem.get(id);
+      setBoletim(data);
+
+      if (data.obra_id) {
+        const obraData = await base44.entities.Obra.get(data.obra_id);
+        setObra(obraData);
+        if (obraData.regional_id) {
+          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+          setRegional(regionalData);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Erro ao carregar dados do relatório");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
+  const formatDateTime = (d) => {
+    if (!d) return 'N/A';
+    const normalized = (!d.endsWith('Z') && !d.includes('+') && !d.includes('-', 10)) ? d + 'Z' : d;
+    return new Date(normalized).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
+  };
+  const fmtNum = (v, dec = 2) => (v !== null && v !== undefined) ? parseFloat(v).toFixed(dec) : '-';
+
+  if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
+  if (error || !boletim) return <div className="flex justify-center items-center h-screen"><p className="text-red-600">{error || "Erro ao carregar"}</p></div>;
+
+  const un = boletim.umidade_natural || {};
+  const den = boletim.densidade_in_situ || {};
+  const camadas = boletim.camadas || [];
+  const temCol2 = camadas.some(c => c.classificacao_2 !== null && c.classificacao_2 !== undefined);
+
+  return (
+    <div className="bg-white min-h-screen">
+      {/* Toolbar */}
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-800">Boletim de Sondagem (PI)</h2>
+          <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
+            <Download className="w-4 h-4 mr-2" /> Gerar PDF
+          </Button>
+        </div>
+      </div>
+
+      <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-6 pb-4 print:pt-0 print:px-4 print:pb-2">
+        {/* Header */}
+        <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+          <div>
+            <img
+              src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
+              alt="Logo"
+              className="h-12 object-contain"
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-sm font-bold text-gray-800 leading-tight">BOLETIM DE SONDAGEM</h1>
+            <p className="text-xs text-gray-500">Umidade Natural e Densidade In Situ</p>
+            <p className="text-xs text-gray-500">DNER-ME 213/94 | DNER-ME 092/94</p>
+          </div>
+          <div></div>
+        </header>
+
+        <main className="text-xs space-y-3">
+          {/* DADOS DA OBRA */}
+          <section>
+            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">DADOS DA OBRA</div>
+            <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-[10px]">
+              {[
+                ["OBRA", obra?.name || '-'],
+                ["CLIENTE", boletim.cliente || regional?.cliente || '-'],
+                ["DATA", formatDate(boletim.data)],
+                ["RODOVIA", boletim.rodovia || '-'],
+                ["KM", boletim.km || '-'],
+                ["PISTA", boletim.pista || '-'],
+                ["BORDO", boletim.bordo || '-'],
+                ["FURO", boletim.furo || '-'],
+                ["OPERADOR", boletim.operador || boletim.laboratorista_name || '-'],
+              ].map(([label, val]) => (
+                <div key={label}>
+                  <span className="font-bold text-gray-700">{label}: </span>
+                  <span className="text-gray-900">{val}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* CAMADAS */}
+          <section>
+            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS</div>
+            <table className="w-full border-collapse border border-slate-400 text-[9px]">
+              <thead>
+                <tr className="bg-slate-200">
+                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
+                  <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
+                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP. (m)</th>
+                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A (m)</th>
+                  <th colSpan={temCol2 ? 2 : 1} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASSIFICAÇÃO EXPEDITA</th>
+                </tr>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
+                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
+                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">1</th>
+                  {temCol2 && <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">2</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {camadas.map((c, i) => (
+                  <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de !== null && c.prof_de !== undefined ? fmtNum(c.prof_de) : '-'}</td>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate !== null && c.prof_ate !== undefined ? fmtNum(c.prof_ate) : '-'}</td>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura !== null && c.espessura !== undefined ? fmtNum(c.espessura) : '-'}</td>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na !== null && c.na !== undefined ? fmtNum(c.na) : '-'}</td>
+                    <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_1 || ''}</td>
+                    {temCol2 && <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_2 || ''}</td>}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+
+          {/* UMIDADE NATURAL */}
+          <section>
+            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94</div>
+            <table className="w-full border-collapse border border-slate-400 text-[9px]">
+              <thead>
+                <tr className="bg-slate-200">
+                  <th className="border border-slate-400 px-2 py-0.5 text-left font-bold">Campo</th>
+                  <th className="border border-slate-400 px-2 py-0.5 text-center font-bold">Amostra 1</th>
+                  <th className="border border-slate-400 px-2 py-0.5 text-center font-bold">Amostra 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Camada ensaiada", un.camada_ensaiada_1, un.camada_ensaiada_2, false],
+                  ["Nº cápsula", un.no_capsula_1, un.no_capsula_2, false],
+                  ["Massa cápsula (g)", un.massa_capsula_1, un.massa_capsula_2, true],
+                  ["Massa cap + solo úmido (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
+                  ["Massa cap + solo seco (g)", un.massa_cap_solo_seco_1, un.massa_cap_solo_seco_2, true],
+                  ["Massa da água (g)", un.massa_agua_1, un.massa_agua_2, true],
+                  ["Massa do solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
+                ].map(([label, v1, v2, isNum], ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    <td className="border border-slate-400 px-2 py-0.5 font-medium text-gray-700">{label}</td>
+                    <td className="border border-slate-400 px-2 py-0.5 text-center">{isNum ? fmtNum(v1) : (v1 || '-')}</td>
+                    <td className="border border-slate-400 px-2 py-0.5 text-center">{isNum ? fmtNum(v2) : (v2 || '-')}</td>
+                  </tr>
+                ))}
+                <tr className="bg-slate-200 font-bold">
+                  <td className="border border-slate-400 px-2 py-0.5">Umidade (%)</td>
+                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_1)} %</td>
+                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_2)} %</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          {/* DENSIDADE IN SITU */}
+          <section>
+            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">MASSA ESPECÍFICA APARENTE IN SITU — DNER-ME 092/94</div>
+            <div className="grid grid-cols-2 gap-4 text-[9px]">
+              <div className="space-y-0.5">
+                <div className="font-bold text-gray-600 text-[8px] uppercase tracking-wide mt-1">VOLUME</div>
+                {[
+                  ["Camada ensaiada", den.camada_ensaiada, false],
+                  ["Peso do frasco antes (gf)", den.peso_frasco_antes, true],
+                  ["Peso do frasco depois (gf)", den.peso_frasco_depois, true],
+                  ["Peso areia funil e placa (gf)", den.peso_areia_funil_placa, true],
+                  ["Massa esp. aparente areia (g/dm³)", den.massa_esp_aparente_areia, true],
+                  ["Peso areia deslocada (gf)", den.peso_areia_deslocada, true],
+                  ["Peso areia na cavidade (gf)", den.peso_areia_cavidade, true],
+                  ["Volume do buraco (dm³)", den.volume_buraco, true, 3],
+                  ["Peso solo + recipiente (gf)", den.peso_solo_recipiente, true],
+                  ["Peso do recipiente (gf)", den.peso_recipiente, true],
+                  ["Peso do solo (gf)", den.peso_solo, true],
+                ].map(([label, val, isNum, dec]) => (
+                  <div key={label} className="flex justify-between border-b border-slate-100 py-0.5">
+                    <span className="text-gray-700">{label}</span>
+                    <span className="font-semibold">{isNum ? fmtNum(val, dec ?? 2) : (val || '-')}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-0.5">
+                <div className="bg-slate-100 border border-slate-300 rounded p-1 text-center mb-2">
+                  <p className="text-[8px] text-gray-600 font-semibold uppercase">Dens. Aparente Solo Úmido (g/dm³)</p>
+                  <p className="text-lg font-bold text-slate-800">{fmtNum(den.densidade_aparente_solo_umido, 3)}</p>
+                </div>
+                <div className="font-bold text-gray-600 text-[8px] uppercase tracking-wide mt-1">UMIDADE</div>
+                {[
+                  ["Peso do solo úmido (gf)", den.peso_solo_umido],
+                  ["Peso do solo seco (gf)", den.peso_solo_seco],
+                  ["Peso da água (gf)", den.peso_agua],
+                  ["Teor de umidade (%)", den.teor_umidade],
+                ].map(([label, val]) => (
+                  <div key={label} className="flex justify-between border-b border-slate-100 py-0.5">
+                    <span className="text-gray-700">{label}</span>
+                    <span className="font-semibold">{fmtNum(val)}</span>
+                  </div>
+                ))}
+                <div className="bg-slate-100 border border-slate-300 rounded p-1 text-center mt-2">
+                  <p className="text-[8px] text-gray-600 font-semibold uppercase">Dens. Aparente Solo Seco (g/dm³)</p>
+                  <p className="text-lg font-bold text-slate-800">{fmtNum(den.densidade_aparente_solo_seco, 3)}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Observações */}
+          {boletim.observacoes && (
+            <section>
+              <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px]">OBSERVAÇÕES</div>
+              <div className="border border-slate-300 p-1 text-[10px] min-h-[20px]">{boletim.observacoes}</div>
+            </section>
+          )}
+
+          {/* Fotos */}
+          {boletim.fotos?.length > 0 && (
+            <section>
+              <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px] mb-1">REGISTRO FOTOGRÁFICO</div>
+              <div className="grid grid-cols-3 gap-2">
+                {boletim.fotos.map((url, i) => (
+                  <img key={i} src={url} alt={`Foto ${i + 1}`} className="w-full h-28 object-cover rounded border border-slate-300" />
+                ))}
+              </div>
+            </section>
+          )}
+        </main>
+
+        {/* Footer */}
+        <footer className="mt-4 pt-2 border-t border-slate-200">
+          <div className="grid grid-cols-3 gap-4 items-end text-center">
+            <div>
+              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
+                {boletim.laboratorista_name && (
+                  <>
+                    <p className="font-bold text-slate-600">{boletim.laboratorista_name}</p>
+                    <p>{boletim.created_by}</p>
+                    <p>em {formatDateTime(boletim.created_date)}</p>
+                  </>
+                )}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="text-[9px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+              </div>
+            </div>
+
+            <div>
+              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
+                {boletim.approver_details ? (
+                  <>
+                    <p className="font-bold text-slate-600">{boletim.approver_details.name}</p>
+                    {boletim.approver_details.crea_number && <p>CREA: {boletim.approver_details.crea_number}</p>}
+                    <p>em {formatDateTime(boletim.approved_date)}</p>
+                  </>
+                ) : null}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+              </div>
+            </div>
+
+            <div>
+              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
+                {boletim.client_signature?.signed_by ? (
+                  <>
+                    <p className="font-bold text-slate-600">{boletim.client_signature.engineer_name}</p>
+                    {boletim.client_signature.crea_number && <p>CREA: {boletim.client_signature.crea_number}</p>}
+                    <p>em {formatDateTime(boletim.client_signature.signed_date)}</p>
+                  </>
+                ) : null}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="text-[9px] font-semibold">ENGENHEIRO CLIENTE</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      <style>{`
+        @media print {
+          @page { size: A4 portrait; margin: 8mm 10mm; }
+          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        }
+      `}</style>
+    </div>
+  );
+}
