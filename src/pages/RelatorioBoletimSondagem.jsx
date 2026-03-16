@@ -107,125 +107,127 @@ export default function RelatorioBoletimSondagem() {
             </div>
           </section>
 
-          {/* CAMADAS */}
+          {/* CAMADAS + UMIDADE NATURAL lado a lado */}
           <section>
-            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS</div>
-            <table className="w-full border-collapse border border-slate-400 text-[9px]">
-              <thead>
-                <tr className="bg-slate-200">
-                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
-                  <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
-                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP. (m)</th>
-                  <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A (m)</th>
-                  <th colSpan={temCol2 ? 2 : 1} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASSIFICAÇÃO EXPEDITA</th>
-                </tr>
-                <tr className="bg-slate-100">
-                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
-                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
-                  <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">1</th>
-                  {temCol2 && <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">2</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {camadas.map((c, i) => (
-                  <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de !== null && c.prof_de !== undefined ? fmtNum(c.prof_de) : '-'}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate !== null && c.prof_ate !== undefined ? fmtNum(c.prof_ate) : '-'}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura !== null && c.espessura !== undefined ? fmtNum(c.espessura) : '-'}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na !== null && c.na !== undefined ? fmtNum(c.na) : '-'}</td>
-                    <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_1 || ''}</td>
-                    {temCol2 && <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_2 || ''}</td>}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="grid grid-cols-2 gap-2">
+              {/* CAMADAS */}
+              <div>
+                <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS</div>
+                <table className="w-full border-collapse border border-slate-400 text-[9px]">
+                  <thead>
+                    <tr className="bg-slate-200">
+                      <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
+                      <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
+                      <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP.</th>
+                      <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A</th>
+                      <th colSpan={temCol2 ? 2 : 1} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASS. EXPEDITA</th>
+                    </tr>
+                    <tr className="bg-slate-100">
+                      <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
+                      <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
+                      <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">1</th>
+                      {temCol2 && <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">2</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {camadas.map((c, i) => (
+                      <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de !== null && c.prof_de !== undefined ? fmtNum(c.prof_de) : '-'}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate !== null && c.prof_ate !== undefined ? fmtNum(c.prof_ate) : '-'}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura !== null && c.espessura !== undefined ? fmtNum(c.espessura) : '-'}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na !== null && c.na !== undefined ? fmtNum(c.na) : '-'}</td>
+                        <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_1 || ''}</td>
+                        {temCol2 && <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_2 || ''}</td>}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* UMIDADE NATURAL */}
+              <div>
+                <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94</div>
+                <table className="w-full border-collapse border border-slate-400 text-[9px]">
+                  <thead>
+                    <tr className="bg-slate-200">
+                      <th className="border border-slate-400 px-1 py-0.5 text-left font-bold">Campo</th>
+                      <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 1</th>
+                      <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 2</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["Camada ensaiada", un.camada_ensaiada_1, un.camada_ensaiada_2, false],
+                      ["Nº cápsula", un.no_capsula_1, un.no_capsula_2, false],
+                      ["Massa cápsula (g)", un.massa_capsula_1, un.massa_capsula_2, true],
+                      ["Massa cap + solo úm. (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
+                      ["Massa cap + solo seco (g)", un.massa_cap_solo_seco_1, un.massa_cap_solo_seco_2, true],
+                      ["Massa da água (g)", un.massa_agua_1, un.massa_agua_2, true],
+                      ["Massa solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
+                    ].map(([label, v1, v2, isNum], ri) => (
+                      <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-400 px-1 py-0.5 text-gray-700">{label}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v1) : (v1 || '-')}</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v2) : (v2 || '-')}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-slate-200 font-bold">
+                      <td className="border border-slate-400 px-1 py-0.5">Umidade (%)</td>
+                      <td className="border border-slate-400 px-1 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_1)}%</td>
+                      <td className="border border-slate-400 px-1 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_2)}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </section>
 
-          {/* UMIDADE NATURAL */}
-          <section>
-            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94</div>
-            <table className="w-full border-collapse border border-slate-400 text-[9px]">
-              <thead>
-                <tr className="bg-slate-200">
-                  <th className="border border-slate-400 px-2 py-0.5 text-left font-bold">Campo</th>
-                  <th className="border border-slate-400 px-2 py-0.5 text-center font-bold">Amostra 1</th>
-                  <th className="border border-slate-400 px-2 py-0.5 text-center font-bold">Amostra 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Camada ensaiada", un.camada_ensaiada_1, un.camada_ensaiada_2, false],
-                  ["Nº cápsula", un.no_capsula_1, un.no_capsula_2, false],
-                  ["Massa cápsula (g)", un.massa_capsula_1, un.massa_capsula_2, true],
-                  ["Massa cap + solo úmido (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
-                  ["Massa cap + solo seco (g)", un.massa_cap_solo_seco_1, un.massa_cap_solo_seco_2, true],
-                  ["Massa da água (g)", un.massa_agua_1, un.massa_agua_2, true],
-                  ["Massa do solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
-                ].map(([label, v1, v2, isNum], ri) => (
-                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                    <td className="border border-slate-400 px-2 py-0.5 font-medium text-gray-700">{label}</td>
-                    <td className="border border-slate-400 px-2 py-0.5 text-center">{isNum ? fmtNum(v1) : (v1 || '-')}</td>
-                    <td className="border border-slate-400 px-2 py-0.5 text-center">{isNum ? fmtNum(v2) : (v2 || '-')}</td>
-                  </tr>
-                ))}
-                <tr className="bg-slate-200 font-bold">
-                  <td className="border border-slate-400 px-2 py-0.5">Umidade (%)</td>
-                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_1)} %</td>
-                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_2)} %</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          {/* DENSIDADE IN SITU */}
+          {/* DENSIDADE IN SITU — em tabela */}
           <section>
             <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">MASSA ESPECÍFICA APARENTE IN SITU — DNER-ME 092/94</div>
-            <div className="grid grid-cols-2 gap-4 text-[9px]">
-              <div className="space-y-0.5">
-                <div className="font-bold text-gray-600 text-[8px] uppercase tracking-wide mt-1">VOLUME</div>
+            <table className="w-full border-collapse border border-slate-400 text-[9px]">
+              <thead>
+                <tr className="bg-slate-200">
+                  <th className="border border-slate-400 px-2 py-0.5 text-left font-bold w-1/2">Campo</th>
+                  <th className="border border-slate-400 px-2 py-0.5 text-center font-bold">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
                 {[
                   ["Camada ensaiada", den.camada_ensaiada, false],
                   ["Peso do frasco antes (gf)", den.peso_frasco_antes, true],
                   ["Peso do frasco depois (gf)", den.peso_frasco_depois, true],
-                  ["Peso areia funil e placa (gf)", den.peso_areia_funil_placa, true],
-                  ["Massa esp. aparente areia (g/dm³)", den.massa_esp_aparente_areia, true],
                   ["Peso areia deslocada (gf)", den.peso_areia_deslocada, true],
+                  ["Peso areia funil e placa (gf)", den.peso_areia_funil_placa, true],
                   ["Peso areia na cavidade (gf)", den.peso_areia_cavidade, true],
+                  ["Massa esp. aparente areia (g/dm³)", den.massa_esp_aparente_areia, true],
                   ["Volume do buraco (dm³)", den.volume_buraco, true, 3],
                   ["Peso solo + recipiente (gf)", den.peso_solo_recipiente, true],
                   ["Peso do recipiente (gf)", den.peso_recipiente, true],
                   ["Peso do solo (gf)", den.peso_solo, true],
-                ].map(([label, val, isNum, dec]) => (
-                  <div key={label} className="flex justify-between border-b border-slate-100 py-0.5">
-                    <span className="text-gray-700">{label}</span>
-                    <span className="font-semibold">{isNum ? fmtNum(val, dec ?? 2) : (val || '-')}</span>
-                  </div>
+                  ["Peso do solo úmido (gf)", den.peso_solo_umido, true],
+                  ["Peso do solo seco (gf)", den.peso_solo_seco, true],
+                  ["Peso da água (gf)", den.peso_agua, true],
+                  ["Teor de umidade (%)", den.teor_umidade, true],
+                ].map(([label, val, isNum, dec], ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    <td className="border border-slate-400 px-2 py-0.5 text-gray-700">{label}</td>
+                    <td className="border border-slate-400 px-2 py-0.5 text-center font-semibold">
+                      {isNum ? fmtNum(val, dec ?? 2) : (val || '-')}
+                    </td>
+                  </tr>
                 ))}
-              </div>
-              <div className="space-y-0.5">
-                <div className="bg-slate-100 border border-slate-300 rounded p-1 text-center mb-2">
-                  <p className="text-[8px] text-gray-600 font-semibold uppercase">Dens. Aparente Solo Úmido (g/dm³)</p>
-                  <p className="text-lg font-bold text-slate-800">{fmtNum(den.densidade_aparente_solo_umido, 3)}</p>
-                </div>
-                <div className="font-bold text-gray-600 text-[8px] uppercase tracking-wide mt-1">UMIDADE</div>
-                {[
-                  ["Peso do solo úmido (gf)", den.peso_solo_umido],
-                  ["Peso do solo seco (gf)", den.peso_solo_seco],
-                  ["Peso da água (gf)", den.peso_agua],
-                  ["Teor de umidade (%)", den.teor_umidade],
-                ].map(([label, val]) => (
-                  <div key={label} className="flex justify-between border-b border-slate-100 py-0.5">
-                    <span className="text-gray-700">{label}</span>
-                    <span className="font-semibold">{fmtNum(val)}</span>
-                  </div>
-                ))}
-                <div className="bg-slate-100 border border-slate-300 rounded p-1 text-center mt-2">
-                  <p className="text-[8px] text-gray-600 font-semibold uppercase">Dens. Aparente Solo Seco (g/dm³)</p>
-                  <p className="text-lg font-bold text-slate-800">{fmtNum(den.densidade_aparente_solo_seco, 3)}</p>
-                </div>
-              </div>
-            </div>
+                <tr className="bg-slate-100 font-bold">
+                  <td className="border border-slate-400 px-2 py-0.5">Dens. Aparente Solo Úmido (g/dm³)</td>
+                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700">{fmtNum(den.densidade_aparente_solo_umido, 3)}</td>
+                </tr>
+                <tr className="bg-slate-200 font-bold">
+                  <td className="border border-slate-400 px-2 py-0.5">Dens. Aparente Solo Seco (g/dm³)</td>
+                  <td className="border border-slate-400 px-2 py-0.5 text-center text-blue-700 text-sm">{fmtNum(den.densidade_aparente_solo_seco, 3)}</td>
+                </tr>
+              </tbody>
+            </table>
           </section>
 
           {/* Observações */}

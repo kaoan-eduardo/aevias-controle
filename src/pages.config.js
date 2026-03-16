@@ -49,6 +49,7 @@
  */
 import AcompanhamentoCarga from './pages/AcompanhamentoCarga';
 import AcompanhamentoUsinagem from './pages/AcompanhamentoUsinagem';
+import BoletimSondagem from './pages/BoletimSondagem';
 import ChecklistAplicacao from './pages/ChecklistAplicacao';
 import ChecklistConcretagem from './pages/ChecklistConcretagem';
 import ChecklistMRAF from './pages/ChecklistMRAF';
@@ -58,6 +59,7 @@ import ChecklistUsina from './pages/ChecklistUsina';
 import ControleLaboratoristas from './pages/ControleLaboratoristas';
 import Dashboard from './pages/Dashboard';
 import DiarioObra from './pages/DiarioObra';
+import EditarNC from './pages/EditarNC';
 import EnsaioCAUQ from './pages/EnsaioCAUQ';
 import EnsaioDensidade from './pages/EnsaioDensidade';
 import EnsaioDensidadeInSitu from './pages/EnsaioDensidadeInSitu';
@@ -71,6 +73,7 @@ import EnsaioVigaBenkelman from './pages/EnsaioVigaBenkelman';
 import FaixasGranulometricas from './pages/FaixasGranulometricas';
 import GestaoNC from './pages/GestaoNC';
 import Home from './pages/Home';
+import ImpressionEtiquetas from './pages/ImpressionEtiquetas';
 import MeusEnsaios from './pages/MeusEnsaios';
 import MigracaoDados from './pages/MigracaoDados';
 import MonitorProdutividade from './pages/MonitorProdutividade';
@@ -102,13 +105,14 @@ import RelatorioVigaBenkelman from './pages/RelatorioVigaBenkelman';
 import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
-import EditarNC from './pages/EditarNC';
+import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AcompanhamentoCarga": AcompanhamentoCarga,
     "AcompanhamentoUsinagem": AcompanhamentoUsinagem,
+    "BoletimSondagem": BoletimSondagem,
     "ChecklistAplicacao": ChecklistAplicacao,
     "ChecklistConcretagem": ChecklistConcretagem,
     "ChecklistMRAF": ChecklistMRAF,
@@ -118,6 +122,7 @@ export const PAGES = {
     "ControleLaboratoristas": ControleLaboratoristas,
     "Dashboard": Dashboard,
     "DiarioObra": DiarioObra,
+    "EditarNC": EditarNC,
     "EnsaioCAUQ": EnsaioCAUQ,
     "EnsaioDensidade": EnsaioDensidade,
     "EnsaioDensidadeInSitu": EnsaioDensidadeInSitu,
@@ -131,6 +136,7 @@ export const PAGES = {
     "FaixasGranulometricas": FaixasGranulometricas,
     "GestaoNC": GestaoNC,
     "Home": Home,
+    "ImpressionEtiquetas": ImpressionEtiquetas,
     "MeusEnsaios": MeusEnsaios,
     "MigracaoDados": MigracaoDados,
     "MonitorProdutividade": MonitorProdutividade,
@@ -162,7 +168,7 @@ export const PAGES = {
     "ResumosPersonalizados": ResumosPersonalizados,
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
-    "EditarNC": EditarNC,
+    "RelatorioBoletimSondagem": RelatorioBoletimSondagem,
 }
 
 export const pagesConfig = {
