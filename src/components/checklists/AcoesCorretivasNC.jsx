@@ -30,7 +30,7 @@ export default function AcoesCorretivasNC({
                 <input
                   type="radio"
                   id="acoes_sim"
-                  name="acoes_corretivas"
+                  name={`acoes_corretivas_${uniqueName}`}
                   checked={acoesRealizadas === true}
                   onChange={() => onAcoesRealizadasChange(true)}
                   disabled={disabled}
