@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,7 +14,6 @@ export default function AcoesCorretivasNC({
   disabled = false,
   locaisPermitidos = ["CAMPO"]
 }) {
-  const uniqueName = useId();
   return (
     <Card className="bg-orange-50 border-orange-200">
       <CardHeader>
@@ -30,7 +29,7 @@ export default function AcoesCorretivasNC({
                 <input
                   type="radio"
                   id="acoes_sim"
-                  name={`acoes_corretivas_${uniqueName}`}
+                  name="acoes_corretivas"
                   checked={acoesRealizadas === true}
                   onChange={() => onAcoesRealizadasChange(true)}
                   disabled={disabled}
@@ -42,7 +41,7 @@ export default function AcoesCorretivasNC({
                 <input
                   type="radio"
                   id="acoes_nao"
-                  name={`acoes_corretivas_${uniqueName}`}
+                  name="acoes_corretivas"
                   checked={acoesRealizadas === false}
                   onChange={() => {
                     onAcoesRealizadasChange(false);
