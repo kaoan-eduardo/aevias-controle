@@ -567,9 +567,12 @@ export default function BoletimSondagemPage() {
                         {isEditable && (
                           <div className="flex gap-2">
                             {!temColuna2 && (
-                              <Button type="button" onClick={addColuna2} size="sm" variant="outline" className="border-[#00233B]/30 text-[#00233B] hover:bg-[#00233B]/10 text-xs">
-                                <Plus className="w-3.5 h-3.5 mr-1" /> 2ª Classificação
-                              </Button>
+                            <Button type="button" onClick={() => {
+                            addColuna2();
+                            setFormData(prev => ({ ...prev, camadas_2: [] }));
+                            }} size="sm" variant="outline" className="border-[#00233B]/30 text-[#00233B] hover:bg-[#00233B]/10 text-xs">
+                            <Plus className="w-3.5 h-3.5 mr-1" /> 2ª Classificação
+                            </Button>
                             )}
                             {temColuna2 && (
                               <Button type="button" onClick={removeColuna2} size="sm" variant="outline" className="border-red-300 text-red-600 hover:bg-red-50 text-xs">
