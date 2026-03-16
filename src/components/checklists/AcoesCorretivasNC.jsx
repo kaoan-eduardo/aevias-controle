@@ -31,7 +31,7 @@ export default function AcoesCorretivasNC({
                 <input
                   type="radio"
                   id="acoes_sim"
-                  name="acoes_corretivas"
+                  name={radioName}
                   checked={acoesRealizadas === true}
                   onChange={() => onAcoesRealizadasChange(true)}
                   disabled={disabled}
@@ -43,7 +43,7 @@ export default function AcoesCorretivasNC({
                 <input
                   type="radio"
                   id="acoes_nao"
-                  name="acoes_corretivas"
+                  name={radioName}
                   checked={acoesRealizadas === false}
                   onChange={() => {
                     onAcoesRealizadasChange(false);
