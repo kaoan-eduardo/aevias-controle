@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { getRegionalUsers } from "@/functions/getRegionalUsers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, ChevronLeft, ChevronRight, Loader2, Edit2 } from "lucide-react";
@@ -30,11 +31,12 @@ export default function ProdutividadePage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const [regionais, allUsers, obras] = await Promise.all([
+      const [regionais, regionalUsersResponse, obras] = await Promise.all([
         base44.entities.Regional.list(),
-        base44.entities.User.list(),
+        getRegionalUsers({}),
         base44.entities.Obra.list()
       ]);
+      const allUsers = regionalUsersResponse?.data?.users || [];
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
 
@@ -59,11 +61,9 @@ export default function ProdutividadePage() {
         labs.forEach(email => labEmails.add(email.toLowerCase()));
       });
 
-      console.log('Regionais do gestor:', regionaisDoGestor.map(r => r.nome));
-      console.log('Emails de laboratoristas encontrados nas regionais:', Array.from(labEmails));
+      console.log('Emails de laboratoristas encontrados:', Array.from(labEmails));
 
-      // Também incluir todos os users com role 'user' ou access_level 'user' 
-      // que tenham registros em obras dessas regionais (identificados pelo created_by)
+      // Buscar dados dos usuários laboratoristas
       const labUsers = allUsers.filter(u => 
         labEmails.has(u.email.toLowerCase())
       );
