@@ -483,11 +483,22 @@ export default function BoletimSondagemPage() {
                 const temColuna2 = formData.camadas.some(c => c.classificacao_2 !== null);
                 const addColuna2 = () => setFormData(prev => ({
                   ...prev,
-                  camadas: prev.camadas.map(c => ({ ...c, classificacao_2: c.classificacao_2 ?? "" }))
+                  camadas: prev.camadas.map(c => ({ ...c, classificacao_2: c.classificacao_2 ?? "" })),
+                  umidade_natural_2: prev.umidade_natural_2 || {
+                    camada_ensaiada_1: "", camada_ensaiada_2: "",
+                    no_capsula_1: "", no_capsula_2: "",
+                    massa_capsula_1: null, massa_capsula_2: null,
+                    massa_cap_solo_umido_1: null, massa_cap_solo_umido_2: null,
+                    massa_cap_solo_seco_1: null, massa_cap_solo_seco_2: null,
+                    massa_agua_1: null, massa_agua_2: null,
+                    massa_solo_seco_1: null, massa_solo_seco_2: null,
+                    umidade_1: null, umidade_2: null
+                  }
                 }));
                 const removeColuna2 = () => setFormData(prev => ({
                   ...prev,
-                  camadas: prev.camadas.map(c => ({ ...c, classificacao_2: null }))
+                  camadas: prev.camadas.map(c => ({ ...c, classificacao_2: null })),
+                  umidade_natural_2: null
                 }));
                 return (
                   <Card className="bg-black/5 border-[#00233B]/10">
