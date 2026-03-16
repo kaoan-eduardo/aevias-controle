@@ -215,8 +215,6 @@ export default function ChecklistConcretagem() {
 
       // Permitir edição apenas se for admin ou se for o criador e (está em rascunho OU foi reprovado)
       if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
-        // Limpar sessionStorage para que o hook não sobrescreva os dados do banco
-        sessionStorage.removeItem('form_autosave_checklist_concretagem');
         setEditingChecklist(checklistToEdit);
         const initialData = getInitialFormData();
         setFormData({ ...initialData, ...checklistToEdit });
