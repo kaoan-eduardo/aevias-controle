@@ -770,7 +770,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC"], []);
+  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem"], []);
 
   if (reportPages.includes(currentPageName)) {
     return <>{children}</>;
