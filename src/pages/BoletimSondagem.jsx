@@ -625,6 +625,7 @@ export default function BoletimSondagemPage() {
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">ESP. (m)</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">N.A (m)</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">CLASSIFICAÇÃO</th>
+                                  {isEditable && <th className="border border-[#00233B]/20 px-2 py-2 w-10"></th>}
                                 </tr>
                                 <tr className="bg-[#00233B]/5">
                                   <th className="border border-[#00233B]/20 px-2 py-1"></th>
@@ -633,6 +634,7 @@ export default function BoletimSondagemPage() {
                                   <th className="border border-[#00233B]/20 px-2 py-1"></th>
                                   <th className="border border-[#00233B]/20 px-2 py-1"></th>
                                   <th className="border border-[#00233B]/20 px-2 py-1"></th>
+                                  {isEditable && <th className="border border-[#00233B]/20 px-2 py-1"></th>}
                                 </tr>
                               </thead>
                               <tbody>
@@ -654,6 +656,15 @@ export default function BoletimSondagemPage() {
                                     <td className="border border-[#00233B]/20 px-1 py-1">
                                       <Input value={camada.classificacao_2 ?? ''} onChange={e => handleCamadaChange(index, 'classificacao_2', e.target.value)} disabled={!isEditable} className="h-8 text-xs" placeholder="Escrever" />
                                     </td>
+                                    {isEditable && (
+                                      <td className="border border-[#00233B]/20 px-1 py-1 text-center">
+                                        {formData.camadas.length > 1 && (
+                                          <button type="button" onClick={() => removerCamada(index)} className="text-red-400 hover:text-red-600">
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                          </button>
+                                        )}
+                                      </td>
+                                    )}
                                   </tr>
                                 ))}
                               </tbody>
