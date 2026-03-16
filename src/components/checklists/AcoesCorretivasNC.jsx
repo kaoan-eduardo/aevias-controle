@@ -14,6 +14,7 @@ export default function AcoesCorretivasNC({
   disabled = false,
   locaisPermitidos = ["CAMPO"]
 }) {
+  const uniqueName = React.useId();
   return (
     <Card className="bg-orange-50 border-orange-200">
       <CardHeader>
