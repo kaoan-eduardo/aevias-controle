@@ -156,6 +156,9 @@ export const getDataFormatted = (ensaio) => {
     case "AcompanhamentoUsinagem":
       dateField = ensaio.data;
       break;
+    case "BoletimSondagem":
+      dateField = ensaio.data;
+      break;
     default:
       dateField = ensaio.created_date;
   }
@@ -231,7 +234,8 @@ export const getEntityMap = () => ({
   "AcompanhamentoUsinagem": "AcompanhamentoUsinagem",
   "AcompanhamentoCarga": "AcompanhamentoCarga",
   "EnsaioManchaPendulo": "EnsaioManchaPendulo",
-  "EnsaioVigaBenkelman": "EnsaioVigaBenkelman"
+  "EnsaioVigaBenkelman": "EnsaioVigaBenkelman",
+  "BoletimSondagem": "BoletimSondagem"
 });
 
 export const typeOptions = [
