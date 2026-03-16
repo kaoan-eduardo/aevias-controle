@@ -42,6 +42,8 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Viga Benkelman", icon: Gauge };
     case "EnsaioTaxaMRAF":
       return { name: "Taxa de MRAF", icon: FlaskConical };
+    case "BoletimSondagem":
+      return { name: "Boletim de Sondagem (PI)", icon: FileText };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }

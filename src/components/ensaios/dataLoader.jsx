@@ -71,7 +71,8 @@ export const loadAllData = async () => {
     base44.entities.AcompanhamentoCarga.list("-created_date", 1000),
     base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
     base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000),
-    base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000)
+    base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000),
+    base44.entities.BoletimSondagem.list("-created_date", 1000)
   ]);
 
   console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
