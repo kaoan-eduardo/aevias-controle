@@ -1135,8 +1135,9 @@ export default function ChecklistReciclagem() {
                 onAcoesRealizadasChange={(value) => setFormData({ ...formData, acoes_corretivas_realizado: value, acoes_corretivas_descricao: value === false ? "" : formData.acoes_corretivas_descricao })}
                 onAcoesDescricaoChange={(value) => setFormData({ ...formData, acoes_corretivas_descricao: value })}
                 onNaoConformidadesChange={(ncs) => setFormData({ ...formData, nao_conformidades: ncs })}
-                disabled={false}
-                locaisPermitidos={["CAMPO"]}
+                  disabled={false}
+                  locaisPermitidos={["CAMPO"]}
+                  instanceId="reciclagem"
               />
 
               {/* FOTOS */}
