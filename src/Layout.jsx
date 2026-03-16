@@ -147,7 +147,9 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       cor: "text-[#00233B]",
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
       tipo_obra: "sondagem",
-      ensaios: []
+      ensaios: [
+        { title: "Boletim de Sondagem (PI)", url: createPageUrl("BoletimSondagem"), icon: FileText }
+      ]
     },
     {
       nome: "Levantamentos",
