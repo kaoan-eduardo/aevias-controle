@@ -609,17 +609,17 @@ export default function BoletimSondagemPage() {
                                 {formData.camadas.map((camada, index) => (
                                   <tr key={index} className={index % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
                                     <td className="border border-[#00233B]/20 px-2 py-1 text-center font-medium text-[#00233B]/70">{camada.numero}</td>
-                                    <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70 bg-slate-50">
-                                      {camada.prof_de !== null && camada.prof_de !== undefined ? camada.prof_de.toFixed(2) : index === 0 ? '0,00' : '—'}
+                                    <td className="border border-[#00233B]/20 px-1 py-1">
+                                      <Input type="number" step="0.01" value={camada.prof_de_2 ?? ''} onChange={e => handleCamadaChange(index, 'prof_de_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input type="number" step="0.01" value={camada.prof_ate ?? ''} disabled className="h-8 text-xs text-center bg-slate-100" />
+                                      <Input type="number" step="0.01" value={camada.prof_ate_2 ?? ''} onChange={e => handleCamadaChange(index, 'prof_ate_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70">
-                                      {camada.espessura !== null && camada.espessura !== undefined ? camada.espessura.toFixed(2) : ''}
+                                      {camada.espessura_2 !== null && camada.espessura_2 !== undefined ? camada.espessura_2.toFixed(2) : ''}
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input type="number" step="0.01" value={camada.na ?? ''} disabled className="h-8 text-xs text-center bg-slate-100" />
+                                      <Input type="number" step="0.01" value={camada.na_2 ?? ''} onChange={e => handleCamadaChange(index, 'na_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
                                       <Input value={camada.classificacao_2 ?? ''} onChange={e => handleCamadaChange(index, 'classificacao_2', e.target.value)} disabled={!isEditable} className="h-8 text-xs" placeholder="Escrever" />
