@@ -636,10 +636,10 @@ export default function BoletimSondagemPage() {
                 );
               })()}
 
-              {/* UMIDADE NATURAL - DNER-ME 213/94 */}
+              {/* UMIDADE NATURAL 1 - DNER-ME 213/94 */}
               <Card className="bg-black/5 border-[#00233B]/10">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base text-[#00233B]">Umidade Natural — DNER-ME 213/94</CardTitle>
+                  <CardTitle className="text-base text-[#00233B]">Umidade Natural 1 — DNER-ME 213/94</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
