@@ -587,6 +587,12 @@ export default function BoletimSondagemPage() {
                       <div className="space-y-4">
                         {/* TABELA 1 - Classificação 1 */}
                         <div className="overflow-x-auto">
+                          <div className="mb-2 flex items-end gap-3">
+                            <div className="flex-1">
+                              <Label className="text-xs">Face da Sondagem - Classificação 1</Label>
+                              <Input value={formData.face_classificacao_1 || ''} onChange={e => setFormData(p => ({ ...p, face_classificacao_1: e.target.value }))} disabled={!isEditable} placeholder="Ex: Frontal, Lateral, etc." className="h-9 text-sm" />
+                            </div>
+                          </div>
                           <div className="text-xs font-semibold text-[#00233B]/70 mb-2">Classificação 1</div>
                           <table className="w-full text-sm border-collapse">
                             <thead>
