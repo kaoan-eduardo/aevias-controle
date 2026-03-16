@@ -699,6 +699,96 @@ export default function BoletimSondagemPage() {
                 </CardContent>
               </Card>
 
+              {/* UMIDADE NATURAL 2 - DNER-ME 213/94 (quando há 2ª classificação) */}
+              {formData.umidade_natural_2 && (
+                <Card className="bg-black/5 border-[#00233B]/10">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base text-[#00233B]">Umidade Natural 2 — DNER-ME 213/94</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm border-collapse">
+                        <thead>
+                          <tr className="bg-[#00233B]/10">
+                            <th className="border border-[#00233B]/20 px-3 py-2 text-left font-medium text-[#00233B]">Campo</th>
+                            <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Amostra 1</th>
+                            <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Amostra 2</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { label: "Camada ensaiada", fields: ['camada_ensaiada_1', 'camada_ensaiada_2'], type: 'text' },
+                            { label: "Nº cápsula", fields: ['no_capsula_1', 'no_capsula_2'], type: 'text' },
+                            { label: "Massa cápsula (g)", fields: ['massa_capsula_1', 'massa_capsula_2'], type: 'number' },
+                            { label: "Massa cap + solo úmido (g)", fields: ['massa_cap_solo_umido_1', 'massa_cap_solo_umido_2'], type: 'number' },
+                            { label: "Massa cap + solo seco (g)", fields: ['massa_cap_solo_seco_1', 'massa_cap_solo_seco_2'], type: 'number' },
+                          ].map(({ label, fields, type }, ri) => (
+                            <tr key={ri} className={ri % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
+                              <td className="border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80">{label}</td>
+                              {fields.map((f, fi) => (
+                                <td key={fi} className="border border-[#00233B]/20 px-2 py-1">
+                                  {type === 'text'
+                                    ? <Input value={formData.umidade_natural_2[f] || ''} onChange={e => setFormData(prev => ({ ...prev, umidade_natural_2: { ...prev.umidade_natural_2, [f]: e.target.value } }))} disabled={!isEditable} className="h-8 text-sm" />
+                                    : <Input type="number" step="0.01" value={formData.umidade_natural_2[f] ?? ''} onChange={e => setFormData(prev => ({ ...prev, umidade_natural_2: { ...prev.umidade_natural_2, [f]: e.target.value !== '' ? parseFloat(e.target.value) : null } }))} disabled={!isEditable} className="h-8 text-sm" />
+                                  }
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                          {[
+                            { label: "Massa da água (g)", keys: ['massa_agua_1', 'massa_agua_2'] },
+                            { label: "Massa do solo seco (g)", keys: ['massa_solo_seco_1', 'massa_solo_seco_2'] },
+                          ].map(({ label, keys }, ri) => (
+                            <tr key={`calc-${ri}`} className="bg-[#BFCF99]/10">
+                              <td className="border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80 italic">{label}</td>
+                              {keys.map((k, ki) => {
+                                const { agua, soloSeco } = (() => {
+                                  const un2 = formData.umidade_natural_2;
+                                  const capSoloUmido = un2[`massa_cap_solo_umido_${ki + 1}`];
+                                  const capSoloSeco = un2[`massa_cap_solo_seco_${ki + 1}`];
+                                  const capsula = un2[`massa_capsula_${ki + 1}`];
+                                  if (capSoloUmido && capSoloSeco && capsula !== null) {
+                                    const agua = capSoloUmido - capSoloSeco;
+                                    const soloSeco = capSoloSeco - capsula;
+                                    return { agua: parseFloat(agua.toFixed(2)), soloSeco: parseFloat(soloSeco.toFixed(2)) };
+                                  }
+                                  return { agua: null, soloSeco: null };
+                                })();
+                                return (
+                                  <td key={ki} className="border border-[#00233B]/20 px-3 py-1.5 text-center font-semibold text-[#00233B]">
+                                    {k.includes('agua') ? (agua !== null ? agua.toFixed(2) : '—') : (soloSeco !== null ? soloSeco.toFixed(2) : '—')}
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ))}
+                          <tr className="bg-[#BFCF99]/30">
+                            <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-[#00233B]">Umidade (%)</td>
+                            {[1, 2].map((idx) => {
+                              const un2 = formData.umidade_natural_2;
+                              const capSoloUmido = un2[`massa_cap_solo_umido_${idx}`];
+                              const capSoloSeco = un2[`massa_cap_solo_seco_${idx}`];
+                              const capsula = un2[`massa_capsula_${idx}`];
+                              let umidade = null;
+                              if (capSoloUmido && capSoloSeco && capsula !== null) {
+                                const agua = capSoloUmido - capSoloSeco;
+                                const soloSeco = capSoloSeco - capsula;
+                                umidade = soloSeco > 0 ? parseFloat(((agua / soloSeco) * 100).toFixed(2)) : null;
+                              }
+                              return (
+                                <td key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-bold text-[#00233B] text-base">
+                                  {umidade !== null ? `${umidade.toFixed(2)} %` : '—'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* DENSIDADE IN SITU */}
               <Card className="bg-black/5 border-[#00233B]/10">
                 <CardHeader className="pb-3">
