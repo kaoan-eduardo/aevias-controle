@@ -307,6 +307,38 @@ export default function NaoConformidadesPage() {
 
       outrosResults.flat().forEach(reg => allCNCs.push(reg));
 
+      // Buscar NCs explícitas (campo nao_conformidades) em checklists e diário
+      const registrosComNcExplicita = await Promise.all(
+        TIPOS_COM_NC_EXPLICITA.map(t =>
+          base44.entities[t.value].list('-created_date', 2000)
+            .catch(() => [])
+            .then(res => res
+              .filter(c => availableIds.has(c.obra_id) && Array.isArray(c.nao_conformidades) && c.nao_conformidades.length > 0)
+              .flatMap(c =>
+                c.nao_conformidades.map(nc => ({
+                  id: c.id,
+                  obra_id: c.obra_id,
+                  parametro: [nc.categoria_nc, nc.parametro_nc].filter(Boolean).join(' / ') || nc.descricao || 'NC',
+                  tipo: t.value,
+                  laboratorista_name: c.laboratorista_name || '',
+                  data: c.data || c.data_ensaio || '',
+                  empreiteira: c.empreiteira || '',
+                  rodovia: c.rodovia || '',
+                  usina: c.usina || c.usina_selecionada || '',
+                  _page: t.page,
+                  _ncLocal: nc.local_nc || '',
+                }))
+              )
+            )
+        )
+      );
+
+      registrosComNcExplicita.flat().forEach(nc => {
+        // Evitar duplicatas com NCs já extraídas automaticamente (mesmo id + mesmo parametro)
+        const jaExiste = allCNCs.some(existing => existing.id === nc.id && existing.parametro === nc.parametro);
+        if (!jaExiste) allCNCs.push(nc);
+      });
+
       setChecklistNCs(allCNCs);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
