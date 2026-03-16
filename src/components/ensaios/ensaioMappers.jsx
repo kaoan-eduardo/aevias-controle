@@ -91,7 +91,7 @@ export const getReportLink = (ensaio) => {
     case "EnsaioTaxaMRAF":
       return createPageUrl(`RelatorioTaxaMRAF?id=${ensaio.id}`);
     case "BoletimSondagem":
-      return createPageUrl(`RelatorioSondagem?id=${ensaio.id}`);
+      return createPageUrl(`RelatorioBoletimSondagem?id=${ensaio.id}`);
     default:
       return "#";
   }
