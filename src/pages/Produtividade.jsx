@@ -181,7 +181,7 @@ export default function ProdutividadePage() {
       });
 
       todosLabUsers.forEach(lab => {
-        prodData[lab.email] = {};
+        if (!prodData[lab.email]) prodData[lab.email] = {};
       });
 
       const processarRegistros = (registros, entityName) => {
