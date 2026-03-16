@@ -16,7 +16,13 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
 
   // Recuperar dados salvos ao montar (apenas se não estiver editando e não houver editId na URL)
   useEffect(() => {
-    if (!isEditing && !hasEditId && isInitialMount.current && !hasRestoredRef.current) {
+    // Se há editId na URL, limpar sessionStorage e não restaurar nada
+    if (hasEditId) {
+      sessionStorage.removeItem(storageKey);
+      isInitialMount.current = false;
+      return;
+    }
+    if (!isEditing && isInitialMount.current && !hasRestoredRef.current) {
       try {
         const savedData = sessionStorage.getItem(storageKey);
         if (savedData) {
