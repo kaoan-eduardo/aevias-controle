@@ -211,7 +211,13 @@ export default function ChecklistReciclagem() {
         
         if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
           setEditingChecklist(checklistToEdit);
-          setFormData(checklistToEdit);
+          setFormData(prev => ({
+            ...prev,
+            ...checklistToEdit,
+            acoes_corretivas_realizado: checklistToEdit.acoes_corretivas_realizado ?? null,
+            acoes_corretivas_descricao: checklistToEdit.acoes_corretivas_descricao ?? "",
+            nao_conformidades: checklistToEdit.nao_conformidades ?? [],
+          }));
         } else {
           alert("Você não tem permissão para editar este registro.");
           navigate(createPageUrl('MeusEnsaios'));
