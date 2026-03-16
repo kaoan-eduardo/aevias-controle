@@ -16,7 +16,7 @@ const getCamadaInicial = (numero) => ({
   espessura: null,
   na: null,
   classificacao_1: "",
-  classificacao_2: ""
+  classificacao_2: null // null = coluna 2 não existe ainda
 });
 
 const CAMADAS_PADRAO = [1, 2, 3, 4, 5].map(getCamadaInicial);
