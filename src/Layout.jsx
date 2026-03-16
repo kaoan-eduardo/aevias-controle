@@ -362,7 +362,7 @@ const AppLayout = ({ children }) => {
         }
       } else {
         // For admin, gestor, and sala_tecnica, show all types for creation
-        setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }, { tipo_obra: 'sondagem' }, { tipo_obra: 'levantamentos' }]);
+        setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }]);
       }
 
       // Carregar transferências pendentes para gestores
