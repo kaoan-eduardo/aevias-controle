@@ -12,8 +12,10 @@ export default function AcoesCorretivasNC({
   onAcoesDescricaoChange,
   onNaoConformidadesChange,
   disabled = false,
-  locaisPermitidos = ["CAMPO"]
+  locaisPermitidos = ["CAMPO"],
+  instanceId = "default"
 }) {
+  const radioName = `acoes_corretivas_${instanceId}`;
   return (
     <Card className="bg-orange-50 border-orange-200">
       <CardHeader>
