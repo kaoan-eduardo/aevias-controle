@@ -211,13 +211,12 @@ export default function ChecklistConcretagem() {
       const editId = params.get('editId');
 
       if (editId) {
-      const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
-
-      // Permitir edição apenas se for admin ou se for o criador e (está em rascunho OU foi reprovado)
-      if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
-        setEditingChecklist(checklistToEdit);
-        const initialData = getInitialFormData();
-        setFormData({ ...initialData, ...checklistToEdit });
+        const checklistToEdit = await base44.entities.ChecklistConcretagem.get(editId);
+        
+        // Permitir edição apenas se for admin ou se for o criador e (está em rascunho OU foi reprovado)
+        if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
+          setEditingChecklist(checklistToEdit);
+          setFormData(checklistToEdit);
         } else {
           alert("Você não tem permissão para editar este registro.");
           navigate(createPageUrl('MeusEnsaios'));
