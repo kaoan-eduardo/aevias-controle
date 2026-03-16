@@ -685,31 +685,65 @@ export default function BoletimSondagemPage() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {formData.camadas.map((camada, index) => (
+                                {(formData.camadas_2 || []).map((camada, index) => (
                                   <tr key={index} className={index % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
                                     <td className="border border-[#00233B]/20 px-2 py-1 text-center font-medium text-[#00233B]/70">{camada.numero}</td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input type="number" step="0.01" value={camada.prof_de_2 ?? ''} onChange={e => handleCamadaChange(index, 'prof_de_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
+                                      <Input type="number" step="0.01" value={camada.prof_de ?? ''} onChange={e => {
+                                        const newVal = e.target.value !== '' ? parseFloat(e.target.value) : null;
+                                        setFormData(prev => {
+                                          const newCamadas2 = [...(prev.camadas_2 || [])];
+                                          newCamadas2[index].prof_de = newVal;
+                                          if (newVal !== null && newCamadas2[index].prof_ate !== null) {
+                                            newCamadas2[index].espessura = parseFloat((newCamadas2[index].prof_ate - newVal).toFixed(2));
+                                          }
+                                          return { ...prev, camadas_2: newCamadas2 };
+                                        });
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input type="number" step="0.01" value={camada.prof_ate_2 ?? ''} onChange={e => handleCamadaChange(index, 'prof_ate_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
+                                      <Input type="number" step="0.01" value={camada.prof_ate ?? ''} onChange={e => {
+                                        const newVal = e.target.value !== '' ? parseFloat(e.target.value) : null;
+                                        setFormData(prev => {
+                                          const newCamadas2 = [...(prev.camadas_2 || [])];
+                                          newCamadas2[index].prof_ate = newVal;
+                                          if (newVal !== null && newCamadas2[index].prof_de !== null) {
+                                            newCamadas2[index].espessura = parseFloat((newVal - newCamadas2[index].prof_de).toFixed(2));
+                                          }
+                                          if (index + 1 < newCamadas2.length && newVal !== null) {
+                                            newCamadas2[index + 1].prof_de = newVal;
+                                          }
+                                          return { ...prev, camadas_2: newCamadas2 };
+                                        });
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center" placeholder="0,00" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70">
-                                      {camada.espessura_2 !== null && camada.espessura_2 !== undefined ? camada.espessura_2.toFixed(2) : ''}
+                                      {camada.espessura !== null && camada.espessura !== undefined ? camada.espessura.toFixed(2) : ''}
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input type="number" step="0.01" value={camada.na_2 ?? ''} onChange={e => handleCamadaChange(index, 'na_2', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center" />
+                                      <Input type="number" step="0.01" value={camada.na ?? ''} onChange={e => {
+                                        const newVal = e.target.value !== '' ? parseFloat(e.target.value) : null;
+                                        setFormData(prev => {
+                                          const newCamadas2 = [...(prev.camadas_2 || [])];
+                                          newCamadas2[index].na = newVal;
+                                          return { ...prev, camadas_2: newCamadas2 };
+                                        });
+                                      }} disabled={!isEditable} className="h-8 text-xs text-center" />
                                     </td>
                                     <td className="border border-[#00233B]/20 px-1 py-1">
-                                      <Input value={camada.classificacao_2 ?? ''} onChange={e => handleCamadaChange(index, 'classificacao_2', e.target.value)} disabled={!isEditable} className="h-8 text-xs" placeholder="Escrever" />
+                                      <Input value={camada.classificacao_2 ?? ''} onChange={e => {
+                                        setFormData(prev => {
+                                          const newCamadas2 = [...(prev.camadas_2 || [])];
+                                          newCamadas2[index].classificacao_2 = e.target.value;
+                                          return { ...prev, camadas_2: newCamadas2 };
+                                        });
+                                      }} disabled={!isEditable} className="h-8 text-xs" placeholder="Escrever" />
                                     </td>
                                     {isEditable && (
                                       <td className="border border-[#00233B]/20 px-1 py-1 text-center">
-                                        {formData.camadas.length > 1 && (
-                                          <button type="button" onClick={() => removerCamada(index)} className="text-red-400 hover:text-red-600">
-                                            <Trash2 className="w-3.5 h-3.5" />
-                                          </button>
-                                        )}
+                                        <button type="button" onClick={() => removerCamada2(index)} className="text-red-400 hover:text-red-600">
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
                                       </td>
                                     )}
                                   </tr>
