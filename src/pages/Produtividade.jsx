@@ -154,9 +154,11 @@ export default function ProdutividadePage() {
         }
       });
 
-      // Buscar apenas laboratoristas com atividade no mês
+      // Mostrar todos os laboratoristas das regionais do gestor,
+      // mais qualquer um que tenha registros/marcadores no mês (mesmo que não esteja em regional)
+      const todosEmailsLabs = new Set([...labEmails, ...labEmailsComRegistrosNoMes]);
       const todosLabUsers = allUsers.filter(u => 
-        labEmailsComRegistrosNoMes.has(u.email.toLowerCase())
+        todosEmailsLabs.has(u.email.toLowerCase())
       );
 
       setLaboratoristas(todosLabUsers);
