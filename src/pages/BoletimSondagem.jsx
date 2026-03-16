@@ -547,7 +547,7 @@ export default function BoletimSondagemPage() {
                                 <Trash2 className="w-3.5 h-3.5 mr-1" /> Remover 2ª Classificação
                               </Button>
                             )}
-                            <Button type="button" onClick={adicionarCamada} size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90" disabled={formData.camadas.length >= 15}>
+                            <Button type="button" onClick={adicionarCamada} size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 text-xs" disabled={formData.camadas.length >= 15}>
                               <Plus className="w-4 h-4 mr-1" /> Adicionar Camada
                             </Button>
                           </div>
