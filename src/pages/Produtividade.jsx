@@ -363,7 +363,7 @@ export default function ProdutividadePage() {
                         </div>
                       </td>
                       {days.map(day => {
-                        const registros = produtividade[lab.email]?.[day] || [];
+                        const registros = produtividade[lab.email.toLowerCase()]?.[day] || [];
                         const hasRegistros = registros.length > 0;
                         const markerKey = `${lab.email.toLowerCase()}_${day}`;
                         const markedStatus = window.marcadoresDia?.[markerKey];
