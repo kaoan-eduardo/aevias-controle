@@ -31,8 +31,8 @@ export default function ProdutividadePage() {
       setUser(currentUser);
 
       const userAccessLevel = currentUser?.access_level || 'user';
-      // Qualquer usuário com role='admin' vê tudo (independente do access_level)
-      const isAdminPuro = currentUser?.role === 'admin';
+      // Admin puro: sem access_level customizado E role === 'admin'
+      const isAdminPuro = !currentUser?.access_level && currentUser?.role === 'admin';
 
       const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
@@ -363,7 +363,7 @@ export default function ProdutividadePage() {
                         </div>
                       </td>
                       {days.map(day => {
-                        const registros = produtividade[lab.email.toLowerCase()]?.[day] || [];
+                        const registros = produtividade[lab.email]?.[day] || [];
                         const hasRegistros = registros.length > 0;
                         const markerKey = `${lab.email.toLowerCase()}_${day}`;
                         const markedStatus = window.marcadoresDia?.[markerKey];
