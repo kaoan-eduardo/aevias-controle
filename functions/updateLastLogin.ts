@@ -9,10 +9,9 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Atualizar o last_login do usuário atual
-        await base44.asServiceRole.entities.User.update(user.id, {
-            last_login: new Date().toISOString()
-        });
+        // Usar updateMe em vez de atualizar o entity diretamente
+        // para evitar disparar subscriptions que causam re-renders
+        await base44.auth.updateMe({ last_login: new Date().toISOString() });
 
         return Response.json({ success: true });
     } catch (error) {
