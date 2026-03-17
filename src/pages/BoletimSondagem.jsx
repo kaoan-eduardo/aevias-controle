@@ -598,14 +598,23 @@ export default function BoletimSondagemPage() {
                           </div>
                           <div className="text-xs font-semibold text-[#00233B]/70 mb-2">Classificação 1</div>
                           <table className="w-full text-sm border-collapse">
+                            <colgroup>
+                              <col className="w-12" />
+                              <col className="w-[130px]" />
+                              <col className="w-[130px]" />
+                              <col className="w-[90px]" />
+                              <col className="w-[110px]" />
+                              <col />
+                              {isEditable && <col className="w-10" />}
+                            </colgroup>
                             <thead>
                               <tr className="bg-[#00233B]/10">
-                                <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium w-12">Nº</th>
+                                <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">Nº</th>
                                 <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium" colSpan={2}>PROF. (m)</th>
                                 <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">ESP. (m)</th>
                                 <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">N.A (m)</th>
                                 <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">CLASSIFICAÇÃO</th>
-                                {isEditable && <th className="border border-[#00233B]/20 px-2 py-2 w-10"></th>}
+                                {isEditable && <th className="border border-[#00233B]/20 px-2 py-2"></th>}
                               </tr>
                               <tr className="bg-[#00233B]/5">
                                 <th className="border border-[#00233B]/20 px-2 py-1"></th>
@@ -621,13 +630,13 @@ export default function BoletimSondagemPage() {
                               {formData.camadas.map((camada, index) => (
                                 <tr key={index} className={index % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
                                   <td className="border border-[#00233B]/20 px-2 py-1 text-center font-medium text-[#00233B]/70">{camada.numero}</td>
-                                  <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70 bg-black/10">
+                                  <td className="border border-[#00233B]/20 px-1 py-1 bg-black/10 text-center text-xs font-medium text-[#00233B]/70">
                                     {camada.prof_de !== null && camada.prof_de !== undefined ? camada.prof_de.toFixed(2) : index === 0 ? '0,00' : '—'}
                                   </td>
                                   <td className="border border-[#00233B]/20 px-1 py-1">
                                     <Input type="number" step="0.01" value={camada.prof_ate ?? ''} onChange={e => handleCamadaChange(index, 'prof_ate', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" placeholder="0,00" />
                                   </td>
-                                  <td className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]/70 bg-black/10">
+                                  <td className="border border-[#00233B]/20 px-1 py-1 bg-black/10 text-center text-xs font-medium text-[#00233B]/70">
                                     {camada.espessura !== null && camada.espessura !== undefined ? camada.espessura.toFixed(2) : ''}
                                   </td>
                                   <td className="border border-[#00233B]/20 px-1 py-1">
