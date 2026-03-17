@@ -21,6 +21,19 @@ const getCamadaInicial = (numero) => ({
 
 const CAMADAS_PADRAO = [1, 2, 3, 4, 5].map(getCamadaInicial);
 
+const getDensidadeInicial = () => ({
+  camada_ensaiada: "",
+  peso_frasco_antes: null, peso_frasco_depois: null,
+  peso_areia_deslocada: null, peso_areia_funil_placa: null,
+  peso_areia_cavidade: null,
+  massa_esp_aparente_areia: 1.2,
+  volume_buraco: null,
+  peso_solo_recipiente: null, peso_recipiente: null, peso_solo: null,
+  densidade_aparente_solo_umido: null,
+  peso_solo_umido: null, peso_solo_seco: null, peso_agua: null,
+  teor_umidade: null, densidade_aparente_solo_seco: null
+});
+
 const getInitialFormData = () => ({
   obra_id: "",
   data: new Date().toISOString().split('T')[0],
@@ -43,18 +56,7 @@ const getInitialFormData = () => ({
     umidade_1: null, umidade_2: null
   },
   umidade_natural_2: null,
-  densidade_in_situ: {
-    camada_ensaiada: "",
-    peso_frasco_antes: null, peso_frasco_depois: null,
-    peso_areia_deslocada: null, peso_areia_funil_placa: null,
-    peso_areia_cavidade: null,
-    massa_esp_aparente_areia: 1.2,
-    volume_buraco: null,
-    peso_solo_recipiente: null, peso_recipiente: null, peso_solo: null,
-    densidade_aparente_solo_umido: null,
-    peso_solo_umido: null, peso_solo_seco: null, peso_agua: null,
-    teor_umidade: null, densidade_aparente_solo_seco: null
-  },
+  densidades_in_situ: [getDensidadeInicial()],
   observacoes: "",
   fotos: []
 });
