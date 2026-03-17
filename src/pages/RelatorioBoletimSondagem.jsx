@@ -49,7 +49,12 @@ export default function RelatorioBoletimSondagem() {
   if (error || !boletim) return <div className="flex justify-center items-center h-screen"><p className="text-red-600">{error || "Erro ao carregar"}</p></div>;
 
   const un = boletim.umidade_natural || {};
-  const den = boletim.densidade_in_situ || {};
+  // Compatibilidade retroativa: suportar campo antigo
+  const densidades = boletim.densidades_in_situ?.length > 0
+    ? boletim.densidades_in_situ
+    : boletim.densidade_in_situ
+      ? [boletim.densidade_in_situ]
+      : [{}];
   const camadas = boletim.camadas || [];
   const temCol2 = camadas.some(c => c.classificacao_2 !== null && c.classificacao_2 !== undefined);
 
