@@ -322,7 +322,7 @@ export default function RelatorioBoletimSondagem() {
                       umid1Media
                     )}
                     {renderUmidadeTable(
-                      boletim.face_classificacao_2 || 'Umidade Natural 2',
+                      un2.camada_ensaiada_1 || 'Umidade Natural 2',
                       un2,
                       [
                         ["Nº cápsula", un2.no_capsula_1, un2.no_capsula_2, false],
