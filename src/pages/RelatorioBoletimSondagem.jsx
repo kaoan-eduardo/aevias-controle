@@ -109,10 +109,12 @@ export default function RelatorioBoletimSondagem() {
 
           {/* SONDAGEM — CAMADAS */}
           <section>
-            <div className="space-y-3">
-              {/* Tabela 1 - Classificação 1 */}
+            {!temCol2 ? (
+              /* Apenas 1 classificação — tabela simples */
               <div>
-                <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS — CLASSIFICAÇÃO 1</div>
+                <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">
+                  SONDAGEM — CAMADAS{boletim.face_classificacao_1 ? ` — ${boletim.face_classificacao_1}` : ''}
+                </div>
                 <table className="w-full border-collapse border border-slate-400 text-[9px]">
                   <thead>
                     <tr className="bg-slate-200">
@@ -141,41 +143,80 @@ export default function RelatorioBoletimSondagem() {
                   </tbody>
                 </table>
               </div>
-
-              {/* Tabela 2 - Classificação 2 (se houver) */}
-              {temCol2 && (
-                <div>
-                  <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS — CLASSIFICAÇÃO 2</div>
-                  <table className="w-full border-collapse border border-slate-400 text-[9px]">
-                    <thead>
-                      <tr className="bg-slate-200">
-                        <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
-                        <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
-                        <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP.</th>
-                        <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A</th>
-                        <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASSIFICAÇÃO</th>
-                      </tr>
-                      <tr className="bg-slate-100">
-                        <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
-                        <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {camadas.map((c, i) => (
-                        <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de !== null && c.prof_de !== undefined ? fmtNum(c.prof_de) : '-'}</td>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate !== null && c.prof_ate !== undefined ? fmtNum(c.prof_ate) : '-'}</td>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura !== null && c.espessura !== undefined ? fmtNum(c.espessura) : '-'}</td>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na !== null && c.na !== undefined ? fmtNum(c.na) : '-'}</td>
-                          <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_2 || ''}</td>
+            ) : (
+              /* 2 classificações — tabelas lado a lado */
+              <div>
+                <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">SONDAGEM — CAMADAS</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {/* Classificação 1 */}
+                  <div>
+                    <div className="bg-slate-500 text-white px-1 py-0.5 font-bold text-center text-[9px] mb-0.5">
+                      {boletim.face_classificacao_1 || 'Classificação 1'}
+                    </div>
+                    <table className="w-full border-collapse border border-slate-400 text-[9px]">
+                      <thead>
+                        <tr className="bg-slate-200">
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
+                          <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP.</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASSIFICAÇÃO</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        <tr className="bg-slate-100">
+                          <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
+                          <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {camadas.map((c, i) => (
+                          <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de != null ? fmtNum(c.prof_de) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate != null ? fmtNum(c.prof_ate) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura != null ? fmtNum(c.espessura) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na != null ? fmtNum(c.na) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_1 || ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {/* Classificação 2 */}
+                  <div>
+                    <div className="bg-slate-500 text-white px-1 py-0.5 font-bold text-center text-[9px] mb-0.5">
+                      {boletim.face_classificacao_2 || 'Classificação 2'}
+                    </div>
+                    <table className="w-full border-collapse border border-slate-400 text-[9px]">
+                      <thead>
+                        <tr className="bg-slate-200">
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">Nº</th>
+                          <th colSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">PROF. (m)</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">ESP.</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">N.A</th>
+                          <th rowSpan={2} className="border border-slate-400 px-1 py-0.5 text-center font-bold">CLASSIFICAÇÃO</th>
+                        </tr>
+                        <tr className="bg-slate-100">
+                          <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">DE</th>
+                          <th className="border border-slate-400 px-1 py-0.5 text-center text-[8px]">ATÉ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(boletim.camadas_2?.length ? boletim.camadas_2 : camadas).map((c, i) => (
+                          <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{c.numero}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_de != null ? fmtNum(c.prof_de) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.prof_ate != null ? fmtNum(c.prof_ate) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.espessura != null ? fmtNum(c.espessura) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5 text-center">{c.na != null ? fmtNum(c.na) : '-'}</td>
+                            <td className="border border-slate-400 px-1 py-0.5">{c.classificacao_2 || ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </section>
 
           {/* UMIDADE NATURAL 1 */}
