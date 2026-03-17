@@ -674,14 +674,23 @@ export default function BoletimSondagemPage() {
                             </div>
                             <div className="text-xs font-semibold text-[#00233B]/70 mb-2">Classificação 2</div>
                             <table className="w-full text-sm border-collapse">
+                              <colgroup>
+                                <col className="w-12" />
+                                <col className="w-[130px]" />
+                                <col className="w-[130px]" />
+                                <col className="w-[90px]" />
+                                <col className="w-[110px]" />
+                                <col />
+                                {isEditable && <col className="w-10" />}
+                              </colgroup>
                               <thead>
                                 <tr className="bg-[#00233B]/10">
-                                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium w-12">Nº</th>
+                                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">Nº</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium" colSpan={2}>PROF. (m)</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">ESP. (m)</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">N.A (m)</th>
                                   <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium">CLASSIFICAÇÃO</th>
-                                  {isEditable && <th className="border border-[#00233B]/20 px-2 py-2 w-10"></th>}
+                                  {isEditable && <th className="border border-[#00233B]/20 px-2 py-2"></th>}
                                 </tr>
                                 <tr className="bg-[#00233B]/5">
                                   <th className="border border-[#00233B]/20 px-2 py-1"></th>
