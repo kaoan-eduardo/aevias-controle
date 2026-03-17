@@ -70,7 +70,7 @@ export default function RelatorioBoletimSondagem() {
         </div>
       </div>
 
-      <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-6 pb-4 print:pt-0 print:px-4 print:pb-2">
+      <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1">
         {/* Header */}
         <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
           <div>
