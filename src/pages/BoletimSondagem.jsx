@@ -640,9 +640,15 @@ export default function BoletimSondagemPage() {
                               {formData.camadas.map((camada, index) => (
                                 <tr key={index} className={index % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
                                   <td className="border border-[#00233B]/20 px-2 py-1 text-center font-medium text-[#00233B]/70">{camada.numero}</td>
-                                  <td className="border border-[#00233B]/20 px-1 py-1 bg-black/10 text-center text-xs font-medium text-[#00233B]/70">
-                                    {camada.prof_de !== null && camada.prof_de !== undefined ? camada.prof_de.toFixed(2) : index === 0 ? '0,00' : '—'}
-                                  </td>
+                                  {index === 0 ? (
+                                    <td className="border border-[#00233B]/20 px-1 py-1">
+                                      <Input type="number" step="0.01" value={camada.prof_de ?? ''} onChange={e => handleCamadaChange(0, 'prof_de', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" placeholder="0,00" />
+                                    </td>
+                                  ) : (
+                                    <td className="border border-[#00233B]/20 px-1 py-1 bg-black/10 text-center text-xs font-medium text-[#00233B]/70">
+                                      {camada.prof_de !== null && camada.prof_de !== undefined ? camada.prof_de.toFixed(2) : '—'}
+                                    </td>
+                                  )}
                                   <td className="border border-[#00233B]/20 px-1 py-1">
                                     <Input type="number" step="0.01" value={camada.prof_ate ?? ''} onChange={e => handleCamadaChange(index, 'prof_ate', e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50" placeholder="0,00" />
                                   </td>
