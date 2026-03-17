@@ -96,8 +96,7 @@ export default function ProdutividadePage() {
       console.log('Laboratoristas encontrados:', labUsers.length);
 
       // Coletar empreiteiras e usinas apenas das obras das regionais do gestor
-      const regionaisIds = regionaisDoGestor.map(r => r.id);
-      const obrasDoGestor = obras.filter(o => regionaisIds.includes(o.regional_id));
+      const obrasDoGestor = obrasDoGestorPreFiltro;
       
       const empresasSet = new Set();
       const usinasSet = new Set();
