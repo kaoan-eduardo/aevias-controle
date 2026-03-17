@@ -242,8 +242,7 @@ export default function RelatorioBoletimSondagem() {
                     ["Massa cápsula (g)", un.massa_capsula_1, un.massa_capsula_2, true],
                     ["Massa cap + solo úmido (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
                     ["Massa cap + solo seco (g)", un.massa_cap_solo_seco_1, un.massa_cap_solo_seco_2, true],
-                    ["Massa da água (g)", un.massa_agua_1, un.massa_agua_2, true],
-                    ["Massa do solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
+
                   ].map(([label, v1, v2, isNum], ri) => (
                     <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
                       <td className="border border-slate-400 px-1 py-0.5 text-gray-700">{label}</td>
