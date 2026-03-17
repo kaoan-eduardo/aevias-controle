@@ -59,8 +59,8 @@ export default function ProdutividadePage() {
       const obrasVisiveis = obras.filter(o => regionaisVisiveisIds.has(o.regional_id));
       const obrasVisiveisIds = new Set(obrasVisiveis.map(o => o.id));
 
-      // ── 3. Laboratoristas: apenas usuários com access_level 'user' (laboratoristas) ─
-      const labUsers = allUsersFromRegional.filter(u => !u.access_level && u.role !== 'admin');
+      // ── 3. Laboratoristas: usuários sem access_level especial (são os colaboradores/laboratoristas) ─
+      const labUsers = allUsersFromRegional.filter(u => !u.access_level);
 
       // ── 4. Empreiteiras e usinas das obras visíveis ──────────────────────────
       const empresasSet = new Set();
