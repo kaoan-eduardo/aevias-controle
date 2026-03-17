@@ -30,49 +30,37 @@ export default function ProdutividadePage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const userAccessLevel = currentUser?.access_level || 'user';
-      // Admin puro: sem access_level customizado E role === 'admin'
-      const isAdminPuro = !currentUser?.access_level && currentUser?.role === 'admin';
-
-      const [regionais, allUsers, obras] = await Promise.all([
-        base44.entities.Regional.list(),
-        base44.entities.User.list(),
+      // ── 1. Buscar dados via backend (service role) e obras ──────────────────
+      const [regionalUsersResp, obras] = await Promise.all([
+        base44.functions.invoke('getRegionalUsers', {}),
         base44.entities.Obra.list()
       ]);
 
-      // ── 1. Determinar quais regionais este usuário gerencia ──────────────────
+      // getRegionalUsers retorna todos os usuários da(s) regional(is) do usuário logado
+      const allUsersFromRegional = regionalUsersResp?.users || [];
+
+      // Regionais visíveis vêm na resposta (para não-admins); para admin, buscar todas
+      const userAccessLevel = currentUser?.access_level || 'user';
+      const isAdminPuro = !currentUser?.access_level && currentUser?.role === 'admin';
+
       let regionaisVisiveis;
-      if (isAdminPuro) {
-        regionaisVisiveis = regionais; // Admin vê tudo
+      if (isAdminPuro || !regionalUsersResp?.regionais) {
+        regionaisVisiveis = await base44.entities.Regional.list();
       } else {
-        // Gestor/Sala técnica: só as regionais onde está cadastrado
-        regionaisVisiveis = regionais.filter(r =>
-          r.gestor_contrato_responsavel?.toLowerCase() === currentUser.email?.toLowerCase() ||
-          (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === currentUser.email?.toLowerCase()) ||
-          (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === currentUser.email?.toLowerCase())
-        );
+        // Buscar as regionais completas a partir dos IDs retornados pela função
+        const todasRegionais = await base44.entities.Regional.list();
+        const regionaisIds = new Set(regionalUsersResp.regionais.map(r => r.id));
+        regionaisVisiveis = todasRegionais.filter(r => regionaisIds.has(r.id));
       }
 
-      const regionaisVisiveisIds = regionaisVisiveis.map(r => r.id);
+      const regionaisVisiveisIds = new Set(regionaisVisiveis.map(r => r.id));
 
       // ── 2. Obras dessas regionais ────────────────────────────────────────────
-      const obrasVisiveis = obras.filter(o => regionaisVisiveisIds.includes(o.regional_id));
+      const obrasVisiveis = obras.filter(o => regionaisVisiveisIds.has(o.regional_id));
       const obrasVisiveisIds = new Set(obrasVisiveis.map(o => o.id));
 
-      // ── 3. Laboratoristas cadastrados nessas regionais ───────────────────────
-      const labEmailsSet = new Set();
-      if (isAdminPuro) {
-        // Admin vê todos os usuários com role 'user' (sem access_level especial)
-        allUsers.forEach(u => {
-          if (!u.access_level && u.role !== 'admin') labEmailsSet.add(u.email.toLowerCase());
-        });
-      } else {
-        regionaisVisiveis.forEach(r => {
-          (r.laboratoristas_responsaveis || []).forEach(e => labEmailsSet.add(e.toLowerCase()));
-        });
-      }
-
-      const labUsers = allUsers.filter(u => labEmailsSet.has(u.email.toLowerCase()));
+      // ── 3. Laboratoristas: apenas usuários com access_level 'user' (laboratoristas) ─
+      const labUsers = allUsersFromRegional.filter(u => !u.access_level && u.role !== 'admin');
 
       // ── 4. Empreiteiras e usinas das obras visíveis ──────────────────────────
       const empresasSet = new Set();
