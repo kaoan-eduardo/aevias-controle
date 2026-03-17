@@ -168,13 +168,22 @@ export default function BoletimSondagemPage() {
         if (currentUser.role === 'admin' || (boletimToEdit.created_by === currentUser.email && boletimToEdit.approved !== true)) {
           setEditingBoletim(boletimToEdit);
           const initial = getInitialFormData();
+          // Compatibilidade retroativa: migrar campo antigo densidade_in_situ para array
+          let densidades;
+          if (boletimToEdit.densidades_in_situ?.length > 0) {
+            densidades = boletimToEdit.densidades_in_situ;
+          } else if (boletimToEdit.densidade_in_situ) {
+            densidades = [{ ...getDensidadeInicial(), ...boletimToEdit.densidade_in_situ }];
+          } else {
+            densidades = [getDensidadeInicial()];
+          }
           setFormData({
             ...initial,
             ...boletimToEdit,
             data: boletimToEdit.data ? new Date(boletimToEdit.data).toISOString().split('T')[0] : initial.data,
             camadas: boletimToEdit.camadas?.length > 0 ? boletimToEdit.camadas : initial.camadas,
             umidade_natural: { ...initial.umidade_natural, ...(boletimToEdit.umidade_natural || {}) },
-            densidade_in_situ: { ...initial.densidade_in_situ, ...(boletimToEdit.densidade_in_situ || {}) },
+            densidades_in_situ: densidades,
             fotos: Array.isArray(boletimToEdit.fotos) ? boletimToEdit.fotos : []
           });
         } else {
