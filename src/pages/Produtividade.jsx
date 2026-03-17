@@ -37,10 +37,11 @@ export default function ProdutividadePage() {
       ]);
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
+      const isAdmin = currentUser?.role === 'admin' || userAccessLevel === 'admin';
 
       // Filtrar regionais baseado no usuário
       let regionaisDoGestor = regionais;
-      if (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+      if (!isAdmin && (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias')) {
         regionaisDoGestor = regionais.filter(r => 
           r.gestor_contrato_responsavel?.toLowerCase() === currentUser.email?.toLowerCase() ||
           (r.gestores_contrato_responsaveis || []).some(email => email.toLowerCase() === currentUser.email?.toLowerCase()) ||
