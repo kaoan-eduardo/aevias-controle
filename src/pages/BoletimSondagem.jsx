@@ -887,14 +887,21 @@ export default function BoletimSondagemPage() {
                           </tr>
                         </thead>
                         <tbody>
+                          {/* Camada ensaiada - campo único (colspan 2) */}
+                          <tr className="bg-white/30">
+                            <td className="border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80">Camada ensaiada</td>
+                            <td className="border border-[#00233B]/20 px-2 py-1" colSpan={2}>
+                              <Input value={formData.umidade_natural_2.camada_ensaiada_1 || ''} onChange={e => setFormData(prev => ({ ...prev, umidade_natural_2: { ...prev.umidade_natural_2, camada_ensaiada_1: e.target.value } }))} disabled={!isEditable} className="h-8 text-sm" placeholder="Ex.: 0,00 - 0,60m" />
+                            </td>
+                          </tr>
+                          {/* Nº cápsula e demais campos individuais */}
                           {[
-                            { label: "Camada ensaiada", fields: ['camada_ensaiada_1', 'camada_ensaiada_2'], type: 'text' },
                             { label: "Nº cápsula", fields: ['no_capsula_1', 'no_capsula_2'], type: 'text' },
                             { label: "Massa cápsula (g)", fields: ['massa_capsula_1', 'massa_capsula_2'], type: 'number' },
                             { label: "Massa cap + solo úmido (g)", fields: ['massa_cap_solo_umido_1', 'massa_cap_solo_umido_2'], type: 'number' },
                             { label: "Massa cap + solo seco (g)", fields: ['massa_cap_solo_seco_1', 'massa_cap_solo_seco_2'], type: 'number' },
                           ].map(({ label, fields, type }, ri) => (
-                            <tr key={ri} className={ri % 2 === 0 ? 'bg-white/30' : 'bg-white/10'}>
+                            <tr key={ri} className={ri % 2 === 0 ? 'bg-white/10' : 'bg-white/30'}>
                               <td className="border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80">{label}</td>
                               {fields.map((f, fi) => (
                                 <td key={fi} className="border border-[#00233B]/20 px-2 py-1">
@@ -906,6 +913,7 @@ export default function BoletimSondagemPage() {
                               ))}
                             </tr>
                           ))}
+                          {/* Campos calculados */}
                           {[
                             { label: "Massa da água (g)", keys: ['massa_agua_1', 'massa_agua_2'] },
                             { label: "Massa do solo seco (g)", keys: ['massa_solo_seco_1', 'massa_solo_seco_2'] },
@@ -933,25 +941,28 @@ export default function BoletimSondagemPage() {
                               })}
                             </tr>
                           ))}
+                          {/* Umidade média (colspan 2) */}
                           <tr className="bg-[#BFCF99]/30">
                             <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-[#00233B]">Umidade (%)</td>
-                            {[1, 2].map((idx) => {
-                              const un2 = formData.umidade_natural_2;
-                              const capSoloUmido = un2[`massa_cap_solo_umido_${idx}`];
-                              const capSoloSeco = un2[`massa_cap_solo_seco_${idx}`];
-                              const capsula = un2[`massa_capsula_${idx}`];
-                              let umidade = null;
-                              if (capSoloUmido && capSoloSeco && capsula !== null) {
-                                const agua = capSoloUmido - capSoloSeco;
-                                const soloSeco = capSoloSeco - capsula;
-                                umidade = soloSeco > 0 ? parseFloat(((agua / soloSeco) * 100).toFixed(2)) : null;
-                              }
-                              return (
-                                <td key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-bold text-[#00233B] text-base">
-                                  {umidade !== null ? `${umidade.toFixed(2)} %` : '—'}
-                                </td>
-                              );
-                            })}
+                            <td className="border border-[#00233B]/20 px-3 py-2 text-center font-bold text-[#00233B] text-base" colSpan={2}>
+                              {(() => {
+                                const un2 = formData.umidade_natural_2;
+                                const calcU = (idx) => {
+                                  const csu = un2[`massa_cap_solo_umido_${idx}`];
+                                  const css = un2[`massa_cap_solo_seco_${idx}`];
+                                  const cap = un2[`massa_capsula_${idx}`];
+                                  if (csu && css && cap !== null) {
+                                    const ss = css - cap;
+                                    return ss > 0 ? parseFloat((((csu - css) / ss) * 100).toFixed(2)) : null;
+                                  }
+                                  return null;
+                                };
+                                const u1 = calcU(1), u2 = calcU(2);
+                                if (u1 !== null && u2 !== null) return `${((u1 + u2) / 2).toFixed(2)} %`;
+                                if (u1 !== null) return `${u1.toFixed(2)} %`;
+                                return '—';
+                              })()}
+                            </td>
                           </tr>
                         </tbody>
                       </table>
