@@ -309,7 +309,7 @@ export default function RelatorioBoletimSondagem() {
                 return (
                   <div className="grid grid-cols-2 gap-2">
                     {renderUmidadeTable(
-                      boletim.face_classificacao_1 || 'Umidade Natural 1',
+                      un.camada_ensaiada_1 || 'Umidade Natural 1',
                       un,
                       [
                         ["Nº cápsula", un.no_capsula_1, un.no_capsula_2, false],
