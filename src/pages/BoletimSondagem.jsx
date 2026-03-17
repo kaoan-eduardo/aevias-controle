@@ -221,6 +221,16 @@ export default function BoletimSondagemPage() {
       const newCamadas = prev.camadas.map(c => ({ ...c }));
       newCamadas[index] = { ...newCamadas[index], [field]: value };
 
+      // Recalcular espessura quando DE da primeira linha é editado
+      if (field === 'prof_de' && index === 0) {
+        const { prof_de, prof_ate } = newCamadas[0];
+        if (prof_de !== null && prof_ate !== null) {
+          newCamadas[0].espessura = parseFloat((prof_ate - prof_de).toFixed(2));
+        } else {
+          newCamadas[0].espessura = null;
+        }
+      }
+
       // Recalcular espessura da camada atual (classificação 1)
       if (field === 'prof_ate') {
         const { prof_de, prof_ate } = newCamadas[index];
