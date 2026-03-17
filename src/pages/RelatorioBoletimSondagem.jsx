@@ -326,7 +326,6 @@ export default function RelatorioBoletimSondagem() {
                         ["Massa cápsula (g)", un2.massa_capsula_1, un2.massa_capsula_2, true],
                         ["Massa cap + solo úmido (g)", un2.massa_cap_solo_umido_1, un2.massa_cap_solo_umido_2, true],
                         ["Massa cap + solo seco (g)", un2.massa_cap_solo_seco_1, un2.massa_cap_solo_seco_2, true],
-                        ["Massa da água (g)", agua1u2, agua2u2, true],
                         ["Massa do solo seco (g)", ss1u2, ss2u2, true],
                       ],
                       umid2Media
