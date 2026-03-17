@@ -16,7 +16,7 @@ export default function ImpressionEtiquetas() {
     setErro('');
     
     try {
-      const xlsxModule = await import('xlsx');
+      const xlsxModule = await import('https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs');
       const reader = new FileReader();
       reader.onload = (event) => {
         const workbook = xlsxModule.read(event.target?.result, { type: 'binary' });
