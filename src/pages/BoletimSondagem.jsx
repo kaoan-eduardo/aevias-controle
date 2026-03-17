@@ -884,11 +884,24 @@ export default function BoletimSondagemPage() {
                 </CardContent>
               </Card>
 
-              {/* UMIDADE NATURAL 2 - DNER-ME 213/94 (quando há 2ª classificação) */}
+              {/* UMIDADE NATURAL 2 - DNER-ME 213/94 */}
               {formData.umidade_natural_2 && (
                 <Card className="bg-black/5 border-[#00233B]/10">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base text-[#00233B]">Umidade Natural 2 — DNER-ME 213/94</CardTitle>
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-base text-[#00233B]">Umidade Natural 2 — DNER-ME 213/94</CardTitle>
+                      {isEditable && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="border-red-300 text-red-600 hover:bg-red-50 text-xs"
+                          onClick={() => setFormData(prev => ({ ...prev, umidade_natural_2: null }))}
+                        >
+                          <Trash2 className="w-3.5 h-3.5 mr-1" /> Remover
+                        </Button>
+                      )}
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
