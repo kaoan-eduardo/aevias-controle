@@ -29,21 +29,21 @@ export default function AcoesCorretivasNC({
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <input
-                  type="radio"
-                  id="acoes_sim"
-                  name={radioName}
-                  checked={acoesRealizadas === true}
-                  onChange={() => onAcoesRealizadasChange(true)}
-                  disabled={disabled}
-                  className="w-4 h-4"
+                 type="radio"
+                 id={`acoes_sim_${instanceId}`}
+                 name={radioName}
+                 checked={acoesRealizadas === true}
+                 onChange={() => onAcoesRealizadasChange(true)}
+                 disabled={disabled}
+                 className="w-4 h-4"
                 />
-                <Label htmlFor="acoes_sim" className="font-normal cursor-pointer">Sim</Label>
-              </div>
-              <div className="flex items-center gap-2">
+                <Label htmlFor={`acoes_sim_${instanceId}`} className="font-normal cursor-pointer">Sim</Label>
+                </div>
+                <div className="flex items-center gap-2">
                 <input
-                  type="radio"
-                  id="acoes_nao"
-                  name={radioName}
+                 type="radio"
+                 id={`acoes_nao_${instanceId}`}
+                 name={radioName}
                   checked={acoesRealizadas === false}
                   onChange={() => {
                     onAcoesRealizadasChange(false);
