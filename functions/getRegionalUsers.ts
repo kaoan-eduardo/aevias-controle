@@ -50,7 +50,8 @@ Deno.serve(async (req) => {
         if (userAccessLevel === 'gestor_contrato') {
             console.log("🔍 Buscando regionais onde o usuário é gestor...");
             regionaisDoUsuario = allRegionais.filter(regional => 
-                regional.gestor_contrato_responsavel?.toLowerCase() === user.email.toLowerCase()
+                regional.gestor_contrato_responsavel?.toLowerCase() === user.email.toLowerCase() ||
+                (regional.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === user.email.toLowerCase())
             );
         } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
             console.log("🔍 Buscando regionais onde o usuário é sala técnica...");
