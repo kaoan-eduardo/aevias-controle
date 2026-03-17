@@ -178,41 +178,114 @@ export default function RelatorioBoletimSondagem() {
             </div>
           </section>
 
-          {/* UMIDADE NATURAL */}
+          {/* UMIDADE NATURAL 1 */}
           <section>
-            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94</div>
+            <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94{boletim.face_classificacao_1 ? ` — ${boletim.face_classificacao_1}` : ''}</div>
             <table className="w-full border-collapse border border-slate-400 text-[9px]">
               <thead>
                 <tr className="bg-slate-200">
-                  <th className="border border-slate-400 px-1 py-0.5 text-left font-bold">Campo</th>
+                  <th className="border border-slate-400 px-1 py-0.5 text-left font-bold w-1/2">Campo</th>
                   <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 1</th>
                   <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 2</th>
                 </tr>
               </thead>
               <tbody>
+                {/* Camada ensaiada - célula única abrangendo as 2 colunas */}
+                <tr className="bg-white font-bold">
+                  <td className="border border-slate-400 px-1 py-0.5 font-bold text-gray-800">Camada ensaiada</td>
+                  <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-gray-900" colSpan={2}>{un.camada_ensaiada_1 || '-'}</td>
+                </tr>
                 {[
-                  ["Camada ensaiada", un.camada_ensaiada_1, un.camada_ensaiada_2, false],
                   ["Nº cápsula", un.no_capsula_1, un.no_capsula_2, false],
                   ["Massa cápsula (g)", un.massa_capsula_1, un.massa_capsula_2, true],
-                  ["Massa cap + solo úm. (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
+                  ["Massa cap + solo úmido (g)", un.massa_cap_solo_umido_1, un.massa_cap_solo_umido_2, true],
                   ["Massa cap + solo seco (g)", un.massa_cap_solo_seco_1, un.massa_cap_solo_seco_2, true],
                   ["Massa da água (g)", un.massa_agua_1, un.massa_agua_2, true],
-                  ["Massa solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
+                  ["Massa do solo seco (g)", un.massa_solo_seco_1, un.massa_solo_seco_2, true],
                 ].map(([label, v1, v2, isNum], ri) => (
-                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
                     <td className="border border-slate-400 px-1 py-0.5 text-gray-700">{label}</td>
                     <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v1) : (v1 || '-')}</td>
                     <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v2) : (v2 || '-')}</td>
                   </tr>
                 ))}
+                {/* Umidade média */}
                 <tr className="bg-slate-200 font-bold">
-                  <td className="border border-slate-400 px-1 py-0.5">Umidade (%)</td>
-                  <td className="border border-slate-400 px-1 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_1)}%</td>
-                  <td className="border border-slate-400 px-1 py-0.5 text-center text-blue-700">{fmtNum(un.umidade_2)}%</td>
+                  <td className="border border-slate-400 px-1 py-0.5 font-bold">Umidade (%)</td>
+                  <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-700" colSpan={2}>
+                    {(() => {
+                      const u1 = un.umidade_1, u2 = un.umidade_2;
+                      if (u1 != null && u2 != null) return `${((u1 + u2) / 2).toFixed(2)}%`;
+                      if (u1 != null) return `${fmtNum(u1)}%`;
+                      return '-';
+                    })()}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </section>
+
+          {/* UMIDADE NATURAL 2 (se houver 2ª classificação) */}
+          {boletim.umidade_natural_2 && (
+            <section>
+              <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">UMIDADE NATURAL — DNER-ME 213/94{boletim.face_classificacao_2 ? ` — ${boletim.face_classificacao_2}` : ' — Classificação 2'}</div>
+              {(() => {
+                const un2 = boletim.umidade_natural_2 || {};
+                const calcU2 = (idx) => {
+                  const csu = un2[`massa_cap_solo_umido_${idx}`];
+                  const css = un2[`massa_cap_solo_seco_${idx}`];
+                  const cap = un2[`massa_capsula_${idx}`];
+                  if (csu && css && cap != null) {
+                    const ss = css - cap;
+                    return ss > 0 ? parseFloat((((csu - css) / ss) * 100).toFixed(2)) : null;
+                  }
+                  return null;
+                };
+                const agua1 = un2.massa_cap_solo_umido_1 && un2.massa_cap_solo_seco_1 ? parseFloat((un2.massa_cap_solo_umido_1 - un2.massa_cap_solo_seco_1).toFixed(2)) : null;
+                const agua2 = un2.massa_cap_solo_umido_2 && un2.massa_cap_solo_seco_2 ? parseFloat((un2.massa_cap_solo_umido_2 - un2.massa_cap_solo_seco_2).toFixed(2)) : null;
+                const ss1 = un2.massa_cap_solo_seco_1 && un2.massa_capsula_1 != null ? parseFloat((un2.massa_cap_solo_seco_1 - un2.massa_capsula_1).toFixed(2)) : null;
+                const ss2 = un2.massa_cap_solo_seco_2 && un2.massa_capsula_2 != null ? parseFloat((un2.massa_cap_solo_seco_2 - un2.massa_capsula_2).toFixed(2)) : null;
+                const u1 = calcU2(1), u2 = calcU2(2);
+                return (
+                  <table className="w-full border-collapse border border-slate-400 text-[9px]">
+                    <thead>
+                      <tr className="bg-slate-200">
+                        <th className="border border-slate-400 px-1 py-0.5 text-left font-bold w-1/2">Campo</th>
+                        <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 1</th>
+                        <th className="border border-slate-400 px-1 py-0.5 text-center font-bold">Am. 2</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-white font-bold">
+                        <td className="border border-slate-400 px-1 py-0.5 font-bold text-gray-800">Camada ensaiada</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-gray-900" colSpan={2}>{un2.camada_ensaiada_1 || '-'}</td>
+                      </tr>
+                      {[
+                        ["Nº cápsula", un2.no_capsula_1, un2.no_capsula_2, false],
+                        ["Massa cápsula (g)", un2.massa_capsula_1, un2.massa_capsula_2, true],
+                        ["Massa cap + solo úmido (g)", un2.massa_cap_solo_umido_1, un2.massa_cap_solo_umido_2, true],
+                        ["Massa cap + solo seco (g)", un2.massa_cap_solo_seco_1, un2.massa_cap_solo_seco_2, true],
+                        ["Massa da água (g)", agua1, agua2, true],
+                        ["Massa do solo seco (g)", ss1, ss2, true],
+                      ].map(([label, v1, v2, isNum], ri) => (
+                        <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                          <td className="border border-slate-400 px-1 py-0.5 text-gray-700">{label}</td>
+                          <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v1) : (v1 || '-')}</td>
+                          <td className="border border-slate-400 px-1 py-0.5 text-center">{isNum ? fmtNum(v2) : (v2 || '-')}</td>
+                        </tr>
+                      ))}
+                      <tr className="bg-slate-200 font-bold">
+                        <td className="border border-slate-400 px-1 py-0.5 font-bold">Umidade (%)</td>
+                        <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-700" colSpan={2}>
+                          {u1 != null && u2 != null ? `${((u1 + u2) / 2).toFixed(2)}%` : u1 != null ? `${fmtNum(u1)}%` : '-'}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                );
+              })()}
+            </section>
+          )}
 
           {/* DENSIDADE IN SITU — em tabela */}
           <section>
