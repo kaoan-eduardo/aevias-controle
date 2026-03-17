@@ -359,11 +359,27 @@ export default function BoletimSondagemPage() {
     });
   }, []);
 
-  const handleDensidadeChange = useCallback((field, value) => {
+  const handleDensidadeChange = useCallback((idx, field, value) => {
     setFormData(prev => {
-      const d = { ...prev.densidade_in_situ, [field]: value };
+      const arr = [...(prev.densidades_in_situ || [getDensidadeInicial()])];
+      const d = { ...arr[idx], [field]: value };
       const calc = calcularDensidade(d);
-      return { ...prev, densidade_in_situ: { ...d, ...calc } };
+      arr[idx] = { ...d, ...calc };
+      return { ...prev, densidades_in_situ: arr };
+    });
+  }, []);
+
+  const adicionarDensidade = useCallback(() => {
+    setFormData(prev => {
+      if ((prev.densidades_in_situ || []).length >= 3) return prev;
+      return { ...prev, densidades_in_situ: [...(prev.densidades_in_situ || []), getDensidadeInicial()] };
+    });
+  }, []);
+
+  const removerDensidade = useCallback((idx) => {
+    setFormData(prev => {
+      const arr = (prev.densidades_in_situ || []).filter((_, i) => i !== idx);
+      return { ...prev, densidades_in_situ: arr.length > 0 ? arr : [getDensidadeInicial()] };
     });
   }, []);
 
