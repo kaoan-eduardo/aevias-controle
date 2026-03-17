@@ -52,7 +52,7 @@ export default function AcoesCorretivasNC({
                   disabled={disabled}
                   className="w-4 h-4"
                 />
-                <Label htmlFor="acoes_nao" className="font-normal cursor-pointer">Não</Label>
+                <Label htmlFor={`acoes_nao_${instanceId}`} className="font-normal cursor-pointer">Não</Label>
               </div>
             </div>
           </div>
