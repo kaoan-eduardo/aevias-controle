@@ -82,8 +82,6 @@ export default function RelatorioBoletimSondagem() {
           </div>
           <div className="text-center">
             <h1 className="text-sm font-bold text-gray-800 leading-tight">BOLETIM DE SONDAGEM</h1>
-            <p className="text-xs text-gray-500">Umidade Natural e Densidade In Situ</p>
-            <p className="text-xs text-gray-500">DNER-ME 213/94 | DNER-ME 092/94</p>
           </div>
           <div></div>
         </header>
