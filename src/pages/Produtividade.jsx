@@ -52,24 +52,42 @@ export default function ProdutividadePage() {
       console.log('Total regionais:', regionais.length);
       console.log('Regionais do gestor:', regionaisDoGestor.length);
 
-      // Coletar laboratoristas únicos das regionais filtradas
+      // Coletar IDs das regionais do gestor para filtrar obras
+      const regionaisDoGestorIds = regionaisDoGestor.map(r => r.id);
+      const obrasDoGestorPreFiltro = obras.filter(o => regionaisDoGestorIds.includes(o.regional_id));
+
+      // Coletar laboratoristas das regionais: tanto os listados em laboratoristas_responsaveis
+      // quanto os que estão em QUALQUER regional (para admin ver todos)
       const labEmails = new Set();
-      regionaisDoGestor.forEach(regional => {
-        const labs = regional.laboratoristas_responsaveis || [];
-        labs.forEach(email => labEmails.add(email.toLowerCase()));
-      });
+
+      if (userAccessLevel === 'admin') {
+        // Admin vê todos os laboratoristas
+        allUsers.forEach(u => {
+          const accessLevel = u.access_level || (u.role === 'admin' ? 'admin' : 'user');
+          if (accessLevel === 'user') labEmails.add(u.email.toLowerCase());
+        });
+      } else {
+        // Gestor/Sala técnica: laboratoristas das suas regionais
+        regionaisDoGestor.forEach(regional => {
+          const labs = regional.laboratoristas_responsaveis || [];
+          labs.forEach(email => labEmails.add(email.toLowerCase()));
+        });
+        // Também incluir laboratoristas que criaram registros em obras dessas regionais
+        // (para quando um laboratorista foi adicionado recentemente ou registros já existem)
+        const obrasDoGestorIdsPreFiltro = obrasDoGestorPreFiltro.map(o => o.id);
+        // Buscar registros rapidamente apenas para identificar emails
+        const [diariosRapido] = await Promise.all([
+          base44.entities.DiarioObra.list()
+        ]);
+        diariosRapido.forEach(reg => {
+          if (obrasDoGestorIdsPreFiltro.includes(reg.obra_id) && reg.created_by) {
+            labEmails.add(reg.created_by.toLowerCase());
+          }
+        });
+      }
 
       console.log('Regionais do gestor:', regionaisDoGestor.map(r => r.nome));
-      console.log('Emails de laboratoristas encontrados nas regionais:', Array.from(labEmails));
-
-      // Também incluir todos os users com access_level 'user' (laboratoristas)
-      // mesmo que não estejam listados em laboratoristas_responsaveis ainda
-      allUsers.forEach(u => {
-        const accessLevel = u.access_level || (u.role === 'admin' ? 'admin' : 'user');
-        if (accessLevel === 'user') {
-          labEmails.add(u.email.toLowerCase());
-        }
-      });
+      console.log('Emails de laboratoristas encontrados:', Array.from(labEmails));
 
       const labUsers = allUsers.filter(u => 
         labEmails.has(u.email.toLowerCase())
