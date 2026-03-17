@@ -31,8 +31,8 @@ export default function ProdutividadePage() {
       setUser(currentUser);
 
       const userAccessLevel = currentUser?.access_level || 'user';
-      // Admin puro: sem access_level customizado E role === 'admin'
-      const isAdminPuro = !currentUser?.access_level && currentUser?.role === 'admin';
+      // Qualquer usuário com role='admin' vê tudo (independente do access_level)
+      const isAdminPuro = currentUser?.role === 'admin';
 
       const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
