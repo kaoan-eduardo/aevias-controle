@@ -277,9 +277,11 @@ export default function RelatorioBoletimSondagem() {
                 const ss1u2 = un2.massa_cap_solo_seco_1 && un2.massa_capsula_1 != null ? parseFloat((un2.massa_cap_solo_seco_1 - un2.massa_capsula_1).toFixed(2)) : null;
                 const ss2u2 = un2.massa_cap_solo_seco_2 && un2.massa_capsula_2 != null ? parseFloat((un2.massa_cap_solo_seco_2 - un2.massa_capsula_2).toFixed(2)) : null;
                 const u2_1 = calcU2(1), u2_2 = calcU2(2);
-                const renderUmidadeTable = (title, uData, rows, umidMedia) => (
+                const renderUmidadeTable = (uData, rows, umidMedia) => (
                   <div>
-                    <div className="bg-slate-500 text-white px-1 py-0.5 font-bold text-center text-[9px] mb-0.5">{title}</div>
+                    <div className="bg-slate-500 text-white px-1 py-0.5 font-bold text-center text-[9px] mb-0.5">
+                      Camada ensaiada: {uData.camada_ensaiada_1 || '-'}
+                    </div>
                     <table className="w-full border-collapse border border-slate-400 text-[9px]">
                       <thead>
                         <tr className="bg-slate-200">
@@ -289,10 +291,6 @@ export default function RelatorioBoletimSondagem() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="bg-white font-bold">
-                          <td className="border border-slate-400 px-1 py-0.5 font-bold text-gray-800">Camada ensaiada</td>
-                          <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-gray-900" colSpan={2}>{uData.camada_ensaiada_1 || '-'}</td>
-                        </tr>
                         {rows.map(([label, v1, v2, isNum], ri) => (
                           <tr key={ri} className={ri % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
                             <td className="border border-slate-400 px-1 py-0.5 text-gray-700">{label}</td>
