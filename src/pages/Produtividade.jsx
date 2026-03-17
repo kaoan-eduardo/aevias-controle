@@ -61,7 +61,7 @@ export default function ProdutividadePage() {
       // quanto os que estão em QUALQUER regional (para admin ver todos)
       const labEmails = new Set();
 
-      if (userAccessLevel === 'admin') {
+      if (isAdmin) {
         // Admin vê todos os laboratoristas
         allUsers.forEach(u => {
           const accessLevel = u.access_level || (u.role === 'admin' ? 'admin' : 'user');
