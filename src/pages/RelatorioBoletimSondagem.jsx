@@ -353,7 +353,15 @@ export default function RelatorioBoletimSondagem() {
                   ["Camada ensaiada", den.camada_ensaiada, false],
                   ["Peso do frasco antes (gf)", den.peso_frasco_antes, true],
                   ["Peso do frasco depois (gf)", den.peso_frasco_depois, true],
+                  ["Peso areia funil e placa (gf)", den.peso_areia_funil_placa, true],
                   ["Peso areia na cavidade (gf)", den.peso_areia_cavidade, true],
+                  ["Massa esp. aparente areia (g/dm³)", den.massa_esp_aparente_areia, true],
+                  ["Volume do buraco (dm³)", den.volume_buraco, true, 3],
+                  ["Peso solo + recipiente (gf)", den.peso_solo_recipiente, true],
+                  ["Peso do recipiente (gf)", den.peso_recipiente, true],
+                  ["Peso do solo (gf)", den.peso_solo, true],
+                  ["Peso do solo úmido (gf)", den.peso_solo_umido, true],
+                  ["Peso do solo seco (gf)", den.peso_solo_seco, true],
                   ["Teor de umidade (%)", den.teor_umidade, true],
                 ].map(([label, val, isNum, dec], ri) => (
                   <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
