@@ -312,17 +312,12 @@ const AppLayout = ({ children }) => {
     loadUserAndObras();
   }, []);
 
-  // Atualizar last_login quando o usuário carrega a aplicação
+  // Atualizar last_login apenas uma vez por sessão do browser
   React.useEffect(() => {
-    const updateLastLogin = async () => {
-      try {
-        await base44.functions.invoke('updateLastLogin', {});
-      } catch (error) {
-        console.error('Erro ao atualizar último login:', error);
-      }
-    };
-
-    updateLastLogin();
+    const sessionKey = 'lastLoginUpdated';
+    if (sessionStorage.getItem(sessionKey)) return;
+    sessionStorage.setItem(sessionKey, '1');
+    base44.functions.invoke('updateLastLogin', {}).catch(() => {});
   }, []);
 
   const loadUserAndObras = useCallback(async () => {
