@@ -37,7 +37,8 @@ export default function ProdutividadePage() {
       ]);
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
-      const isAdmin = currentUser?.role === 'admin' || userAccessLevel === 'admin';
+      // isAdmin apenas quando não tem access_level customizado (é admin puro)
+      const isAdmin = userAccessLevel === 'admin';
 
       // Filtrar regionais baseado no usuário
       let regionaisDoGestor = regionais;
