@@ -1215,9 +1215,9 @@ export default function ChecklistTerraplanagem() {
                 acoesRealizadas={formData.acoes_corretivas_realizado}
                 acoesDescricao={formData.acoes_corretivas_descricao}
                 naoConformidades={formData.nao_conformidades || []}
-                onAcoesRealizadasChange={(value) => setFormData({ ...formData, acoes_corretivas_realizado: value, acoes_corretivas_descricao: value === false ? "" : formData.acoes_corretivas_descricao })}
-                onAcoesDescricaoChange={(value) => setFormData({ ...formData, acoes_corretivas_descricao: value })}
-                onNaoConformidadesChange={(ncs) => setFormData({ ...formData, nao_conformidades: ncs })}
+                onAcoesRealizadasChange={(value) => setFormData(prev => ({ ...prev, acoes_corretivas_realizado: value, acoes_corretivas_descricao: value === false ? "" : prev.acoes_corretivas_descricao }))}
+                onAcoesDescricaoChange={(value) => setFormData(prev => ({ ...prev, acoes_corretivas_descricao: value }))}
+                onNaoConformidadesChange={(ncs) => setFormData(prev => ({ ...prev, nao_conformidades: ncs }))}
                 disabled={false}
                 locaisPermitidos={["CAMPO"]}
               />
