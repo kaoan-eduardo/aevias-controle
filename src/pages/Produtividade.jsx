@@ -62,8 +62,15 @@ export default function ProdutividadePage() {
       console.log('Regionais do gestor:', regionaisDoGestor.map(r => r.nome));
       console.log('Emails de laboratoristas encontrados nas regionais:', Array.from(labEmails));
 
-      // Também incluir todos os users com role 'user' ou access_level 'user' 
-      // que tenham registros em obras dessas regionais (identificados pelo created_by)
+      // Também incluir todos os users com access_level 'user' (laboratoristas)
+      // mesmo que não estejam listados em laboratoristas_responsaveis ainda
+      allUsers.forEach(u => {
+        const accessLevel = u.access_level || (u.role === 'admin' ? 'admin' : 'user');
+        if (accessLevel === 'user') {
+          labEmails.add(u.email.toLowerCase());
+        }
+      });
+
       const labUsers = allUsers.filter(u => 
         labEmails.has(u.email.toLowerCase())
       );
