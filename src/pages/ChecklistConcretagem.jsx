@@ -1250,7 +1250,7 @@ export default function ChecklistConcretagem() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {[3, 7, 28].map((dias) => (
+                                    {[3, 7, 28, 63].map((dias) => (
                                       <tr key={dias}>
                                         <td className="border border-slate-300 p-2 text-center font-medium bg-slate-50">
                                           {dias} dias
@@ -1294,6 +1294,8 @@ export default function ChecklistConcretagem() {
                                       ` | 7 dias: ${carga.corpos_prova.filter(cp => cp.dias_ruptura === 7).length}`}
                                     {carga.corpos_prova.filter(cp => cp.dias_ruptura === 28).length > 0 && 
                                       ` | 28 dias: ${carga.corpos_prova.filter(cp => cp.dias_ruptura === 28).length}`}
+                                      {carga.corpos_prova.filter(cp => cp.dias_ruptura === 63).length > 0 && 
+                                      ` | 63 dias: ${carga.corpos_prova.filter(cp => cp.dias_ruptura === 63).length}`}
                                   </p>
                                 </div>
                               )}
