@@ -652,9 +652,8 @@ export default function ChecklistMRAFPage() {
                         value={formData.pedreira}
                         onChange={(e) => handleChange('pedreira', e.target.value)}
                         disabled={!isEditable || isApproved}
-                        readOnly={!!selectedProject && !!formData.pedreira}
                         required
-                        className={selectedProject && formData.pedreira ? "bg-slate-100 h-11 text-base" : "bg-white border-slate-200 text-slate-700 h-11 text-base"}
+                        className="bg-white border-slate-200 text-slate-700 h-11 text-base"
                         placeholder="Nome da pedreira"
                       />
                     </div>
