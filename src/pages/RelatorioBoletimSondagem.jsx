@@ -508,6 +508,8 @@ export default function RelatorioBoletimSondagem() {
       })()}
 
       <style>{`
+        table tr { line-height: 0.95; }
+        table td, table th { padding-top: 0.095rem; padding-bottom: 0.095rem; }
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
