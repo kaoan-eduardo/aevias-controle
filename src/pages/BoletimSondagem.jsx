@@ -56,6 +56,7 @@ const getInitialFormData = () => ({
     umidade_1: null, umidade_2: null
   },
   umidade_natural_2: null,
+  ensaio_insitu_realizado: false,
   densidades_in_situ: [getDensidadeInicial()],
   observacoes: "",
   fotos: []
@@ -184,6 +185,7 @@ export default function BoletimSondagemPage() {
             camadas: boletimToEdit.camadas?.length > 0 ? boletimToEdit.camadas : initial.camadas,
             umidade_natural: { ...initial.umidade_natural, ...(boletimToEdit.umidade_natural || {}) },
             densidades_in_situ: densidades,
+            ensaio_insitu_realizado: boletimToEdit.ensaio_insitu_realizado ?? false,
             fotos: Array.isArray(boletimToEdit.fotos) ? boletimToEdit.fotos : []
           });
         } else {
@@ -1030,14 +1032,31 @@ export default function BoletimSondagemPage() {
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-center flex-wrap gap-2">
                     <CardTitle className="text-base text-[#00233B]">Massa Específica Aparente In Situ — DNER-ME 092/94</CardTitle>
-                    {isEditable && (formData.densidades_in_situ || []).length < 3 && (
-                      <Button type="button" onClick={adicionarDensidade} size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 text-xs">
-                        <Plus className="w-3.5 h-3.5 mr-1" /> Adicionar Ensaio
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={formData.ensaio_insitu_realizado}
+                          onChange={e => setFormData(prev => ({ ...prev, ensaio_insitu_realizado: e.target.checked }))}
+                          disabled={!isEditable}
+                          className="w-4 h-4 accent-[#00233B]"
+                        />
+                        <span className="text-sm font-medium text-[#00233B]">Ensaio realizado</span>
+                      </label>
+                      {isEditable && formData.ensaio_insitu_realizado && (formData.densidades_in_situ || []).length < 3 && (
+                        <Button type="button" onClick={adicionarDensidade} size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 text-xs">
+                          <Plus className="w-3.5 h-3.5 mr-1" /> Adicionar Ensaio
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                {!formData.ensaio_insitu_realizado && (
+                  <CardContent>
+                    <p className="text-sm text-[#00233B]/60 italic text-center py-4">Ensaio in situ não realizado neste boletim.</p>
+                  </CardContent>
+                )}
+                {formData.ensaio_insitu_realizado && <CardContent>
                   <div className="overflow-x-auto">
                     {(() => {
                       const densidades = formData.densidades_in_situ || [getDensidadeInicial()];
