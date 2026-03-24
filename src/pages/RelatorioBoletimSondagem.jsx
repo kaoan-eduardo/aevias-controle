@@ -70,7 +70,7 @@ export default function RelatorioBoletimSondagem() {
         </div>
       </div>
 
-      <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1" style={{ fontSize: '95%' }}>
+      <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1 flex flex-col" style={{ fontSize: '95%', minHeight: 'calc(297mm - 16mm)' }}>
         {/* Header */}
         <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
           <div>
@@ -406,7 +406,7 @@ export default function RelatorioBoletimSondagem() {
         </main>
 
         {/* Footer — assinaturas ficam na mesma página do relatório */}
-        <footer className="mt-2 pt-1 border-t border-slate-200" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
+        <footer className="mt-auto pt-1 border-t border-slate-200" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
           <div className="grid grid-cols-3 gap-4 items-end text-center">
             <div>
               <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
@@ -508,8 +508,8 @@ export default function RelatorioBoletimSondagem() {
       })()}
 
       <style>{`
-        table tr { line-height: 1.025; }
-        table td, table th { padding-top: 0.17rem; padding-bottom: 0.17rem; }
+        table tr { line-height: 1.075; }
+        table td, table th { padding-top: 0.22rem; padding-bottom: 0.22rem; }
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
