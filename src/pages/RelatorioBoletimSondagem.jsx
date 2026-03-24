@@ -397,7 +397,7 @@ export default function RelatorioBoletimSondagem() {
 
           {/* Observações */}
           {boletim.observacoes && (
-            <section className="mb-1">
+            <section className="mb-[50px]">
               <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px]">OBSERVAÇÕES</div>
               <div className="border border-slate-300 p-1 text-[10px] min-h-[20px]">{boletim.observacoes}</div>
             </section>
