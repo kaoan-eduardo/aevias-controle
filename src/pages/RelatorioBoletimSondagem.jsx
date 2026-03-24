@@ -456,6 +456,57 @@ export default function RelatorioBoletimSondagem() {
         </footer>
       </div>
 
+      {/* Relatório Fotográfico — páginas separadas, idêntico ao checklist de usina */}
+      {boletim.fotos?.length > 0 && (() => {
+        const chunkArray = (arr, size) => {
+          const chunks = [];
+          for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));
+          return chunks;
+        };
+        const photoChunks = chunkArray(boletim.fotos, 6);
+        return photoChunks.map((chunk, pageIndex) => (
+          <div key={pageIndex} className="p-8 print:p-8 flex flex-col min-h-screen" style={{ breakBefore: 'page' }}>
+            <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+              <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2">
+                <div className="flex justify-start">
+                  <img
+                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
+                    alt="Logo"
+                    className="h-16 object-contain"
+                  />
+                </div>
+                <div className="text-center">
+                  <h1 className="text-xl font-bold text-gray-800">Relatório Fotográfico</h1>
+                  <p className="text-sm text-gray-600">Boletim de Sondagem — {obra?.name || ''}</p>
+                </div>
+                <div className="flex justify-end">
+                  <div className="border border-gray-400 p-2 rounded-md text-sm">
+                    <p>{boletim.data ? new Date(boletim.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-'}</p>
+                  </div>
+                </div>
+              </header>
+              <main className="flex-grow grid grid-cols-2 gap-4 mt-4" style={{ gridAutoRows: 'minmax(0, 1fr)' }}>
+                {chunk.map((fotoUrl, fotoIndex) => (
+                  <div key={fotoIndex} className="border p-2 rounded-lg flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
+                    <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
+                      <img
+                        src={fotoUrl}
+                        alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                    <p className="text-center text-sm mt-2 font-medium">Foto {pageIndex * 6 + fotoIndex + 1}</p>
+                  </div>
+                ))}
+              </main>
+              <footer className="mt-auto pt-2 text-center text-xs text-gray-500">
+                Página {pageIndex + 2} de {photoChunks.length + 1}
+              </footer>
+            </div>
+          </div>
+        ));
+      })()}
+
       <style>{`
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
