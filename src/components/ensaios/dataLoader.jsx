@@ -49,7 +49,8 @@ export const loadAllData = async () => {
     manchaPenduloData,
     vigaBenkelmanData,
     taxaMRAFData,
-    boletimSondagemData
+    boletimSondagemData,
+    boletimSondagemTradoData
   ] = await Promise.all([
     Obra.list(),
     Regional.list(),
@@ -73,7 +74,8 @@ export const loadAllData = async () => {
     base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
     base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000),
     base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000),
-    base44.entities.BoletimSondagem.list("-created_date", 1000)
+    base44.entities.BoletimSondagem.list("-created_date", 1000),
+    base44.entities.BoletimSondagemTrado.list("-created_date", 1000)
   ]);
 
   console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
@@ -110,7 +112,8 @@ export const loadAllData = async () => {
     ...manchaPenduloData.map((d) => ({ ...d, entityType: "EnsaioManchaPendulo" })),
     ...vigaBenkelmanData.map((d) => ({ ...d, entityType: "EnsaioVigaBenkelman" })),
     ...taxaMRAFData.map((d) => ({ ...d, entityType: "EnsaioTaxaMRAF" })),
-    ...boletimSondagemData.map((d) => ({ ...d, entityType: "BoletimSondagem" }))
+    ...boletimSondagemData.map((d) => ({ ...d, entityType: "BoletimSondagem" })),
+    ...boletimSondagemTradoData.map((d) => ({ ...d, entityType: "BoletimSondagemTrado" }))
   ].sort((a, b) => {
     const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
     
