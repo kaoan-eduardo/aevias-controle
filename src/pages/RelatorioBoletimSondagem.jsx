@@ -405,19 +405,26 @@ export default function RelatorioBoletimSondagem() {
 
           {/* Fotos */}
           {boletim.fotos?.length > 0 && (
-            <section>
-              <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px] mb-1">REGISTRO FOTOGRÁFICO</div>
-              <div className="grid grid-cols-3 gap-2">
-                {boletim.fotos.map((url, i) => (
-                  <img key={i} src={url} alt={`Foto ${i + 1}`} className="w-full h-28 object-cover rounded border border-slate-300" />
-                ))}
-              </div>
+            <section style={{ breakBefore: 'page' }}>
+              <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-2">REGISTRO FOTOGRÁFICO</div>
+              {Array.from({ length: Math.ceil(boletim.fotos.length / 6) }, (_, pageIdx) => (
+                <div key={pageIdx} style={{ breakInside: 'avoid', breakAfter: pageIdx < Math.ceil(boletim.fotos.length / 6) - 1 ? 'page' : 'auto' }}>
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    {boletim.fotos.slice(pageIdx * 6, pageIdx * 6 + 6).map((url, i) => (
+                      <div key={i} className="flex flex-col items-center">
+                        <img src={url} alt={`Foto ${pageIdx * 6 + i + 1}`} className="w-full h-36 object-cover border border-slate-300" />
+                        <span className="text-[8px] text-slate-500 mt-0.5">Foto {pageIdx * 6 + i + 1}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </section>
           )}
         </main>
 
         {/* Footer */}
-        <footer className="mt-4 pt-2 border-t border-slate-200">
+        <footer className="mt-4 pt-2 border-t border-slate-200" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
           <div className="grid grid-cols-3 gap-4 items-end text-center">
             <div>
               <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
