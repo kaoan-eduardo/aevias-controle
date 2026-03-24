@@ -1058,11 +1058,97 @@ export default function BoletimSondagemPage() {
                 )}
                 {formData.ensaio_insitu_realizado && (
                   <CardContent>
-                  <div className="overflow-x-auto">
+                    <div className="overflow-x-auto">
+                      {(() => {
+                        const densidades = formData.densidades_in_situ || [getDensidadeInicial()];
+                        const nEnsaios = densidades.length;
+                        const numInput2 = (val, onChange, step = "0.01") => (
+                          <Input type="number" step={step} value={val ?? ''} onChange={(e) => onChange(e.target.value !== '' ? parseFloat(e.target.value) : null)} disabled={!isEditable} className="h-8 text-xs text-center bg-white/50 min-w-[90px]" />
+                        );
+                        const calc = (val, dec = 2) => val !== null && val !== undefined ? val.toFixed(dec) : '—';
+                        const rows = [
+                          { label: "Camada ensaiada em campo", field: "camada_ensaiada", type: "text" },
+                          { label: "— VOLUME —", section: true },
+                          { label: "Peso do frasco antes (gf)", field: "peso_frasco_antes", type: "number", step: "0.001" },
+                          { label: "Peso do frasco depois (gf)", field: "peso_frasco_depois", type: "number", step: "0.001" },
+                          { label: "Peso da areia no funil e placa (gf)", field: "peso_areia_funil_placa", type: "number", step: "0.001" },
+                          { label: "Massa esp. aparente da areia (g/dm\u00b3)", field: "massa_esp_aparente_areia", type: "number", step: "0.001" },
+                          { label: "Peso da areia deslocada (gf)", field: "peso_areia_deslocada", type: "calc", dec: 2 },
+                          { label: "Peso da areia na cavidade (gf)", field: "peso_areia_cavidade", type: "calc", dec: 2 },
+                          { label: "Volume do buraco (dm\u00b3)", field: "volume_buraco", type: "calc", dec: 3 },
+                          { label: "— MASSA —", section: true },
+                          { label: "Peso do solo e recipiente (gf)", field: "peso_solo_recipiente", type: "number" },
+                          { label: "Peso do recipiente (gf)", field: "peso_recipiente", type: "number" },
+                          { label: "Peso do solo (gf)", field: "peso_solo", type: "calc", dec: 2 },
+                          { label: "— UMIDADE —", section: true },
+                          { label: "Peso do solo \u00famido (gf)", field: "peso_solo_umido", type: "number" },
+                          { label: "Peso do solo seco (gf)", field: "peso_solo_seco", type: "number" },
+                          { label: "Teor de umidade (%)", field: "teor_umidade", type: "calc", dec: 2 },
+                          { label: "— RESULTADOS —", section: true },
+                          { label: "Dens. Aparente Solo \u00damido (g/dm\u00b3)", field: "densidade_aparente_solo_umido", type: "result", dec: 3 },
+                          { label: "Dens. Aparente Solo Seco (g/dm\u00b3)", field: "densidade_aparente_solo_seco", type: "result", dec: 3 },
+                        ];
+                        return (
+                          <table className="w-full text-sm border-collapse">
+                            <thead>
+                              <tr className="bg-[#00233B]/10">
+                                <th className="border border-[#00233B]/20 px-3 py-2 text-left font-medium text-[#00233B] min-w-[220px]">Campo</th>
+                                {densidades.map((_, i) => (
+                                  <th key={i} className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B] min-w-[120px]">
+                                    <div className="flex items-center justify-center gap-2">
+                                      <span>Ensaio {i + 1}</span>
+                                      {isEditable && nEnsaios > 1 && (
+                                        <button type="button" onClick={() => removerDensidade(i)} className="text-red-400 hover:text-red-600">
+                                          <Trash2 className="w-3 h-3" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {rows.map((row, ri) => {
+                                if (row.section) {
+                                  return (
+                                    <tr key={ri} className="bg-[#00233B]/10">
+                                      <td colSpan={nEnsaios + 1} className="border border-[#00233B]/20 px-3 py-1 text-xs font-bold text-[#00233B]/60 uppercase tracking-wider">
+                                        {row.label.replace(/\u2014/g, '').trim()}
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                                const isCalc = row.type === 'calc' || row.type === 'result';
+                                const isResult = row.type === 'result';
+                                return (
+                                  <tr key={ri} className={isResult ? 'bg-[#BFCF99]/30' : isCalc ? 'bg-[#BFCF99]/10' : (ri % 2 === 0 ? 'bg-white/20' : 'bg-white/5')}>
+                                    <td className={`border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80 text-xs ${isCalc ? 'italic' : ''} ${isResult ? 'font-bold text-[#00233B]' : ''}`}>{row.label}</td>
+                                    {densidades.map((d, di) => (
+                                      <td key={di} className={`border border-[#00233B]/20 px-2 py-1 text-center ${isCalc ? 'font-semibold text-[#00233B]' : ''}`}>
+                                        {isCalc ? (
+                                          <span className={isResult ? 'text-base font-bold text-[#00233B]' : ''}>{calc(d[row.field], row.dec ?? 2)}</span>
+                                        ) : row.type === 'text' ? (
+                                          <Input value={d[row.field] || ''} onChange={e => handleDensidadeChange(di, row.field, e.target.value)} disabled={!isEditable} className="h-8 text-xs bg-white/50 min-w-[90px]" />
+                                        ) : (
+                                          numInput2(d[row.field], v => handleDensidadeChange(di, row.field, v), row.step || "0.01")
+                                        )}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        );
+                      })()}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
 
-              {/* OBSERVAÇÕES */}
+              {/* OBSERVA\u00c7\u00d5ES */}
               <div>
-                <Label htmlFor="observacoes">Observações</Label>
+                <Label htmlFor="observacoes">Observa\u00e7\u00f5es</Label>
                 <Textarea
                   id="observacoes"
                   value={formData.observacoes}
@@ -1070,28 +1156,17 @@ export default function BoletimSondagemPage() {
                   disabled={!isEditable}
                   rows={3}
                   maxLength={500}
-                  placeholder="Observações gerais sobre o boletim..."
+                  placeholder="Observa\u00e7\u00f5es gerais sobre o boletim..."
                 />
               </div>
 
-              {/* REGISTRO FOTOGRÁFICO */}
+              {/* REGISTRO FOTOGR\u00c1FICO */}
               <div>
-                <Label>Registro Fotográfico</Label>
+                <Label>Registro Fotogr\u00e1fico</Label>
                 {isEditable && (
                   <div className="mt-2">
-                    <input
-                      id="fotos-upload"
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      disabled={uploadingPhoto}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="fotos-upload"
-                      className={`flex items-center justify-between w-full h-10 px-3 py-2 border border-[#00233B]/20 bg-white/30 rounded-md text-sm cursor-pointer hover:bg-white/50 ${uploadingPhoto ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
+                    <input id="fotos-upload" type="file" multiple accept="image/*" onChange={handlePhotoUpload} disabled={uploadingPhoto} className="hidden" />
+                    <label htmlFor="fotos-upload" className={`flex items-center justify-between w-full h-10 px-3 py-2 border border-[#00233B]/20 bg-white/30 rounded-md text-sm cursor-pointer hover:bg-white/50 ${uploadingPhoto ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       <span className="text-[#00233B]/60">{uploadingPhoto ? 'Enviando...' : 'Selecionar fotos'}</span>
                       <span className="px-3 py-1 rounded-md text-sm font-semibold bg-[#00233B]/10 text-[#00233B] hover:bg-[#00233B]/20">
                         {uploadingPhoto ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Escolher Ficheiros'}
@@ -1105,13 +1180,7 @@ export default function BoletimSondagemPage() {
                       <div key={index} className="relative group">
                         <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-[#00233B]/20" />
                         {isEditable && (
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => handleRemovePhoto(index)}
-                          >
+                          <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleRemovePhoto(index)}>
                             <XCircle className="h-4 w-4" />
                           </Button>
                         )}
@@ -1121,23 +1190,12 @@ export default function BoletimSondagemPage() {
                 )}
               </div>
 
-              {/* BOTÕES */}
+              {/* BOT\u00d5ES */}
               <div className="flex justify-end gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate(createPageUrl('MeusEnsaios'))}
-                  className="hover:bg-black/10"
-                >
-                  Cancelar
-                </Button>
+                <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))} className="hover:bg-black/10">Cancelar</Button>
                 {isEditable && (
                   <Button type="submit" disabled={saving} className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">
-                    {saving ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Salvando...</>
-                    ) : (
-                      <><Save className="w-4 h-4 mr-2" />Salvar Boletim</>
-                    )}
+                    {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Salvando...</> : <><Save className="w-4 h-4 mr-2" />Salvar Boletim</>}
                   </Button>
                 )}
               </div>
