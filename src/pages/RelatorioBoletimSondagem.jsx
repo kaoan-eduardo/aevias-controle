@@ -338,7 +338,8 @@ export default function RelatorioBoletimSondagem() {
           </section>
 
           {/* DENSIDADE IN SITU — tabela multi-ensaio */}
-          {(boletim.ensaio_insitu_realizado !== false) && <section>
+          {(boletim.ensaio_insitu_realizado !== false) && densidades.length > 0 && (
+          <section>
             <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">MASSA ESPECÍFICA APARENTE IN SITU — DNER-ME 092/94</div>
             {(() => {
               const rows = [
@@ -397,6 +398,7 @@ export default function RelatorioBoletimSondagem() {
               );
             })()}
           </section>
+          )}
 
           {/* Observações */}
           {boletim.observacoes && (
