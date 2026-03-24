@@ -190,7 +190,7 @@ export default function RelatorioBoletimSondagem() {
                   {/* Classificação 2 */}
                   <div>
                     <div className="bg-slate-500 text-white px-1 py-0.5 font-bold text-center text-[9px] mb-0.5">
-                      {boletim.face_classificacao_2 || 'Classificação 2'}
+                      {boletim.face_classificacao_2 ? `Face: ${boletim.face_classificacao_2}` : 'Classificação 2'}
                     </div>
                     <table className="w-full border-collapse border border-slate-400 text-[9px]">
                       <thead>
