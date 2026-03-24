@@ -406,7 +406,7 @@ export default function RelatorioBoletimSondagem() {
         </main>
 
         {/* Footer — assinaturas ficam na mesma página do relatório */}
-        <footer className="mt-auto pt-1 border-t border-slate-200" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
+        <footer className="mt-auto pt-1" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
           <div className="grid grid-cols-3 gap-4 items-end text-center">
             <div>
               <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
