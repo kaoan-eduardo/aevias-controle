@@ -10,6 +10,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ImpressionEtiquetas from './pages/ImpressionEtiquetas';
 import BoletimSondagem from './pages/BoletimSondagem';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
+import BoletimSondagemTrado from './pages/BoletimSondagemTrado';
+import RelatorioBoletimSondagemTrado from './pages/RelatorioBoletimSondagemTrado';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +84,22 @@ function AuthenticatedApp() {
         element={
           <LayoutWrapper currentPageName="RelatorioBoletimSondagem">
             <RelatorioBoletimSondagem />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/BoletimSondagemTrado"
+        element={
+          <LayoutWrapper currentPageName="BoletimSondagemTrado">
+            <BoletimSondagemTrado />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RelatorioBoletimSondagemTrado"
+        element={
+          <LayoutWrapper currentPageName="RelatorioBoletimSondagemTrado">
+            <RelatorioBoletimSondagemTrado />
           </LayoutWrapper>
         }
       />
