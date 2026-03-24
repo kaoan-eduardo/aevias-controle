@@ -1146,9 +1146,9 @@ export default function BoletimSondagemPage() {
                 )}
               </Card>
 
-              {/* OBSERVA\u00c7\u00d5ES */}
+              {/* OBSERVAÇÕES */}
               <div>
-                <Label htmlFor="observacoes">Observa\u00e7\u00f5es</Label>
+                <Label htmlFor="observacoes">Observações</Label>
                 <Textarea
                   id="observacoes"
                   value={formData.observacoes}
@@ -1156,13 +1156,13 @@ export default function BoletimSondagemPage() {
                   disabled={!isEditable}
                   rows={3}
                   maxLength={500}
-                  placeholder="Observa\u00e7\u00f5es gerais sobre o boletim..."
+                  placeholder="Observações gerais sobre o boletim..."
                 />
               </div>
 
-              {/* REGISTRO FOTOGR\u00c1FICO */}
+              {/* REGISTRO FOTOGRÁFICO */}
               <div>
-                <Label>Registro Fotogr\u00e1fico</Label>
+                <Label>Registro Fotográfico</Label>
                 {isEditable && (
                   <div className="mt-2">
                     <input id="fotos-upload" type="file" multiple accept="image/*" onChange={handlePhotoUpload} disabled={uploadingPhoto} className="hidden" />
@@ -1190,7 +1190,7 @@ export default function BoletimSondagemPage() {
                 )}
               </div>
 
-              {/* BOT\u00d5ES */}
+              {/* BOTÕES */}
               <div className="flex justify-end gap-3">
                 <Button type="button" variant="outline" onClick={() => navigate(createPageUrl('MeusEnsaios'))} className="hover:bg-black/10">Cancelar</Button>
                 {isEditable && (
