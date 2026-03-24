@@ -86,9 +86,9 @@ export default function RelatorioBoletimSondagem() {
           <div></div>
         </header>
 
-        <main className="text-xs space-y-3">
+        <main className="text-xs space-y-2">
           {/* DADOS DA OBRA */}
-          <section>
+          <section className="mb-1">
             <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">DADOS DA OBRA</div>
             <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-[10px]">
               {[
@@ -397,7 +397,7 @@ export default function RelatorioBoletimSondagem() {
 
           {/* Observações */}
           {boletim.observacoes && (
-            <section>
+            <section className="mb-1">
               <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px]">OBSERVAÇÕES</div>
               <div className="border border-slate-300 p-1 text-[10px] min-h-[20px]">{boletim.observacoes}</div>
             </section>
@@ -406,7 +406,7 @@ export default function RelatorioBoletimSondagem() {
         </main>
 
         {/* Footer — assinaturas ficam na mesma página do relatório */}
-        <footer className="mt-4 pt-2 border-t border-slate-200" style={{ breakInside: 'avoid' }}>
+        <footer className="mt-2 pt-1 border-t border-slate-200" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
           <div className="grid grid-cols-3 gap-4 items-end text-center">
             <div>
               <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
