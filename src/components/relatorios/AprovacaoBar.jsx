@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 
+// Props:
+//   entityName: string (e.g. "ChecklistConcretagem")
+//   recordId: string
 export default function AprovacaoBar({ entityName, recordId }) {
   const [user, setUser] = useState(null);
   const [record, setRecord] = useState(null);
@@ -15,41 +18,44 @@ export default function AprovacaoBar({ entityName, recordId }) {
   const [rejectionReason, setRejectionReason] = useState('');
 
   useEffect(() => {
-    if (!entityName || !recordId) return;
-    loadData();
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    if (entityName && recordId) {
+      loadRecord();
+    }
   }, [entityName, recordId]);
 
-  const loadData = async () => {
+  const loadUser = async () => {
     try {
-      const [userData, recordData] = await Promise.all([
-        User.me(),
-        base44.entities[entityName].get(recordId)
-      ]);
+      const userData = await User.me();
       setUser(userData);
-      setRecord(recordData);
     } catch (err) {
-      console.error('AprovacaoBar: erro ao carregar dados', err);
+      console.error('AprovacaoBar: erro ao carregar usuário', err);
     }
   };
 
-  const canApprove = user && (
-    user.access_level === 'admin' ||
+  const loadRecord = async () => {
+    try {
+      const data = await base44.entities[entityName].get(recordId);
+      setRecord(data);
+    } catch (err) {
+      console.error('AprovacaoBar: erro ao carregar registro', err);
+    }
+  };
+
+  if (!user || !record) return null;
+
+  const canApprove =
     user.role === 'admin' ||
+    user.access_level === 'admin' ||
     user.access_level === 'sala_tecnica_afirmaevias' ||
-    user.access_level === 'gestor_contrato'
-  );
+    user.access_level === 'gestor_contrato';
 
-  const isPending = record && (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
-  const isApproved = record && record.approved === true;
-  const isRejected = record && record.approved === false;
-
-  if (!record) return null;
-  if (!canApprove) {
-    // Mostrar apenas status para não-aprovadores
-    if (isApproved) return <span className="flex items-center gap-1 text-xs font-medium text-green-700 bg-green-100 px-2.5 py-1 rounded-full"><CheckCircle className="w-3.5 h-3.5" /> Aprovado</span>;
-    if (isRejected) return <span className="flex items-center gap-1 text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-full"><XCircle className="w-3.5 h-3.5" /> Reprovado</span>;
-    return null;
-  }
+  const isPending = (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
+  const isApproved = record.approved === true;
+  const isRejected = record.approved === false;
 
   const handleApprove = async () => {
     setSaving(true);
@@ -99,30 +105,36 @@ export default function AprovacaoBar({ entityName, recordId }) {
     }
   };
 
+  const statusBadge = () => {
+    if (record.status === 'rascunho') return (
+      <span className="flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+        Em execução
+      </span>
+    );
+    if (isApproved) return (
+      <span className="flex items-center gap-1 text-xs font-medium text-green-700 bg-green-100 px-2.5 py-1 rounded-full">
+        <CheckCircle className="w-3.5 h-3.5" /> Aprovado
+      </span>
+    );
+    if (isRejected) return (
+      <span className="flex items-center gap-1 text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-full">
+        <XCircle className="w-3.5 h-3.5" /> Reprovado
+      </span>
+    );
+    if (isPending) return (
+      <span className="flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full">
+        <Clock className="w-3.5 h-3.5" /> Pendente
+      </span>
+    );
+    return null;
+  };
+
   return (
     <>
       <div className="flex items-center gap-2">
-        {record.status === 'rascunho' && (
-          <span className="flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
-            Em execução
-          </span>
-        )}
-        {isPending && (
-          <span className="flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full">
-            <Clock className="w-3.5 h-3.5" /> Pendente
-          </span>
-        )}
-        {isApproved && (
-          <span className="flex items-center gap-1 text-xs font-medium text-green-700 bg-green-100 px-2.5 py-1 rounded-full">
-            <CheckCircle className="w-3.5 h-3.5" /> Aprovado
-          </span>
-        )}
-        {isRejected && (
-          <span className="flex items-center gap-1 text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-full">
-            <XCircle className="w-3.5 h-3.5" /> Reprovado
-          </span>
-        )}
-        {isPending && (
+        {statusBadge()}
+
+        {canApprove && isPending && (
           <>
             <Button size="sm" onClick={handleApprove} disabled={saving}
               className="bg-green-700 text-white hover:bg-green-800 gap-1 h-8">
@@ -136,7 +148,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
             </Button>
           </>
         )}
-        {isRejected && (
+        {canApprove && isRejected && (
           <Button size="sm" onClick={handleApprove} disabled={saving}
             className="bg-green-700 text-white hover:bg-green-800 gap-1 h-8">
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}

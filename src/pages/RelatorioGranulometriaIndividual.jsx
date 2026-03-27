@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import RelatorioGranulometriaIndividual from "../components/relatorios/RelatorioGranulometriaIndividual";
-import { Loader2 } from "lucide-react";
+import { Loader2, Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioGranulometriaIndividualPage() {
   const [ensaio, setEnsaio] = useState(null);
@@ -66,12 +68,25 @@ export default function RelatorioGranulometriaIndividualPage() {
   }
 
   return (
-    <RelatorioGranulometriaIndividual
-      ensaio={ensaio}
-      obra={obra}
-      project={project}
-      user={user}
-      regional={regional}
-    />
+    <div className="bg-white min-h-screen">
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
+        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-slate-800">Relatório de Granulometria Individual</h2>
+          <div className="flex items-center gap-2">
+            {ensaio && <AprovacaoBar entityName="EnsaioGranulometriaIndividual" recordId={ensaio.id} />}
+            <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Printer className="w-4 h-4 mr-2" /> Gerar PDF
+            </Button>
+          </div>
+        </div>
+      </div>
+      <RelatorioGranulometriaIndividual
+        ensaio={ensaio}
+        obra={obra}
+        project={project}
+        user={user}
+        regional={regional}
+      />
+    </div>
   );
 }
