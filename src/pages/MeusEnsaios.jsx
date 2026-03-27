@@ -34,6 +34,14 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
+
+// Salva lista para navegar entre registros nos relatórios
+function saveNavList(filteredList) {
+  try {
+    const navList = filteredList.map(e => ({ id: e.id, url: getReportLink(e) }));
+    sessionStorage.setItem('ensaios_navlist', JSON.stringify(navList));
+  } catch (e) { /* ignore */ }
+}
 import { getEntityMap } from "@/components/ensaios/entityMaps";
 import { getLocalInfo, getLaboratoristaInfo, getResponsavelInfo, getEmpireiteiraInfo, getRodoviaInfo, getTrechoInfo, getNaoConformidades, getStatusInfo } from "@/components/ensaios/utils";
 import { loadAllData } from "@/components/ensaios/dataLoader";
@@ -737,12 +745,12 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-1">
                           <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
-                            <Link to={reportUrl} target="_blank">
+                            <Link to={reportUrl} target="_blank" onClick={() => saveNavList(filteredEnsaios)}>
                               <FileText className="w-3 h-3" />
                             </Link>
-                          </Button>
+                            </Button>
 
-                          {canApprove && ensaio.status !== 'rascunho' && (
+                            {canApprove && ensaio.status !== 'rascunho' && (
                               <div className="flex gap-1">
                                 {(ensaio.approved === null || ensaio.approved === false) && (
                                   <Button
@@ -1531,7 +1539,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <td className="px-2 py-2">
                         <div className="flex items-center gap-1">
                           <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
-                            <Link to={reportUrl} target="_blank">
+                            <Link to={reportUrl} target="_blank" onClick={() => saveNavList(filteredEnsaios)}>
                               <FileText className="w-3 h-3" />
                             </Link>
                           </Button>

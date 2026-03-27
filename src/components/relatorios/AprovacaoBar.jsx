@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle, Loader2, Clock } from "lucide-react";
+import NavegacaoRegistros from './NavegacaoRegistros';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -132,7 +133,8 @@ export default function AprovacaoBar({ entityName, recordId }) {
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
+        <NavegacaoRegistros />
         {statusBadge()}
 
         {canApprove && isPending && (
