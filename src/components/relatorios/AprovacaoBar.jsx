@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
+import { User } from "@/entities/User";
 
 export default function AprovacaoBar({ entityName, recordId }) {
   const [user, setUser] = useState(null);
@@ -21,7 +22,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
   const loadData = async () => {
     try {
       const [userData, recordData] = await Promise.all([
-        base44.auth.me(),
+        User.me(),
         base44.entities[entityName].get(recordId)
       ]);
       setUser(userData);
@@ -38,11 +39,17 @@ export default function AprovacaoBar({ entityName, recordId }) {
     user.access_level === 'gestor_contrato'
   );
 
-  const isPending = record && record.approved === null && record.status !== 'rascunho';
+  const isPending = record && (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
   const isApproved = record && record.approved === true;
   const isRejected = record && record.approved === false;
 
-  if (!record || !canApprove) return null;
+  if (!record) return null;
+  if (!canApprove) {
+    // Mostrar apenas status para não-aprovadores
+    if (isApproved) return <span className="flex items-center gap-1 text-xs font-medium text-green-700 bg-green-100 px-2.5 py-1 rounded-full"><CheckCircle className="w-3.5 h-3.5" /> Aprovado</span>;
+    if (isRejected) return <span className="flex items-center gap-1 text-xs font-medium text-red-700 bg-red-100 px-2.5 py-1 rounded-full"><XCircle className="w-3.5 h-3.5" /> Reprovado</span>;
+    return null;
+  }
 
   const handleApprove = async () => {
     setSaving(true);
