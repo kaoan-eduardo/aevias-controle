@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 const PENEIRAS_CONFIG = [
   { label: 'Nº 3"', abertura: '75,0', key: 'peneira_75_0mm' },
@@ -209,10 +210,13 @@ export default function RelatorioCAUQ() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Ensaio Marshall
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {ensaio && <AprovacaoBar entityName="EnsaioCAUQ" recordId={ensaio.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import RelatorioChecklistTerraplanagem from "../components/relatorios/RelatorioChecklistTerraplanagem";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistTerraplanamemPage() {
   const [reportData, setReportData] = useState(null);
@@ -72,10 +73,13 @@ export default function RelatorioChecklistTerraplanamemPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Checklist de Terraplanagem
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {reportData && <AprovacaoBar entityName="ChecklistTerraplanagem" recordId={reportData.checklist?.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

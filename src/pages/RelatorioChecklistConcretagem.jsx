@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import RelatorioChecklistConcretagemComponent from "../components/relatorios/RelatorioChecklistConcretagem";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistConcretagemPage() {
   const location = useLocation();
@@ -67,10 +68,13 @@ export default function RelatorioChecklistConcretagemPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Checklist de Concretagem
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {checklist && <AprovacaoBar entityName="ChecklistConcretagem" recordId={checklist.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

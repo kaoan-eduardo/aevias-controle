@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Printer } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { Project } from "@/entities/Project";
@@ -94,13 +95,13 @@ export default function RelatorioAcompanhamentoCargaPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Acompanhamento de Cargas
           </h2>
-          <Button
-            onClick={handlePrint}
-            className="bg-[#00233B] text-white hover:bg-[#00233B]/90"
-          >
-            <Printer className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {acompanhamento && <AprovacaoBar entityName="AcompanhamentoCarga" recordId={acompanhamento.id} />}
+            <Button onClick={handlePrint} className="bg-[#00233B] text-white hover:bg-[#00233B]/90">
+              <Printer className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

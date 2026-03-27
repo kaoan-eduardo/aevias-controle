@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 import { EnsaioDensidade } from '@/entities/EnsaioDensidade';
 import { Obra } from '@/entities/Obra';
 import { Project } from '@/entities/Project';
@@ -118,10 +119,17 @@ export default function RelatorioEnsaio() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de {getTipoRelatorioNome()}
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {state.data && (() => {
+              const entityMap = { densidade: 'EnsaioDensidade', mraf: 'EnsaioMRAF' };
+              const en = entityMap[state.data.tipo];
+              return en ? <AprovacaoBar entityName={en} recordId={state.data.record?.id} /> : null;
+            })()}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
       

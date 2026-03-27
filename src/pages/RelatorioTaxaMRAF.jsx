@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, Printer } from "lucide-react";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioTaxaMRAF() {
   const [ensaio, setEnsaio] = useState(null);
@@ -59,7 +60,8 @@ export default function RelatorioTaxaMRAF() {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="print:hidden p-4 flex gap-3 justify-end border-b">
+      <div className="print:hidden p-4 flex gap-3 justify-between items-center border-b">
+        <div>{ensaio && <AprovacaoBar entityName="EnsaioTaxaMRAF" recordId={ensaio.id} />}</div>
         <Button onClick={() => window.print()} className="bg-[#00233B] text-white">
           <Printer className="w-4 h-4 mr-2" /> Gerar PDF
         </Button>

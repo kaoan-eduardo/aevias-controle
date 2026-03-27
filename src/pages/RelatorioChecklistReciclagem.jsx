@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import RelatorioChecklistReciclagem from "../components/relatorios/RelatorioChecklistReciclagem";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistReciclagemPage() {
   const [checklist, setChecklist] = useState(null);
@@ -84,10 +85,13 @@ export default function RelatorioChecklistReciclagemPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório - Checklist de Reciclagem
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {checklist && <AprovacaoBar entityName="ChecklistReciclagem" recordId={checklist.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

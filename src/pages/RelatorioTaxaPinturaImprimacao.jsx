@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import RelatorioTaxaPinturaImprimacao from "@/components/relatorios/RelatorioTaxaPinturaImprimacao";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioTaxaPinturaImprimacaoPage() {
   const [ensaio, setEnsaio] = useState(null);
@@ -74,10 +75,13 @@ export default function RelatorioTaxaPinturaImprimacaoPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Taxa de Pintura/Imprimação
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {ensaio && <AprovacaoBar entityName="EnsaioTaxaPinturaImprimacao" recordId={ensaio.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 

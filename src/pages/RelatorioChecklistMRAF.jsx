@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import RelatorioChecklistMRAFComponent from '../components/relatorios/RelatorioChecklistMRAF';
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistMRAFPage() {
   const [state, setState] = useState({
@@ -84,10 +85,13 @@ export default function RelatorioChecklistMRAFPage() {
           <h2 className="text-lg font-semibold text-slate-800">
             Relatório de Checklist de MRAF
           </h2>
-          <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" />
-            Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {state.data && <AprovacaoBar entityName="ChecklistMRAF" recordId={state.data.checklist?.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
       

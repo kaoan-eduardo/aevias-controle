@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
+import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioBoletimSondagemTrado() {
   const [boletim, setBoletim] = useState(null);
@@ -56,9 +57,12 @@ export default function RelatorioBoletimSondagemTrado() {
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <h2 className="text-lg font-semibold text-slate-800">Boletim de Sondagem a Trado</h2>
-          <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Download className="w-4 h-4 mr-2" /> Gerar PDF
-          </Button>
+          <div className="flex items-center gap-2">
+            {boletim && <AprovacaoBar entityName="BoletimSondagemTrado" recordId={boletim.id} />}
+            <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" /> Gerar PDF
+            </Button>
+          </div>
         </div>
       </div>
 
