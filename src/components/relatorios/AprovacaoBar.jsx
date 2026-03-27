@@ -47,11 +47,11 @@ export default function AprovacaoBar({ entityName, recordId }) {
 
   if (!user || !record) return null;
 
+  const accessLevel = user.access_level || (user.role === 'admin' ? 'admin' : 'user');
   const canApprove =
-    user.role === 'admin' ||
-    user.access_level === 'admin' ||
-    user.access_level === 'sala_tecnica_afirmaevias' ||
-    user.access_level === 'gestor_contrato';
+    accessLevel === 'admin' ||
+    accessLevel === 'sala_tecnica_afirmaevias' ||
+    accessLevel === 'gestor_contrato';
 
   const isPending = (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
   const isApproved = record.approved === true;
