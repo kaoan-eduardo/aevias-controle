@@ -47,11 +47,12 @@ export default function AprovacaoBar({ entityName, recordId }) {
 
   if (!user || !record) return null;
 
+  // Mesma lógica do layout principal:
+  // Só laboratoristas comuns (access_level ausente + role='user') NÃO podem aprovar
   const accessLevel = user.access_level || (user.role === 'admin' ? 'admin' : 'user');
-  const canApprove =
-    accessLevel === 'admin' ||
-    accessLevel === 'sala_tecnica_afirmaevias' ||
-    accessLevel === 'gestor_contrato';
+  const canApprove = accessLevel !== 'user';
+
+  console.log('[AprovacaoBar] user:', user.email, 'role:', user.role, 'access_level:', user.access_level, 'accessLevel computed:', accessLevel, 'canApprove:', canApprove);
 
   const isPending = (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
   const isApproved = record.approved === true;
