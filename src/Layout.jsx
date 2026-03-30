@@ -786,7 +786,6 @@ const AppLayout = ({ children }) => {
             <header className="bg-white/10 backdrop-blur-lg border-b border-white/10 px-6 py-4 md:hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <SidebarTrigger className="bg-[#00233B] hover:bg-[#00233B]/90 h-9 w-9 rounded-lg transition-colors duration-200 text-[#BFCF99] flex items-center justify-center" />
                   <h1 className="text-xl font-bold text-[#00233B]">Afirmaevias</h1>
                 </div>
                 {canCreateRecords && (
