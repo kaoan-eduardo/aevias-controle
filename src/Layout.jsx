@@ -1,5 +1,16 @@
 import React, { useMemo, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ChevronLeft } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import {
@@ -24,7 +35,8 @@ import {
   BarChart3,
   TrendingUp,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Trash2
 } from "lucide-react";
 import {
   Sidebar,
@@ -63,32 +75,67 @@ import { Regional } from "@/entities/Regional";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
+const TAB_ZONES = {
+  home: ['/'],
+  regionais: ['/Regionais', '/Obra', '/Regional'],
+  projects: ['/Projects', '/Project'],
+  registros: ['/MeusEnsaios', '/Ensaio', '/Checklist', '/Diario', '/Acompanhamento', '/Boletim'],
+};
+
+function getTabZone(pathname) {
+  for (const [zone, prefixes] of Object.entries(TAB_ZONES)) {
+    if (prefixes.some(p => pathname === p || pathname.startsWith(p + '/') || pathname.startsWith(p + '?'))) {
+      return zone;
+    }
+  }
+  return null;
+}
+
 // Bottom Navigation Bar para mobile
 const BottomNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const navItems = [
-    { label: 'Início', icon: Home, path: '/' },
-    { label: 'Obras', icon: FolderOpen, path: createPageUrl('Regionais') },
-    { label: 'Projetos', icon: Grid, path: createPageUrl('Projects') },
-    { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios') },
+    { label: 'Início', icon: Home, path: '/', zone: 'home' },
+    { label: 'Obras', icon: FolderOpen, path: createPageUrl('Regionais'), zone: 'regionais' },
+    { label: 'Projetos', icon: Grid, path: createPageUrl('Projects'), zone: 'projects' },
+    { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios'), zone: 'registros' },
   ];
+
+  useEffect(() => {
+    const zone = getTabZone(location.pathname);
+    if (zone) sessionStorage.setItem(`tab_stack_${zone}`, location.pathname + location.search);
+  }, [location]);
+
+  const handleTabPress = useCallback((item) => {
+    const currentZone = getTabZone(location.pathname);
+    if (currentZone === item.zone) {
+      navigate(item.path);
+    } else {
+      const saved = sessionStorage.getItem(`tab_stack_${item.zone}`);
+      navigate(saved || item.path);
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F2F1EF] border-t border-black/10 flex items-center justify-around"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      {navItems.map(({ label, icon: Icon, path }) => {
-        const isActive = location.pathname === path;
+      {navItems.map((item) => {
+        const currentZone = getTabZone(location.pathname);
+        const isActive = currentZone === item.zone;
         return (
-          <Link
-            key={label}
-            to={path}
+          <button
+            key={item.label}
+            onClick={() => handleTabPress(item)}
             className={`flex flex-col items-center gap-1 py-3 px-6 transition-colors select-none ${
               isActive ? 'text-[#00233B]' : 'text-[#00233B]/50'
             }`}
           >
-            <Icon className={`w-5 h-5 ${isActive ? 'text-[#BFCF99]' : ''}`} />
-            <span className="text-[10px] font-medium">{label}</span>
-          </Link>
+            <item.icon className={`w-5 h-5 ${isActive ? 'text-[#BFCF99]' : ''}`} />
+            <span className="text-[10px] font-medium">{item.label}</span>
+          </button>
         );
       })}
     </nav>
@@ -350,6 +397,7 @@ const AppLayout = ({ children }) => {
   const [pendingTransfers, setPendingTransfers] = React.useState(0);
   const [naoConformidadesOpen, setNaoConformidadesOpen] = React.useState(false);
   const [minhasObrasOpen, setMinhasObrasOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   useEffect(() => {
     // Desabilitar tradução automática
@@ -453,6 +501,10 @@ const AppLayout = ({ children }) => {
   }, []);
 
   const handleLogout = useCallback(async () => {
+    await User.logout();
+  }, []);
+
+  const handleDeleteAccount = useCallback(async () => {
     await User.logout();
   }, []);
 
@@ -772,6 +824,13 @@ const AppLayout = ({ children }) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-[#F2F1EF]/80 backdrop-blur-lg border-white/20 text-[#00233B]">
+                    <DropdownMenuItem
+                      onClick={() => setIsDeleteDialogOpen(true)}
+                      className="text-red-500 cursor-pointer focus:bg-white/10 focus:text-red-400"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Excluir Conta
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer focus:bg-white/10 focus:text-red-500">
                       <LogOut className="w-4 h-4 mr-2" />
                       Sair
@@ -780,6 +839,26 @@ const AppLayout = ({ children }) => {
                 </DropdownMenu>
               )}
             </SidebarFooter>
+
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir conta?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação não pode ser desfeita. Sua conta e todos os seus dados serão permanentemente removidos do sistema.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Sim, excluir minha conta
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </Sidebar>
 
           <main className="flex-1 flex flex-col">
@@ -799,11 +878,22 @@ const AppLayout = ({ children }) => {
               </div>
             </header>
 
-            <PullToRefresh>
-              <div className="pb-16 lg:pb-0 pt-12 lg:pt-0">
-                {children}
-              </div>
-            </PullToRefresh>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -12 }}
+                transition={{ duration: 0.15, ease: 'easeInOut' }}
+                className="flex-1 flex flex-col"
+              >
+                <PullToRefresh>
+                  <div className="pb-16 lg:pb-0 pt-12 lg:pt-0">
+                    {children}
+                  </div>
+                </PullToRefresh>
+              </motion.div>
+            </AnimatePresence>
             <BottomNav />
           </main>
         </div>
