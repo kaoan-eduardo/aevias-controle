@@ -403,53 +403,7 @@ body.relatorio-page table td {
   color: hsl(0 0% 3.9%) !important;
 }
 
-/* Nuclear option: force dark text on everything in reports */
+/* Force dark text only - preserve background colors */
 body.relatorio-page * {
-  color: hsl(0 0% 3.9%) !important;
-  background-color: transparent !important;
-}
-
-/* Re-enable backgrounds for specific elements */
-body.relatorio-page,
-body.relatorio-page body {
-  background-color: hsl(0 0% 100%) !important;
-}
-
-body.relatorio-page header,
-body.relatorio-page main,
-body.relatorio-page footer,
-body.relatorio-page section,
-body.relatorio-page article {
-  background-color: transparent !important;
-}
-
-body.relatorio-page table,
-body.relatorio-page tr {
-  background-color: hsl(0 0% 100%) !important;
-}
-
-body.relatorio-page thead,
-body.relatorio-page th {
-  background-color: hsl(220 13% 10%) !important;
-  color: hsl(0 0% 100%) !important;
-}
-
-body.relatorio-page tbody tr:nth-child(even) {
-  background-color: hsl(0 0% 97%) !important;
-}
-
-body.relatorio-page div,
-body.relatorio-page span,
-body.relatorio-page p,
-body.relatorio-page label,
-body.relatorio-page td,
-body.relatorio-page li,
-body.relatorio-page h1,
-body.relatorio-page h2,
-body.relatorio-page h3,
-body.relatorio-page h4,
-body.relatorio-page h5,
-body.relatorio-page h6 {
-  color: hsl(0 0% 3.9%) !important;
-  background-color: transparent !important;
+  color: hsl(0 0% 10%) !important;
 }
