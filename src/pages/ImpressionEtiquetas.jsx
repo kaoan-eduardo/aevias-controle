@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, Loader } from 'lucide-react';
 
 export default function ImpressionEtiquetas() {
+  const [tipoEtiqueta, setTipoEtiqueta] = useState('coleta');
   const [etiquetas, setEtiquetas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
@@ -55,20 +56,35 @@ export default function ImpressionEtiquetas() {
       <div className="min-h-screen bg-[#F2F1EF] p-6">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-[#00233B] mb-8">Impressão de Etiquetas - Sondagem</h1>
+
+          {/* Seleção do tipo de etiqueta */}
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <label className="block text-sm font-semibold text-[#00233B] mb-2">Tipo de Etiqueta</label>
+            <select
+              value={tipoEtiqueta}
+              onChange={(e) => { setTipoEtiqueta(e.target.value); setEtiquetas([]); setErro(''); setShowRender(false); }}
+              className="flex h-10 w-full max-w-xs rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#00233B]/30"
+            >
+              <option value="coleta">Etiqueta de Coleta</option>
+              <option value="umidade">Etiqueta de Umidade</option>
+            </select>
+          </div>
           
           <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="border-2 border-dashed border-[#BFCF99] rounded-lg p-12 text-center">
               <Upload className="w-16 h-16 text-[#BFCF99] mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-[#00233B] mb-2">Carregue a Planilha de Etiquetas</h2>
               <p className="text-[#00233B]/70 mb-6">
-                Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, AMOSTRA, PROFUNDIDADE(M), MATERIAL, ENSAIOS (separados por ponto e vírgula)
+                {tipoEtiqueta === 'coleta'
+                  ? 'Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, AMOSTRA, PROFUNDIDADE(M), MATERIAL, ENSAIOS (separados por ponto e vírgula)'
+                  : 'Etiqueta de Umidade em desenvolvimento. Em breve disponível nesta página.'}
               </p>
               
               <input
                 type="file"
                 accept=".xlsx,.xlsm,.xls,.csv"
                 onChange={handleFileUpload}
-                disabled={loading}
+                disabled={loading || tipoEtiqueta !== 'coleta'}
                 className="hidden"
                 id="file-input"
               />
@@ -76,7 +92,7 @@ export default function ImpressionEtiquetas() {
               <Button
                 onClick={() => document.getElementById('file-input').click()}
                 className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 cursor-pointer"
-                disabled={loading}
+                disabled={loading || tipoEtiqueta !== 'coleta'}
               >
                 {loading ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
                 {loading ? 'Processando...' : 'Selecionar Arquivo'}
