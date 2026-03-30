@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ImpressionEtiquetas from './pages/ImpressionEtiquetas';
+import Settings from './pages/Settings';
 import BoletimSondagem from './pages/BoletimSondagem';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
 import BoletimSondagemTrado from './pages/BoletimSondagemTrado';
@@ -63,6 +64,14 @@ function AuthenticatedApp() {
           }
         />
       ))}
+      <Route
+        path="/Settings"
+        element={
+          <LayoutWrapper currentPageName="Settings">
+            <Settings />
+          </LayoutWrapper>
+        }
+      />
       <Route
         path="/ImpressionEtiquetas"
         element={
