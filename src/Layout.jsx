@@ -846,20 +846,20 @@ const AppLayout = ({ children }) => {
           <main className="flex-1 flex flex-col">
             {/* Mobile unified header */}
             <div
-              className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/95 backdrop-blur-md border-b border-black/10 flex items-center justify-between px-4 h-12"
-              style={{ paddingTop: 'env(safe-area-inset-top)' }}
+              className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/95 backdrop-blur-md border-b border-black/10 flex items-center justify-between px-4"
+              style={{ paddingTop: 'env(safe-area-inset-top)', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
             >
               {/* Left: back button or logo */}
               {location.pathname !== '/' ? (
                 <button
                   onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
-                  className="flex items-center gap-1 text-[#00233B] font-medium select-none"
+                  className="flex items-center gap-1 text-[#00233B] font-medium select-none py-3 pr-4"
                 >
                   <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
                   <span className="text-sm">Voltar</span>
                 </button>
               ) : (
-                <span className="text-base font-bold text-[#00233B]">Afirmaevias</span>
+                <span className="text-base font-bold text-[#00233B] py-3">Afirmaevias</span>
               )}
 
               {/* Right: new record button */}
@@ -882,7 +882,7 @@ const AppLayout = ({ children }) => {
                 className="flex-1 flex flex-col"
               >
                 <PullToRefresh>
-                  <div className="pb-16 lg:pb-0 pt-12 lg:pt-0">
+                  <div className="pb-16 lg:pb-0 lg:pt-0" style={{ paddingTop: 'calc(3rem + env(safe-area-inset-top))' }}>
                     {children}
                   </div>
                 </PullToRefresh>
