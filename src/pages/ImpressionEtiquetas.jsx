@@ -93,7 +93,7 @@ export default function ImpressionEtiquetas() {
                 type="file"
                 accept=".xlsx,.xlsm,.xls,.csv"
                 onChange={handleFileUpload}
-                disabled={loading || tipoEtiqueta !== 'coleta'}
+                disabled={loading}
                 className="hidden"
                 id="file-input"
               />
@@ -101,7 +101,7 @@ export default function ImpressionEtiquetas() {
               <Button
                 onClick={() => document.getElementById('file-input').click()}
                 className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 cursor-pointer"
-                disabled={loading || tipoEtiqueta !== 'coleta'}
+                disabled={loading}
               >
                 {loading ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
                 {loading ? 'Processando...' : 'Selecionar Arquivo'}
