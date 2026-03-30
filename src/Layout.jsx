@@ -798,7 +798,7 @@ const AppLayout = ({ children }) => {
               </div>
             </header>
 
-            <div className="flex-1 overflow-auto bg-transparent pb-16 md:pb-0">
+            <div className="flex-1 overflow-auto bg-transparent pb-16 md:pb-0 pt-12 md:pt-0">
               {children}
             </div>
             <BottomNav />
