@@ -1,11 +1,13 @@
 import React, { useMemo, useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import {
   LayoutDashboard,
   Settings,
   Users,
   FolderOpen,
+  Home,
   FlaskConical,
   LogOut,
   User as UserIcon,
@@ -59,6 +61,58 @@ import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+
+// Bottom Navigation Bar para mobile
+const BottomNav = () => {
+  const location = useLocation();
+  const navItems = [
+    { label: 'Início', icon: Home, path: '/' },
+    { label: 'Obras', icon: FolderOpen, path: createPageUrl('Regionais') },
+    { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios') },
+  ];
+  return (
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F2F1EF] border-t border-black/10 flex items-center justify-around"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      {navItems.map(({ label, icon: Icon, path }) => {
+        const isActive = location.pathname === path;
+        return (
+          <Link
+            key={label}
+            to={path}
+            className={`flex flex-col items-center gap-1 py-3 px-6 transition-colors select-none ${
+              isActive ? 'text-[#00233B]' : 'text-[#00233B]/50'
+            }`}
+          >
+            <Icon className={`w-5 h-5 ${isActive ? 'text-[#BFCF99]' : ''}`} />
+            <span className="text-[10px] font-medium">{label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+};
+
+// Mobile Header com botão de voltar
+const MobileHeader = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isRoot = location.pathname === '/';
+  if (isRoot) return null;
+  return (
+    <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/90 backdrop-blur-md border-b border-black/10 flex items-center px-4 h-12"
+      style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: 0 }}
+    >
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 text-[#00233B] font-medium select-none"
+      >
+        <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
+        <span className="text-sm">Voltar</span>
+      </button>
+    </div>
+  );
+};
 
 // Memoizar componente de diálogo para evitar re-renders
 const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
@@ -727,6 +781,7 @@ const AppLayout = ({ children }) => {
           </Sidebar>
 
           <main className="flex-1 flex flex-col">
+            <MobileHeader />
             <header className="bg-white/10 backdrop-blur-lg border-b border-white/10 px-6 py-4 md:hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -743,9 +798,10 @@ const AppLayout = ({ children }) => {
               </div>
             </header>
 
-            <div className="flex-1 overflow-auto bg-transparent">
+            <div className="flex-1 overflow-auto bg-transparent pb-16 md:pb-0">
               {children}
             </div>
+            <BottomNav />
           </main>
         </div>
 
