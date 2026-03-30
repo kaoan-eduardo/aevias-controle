@@ -20,38 +20,48 @@ export default function ImpressionEtiquetas() {
       const xlsxModule = await import('https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs');
       const reader = new FileReader();
       reader.onload = (event) => {
-        const workbook = xlsxModule.read(event.target?.result, { type: 'binary' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const data = xlsxModule.utils.sheet_to_json(worksheet);
+        try {
+          const workbook = xlsxModule.read(event.target?.result, { type: 'binary' });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const data = xlsxModule.utils.sheet_to_json(worksheet);
 
-        if (tipoEtiqueta === 'umidade') {
-          const processadas = data.map((row) => ({
-            furo: row.FURO || '',
-            rodovia: row.RODOVIA || '',
-            km: row.KM || '',
-            pista: row.PISTA || '',
-            tipo_umidade: row['TIPO UMIDADE'] || row['TIPO_UMIDADE'] || '',
-          }));
-          setEtiquetas(processadas);
-        } else {
-          const processadas = data.map((row) => ({
-            furo: row.FURO || '',
-            rodovia: row.RODOVIA || '',
-            km: row.KM || '',
-            pista: row.PISTA || '',
-            amostra: row.AMOSTRA || '',
-            profundidade: row['PROFUNDIDADE(M)'] || '',
-            material: row.MATERIAL || '',
-            ensaios: row.ENSAIOS ? row.ENSAIOS.split(';').map(e => e.trim()).filter(e => e) : [],
-          }));
-          setEtiquetas(processadas);
+          if (tipoEtiqueta === 'umidade') {
+            const processadas = data.map((row) => ({
+              furo: row.FURO || '',
+              rodovia: row.RODOVIA || '',
+              km: row.KM || '',
+              pista: row.PISTA || '',
+              tipo_umidade: row['TIPO UMIDADE'] || row['TIPO_UMIDADE'] || '',
+            }));
+            setEtiquetas(processadas);
+          } else {
+            const processadas = data.map((row) => ({
+              furo: row.FURO || '',
+              rodovia: row.RODOVIA || '',
+              km: row.KM || '',
+              pista: row.PISTA || '',
+              amostra: row.AMOSTRA || '',
+              profundidade: row['PROFUNDIDADE(M)'] || '',
+              material: row.MATERIAL || '',
+              ensaios: row.ENSAIOS ? row.ENSAIOS.split(';').map(e => e.trim()).filter(e => e) : [],
+            }));
+            setEtiquetas(processadas);
+          }
+        } catch (err) {
+          setErro('Erro ao processar arquivo. Verifique o formato.');
+          console.error(err);
+        } finally {
+          setLoading(false);
         }
+      };
+      reader.onerror = () => {
+        setErro('Erro ao ler o arquivo.');
+        setLoading(false);
       };
       reader.readAsBinaryString(file);
     } catch (error) {
       setErro('Erro ao processar arquivo. Verifique o formato.');
       console.error(error);
-    } finally {
       setLoading(false);
     }
   };
