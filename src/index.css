@@ -160,16 +160,50 @@
   .dark [class*="border-\[#00233B\]"] { border-color: hsl(220 13% 30%) !important; }
 
   /* Fix slate/gray text classes used in forms */
-  .dark .text-slate-500, .dark .text-slate-600, .dark .text-slate-700,
+  .dark .text-slate-400, .dark .text-slate-500, .dark .text-slate-600, .dark .text-slate-700,
   .dark .text-slate-800, .dark .text-slate-900 {
     color: hsl(210 15% 72%) !important;
   }
-  .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700,
+  .dark .text-gray-400, .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700,
   .dark .text-gray-800, .dark .text-gray-900 {
     color: hsl(210 15% 72%) !important;
   }
+  .dark .text-slate-300 { color: hsl(210 15% 80%) !important; }
+  .dark .text-gray-300 { color: hsl(210 15% 80%) !important; }
 
-  /* Fix slate backgrounds */
+  /* Fix placeholders in inputs */
+  .dark input::placeholder {
+    color: hsl(210 15% 65%) !important;
+  }
+
+  /* Fix select element text color */
+  .dark select {
+    color: hsl(210 20% 88%) !important;
+  }
+
+  /* Fix option text in select dropdowns */
+  .dark option {
+    background-color: hsl(220 13% 20%) !important;
+    color: hsl(210 20% 88%) !important;
+  }
+
+  /* Fix labels inside light cards */
+  .dark .bg-orange-50 label, .dark .bg-green-50 label, .dark .bg-yellow-50 label,
+  .dark .bg-blue-50 label, .dark .bg-purple-50 label, .dark .bg-red-50 label,
+  .dark .bg-amber-50 label, .dark .bg-pink-50 label, .dark .bg-teal-50 label,
+  .dark .bg-cyan-50 label {
+    color: hsl(210 20% 88%) !important;
+  }
+
+  /* Fix text inside light-background cards */
+  .dark .bg-orange-50 > *, .dark .bg-green-50 > *, .dark .bg-yellow-50 > *,
+  .dark .bg-blue-50 > *, .dark .bg-purple-50 > *, .dark .bg-red-50 > *,
+  .dark .bg-amber-50 > *, .dark .bg-pink-50 > *, .dark .bg-teal-50 > *,
+  .dark .bg-cyan-50 > * {
+    color: hsl(210 20% 88%) !important;
+  }
+
+  /* Fix slate/gray backgrounds */
   .dark .bg-slate-50, .dark .bg-slate-100 { background-color: hsl(220 13% 18%) !important; }
   .dark .bg-gray-50,  .dark .bg-gray-100  { background-color: hsl(220 13% 18%) !important; }
 
