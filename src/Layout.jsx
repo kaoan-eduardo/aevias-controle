@@ -142,26 +142,8 @@ const BottomNav = () => {
   );
 };
 
-// Mobile Header com botão de voltar
-const MobileHeader = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const isRoot = location.pathname === '/';
-  if (isRoot) return null;
-  return (
-    <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/90 backdrop-blur-md border-b border-black/10 flex items-center px-4 h-12"
-      style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: 0 }}
-    >
-      <button
-        onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
-        className="flex items-center gap-1 text-[#00233B] font-medium select-none"
-      >
-        <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
-        <span className="text-sm">Voltar</span>
-      </button>
-    </div>
-  );
-};
+// Mobile Header — back button + new record button (rendered inside AppLayout for Dialog access)
+// Placeholder kept for structural reference; actual header is inlined in AppLayout below.
 
 // Memoizar componente de diálogo para evitar re-renders
 const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
@@ -862,21 +844,33 @@ const AppLayout = ({ children }) => {
           </Sidebar>
 
           <main className="flex-1 flex flex-col">
-            <MobileHeader />
-            <header className="bg-white/10 backdrop-blur-lg border-b border-white/10 px-6 py-4 lg:hidden">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <h1 className="text-xl font-bold text-[#00233B]">Afirmaevias</h1>
-                </div>
-                {canCreateRecords && (
-                  <DialogTrigger asChild>
-                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors">
-                      <FilePlus className="w-5 h-5 text-[#BFCF99]"/>
-                    </Button>
-                  </DialogTrigger>
-                )}
-              </div>
-            </header>
+            {/* Mobile unified header */}
+            <div
+              className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/95 backdrop-blur-md border-b border-black/10 flex items-center justify-between px-4 h-12"
+              style={{ paddingTop: 'env(safe-area-inset-top)' }}
+            >
+              {/* Left: back button or logo */}
+              {location.pathname !== '/' ? (
+                <button
+                  onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
+                  className="flex items-center gap-1 text-[#00233B] font-medium select-none"
+                >
+                  <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
+                  <span className="text-sm">Voltar</span>
+                </button>
+              ) : (
+                <span className="text-base font-bold text-[#00233B]">Afirmaevias</span>
+              )}
+
+              {/* Right: new record button */}
+              {canCreateRecords && (
+                <DialogTrigger asChild>
+                  <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors h-8 w-8">
+                    <FilePlus className="w-4 h-4 text-[#BFCF99]"/>
+                  </Button>
+                </DialogTrigger>
+              )}
+            </div>
 
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
