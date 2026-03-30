@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -11,21 +12,9 @@ export default function RelatorioBoletimSondagem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    document.documentElement.classList.remove('dark');
-    document.body.classList.remove('dark');
-    loadData();
-  }, []);
+  useReportMode();
 
-  useEffect(() => {
-    return () => {
-      // Re-apply dark mode if it was enabled before
-      const htmlEl = document.documentElement;
-      if (localStorage.getItem('aevias_theme') === 'dark' || (localStorage.getItem('aevias_theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        htmlEl.classList.add('dark');
-      }
-    };
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     try {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -10,6 +11,8 @@ export default function RelatorioBoletimSondagemTrado() {
   const [regional, setRegional] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useReportMode();
 
   useEffect(() => { loadData(); }, []);
 
