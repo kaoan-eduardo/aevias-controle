@@ -96,62 +96,85 @@
     -webkit-user-select: none;
   }
 
-  /* Force all text to be readable in dark mode */
-  .dark p,
-  .dark span,
-  .dark label,
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
-  .dark div,
-  .dark td, .dark th,
-  .dark li {
-    color: inherit;
+  /* ============================================
+     DARK MODE — GLOBAL CONTRAST FIXES
+     ============================================ */
+
+  /* All text defaults to light in dark mode */
+  .dark * {
+    --text-brand: hsl(210 20% 88%);
+    --text-brand-80: hsl(210 20% 78%);
+    --text-brand-70: hsl(210 20% 70%);
+    --text-brand-60: hsl(210 20% 62%);
+    --text-brand-50: hsl(210 20% 55%);
   }
 
-  .dark {
-    color: hsl(var(--foreground));
+  /* Override the app's cream background */
+  .dark body,
+  .dark #root {
+    background-color: hsl(var(--background)) !important;
   }
 
-  .dark input,
-  .dark textarea {
-    color: hsl(var(--foreground));
-    background-color: hsl(220 13% 20%);
-    border-color: hsl(220 13% 28%);
+  /* Main page wrapper background */
+  .dark .min-h-screen {
+    background-color: hsl(var(--background));
   }
 
+  /* Inputs and selects */
+  .dark input:not([type="radio"]):not([type="checkbox"]),
+  .dark textarea,
   .dark select {
-    color: hsl(var(--foreground));
-    background-color: hsl(220 13% 20%);
-    border-color: hsl(220 13% 28%);
+    color: hsl(210 20% 88%) !important;
+    background-color: hsl(220 13% 20%) !important;
+    border-color: hsl(220 13% 30%) !important;
   }
 
-  /* Force section card backgrounds to be dark */
-  .dark [style],
-  .dark [class] {
-    --tw-bg-opacity: 1;
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: hsl(210 15% 55%) !important;
   }
 
-  /* Override light tinted section backgrounds */
-  .dark .bg-\[\#BFCF99\]\/20 { background-color: hsl(140 15% 18% / 0.6) !important; }
-  .dark .bg-\[\#BFCF99\]\/10 { background-color: hsl(140 15% 15% / 0.5) !important; }
-  .dark .bg-\[\#BFCF99\]\/30 { background-color: hsl(140 15% 20% / 0.6) !important; }
-  .dark .bg-white\/10 { background-color: hsl(220 15% 18% / 0.5) !important; }
-  .dark .bg-white\/20 { background-color: hsl(220 15% 20% / 0.5) !important; }
-  .dark .bg-white\/30 { background-color: hsl(220 15% 22% / 0.6) !important; }
-  .dark .bg-white\/50 { background-color: hsl(220 15% 25% / 0.7) !important; }
-  .dark .bg-black\/5  { background-color: hsl(220 15% 12% / 0.5) !important; }
-  .dark .bg-black\/10 { background-color: hsl(220 15% 10% / 0.5) !important; }
+  /* Nuclear text fix — override ALL inline color styles */
+  .dark [style*="color: rgb(0"],
+  .dark [style*="color:#00233B"] {
+    color: hsl(210 20% 88%) !important;
+  }
 
-  /* Force brand text colors to adapt */
-  .dark .text-\[\#00233B\]       { color: hsl(210 20% 88%) !important; }
-  .dark .text-\[\#00233B\]\/90   { color: hsl(210 20% 82%) !important; }
-  .dark .text-\[\#00233B\]\/80   { color: hsl(210 20% 76%) !important; }
-  .dark .text-\[\#00233B\]\/70   { color: hsl(210 20% 70%) !important; }
-  .dark .text-\[\#00233B\]\/60   { color: hsl(210 20% 60%) !important; }
-  .dark .text-\[\#00233B\]\/50   { color: hsl(210 20% 55%) !important; }
+  /* Fix card and section backgrounds */
+  .dark .bg-transparent { background-color: transparent; }
+  .dark [class*="bg-white/"]  { background-color: hsl(220 15% 20% / 0.5) !important; }
+  .dark [class*="bg-black/"]  { background-color: hsl(220 15% 10% / 0.4) !important; }
 
-  /* Borders */
-  .dark .border-white\/20 { border-color: hsl(220 13% 28%) !important; }
-  .dark .border-white\/10 { border-color: hsl(220 13% 23%) !important; }
-  .dark .border-\[\#00233B\]\/20 { border-color: hsl(220 13% 28%) !important; }
-  .dark .border-\[\#00233B\]\/10 { border-color: hsl(220 13% 23%) !important; }
+  /* Fix brand background tints */
+  .dark [class*="bg-\[#BFCF99\]"] { background-color: hsl(140 15% 20% / 0.4) !important; }
+  .dark [class*="bg-\[#F2F1EF\]"] { background-color: hsl(220 15% 15%) !important; }
+  .dark [class*="bg-\[#00233B\]"] { background-color: hsl(215 30% 22%) !important; }
+
+  /* Fix ALL text with brand color via attribute contains selector */
+  .dark [class*="text-\[#00233B\]"] { color: hsl(210 20% 88%) !important; }
+  .dark [class*="text-\[#BFCF99\]"] { color: hsl(140 50% 70%) !important; }
+
+  /* Fix border colors */
+  .dark [class*="border-white/"]    { border-color: hsl(220 13% 28%) !important; }
+  .dark [class*="border-black/"]    { border-color: hsl(220 13% 25%) !important; }
+  .dark [class*="border-\[#00233B\]"] { border-color: hsl(220 13% 30%) !important; }
+
+  /* Fix slate/gray text classes used in forms */
+  .dark .text-slate-500, .dark .text-slate-600, .dark .text-slate-700,
+  .dark .text-slate-800, .dark .text-slate-900 {
+    color: hsl(210 15% 72%) !important;
+  }
+  .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700,
+  .dark .text-gray-800, .dark .text-gray-900 {
+    color: hsl(210 15% 72%) !important;
+  }
+
+  /* Fix slate backgrounds */
+  .dark .bg-slate-50, .dark .bg-slate-100 { background-color: hsl(220 13% 18%) !important; }
+  .dark .bg-gray-50,  .dark .bg-gray-100  { background-color: hsl(220 13% 18%) !important; }
+
+  /* Tables */
+  .dark table { border-color: hsl(220 13% 28%); }
+  .dark thead  { background-color: hsl(220 15% 18%) !important; }
+  .dark tbody tr:nth-child(even) { background-color: hsl(220 15% 16% / 0.5) !important; }
 }
