@@ -24,19 +24,28 @@ export default function ImpressionEtiquetas() {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = xlsxModule.utils.sheet_to_json(worksheet);
 
-        // Mapear colunas da planilha
-        const processadas = data.map((row) => ({
-          furo: row.FURO || '',
-          rodovia: row.RODOVIA || '',
-          km: row.KM || '',
-          pista: row.PISTA || '',
-          amostra: row.AMOSTRA || '',
-          profundidade: row['PROFUNDIDADE(M)'] || '',
-          material: row.MATERIAL || '',
-          ensaios: row.ENSAIOS ? row.ENSAIOS.split(';').map(e => e.trim()).filter(e => e) : [],
-        }));
-
-        setEtiquetas(processadas);
+        if (tipoEtiqueta === 'umidade') {
+          const processadas = data.map((row) => ({
+            furo: row.FURO || '',
+            rodovia: row.RODOVIA || '',
+            km: row.KM || '',
+            pista: row.PISTA || '',
+            tipo_umidade: row['TIPO UMIDADE'] || row['TIPO_UMIDADE'] || '',
+          }));
+          setEtiquetas(processadas);
+        } else {
+          const processadas = data.map((row) => ({
+            furo: row.FURO || '',
+            rodovia: row.RODOVIA || '',
+            km: row.KM || '',
+            pista: row.PISTA || '',
+            amostra: row.AMOSTRA || '',
+            profundidade: row['PROFUNDIDADE(M)'] || '',
+            material: row.MATERIAL || '',
+            ensaios: row.ENSAIOS ? row.ENSAIOS.split(';').map(e => e.trim()).filter(e => e) : [],
+          }));
+          setEtiquetas(processadas);
+        }
       };
       reader.readAsBinaryString(file);
     } catch (error) {
@@ -77,7 +86,7 @@ export default function ImpressionEtiquetas() {
               <p className="text-[#00233B]/70 mb-6">
                 {tipoEtiqueta === 'coleta'
                   ? 'Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, AMOSTRA, PROFUNDIDADE(M), MATERIAL, ENSAIOS (separados por ponto e vírgula)'
-                  : 'Etiqueta de Umidade em desenvolvimento. Em breve disponível nesta página.'}
+                  : 'Selecione um arquivo Excel com as colunas: FURO, RODOVIA, KM, PISTA, TIPO UMIDADE'}
               </p>
               
               <input
@@ -127,29 +136,56 @@ export default function ImpressionEtiquetas() {
     );
   }
 
+  if (showRender && tipoEtiqueta === 'umidade') {
+    return (
+      <div className="bg-white min-h-screen p-4 print:p-0">
+        <div className="mb-4 print:hidden flex gap-2 sticky top-0 bg-white z-10 py-2">
+          <Button onClick={handlePrint} className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">🖨️ Imprimir</Button>
+          <Button onClick={() => { setShowRender(false); setEtiquetas([]); }} variant="outline" className="border-[#BFCF99] text-[#00233B]">← Voltar</Button>
+        </div>
+
+        <div>
+          {Array.from({ length: Math.ceil(etiquetas.length / 8) }).map((_, pageIdx) => (
+            <div key={pageIdx} className="page-container">
+              <div className="grid grid-cols-4 gap-2 print:gap-1.5">
+                {etiquetas.slice(pageIdx * 8, (pageIdx + 1) * 8).map((etiqueta, idx) => (
+                  <div key={idx} style={{ border: '0.5mm solid #aaa', fontSize: '11px' }}>
+                    <div style={{ background: '#BFCF99', borderBottom: '0.5mm solid #aaa', padding: '6px 8px', textAlign: 'center', fontStyle: 'italic', fontWeight: 'bold', color: '#00233B' }}>
+                      {etiqueta.furo}
+                    </div>
+                    <div style={{ borderBottom: '0.5mm solid #aaa', padding: '6px 8px', textAlign: 'center', fontStyle: 'italic', background: '#fff', color: '#00233B' }}>
+                      {etiqueta.rodovia}
+                    </div>
+                    <div style={{ borderBottom: '0.5mm solid #aaa', padding: '6px 8px', textAlign: 'center', fontStyle: 'italic', background: '#fff', color: '#00233B' }}>
+                      {etiqueta.km}
+                    </div>
+                    <div style={{ borderBottom: '0.5mm solid #aaa', padding: '6px 8px', textAlign: 'center', fontStyle: 'italic', background: '#fff', color: '#00233B' }}>
+                      {etiqueta.pista}
+                    </div>
+                    <div style={{ background: '#BFCF99', padding: '6px 8px', textAlign: 'center', fontStyle: 'italic', fontWeight: 'bold', color: '#00233B' }}>
+                      {etiqueta.tipo_umidade}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <style>{`
+          .page-container { padding: 8px; page-break-after: always !important; break-after: page !important; display: block !important; }
+          .page-container:last-child { page-break-after: auto !important; break-after: auto !important; }
+          @page { size: A4; margin: 8mm 6mm; }
+          @media screen { .page-container { min-height: 100vh; margin-bottom: 20px; border: 1px solid #e5e7eb; } }
+          @media print { * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .print\\:hidden { display: none !important; } }
+        `}</style>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white min-h-screen p-4 print:p-0">
       <div className="mb-4 print:hidden flex gap-2 sticky top-0 bg-white z-10 py-2">
-        <Button 
-          onClick={handlePrint}
-          className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
-        >
-          🖨️ Imprimir
-        </Button>
-        <Button 
-          onClick={() => {
-            setShowRender(false);
-            setEtiquetas([]);
-          }}
-          variant="outline"
-          className="border-[#BFCF99] text-[#00233B]"
-        >
-          ← Voltar
-        </Button>
-      </div>
-
-      <div>
-        {Array.from({ length: Math.ceil(etiquetas.length / 4) }).map((_, pageIdx) => (
           <div key={pageIdx} className="page-container">
             <div className="grid grid-cols-2 gap-x-2 gap-y-4 print:gap-x-1.5 print:gap-y-3">
               {etiquetas.slice(pageIdx * 4, (pageIdx + 1) * 4).map((etiqueta, idx) => (
