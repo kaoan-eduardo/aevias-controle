@@ -177,7 +177,15 @@ export default function ImpressionEtiquetas() {
           .page-container:last-child { page-break-after: auto !important; break-after: auto !important; }
           @page { size: A4; margin: 8mm 6mm; }
           @media screen { .page-container { min-height: 100vh; margin-bottom: 20px; border: 1px solid #e5e7eb; } }
-          @media print { * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .print\\:hidden { display: none !important; } }
+          @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; overflow: visible !important; }
+            *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+            html, body, div, section, main { overflow: visible !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+            .page-container { padding: 4px; page-break-after: always !important; overflow: visible !important; }
+            .page-container:last-child { page-break-after: auto !important; }
+            .print\\:hidden { display: none !important; }
+            header, nav, .no-print { display: none !important; }
+          }
         `}</style>
       </div>
     );
