@@ -104,7 +104,7 @@ const MobileHeader = () => {
       style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: 0 }}
     >
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
         className="flex items-center gap-1 text-[#00233B] font-medium select-none"
       >
         <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
