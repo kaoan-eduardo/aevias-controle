@@ -72,7 +72,7 @@ const BottomNav = () => {
     { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios') },
   ];
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F2F1EF] border-t border-black/10 flex items-center justify-around"
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F2F1EF] border-t border-black/10 flex items-center justify-around"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {navItems.map(({ label, icon: Icon, path }) => {
@@ -101,7 +101,7 @@ const MobileHeader = () => {
   const isRoot = location.pathname === '/';
   if (isRoot) return null;
   return (
-    <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/90 backdrop-blur-md border-b border-black/10 flex items-center px-4 h-12"
+    <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/90 backdrop-blur-md border-b border-black/10 flex items-center px-4 h-12"
       style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: 0 }}
     >
       <button
@@ -497,7 +497,7 @@ const AppLayout = ({ children }) => {
             <SidebarContent className="p-3">
               {canCreateRecords && (
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 mb-4 hidden md:flex">
+                  <Button className="w-full bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90 mb-4 hidden lg:flex">
                     <FilePlus className="w-5 h-5 mr-2 text-[#BFCF99]" />
                     Novo Registro
                   </Button>
@@ -783,7 +783,7 @@ const AppLayout = ({ children }) => {
 
           <main className="flex-1 flex flex-col">
             <MobileHeader />
-            <header className="bg-white/10 backdrop-blur-lg border-b border-white/10 px-6 py-4 md:hidden">
+            <header className="bg-white/10 backdrop-blur-lg border-b border-white/10 px-6 py-4 lg:hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <h1 className="text-xl font-bold text-[#00233B]">Afirmaevias</h1>
@@ -798,7 +798,7 @@ const AppLayout = ({ children }) => {
               </div>
             </header>
 
-            <div className="flex-1 overflow-auto bg-transparent pb-16 md:pb-0 pt-12 md:pt-0">
+            <div className="flex-1 overflow-auto bg-transparent pb-16 lg:pb-0 pt-12 lg:pt-0">
               {children}
             </div>
             <BottomNav />
