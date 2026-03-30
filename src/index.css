@@ -96,20 +96,62 @@
     -webkit-user-select: none;
   }
 
+  /* Force all text to be readable in dark mode */
+  .dark p,
+  .dark span,
+  .dark label,
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+  .dark div,
+  .dark td, .dark th,
+  .dark li {
+    color: inherit;
+  }
+
+  .dark {
+    color: hsl(var(--foreground));
+  }
+
   .dark input,
-  .dark textarea,
+  .dark textarea {
+    color: hsl(var(--foreground));
+    background-color: hsl(220 13% 20%);
+    border-color: hsl(220 13% 28%);
+  }
+
   .dark select {
     color: hsl(var(--foreground));
-    background-color: hsl(var(--input));
+    background-color: hsl(220 13% 20%);
+    border-color: hsl(220 13% 28%);
   }
 
-  .dark label {
-    color: hsl(var(--foreground));
+  /* Force section card backgrounds to be dark */
+  .dark [style],
+  .dark [class] {
+    --tw-bg-opacity: 1;
   }
 
-  .dark [class*="text-slate"],
-  .dark [class*="text-gray"],
-  .dark [class*="text-zinc"] {
-    color: hsl(var(--foreground)) !important;
-  }
+  /* Override light tinted section backgrounds */
+  .dark .bg-\[\#BFCF99\]\/20 { background-color: hsl(140 15% 18% / 0.6) !important; }
+  .dark .bg-\[\#BFCF99\]\/10 { background-color: hsl(140 15% 15% / 0.5) !important; }
+  .dark .bg-\[\#BFCF99\]\/30 { background-color: hsl(140 15% 20% / 0.6) !important; }
+  .dark .bg-white\/10 { background-color: hsl(220 15% 18% / 0.5) !important; }
+  .dark .bg-white\/20 { background-color: hsl(220 15% 20% / 0.5) !important; }
+  .dark .bg-white\/30 { background-color: hsl(220 15% 22% / 0.6) !important; }
+  .dark .bg-white\/50 { background-color: hsl(220 15% 25% / 0.7) !important; }
+  .dark .bg-black\/5  { background-color: hsl(220 15% 12% / 0.5) !important; }
+  .dark .bg-black\/10 { background-color: hsl(220 15% 10% / 0.5) !important; }
+
+  /* Force brand text colors to adapt */
+  .dark .text-\[\#00233B\]       { color: hsl(210 20% 88%) !important; }
+  .dark .text-\[\#00233B\]\/90   { color: hsl(210 20% 82%) !important; }
+  .dark .text-\[\#00233B\]\/80   { color: hsl(210 20% 76%) !important; }
+  .dark .text-\[\#00233B\]\/70   { color: hsl(210 20% 70%) !important; }
+  .dark .text-\[\#00233B\]\/60   { color: hsl(210 20% 60%) !important; }
+  .dark .text-\[\#00233B\]\/50   { color: hsl(210 20% 55%) !important; }
+
+  /* Borders */
+  .dark .border-white\/20 { border-color: hsl(220 13% 28%) !important; }
+  .dark .border-white\/10 { border-color: hsl(220 13% 23%) !important; }
+  .dark .border-\[\#00233B\]\/20 { border-color: hsl(220 13% 28%) !important; }
+  .dark .border-\[\#00233B\]\/10 { border-color: hsl(220 13% 23%) !important; }
 }
