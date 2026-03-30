@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
@@ -15,6 +16,8 @@ export default function RelatorioDiarioPage() {
     error: null,
     data: null
   });
+
+  useReportMode();
 
   useEffect(() => {
     loadReportData();
