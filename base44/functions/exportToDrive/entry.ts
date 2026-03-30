@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
-import { jsPDF } from 'npm:jspdf@2.5.1';
+import PDFDocument from 'npm:pdfkit@0.14.0';
 
-const ENTITY_DISPLAY_NAMES = {
+const ENTITY_LABELS = {
   DiarioObra: 'Diário de Obra',
   ChecklistUsina: 'Checklist de Usina',
   ChecklistAplicacao: 'Checklist de Aplicação',
@@ -14,13 +14,15 @@ const ENTITY_DISPLAY_NAMES = {
   EnsaioCAUQ: 'Ensaio CAUQ',
   EnsaioSondagem: 'Ensaio de Sondagem',
   EnsaioDensidadeInSitu: 'Ensaio Densidade In Situ',
-  EnsaioTaxaPinturaImprimacao: 'Taxa de Pintura/Imprimação',
-  EnsaioManchaPendulo: 'Mancha + Pêndulo',
+  EnsaioTaxaPinturaImprimacao: 'Taxa de Pintura Imprimação',
+  EnsaioManchaPendulo: 'Mancha e Pendulo',
   EnsaioVigaBenkelman: 'Viga Benkelman',
   EnsaioTaxaMRAF: 'Taxa MRAF',
   EnsaioMRAF: 'Ensaio MRAF',
+  EnsaioGranAreia: 'Granulometria e Equiv Areia',
   EnsaioGranulometriaIndividual: 'Granulometria Individual',
-  EnsaioGranAreia: 'Granulometria + Equiv. Areia',
+  BoletimSondagem: 'Boletim de Sondagem',
+  BoletimSondagemTrado: 'Boletim Sondagem Trado',
 };
 
 const FIELD_LABELS = {
@@ -29,281 +31,238 @@ const FIELD_LABELS = {
   laboratorista_name: 'Laboratorista',
   rodovia: 'Rodovia',
   trecho: 'Trecho',
+  sub_trecho: 'Sub-trecho',
   empreiteira: 'Empreiteira',
   usina: 'Usina',
-  estaca: 'Estaca',
-  camada: 'Camada',
-  material: 'Material',
-  engenheiro_responsavel: 'Engenheiro Responsável',
-  inspetor_campo: 'Inspetor de Campo',
-  inspetor_fiscal: 'Inspetor Fiscal',
-  status: 'Status',
-  observacoes_gerais: 'Observações Gerais',
-  observacoes: 'Observações',
-  servico: 'Serviço',
-  concreteira: 'Concreteira',
-  fck: 'FCK',
-  estrutura: 'Estrutura',
-  tipo_local: 'Tipo de Local',
-  condicoes_climaticas: 'Condições Climáticas',
-  temperatura: 'Temperatura',
-  atividades_realizadas: 'Atividades Realizadas',
-  local_coleta: 'Local de Coleta',
-  placa_caminhao: 'Placa do Caminhão',
-  faixa_especificada: 'Faixa Especificada',
+  usina_fornecedora: 'Usina Fornecedora',
   ligante: 'Ligante',
   pedreira: 'Pedreira',
+  engenheiro_responsavel: 'Engenheiro Responsavel',
+  status: 'Status',
+  observacoes: 'Observacoes',
+  observacoes_gerais: 'Observacoes Gerais',
+  material: 'Material',
+  estaca: 'Estaca',
+  camada: 'Camada',
+  condicoes_climaticas: 'Condicoes Climaticas',
+  temperatura: 'Temperatura (C)',
+  atividades_realizadas: 'Atividades Realizadas',
+  inspetor_campo: 'Inspetor de Campo',
+  inspetor_fiscal: 'Inspetor Fiscal',
+  faixa_especificada: 'Faixa Especificada',
   projeto_utilizado: 'Projeto Utilizado',
+  concreteira: 'Concreteira',
+  fck: 'fck (MPa)',
+  volume: 'Volume (m3)',
   ensaio_realizado_por: 'Ensaio Realizado Por',
+  umidade_otima_proctor: 'Umidade Otima Proctor (%)',
+  umidade_in_situ: 'Umidade In Situ (%)',
+  servico: 'Servico',
+  cliente: 'Cliente',
+  tipo_local: 'Tipo de Local',
+  faixa: 'Faixa',
+  inspetor_campo: 'Inspetor de Campo',
+  local_coleta: 'Local de Coleta',
+  placa_caminhao: 'Placa do Caminhao',
+  tipo_ligante: 'Tipo de Ligante',
+  horario: 'Horario',
+  estrutura: 'Estrutura',
 };
 
-async function getOrCreateFolder(base44, accessToken, parentId, name, pathKey) {
-  // Check cache
-  const existing = await base44.asServiceRole.entities.DriveFolderMap.filter({ path_key: pathKey });
-  if (existing && existing.length > 0) {
-    return existing[0].folder_id;
-  }
+async function getOrCreateFolder(accessToken, name, parentId, base44, pathKey) {
+  const cached = await base44.asServiceRole.entities.DriveExportFolder.filter({ path: pathKey });
+  if (cached.length > 0) return cached[0].folder_id;
 
-  // Create folder in Drive
-  const body = {
-    name,
-    mimeType: 'application/vnd.google-apps.folder',
-  };
-  if (parentId) body.parents = [parentId];
+  const meta = { name, mimeType: 'application/vnd.google-apps.folder' };
+  if (parentId) meta.parents = [parentId];
 
   const res = await fetch('https://www.googleapis.com/drive/v3/files', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(meta),
   });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Drive folder creation failed: ${err}`);
+  }
 
   const folder = await res.json();
-  if (!folder.id) throw new Error(`Failed to create folder "${name}": ${JSON.stringify(folder)}`);
-
-  // Cache it
-  await base44.asServiceRole.entities.DriveFolderMap.create({
-    path_key: pathKey,
-    folder_id: folder.id,
-    folder_name: name,
-  });
-
+  await base44.asServiceRole.entities.DriveExportFolder.create({ path: pathKey, folder_id: folder.id });
   return folder.id;
 }
 
-function generatePDF(entityName, record, obraName) {
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  const displayName = ENTITY_DISPLAY_NAMES[entityName] || entityName;
-  const pageW = 210;
-  const margin = 15;
-  const contentW = pageW - margin * 2;
-
-  // Header bar
-  doc.setFillColor(0, 35, 59); // #00233B
-  doc.rect(0, 0, pageW, 22, 'F');
-
-  doc.setTextColor(191, 207, 153); // #BFCF99
-  doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
-  doc.text('AFIRMA EVIAS', margin, 10);
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(displayName, margin, 17);
-
-  // Subtitle
-  doc.setTextColor(0, 35, 59);
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Obra: ${obraName || 'N/A'}`, margin, 32);
-
-  const dateStr = record.data || record.data_ensaio || '';
-  if (dateStr) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Data: ${dateStr}`, margin, 39);
-  }
-
-  // Divider
-  doc.setDrawColor(191, 207, 153);
-  doc.setLineWidth(0.5);
-  doc.line(margin, 43, pageW - margin, 43);
-
-  // Fields
-  let y = 50;
-  const lineHeight = 8;
-  const colLabel = margin;
-  const colValue = margin + 55;
-
-  doc.setFontSize(9);
-
+function extractFields(record) {
+  const fields = [];
   for (const [key, label] of Object.entries(FIELD_LABELS)) {
     const val = record[key];
-    if (val === undefined || val === null || val === '') continue;
-    if (typeof val === 'object') continue; // skip nested objects
-
-    if (y > 270) {
-      doc.addPage();
-      y = 20;
-    }
-
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 35, 59);
-    doc.text(`${label}:`, colLabel, y);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(50, 50, 50);
-    const valStr = String(val);
-    const lines = doc.splitTextToSize(valStr, contentW - 55);
-    doc.text(lines, colValue, y);
-    y += lineHeight * Math.max(1, lines.length);
-  }
-
-  // Jornada
-  if (record.jornada) {
-    if (y > 270) { doc.addPage(); y = 20; }
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 35, 59);
-    doc.text('Jornada:', colLabel, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(50, 50, 50);
-    const jStr = `${record.jornada.horario_inicio || ''} - ${record.jornada.horario_fim || ''}`;
-    doc.text(jStr, colValue, y);
-    y += lineHeight;
-  }
-
-  // NCs summary
-  if (record.nao_conformidades && record.nao_conformidades.length > 0) {
-    if (y > 260) { doc.addPage(); y = 20; }
-    y += 4;
-    doc.setFillColor(240, 240, 240);
-    doc.rect(margin, y - 4, contentW, 7, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 35, 59);
-    doc.setFontSize(9);
-    doc.text(`Não Conformidades (${record.nao_conformidades.length})`, margin + 2, y);
-    y += 7;
-
-    for (const nc of record.nao_conformidades) {
-      if (y > 275) { doc.addPage(); y = 20; }
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(180, 0, 0);
-      const ncLine = `• [${nc.categoria_nc || ''}] ${nc.descricao || nc.parametro_nc || ''}`;
-      const ncLines = doc.splitTextToSize(ncLine, contentW);
-      doc.text(ncLines, margin + 2, y);
-      y += lineHeight * Math.max(1, ncLines.length);
+    if (val !== undefined && val !== null && val !== '') {
+      fields.push({ label, value: String(val) });
     }
   }
+  return fields;
+}
 
-  // Footer
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFontSize(7);
-    doc.setTextColor(150, 150, 150);
-    doc.text(
-      `Gerado automaticamente em ${new Date().toLocaleDateString('pt-BR')} — Página ${i}/${totalPages}`,
-      margin,
-      290
+async function generatePDF(entityName, record, obra) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: 'A4', margin: 50, bufferPages: true });
+    const chunks = [];
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+    doc.on('error', reject);
+
+    const label = ENTITY_LABELS[entityName] || entityName;
+    const obraName = obra ? `${obra.name} (${obra.code})` : 'Sem Obra';
+    const pageWidth = doc.page.width;
+
+    // Header
+    doc.rect(0, 0, pageWidth, 75).fill('#00233B');
+    doc.fillColor('#BFCF99').fontSize(16).font('Helvetica-Bold').text('AFIRMAEVIAS', 50, 20, { width: 400 });
+    doc.fillColor('#FFFFFF').fontSize(12).text(label.toUpperCase(), 50, 44, { width: 400 });
+
+    doc.y = 90;
+
+    // Obra / meta info
+    doc.font('Helvetica-Bold').fontSize(10).fillColor('#00233B').text('Obra: ', { continued: true });
+    doc.font('Helvetica').fillColor('#333333').text(obraName);
+
+    const recDate = record.data || record.data_ensaio;
+    if (recDate) {
+      doc.font('Helvetica-Bold').fontSize(10).fillColor('#00233B').text('Data: ', { continued: true });
+      doc.font('Helvetica').fillColor('#333333').text(String(recDate));
+    }
+
+    if (record.laboratorista_name) {
+      doc.font('Helvetica-Bold').fontSize(10).fillColor('#00233B').text('Laboratorista: ', { continued: true });
+      doc.font('Helvetica').fillColor('#333333').text(record.laboratorista_name);
+    }
+
+    doc.moveDown(0.4);
+    doc.moveTo(50, doc.y).lineTo(pageWidth - 50, doc.y).strokeColor('#BFCF99').stroke();
+    doc.moveDown(0.5);
+
+    // Fields table
+    const fields = extractFields(record);
+    // Remove already shown fields
+    const shownKeys = ['data', 'data_ensaio', 'laboratorista_name'];
+    const remaining = fields.filter(f => !shownKeys.some(k => FIELD_LABELS[k] === f.label));
+
+    for (const { label: fl, value } of remaining) {
+      if (doc.y > 730) {
+        doc.addPage();
+        doc.y = 50;
+      }
+      doc.font('Helvetica-Bold').fontSize(9).fillColor('#00233B').text(fl + ': ', { continued: true });
+      doc.font('Helvetica').fillColor('#444444').text(value);
+    }
+
+    // Footer
+    doc.fontSize(7).fillColor('#AAAAAA').text(
+      `Exportado automaticamente em ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} | ID: ${record.id || ''}`,
+      50,
+      doc.page.height - 40,
+      { align: 'center', width: pageWidth - 100 }
     );
+
+    doc.end();
+  });
+}
+
+async function uploadToDrive(accessToken, folderId, filename, pdfBuffer) {
+  const metadata = { name: filename, parents: [folderId], mimeType: 'application/pdf' };
+  const metaStr = JSON.stringify(metadata);
+  const boundary = 'ae_pdf_boundary_271828';
+
+  const head = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metaStr}\r\n--${boundary}\r\nContent-Type: application/pdf\r\n\r\n`;
+  const tail = `\r\n--${boundary}--`;
+
+  const headBytes = new TextEncoder().encode(head);
+  const tailBytes = new TextEncoder().encode(tail);
+  const pdfBytes = pdfBuffer instanceof Uint8Array ? pdfBuffer : new Uint8Array(pdfBuffer.buffer, pdfBuffer.byteOffset, pdfBuffer.byteLength);
+
+  const body = new Uint8Array(headBytes.length + pdfBytes.length + tailBytes.length);
+  body.set(headBytes, 0);
+  body.set(pdfBytes, headBytes.length);
+  body.set(tailBytes, headBytes.length + pdfBytes.length);
+
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': `multipart/related; boundary=${boundary}`,
+    },
+    body,
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Drive upload failed: ${err}`);
   }
 
-  return doc.output('arraybuffer');
+  return await res.json();
 }
 
 Deno.serve(async (req) => {
   try {
+    const payload = await req.json();
     const base44 = createClientFromRequest(req);
-    const { entityName, recordId } = await req.json();
+
+    let entityName, recordId, record;
+
+    if (payload.event) {
+      // Triggered from entity automation
+      entityName = payload.event.entity_name;
+      recordId = payload.event.entity_id;
+      record = payload.data && !payload.payload_too_large
+        ? payload.data
+        : await base44.asServiceRole.entities[entityName].get(recordId);
+    } else {
+      // Direct invocation
+      entityName = payload.entity_name;
+      recordId = payload.record_id;
+      record = await base44.asServiceRole.entities[entityName].get(recordId);
+    }
 
     if (!entityName || !recordId) {
-      return Response.json({ error: 'entityName and recordId are required' }, { status: 400 });
+      return Response.json({ error: 'Missing entity_name or record_id' }, { status: 400 });
     }
 
-    // Fetch record
-    const record = await base44.asServiceRole.entities[entityName].get(recordId);
-    if (!record) return Response.json({ error: 'Record not found' }, { status: 404 });
-
-    // Fetch obra
-    let obraName = 'Obra Desconhecida';
-    if (record.obra_id) {
-      try {
-        const obra = await base44.asServiceRole.entities.Obra.get(record.obra_id);
-        if (obra) obraName = obra.name || obra.code || obraName;
-      } catch (_) {}
+    // Get Obra for folder naming
+    const obraId = record.obra_id;
+    let obra = null;
+    if (obraId) {
+      obra = await base44.asServiceRole.entities.Obra.get(obraId);
     }
 
-    // Get Drive token
+    // Get Drive access token
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googledrive');
 
-    // Ensure folder structure
-    const rootId = await getOrCreateFolder(base44, accessToken, null, 'AfirmaEvias - Registros', 'root');
-    const obraFolderId = await getOrCreateFolder(
-      base44, accessToken, rootId,
-      obraName,
-      `obra_${record.obra_id || 'unknown'}`
-    );
-    const displayName = ENTITY_DISPLAY_NAMES[entityName] || entityName;
-    const typeFolderId = await getOrCreateFolder(
-      base44, accessToken, obraFolderId,
-      displayName,
-      `obra_${record.obra_id || 'unknown'}_${entityName}`
-    );
+    // Build folder hierarchy: AfirmaEvias Registros / Obra / TipoRegistro
+    const rootId = await getOrCreateFolder(accessToken, 'AfirmaEvias Registros', null, base44, 'root');
+
+    const obraKey = `obra_${obraId || 'none'}`;
+    const obraFolderName = obra ? `${obra.name} (${obra.code})` : 'Sem Obra';
+    const obraFolderId = await getOrCreateFolder(accessToken, obraFolderName, rootId, base44, obraKey);
+
+    const typeKey = `${obraKey}_${entityName}`;
+    const typeLabel = ENTITY_LABELS[entityName] || entityName;
+    const typeFolderId = await getOrCreateFolder(accessToken, typeLabel, obraFolderId, base44, typeKey);
 
     // Generate PDF
-    const pdfBuffer = generatePDF(entityName, record, obraName);
+    const pdfBuffer = await generatePDF(entityName, record, obra);
 
-    // Build filename
-    const dateStr = (record.data || record.data_ensaio || new Date().toISOString().slice(0, 10)).replace(/-/g, '');
-    const labName = (record.laboratorista_name || '').replace(/\s+/g, '_').slice(0, 20);
-    const fileName = `${displayName}_${dateStr}${labName ? '_' + labName : ''}_${recordId.slice(-6)}.pdf`;
+    // Build filename: YYYYMMDD_Laboratorista_lastID.pdf
+    const rawDate = record.data || record.data_ensaio || new Date().toISOString().split('T')[0];
+    const dateStr = String(rawDate).replace(/-/g, '');
+    const labStr = (record.laboratorista_name || 'lab').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20);
+    const idSuffix = recordId.slice(-6);
+    const filename = `${dateStr}_${labStr}_${idSuffix}.pdf`;
 
-    // Upload to Drive (multipart)
-    const boundary = '-------afirmaevias_boundary';
-    const metadata = JSON.stringify({ name: fileName, parents: [typeFolderId] });
+    // Upload
+    const uploaded = await uploadToDrive(accessToken, typeFolderId, filename, pdfBuffer);
 
-    const metaPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n`;
-    const filePart = `--${boundary}\r\nContent-Type: application/pdf\r\n\r\n`;
-    const closePart = `\r\n--${boundary}--`;
-
-    const encoder = new TextEncoder();
-    const parts = [
-      encoder.encode(metaPart),
-      encoder.encode(filePart),
-      new Uint8Array(pdfBuffer),
-      encoder.encode(closePart),
-    ];
-
-    const totalLength = parts.reduce((sum, p) => sum + p.length, 0);
-    const body = new Uint8Array(totalLength);
-    let offset = 0;
-    for (const part of parts) {
-      body.set(part, offset);
-      offset += part.length;
-    }
-
-    const uploadRes = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': `multipart/related; boundary=${boundary}`,
-          'Content-Length': String(totalLength),
-        },
-        body,
-      }
-    );
-
-    const uploaded = await uploadRes.json();
-    if (!uploaded.id) throw new Error(`Upload failed: ${JSON.stringify(uploaded)}`);
-
-    console.log(`✅ Uploaded ${fileName} → Drive ID: ${uploaded.id}`);
-    return Response.json({ success: true, driveFileId: uploaded.id, fileName });
+    console.log(`Exported ${entityName} ${recordId} -> Drive file ${uploaded.id} (${filename})`);
+    return Response.json({ success: true, file_id: uploaded.id, filename });
   } catch (error) {
     console.error('exportToDrive error:', error);
     return Response.json({ error: error.message }, { status: 500 });
