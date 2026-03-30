@@ -10,8 +10,12 @@
           root.classList.add('dark');
         } else if (theme === 'light') {
           root.setAttribute('data-theme', 'light');
+          root.classList.remove('dark');
         } else {
-          // system: only apply dark if user previously chose it explicitly
+          // system: follow OS preference
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            root.classList.add('dark');
+          }
         }
       })();
     </script>

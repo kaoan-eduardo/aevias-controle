@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun, Monitor, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { base44 } from "@/api/base44Client";
 
 const THEME_KEY = "aevias_theme";
 
@@ -26,11 +39,32 @@ function applyTheme(theme) {
 
 export default function Settings() {
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || "system");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     applyTheme(theme);
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  // Listen to OS dark mode changes when theme is 'system'
+  useEffect(() => {
+    if (theme !== 'system') return;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e) => {
+      if (e.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [theme]);
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    await base44.auth.logout();
+  };
 
   const options = [
     { value: "light", label: "Claro", icon: Sun, desc: "Sempre usar tema claro" },
@@ -77,6 +111,43 @@ export default function Settings() {
               </button>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white/20 backdrop-blur-lg border border-red-200/30 text-[#00233B]">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-red-600 flex items-center gap-2">
+            <Trash2 className="w-5 h-5" />
+            Zona de Perigo
+          </CardTitle>
+          <p className="text-sm text-[#00233B]/70">Ações irreversíveis para a sua conta</p>
+        </CardHeader>
+        <CardContent>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="w-full sm:w-auto" disabled={deleting}>
+                <Trash2 className="w-4 h-4 mr-2" />
+                {deleting ? 'Processando...' : 'Excluir minha conta'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta ação não pode ser desfeita. Sua conta e todos os seus dados serão permanentemente removidos do sistema.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAccount}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Sim, excluir minha conta
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardContent>
       </Card>
     </div>
