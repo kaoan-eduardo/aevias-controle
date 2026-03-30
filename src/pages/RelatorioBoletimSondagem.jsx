@@ -11,7 +11,21 @@ export default function RelatorioBoletimSondagem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      // Re-apply dark mode if it was enabled before
+      const htmlEl = document.documentElement;
+      if (localStorage.getItem('aevias_theme') === 'dark' || (localStorage.getItem('aevias_theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        htmlEl.classList.add('dark');
+      }
+    };
+  }, []);
 
   const loadData = async () => {
     try {
