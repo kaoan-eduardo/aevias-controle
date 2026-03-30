@@ -11,9 +11,7 @@
         } else if (theme === 'light') {
           root.setAttribute('data-theme', 'light');
         } else {
-          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            root.classList.add('dark');
-          }
+          // system: only apply dark if user previously chose it explicitly
         }
       })();
     </script>
