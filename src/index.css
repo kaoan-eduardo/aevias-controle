@@ -177,4 +177,59 @@
   .dark table { border-color: hsl(220 13% 28%); }
   .dark thead  { background-color: hsl(220 15% 18%) !important; }
   .dark tbody tr:nth-child(even) { background-color: hsl(220 15% 16% / 0.5) !important; }
+
+  /* ============================================
+     RECHARTS — DARK MODE FIXES
+     ============================================ */
+
+  /* Tooltip container */
+  .dark .recharts-default-tooltip {
+    background-color: hsl(220 15% 18%) !important;
+    border-color: hsl(220 13% 30%) !important;
+    color: hsl(210 20% 88%) !important;
+  }
+
+  .dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-label {
+    color: hsl(210 20% 88%) !important;
+  }
+
+  .dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item {
+    color: hsl(210 20% 80%) !important;
+  }
+
+  /* Axis tick labels */
+  .dark .recharts-cartesian-axis-tick-value,
+  .dark .recharts-text {
+    fill: hsl(210 15% 70%) !important;
+  }
+
+  /* Legend text */
+  .dark .recharts-legend-item-text {
+    color: hsl(210 15% 70%) !important;
+  }
+
+  /* Cartesian grid lines */
+  .dark .recharts-cartesian-grid-horizontal line,
+  .dark .recharts-cartesian-grid-vertical line {
+    stroke: hsl(220 13% 28%) !important;
+  }
+
+  /* ============================================
+     LIGHT-COLORED CARDS IN DARK MODE
+     ============================================ */
+
+  /* Cards with inline light blue/white backgrounds (project detail pages) */
+  .dark [class*="bg-blue-"] { background-color: hsl(215 30% 22%) !important; }
+  .dark [class*="bg-indigo-"] { background-color: hsl(230 25% 22%) !important; }
+  .dark [class*="text-blue-"] { color: hsl(210 70% 75%) !important; }
+  .dark [class*="text-indigo-"] { color: hsl(230 60% 78%) !important; }
+
+  /* Fix any remaining very light backgrounds that cause poor contrast */
+  .dark [style*="background: rgb(255"],
+  .dark [style*="background-color: rgb(255"],
+  .dark [style*="background: white"],
+  .dark [style*="background-color: white"] {
+    background-color: hsl(220 15% 18%) !important;
+    color: hsl(210 20% 88%) !important;
+  }
 }
