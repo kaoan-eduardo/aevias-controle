@@ -372,6 +372,7 @@ const NavLink = ({ to, children, className }) => {
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [user, setUser] = React.useState(null);
   const [obrasDoUsuario, setObrasDoUsuario] = React.useState([]);
   const [isCreateEnsaioOpen, setIsCreateEnsaioOpen] = React.useState(false);
