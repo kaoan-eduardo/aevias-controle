@@ -56,6 +56,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
+import PullToRefresh from "@/components/PullToRefresh";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
@@ -798,9 +799,11 @@ const AppLayout = ({ children }) => {
               </div>
             </header>
 
-            <div className="flex-1 overflow-auto bg-transparent pb-16 lg:pb-0 pt-12 lg:pt-0">
-              {children}
-            </div>
+            <PullToRefresh>
+              <div className="pb-16 lg:pb-0 pt-12 lg:pt-0">
+                {children}
+              </div>
+            </PullToRefresh>
             <BottomNav />
           </main>
         </div>
