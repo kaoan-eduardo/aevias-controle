@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, MapPin, Edit, Trash2, Construction as ConstructionIcon, Users as UsersIcon, ChevronDown, ChevronUp, Search, FileText, HardHat, Construction, Wrench, Loader2, Eye } from "lucide-react";
+import { Plus, MapPin, Edit, Trash2, Construction as ConstructionIcon, Users as UsersIcon, ChevronDown, ChevronUp, Search, FileText, HardHat, Construction, Wrench, Loader2, Eye, ArrowLeftRight } from "lucide-react";
 import { Regional } from "@/entities/Regional";
 import { Obra } from "@/entities/Obra";
 import { User } from "@/entities/User";
 import { Project } from "@/entities/Project";
 import RegionalForm from '../components/regionais/RegionalForm';
 import RegionalDetails from '../components/regionais/RegionalDetails';
+import SolicitarTransferenciaRegionalModal from '../components/obras/SolicitarTransferenciaRegionalModal';
 
 import {
   Dialog,
@@ -695,6 +696,8 @@ export default function RegionaisPage() {
   const [selectedRegional, setSelectedRegional] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isTransferenciaModalOpen, setIsTransferenciaModalOpen] = useState(false);
+  const [todasRegionais, setTodasRegionais] = useState([]);
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isAdmin = userAccessLevel === 'admin';
@@ -720,6 +723,8 @@ export default function RegionaisPage() {
         Obra.list(),
         Project.list()
       ]);
+
+      setTodasRegionais(regionaisData);
 
       console.log('🔍 [DEBUG] Total regionais carregadas:', regionaisData.length);
       regionaisData.forEach(r => {
@@ -844,6 +849,15 @@ export default function RegionaisPage() {
               {isAdmin ? "Gerencie as regionais e suas obras" : "Visualize as regionais e obras"}
             </p>
           </div>
+          {isLaboratorista && (
+            <Button
+              onClick={() => setIsTransferenciaModalOpen(true)}
+              className="bg-[#00233B] hover:bg-[#00233B]/90 text-[#F2F1EF]"
+            >
+              <ArrowLeftRight className="w-4 h-4 mr-2 text-[#BFCF99]" />
+              Solicitar Transferência
+            </Button>
+          )}
           {canManage && !isLaboratorista && (
             <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
               <DialogTrigger asChild>
@@ -939,6 +953,17 @@ export default function RegionaisPage() {
           </Card>
         )}
       </div>
+
+      {isLaboratorista && user && (
+        <SolicitarTransferenciaRegionalModal
+          isOpen={isTransferenciaModalOpen}
+          onClose={() => setIsTransferenciaModalOpen(false)}
+          user={user}
+          regionalAtual={regionais[0]}
+          todasRegionais={todasRegionais}
+          onSuccess={() => setIsTransferenciaModalOpen(false)}
+        />
+      )}
 
       {/* Regional Details Dialog */}
       <Dialog open={!!selectedRegional} onOpenChange={(open) => !open && setSelectedRegional(null)}>
