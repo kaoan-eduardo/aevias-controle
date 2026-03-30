@@ -1,0 +1,377 @@
+{
+  "name": "ChecklistTerraplanagem",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "string",
+      "format": "date"
+    },
+    "jornada": {
+      "type": "object",
+      "properties": {
+        "horario_inicio": {
+          "type": "string"
+        },
+        "horario_fim": {
+          "type": "string"
+        }
+      }
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "engenheiro_responsavel": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "empreiteira": {
+      "type": "string"
+    },
+    "estaca": {
+      "type": "string"
+    },
+    "camada": {
+      "type": "string"
+    },
+    "inspetor_fiscal": {
+      "type": "string"
+    },
+    "material": {
+      "type": "string"
+    },
+    "umidade_otima_proctor": {
+      "type": "number"
+    },
+    "umidade_in_situ": {
+      "type": "number"
+    },
+    "ensaio_realizado_por": {
+      "type": "string",
+      "enum": [
+        "Afirma Evias",
+        "Empreiteira"
+      ],
+      "default": "Afirma Evias",
+      "description": "Quem realizou o ensaio"
+    },
+    "periodos_clima": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "periodo": {
+            "type": "string",
+            "enum": [
+              "manha",
+              "tarde"
+            ]
+          },
+          "temperatura_ambiente": {
+            "type": "number"
+          },
+          "condicoes_climaticas": {
+            "type": "string",
+            "enum": [
+              "bom",
+              "chuva",
+              "instavel"
+            ]
+          }
+        }
+      }
+    },
+    "acompanhamento_execucao": {
+      "type": "object",
+      "properties": {
+        "remocao_material_existente": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            }
+          }
+        },
+        "espalhamento_material_novo": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            }
+          }
+        },
+        "compactacao_conforme_projeto": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            },
+            "rolo_liso": {
+              "type": "boolean"
+            },
+            "rolo_pneu": {
+              "type": "boolean"
+            },
+            "rolo_pe_carneiro": {
+              "type": "boolean"
+            }
+          }
+        },
+        "ensaio_viga_benkelman": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            }
+          }
+        },
+        "teste_carga": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            }
+          }
+        },
+        "falha_compactacao": {
+          "type": "object",
+          "properties": {
+            "sim": {
+              "type": "boolean"
+            },
+            "nao": {
+              "type": "boolean"
+            },
+            "na": {
+              "type": "boolean"
+            }
+          }
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "ensaios_empreiteira": {
+      "type": "object",
+      "properties": {
+        "compactacao_proctor": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        },
+        "isc": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        },
+        "umidade_frigideira": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        },
+        "massa_especifica_in_situ": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        },
+        "granulometria": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "observacoes_gerais": {
+      "type": "string"
+    },
+    "acoes_corretivas_realizado": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "acoes_corretivas_descricao": {
+      "type": "string"
+    },
+    "nao_conformidades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "local_nc": {
+            "type": "string"
+          },
+          "categoria_nc": {
+            "type": "string"
+          },
+          "parametro_nc": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id",
+    "data"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}
