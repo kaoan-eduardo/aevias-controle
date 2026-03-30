@@ -70,6 +70,7 @@ const BottomNav = () => {
     { label: 'Obras', icon: FolderOpen, path: createPageUrl('Regionais') },
     { label: 'Projetos', icon: Grid, path: createPageUrl('Projects') },
     { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios') },
+    { label: 'Transferências', icon: ArrowLeftRight, path: createPageUrl('SolicitacoesTransferencia') },
   ];
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#F2F1EF] border-t border-black/10 flex items-center justify-around"
