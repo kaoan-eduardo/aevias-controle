@@ -299,3 +299,42 @@
     color: hsl(210 20% 88%) !important;
   }
 }
+
+/* ============================================
+   FORCE LIGHT MODE FOR REPORT PAGES
+   ============================================ */
+body.relatorio-page {
+  color-scheme: light !important;
+}
+
+body.relatorio-page,
+body.relatorio-page * {
+  --background: 0 0% 100% !important;
+  --foreground: 0 0% 3.9% !important;
+}
+
+body.relatorio-page {
+  background-color: hsl(0 0% 100%) !important;
+  color: hsl(0 0% 3.9%) !important;
+}
+
+body.relatorio-page .dark,
+body.relatorio-page [class*="dark"] {
+  color-scheme: light !important;
+}
+
+body.relatorio-page input,
+body.relatorio-page textarea,
+body.relatorio-page select,
+body.relatorio-page table,
+body.relatorio-page thead,
+body.relatorio-page tbody {
+  color: hsl(0 0% 3.9%) !important;
+  background-color: hsl(0 0% 100%) !important;
+  border-color: hsl(0 0% 89.8%) !important;
+}
+
+body.relatorio-page input::placeholder,
+body.relatorio-page textarea::placeholder {
+  color: hsl(0 0% 45.1%) !important;
+}

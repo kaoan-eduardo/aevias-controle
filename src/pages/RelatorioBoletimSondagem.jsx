@@ -60,7 +60,7 @@ export default function RelatorioBoletimSondagem() {
   const temCol2 = camadas.some(c => c.classificacao_2 !== null && c.classificacao_2 !== undefined);
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="relatorio-page bg-white min-h-screen">
       {/* Toolbar */}
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
