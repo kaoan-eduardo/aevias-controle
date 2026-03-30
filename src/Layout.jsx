@@ -68,6 +68,7 @@ const BottomNav = () => {
   const navItems = [
     { label: 'Início', icon: Home, path: '/' },
     { label: 'Obras', icon: FolderOpen, path: createPageUrl('Regionais') },
+    { label: 'Projetos', icon: Grid, path: createPageUrl('Projects') },
     { label: 'Registros', icon: LayoutDashboard, path: createPageUrl('MeusEnsaios') },
   ];
   return (
