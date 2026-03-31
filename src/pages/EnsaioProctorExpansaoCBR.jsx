@@ -279,11 +279,10 @@ export default function EnsaioProctorExpansaoCBR() {
       </div>
 
       <Tabs defaultValue="dados" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="dados">Dados Gerais</TabsTrigger>
           <TabsTrigger value="compactacao">Compactação</TabsTrigger>
           <TabsTrigger value="expansao">Expansão</TabsTrigger>
-          <TabsTrigger value="umidade">Umidade</TabsTrigger>
           <TabsTrigger value="cbr">CBR (ISC)</TabsTrigger>
         </TabsList>
 
@@ -350,7 +349,8 @@ export default function EnsaioProctorExpansaoCBR() {
         </TabsContent>
 
         <TabsContent value="compactacao">
-          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+          <div className="space-y-6">
+            <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Compactação Proctor</CardTitle>
               <Button onClick={addMolde} size="sm" className="gap-2">
@@ -404,6 +404,7 @@ export default function EnsaioProctorExpansaoCBR() {
               ))}
             </CardContent>
           </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="expansao">
@@ -441,9 +442,7 @@ export default function EnsaioProctorExpansaoCBR() {
               ))}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="umidade">
           <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Umidade Higrográfica (DNIT 164/2013)</CardTitle>
