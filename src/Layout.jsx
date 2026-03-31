@@ -183,7 +183,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical }
+        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+        { title: "Proctor + Expansão + CBR", url: createPageUrl("EnsaioProctorExpansaoCBR"), icon: FlaskConical }
       ]
     },
     {
@@ -201,7 +202,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical }
+        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+        { title: "Proctor + Expansão + CBR", url: createPageUrl("EnsaioProctorExpansaoCBR"), icon: FlaskConical }
       ]
     },
     {
@@ -223,7 +225,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical }
+        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+        { title: "Proctor + Expansão + CBR", url: createPageUrl("EnsaioProctorExpansaoCBR"), icon: FlaskConical }
       ]
     },
     {
