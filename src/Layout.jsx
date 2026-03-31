@@ -815,6 +815,10 @@ const AppLayout = ({ children }) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48 bg-[#F2F1EF]/80 backdrop-blur-lg border-white/20 text-[#00233B]">
+                    <DropdownMenuItem onClick={() => navigate('/Settings')} className="cursor-pointer focus:bg-white/10">
+                      <Settings className="w-4 h-4 mr-2 text-[#BFCF99]" />
+                      Configurações
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => setIsDeleteDialogOpen(true)}
                       className="text-red-500 cursor-pointer focus:bg-white/10 focus:text-red-400"
