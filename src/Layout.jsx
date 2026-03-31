@@ -858,7 +858,7 @@ const AppLayout = ({ children }) => {
               className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#F2F1EF]/95 backdrop-blur-md border-b border-black/10 flex items-center justify-between px-4"
               style={{ paddingTop: 'env(safe-area-inset-top)', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
             >
-              {/* Left: back button or logo */}
+              {/* Left: back button or logo + profile on home */}
               {location.pathname !== '/' ? (
                 <button
                   onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
@@ -868,34 +868,36 @@ const AppLayout = ({ children }) => {
                   <span className="text-sm">Voltar</span>
                 </button>
               ) : (
-                <span className="text-base font-bold text-[#00233B] py-3">Afirmaevias</span>
+                <div className="flex items-center gap-2 py-3">
+                  {user && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-[#00233B]/10 hover:bg-[#00233B]/20">
+                          <UserIcon className="w-4 h-4 text-[#00233B]" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-56 bg-[#F2F1EF]/95 backdrop-blur-lg border-white/20 text-[#00233B]">
+                        <div className="px-3 py-2 border-b border-black/10">
+                          <p className="text-xs font-medium text-[#00233B] truncate">{user.email}</p>
+                          <p className="text-[10px] text-[#00233B]/60 truncate">{user.laboratorista_name || user.full_name}</p>
+                        </div>
+                        <DropdownMenuItem onClick={() => navigate('/Settings')} className="cursor-pointer focus:bg-white/10">
+                          <Settings className="w-4 h-4 mr-2 text-[#BFCF99]" />
+                          Configurações
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer focus:bg-white/10">
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sair
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                  <span className="text-base font-bold text-[#00233B]">Afirmaevias</span>
+                </div>
               )}
 
-{/* Right: profile + new record buttons */}
+{/* Right: new record button */}
               <div className="flex items-center gap-2">
-                {user && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-[#00233B]/10 hover:bg-[#00233B]/20">
-                        <UserIcon className="w-4 h-4 text-[#00233B]" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 bg-[#F2F1EF]/95 backdrop-blur-lg border-white/20 text-[#00233B]">
-                      <div className="px-3 py-2 border-b border-black/10">
-                        <p className="text-xs font-medium text-[#00233B] truncate">{user.email}</p>
-                        <p className="text-[10px] text-[#00233B]/60 truncate">{user.laboratorista_name || user.full_name}</p>
-                      </div>
-                      <DropdownMenuItem onClick={() => navigate('/Settings')} className="cursor-pointer focus:bg-white/10">
-                        <Settings className="w-4 h-4 mr-2 text-[#BFCF99]" />
-                        Configurações
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer focus:bg-white/10">
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sair
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
                 {canCreateRecords && (
                   <DialogTrigger asChild>
                     <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors h-8 w-8">
