@@ -158,9 +158,11 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
 
   const tiposObraDisponiveis = useMemo(() => {
     if (!obrasDoUsuario || obrasDoUsuario.length === 0) {
-      return new Set();
+      return new Set(['supervisao', 'implantacao', 'conservacao', 'sondagem', 'levantamentos']);
     }
-    return new Set(obrasDoUsuario.map(obra => obra.tipo_obra).filter(Boolean));
+    const tipos = new Set(obrasDoUsuario.map(obra => obra.tipo_obra).filter(Boolean));
+    // Garantir que pelo menos esses tipos estejam disponíveis
+    return tipos.size === 0 ? new Set(['supervisao', 'implantacao', 'conservacao', 'sondagem', 'levantamentos']) : tipos;
   }, [obrasDoUsuario]);
 
   const categorias = useMemo(() => [
