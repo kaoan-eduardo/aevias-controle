@@ -253,7 +253,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       icon: FlaskConical,
       cor: "text-[#00233B]",
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
-      tipo_obra: null,
+      tipo_obra: ["sondagem", "implantacao", "conservacao"],
       ensaios: [
         { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
       ]
@@ -261,7 +261,12 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
   ], []);
 
   const categoriasDisponiveis = useMemo(() =>
-    categorias.filter(categoria => tiposObraDisponiveis.has(categoria.tipo_obra)),
+    categorias.filter(categoria => {
+      if (Array.isArray(categoria.tipo_obra)) {
+        return categoria.tipo_obra.some(tipo => tiposObraDisponiveis.has(tipo));
+      }
+      return tiposObraDisponiveis.has(categoria.tipo_obra);
+    }),
     [categorias, tiposObraDisponiveis]
   );
 
