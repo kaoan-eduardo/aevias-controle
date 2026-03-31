@@ -105,6 +105,40 @@ export default function ProctorPage() {
     loadInitialData();
   }, []);
 
+  // Auto-calcular umidade quando valores mudarem
+  useEffect(() => {
+    const newCil = formData.cilindros.map(cilindro => {
+      const { peso_capsula, peso_solo_umido, peso_capsula_solo_seco } = cilindro.umidade;
+      if (peso_capsula > 0 && peso_solo_umido > 0 && peso_capsula_solo_seco > 0) {
+        const umid = calcularUmidade(peso_capsula, peso_solo_umido, peso_capsula_solo_seco);
+        return {
+          ...cilindro,
+          umidade: { ...cilindro.umidade, umidade_calculada: parseFloat(umid) }
+        };
+      }
+      return cilindro;
+    });
+    setFormData(prev => ({ ...prev, cilindros: newCil }));
+  }, [formData.cilindros.map(c => `${c.umidade.peso_capsula}${c.umidade.peso_solo_umido}${c.umidade.peso_capsula_solo_seco}`).join()]);
+
+  // Auto-calcular densidade quando valores mudarem
+  useEffect(() => {
+    const newCil = formData.cilindros.map(cilindro => {
+      const { peso_material, volume } = cilindro.densidade;
+      const umidad = cilindro.umidade.umidade_calculada || 0;
+      if (peso_material > 0 && volume > 0) {
+        const densUmida = parseFloat((peso_material / volume).toFixed(4));
+        const densSeca = parseFloat(calcularDensidadeSeca(densUmida, umidad));
+        return {
+          ...cilindro,
+          densidade: { ...cilindro.densidade, densidade_umida: densUmida, densidade_seca: densSeca }
+        };
+      }
+      return cilindro;
+    });
+    setFormData(prev => ({ ...prev, cilindros: newCil }));
+  }, [formData.cilindros.map(c => `${c.densidade.peso_material}${c.densidade.volume}${c.umidade.umidade_calculada}`).join()]);
+
   const loadInitialData = async () => {
     try {
       const userData = await base44.auth.me();
