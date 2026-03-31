@@ -161,18 +161,19 @@ export default function EnsaioProctorPage() {
 
   const calculateDensidade = (index) => {
     const d = form.densidades[index];
-    if (d.cilindro_solo_umido && d.peso_cilindro && d.volume_cilindro) {
-      const p1 = parseFloat(d.cilindro_solo_umido);
-      const p2 = parseFloat(d.peso_cilindro);
-      const p3 = p1 - p2;
-      const v = parseFloat(d.volume_cilindro);
+    const p1 = parseFloat(d.cilindro_solo_umido);
+    const p2 = parseFloat(d.peso_cilindro);
+    const v = parseFloat(d.volume_cilindro);
 
+    if (!isNaN(p1) && !isNaN(p2) && !isNaN(v)) {
+      const p3 = p1 - p2;
       const gammaW = p3 / v;
+      
       let tW;
       if (form.correcao_densidade === "higroscopica") {
         tW = form.umidade_higroscopica ? parseFloat(form.umidade_higroscopica) : form.umidade_media;
       } else {
-        tW = form.umidades[index].teor_umidade || form.umidade_media;
+        tW = form.umidades[index]?.teor_umidade || form.umidade_media;
       }
 
       const gammaS = (gammaW / (tW + 100)) * 100;
