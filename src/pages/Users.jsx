@@ -600,8 +600,8 @@ export default function UsersPage() {
           </CardContent>
         </Card>
 
-        <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg overflow-x-auto">
-          <table className="w-full divide-y divide-white/10">
+        <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-white/10">
             <thead className="bg-black/5">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Usuário</th>
@@ -611,7 +611,7 @@ export default function UsersPage() {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Ativo</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#00233B]/70 uppercase tracking-wider">Status</th>
                 {(canManageUsers && !isCliente) && (
-                  <th scope="col" className="relative px-6 py-3 min-w-[100px]">
+                  <th scope="col" className="relative px-6 py-3">
                     <span className="sr-only">Editar</span>
                   </th>
                 )}

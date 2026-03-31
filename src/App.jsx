@@ -13,7 +13,6 @@ import BoletimSondagem from './pages/BoletimSondagem';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
 import BoletimSondagemTrado from './pages/BoletimSondagemTrado';
 import RelatorioBoletimSondagemTrado from './pages/RelatorioBoletimSondagemTrado';
-import Proctor from './pages/Proctor';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -110,14 +109,6 @@ function AuthenticatedApp() {
         element={
           <LayoutWrapper currentPageName="RelatorioBoletimSondagemTrado">
             <RelatorioBoletimSondagemTrado />
-          </LayoutWrapper>
-        }
-      />
-      <Route
-        path="/Proctor"
-        element={
-          <LayoutWrapper currentPageName="Proctor">
-            <Proctor />
           </LayoutWrapper>
         }
       />
