@@ -53,29 +53,24 @@ export default function ProctorPage() {
       peso_capsula_solo_seco: 0,
       umidade_calculada: 0
     },
-    num_moldes: 5,
-    compactacoes: Array(5).fill(null).map(() => ({
-      numero_molde: 0,
-      umidades: Array(5).fill(null).map(() => ({
+    cilindros: Array(5).fill(null).map(() => ({
+      numero_cilindro: '',
+      umidade: {
         numero_capsula: '',
         peso_capsula: 0,
         peso_solo_umido: 0,
         peso_capsula_solo_umido: 0,
-        peso_agua_adicionada: 0,
+        peso_agua: 0,
         peso_capsula_solo_seco: 0,
-        percentual_agua_adicionada: 0,
-        peso_material_solo_agua: 0,
-        umidade_calculada: 0,
-        umidade_media: 0
-      })),
-      densidades: Array(5).fill(null).map(() => ({
-        numero_cilindro: '',
+        umidade_calculada: 0
+      },
+      densidade: {
         peso_material: 0,
         peso_seco: 0,
         volume: 0,
         densidade_umida: 0,
         densidade_seca: 0
-      }))
+      }
     })),
     densidade_maxima: 0,
     umidade_otima: 0,
@@ -465,118 +460,201 @@ export default function ProctorPage() {
         <TabsContent value="compactacao" className="space-y-4">
           <Card className="bg-white/20 backdrop-blur-lg border-white/20">
             <CardHeader>
-              <CardTitle>Dados de Compactação</CardTitle>
+              <CardTitle>Cilindros - Umidade e Densidade</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {formData.compactacoes.map((comp, moldIndex) => (
-                <div key={moldIndex} className="border-t pt-6">
-                  <h4 className="font-bold text-[#00233B] mb-4">Molde {moldIndex + 1}</h4>
-                  
-                  <div className="space-y-4">
-                    <h5 className="font-semibold text-sm">Umidades</h5>
-                    {comp.umidades.slice(0, umidadeMode === 'higroscopica' ? 1 : 5).map((umid, umidIndex) => (
-                      <div key={umidIndex} className="bg-white/10 p-3 rounded border border-white/20">
-                        <p className="text-xs font-semibold text-[#00233B] mb-2">Umidade {umidIndex + 1}</p>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                          <Input placeholder="Cápsula Nº" value={umid.numero_capsula} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].umidades[umidIndex].numero_capsula = e.target.value;
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="C (g)" value={umid.peso_capsula} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].umidades[umidIndex].peso_capsula = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="S (g)" value={umid.peso_solo_umido} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].umidades[umidIndex].peso_solo_umido = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="C+S (g)" value={umid.peso_capsula_solo_umido} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].umidades[umidIndex].peso_capsula_solo_umido = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="C+S+A (g)" value={umid.peso_capsula_solo_seco} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].umidades[umidIndex].peso_capsula_solo_seco = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="Umidade (%)" value={umid.umidade_calculada} disabled size="sm" />
-                        </div>
+              {formData.cilindros.map((cilindro, cilIndex) => (
+                <div key={cilIndex} className="border-t pt-6">
+                  <h4 className="font-bold text-[#00233B] mb-4">Cilindro {cilIndex + 1}</h4>
+
+                  <Input 
+                    placeholder="Cilindro Nº" 
+                    value={cilindro.numero_cilindro} 
+                    onChange={(e) => {
+                      const newCil = [...formData.cilindros];
+                      newCil[cilIndex].numero_cilindro = e.target.value;
+                      setFormData(prev => ({ ...prev, cilindros: newCil }));
+                    }} 
+                    className="mb-4"
+                  />
+
+                  {/* UMIDADE */}
+                  <div className="space-y-4 mb-6">
+                    <h5 className="font-semibold text-sm">Umidade</h5>
+                    <div className="bg-white/10 p-3 rounded border border-white/20">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <Input 
+                          placeholder="Cápsula Nº" 
+                          value={cilindro.umidade.numero_capsula} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.numero_capsula = e.target.value;
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="C (g)" 
+                          value={cilindro.umidade.peso_capsula} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.peso_capsula = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="S (g)" 
+                          value={cilindro.umidade.peso_solo_umido} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.peso_solo_umido = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="C+S (g)" 
+                          value={cilindro.umidade.peso_capsula_solo_umido} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.peso_capsula_solo_umido = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="A (g)" 
+                          value={cilindro.umidade.peso_agua} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.peso_agua = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="C+S+A (g)" 
+                          value={cilindro.umidade.peso_capsula_solo_seco} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].umidade.peso_capsula_solo_seco = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="Umidade (%)" 
+                          value={cilindro.umidade.umidade_calculada} 
+                          disabled 
+                          size="sm" 
+                        />
                       </div>
-                    ))}
-                    {umidadeMode === 'ponto_a_ponto' && (
-                      <Button size="sm" variant="outline" onClick={() => {
-                        const newComp = [...formData.compactacoes];
-                        const umids = newComp[moldIndex].umidades;
-                        umids.forEach((u, idx) => {
-                          u.umidade_calculada = parseFloat(calcularUmidade(u.peso_capsula, u.peso_solo_umido, u.peso_capsula_solo_seco));
-                        });
-                        const media = umids.reduce((a, b) => a + b.umidade_calculada, 0) / umids.filter(u => u.umidade_calculada > 0).length;
-                        umids.forEach(u => u.umidade_media = parseFloat(media.toFixed(2)));
-                        setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                      }}>
-                        Calcular Umidades (Ponto a Ponto)
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => {
+                          const newCil = [...formData.cilindros];
+                          const umid = calcularUmidade(
+                            newCil[cilIndex].umidade.peso_capsula,
+                            newCil[cilIndex].umidade.peso_solo_umido,
+                            newCil[cilIndex].umidade.peso_capsula_solo_seco
+                          );
+                          newCil[cilIndex].umidade.umidade_calculada = parseFloat(umid);
+                          setFormData(prev => ({ ...prev, cilindros: newCil }));
+                        }}
+                        className="w-full mt-2"
+                      >
+                        Calcular Umidade
                       </Button>
-                    )}
-                    {umidadeMode === 'higroscopica' && (
-                      <Button size="sm" variant="outline" onClick={() => {
-                        const newComp = [...formData.compactacoes];
-                        const umidHigro = formData.umidade_higroscopica.umidade_calculada || 0;
-                        newComp[moldIndex].umidades.forEach(u => {
-                          u.umidade_media = umidHigro;
-                          u.umidade_calculada = umidHigro;
-                        });
-                        setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                      }}>
-                        Aplicar Umidade Higroscópica
-                      </Button>
-                    )}
+                    </div>
                   </div>
 
-                  <div className="space-y-4 mt-4">
-                    <h5 className="font-semibold text-sm">Densidades</h5>
-                    {comp.densidades.map((dens, densIndex) => (
-                      <div key={densIndex} className="bg-white/10 p-3 rounded border border-white/20">
-                        <p className="text-xs font-semibold text-[#00233B] mb-2">Densidade {densIndex + 1}</p>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                          <Input placeholder="Cilindro Nº" value={dens.numero_cilindro} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].densidades[densIndex].numero_cilindro = e.target.value;
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="Peso Mat. (g)" value={dens.peso_material} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].densidades[densIndex].peso_material = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="Peso Seco (g)" value={dens.peso_seco} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].densidades[densIndex].peso_seco = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.01" placeholder="Volume (cm³)" value={dens.volume} onChange={(e) => {
-                            const newComp = [...formData.compactacoes];
-                            newComp[moldIndex].densidades[densIndex].volume = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                          }} size="sm" />
-                          <Input type="number" step="0.0001" placeholder="Dens. Seca (g/cm³)" value={dens.densidade_seca} disabled size="sm" />
-                        </div>
+                  {/* DENSIDADE */}
+                  <div className="space-y-4">
+                    <h5 className="font-semibold text-sm">Densidade</h5>
+                    <div className="bg-white/10 p-3 rounded border border-white/20">
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="Peso Mat. (g)" 
+                          value={cilindro.densidade.peso_material} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].densidade.peso_material = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="Peso Seco (g)" 
+                          value={cilindro.densidade.peso_seco} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].densidade.peso_seco = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="Volume (cm³)" 
+                          value={cilindro.densidade.volume} 
+                          onChange={(e) => {
+                            const newCil = [...formData.cilindros];
+                            newCil[cilIndex].densidade.volume = Number(e.target.value);
+                            setFormData(prev => ({ ...prev, cilindros: newCil }));
+                          }} 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.0001" 
+                          placeholder="Dens. Úmida" 
+                          value={cilindro.densidade.densidade_umida} 
+                          disabled 
+                          size="sm" 
+                        />
+                        <Input 
+                          type="number" 
+                          step="0.0001" 
+                          placeholder="Dens. Seca" 
+                          value={cilindro.densidade.densidade_seca} 
+                          disabled 
+                          size="sm" 
+                        />
                       </div>
-                    ))}
-                    <Button size="sm" variant="outline" onClick={() => {
-                      const newComp = [...formData.compactacoes];
-                      const umidMedia = newComp[moldIndex].umidades[0]?.umidade_media || 0;
-                      newComp[moldIndex].densidades.forEach((d, idx) => {
-                        d.densidade_umida = d.peso_material / d.volume;
-                        d.densidade_seca = parseFloat(calcularDensidadeSeca(d.densidade_umida, umidMedia));
-                      });
-                      setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                    }}>
-                      Calcular Densidades
-                    </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => {
+                          const newCil = [...formData.cilindros];
+                          const umidad = newCil[cilIndex].umidade.umidade_calculada || 0;
+                          newCil[cilIndex].densidade.densidade_umida = parseFloat((newCil[cilIndex].densidade.peso_material / newCil[cilIndex].densidade.volume).toFixed(4));
+                          newCil[cilIndex].densidade.densidade_seca = parseFloat(calcularDensidadeSeca(newCil[cilIndex].densidade.densidade_umida, umidad));
+                          setFormData(prev => ({ ...prev, cilindros: newCil }));
+                        }}
+                        className="w-full mt-2"
+                      >
+                        Calcular Densidade
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
