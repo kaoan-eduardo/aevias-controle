@@ -193,6 +193,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
       tipo_obra: "implantacao",
       ensaios: [
+        { title: "Proctor", url: createPageUrl("Proctor"), icon: FlaskConical },
         { title: "Ensaio MRAF", url: createPageUrl("EnsaioMRAF"), icon: FlaskConical },
         { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
@@ -212,6 +213,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
       tipo_obra: "conservacao",
       ensaios: [
+        { title: "Proctor", url: createPageUrl("Proctor"), icon: FlaskConical },
         { title: "Ensaio de CAUQ", url: createPageUrl("EnsaioCAUQ"), icon: FlaskConical },
         { title: "Ensaio MRAF", url: createPageUrl("EnsaioMRAF"), icon: FlaskConical },
         { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
@@ -234,7 +236,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       tipo_obra: "sondagem",
       ensaios: [
         { title: "Boletim de Sondagem (PI)", url: createPageUrl("BoletimSondagem"), icon: FileText },
-        { title: "Boletim de Sondagem a Trado", url: createPageUrl("BoletimSondagemTrado"), icon: FileText }
+        { title: "Boletim de Sondagem a Trado", url: createPageUrl("BoletimSondagemTrado"), icon: FileText },
+        { title: "Proctor", url: createPageUrl("Proctor"), icon: FlaskConical }
       ]
     },
     {
