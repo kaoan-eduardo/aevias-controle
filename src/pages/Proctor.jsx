@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { base44 } from "@/api/base44Client";
 import { Loader2, Trash2, Plus } from "lucide-react";
 
@@ -27,6 +28,7 @@ export default function ProctorPage() {
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [recordId, setRecordId] = useState(null);
+  const [umidadeMode, setUmidadeMode] = useState('higroscopica'); // 'higroscopica' ou 'ponto_a_ponto'
 
   const [formData, setFormData] = useState({
     obra_id: '',
@@ -203,8 +205,9 @@ export default function ProctorPage() {
       </div>
 
       <Tabs defaultValue="metadata" className="space-y-4">
-        <TabsList className="grid grid-cols-5 lg:grid-cols-5 bg-white/20">
+        <TabsList className="grid grid-cols-6 lg:grid-cols-6 bg-white/20">
           <TabsTrigger value="metadata">Identificação</TabsTrigger>
+          <TabsTrigger value="umidade_modo">Umidade</TabsTrigger>
           <TabsTrigger value="compactacao">Compactação</TabsTrigger>
           <TabsTrigger value="expansao">Expansão</TabsTrigger>
           <TabsTrigger value="cbr">CBR</TabsTrigger>
@@ -431,6 +434,31 @@ export default function ProctorPage() {
           </Card>
         </TabsContent>
 
+        {/* TAB: UMIDADE */}
+        <TabsContent value="umidade_modo" className="space-y-4">
+          <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+            <CardHeader>
+              <CardTitle>Método de Cálculo de Umidade</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup value={umidadeMode} onValueChange={setUmidadeMode}>
+                <div className="flex items-center space-x-2 p-3 border border-white/20 rounded mb-2">
+                  <RadioGroupItem value="higroscopica" id="hig" />
+                  <Label htmlFor="hig" className="cursor-pointer flex-1 m-0">
+                    <strong>Umidade Higroscópica</strong> - Usar uma única medição de umidade para todo o molde
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border border-white/20 rounded">
+                  <RadioGroupItem value="ponto_a_ponto" id="ponto" />
+                  <Label htmlFor="ponto" className="cursor-pointer flex-1 m-0">
+                    <strong>Umidade Ponto a Ponto</strong> - Medir umidade em cada cilindro/molde individualmente
+                  </Label>
+                </div>
+              </RadioGroup>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* TAB: COMPACTAÇÃO */}
         <TabsContent value="compactacao" className="space-y-4">
           <Card className="bg-white/20 backdrop-blur-lg border-white/20">
@@ -477,18 +505,33 @@ export default function ProctorPage() {
                         </div>
                       </div>
                     ))}
-                    <Button size="sm" variant="outline" onClick={() => {
-                      const newComp = [...formData.compactacoes];
-                      const umids = newComp[moldIndex].umidades;
-                      umids.forEach((u, idx) => {
-                        u.umidade_calculada = parseFloat(calcularUmidade(u.peso_capsula, u.peso_solo_umido, u.peso_capsula_solo_seco));
-                      });
-                      const media = umids.reduce((a, b) => a + b.umidade_calculada, 0) / umids.filter(u => u.umidade_calculada > 0).length;
-                      umids.forEach(u => u.umidade_media = parseFloat(media.toFixed(2)));
-                      setFormData(prev => ({ ...prev, compactacoes: newComp }));
-                    }}>
-                      Calcular Umidades
-                    </Button>
+                    {umidadeMode === 'ponto_a_ponto' && (
+                      <Button size="sm" variant="outline" onClick={() => {
+                        const newComp = [...formData.compactacoes];
+                        const umids = newComp[moldIndex].umidades;
+                        umids.forEach((u, idx) => {
+                          u.umidade_calculada = parseFloat(calcularUmidade(u.peso_capsula, u.peso_solo_umido, u.peso_capsula_solo_seco));
+                        });
+                        const media = umids.reduce((a, b) => a + b.umidade_calculada, 0) / umids.filter(u => u.umidade_calculada > 0).length;
+                        umids.forEach(u => u.umidade_media = parseFloat(media.toFixed(2)));
+                        setFormData(prev => ({ ...prev, compactacoes: newComp }));
+                      }}>
+                        Calcular Umidades (Ponto a Ponto)
+                      </Button>
+                    )}
+                    {umidadeMode === 'higroscopica' && (
+                      <Button size="sm" variant="outline" onClick={() => {
+                        const newComp = [...formData.compactacoes];
+                        const umidHigro = formData.umidade_higroscopica.umidade_calculada || 0;
+                        newComp[moldIndex].umidades.forEach(u => {
+                          u.umidade_media = umidHigro;
+                          u.umidade_calculada = umidHigro;
+                        });
+                        setFormData(prev => ({ ...prev, compactacoes: newComp }));
+                      }}>
+                        Aplicar Umidade Higroscópica
+                      </Button>
+                    )}
                   </div>
 
                   <div className="space-y-4 mt-4">
