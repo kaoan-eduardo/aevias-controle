@@ -1,0 +1,323 @@
+{
+  "name": "EnsaioProctorExpansaoCBR",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto vinculado"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string",
+      "description": "Nome do laboratorista que criou o registro"
+    },
+    "engenheiro_responsavel": {
+      "type": "string",
+      "description": "Nome do engenheiro respons\u00e1vel"
+    },
+    "local": {
+      "type": "string",
+      "description": "Local do ensaio"
+    },
+    "km": {
+      "type": "string",
+      "description": "KM"
+    },
+    "pista": {
+      "type": "string",
+      "description": "Pista"
+    },
+    "furo": {
+      "type": "string",
+      "description": "N\u00famero do furo"
+    },
+    "horizonte": {
+      "type": "string",
+      "description": "Horizonte"
+    },
+    "material": {
+      "type": "string",
+      "description": "Tipo de material"
+    },
+    "golpes": {
+      "type": "string",
+      "description": "N\u00famero de golpes (Proctor Intermedi\u00e1rio/Modificado)"
+    },
+    "amostra": {
+      "type": "string",
+      "description": "N\u00famero da amostra"
+    },
+    "auxiliar": {
+      "type": "string",
+      "description": "Nome do auxiliar"
+    },
+    "compactacao": {
+      "type": "object",
+      "description": "Dados de compacta\u00e7\u00e3o Proctor",
+      "properties": {
+        "moldes": {
+          "type": "array",
+          "description": "At\u00e9 5 moldes compactados",
+          "items": {
+            "type": "object",
+            "properties": {
+              "numero": {
+                "type": "number",
+                "description": "N\u00famero do molde"
+              },
+              "peso_molde": {
+                "type": "number",
+                "description": "Peso do molde (g)"
+              },
+              "peso_molde_amostra": {
+                "type": "number",
+                "description": "Peso molde + amostra (g)"
+              },
+              "volume_molde": {
+                "type": "number",
+                "description": "Volume do molde (cm\u00b3)"
+              },
+              "peso_amostra": {
+                "type": "number",
+                "description": "Peso da amostra (g) - calculado"
+              },
+              "densidade_umida": {
+                "type": "number",
+                "description": "Densidade \u00famida (g/cm\u00b3) - calculada"
+              },
+              "peso_seco": {
+                "type": "number",
+                "description": "Peso seco (g)"
+              },
+              "densidade_seca": {
+                "type": "number",
+                "description": "Densidade seca (g/cm\u00b3) - calculada"
+              },
+              "umidade": {
+                "type": "number",
+                "description": "Umidade (%)"
+              }
+            }
+          }
+        },
+        "densidade_maxima": {
+          "type": "number",
+          "description": "Densidade m\u00e1xima obtida (g/cm\u00b3)"
+        },
+        "umidade_otima": {
+          "type": "number",
+          "description": "Umidade \u00f3tima (%)"
+        }
+      }
+    },
+    "expansao": {
+      "type": "object",
+      "description": "Dados de expans\u00e3o",
+      "properties": {
+        "cilindros": {
+          "type": "array",
+          "description": "At\u00e9 4 cilindros",
+          "items": {
+            "type": "object",
+            "properties": {
+              "numero": {
+                "type": "number",
+                "description": "N\u00famero do cilindro"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data"
+              },
+              "hora": {
+                "type": "string",
+                "description": "Hora"
+              },
+              "altura_inicial": {
+                "type": "number",
+                "description": "Altura inicial (mm)"
+              },
+              "leituras": {
+                "type": "array",
+                "description": "Leituras em dias (0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0)",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "diferenca_total": {
+                "type": "number",
+                "description": "Diferen\u00e7a total (mm) - calculada"
+              },
+              "expansao_percentual": {
+                "type": "number",
+                "description": "Expans\u00e3o (%)"
+              },
+              "peso_solo_final": {
+                "type": "number",
+                "description": "Peso solo final (g)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cbr": {
+      "type": "object",
+      "description": "Dados de CBR (ISC)",
+      "properties": {
+        "cilindros": {
+          "type": "array",
+          "description": "At\u00e9 5 cilindros",
+          "items": {
+            "type": "object",
+            "properties": {
+              "numero": {
+                "type": "number",
+                "description": "N\u00famero do cilindro"
+              },
+              "penetracoes": {
+                "type": "array",
+                "description": "Dados para penetra\u00e7\u00f5es de 2.54, 5.08 e 7.62 mm",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "penetracao_mm": {
+                      "type": "number",
+                      "description": "Penetra\u00e7\u00e3o (mm)"
+                    },
+                    "leitura_anel": {
+                      "type": "number",
+                      "description": "Leitura do anel"
+                    },
+                    "pressao_kgf_cm2": {
+                      "type": "number",
+                      "description": "Press\u00e3o (kgf/cm\u00b2) - calculada"
+                    },
+                    "isc_percentual": {
+                      "type": "number",
+                      "description": "ISC (%)"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "umidade_higroscopica": {
+      "type": "array",
+      "description": "Umidade higrosc\u00f3pica das amostras",
+      "items": {
+        "type": "object",
+        "properties": {
+          "capsula_numero": {
+            "type": "string",
+            "description": "N\u00famero da c\u00e1psula"
+          },
+          "peso_capsula": {
+            "type": "number",
+            "description": "C (g)"
+          },
+          "peso_capsula_solo": {
+            "type": "number",
+            "description": "C + S (g)"
+          },
+          "peso_capsula_solo_agua": {
+            "type": "number",
+            "description": "C + S + A (g)"
+          },
+          "peso_solo": {
+            "type": "number",
+            "description": "S - Solo (g) - calculado"
+          },
+          "peso_agua": {
+            "type": "number",
+            "description": "A - \u00c1gua (g) - calculado"
+          },
+          "umidade_calculada": {
+            "type": "number",
+            "description": "Umidade calculada (%)"
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho",
+      "description": "Status do registro"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null,
+      "description": "Status de aprova\u00e7\u00e3o"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que aprovou"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object",
+      "properties": {
+        "signed_by": {
+          "type": "string"
+        },
+        "signed_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engineer_name": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "obra_id",
+    "data_ensaio"
+  ]
+}
