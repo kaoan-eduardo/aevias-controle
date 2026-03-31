@@ -389,74 +389,37 @@ export default function EnsaioProctorPage() {
             </div>
           )}
 
-          <div className="space-y-4">
-            {form.umidades.map((u, idx) => (
-              <div key={idx} className="border border-white/20 rounded-lg p-4 bg-white/5">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Água Adicionada (ml)</Label>
-                    <Input type="number" value={u.agua_adicionada_ml} onChange={(e) => {
-                      const updated = [...form.umidades];
-                      updated[idx].agua_adicionada_ml = e.target.value;
-                      setForm(prev => ({ ...prev, umidades: updated }));
-                    }} />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Cápsula Nº</Label>
-                    <Input value={u.capsula_numero} onChange={(e) => {
-                      const updated = [...form.umidades];
-                      updated[idx].capsula_numero = e.target.value;
-                      setForm(prev => ({ ...prev, umidades: updated }));
-                    }} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Cápsula + Solo Úmido (g)</Label>
-                    <Input type="number" step="0.01" value={u.capsula_solo_umido} onChange={(e) => {
-                      const updated = [...form.umidades];
-                      updated[idx].capsula_solo_umido = e.target.value;
-                      setForm(prev => ({ ...prev, umidades: updated }));
-                      setTimeout(() => calculateUmidade(idx), 0);
-                    }} />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Cápsula + Solo Seco (g)</Label>
-                    <Input type="number" step="0.01" value={u.capsula_solo_seco} onChange={(e) => {
-                      const updated = [...form.umidades];
-                      updated[idx].capsula_solo_seco = e.target.value;
-                      setForm(prev => ({ ...prev, umidades: updated }));
-                      setTimeout(() => calculateUmidade(idx), 0);
-                    }} />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Peso da Cápsula (g)</Label>
-                    <Input type="number" step="0.01" value={u.peso_capsula} onChange={(e) => {
-                      const updated = [...form.umidades];
-                      updated[idx].peso_capsula = e.target.value;
-                      setForm(prev => ({ ...prev, umidades: updated }));
-                      setTimeout(() => calculateUmidade(idx), 0);
-                    }} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 text-sm">
-                  <div className="bg-white/10 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Peso Água (g)</span>
-                    <p className="font-semibold text-[#00233B]">{u.peso_agua.toFixed(3)}</p>
-                  </div>
-                  <div className="bg-white/10 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Peso Solo Seco (g)</span>
-                    <p className="font-semibold text-[#00233B]">{u.peso_solo_seco.toFixed(3)}</p>
-                  </div>
-                  <div className="bg-white/10 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Teor Umidade (%)</span>
-                    <p className="font-semibold text-[#BFCF99]">{u.teor_umidade.toFixed(2)}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-[#00233B]/10">
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">#</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Água (ml)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cápsula Nº</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cap+Solo Úmido (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cap+Solo Seco (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Peso Cap (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Peso Água (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Peso Solo Seco (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Umidade (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.umidades.map((u, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-white/20' : 'bg-white/10'}>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]">{idx + 1}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" value={u.agua_adicionada_ml} onChange={(e) => { const updated = [...form.umidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input value={u.capsula_numero} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.capsula_solo_umido} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.capsula_solo_seco} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.peso_capsula} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{u.peso_agua.toFixed(3)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{u.peso_solo_seco.toFixed(3)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{u.teor_umidade.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           <div className="bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg p-3 mt-4">
@@ -473,66 +436,36 @@ export default function EnsaioProctorPage() {
         <CardHeader>
           <CardTitle className="text-lg text-[#00233B]">Compactação - Densidade</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-4">
-            {form.densidades.map((d, idx) => (
-              <div key={idx} className="border border-white/20 rounded-lg p-4 bg-white/5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Cilindro Nº</Label>
-                    <Input value={d.cilindro_numero} onChange={(e) => {
-                      const updated = [...form.densidades];
-                      updated[idx].cilindro_numero = e.target.value;
-                      setForm(prev => ({ ...prev, densidades: updated }));
-                    }} />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Volume do Cilindro (cm³)</Label>
-                    <Input type="number" step="0.01" value={d.volume_cilindro} onChange={(e) => {
-                      const updated = [...form.densidades];
-                      updated[idx].volume_cilindro = e.target.value;
-                      setForm(prev => ({ ...prev, densidades: updated }));
-                    }} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Cilindro + Solo Úmido (g)</Label>
-                    <Input type="number" step="0.01" value={d.cilindro_solo_umido} onChange={(e) => {
-                      const updated = [...form.densidades];
-                      updated[idx].cilindro_solo_umido = e.target.value;
-                      setForm(prev => ({ ...prev, densidades: updated }));
-                      setTimeout(() => calculateDensidade(idx), 0);
-                    }} />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-[#00233B]">Peso do Cilindro (g)</Label>
-                    <Input type="number" step="0.01" value={d.peso_cilindro} onChange={(e) => {
-                      const updated = [...form.densidades];
-                      updated[idx].peso_cilindro = e.target.value;
-                      setForm(prev => ({ ...prev, densidades: updated }));
-                      setTimeout(() => calculateDensidade(idx), 0);
-                    }} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3 text-sm">
-                  <div className="bg-white/10 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Peso Solo Úmido (g)</span>
-                    <p className="font-semibold text-[#00233B]">{d.peso_solo_umido.toFixed(3)}</p>
-                  </div>
-                  <div className="bg-white/10 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Dens. Ap. Úmida (g/cm³)</span>
-                    <p className="font-semibold text-[#00233B]">{d.dens_ap_umida.toFixed(4)}</p>
-                  </div>
-                  <div className="bg-[#BFCF99]/20 p-2 rounded">
-                    <span className="text-[#00233B]/70 text-xs">Dens. Ap. Seca (g/cm³)</span>
-                    <p className="font-semibold text-[#BFCF99]">{d.dens_ap_seca.toFixed(4)}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-[#00233B]/10">
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">#</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cilindro Nº</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cilindro+Solo Úmido (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Peso Cilindro (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Vol Cilindro (cm³)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Peso Solo Úmido (g)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Dens. Ap. Úmida (g/cm³)</th>
+                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Dens. Ap. Seca (g/cm³)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.densidades.map((d, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-white/20' : 'bg-white/10'}>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]">{idx + 1}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input value={d.cilindro_numero} onChange={(e) => { const updated = [...form.densidades]; updated[idx].cilindro_numero = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.cilindro_solo_umido} onChange={(e) => { const updated = [...form.densidades]; updated[idx].cilindro_solo_umido = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.peso_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].peso_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.volume_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].volume_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); }} className="h-8 text-xs" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.peso_solo_umido.toFixed(3)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.dens_ap_umida.toFixed(4)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{d.dens_ap_seca.toFixed(4)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </CardContent>
       </Card>
