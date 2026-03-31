@@ -57,15 +57,25 @@ export default function EnsaioProctorPage() {
     umidades: Array(5).fill(null).map(() => ({
       numero: 1,
       agua_adicionada_ml: "",
-      capsula_numero: "",
-      capsula_solo_umido: "",
-      capsula_solo_seco: "",
-      peso_capsula: "",
-      peso_agua: 0,
-      peso_solo_seco: 0,
-      teor_umidade: 0,
+      // Amostra 1
+      capsula_numero_1: "",
+      capsula_solo_umido_1: "",
+      capsula_solo_seco_1: "",
+      peso_capsula_1: "",
+      peso_agua_1: 0,
+      peso_solo_seco_1: 0,
+      teor_umidade_1: 0,
+      // Amostra 2
+      capsula_numero_2: "",
+      capsula_solo_umido_2: "",
+      capsula_solo_seco_2: "",
+      peso_capsula_2: "",
+      peso_agua_2: 0,
+      peso_solo_seco_2: 0,
+      teor_umidade_2: 0,
+      // Média
+      teor_umidade_media: 0,
     })),
-    umidade_media: 0,
     densidades: Array(5).fill(null).map(() => ({
       numero: 1,
       cilindro_numero: "",
@@ -173,7 +183,7 @@ export default function EnsaioProctorPage() {
       if (form.correcao_densidade === "higroscopica") {
         tW = form.umidade_higroscopica ? parseFloat(form.umidade_higroscopica) : form.umidade_media;
       } else {
-        tW = form.umidades[index]?.teor_umidade || form.umidade_media;
+        tW = form.umidades[index]?.teor_umidade_media || form.umidade_media;
       }
 
       const gammaS = (gammaW / (tW + 100)) * 100;
@@ -394,29 +404,44 @@ export default function EnsaioProctorPage() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-[#00233B]/10">
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">#</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Água (ml)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cápsula Nº</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cap+Solo Úmido (g)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Cap+Solo Seco (g)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Peso Cap (g)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Peso Água (g)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Peso Solo Seco (g)</th>
-                  <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#BFCF99]">Umidade (%)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]" rowSpan={2}>#</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]" rowSpan={2}>Água (ml)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]" colSpan={5}>Amostra 1</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]" colSpan={5}>Amostra 2</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#BFCF99]" rowSpan={2}>Umidade Média (%)</th>
+                </tr>
+                <tr className="bg-[#00233B]/5">
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cáps. Nº</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cap+Solo Úm. (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cap+Solo Sec. (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Peso Cap (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#BFCF99]">t (%) </th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cáps. Nº</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cap+Solo Úm. (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Cap+Solo Sec. (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#00233B]">Peso Cap (g)</th>
+                  <th className="border border-[#00233B]/20 px-2 py-1 text-center text-xs font-medium text-[#BFCF99]">t (%)</th>
                 </tr>
               </thead>
               <tbody>
                 {form.umidades.map((u, idx) => (
                   <tr key={idx} className={idx % 2 === 0 ? 'bg-white/20' : 'bg-white/10'}>
                     <td className="border border-[#00233B]/20 px-2 py-2 text-center font-medium text-[#00233B]">{idx + 1}</td>
-                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" value={u.agua_adicionada_ml} onChange={(e) => { const updated = [...form.umidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-1"><Input value={u.capsula_numero} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.capsula_solo_umido} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.capsula_solo_seco} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={u.peso_capsula} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{u.peso_agua.toFixed(3)}</td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{u.peso_solo_seco.toFixed(3)}</td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{u.teor_umidade.toFixed(2)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" value={u.agua_adicionada_ml} onChange={(e) => { const updated = [...form.umidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs min-w-[70px]" /></td>
+                    {/* Amostra 1 */}
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input value={u.capsula_numero_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs min-w-[60px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.capsula_solo_umido_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs min-w-[80px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.capsula_solo_seco_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs min-w-[80px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.peso_capsula_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs min-w-[70px]" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_1 || 0).toFixed(2)}</td>
+                    {/* Amostra 2 */}
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input value={u.capsula_numero_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs min-w-[60px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.capsula_solo_umido_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs min-w-[80px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.capsula_solo_seco_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs min-w-[80px]" /></td>
+                    <td className="border border-[#00233B]/20 px-1 py-1"><Input type="number" step="0.01" value={u.peso_capsula_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs min-w-[70px]" /></td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_2 || 0).toFixed(2)}</td>
+                    {/* Média */}
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-sm font-bold text-[#BFCF99] bg-[#BFCF99]/25">{(u.teor_umidade_media || 0).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
