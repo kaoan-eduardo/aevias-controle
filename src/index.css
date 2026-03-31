@@ -82,6 +82,32 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Compact mobile form pages — reduce padding to show more content */
+  @media (max-width: 1023px) {
+    /* Outer wrapper of form pages (all use p-6 + bg-transparent + min-h-screen) */
+    .min-h-screen.bg-transparent {
+      padding: 0.5rem !important;
+    }
+    /* Reduce gap between sections inside form pages */
+    .min-h-screen.bg-transparent .space-y-6 > * + * {
+      margin-top: 0.75rem !important;
+    }
+    .min-h-screen.bg-transparent .space-y-4 > * + * {
+      margin-top: 0.5rem !important;
+    }
+    /* Card inner padding inside form pages */
+    .min-h-screen.bg-transparent .p-6 {
+      padding: 0.75rem !important;
+    }
+    .min-h-screen.bg-transparent .p-4 {
+      padding: 0.625rem !important;
+    }
+    /* Compact labels */
+    .min-h-screen.bg-transparent label {
+      font-size: 0.75rem !important;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     overscroll-behavior-y: none;
