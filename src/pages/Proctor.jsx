@@ -110,7 +110,7 @@ export default function ProctorPage() {
     const newCil = formData.cilindros.map(cilindro => {
       const { peso_capsula, peso_capsula_solo_umido, peso_capsula_solo_seco } = cilindro.umidade;
       if (peso_capsula > 0 && peso_capsula_solo_umido > 0 && peso_capsula_solo_seco > 0) {
-        const pesoAgua = peso_capsula_solo_seco - peso_capsula_solo_umido;
+        const pesoAgua = peso_capsula_solo_umido - peso_capsula_solo_seco;
         const pesoSoloSeco = peso_capsula_solo_seco - peso_capsula;
         const umid = pesoSoloSeco > 0 ? ((pesoAgua / pesoSoloSeco) * 100).toFixed(2) : 0;
         return {
