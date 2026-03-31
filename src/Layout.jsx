@@ -201,7 +201,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical }
+        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
       ]
     },
     {
@@ -223,7 +224,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
         { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical }
+        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
       ]
     },
     {
@@ -234,7 +236,8 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
       tipo_obra: "sondagem",
       ensaios: [
         { title: "Boletim de Sondagem (PI)", url: createPageUrl("BoletimSondagem"), icon: FileText },
-        { title: "Boletim de Sondagem a Trado", url: createPageUrl("BoletimSondagemTrado"), icon: FileText }
+        { title: "Boletim de Sondagem a Trado", url: createPageUrl("BoletimSondagemTrado"), icon: FileText },
+        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
       ]
     },
     {
@@ -247,26 +250,11 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
       ]
-    },
-    {
-      nome: "Proctor",
-      icon: FlaskConical,
-      cor: "text-[#00233B]",
-      corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
-      tipo_obra: ["sondagem", "implantacao", "conservacao"],
-      ensaios: [
-        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
-      ]
     }
   ], []);
 
   const categoriasDisponiveis = useMemo(() =>
-    categorias.filter(categoria => {
-      if (Array.isArray(categoria.tipo_obra)) {
-        return categoria.tipo_obra.some(tipo => tiposObraDisponiveis.has(tipo));
-      }
-      return tiposObraDisponiveis.has(categoria.tipo_obra);
-    }),
+    categorias.filter(categoria => tiposObraDisponiveis.has(categoria.tipo_obra)),
     [categorias, tiposObraDisponiveis]
   );
 
