@@ -103,6 +103,24 @@
     }
   }
 
+  /* Mobile form pages — full width, no side padding */
+  @media (max-width: 1023px) {
+    .p-6 {
+      padding-left: 0.25rem !important;
+      padding-right: 0.25rem !important;
+    }
+    .p-4 {
+      padding-left: 0.25rem !important;
+      padding-right: 0.25rem !important;
+    }
+    /* Cards stretch full width */
+    .max-w-6xl, .max-w-7xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .max-w-2xl {
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+
   /* Compact mobile form pages — reduce padding to show more content */
   @media (max-width: 1023px) {
     /* Outer wrapper of form pages (all use p-6 + bg-transparent + min-h-screen) */
