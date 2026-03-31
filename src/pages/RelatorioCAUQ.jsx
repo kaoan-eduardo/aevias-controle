@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -27,6 +28,7 @@ const PENEIRAS_CONFIG = [
 ];
 
 export default function RelatorioCAUQ() {
+  useReportMode();
   const [ensaio, setEnsaio] = useState(null);
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);

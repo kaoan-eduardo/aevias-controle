@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
@@ -12,6 +13,7 @@ import RelatorioMRAF from '../components/relatorios/RelatorioMRAF';
 import { base44 } from "@/api/base44Client";
 
 export default function RelatorioEnsaio() {
+  useReportMode();
   const [state, setState] = useState({
     loading: true,
     error: null,

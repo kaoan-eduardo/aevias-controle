@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function RelatorioVigaBenkelman() {
+  useReportMode();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
 

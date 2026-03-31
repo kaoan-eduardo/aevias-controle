@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Loader2, Printer } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -9,6 +10,7 @@ import { Project } from "@/entities/Project";
 import RelatorioAcompanhamentoCarga from "@/components/relatorios/RelatorioAcompanhamentoCarga";
 
 export default function RelatorioAcompanhamentoCargaPage() {
+  useReportMode();
   const [acompanhamento, setAcompanhamento] = useState(null);
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);

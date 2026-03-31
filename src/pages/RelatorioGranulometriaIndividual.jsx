@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import RelatorioGranulometriaIndividual from "../components/relatorios/RelatorioGranulometriaIndividual";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioGranulometriaIndividualPage() {
+  useReportMode();
   const [ensaio, setEnsaio] = useState(null);
   const [obra, setObra] = useState(null);
   const [project, setProject] = useState(null);

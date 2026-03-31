@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import RelatorioManchaPenduloComponent from '@/components/relatorios/RelatorioMa
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioManchaPenduloPage() {
+  useReportMode();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { ChecklistUsina } from '@/entities/ChecklistUsina';
@@ -10,6 +11,7 @@ import { User } from '@/entities/User';
 import RelatorioChecklistComponent from '../components/relatorios/RelatorioChecklist';
 
 export default function RelatorioChecklistPage() {
+  useReportMode();
   const [state, setState] = useState({
     loading: true,
     error: null,

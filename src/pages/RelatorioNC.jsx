@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -213,6 +214,7 @@ function compressImage(url, maxWidth = 1200, quality = 0.7) {
 }
 
 export default function RelatorioNCPage() {
+  useReportMode();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);

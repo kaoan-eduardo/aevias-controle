@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -6,6 +7,7 @@ import RelatorioChecklistMRAFComponent from '../components/relatorios/RelatorioC
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistMRAFPage() {
+  useReportMode();
   const [state, setState] = useState({
     loading: true,
     error: null,

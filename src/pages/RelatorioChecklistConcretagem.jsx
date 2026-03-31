@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import RelatorioChecklistConcretagemComponent from "../components/relatorios/Rel
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistConcretagemPage() {
+  useReportMode();
   const location = useLocation();
   const [checklist, setChecklist] = useState(null);
   const [creatorUser, setCreatorUser] = useState(null);

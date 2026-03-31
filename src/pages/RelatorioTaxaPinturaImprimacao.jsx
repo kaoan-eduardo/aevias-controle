@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import RelatorioTaxaPinturaImprimacao from "@/components/relatorios/RelatorioTax
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioTaxaPinturaImprimacaoPage() {
+  useReportMode();
   const [ensaio, setEnsaio] = useState(null);
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);

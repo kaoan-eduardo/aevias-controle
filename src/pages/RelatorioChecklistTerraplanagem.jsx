@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
@@ -6,6 +7,7 @@ import RelatorioChecklistTerraplanagem from "../components/relatorios/RelatorioC
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioChecklistTerraplanamemPage() {
+  useReportMode();
   const [reportData, setReportData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

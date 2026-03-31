@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, Printer } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioTaxaMRAF() {
+  useReportMode();
   const [ensaio, setEnsaio] = useState(null);
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);
