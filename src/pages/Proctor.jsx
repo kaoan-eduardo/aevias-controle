@@ -570,19 +570,20 @@ export default function ProctorPage() {
                           <Label className="text-xs text-[#00233B]/70">Umidade (%) - Auto</Label>
                           <Input type="number" step="0.01" value={cilindro.umidade.umidade_calculada} disabled size="sm" />
                         </div>
-                      </div>
-                    </div>
-                  </div>
+                        </div>
+                        </div>
+                        </div>
 
-                  {/* DENSIDADE */}
-                  <div className="space-y-4">
-                    <h5 className="font-semibold text-sm">Densidade</h5>
-                    <div className="bg-white/10 p-3 rounded border border-white/20">
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                        {/* DENSIDADE */}
+                        <div className="space-y-4">
+                        <h5 className="font-semibold text-sm">Densidade</h5>
+                        <div className="bg-white/10 p-3 rounded border border-white/20">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <div>
+                          <Label className="text-xs">Peso Material (g)</Label>
                         <Input 
                           type="number" 
                           step="0.01" 
-                          placeholder="Peso Mat. (g)" 
                           value={cilindro.densidade.peso_material} 
                           onChange={(e) => {
                             const newCil = [...formData.cilindros];
@@ -591,10 +592,12 @@ export default function ProctorPage() {
                           }} 
                           size="sm" 
                         />
+                        </div>
+                        <div>
+                        <Label className="text-xs">Peso Seco (g)</Label>
                         <Input 
                           type="number" 
                           step="0.01" 
-                          placeholder="Peso Seco (g)" 
                           value={cilindro.densidade.peso_seco} 
                           onChange={(e) => {
                             const newCil = [...formData.cilindros];
@@ -603,10 +606,12 @@ export default function ProctorPage() {
                           }} 
                           size="sm" 
                         />
+                        </div>
+                        <div>
+                        <Label className="text-xs">Volume (cm³)</Label>
                         <Input 
                           type="number" 
                           step="0.01" 
-                          placeholder="Volume (cm³)" 
                           value={cilindro.densidade.volume} 
                           onChange={(e) => {
                             const newCil = [...formData.cilindros];
@@ -615,37 +620,42 @@ export default function ProctorPage() {
                           }} 
                           size="sm" 
                         />
+                        </div>
+                        <div>
+                        <Label className="text-xs text-[#00233B]/70">Dens. Úmida - Auto</Label>
                         <Input 
                           type="number" 
                           step="0.0001" 
-                          placeholder="Dens. Úmida" 
                           value={cilindro.densidade.densidade_umida} 
                           disabled 
                           size="sm" 
                         />
+                        </div>
+                        <div>
+                        <Label className="text-xs text-[#00233B]/70">Dens. Seca - Auto</Label>
                         <Input 
                           type="number" 
                           step="0.0001" 
-                          placeholder="Dens. Seca" 
                           value={cilindro.densidade.densidade_seca} 
                           disabled 
                           size="sm" 
                         />
-                      </div>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        onClick={() => {
-                          const newCil = [...formData.cilindros];
-                          const umidad = newCil[cilIndex].umidade.umidade_calculada || 0;
-                          newCil[cilIndex].densidade.densidade_umida = parseFloat((newCil[cilIndex].densidade.peso_material / newCil[cilIndex].densidade.volume).toFixed(4));
-                          newCil[cilIndex].densidade.densidade_seca = parseFloat(calcularDensidadeSeca(newCil[cilIndex].densidade.densidade_umida, umidad));
-                          setFormData(prev => ({ ...prev, cilindros: newCil }));
-                        }}
-                        className="w-full mt-2"
-                      >
-                        Calcular Densidade
-                      </Button>
+                        </div>
+                        </div>
+                        <Button 
+                         size="sm" 
+                         variant="outline" 
+                         onClick={() => {
+                           const newCil = [...formData.cilindros];
+                           const umidad = newCil[cilIndex].umidade.umidade_calculada || 0;
+                           newCil[cilIndex].densidade.densidade_umida = parseFloat((newCil[cilIndex].densidade.peso_material / newCil[cilIndex].densidade.volume).toFixed(4));
+                           newCil[cilIndex].densidade.densidade_seca = parseFloat(calcularDensidadeSeca(newCil[cilIndex].densidade.densidade_umida, umidad));
+                           setFormData(prev => ({ ...prev, cilindros: newCil }));
+                         }}
+                         className="w-full mt-2"
+                        >
+                         Calcular Densidade
+                        </Button>
                     </div>
                   </div>
                 </div>
