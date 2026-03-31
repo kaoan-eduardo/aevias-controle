@@ -96,7 +96,7 @@ export default function EnsaioProctorExpansaoCBR() {
           numero: prev.compactacao.moldes.length + 1,
           peso_molde: null,
           peso_molde_amostra: null,
-          volume_molde: 2100,
+          volume_molde: null,
           peso_amostra: null,
           densidade_umida: null,
           peso_seco: null,
@@ -367,6 +367,10 @@ export default function EnsaioProctorExpansaoCBR() {
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     <div>
+                      <Label className="text-xs">Volume Molde (cm³) *</Label>
+                      <Input type="number" step="0.1" value={molde.volume_molde || ""} onChange={(e) => updateMolde(idx, "volume_molde", e.target.value)} required />
+                    </div>
+                    <div>
                       <Label className="text-xs">Peso Molde (g)</Label>
                       <Input type="number" step="0.1" value={molde.peso_molde || ""} onChange={(e) => updateMolde(idx, "peso_molde", e.target.value)} />
                     </div>
@@ -379,6 +383,10 @@ export default function EnsaioProctorExpansaoCBR() {
                       <Input type="number" step="0.1" value={molde.peso_seco || ""} onChange={(e) => updateMolde(idx, "peso_seco", e.target.value)} />
                     </div>
                     <div>
+                      <Label className="text-xs">Umidade (%) - Editar</Label>
+                      <Input type="number" step="0.01" value={molde.umidade || ""} onChange={(e) => updateMolde(idx, "umidade", e.target.value)} placeholder="Digitar ou calcular" />
+                    </div>
+                    <div>
                       <Label className="text-xs">Peso Amostra (g) - Auto</Label>
                       <Input type="number" disabled value={molde.peso_amostra?.toFixed(1) || ""} />
                     </div>
@@ -389,10 +397,6 @@ export default function EnsaioProctorExpansaoCBR() {
                     <div>
                       <Label className="text-xs">Densidade Seca (g/cm³)</Label>
                       <Input type="number" disabled value={molde.densidade_seca?.toFixed(3) || ""} />
-                    </div>
-                    <div className="col-span-3">
-                      <Label className="text-xs">Umidade (%)</Label>
-                      <Input type="number" step="0.1" value={molde.umidade || ""} onChange={(e) => updateMolde(idx, "umidade", e.target.value)} />
                     </div>
                   </div>
                 </div>
