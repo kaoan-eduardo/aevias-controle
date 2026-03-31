@@ -38,7 +38,14 @@ function applyTheme(theme) {
 }
 
 export default function Settings() {
-  const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || "system");
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (!saved) {
+      localStorage.setItem(THEME_KEY, "system");
+      return "system";
+    }
+    return saved;
+  });
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
