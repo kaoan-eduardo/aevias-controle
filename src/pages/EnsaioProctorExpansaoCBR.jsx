@@ -111,19 +111,26 @@ export default function EnsaioProctorExpansaoCBR() {
     const newMoldes = [...formData.compactacao.moldes];
     newMoldes[index][field] = value ? parseFloat(value) : null;
     
-    // Cálculos automáticos
-    if (newMoldes[index].peso_molde && newMoldes[index].peso_molde_amostra) {
+    // Cálculos DNIT 164/2013
+    // Peso da amostra (Ps = P1 - P2)
+    if (newMoldes[index].peso_molde_amostra && newMoldes[index].peso_molde) {
       newMoldes[index].peso_amostra = newMoldes[index].peso_molde_amostra - newMoldes[index].peso_molde;
     }
+    
+    // Densidade úmida (γap = Ps / V)
     if (newMoldes[index].peso_amostra && newMoldes[index].volume_molde) {
       newMoldes[index].densidade_umida = newMoldes[index].peso_amostra / newMoldes[index].volume_molde;
     }
-    if (newMoldes[index].peso_seco && newMoldes[index].volume_molde) {
-      newMoldes[index].densidade_seca = newMoldes[index].peso_seco / newMoldes[index].volume_molde;
-    }
+    
+    // Umidade (h = (Pw / Ps) × 100 onde Pw = peso_amostra - peso_seco)
     if (newMoldes[index].peso_amostra && newMoldes[index].peso_seco) {
-      const agua = newMoldes[index].peso_amostra - newMoldes[index].peso_seco;
-      newMoldes[index].umidade = (agua / newMoldes[index].peso_seco) * 100;
+      const peso_agua = newMoldes[index].peso_amostra - newMoldes[index].peso_seco;
+      newMoldes[index].umidade = (peso_agua / newMoldes[index].peso_seco) * 100;
+    }
+    
+    // Densidade seca (γs = (γap / (1 + h/100)))
+    if (newMoldes[index].densidade_umida && newMoldes[index].umidade !== null) {
+      newMoldes[index].densidade_seca = newMoldes[index].densidade_umida / (1 + newMoldes[index].umidade / 100);
     }
     
     setFormData(prev => ({
