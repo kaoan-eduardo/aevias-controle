@@ -328,110 +328,112 @@ export default function ProctorPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/20 backdrop-blur-lg border-white/20">
-            <CardHeader>
-              <CardTitle>Umidade Higroscópica</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                  <Label>Cápsula Nº</Label>
-                  <Input
-                    value={formData.umidade_higroscopica.capsula_numero}
-                    onChange={(e) => setFormData(prev => ({
+          {umidadeMode === 'ponto_a_ponto' && (
+            <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+              <CardHeader>
+                <CardTitle>Umidade Higroscópica</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label>Cápsula Nº</Label>
+                    <Input
+                      value={formData.umidade_higroscopica.capsula_numero}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, capsula_numero: e.target.value }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>C (g)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.peso_capsula}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula: Number(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>S (g)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.peso_solo_umido}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, peso_solo_umido: Number(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>C + S (g)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.peso_capsula_solo_umido}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula_solo_umido: Number(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>A (g)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.peso_agua}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, peso_agua: Number(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>C + S + A (g)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.peso_capsula_solo_seco}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula_solo_seco: Number(e.target.value) }
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <Label>Umidade (%)</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.umidade_higroscopica.umidade_calculada}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <Button
+                  onClick={() => {
+                    const umid = calcularUmidade(
+                      formData.umidade_higroscopica.peso_capsula,
+                      formData.umidade_higroscopica.peso_solo_umido,
+                      formData.umidade_higroscopica.peso_capsula_solo_seco
+                    );
+                    setFormData(prev => ({
                       ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, capsula_numero: e.target.value }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>C (g)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.peso_capsula}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula: Number(e.target.value) }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>S (g)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.peso_solo_umido}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, peso_solo_umido: Number(e.target.value) }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>C + S (g)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.peso_capsula_solo_umido}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula_solo_umido: Number(e.target.value) }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>A (g)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.peso_agua}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, peso_agua: Number(e.target.value) }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>C + S + A (g)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.peso_capsula_solo_seco}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      umidade_higroscopica: { ...prev.umidade_higroscopica, peso_capsula_solo_seco: Number(e.target.value) }
-                    }))}
-                  />
-                </div>
-                <div>
-                  <Label>Umidade (%)</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.umidade_higroscopica.umidade_calculada}
-                    disabled
-                  />
-                </div>
-              </div>
-              <Button
-                onClick={() => {
-                  const umid = calcularUmidade(
-                    formData.umidade_higroscopica.peso_capsula,
-                    formData.umidade_higroscopica.peso_solo_umido,
-                    formData.umidade_higroscopica.peso_capsula_solo_seco
-                  );
-                  setFormData(prev => ({
-                    ...prev,
-                    umidade_higroscopica: { ...prev.umidade_higroscopica, umidade_calculada: parseFloat(umid) }
-                  }));
-                }}
-                className="w-full"
-              >
-                Calcular Umidade (ABNT NBR 7182:2016)
-              </Button>
-            </CardContent>
-          </Card>
+                      umidade_higroscopica: { ...prev.umidade_higroscopica, umidade_calculada: parseFloat(umid) }
+                    }));
+                  }}
+                  className="w-full"
+                >
+                  Calcular Umidade (ABNT NBR 7182:2016)
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         {/* TAB: UMIDADE */}
@@ -472,7 +474,7 @@ export default function ProctorPage() {
                   
                   <div className="space-y-4">
                     <h5 className="font-semibold text-sm">Umidades</h5>
-                    {comp.umidades.map((umid, umidIndex) => (
+                    {comp.umidades.slice(0, umidadeMode === 'higroscopica' ? 1 : 5).map((umid, umidIndex) => (
                       <div key={umidIndex} className="bg-white/10 p-3 rounded border border-white/20">
                         <p className="text-xs font-semibold text-[#00233B] mb-2">Umidade {umidIndex + 1}</p>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
