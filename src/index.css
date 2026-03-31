@@ -82,6 +82,17 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Hide scrollbars on mobile */
+  @media (max-width: 1023px) {
+    * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    *::-webkit-scrollbar {
+      display: none !important;
+    }
+  }
+
   /* Compact mobile — reduce font sizes globally */
   @media (max-width: 1023px) {
     html {
