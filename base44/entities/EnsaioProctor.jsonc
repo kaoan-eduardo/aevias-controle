@@ -1,0 +1,260 @@
+{
+  "name": "EnsaioProctor",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto vinculado"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "horario": {
+      "type": "string",
+      "description": "Hor\u00e1rio do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string",
+      "description": "Nome do laboratorista que criou o registro"
+    },
+    "cliente": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "contrato": {
+      "type": "string",
+      "description": "N\u00famero do contrato"
+    },
+    "rodovia": {
+      "type": "string",
+      "description": "Nome da rodovia"
+    },
+    "trecho": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do trecho"
+    },
+    "local_coleta": {
+      "type": "string",
+      "description": "Local de coleta da amostra"
+    },
+    "camada": {
+      "type": "string",
+      "description": "N\u00famero/descri\u00e7\u00e3o da camada"
+    },
+    "material": {
+      "type": "string",
+      "description": "Tipo de material"
+    },
+    "procedencia": {
+      "type": "string",
+      "description": "Proced\u00eancia do material"
+    },
+    "amostra_umida": {
+      "type": "string",
+      "enum": [
+        "Pequena",
+        "Grande"
+      ],
+      "description": "Tamanho da amostra \u00famida"
+    },
+    "agua_adicionada": {
+      "type": "number",
+      "description": "Quantidade de \u00e1gua adicionada em ml"
+    },
+    "disco_especial": {
+      "type": "string",
+      "enum": [
+        "5.20",
+        "6.20"
+      ],
+      "description": "Disco especial utilizado"
+    },
+    "soquete": {
+      "type": "string",
+      "enum": [
+        "Pequeno",
+        "Grande"
+      ],
+      "description": "Tipo de soquete"
+    },
+    "num_golpes": {
+      "type": "number",
+      "description": "N\u00famero de golpes"
+    },
+    "energia_compactacao": {
+      "type": "string",
+      "enum": [
+        "Intermedi\u00e1ria",
+        "Modificada"
+      ],
+      "description": "Energia de compacta\u00e7\u00e3o"
+    },
+    "correcao_densidade": {
+      "type": "string",
+      "enum": [
+        "higroscopica",
+        "ponto_a_ponto"
+      ],
+      "description": "Tipo de corre\u00e7\u00e3o de densidade"
+    },
+    "umidade_higroscopica": {
+      "type": "number",
+      "description": "Umidade higrosc\u00f3pica (%)"
+    },
+    "umidades": {
+      "type": "array",
+      "description": "Dados de umidade (m\u00e1ximo 5 pontos)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "number"
+          },
+          "agua_adicionada_ml": {
+            "type": "number"
+          },
+          "capsula_numero": {
+            "type": "string"
+          },
+          "capsula_solo_umido": {
+            "type": "number",
+            "description": "P4 - Peso em g"
+          },
+          "capsula_solo_seco": {
+            "type": "number",
+            "description": "P5 - Peso em g"
+          },
+          "peso_capsula": {
+            "type": "number",
+            "description": "P6 - Peso em g"
+          },
+          "peso_agua": {
+            "type": "number",
+            "description": "Calculado - P\u03c9 = P4 - P5"
+          },
+          "peso_solo_seco": {
+            "type": "number",
+            "description": "Calculado - Pss = P5 - P6"
+          },
+          "teor_umidade": {
+            "type": "number",
+            "description": "Calculado - t\u03c9 = (P\u03c9 / Pss) \u00d7 100 (%)"
+          }
+        }
+      }
+    },
+    "umidade_media": {
+      "type": "number",
+      "description": "Umidade m\u00e9dia calculada (%)"
+    },
+    "densidades": {
+      "type": "array",
+      "description": "Dados de densidade (m\u00e1ximo 5 pontos)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "number"
+          },
+          "cilindro_numero": {
+            "type": "string"
+          },
+          "cilindro_solo_umido": {
+            "type": "number",
+            "description": "P1 - Peso em g"
+          },
+          "peso_cilindro": {
+            "type": "number",
+            "description": "P2 - Peso em g"
+          },
+          "peso_solo_umido": {
+            "type": "number",
+            "description": "Calculado - P3 = P1 - P2"
+          },
+          "volume_cilindro": {
+            "type": "number",
+            "description": "Volume em cm\u00b3"
+          },
+          "dens_ap_umida": {
+            "type": "number",
+            "description": "Calculado - \u03b3\u03c9 = P3 / V (g/cm\u00b3)"
+          },
+          "dens_ap_seca": {
+            "type": "number",
+            "description": "Calculado - \u03b3s = \u03b3\u03c9 / (t\u03c9 + 100) \u00d7 100 (g/cm\u00b3)"
+          }
+        }
+      }
+    },
+    "densidade_maxima_seca": {
+      "type": "number",
+      "description": "Densidade m\u00e1xima seca identificada (g/cm\u00b3)"
+    },
+    "umidade_otima": {
+      "type": "number",
+      "description": "Umidade \u00f3tima identificada (%)"
+    },
+    "isc_cbr": {
+      "type": "number",
+      "description": "Valor de ISC/CBR (%)"
+    },
+    "expansao": {
+      "type": "number",
+      "description": "Valor de expans\u00e3o (%)"
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho",
+      "description": "Status do registro"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null,
+      "description": "Status de aprova\u00e7\u00e3o"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que aprovou"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "obra_id",
+    "data_ensaio"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}

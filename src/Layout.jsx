@@ -247,6 +247,16 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge }
       ]
+    },
+    {
+      nome: "Proctor",
+      icon: FlaskConical,
+      cor: "text-[#00233B]",
+      corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
+      tipo_obra: null,
+      ensaios: [
+        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
+      ]
     }
   ], []);
 
