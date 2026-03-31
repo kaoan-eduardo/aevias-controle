@@ -515,86 +515,65 @@ export default function ProctorPage() {
                   {/* UMIDADE */}
                   <div className="space-y-4 mb-6">
                     <h5 className="font-semibold text-sm">Umidade</h5>
-                    <div className="bg-white/10 p-3 rounded border border-white/20">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        <Input 
-                          placeholder="Cápsula Nº" 
-                          value={cilindro.umidade.numero_capsula} 
-                          onChange={(e) => {
+                    <div className="bg-white/10 p-3 rounded border border-white/20 space-y-3">
+                      <div className="text-xs text-[#00233B]/70 font-medium bg-white/5 p-2 rounded">
+                        <p><strong>C</strong> = Peso cápsula vazia | <strong>S</strong> = Peso solo úmido</p>
+                        <p><strong>C+S</strong> = Cápsula + solo úmido | <strong>A</strong> = Peso água</p>
+                        <p><strong>C+S+A</strong> = Cápsula + solo seco (após aquecimento)</p>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                          <Label className="text-xs">Cápsula Nº</Label>
+                          <Input value={cilindro.umidade.numero_capsula} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.numero_capsula = e.target.value;
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="C (g)" 
-                          value={cilindro.umidade.peso_capsula} 
-                          onChange={(e) => {
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">C (g)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_capsula = Number(e.target.value);
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="S (g)" 
-                          value={cilindro.umidade.peso_solo_umido} 
-                          onChange={(e) => {
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">S (g)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.peso_solo_umido} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_solo_umido = Number(e.target.value);
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="C+S (g)" 
-                          value={cilindro.umidade.peso_capsula_solo_umido} 
-                          onChange={(e) => {
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">C+S (g)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_umido} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_capsula_solo_umido = Number(e.target.value);
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="A (g)" 
-                          value={cilindro.umidade.peso_agua} 
-                          onChange={(e) => {
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">A (g)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.peso_agua} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_agua = Number(e.target.value);
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="C+S+A (g)" 
-                          value={cilindro.umidade.peso_capsula_solo_seco} 
-                          onChange={(e) => {
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">C+S+A (g)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_seco} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_capsula_solo_seco = Number(e.target.value);
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} 
-                          size="sm" 
-                        />
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="Umidade (%)" 
-                          value={cilindro.umidade.umidade_calculada} 
-                          disabled 
-                          size="sm" 
-                        />
+                          }} size="sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Umidade (%)</Label>
+                          <Input type="number" step="0.01" value={cilindro.umidade.umidade_calculada} disabled size="sm" />
+                        </div>
                       </div>
                       <Button 
                         size="sm" 
