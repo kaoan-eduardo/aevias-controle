@@ -46,60 +46,59 @@ export default function ProctorPage() {
     auxiliar: '',
     umidade_higroscopica: {
       capsula_numero: '',
-      peso_capsula: 0,
-      peso_solo_umido: 0,
-      peso_capsula_solo_umido: 0,
-      peso_agua: 0,
-      peso_capsula_solo_seco: 0,
-      umidade_calculada: 0
+      peso_capsula: '',
+      peso_solo_umido: '',
+      peso_capsula_solo_umido: '',
+      peso_agua: '',
+      peso_capsula_solo_seco: '',
+      umidade_calculada: ''
     },
-    cilindros: Array(5).fill(null).map(() => ({
       numero_cilindro: '',
       umidade: {
         numero_capsula: '',
-        peso_capsula: 0,
-        peso_solo_umido: 0,
-        peso_capsula_solo_umido: 0,
-        peso_agua: 0,
-        peso_capsula_solo_seco: 0,
-        umidade_calculada: 0
+        peso_capsula: '',
+        peso_solo_umido: '',
+        peso_capsula_solo_umido: '',
+        peso_agua: '',
+        peso_capsula_solo_seco: '',
+        umidade_calculada: ''
       },
       densidade: {
-        peso_material: 0,
-        peso_seco: 0,
-        volume: 0,
-        densidade_umida: 0,
-        densidade_seca: 0
+        peso_material: '',
+        peso_seco: '',
+        volume: '',
+        densidade_umida: '',
+        densidade_seca: ''
       }
-    })),
-    densidade_maxima: 0,
-    umidade_otima: 0,
-    expansoes: Array(5).fill(null).map(() => ({
+      })),
+      densidade_maxima: '',
+      umidade_otima: '',
+      expansoes: Array(5).fill(null).map(() => ({
       numero_cilindro: '',
       data: new Date().toISOString().split('T')[0],
       hora: '',
-      altura_inicial: 0,
-      leituras: [0, 0, 0, 0],
-      diferenca: 0,
-      expansao_percentual: 0,
-      peso_solo_final: 0
-    })),
-    cbrs: Array(5).fill(null).map(() => ({
+      altura_inicial: '',
+      leituras: ['', '', '', ''],
+      diferenca: '',
+      expansao_percentual: '',
+      peso_solo_final: ''
+      })),
+      cbrs: Array(5).fill(null).map(() => ({
       numero_cilindro: '',
       penetracoes: Array(10).fill(null).map(() => ({
-        penetracao_mm: 0,
-        tempo_minutos: 0,
-        leitura_anel: 0,
-        pressao_kgf_cm2: 0,
-        isc_percentual: 0
+        penetracao_mm: '',
+        tempo_minutos: '',
+        leitura_anel: '',
+        pressao_kgf_cm2: '',
+        isc_percentual: ''
       })),
-      cbr_em_2_54: 0,
-      cbr_em_5_08: 0,
-      cbr_final: 0
-    })),
-    observacoes: '',
-    status: 'rascunho'
-  });
+      cbr_em_2_54: '',
+      cbr_em_5_08: '',
+      cbr_final: ''
+      })),
+      observacoes: '',
+      status: 'rascunho'
+      });
 
   useEffect(() => {
     loadInitialData();
