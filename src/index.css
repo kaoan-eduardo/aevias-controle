@@ -82,6 +82,16 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Compact mobile — reduce font sizes globally */
+  @media (max-width: 1023px) {
+    html {
+      font-size: 14px !important;
+    }
+    button, .btn {
+      font-size: 0.8rem !important;
+    }
+  }
+
   /* Compact mobile form pages — reduce padding to show more content */
   @media (max-width: 1023px) {
     /* Outer wrapper of form pages (all use p-6 + bg-transparent + min-h-screen) */
