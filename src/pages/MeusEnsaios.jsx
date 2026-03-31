@@ -1065,15 +1065,18 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
   return (
     <div className="space-y-4">
       <Tabs defaultValue="emExecucao" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20">
-        <TabsTrigger value="emExecucao" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
-          Em Execução <Badge className="ml-2">{emExecucao.length}</Badge>
+        <TabsList className="grid w-full grid-cols-3 bg-white/20 backdrop-blur-lg border border-white/20 h-auto">
+        <TabsTrigger value="emExecucao" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5 flex flex-col items-center gap-0.5 py-2 px-1">
+          <span className="text-xs leading-tight text-center">Em Execução</span>
+          <Badge className="text-xs">{emExecucao.length}</Badge>
         </TabsTrigger>
-        <TabsTrigger value="pendentes" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
-          Pendentes <Badge className="ml-2">{pendentes.length}</Badge>
+        <TabsTrigger value="pendentes" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5 flex flex-col items-center gap-0.5 py-2 px-1">
+          <span className="text-xs leading-tight text-center">Pendentes</span>
+          <Badge className="text-xs">{pendentes.length}</Badge>
         </TabsTrigger>
-        <TabsTrigger value="aprovados" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5">
-          Aprovados <Badge className="ml-2">{aprovados.length}</Badge>
+        <TabsTrigger value="aprovados" className="data-[state=active]:bg-white/40 data-[state=active]:text-[#00233B] data-[state=active]:border-b-2 data-[state=active]:border-[#BFCF99] text-[#00233B]/80 hover:bg-black/5 flex flex-col items-center gap-0.5 py-2 px-1">
+          <span className="text-xs leading-tight text-center">Aprovados</span>
+          <Badge className="text-xs">{aprovados.length}</Badge>
         </TabsTrigger>
       </TabsList>
 
