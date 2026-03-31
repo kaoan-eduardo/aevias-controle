@@ -174,10 +174,13 @@ export default function ProctorPage() {
   };
 
   // Cálculos ABNT NBR 7182:2016
-  const calcularUmidade = (pesoCapsula, pesoSoloUmido, pesoCapsula_Solo) => {
-    const pesoPerdido = pesoCapsula_Solo - pesoCapsula;
-    const pesoSoloSeco = pesoPerdido - pesoSoloUmido;
-    return pesoSoloSeco > 0 ? ((pesoSoloUmido / pesoSoloSeco) * 100).toFixed(2) : 0;
+  const calcularUmidade = (pesoCapsula, pesoSoloUmido, pesoCapsula_Solo_Seco) => {
+    // h(%) = (pa / ps) * 100
+    // pa = peso da água = (C+S+A) - (C+S)
+    // ps = peso solo seco = (C+S+A) - C - pa
+    const pesoAgua = pesoCapsula_Solo_Seco - pesoSoloUmido - pesoCapsula;
+    const pesoSoloSeco = pesoCapsula_Solo_Seco - pesoCapsula - pesoAgua;
+    return pesoSoloSeco > 0 ? ((pesoAgua / pesoSoloSeco) * 100).toFixed(2) : 0;
   };
 
   const calcularDensidadeSeca = (densidadeUmida, umidade) => {
@@ -516,11 +519,6 @@ export default function ProctorPage() {
                   <div className="space-y-4 mb-6">
                     <h5 className="font-semibold text-sm">Umidade</h5>
                     <div className="bg-white/10 p-3 rounded border border-white/20 space-y-3">
-                      <div className="text-xs text-[#00233B]/70 font-medium bg-white/5 p-2 rounded">
-                        <p><strong>C</strong> = Peso cápsula vazia | <strong>S</strong> = Peso solo úmido</p>
-                        <p><strong>C+S</strong> = Cápsula + solo úmido | <strong>A</strong> = Peso água</p>
-                        <p><strong>C+S+A</strong> = Cápsula + solo seco (após aquecimento)</p>
-                      </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div>
                           <Label className="text-xs">Cápsula Nº</Label>
@@ -531,7 +529,7 @@ export default function ProctorPage() {
                           }} size="sm" />
                         </div>
                         <div>
-                          <Label className="text-xs">C (g)</Label>
+                          <Label className="text-xs">Peso Cápsula (g)</Label>
                           <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula} onChange={(e) => {
                             const newCil = [...formData.cilindros];
                             newCil[cilIndex].umidade.peso_capsula = Number(e.target.value);
@@ -539,41 +537,41 @@ export default function ProctorPage() {
                           }} size="sm" />
                         </div>
                         <div>
-                          <Label className="text-xs">S (g)</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.peso_solo_umido} onChange={(e) => {
-                            const newCil = [...formData.cilindros];
-                            newCil[cilIndex].umidade.peso_solo_umido = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} size="sm" />
-                        </div>
-                        <div>
-                          <Label className="text-xs">C+S (g)</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_umido} onChange={(e) => {
-                            const newCil = [...formData.cilindros];
-                            newCil[cilIndex].umidade.peso_capsula_solo_umido = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} size="sm" />
-                        </div>
-                        <div>
-                          <Label className="text-xs">A (g)</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.peso_agua} onChange={(e) => {
-                            const newCil = [...formData.cilindros];
-                            newCil[cilIndex].umidade.peso_agua = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} size="sm" />
-                        </div>
-                        <div>
-                          <Label className="text-xs">C+S+A (g)</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_seco} onChange={(e) => {
-                            const newCil = [...formData.cilindros];
-                            newCil[cilIndex].umidade.peso_capsula_solo_seco = Number(e.target.value);
-                            setFormData(prev => ({ ...prev, cilindros: newCil }));
-                          }} size="sm" />
-                        </div>
-                        <div>
-                          <Label className="text-xs">Umidade (%)</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.umidade_calculada} disabled size="sm" />
-                        </div>
+                           <Label className="text-xs">Peso Solo Úmido (g)</Label>
+                           <Input type="number" step="0.01" value={cilindro.umidade.peso_solo_umido} onChange={(e) => {
+                             const newCil = [...formData.cilindros];
+                             newCil[cilIndex].umidade.peso_solo_umido = Number(e.target.value);
+                             setFormData(prev => ({ ...prev, cilindros: newCil }));
+                           }} size="sm" />
+                         </div>
+                         <div>
+                           <Label className="text-xs">Cápsula + Solo Úmido (g)</Label>
+                           <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_umido} onChange={(e) => {
+                             const newCil = [...formData.cilindros];
+                             newCil[cilIndex].umidade.peso_capsula_solo_umido = Number(e.target.value);
+                             setFormData(prev => ({ ...prev, cilindros: newCil }));
+                           }} size="sm" />
+                         </div>
+                         <div>
+                           <Label className="text-xs">Peso Água (g)</Label>
+                           <Input type="number" step="0.01" value={cilindro.umidade.peso_agua} onChange={(e) => {
+                             const newCil = [...formData.cilindros];
+                             newCil[cilIndex].umidade.peso_agua = Number(e.target.value);
+                             setFormData(prev => ({ ...prev, cilindros: newCil }));
+                           }} size="sm" />
+                         </div>
+                         <div>
+                           <Label className="text-xs">Cápsula + Solo Seco (g)</Label>
+                           <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula_solo_seco} onChange={(e) => {
+                             const newCil = [...formData.cilindros];
+                             newCil[cilIndex].umidade.peso_capsula_solo_seco = Number(e.target.value);
+                             setFormData(prev => ({ ...prev, cilindros: newCil }));
+                           }} size="sm" />
+                         </div>
+                         <div>
+                           <Label className="text-xs">Umidade (%)</Label>
+                           <Input type="number" step="0.01" value={cilindro.umidade.umidade_calculada} disabled size="sm" />
+                         </div>
                       </div>
                       <Button 
                         size="sm" 
