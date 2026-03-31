@@ -279,10 +279,11 @@ export default function EnsaioProctorExpansaoCBR() {
       </div>
 
       <Tabs defaultValue="dados" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="dados">Dados Gerais</TabsTrigger>
           <TabsTrigger value="compactacao">Compactação</TabsTrigger>
           <TabsTrigger value="expansao">Expansão</TabsTrigger>
+          <TabsTrigger value="umidade">Umidade</TabsTrigger>
           <TabsTrigger value="cbr">CBR (ISC)</TabsTrigger>
         </TabsList>
 
@@ -438,6 +439,94 @@ export default function EnsaioProctorExpansaoCBR() {
                   </div>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="umidade">
+          <Card className="bg-white/20 backdrop-blur-lg border border-white/20">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Umidade Higrográfica (DNIT 164/2013)</CardTitle>
+              <Button onClick={() => setFormData(prev => ({
+                ...prev,
+                umidade_higroscopica: [...prev.umidade_higroscopica, {
+                  capsula_numero: "",
+                  peso_capsula: null,
+                  peso_capsula_solo_umido: null,
+                  peso_capsula_solo_seco: null,
+                  peso_agua: null,
+                  peso_solo_seco: null,
+                  umidade_calculada: null
+                }]
+              }))} size="sm" className="gap-2">
+                <Plus className="w-4 h-4" /> Adicionar
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {(formData.umidade_higroscopica || []).map((amostra, idx) => {
+                const handleUmidadeChange = (field, value) => {
+                  const newAmostra = [...formData.umidade_higroscopica];
+                  newAmostra[idx][field] = value ? parseFloat(value) : null;
+                  
+                  // Peso da água: Pₐ = P₄ - P₅
+                  if (newAmostra[idx].peso_capsula_solo_umido && newAmostra[idx].peso_capsula_solo_seco) {
+                    newAmostra[idx].peso_agua = newAmostra[idx].peso_capsula_solo_umido - newAmostra[idx].peso_capsula_solo_seco;
+                  }
+                  
+                  // Peso do solo seco: Psₛ = P₅ - Pₖ
+                  if (newAmostra[idx].peso_capsula_solo_seco && newAmostra[idx].peso_capsula) {
+                    newAmostra[idx].peso_solo_seco = newAmostra[idx].peso_capsula_solo_seco - newAmostra[idx].peso_capsula;
+                  }
+                  
+                  // Teor de umidade: tᵤ = (Pₐ / Psₛ) × 100
+                  if (newAmostra[idx].peso_agua && newAmostra[idx].peso_solo_seco) {
+                    newAmostra[idx].umidade_calculada = (newAmostra[idx].peso_agua / newAmostra[idx].peso_solo_seco) * 100;
+                  }
+                  
+                  setFormData(prev => ({ ...prev, umidade_higroscopica: newAmostra }));
+                };
+                
+                return (
+                  <div key={idx} className="p-4 border border-white/30 rounded-lg bg-white/5 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-bold text-[#00233B]">Cápsula {amostra.capsula_numero}</h4>
+                      <Button onClick={() => setFormData(prev => ({ ...prev, umidade_higroscopica: prev.umidade_higroscopica.filter((_, i) => i !== idx) }))} size="sm" variant="destructive">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                      <div>
+                        <Label className="text-xs">Nº Cápsula</Label>
+                        <Input value={amostra.capsula_numero} onChange={(e) => handleUmidadeChange("capsula_numero", e.target.value)} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Peso Cápsula (g) - Pₖ</Label>
+                        <Input type="number" step="0.01" value={amostra.peso_capsula || ""} onChange={(e) => handleUmidadeChange("peso_capsula", e.target.value)} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Cápsula + Solo Úmido (g) - P₄</Label>
+                        <Input type="number" step="0.01" value={amostra.peso_capsula_solo_umido || ""} onChange={(e) => handleUmidadeChange("peso_capsula_solo_umido", e.target.value)} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Cápsula + Solo Seco (g) - P₅</Label>
+                        <Input type="number" step="0.01" value={amostra.peso_capsula_solo_seco || ""} onChange={(e) => handleUmidadeChange("peso_capsula_solo_seco", e.target.value)} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Peso Água (g) - Auto</Label>
+                        <Input type="number" disabled value={amostra.peso_agua?.toFixed(2) || ""} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Peso Solo Seco (g) - Auto</Label>
+                        <Input type="number" disabled value={amostra.peso_solo_seco?.toFixed(2) || ""} />
+                      </div>
+                      <div className="col-span-2">
+                        <Label className="text-xs">Teor de Umidade (%) - Auto</Label>
+                        <Input type="number" disabled value={amostra.umidade_calculada?.toFixed(2) || ""} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         </TabsContent>
