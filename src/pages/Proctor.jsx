@@ -523,10 +523,10 @@ export default function ProctorPage() {
                     <div className="bg-white/10 p-3 rounded border border-white/20 space-y-3">
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         <div>
-                           <Label className="text-xs">Cápsula Nº</Label>
-                          <Input type="number" step="0.01" value={cilindro.umidade.peso_capsula} onChange={(e) => {
+                          <Label className="text-xs">Cápsula Nº</Label>
+                          <Input value={cilindro.umidade.numero_capsula} onChange={(e) => {
                             const newCil = [...formData.cilindros];
-                            newCil[cilIndex].umidade.peso_capsula = Number(e.target.value);
+                            newCil[cilIndex].umidade.numero_capsula = e.target.value;
                             setFormData(prev => ({ ...prev, cilindros: newCil }));
                           }} size="sm" />
                         </div>
