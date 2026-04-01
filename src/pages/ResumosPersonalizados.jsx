@@ -681,18 +681,8 @@ export default function ResumosPersonalizadosPage() {
         peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
       }
 
-      // Para ChecklistAplicacao: calcular maxPlacas globalmente antes do loop
-      let globalMaxPlacas = 1;
-      if (tipo === 'ChecklistAplicacao') {
-        ensaiosFiltrados.forEach(e => {
-          const meds = e.medicoes_geometricas?.medicoes || [];
-          meds.forEach(m => {
-            // conta todas as placas, inclusive vazias, para garantir colunas
-            const arr = m.placas && Array.isArray(m.placas) ? m.placas : (m.placa ? [m.placa] : []);
-            if (arr.length > globalMaxPlacas) globalMaxPlacas = arr.length;
-          });
-        });
-      }
+      // Sem expansão por caminhão — uma coluna única de placas por medição
+      const globalMaxPlacas = 1;
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
@@ -1215,14 +1205,11 @@ export default function ResumosPersonalizadosPage() {
                 fixedSubfields.forEach(sf => {
                   linha[sf.label] = formatValue(med[sf.key], sf.key);
                 });
-                // Expandir placas em colunas dinâmicas
-                const placasArr = med.placas && Array.isArray(med.placas) ? med.placas : (med.placa ? [med.placa] : []);
-                for (let n = 1; n <= maxPlacas; n++) {
-                  const placa = placasArr[n - 1];
-                  linha[`Placa ${n}`] = (placa && placa.trim() !== '') ? placa : '-';
-                  linha[`Quantidade ${n} (t)`] = n <= placasArr.length ? formatValue(med.quantidade, 'quantidade') : '-';
-                  linha[`Temperatura ${n} (°C)`] = n <= placasArr.length ? formatValue(med.temperatura, 'temperatura') : '-';
-                }
+                // Coluna única de placas (todas as placas da medição juntas)
+                const placasArr = med.placas && Array.isArray(med.placas) ? med.placas.filter(Boolean) : (med.placa ? [med.placa] : []);
+                linha['Med. Placas'] = placasArr.length > 0 ? placasArr.join(', ') : '-';
+                linha['Med. Quantidade (t)'] = formatValue(med.quantidade, 'quantidade');
+                linha['Med. Temperatura (°C)'] = formatValue(med.temperatura, 'temperatura');
               }
               resultados.push(linha);
             });
@@ -1231,11 +1218,9 @@ export default function ResumosPersonalizadosPage() {
             if (medCampo) {
               const fixedSubfields = medCampo.subfields.filter(sf => !['placas', 'quantidade', 'temperatura'].includes(sf.key));
               fixedSubfields.forEach(sf => { linha[sf.label] = '-'; });
-              for (let n = 1; n <= maxPlacas; n++) {
-                linha[`Placa ${n}`] = '-';
-                linha[`Quantidade ${n} (t)`] = '-';
-                linha[`Temperatura ${n} (°C)`] = '-';
-              }
+              linha['Med. Placas'] = '-';
+              linha['Med. Quantidade (t)'] = '-';
+              linha['Med. Temperatura (°C)'] = '-';
             }
             resultados.push(linha);
           }
