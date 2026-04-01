@@ -679,6 +679,18 @@ export default function ResumosPersonalizadosPage() {
         peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
       }
 
+      // Para ChecklistAplicacao: calcular maxPlacas globalmente antes do loop
+      let globalMaxPlacas = 1;
+      if (tipo === 'ChecklistAplicacao') {
+        ensaiosFiltrados.forEach(e => {
+          const meds = e.medicoes_geometricas?.medicoes || [];
+          meds.forEach(m => {
+            const n = m.placas && m.placas.length > 0 ? m.placas.filter(Boolean).length : (m.placa ? 1 : 0);
+            if (n > globalMaxPlacas) globalMaxPlacas = n;
+          });
+        });
+      }
+
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
         // Adicionar nome do projeto se for CAUQ, Sondagem, ChecklistUsina ou ChecklistMRAF
@@ -1176,8 +1188,7 @@ export default function ResumosPersonalizadosPage() {
           const baseCampos = CAMPOS_POR_TIPO[tipo].filter(c => c.key !== 'medicoes_geometricas');
           const medCampo = CAMPOS_POR_TIPO[tipo].find(c => c.key === 'medicoes_geometricas');
 
-          // Calcular número máximo de placas entre todas as medições deste ensaio
-          const maxPlacas = Math.max(1, ...medicoes.map(m => (m.placas && m.placas.length > 0 ? m.placas.length : (m.placa ? 1 : 0))));
+          const maxPlacas = globalMaxPlacas;
 
           const buildBaseLinha = (idx) => {
             const l = {
