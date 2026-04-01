@@ -217,6 +217,18 @@ const CAMPOS_POR_TIPO = {
     { key: "controle_aplicacao.temp_aplicacao_cargas.conforme", label: "Temp. Aplicação Conforme" },
     { key: "controle_aplicacao.espessura_camada.quantidade", label: "Espessura Camada Qtd" },
     { key: "controle_aplicacao.espessura_camada.conforme", label: "Espessura Camada Conforme" },
+    { key: "medicoes_geometricas", label: "Medições Geométricas", subfields: [
+      { key: "estaca_inicial", label: "Med. Estaca Inicial" },
+      { key: "estaca_final", label: "Med. Estaca Final" },
+      { key: "lado", label: "Med. Lado" },
+      { key: "faixa", label: "Med. Faixa" },
+      { key: "comprimento", label: "Med. Comprimento (m)" },
+      { key: "largura", label: "Med. Largura (m)" },
+      { key: "altura", label: "Med. Altura (cm)" },
+      { key: "placa", label: "Med. Placa" },
+      { key: "quantidade", label: "Med. Quantidade (t)" },
+      { key: "temperatura", label: "Med. Temperatura (°C)" }
+    ]},
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistMRAF: [
@@ -1158,20 +1170,51 @@ export default function ResumosPersonalizadosPage() {
           });
 
           resultados.push(linha);
+        } else if (tipo === 'ChecklistAplicacao') {
+          // Uma linha por medição geométrica; se não houver, cria linha única
+          const medicoes = ensaio.medicoes_geometricas?.medicoes || [];
+          const baseCampos = CAMPOS_POR_TIPO[tipo].filter(c => c.key !== 'medicoes_geometricas');
+          const medCampo = CAMPOS_POR_TIPO[tipo].find(c => c.key === 'medicoes_geometricas');
+
+          const buildBaseLinha = (idx) => {
+            const l = {
+              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              id: idx !== undefined ? `${ensaio.id}_Med${idx + 1}` : ensaio.id,
+              data: ensaio.data_ensaio || ensaio.data || '-'
+            };
+            baseCampos.forEach(campo => {
+              const value = getNestedValue(ensaio, campo.key);
+              l[campo.label] = formatValue(value, campo.key);
+            });
+            return l;
+          };
+
+          if (medicoes.length > 0) {
+            medicoes.forEach((med, idx) => {
+              const linha = buildBaseLinha(idx);
+              if (medCampo) {
+                medCampo.subfields.forEach(sf => {
+                  linha[sf.label] = formatValue(med[sf.key], sf.key);
+                });
+              }
+              resultados.push(linha);
+            });
+          } else {
+            const linha = buildBaseLinha();
+            if (medCampo) {
+              medCampo.subfields.forEach(sf => { linha[sf.label] = '-'; });
+            }
+            resultados.push(linha);
+          }
         } else {
           // Para outros tipos de ensaio
-          
+
           // Para EnsaioManchaPendulo: calcular campos derivados on-the-fly se não estiverem salvos
           if (tipo === 'EnsaioManchaPendulo') {
             const manchaValidos = (ensaio.ensaios_mancha || []).filter(e => e && e.hs_mm != null);
             const penduloValidos = (ensaio.ensaios_pendulo || []).filter(e => e && e.vrd != null);
-
-            if (!ensaio.media_hs && manchaValidos.length > 0) {
-              ensaio.media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
-            }
-            if (!ensaio.media_vrd && penduloValidos.length > 0) {
-              ensaio.media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
-            }
+            if (!ensaio.media_hs && manchaValidos.length > 0) ensaio.media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
+            if (!ensaio.media_vrd && penduloValidos.length > 0) ensaio.media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
             if (!ensaio.classificacao_media_hs && ensaio.media_hs != null) {
               const v = ensaio.media_hs;
               ensaio.classificacao_media_hs = v < 0.2 ? 'Muito Fina' : v < 0.4 ? 'Fina' : v < 0.8 ? 'Média' : v < 1.2 ? 'Grossa' : 'Muito Grossa';
@@ -1183,9 +1226,7 @@ export default function ResumosPersonalizadosPage() {
             if (!ensaio.condicao_conformidade && ensaio.media_hs != null && ensaio.media_vrd != null) {
               const limites = { 'DER/PR': 50, 'DNIT': 55, 'ECO-RODOVIAS': 47 };
               const vrdMin = limites[ensaio.orgao] || 47;
-              const manchaOk = ensaio.media_hs >= 0.6 && ensaio.media_hs <= 1.2;
-              const penduloOk = ensaio.media_vrd >= vrdMin;
-              ensaio.condicao_conformidade = (manchaOk && penduloOk) ? 'CONFORME' : 'NÃO CONFORME';
+              ensaio.condicao_conformidade = (ensaio.media_hs >= 0.6 && ensaio.media_hs <= 1.2 && ensaio.media_vrd >= vrdMin) ? 'CONFORME' : 'NÃO CONFORME';
             }
           }
 
@@ -1197,21 +1238,15 @@ export default function ResumosPersonalizadosPage() {
 
           campos.forEach(campoKey => {
             const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
-            
             if (!campo) return;
-
             if (campo?.subfields) {
-              // Tratar granulometria de forma especial
               if (campoKey === 'granulometria') {
                 const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
                 peneirasParaExibir.forEach(subfield => {
                   const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
-                  if (percentualPassante !== null) {
-                    linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
-                  }
+                  if (percentualPassante !== null) linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
                 });
               } else {
-                // Calcular médias para arrays (outros tipos)
                 const arrayData = getNestedValue(ensaio, campoKey);
                 campo.subfields.forEach(subfield => {
                   const media = calcularMediaArray(arrayData, subfield.key);
