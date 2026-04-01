@@ -3,9 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import * as XLSX from "xlsx";
 import { Badge } from "@/components/ui/badge";
-import { Download, Filter, Loader2, X } from "lucide-react";
+import { Download, Filter, Loader2, X, FileSpreadsheet } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -380,6 +380,7 @@ export default function ResumosPersonalizadosPage() {
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
   const [laboratoristas, setLaboratoristas] = useState([]);
+  const [rawEnsaios, setRawEnsaios] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -1230,12 +1231,52 @@ export default function ResumosPersonalizadosPage() {
 
       console.log('Resultados processados:', resultados.length);
       setDadosConsolidados(resultados);
+      setRawEnsaios(ensaiosFiltrados);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados dos ensaios: " + error.message);
     } finally {
       setLoadingData(false);
     }
+  };
+
+  const exportarMedicaoGeometrica = (linhaId) => {
+    const ensaio = rawEnsaios.find(e => e.id === linhaId || linhaId?.startsWith(e.id));
+    if (!ensaio) return;
+
+    const med = ensaio.medicoes_geometricas;
+    const medicoes = med?.medicoes || [];
+
+    if (medicoes.length === 0) {
+      alert('Este checklist não possui medições geométricas.');
+      return;
+    }
+
+    const wsData = [
+      ['Subtrecho', med.subtrecho || '-'],
+      ['Serviço', med.servico || '-'],
+      [],
+      ['Estaca Inicial', 'Estaca Final', 'Lado', 'Faixa', 'Comprimento (m)', 'Largura (m)', 'Altura (cm)', 'Placa', 'Quantidade', 'Temperatura (°C)', 'Observações'],
+      ...medicoes.map(m => [
+        m.estaca_inicial || '-',
+        m.estaca_final || '-',
+        m.lado || '-',
+        m.faixa || '-',
+        m.comprimento ?? '-',
+        m.largura ?? '-',
+        m.altura ?? '-',
+        m.placa || '-',
+        m.quantidade ?? '-',
+        m.temperatura ?? '-',
+        m.observacoes || '-'
+      ])
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Medição Geométrica');
+    const dataStr = ensaio.data ? new Date(ensaio.data).toLocaleDateString('pt-BR') : '';
+    XLSX.writeFile(wb, `medicao_geometrica_${dataStr}.xlsx`);
   };
 
   const normalizarTexto = (texto) => {
@@ -1426,8 +1467,11 @@ export default function ResumosPersonalizadosPage() {
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="bg-[#00233B] text-white">
-                      <th className="border border-white/20 px-2 py-2 text-left">Tipo</th>
-                      <th className="border border-white/20 px-2 py-2 text-left">Data</th>
+                     <th className="border border-white/20 px-2 py-2 text-left">Tipo</th>
+                     <th className="border border-white/20 px-2 py-2 text-left">Data</th>
+                     {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
+                       <th className="border border-white/20 px-2 py-2 text-center">Medição Geométrica</th>
+                     )}
                       {Object.keys(dadosConsolidados[0])
                         .filter(key => key !== 'tipo' && key !== 'data' && key !== 'id')
                         .map(key => (
@@ -1440,12 +1484,25 @@ export default function ResumosPersonalizadosPage() {
                   <tbody>
                     {dadosConsolidados.map((linha, idx) => (
                       <tr key={idx} className={idx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
-                        <td className="border border-white/20 px-2 py-2 font-medium text-[#00233B]">
-                          {linha.tipo}
-                        </td>
-                        <td className="border border-white/20 px-2 py-2 text-[#00233B]">
-                          {formatValue(linha.data, 'data')}
-                        </td>
+                       <td className="border border-white/20 px-2 py-2 font-medium text-[#00233B]">
+                         {linha.tipo}
+                       </td>
+                       <td className="border border-white/20 px-2 py-2 text-[#00233B]">
+                         {formatValue(linha.data, 'data')}
+                       </td>
+                       {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
+                         <td className="border border-white/20 px-2 py-2 text-center">
+                           <Button
+                             size="sm"
+                             variant="outline"
+                             onClick={() => exportarMedicaoGeometrica(linha.id)}
+                             className="h-7 text-xs border-[#00233B]/30 text-[#00233B] hover:bg-[#00233B]/10 gap-1"
+                           >
+                             <FileSpreadsheet className="w-3.5 h-3.5 text-green-600" />
+                             Excel
+                           </Button>
+                         </td>
+                       )}
                         {Object.keys(linha)
                           .filter(key => key !== 'tipo' && key !== 'data' && key !== 'id')
                           .map(key => (
