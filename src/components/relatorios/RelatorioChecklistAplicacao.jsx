@@ -553,99 +553,51 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <strong className="font-medium" style={{ fontSize: '10px' }}>Observações Gerais:</strong>
               <p style={{ fontSize: '8px' }}>{checklist.observacoes_gerais || 'Nenhuma observação adicional.'}</p>
             </div>
-          </main>
-          <div className="mt-auto pt-1 break-inside-avoid">
-            <div className="grid grid-cols-3 gap-4 items-end">
-              <div className="text-center">
-                <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                  <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
-                  <p>{checklist.created_by}</p>
-                  <p>em {formatDateBrasilia(checklist.created_date)}</p>
-                </div>
-                <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
-              </div>
-              
-              <div className="text-center">
-                {checklist.approved === true && checklist.approver_details ? (
-                  <>
-                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                      <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                      <p>{checklist.approved_by}</p>
-                      {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
-                      <p>em {formatDateBrasilia(checklist.approved_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-10 mb-1"></div>
-                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Aprovação</p></div>
-                  </>
+
+            {checklist.medicoes_geometricas?.medicoes?.length > 0 && (
+              <div className="mt-0.5">
+                <SectionTitle>Medição Geométrica</SectionTitle>
+                {(checklist.medicoes_geometricas?.subtrecho || checklist.medicoes_geometricas?.servico) && (
+                  <div className="grid grid-cols-2 gap-1 mb-0.5" style={{ fontSize: '9px' }}>
+                    {checklist.medicoes_geometricas?.subtrecho && <p><strong>Subtrecho:</strong> {checklist.medicoes_geometricas.subtrecho}</p>}
+                    {checklist.medicoes_geometricas?.servico && <p><strong>Serviço:</strong> {checklist.medicoes_geometricas.servico}</p>}
+                  </div>
                 )}
-              </div>
-
-              <div className="text-center">
-                {checklist.client_signature?.signed_by ? (
-                  <>
-                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                      <p>Assinado digitalmente por</p>
-                      <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                      <p>{checklist.client_signature.signed_by}</p>
-                      {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
-                      <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-10 mb-1"></div>
-                    <div className="border-t border-gray-500 pt-1"><p style={{ fontSize: '8px' }}>Engenheiro Cliente</p></div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* --- Página 2: Ações Corretivas e/ou Não Conformidades (se houver) --- */}
-      {(temAcoesCorretivas || (checklist.nao_conformidades && checklist.nao_conformidades.length > 0)) && (
-        <div className="p-3 print:p-3 break-before-page relative" style={{ minHeight: '297mm', height: '297mm' }}>
-          <div className="w-full max-w-[190mm] mx-auto relative" style={{ height: '100%' }}>
-            <ReportPrintHeader checklist={checklist} obra={obra} regional={regional} />
-            <main className="mt-2">
-              <SectionTitle>Ações Corretivas</SectionTitle>
-              <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '500px' }}>
-                <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {checklist.acoes_corretivas_descricao}
-                </p>
-              </div>
-
-              {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
-                <div className="mt-4">
-                  <SectionTitle>Não Conformidades</SectionTitle>
-                  <table className="w-full border-collapse border border-slate-300 text-sm">
-                    <thead>
-                      <tr className="bg-slate-100">
-                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">LOCAL</th>
-                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">CATEGORIA</th>
-                        <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">PARÂMETRO</th>
+                <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '8px' }}>
+                  <thead className="bg-slate-100">
+                    <tr>
+                      <th className="border border-slate-300 p-0.5 text-center">Est. Ini.</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Est. Fin.</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Lado</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Faixa</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Comp. (m)</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Larg. (m)</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Altura (cm)</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Placa</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Quant.</th>
+                      <th className="border border-slate-300 p-0.5 text-center">Temp. (°C)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {checklist.medicoes_geometricas.medicoes.map((med, i) => (
+                      <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.estaca_inicial || '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.estaca_final || '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.lado || '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.faixa || '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.comprimento != null ? med.comprimento.toFixed(2) : '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.largura != null ? med.largura.toFixed(2) : '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.altura != null ? med.altura.toFixed(2) : '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.placa || '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.quantidade != null ? med.quantidade.toFixed(2) : '-'}</td>
+                        <td className="border border-slate-300 p-0.5 text-center">{med.temperatura != null ? `${med.temperatura.toFixed(1)}` : '-'}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {checklist.nao_conformidades.map((nc, index) => (
-                        <tr key={index} className="bg-white">
-                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
-                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
-                          <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </main>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </main>
             <div className="absolute bottom-0 left-0 right-0 pt-1 break-inside-avoid">
               <div className="grid grid-cols-3 gap-4 items-end">
                 <div className="text-center">
