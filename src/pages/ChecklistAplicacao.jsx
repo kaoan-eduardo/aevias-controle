@@ -1471,9 +1471,11 @@ export default function ChecklistAplicacaoPage() {
                             temperatura: null,
                             observacoes: ''
                           }]
-                    >
-                      + Adicionar Medição
-                    </Button>
+                          });
+                          }}
+                          >
+                          {'+ Adicionar Medição'}
+                          </Button>
                   )}
 
                   {formData.medicoes_geometricas?.medicoes?.length > 0 && (
