@@ -685,8 +685,9 @@ export default function ResumosPersonalizadosPage() {
         ensaiosFiltrados.forEach(e => {
           const meds = e.medicoes_geometricas?.medicoes || [];
           meds.forEach(m => {
-            const n = m.placas && m.placas.length > 0 ? m.placas.filter(Boolean).length : (m.placa ? 1 : 0);
-            if (n > globalMaxPlacas) globalMaxPlacas = n;
+            // conta todas as placas, inclusive vazias, para garantir colunas
+            const arr = m.placas && Array.isArray(m.placas) ? m.placas : (m.placa ? [m.placa] : []);
+            if (arr.length > globalMaxPlacas) globalMaxPlacas = arr.length;
           });
         });
       }
@@ -1213,14 +1214,12 @@ export default function ResumosPersonalizadosPage() {
                   linha[sf.label] = formatValue(med[sf.key], sf.key);
                 });
                 // Expandir placas em colunas dinâmicas
-                const placasArr = med.placas && med.placas.length > 0
-                  ? med.placas.filter(Boolean)
-                  : med.placa ? [med.placa] : [];
+                const placasArr = med.placas && Array.isArray(med.placas) ? med.placas : (med.placa ? [med.placa] : []);
                 for (let n = 1; n <= maxPlacas; n++) {
                   const placa = placasArr[n - 1];
-                  linha[`Placa ${n}`] = placa || '-';
-                  linha[`Quantidade ${n} (t)`] = placa != null ? formatValue(med.quantidade, 'quantidade') : '-';
-                  linha[`Temperatura ${n} (°C)`] = placa != null ? formatValue(med.temperatura, 'temperatura') : '-';
+                  linha[`Placa ${n}`] = (placa && placa.trim() !== '') ? placa : '-';
+                  linha[`Quantidade ${n} (t)`] = n <= placasArr.length ? formatValue(med.quantidade, 'quantidade') : '-';
+                  linha[`Temperatura ${n} (°C)`] = n <= placasArr.length ? formatValue(med.temperatura, 'temperatura') : '-';
                 }
               }
               resultados.push(linha);
@@ -1311,6 +1310,19 @@ export default function ResumosPersonalizadosPage() {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^\x00-\x7F]/g, '');
+  };
+
+  const exportarMedicaoCSV = (linha) => {
+    const headers = Object.keys(linha).filter(k => k !== 'tipo' && k !== 'id');
+    const csvContent = [
+      headers.map(h => normalizarTexto(h)).join(';'),
+      headers.map(h => normalizarTexto(String(linha[h] || ''))).join(';')
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `medicao_${linha.data || 'sem_data'}_${linha['Med. Estaca Inicial'] || ''}.csv`;
+    link.click();
   };
 
   const exportarParaCSV = () => {
@@ -1493,6 +1505,9 @@ export default function ResumosPersonalizadosPage() {
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="bg-[#00233B] text-white">
+                      {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
+                        <th className="border border-white/20 px-2 py-2 text-center">Download</th>
+                      )}
                       <th className="border border-white/20 px-2 py-2 text-left">Tipo</th>
                       <th className="border border-white/20 px-2 py-2 text-left">Data</th>
                       {Object.keys(dadosConsolidados[0])
@@ -1507,6 +1522,17 @@ export default function ResumosPersonalizadosPage() {
                   <tbody>
                     {dadosConsolidados.map((linha, idx) => (
                       <tr key={idx} className={idx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
+                        {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
+                          <td className="border border-white/20 px-2 py-2 text-center">
+                            <button
+                              onClick={() => exportarMedicaoCSV(linha)}
+                              title="Baixar esta medição"
+                              className="text-[#00233B] hover:text-[#BFCF99] transition-colors"
+                            >
+                              <Download className="w-4 h-4" />
+                            </button>
+                          </td>
+                        )}
                         <td className="border border-white/20 px-2 py-2 font-medium text-[#00233B]">
                           {linha.tipo}
                         </td>
