@@ -225,7 +225,7 @@ const CAMPOS_POR_TIPO = {
       { key: "comprimento", label: "Med. Comprimento (m)" },
       { key: "largura", label: "Med. Largura (m)" },
       { key: "altura", label: "Med. Altura (cm)" },
-      { key: "placa", label: "Med. Placa" },
+      { key: "placas", label: "Med. Placas" },
       { key: "quantidade", label: "Med. Quantidade (t)" },
       { key: "temperatura", label: "Med. Temperatura (°C)" }
     ]},
@@ -1194,7 +1194,12 @@ export default function ResumosPersonalizadosPage() {
               const linha = buildBaseLinha(idx);
               if (medCampo) {
                 medCampo.subfields.forEach(sf => {
-                  linha[sf.label] = formatValue(med[sf.key], sf.key);
+                  if (sf.key === 'placas') {
+                    const arr = med.placas || (med.placa ? [med.placa] : []);
+                    linha[sf.label] = arr.filter(Boolean).join(', ') || '-';
+                  } else {
+                    linha[sf.label] = formatValue(med[sf.key], sf.key);
+                  }
                 });
               }
               resultados.push(linha);

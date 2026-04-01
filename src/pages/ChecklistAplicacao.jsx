@@ -1466,14 +1466,11 @@ export default function ChecklistAplicacaoPage() {
                             comprimento: null,
                             largura: null,
                             altura: null,
-                            placa: '',
+                            placas: [],
                             quantidade: null,
                             temperatura: null,
                             observacoes: ''
                           }]
-                        });
-                      }}
-                      className="w-full mb-4"
                     >
                       + Adicionar Medição
                     </Button>
@@ -1647,24 +1644,47 @@ export default function ChecklistAplicacaoPage() {
 
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                               <div>
-                                <Label className="text-xs">Placa</Label>
-                                <Input
-                                  value={medicao.placa}
-                                  onChange={(e) => {
-                                    const medicoes = [...formData.medicoes_geometricas.medicoes];
-                                    medicoes[index].placa = e.target.value;
-                                    handleInputChange('medicoes_geometricas', {
-                                      ...formData.medicoes_geometricas,
-                                      medicoes
-                                    });
-                                  }}
-                                  disabled={!isEditable}
-                                  placeholder="Ex: ABC-1234"
-                                  className="h-9 text-sm"
-                                />
+                                <Label className="text-xs">Placas dos Caminhões</Label>
+                                <div className="space-y-1">
+                                  {(medicao.placas || []).map((placa, pIdx) => (
+                                    <div key={pIdx} className="flex gap-1">
+                                      <Input
+                                        value={placa}
+                                        onChange={(e) => {
+                                          const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                          const novasPlacas = [...(medicoes[index].placas || [])];
+                                          novasPlacas[pIdx] = e.target.value;
+                                          medicoes[index].placas = novasPlacas;
+                                          handleInputChange('medicoes_geometricas', { ...formData.medicoes_geometricas, medicoes });
+                                        }}
+                                        disabled={!isEditable}
+                                        placeholder="Ex: ABC-1234"
+                                        className="h-8 text-sm"
+                                      />
+                                      {isEditable && (
+                                        <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500"
+                                          onClick={() => {
+                                            const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                            medicoes[index].placas = (medicoes[index].placas || []).filter((_, i) => i !== pIdx);
+                                            handleInputChange('medicoes_geometricas', { ...formData.medicoes_geometricas, medicoes });
+                                          }}>
+                                          <X className="w-3 h-3" />
+                                        </Button>
+                                      )}
+                                    </div>
+                                  ))}
+                                  {isEditable && (
+                                    <Button type="button" variant="outline" size="sm" className="w-full h-7 text-xs"
+                                      onClick={() => {
+                                        const medicoes = [...formData.medicoes_geometricas.medicoes];
+                                        medicoes[index].placas = [...(medicoes[index].placas || []), ''];
+                                        handleInputChange('medicoes_geometricas', { ...formData.medicoes_geometricas, medicoes });
+                                      }}>{'+ Placa'}</Button>
+                                  )}
+                                </div>
                               </div>
                               <div>
-                                <Label className="text-xs">Quantidade</Label>
+                                <Label className="text-xs">Quantidade (t)</Label>
                                 <Input
                                   type="number"
                                   step="0.01"
@@ -1672,10 +1692,7 @@ export default function ChecklistAplicacaoPage() {
                                   onChange={(e) => {
                                     const medicoes = [...formData.medicoes_geometricas.medicoes];
                                     medicoes[index].quantidade = e.target.value ? parseFloat(e.target.value) : null;
-                                    handleInputChange('medicoes_geometricas', {
-                                      ...formData.medicoes_geometricas,
-                                      medicoes
-                                    });
+                                    handleInputChange('medicoes_geometricas', { ...formData.medicoes_geometricas, medicoes });
                                   }}
                                   disabled={!isEditable}
                                   placeholder="0.00"
@@ -1691,10 +1708,7 @@ export default function ChecklistAplicacaoPage() {
                                   onChange={(e) => {
                                     const medicoes = [...formData.medicoes_geometricas.medicoes];
                                     medicoes[index].temperatura = e.target.value ? parseFloat(e.target.value) : null;
-                                    handleInputChange('medicoes_geometricas', {
-                                      ...formData.medicoes_geometricas,
-                                      medicoes
-                                    });
+                                    handleInputChange('medicoes_geometricas', { ...formData.medicoes_geometricas, medicoes });
                                   }}
                                   disabled={!isEditable}
                                   placeholder="0.0"
