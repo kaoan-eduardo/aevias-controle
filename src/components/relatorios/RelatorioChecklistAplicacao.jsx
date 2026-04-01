@@ -821,7 +821,14 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
                     <td className="border border-slate-400 p-1 text-center">{medicao.comprimento !== null ? medicao.comprimento.toFixed(2) : '-'}</td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.largura !== null ? medicao.largura.toFixed(2) : '-'}</td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.altura !== null ? medicao.altura.toFixed(2) : '-'}</td>
-                    <td className="border border-slate-400 p-1 text-center">{medicao.placa || '-'}</td>
+                    <td className="border border-slate-400 p-1 text-center">
+                      {(() => {
+                        const placas = medicao.placas && medicao.placas.length > 0
+                          ? medicao.placas.filter(Boolean)
+                          : medicao.placa ? [medicao.placa] : [];
+                        return placas.length > 0 ? placas.join(', ') : '-';
+                      })()}
+                    </td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.quantidade !== null ? medicao.quantidade.toFixed(2) : '-'}</td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.temperatura !== null ? `${medicao.temperatura.toFixed(1)}°C` : '-'}</td>
                     <td className="border border-slate-400 p-1 text-xs">{medicao.observacoes || '-'}</td>
