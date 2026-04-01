@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 
 import { Badge } from "@/components/ui/badge";
 import { Download, Filter, Loader2, X } from "lucide-react";
-import * as XLSX from "xlsx";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -218,18 +217,6 @@ const CAMPOS_POR_TIPO = {
     { key: "controle_aplicacao.temp_aplicacao_cargas.conforme", label: "Temp. Aplicação Conforme" },
     { key: "controle_aplicacao.espessura_camada.quantidade", label: "Espessura Camada Qtd" },
     { key: "controle_aplicacao.espessura_camada.conforme", label: "Espessura Camada Conforme" },
-    { key: "medicoes_geometricas", label: "Medições Geométricas", subfields: [
-      { key: "estaca_inicial", label: "Med. Estaca Inicial" },
-      { key: "estaca_final", label: "Med. Estaca Final" },
-      { key: "lado", label: "Med. Lado" },
-      { key: "faixa", label: "Med. Faixa" },
-      { key: "comprimento", label: "Med. Comprimento (m)" },
-      { key: "largura", label: "Med. Largura (m)" },
-      { key: "altura", label: "Med. Altura (cm)" },
-      { key: "placas", label: "Med. Placas" },
-      { key: "quantidade", label: "Med. Quantidade (t)" },
-      { key: "temperatura", label: "Med. Temperatura (°C)" }
-    ]},
     { key: "acoes_corretivas_realizado", label: "Ações Corretivas" }
   ],
   ChecklistMRAF: [
@@ -393,7 +380,6 @@ export default function ResumosPersonalizadosPage() {
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
   const [laboratoristas, setLaboratoristas] = useState([]);
-  const [rawEnsaios, setRawEnsaios] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -680,9 +666,6 @@ export default function ResumosPersonalizadosPage() {
       if (tipo === 'EnsaioCAUQ') {
         peneirasRelevantes = CAMPOS_POR_TIPO.EnsaioCAUQ.find(c => c.key === 'granulometria')?.subfields || [];
       }
-
-      // Sem expansão por caminhão — uma coluna única de placas por medição
-      const globalMaxPlacas = 1;
 
       // Processar cada ensaio
       ensaiosFiltrados.forEach(ensaio => {
@@ -1175,64 +1158,20 @@ export default function ResumosPersonalizadosPage() {
           });
 
           resultados.push(linha);
-        } else if (tipo === 'ChecklistAplicacao') {
-          // Uma linha por medição geométrica; se não houver, cria linha única
-          const medicoes = ensaio.medicoes_geometricas?.medicoes || [];
-          const baseCampos = CAMPOS_POR_TIPO[tipo].filter(c => c.key !== 'medicoes_geometricas');
-          const medCampo = CAMPOS_POR_TIPO[tipo].find(c => c.key === 'medicoes_geometricas');
-
-          const maxPlacas = globalMaxPlacas;
-
-          const buildBaseLinha = (idx) => {
-            const l = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
-              id: idx !== undefined ? `${ensaio.id}_Med${idx + 1}` : ensaio.id,
-              data: ensaio.data_ensaio || ensaio.data || '-'
-            };
-            baseCampos.forEach(campo => {
-              const value = getNestedValue(ensaio, campo.key);
-              l[campo.label] = formatValue(value, campo.key);
-            });
-            return l;
-          };
-
-          if (medicoes.length > 0) {
-            medicoes.forEach((med, idx) => {
-              const linha = buildBaseLinha(idx);
-              if (medCampo) {
-                // Campos geométricos fixos (exceto placas, quantidade, temperatura)
-                const fixedSubfields = medCampo.subfields.filter(sf => !['placas', 'quantidade', 'temperatura'].includes(sf.key));
-                fixedSubfields.forEach(sf => {
-                  linha[sf.label] = formatValue(med[sf.key], sf.key);
-                });
-                // Coluna única de placas (todas as placas da medição juntas)
-                const placasArr = med.placas && Array.isArray(med.placas) ? med.placas.filter(Boolean) : (med.placa ? [med.placa] : []);
-                linha['Med. Placas'] = placasArr.length > 0 ? placasArr.join(', ') : '-';
-                linha['Med. Quantidade (t)'] = formatValue(med.quantidade, 'quantidade');
-                linha['Med. Temperatura (°C)'] = formatValue(med.temperatura, 'temperatura');
-              }
-              resultados.push(linha);
-            });
-          } else {
-            const linha = buildBaseLinha();
-            if (medCampo) {
-              const fixedSubfields = medCampo.subfields.filter(sf => !['placas', 'quantidade', 'temperatura'].includes(sf.key));
-              fixedSubfields.forEach(sf => { linha[sf.label] = '-'; });
-              linha['Med. Placas'] = '-';
-              linha['Med. Quantidade (t)'] = '-';
-              linha['Med. Temperatura (°C)'] = '-';
-            }
-            resultados.push(linha);
-          }
         } else {
           // Para outros tipos de ensaio
-
+          
           // Para EnsaioManchaPendulo: calcular campos derivados on-the-fly se não estiverem salvos
           if (tipo === 'EnsaioManchaPendulo') {
             const manchaValidos = (ensaio.ensaios_mancha || []).filter(e => e && e.hs_mm != null);
             const penduloValidos = (ensaio.ensaios_pendulo || []).filter(e => e && e.vrd != null);
-            if (!ensaio.media_hs && manchaValidos.length > 0) ensaio.media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
-            if (!ensaio.media_vrd && penduloValidos.length > 0) ensaio.media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
+
+            if (!ensaio.media_hs && manchaValidos.length > 0) {
+              ensaio.media_hs = manchaValidos.reduce((sum, e) => sum + e.hs_mm, 0) / manchaValidos.length;
+            }
+            if (!ensaio.media_vrd && penduloValidos.length > 0) {
+              ensaio.media_vrd = penduloValidos.reduce((sum, e) => sum + e.vrd, 0) / penduloValidos.length;
+            }
             if (!ensaio.classificacao_media_hs && ensaio.media_hs != null) {
               const v = ensaio.media_hs;
               ensaio.classificacao_media_hs = v < 0.2 ? 'Muito Fina' : v < 0.4 ? 'Fina' : v < 0.8 ? 'Média' : v < 1.2 ? 'Grossa' : 'Muito Grossa';
@@ -1244,7 +1183,9 @@ export default function ResumosPersonalizadosPage() {
             if (!ensaio.condicao_conformidade && ensaio.media_hs != null && ensaio.media_vrd != null) {
               const limites = { 'DER/PR': 50, 'DNIT': 55, 'ECO-RODOVIAS': 47 };
               const vrdMin = limites[ensaio.orgao] || 47;
-              ensaio.condicao_conformidade = (ensaio.media_hs >= 0.6 && ensaio.media_hs <= 1.2 && ensaio.media_vrd >= vrdMin) ? 'CONFORME' : 'NÃO CONFORME';
+              const manchaOk = ensaio.media_hs >= 0.6 && ensaio.media_hs <= 1.2;
+              const penduloOk = ensaio.media_vrd >= vrdMin;
+              ensaio.condicao_conformidade = (manchaOk && penduloOk) ? 'CONFORME' : 'NÃO CONFORME';
             }
           }
 
@@ -1256,15 +1197,21 @@ export default function ResumosPersonalizadosPage() {
 
           campos.forEach(campoKey => {
             const campo = CAMPOS_POR_TIPO[tipo].find(c => c.key === campoKey);
+            
             if (!campo) return;
+
             if (campo?.subfields) {
+              // Tratar granulometria de forma especial
               if (campoKey === 'granulometria') {
                 const peneirasParaExibir = peneirasRelevantes.length > 0 ? peneirasRelevantes : campo.subfields;
                 peneirasParaExibir.forEach(subfield => {
                   const percentualPassante = calcularGranulometriaPassante(ensaio, subfield.key);
-                  if (percentualPassante !== null) linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
+                  if (percentualPassante !== null) {
+                    linha[`${campoKey}.${subfield.astm}`] = percentualPassante;
+                  }
                 });
               } else {
+                // Calcular médias para arrays (outros tipos)
                 const arrayData = getNestedValue(ensaio, campoKey);
                 campo.subfields.forEach(subfield => {
                   const media = calcularMediaArray(arrayData, subfield.key);
@@ -1283,7 +1230,6 @@ export default function ResumosPersonalizadosPage() {
 
       console.log('Resultados processados:', resultados.length);
       setDadosConsolidados(resultados);
-      setRawEnsaios(ensaiosFiltrados);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados dos ensaios: " + error.message);
@@ -1298,57 +1244,6 @@ export default function ResumosPersonalizadosPage() {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^\x00-\x7F]/g, '');
-  };
-
-  const exportarMedicaoExcel = (linha, ensaioOriginal) => {
-    const medIdx = parseInt((linha.id || '').split('_Med')[1]) - 1;
-    const medicoes = ensaioOriginal?.medicoes_geometricas?.medicoes || [];
-    const med = medicoes[medIdx] !== undefined ? medicoes[medIdx] : null;
-
-    const wb = XLSX.utils.book_new();
-    const wsData = [];
-
-    // Cabeçalho / meta
-    wsData.push(['Medição Geométrica de Campo']);
-    wsData.push([]);
-    wsData.push(['RODOVIA', ensaioOriginal?.rodovia || '-', '', 'TRECHO', ensaioOriginal?.trecho || '-', '', 'DATA', ensaioOriginal?.data ? new Date(ensaioOriginal.data).toLocaleDateString('pt-BR', {timeZone:'UTC'}) : '-']);
-    wsData.push(['EMPREITEIRA', ensaioOriginal?.empreiteira || '-', '', 'SUBTRECHO', ensaioOriginal?.medicoes_geometricas?.subtrecho || '-', '', 'SERVIÇO', ensaioOriginal?.medicoes_geometricas?.servico || '-']);
-    wsData.push([]);
-
-    // Cabeçalho da tabela
-    wsData.push(['ESTACA INICIAL', 'ESTACA FINAL', 'LADO', 'FAIXA', 'COMP. (m)', 'LARG. (m)', 'ALTURA (m)', 'PLACAS', 'QUANT. (t)', 'TEMP. (°C)', 'OBSERVAÇÕES']);
-
-    // Linha de dados
-    if (med) {
-      const placas = med.placas && Array.isArray(med.placas) ? med.placas.filter(Boolean).join(', ') : (med.placa || '-');
-      wsData.push([
-        med.estaca_inicial || '-',
-        med.estaca_final || '-',
-        med.lado || '-',
-        med.faixa || '-',
-        med.comprimento != null ? med.comprimento : '-',
-        med.largura != null ? med.largura : '-',
-        med.altura != null ? med.altura : '-',
-        placas,
-        med.quantidade != null ? med.quantidade : '-',
-        med.temperatura != null ? med.temperatura : '-',
-        med.observacoes || '-'
-      ]);
-    }
-
-    const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-    // Larguras das colunas
-    ws['!cols'] = [14,14,10,10,12,12,12,22,12,12,24].map(w => ({wch: w}));
-
-    // Merge título
-    ws['!merges'] = [{ s:{r:0,c:0}, e:{r:0,c:10} }];
-
-    XLSX.utils.book_append_sheet(wb, ws, 'Medição Geométrica');
-
-    const data = ensaioOriginal?.data || '';
-    const estaca = med?.estaca_inicial || '';
-    XLSX.writeFile(wb, `medicao_geometrica_${data}_${estaca}.xlsx`);
   };
 
   const exportarParaCSV = () => {
@@ -1531,9 +1426,6 @@ export default function ResumosPersonalizadosPage() {
                 <table className="w-full border-collapse text-sm">
                   <thead>
                     <tr className="bg-[#00233B] text-white">
-                      {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
-                        <th className="border border-white/20 px-2 py-2 text-center">Download</th>
-                      )}
                       <th className="border border-white/20 px-2 py-2 text-left">Tipo</th>
                       <th className="border border-white/20 px-2 py-2 text-left">Data</th>
                       {Object.keys(dadosConsolidados[0])
@@ -1548,21 +1440,6 @@ export default function ResumosPersonalizadosPage() {
                   <tbody>
                     {dadosConsolidados.map((linha, idx) => (
                       <tr key={idx} className={idx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
-                        {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
-                          <td className="border border-white/20 px-2 py-2 text-center">
-                            <button
-                              onClick={() => {
-                                const ensaioId = (linha.id || '').split('_Med')[0];
-                                const ensaioOriginal = rawEnsaios.find(e => e.id === ensaioId);
-                                exportarMedicaoExcel(linha, ensaioOriginal);
-                              }}
-                              title="Ver medição geométrica"
-                              className="text-[#00233B] hover:text-[#BFCF99] transition-colors"
-                            >
-                              <Download className="w-4 h-4" />
-                            </button>
-                          </td>
-                        )}
                         <td className="border border-white/20 px-2 py-2 font-medium text-[#00233B]">
                           {linha.tipo}
                         </td>
