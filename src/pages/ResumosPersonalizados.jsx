@@ -392,6 +392,7 @@ export default function ResumosPersonalizadosPage() {
   // Dados
   const [dadosConsolidados, setDadosConsolidados] = useState([]);
   const [laboratoristas, setLaboratoristas] = useState([]);
+  const [rawEnsaios, setRawEnsaios] = useState([]);
 
   useEffect(() => {
     loadInitialData();
@@ -1296,6 +1297,7 @@ export default function ResumosPersonalizadosPage() {
 
       console.log('Resultados processados:', resultados.length);
       setDadosConsolidados(resultados);
+      setRawEnsaios(ensaiosFiltrados);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
       alert("Erro ao carregar dados dos ensaios: " + error.message);
@@ -1312,17 +1314,82 @@ export default function ResumosPersonalizadosPage() {
       .replace(/[^\x00-\x7F]/g, '');
   };
 
-  const exportarMedicaoCSV = (linha) => {
-    const headers = Object.keys(linha).filter(k => k !== 'tipo' && k !== 'id');
-    const csvContent = [
-      headers.map(h => normalizarTexto(h)).join(';'),
-      headers.map(h => normalizarTexto(String(linha[h] || ''))).join(';')
-    ].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `medicao_${linha.data || 'sem_data'}_${linha['Med. Estaca Inicial'] || ''}.csv`;
-    link.click();
+  const exportarMedicaoHTML = (linha, ensaioOriginal) => {
+    // Coletar dados da medição geométrica do ensaio original via índice
+    const medIdx = parseInt((linha.id || '').split('_Med')[1]) - 1;
+    const medicoes = ensaioOriginal?.medicoes_geometricas?.medicoes || [];
+    const med = medicoes[medIdx] !== undefined ? medicoes[medIdx] : null;
+
+    const rows = med ? [med] : [];
+
+    const htmlContent = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Medição Geométrica</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11px; margin: 16px; }
+  h2 { font-size: 13px; text-align: center; margin-bottom: 8px; }
+  .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 12px; margin-bottom: 8px; font-size: 10px; }
+  .meta p { margin: 0; } .meta b { display: block; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #888; padding: 3px 5px; text-align: center; font-size: 10px; }
+  thead { background: #e2e8f0; }
+  @media print { button { display: none; } }
+</style>
+</head>
+<body>
+<h2>Medição Geométrica de Campo</h2>
+<div class="meta">
+  <div><b>RODOVIA:</b><p>${ensaioOriginal?.rodovia || '-'}</p></div>
+  <div><b>TRECHO:</b><p>${ensaioOriginal?.trecho || '-'}</p></div>
+  <div><b>DATA:</b><p>${ensaioOriginal?.data ? new Date(ensaioOriginal.data).toLocaleDateString('pt-BR', {timeZone:'UTC'}) : '-'}</p></div>
+  <div><b>EMPREITEIRA:</b><p>${ensaioOriginal?.empreiteira || '-'}</p></div>
+  <div><b>SUBTRECHO:</b><p>${ensaioOriginal?.medicoes_geometricas?.subtrecho || '-'}</p></div>
+  <div><b>SERVIÇO:</b><p>${ensaioOriginal?.medicoes_geometricas?.servico || '-'}</p></div>
+</div>
+<table>
+<thead>
+  <tr>
+    <th colspan="2">ESTACAS</th>
+    <th rowspan="2">LADO</th>
+    <th rowspan="2">FAIXA</th>
+    <th colspan="3">GEOMÉTRICO</th>
+    <th rowspan="2">PLACAS</th>
+    <th rowspan="2">QUANT. (t)</th>
+    <th rowspan="2">TEMP. (°C)</th>
+    <th rowspan="2">OBSERVAÇÕES</th>
+  </tr>
+  <tr>
+    <th>INICIAL</th><th>FINAL</th>
+    <th>COMP. (m)</th><th>LARG. (m)</th><th>ALTURA (m)</th>
+  </tr>
+</thead>
+<tbody>
+${rows.map(m => {
+  const placas = m.placas && Array.isArray(m.placas) ? m.placas.filter(Boolean).join(', ') : (m.placa || '-');
+  return `<tr>
+    <td>${m.estaca_inicial || '-'}</td>
+    <td>${m.estaca_final || '-'}</td>
+    <td>${m.lado || '-'}</td>
+    <td>${m.faixa || '-'}</td>
+    <td>${m.comprimento != null ? m.comprimento.toFixed(2) : '-'}</td>
+    <td>${m.largura != null ? m.largura.toFixed(2) : '-'}</td>
+    <td>${m.altura != null ? m.altura.toFixed(2) : '-'}</td>
+    <td>${placas}</td>
+    <td>${m.quantidade != null ? m.quantidade.toFixed(2) : '-'}</td>
+    <td>${m.temperatura != null ? m.temperatura.toFixed(1) : '-'}</td>
+    <td>${m.observacoes || '-'}</td>
+  </tr>`;
+}).join('')}
+</tbody>
+</table>
+<br/><button onclick="window.print()">Imprimir</button>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(htmlContent);
+    win.document.close();
   };
 
   const exportarParaCSV = () => {
@@ -1525,8 +1592,12 @@ export default function ResumosPersonalizadosPage() {
                         {tipoEnsaioSelecionado === 'ChecklistAplicacao' && (
                           <td className="border border-white/20 px-2 py-2 text-center">
                             <button
-                              onClick={() => exportarMedicaoCSV(linha)}
-                              title="Baixar esta medição"
+                              onClick={() => {
+                                const ensaioId = (linha.id || '').split('_Med')[0];
+                                const ensaioOriginal = rawEnsaios.find(e => e.id === ensaioId);
+                                exportarMedicaoHTML(linha, ensaioOriginal);
+                              }}
+                              title="Ver medição geométrica"
                               className="text-[#00233B] hover:text-[#BFCF99] transition-colors"
                             >
                               <Download className="w-4 h-4" />
