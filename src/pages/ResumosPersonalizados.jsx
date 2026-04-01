@@ -1176,6 +1176,9 @@ export default function ResumosPersonalizadosPage() {
           const baseCampos = CAMPOS_POR_TIPO[tipo].filter(c => c.key !== 'medicoes_geometricas');
           const medCampo = CAMPOS_POR_TIPO[tipo].find(c => c.key === 'medicoes_geometricas');
 
+          // Calcular número máximo de placas entre todas as medições deste ensaio
+          const maxPlacas = Math.max(1, ...medicoes.map(m => (m.placas && m.placas.length > 0 ? m.placas.length : (m.placa ? 1 : 0))));
+
           const buildBaseLinha = (idx) => {
             const l = {
               tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
@@ -1193,21 +1196,34 @@ export default function ResumosPersonalizadosPage() {
             medicoes.forEach((med, idx) => {
               const linha = buildBaseLinha(idx);
               if (medCampo) {
-                medCampo.subfields.forEach(sf => {
-                  if (sf.key === 'placas') {
-                    const arr = med.placas || (med.placa ? [med.placa] : []);
-                    linha[sf.label] = arr.filter(Boolean).join(', ') || '-';
-                  } else {
-                    linha[sf.label] = formatValue(med[sf.key], sf.key);
-                  }
+                // Campos geométricos fixos (exceto placas, quantidade, temperatura)
+                const fixedSubfields = medCampo.subfields.filter(sf => !['placas', 'quantidade', 'temperatura'].includes(sf.key));
+                fixedSubfields.forEach(sf => {
+                  linha[sf.label] = formatValue(med[sf.key], sf.key);
                 });
+                // Expandir placas em colunas dinâmicas
+                const placasArr = med.placas && med.placas.length > 0
+                  ? med.placas.filter(Boolean)
+                  : med.placa ? [med.placa] : [];
+                for (let n = 1; n <= maxPlacas; n++) {
+                  const placa = placasArr[n - 1];
+                  linha[`Placa ${n}`] = placa || '-';
+                  linha[`Quantidade ${n} (t)`] = placa != null ? formatValue(med.quantidade, 'quantidade') : '-';
+                  linha[`Temperatura ${n} (°C)`] = placa != null ? formatValue(med.temperatura, 'temperatura') : '-';
+                }
               }
               resultados.push(linha);
             });
           } else {
             const linha = buildBaseLinha();
             if (medCampo) {
-              medCampo.subfields.forEach(sf => { linha[sf.label] = '-'; });
+              const fixedSubfields = medCampo.subfields.filter(sf => !['placas', 'quantidade', 'temperatura'].includes(sf.key));
+              fixedSubfields.forEach(sf => { linha[sf.label] = '-'; });
+              for (let n = 1; n <= maxPlacas; n++) {
+                linha[`Placa ${n}`] = '-';
+                linha[`Quantidade ${n} (t)`] = '-';
+                linha[`Temperatura ${n} (°C)`] = '-';
+              }
             }
             resultados.push(linha);
           }
