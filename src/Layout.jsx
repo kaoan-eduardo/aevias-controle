@@ -869,12 +869,8 @@ const AppLayout = ({ children }) => {
               {location.pathname !== '/' ? (
                 <button
                   onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
-                  className="flex items-center gap-1 text-[#00233B] font-medium select-none py-3 pr-4"
+                  className="flex items-center gap-1 text-[#00233B] font-medium select-none py-2 pr-6 pl-1 min-h-[44px] min-w-[80px] active:opacity-70"
                 >
-                  <ChevronLeft className="w-5 h-5 text-[#BFCF99]" />
-                  <span className="text-sm">Voltar</span>
-                </button>
-              ) : (
                 <div className="flex items-center gap-2 py-3">
                   {user && (
                     <DropdownMenu>
@@ -907,8 +903,8 @@ const AppLayout = ({ children }) => {
               <div className="flex items-center gap-2">
                 {canCreateRecords && (
                   <DialogTrigger asChild>
-                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors h-8 w-8">
-                      <FilePlus className="w-4 h-4 text-[#BFCF99]"/>
+                    <Button size="icon" className="bg-[#00233B] text-[#F2F1EF] shadow-lg ring-2 ring-white/20 hover:bg-[#00233B]/90 transition-colors h-11 w-11 active:scale-95">
+                      <FilePlus className="w-5 h-5 text-[#BFCF99]"/>
                     </Button>
                   </DialogTrigger>
                 )}

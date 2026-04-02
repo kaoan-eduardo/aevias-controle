@@ -876,42 +876,22 @@ export default function ChecklistUsinaPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="obra_id">Obra *</Label>
-                      <select
-                        id="obra_id"
-                        value={formData.obra_id}
-                        onChange={(e) => handleObraChange(e.target.value)}
-                        required
-                        disabled={!isEditable || isApproved || editingChecklist?.id}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione a obra</option>
-                        {obras.map(obra => {
-                          const regional = regionais.find(r => r.id === obra.regional_id);
-                          return (
-                            <option key={obra.id} value={obra.id}>
-                              {obra.name} - {obra.code} {regional && `(${regional.nome})`}
-                            </option>
-                          );
-                        })}
-                      </select>
+                      <Select value={formData.obra_id || ""} onValueChange={(v) => handleObraChange(v)} disabled={!isEditable || isApproved || editingChecklist?.id}>
+                        <SelectTrigger><SelectValue placeholder="Selecione a obra" /></SelectTrigger>
+                        <SelectContent>
+                          {obras.map(obra => { const regional = regionais.find(r => r.id === obra.regional_id); return (<SelectItem key={obra.id} value={obra.id}>{obra.name} - {obra.code} {regional && `(${regional.nome})`}</SelectItem>); })}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
                       <Label htmlFor="project_id">Projeto Vinculado</Label>
-                      <select
-                        id="project_id"
-                        value={formData.project_id}
-                        onChange={(e) => handleProjectChange(e.target.value)}
-                        disabled={!isEditable || isApproved || !formData.obra_id}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione um projeto</option>
-                        {projetosDisponiveis.map(proj => (
-                          <option key={proj.id} value={proj.id}>
-                            {proj.name}
-                          </option>
-                        ))}
-                      </select>
+                      <Select value={formData.project_id || ""} onValueChange={(v) => handleProjectChange(v)} disabled={!isEditable || isApproved || !formData.obra_id}>
+                        <SelectTrigger><SelectValue placeholder="Selecione um projeto" /></SelectTrigger>
+                        <SelectContent>
+                          {projetosDisponiveis.map(proj => (<SelectItem key={proj.id} value={proj.id}>{proj.name}</SelectItem>))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
@@ -973,21 +953,12 @@ export default function ChecklistUsinaPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="usina">Usina *</Label>
-                      <select
-                        id="usina"
-                        value={formData.usina}
-                        onChange={(e) => handleChange('usina', e.target.value)}
-                        required
-                        disabled={!isEditable || isApproved || !obraSelecionada}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="">Selecione a usina</option>
-                        {(obraSelecionada?.usinas || []).map((usina, idx) => (
-                          <option key={idx} value={usina}>
-                            {usina}
-                          </option>
-                        ))}
-                      </select>
+                      <Select value={formData.usina || ""} onValueChange={(v) => handleChange('usina', v)} disabled={!isEditable || isApproved || !obraSelecionada}>
+                        <SelectTrigger><SelectValue placeholder="Selecione a usina" /></SelectTrigger>
+                        <SelectContent>
+                          {(obraSelecionada?.usinas || []).map((usina, idx) => (<SelectItem key={idx} value={usina}>{usina}</SelectItem>))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
@@ -1005,16 +976,13 @@ export default function ChecklistUsinaPage() {
 
                     <div>
                       <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
-                      <select
-                        id="ensaio_realizado_por"
-                        value={formData.ensaio_realizado_por}
-                        onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
-                      >
-                        <option value="Afirma Evias">Afirma Evias</option>
-                        <option value="Empreiteira">Empreiteira</option>
-                      </select>
+                      <Select value={formData.ensaio_realizado_por || "Afirma Evias"} onValueChange={(v) => handleChange('ensaio_realizado_por', v)} disabled={!isEditable || isApproved}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
@@ -1312,16 +1280,14 @@ export default function ChecklistUsinaPage() {
 
                         <div>
                           <Label>Condições Climáticas</Label>
-                          <select
-                            value={rodada.condicoes_climaticas}
-                            onChange={(e) => handleRodadaChange(index, 'condicoes_climaticas', e.target.value)}
-                            disabled={!isEditable || isApproved}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                          >
-                            <option value="bom">Bom</option>
-                            <option value="instavel">Instável</option>
-                            <option value="chuva">Chuva</option>
-                          </select>
+                          <Select value={rodada.condicoes_climaticas} onValueChange={(v) => handleRodadaChange(index, 'condicoes_climaticas', v)} disabled={!isEditable || isApproved}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="bom">Bom</SelectItem>
+                              <SelectItem value="instavel">Instável</SelectItem>
+                              <SelectItem value="chuva">Chuva</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
 
                         <div>

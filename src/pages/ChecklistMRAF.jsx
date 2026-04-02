@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Save, AlertTriangle, Loader2, XCircle, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChecklistMRAF as ChecklistMRAFEntity } from "@/entities/ChecklistMRAF";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
@@ -495,43 +496,45 @@ export default function ChecklistMRAFPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <Label htmlFor="obra_id" className="text-base">Obra *</Label>
-                      <select
-                        id="obra_id"
-                        value={formData.obra_id}
-                        onChange={(e) => handleObraChange(e.target.value)}
-                        required
+                      <Select
+                        value={formData.obra_id || ""}
+                        onValueChange={(value) => handleObraChange(value)}
                         disabled={!isEditable || isApproved || editingChecklist?.id}
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
-                        <option value="">Selecione a obra</option>
-                        {obras.map(obra => {
-                          const regional = regionais.find(r => r.id === obra.regional_id);
-                          return (
-                            <option key={obra.id} value={obra.id}>
-                              {obra.name} - {obra.code} {regional && `(${regional.nome})`}
-                            </option>
-                          );
-                        })}
-                      </select>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Selecione a obra" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {obras.map(obra => {
+                            const regional = regionais.find(r => r.id === obra.regional_id);
+                            return (
+                              <SelectItem key={obra.id} value={obra.id}>
+                                {obra.name} - {obra.code} {regional && `(${regional.nome})`}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
                       <Label htmlFor="project_id" className="text-base">Projeto Vinculado *</Label>
-                      <select
-                        id="project_id"
-                        value={formData.project_id}
-                        onChange={(e) => handleProjectChange(e.target.value)}
+                      <Select
+                        value={formData.project_id || ""}
+                        onValueChange={(value) => handleProjectChange(value)}
                         disabled={!isEditable || isApproved || !formData.obra_id}
-                        required
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
-                        <option value="">Selecione um projeto</option>
-                        {projetosDisponiveis.map(proj => (
-                          <option key={proj.id} value={proj.id}>
-                            {proj.name}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Selecione um projeto" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {projetosDisponiveis.map(proj => (
+                            <SelectItem key={proj.id} value={proj.id}>
+                              {proj.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
@@ -596,21 +599,20 @@ export default function ChecklistMRAFPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <Label htmlFor="rodovia" className="text-base">Rodovia *</Label>
-                      <select
-                        id="rodovia"
-                        value={formData.rodovia}
-                        onChange={(e) => handleChange('rodovia', e.target.value)}
-                        required
+                      <Select
+                        value={formData.rodovia || ""}
+                        onValueChange={(value) => handleChange('rodovia', value)}
                         disabled={!isEditable || isApproved || !obraSelecionada}
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
-                        <option value="">Selecione a rodovia</option>
-                        {(obraSelecionada?.rodovias || []).map((rodovia, idx) => (
-                          <option key={idx} value={rodovia}>
-                            {rodovia}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Selecione a rodovia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(obraSelecionada?.rodovias || []).map((rodovia, idx) => (
+                            <SelectItem key={idx} value={rodovia}>{rodovia}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
@@ -628,21 +630,20 @@ export default function ChecklistMRAFPage() {
 
                     <div>
                       <Label htmlFor="empreiteira" className="text-base">Empreiteira *</Label>
-                      <select
-                        id="empreiteira"
-                        value={formData.empreiteira}
-                        onChange={(e) => handleChange('empreiteira', e.target.value)}
+                      <Select
+                        value={formData.empreiteira || ""}
+                        onValueChange={(value) => handleChange('empreiteira', value)}
                         disabled={!isEditable || isApproved || !obraSelecionada}
-                        required
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
-                        <option value="">Selecione a empreiteira</option>
-                        {(obraSelecionada?.empreiteiras || []).map((empreiteira, idx) => (
-                          <option key={idx} value={empreiteira}>
-                            {empreiteira}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Selecione a empreiteira" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(obraSelecionada?.empreiteiras || []).map((empreiteira, idx) => (
+                            <SelectItem key={idx} value={empreiteira}>{empreiteira}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
@@ -686,17 +687,19 @@ export default function ChecklistMRAFPage() {
 
                     <div>
                       <Label htmlFor="ensaio_realizado_por" className="text-base">Ensaio realizado por: *</Label>
-                      <select
-                        id="ensaio_realizado_por"
-                        value={formData.ensaio_realizado_por}
-                        onChange={(e) => handleChange('ensaio_realizado_por', e.target.value)}
+                      <Select
+                        value={formData.ensaio_realizado_por || ""}
+                        onValueChange={(value) => handleChange('ensaio_realizado_por', value)}
                         disabled={!isEditable || isApproved}
-                        required
-                        className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                       >
-                        <option value="Afirma Evias">Afirma Evias</option>
-                        <option value="Empreiteira">Empreiteira</option>
-                      </select>
+                        <SelectTrigger className="h-11">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </CardContent>
@@ -735,23 +738,24 @@ export default function ChecklistMRAFPage() {
 
                           <div>
                             <Label className="text-sm">Condições Climáticas</Label>
-                            <select
+                            <Select
                               value={periodo.condicoes_climaticas}
-                              onChange={(e) => {
+                              onValueChange={(value) => {
                                 const novosClimas = [...formData.periodos_clima];
-                                novosClimas[index] = {
-                                  ...novosClimas[index],
-                                  condicoes_climaticas: e.target.value
-                                };
+                                novosClimas[index] = { ...novosClimas[index], condicoes_climaticas: value };
                                 handleChange('periodos_clima', novosClimas);
                               }}
                               disabled={!isEditable || isApproved}
-                              className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                             >
-                              <option value="bom">☀️ Bom</option>
-                              <option value="nublado">⛅ Nublado</option>
-                              <option value="chuva">🌧️ Chuva</option>
-                            </select>
+                              <SelectTrigger className="h-10">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="bom">☀️ Bom</SelectItem>
+                                <SelectItem value="nublado">⛅ Nublado</SelectItem>
+                                <SelectItem value="chuva">🌧️ Chuva</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
                       </div>
@@ -1347,17 +1351,20 @@ export default function ChecklistMRAFPage() {
 
                   <div>
                     <Label htmlFor="lado_inicial" className="text-base">Lado inicial</Label>
-                    <select
-                      id="lado_inicial"
-                      value={formData.controle_aplicacao.lado_inicial}
-                      onChange={(e) => handleNestedChange('controle_aplicacao', 'lado_inicial', e.target.value)}
+                    <Select
+                      value={formData.controle_aplicacao.lado_inicial || "direito"}
+                      onValueChange={(value) => handleNestedChange('controle_aplicacao', 'lado_inicial', value)}
                       disabled={!isEditable || isApproved}
-                      className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                     >
-                      <option value="direito">Direito</option>
-                      <option value="esquerdo">Esquerdo</option>
-                      <option value="ambos">Ambos</option>
-                    </select>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="direito">Direito</SelectItem>
+                        <SelectItem value="esquerdo">Esquerdo</SelectItem>
+                        <SelectItem value="ambos">Ambos</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
@@ -1373,17 +1380,20 @@ export default function ChecklistMRAFPage() {
 
                   <div>
                     <Label htmlFor="lado_final" className="text-base">Lado final</Label>
-                    <select
-                      id="lado_final"
-                      value={formData.controle_aplicacao.lado_final}
-                      onChange={(e) => handleNestedChange('controle_aplicacao', 'lado_final', e.target.value)}
+                    <Select
+                      value={formData.controle_aplicacao.lado_final || "direito"}
+                      onValueChange={(value) => handleNestedChange('controle_aplicacao', 'lado_final', value)}
                       disabled={!isEditable || isApproved}
-                      className="flex h-11 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-base"
                     >
-                      <option value="direito">Direito</option>
-                      <option value="esquerdo">Esquerdo</option>
-                      <option value="ambos">Ambos</option>
-                    </select>
+                      <SelectTrigger className="h-11">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="direito">Direito</SelectItem>
+                        <SelectItem value="esquerdo">Esquerdo</SelectItem>
+                        <SelectItem value="ambos">Ambos</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>

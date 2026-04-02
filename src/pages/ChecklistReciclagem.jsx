@@ -555,37 +555,34 @@ export default function ChecklistReciclagem() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                      <Label htmlFor="obra_id">Obra *</Label>
-                     <select
-                       id="obra_id"
-                       value={formData.obra_id}
-                       onChange={(e) => {
-                         const obraId = e.target.value;
+                     <Select
+                       value={formData.obra_id || ""}
+                       onValueChange={(obraId) => {
                          const obraSelecionada = obras.find(o => o.id === obraId);
-
-                         // Filtrar projetos de CAMADAS_GRANULARES da regional da obra
                          if (obraSelecionada?.regional_id) {
-                           const projetosFiltrados = allProjects.filter(p => 
-                             p.regional_id === obraSelecionada.regional_id && 
+                           const projetosFiltrados = allProjects.filter(p =>
+                             p.regional_id === obraSelecionada.regional_id &&
                              p.tipo_projeto === 'CAMADAS_GRANULARES'
                            );
                            setProjects(projetosFiltrados);
                          } else {
                            setProjects([]);
                          }
-
                          setFormData({ ...formData, obra_id: obraId, project_id: "", faixa: "" });
                        }}
-                       required
                        disabled={!!editingChecklist?.id}
-                       className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                      >
-                       <option value="">Selecione a obra</option>
-                       {obras.map(obra => (
-                         <option key={obra.id} value={obra.id}>
-                           {obra.name} - {obra.code}
-                         </option>
-                       ))}
-                     </select>
+                       <SelectTrigger>
+                         <SelectValue placeholder="Selecione a obra" />
+                       </SelectTrigger>
+                       <SelectContent>
+                         {obras.map(obra => (
+                           <SelectItem key={obra.id} value={obra.id}>
+                             {obra.name} - {obra.code}
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
+                     </Select>
                     </div>
 
                     <div>
@@ -764,15 +761,18 @@ export default function ChecklistReciclagem() {
 
                     <div>
                       <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
-                      <select
-                        id="ensaio_realizado_por"
-                        value={formData.ensaio_realizado_por}
-                        onChange={(e) => setFormData({ ...formData, ensaio_realizado_por: e.target.value })}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      <Select
+                        value={formData.ensaio_realizado_por || "Afirma Evias"}
+                        onValueChange={(value) => setFormData({ ...formData, ensaio_realizado_por: value })}
                       >
-                        <option value="Afirma Evias">Afirma Evias</option>
-                        <option value="Empreiteira">Empreiteira</option>
-                      </select>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
@@ -808,20 +808,23 @@ export default function ChecklistReciclagem() {
                           </div>
                           <div>
                             <Label className="text-sm">Condições *</Label>
-                            <select
+                            <Select
                               value={periodo.condicoes_climaticas}
-                              onChange={(e) => {
+                              onValueChange={(value) => {
                                 const newPeriodos = [...formData.periodos_clima];
-                                newPeriodos[index].condicoes_climaticas = e.target.value;
+                                newPeriodos[index].condicoes_climaticas = value;
                                 setFormData({ ...formData, periodos_clima: newPeriodos });
                               }}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                              required
                             >
-                              <option value="bom">Bom</option>
-                              <option value="instavel">Instável</option>
-                              <option value="chuva">Chuva</option>
-                            </select>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="bom">Bom</SelectItem>
+                                <SelectItem value="instavel">Instável</SelectItem>
+                                <SelectItem value="chuva">Chuva</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </CardContent>
                       </Card>

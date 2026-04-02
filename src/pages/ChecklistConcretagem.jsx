@@ -707,38 +707,41 @@ export default function ChecklistConcretagem() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="obra_id">Obra *</Label>
-                      <select
-                        id="obra_id"
-                        value={formData.obra_id}
-                        onChange={(e) => setFormData({ ...formData, obra_id: e.target.value })}
-                        required
+                      <Select
+                        value={formData.obra_id || ""}
+                        onValueChange={(value) => setFormData({ ...formData, obra_id: value })}
                         disabled={!!editingChecklist?.id}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                       >
-                        <option value="">Selecione a obra</option>
-                        {obras.map(obra => (
-                          <option key={obra.id} value={obra.id}>
-                            {obra.name} - {obra.code}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a obra" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {obras.map(obra => (
+                            <SelectItem key={obra.id} value={obra.id}>
+                              {obra.name} - {obra.code}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
                       <Label htmlFor="project_id">Carta Traço de Concreto</Label>
-                      <select
-                        id="project_id"
-                        value={formData.project_id}
-                        onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      <Select
+                        value={formData.project_id || ""}
+                        onValueChange={(value) => setFormData({ ...formData, project_id: value })}
                       >
-                        <option value="">Selecione a carta traço</option>
-                        {projects.map(project => (
-                          <option key={project.id} value={project.id}>
-                            {project.name}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a carta traço" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {projects.map(project => (
+                            <SelectItem key={project.id} value={project.id}>
+                              {project.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
@@ -881,15 +884,18 @@ export default function ChecklistConcretagem() {
 
                     <div>
                       <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
-                      <select
-                        id="ensaio_realizado_por"
-                        value={formData.ensaio_realizado_por}
-                        onChange={(e) => setFormData({ ...formData, ensaio_realizado_por: e.target.value })}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+                      <Select
+                        value={formData.ensaio_realizado_por || "Afirma Evias"}
+                        onValueChange={(value) => setFormData({ ...formData, ensaio_realizado_por: value })}
                       >
-                        <option value="Afirma Evias">Afirma Evias</option>
-                        <option value="Empreiteira">Empreiteira</option>
-                      </select>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
+                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     </div>
 
@@ -932,19 +938,23 @@ export default function ChecklistConcretagem() {
                           </div>
                           <div>
                             <Label className="text-sm">Condições</Label>
-                            <select
+                            <Select
                               value={periodo.condicoes_climaticas}
-                              onChange={(e) => {
+                              onValueChange={(value) => {
                                 const newPeriodos = [...formData.periodos_clima];
-                                newPeriodos[index].condicoes_climaticas = e.target.value;
+                                newPeriodos[index].condicoes_climaticas = value;
                                 setFormData({ ...formData, periodos_clima: newPeriodos });
                               }}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                             >
-                              <option value="bom">Bom</option>
-                              <option value="instavel">Instável</option>
-                              <option value="chuva">Chuva</option>
-                            </select>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="bom">Bom</SelectItem>
+                                <SelectItem value="instavel">Instável</SelectItem>
+                                <SelectItem value="chuva">Chuva</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </CardContent>
                       </Card>
@@ -1130,15 +1140,18 @@ export default function ChecklistConcretagem() {
 
                           <div className="mt-3">
                             <Label>Equipamento de Lançamento</Label>
-                            <select
-                              value={carga.equipamento_lancamento}
-                              onChange={(e) => handleCargaChange(index, 'equipamento_lancamento', e.target.value)}
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            <Select
+                            value={carga.equipamento_lancamento || ""}
+                            onValueChange={(value) => handleCargaChange(index, 'equipamento_lancamento', value)}
                             >
-                              <option value="">Selecione</option>
-                              <option value="convencional">Convencional</option>
-                              <option value="bombeado">Bombeado</option>
-                            </select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="convencional">Convencional</SelectItem>
+                              <SelectItem value="bombeado">Bombeado</SelectItem>
+                            </SelectContent>
+                            </Select>
                           </div>
                         </div>
 
@@ -1267,16 +1280,20 @@ export default function ChecklistConcretagem() {
                                           />
                                         </td>
                                         <td className="border border-slate-300 p-2">
-                                          <select
+                                          <Select
                                             value={getTipoRupturaCPs(index, dias)}
-                                            onChange={(e) => handleCPConfigChange(index, dias, 'tipo_ruptura', e.target.value)}
+                                            onValueChange={(value) => handleCPConfigChange(index, dias, 'tipo_ruptura', value)}
                                             disabled={getQuantidadeCPs(index, dias) === 0}
-                                            className="w-full h-9 rounded-md border border-input bg-background px-2 py-1 text-sm"
                                           >
-                                            <option value="compressao_axial">Compressão Axial</option>
-                                            <option value="comp_diametral">Compressão Diametral</option>
-                                            <option value="tracao_flexao">Tração na Flexão</option>
-                                          </select>
+                                            <SelectTrigger className="h-9">
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="compressao_axial">Compressão Axial</SelectItem>
+                                              <SelectItem value="comp_diametral">Compressão Diametral</SelectItem>
+                                              <SelectItem value="tracao_flexao">Tração na Flexão</SelectItem>
+                                            </SelectContent>
+                                          </Select>
                                         </td>
                                       </tr>
                                     ))}

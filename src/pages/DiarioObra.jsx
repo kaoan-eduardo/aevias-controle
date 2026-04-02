@@ -235,20 +235,20 @@ const DiarioForm = ({
       
       <div className="space-y-2">
         <Label>Local do Registro *</Label>
-        <div className="flex items-center space-x-4">
-            <label className="flex items-center">
-                <input type="radio" name="tipo_local" value="campo" checked={formData.tipo_local === 'campo'} onChange={(e) => handleChange(e.target.name, e.target.value)} disabled={!isEditable || isApproved} className="mr-2"/>
-                Campo
-            </label>
-            <label className="flex items-center">
-                <input type="radio" name="tipo_local" value="usina" checked={formData.tipo_local === 'usina'} onChange={(e) => handleChange(e.target.name, e.target.value)} disabled={!isEditable || isApproved} className="mr-2"/>
-                Usina
-            </label>
-            <label className="flex items-center">
-                <input type="radio" name="tipo_local" value="escritorio" checked={formData.tipo_local === 'escritorio'} onChange={(e) => handleChange(e.target.name, e.target.value)} disabled={!isEditable || isApproved} className="mr-2"/>
-                Escritório
-            </label>
-        </div>
+        <Select
+          value={formData.tipo_local}
+          onValueChange={(value) => handleChange('tipo_local', value)}
+          disabled={!isEditable || isApproved}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="campo">Campo</SelectItem>
+            <SelectItem value="usina">Usina</SelectItem>
+            <SelectItem value="escritorio">Escritório</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Campos ocultados para Escritório */}
@@ -365,14 +365,19 @@ const DiarioForm = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="condicoes_climaticas">Condições Climáticas *</Label>
-              <select id="condicoes_climaticas" name="condicoes_climaticas" value={formData.condicoes_climaticas} onChange={(e) => handleChange(e.target.name, e.target.value)} required disabled={!isEditable || isApproved} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                <option value="ensolarado">Ensolarado</option>
-                <option value="nublado">Nublado</option>
-                <option value="chuvoso">Chuvoso</option>
-                <option value="garoa">Garoa</option>
-                <option value="vento_forte">Vento Forte</option>
-                <option value="neblina">Neblina</option>
-              </select>
+              <Select value={formData.condicoes_climaticas} onValueChange={(value) => handleChange('condicoes_climaticas', value)} disabled={!isEditable || isApproved}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ensolarado">Ensolarado</SelectItem>
+                  <SelectItem value="nublado">Nublado</SelectItem>
+                  <SelectItem value="chuvoso">Chuvoso</SelectItem>
+                  <SelectItem value="garoa">Garoa</SelectItem>
+                  <SelectItem value="vento_forte">Vento Forte</SelectItem>
+                  <SelectItem value="neblina">Neblina</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="temperatura">Temperatura (°C)</Label>
@@ -562,29 +567,20 @@ const DiarioForm = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Preencher Checklist de Veículo? *</Label>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input 
-                  type="radio" 
-                  checked={formData.checklist_veiculo_ativo === true}
-                  onChange={() => handleChange('checklist_veiculo_ativo', true)}
-                  disabled={!isEditable || isApproved}
-                  className="mr-2"
-                />
-                Sim
-              </label>
-              <label className="flex items-center">
-                <input 
-                  type="radio" 
-                  checked={formData.checklist_veiculo_ativo === false}
-                  onChange={() => handleChange('checklist_veiculo_ativo', false)}
-                  disabled={!isEditable || isApproved}
-                  className="mr-2"
-                />
-                Não
-              </label>
-            </div>
+            <Label>Preencher Checklist de Veículo?</Label>
+            <Select
+              value={formData.checklist_veiculo_ativo === true ? "sim" : "nao"}
+              onValueChange={(value) => handleChange('checklist_veiculo_ativo', value === 'sim')}
+              disabled={!isEditable || isApproved}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sim">Sim</SelectItem>
+                <SelectItem value="nao">Não</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {formData.checklist_veiculo_ativo && (
@@ -679,25 +675,29 @@ const DiarioForm = ({
                   ].map(item => (
                     <div key={item.key}>
                       <Label className="text-xs">{item.label}</Label>
-                      <select
+                      <Select
                         value={formData.checklist_veiculo?.condicoes_gerais?.[item.key] || "bom"}
-                        onChange={(e) => handleChange('checklist_veiculo', {
+                        onValueChange={(val) => handleChange('checklist_veiculo', {
                           ...formData.checklist_veiculo,
-                          condicoes_gerais: { ...formData.checklist_veiculo.condicoes_gerais, [item.key]: e.target.value }
+                          condicoes_gerais: { ...formData.checklist_veiculo.condicoes_gerais, [item.key]: val }
                         })}
                         disabled={!isEditable || isApproved}
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                       >
-                        <option value="bom">Bom</option>
-                        <option value="medio">Médio</option>
-                        <option value="ruim">Ruim</option>
-                      </select>
+                        <SelectTrigger className="h-9 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="bom">Bom</SelectItem>
+                          <SelectItem value="medio">Médio</SelectItem>
+                          <SelectItem value="ruim">Ruim</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Luzes Traseiras */}
+              {/* Luzes Traseiras */
               <div className="space-y-3">
                 <Label className="font-semibold text-base">Luzes Traseiras</Label>
                 
@@ -714,22 +714,20 @@ const DiarioForm = ({
                     ].map(item => (
                       <div key={item.key}>
                         <Label className="text-xs">{item.label}</Label>
-                        <select
+                        <Select
                           value={formData.checklist_veiculo?.luzes_traseiras?.direita?.[item.key] || "sim"}
-                          onChange={(e) => handleChange('checklist_veiculo', {
-                            ...formData.checklist_veiculo,
-                            luzes_traseiras: { 
-                              ...formData.checklist_veiculo.luzes_traseiras, 
-                              direita: { ...formData.checklist_veiculo.luzes_traseiras.direita, [item.key]: e.target.value }
-                            }
-                          })}
+                          onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, luzes_traseiras: { ...formData.checklist_veiculo.luzes_traseiras, direita: { ...formData.checklist_veiculo.luzes_traseiras.direita, [item.key]: val } } })}
                           disabled={!isEditable || isApproved}
-                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                         >
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                          <option value="na">N/A</option>
-                        </select>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sim">Sim</SelectItem>
+                            <SelectItem value="nao">Não</SelectItem>
+                            <SelectItem value="na">N/A</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -747,22 +745,20 @@ const DiarioForm = ({
                     ].map(item => (
                       <div key={item.key}>
                         <Label className="text-xs">{item.label}</Label>
-                        <select
+                        <Select
                           value={formData.checklist_veiculo?.luzes_traseiras?.esquerda?.[item.key] || "sim"}
-                          onChange={(e) => handleChange('checklist_veiculo', {
-                            ...formData.checklist_veiculo,
-                            luzes_traseiras: { 
-                              ...formData.checklist_veiculo.luzes_traseiras, 
-                              esquerda: { ...formData.checklist_veiculo.luzes_traseiras.esquerda, [item.key]: e.target.value }
-                            }
-                          })}
+                          onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, luzes_traseiras: { ...formData.checklist_veiculo.luzes_traseiras, esquerda: { ...formData.checklist_veiculo.luzes_traseiras.esquerda, [item.key]: val } } })}
                           disabled={!isEditable || isApproved}
-                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                         >
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                          <option value="na">N/A</option>
-                        </select>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sim">Sim</SelectItem>
+                            <SelectItem value="nao">Não</SelectItem>
+                            <SelectItem value="na">N/A</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -785,22 +781,20 @@ const DiarioForm = ({
                     ].map(item => (
                       <div key={item.key}>
                         <Label className="text-xs">{item.label}</Label>
-                        <select
+                        <Select
                           value={formData.checklist_veiculo?.luzes_dianteiras?.direita?.[item.key] || "sim"}
-                          onChange={(e) => handleChange('checklist_veiculo', {
-                            ...formData.checklist_veiculo,
-                            luzes_dianteiras: { 
-                              ...formData.checklist_veiculo.luzes_dianteiras, 
-                              direita: { ...formData.checklist_veiculo.luzes_dianteiras.direita, [item.key]: e.target.value }
-                            }
-                          })}
+                          onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, luzes_dianteiras: { ...formData.checklist_veiculo.luzes_dianteiras, direita: { ...formData.checklist_veiculo.luzes_dianteiras.direita, [item.key]: val } } })}
                           disabled={!isEditable || isApproved}
-                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                         >
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                          <option value="na">N/A</option>
-                        </select>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sim">Sim</SelectItem>
+                            <SelectItem value="nao">Não</SelectItem>
+                            <SelectItem value="na">N/A</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -818,22 +812,20 @@ const DiarioForm = ({
                     ].map(item => (
                       <div key={item.key}>
                         <Label className="text-xs">{item.label}</Label>
-                        <select
+                        <Select
                           value={formData.checklist_veiculo?.luzes_dianteiras?.esquerda?.[item.key] || "sim"}
-                          onChange={(e) => handleChange('checklist_veiculo', {
-                            ...formData.checklist_veiculo,
-                            luzes_dianteiras: { 
-                              ...formData.checklist_veiculo.luzes_dianteiras, 
-                              esquerda: { ...formData.checklist_veiculo.luzes_dianteiras.esquerda, [item.key]: e.target.value }
-                            }
-                          })}
+                          onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, luzes_dianteiras: { ...formData.checklist_veiculo.luzes_dianteiras, esquerda: { ...formData.checklist_veiculo.luzes_dianteiras.esquerda, [item.key]: val } } })}
                           disabled={!isEditable || isApproved}
-                          className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                         >
-                          <option value="sim">Sim</option>
-                          <option value="nao">Não</option>
-                          <option value="na">N/A</option>
-                        </select>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sim">Sim</SelectItem>
+                            <SelectItem value="nao">Não</SelectItem>
+                            <SelectItem value="na">N/A</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -862,19 +854,20 @@ const DiarioForm = ({
                   ].map(item => (
                     <div key={item.key}>
                       <Label className="text-xs">{item.label}</Label>
-                      <select
+                      <Select
                         value={formData.checklist_veiculo?.seguranca?.[item.key] || "sim"}
-                        onChange={(e) => handleChange('checklist_veiculo', {
-                          ...formData.checklist_veiculo,
-                          seguranca: { ...formData.checklist_veiculo.seguranca, [item.key]: e.target.value }
-                        })}
+                        onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, seguranca: { ...formData.checklist_veiculo.seguranca, [item.key]: val } })}
                         disabled={!isEditable || isApproved}
-                        className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                       >
-                        <option value="sim">Sim</option>
-                        <option value="nao">Não</option>
-                        <option value="na">N/A</option>
-                      </select>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sim">Sim</SelectItem>
+                          <SelectItem value="nao">Não</SelectItem>
+                          <SelectItem value="na">N/A</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   ))}
                 </div>
@@ -897,19 +890,20 @@ const DiarioForm = ({
                   ].map(item => (
                     <div key={item.key}>
                       <Label className="text-xs">{item.label}</Label>
-                      <select
+                      <Select
                         value={formData.checklist_veiculo?.motor?.[item.key] || "sim"}
-                        onChange={(e) => handleChange('checklist_veiculo', {
-                          ...formData.checklist_veiculo,
-                          motor: { ...formData.checklist_veiculo.motor, [item.key]: e.target.value }
-                        })}
+                        onValueChange={(val) => handleChange('checklist_veiculo', { ...formData.checklist_veiculo, motor: { ...formData.checklist_veiculo.motor, [item.key]: val } })}
                         disabled={!isEditable || isApproved}
-                        className="flex h-8 w-full rounded-md border border-input bg-background px-2 py-1 text-xs"
                       >
-                        <option value="sim">Sim</option>
-                        <option value="nao">Não</option>
-                        <option value="na">N/A</option>
-                      </select>
+                        <SelectTrigger className="h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sim">Sim</SelectItem>
+                          <SelectItem value="nao">Não</SelectItem>
+                          <SelectItem value="na">N/A</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   ))}
                 </div>
