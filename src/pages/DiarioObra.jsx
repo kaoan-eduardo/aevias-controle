@@ -697,7 +697,7 @@ const DiarioForm = ({
                 </div>
               </div>
 
-              {/* Luzes Traseiras */
+              {/* Luzes Traseiras */}
               <div className="space-y-3">
                 <Label className="font-semibold text-base">Luzes Traseiras</Label>
                 

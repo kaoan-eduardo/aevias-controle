@@ -897,6 +897,7 @@ const AppLayout = ({ children }) => {
                   )}
                   <span className="text-base font-bold text-[#00233B]">Afirmaevias</span>
                 </div>
+                </button>
               )}
 
 {/* Right: new record button */}
