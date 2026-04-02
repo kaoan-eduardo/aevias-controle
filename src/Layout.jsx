@@ -866,7 +866,7 @@ const AppLayout = ({ children }) => {
               style={{ paddingTop: 'env(safe-area-inset-top)', minHeight: 'calc(3rem + env(safe-area-inset-top))' }}
             >
               {/* Left: back button or logo + profile on home */}
-              {location.pathname !== '/' ? (
+              {location.pathname !== '/' && (
                 <button
                   onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
                   className="flex items-center gap-1 text-[#00233B] font-medium select-none py-2 pr-6 pl-1 min-h-[44px] min-w-[80px] active:opacity-70"
