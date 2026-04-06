@@ -22,6 +22,7 @@ export default function Projects() {
   const [faixas, setFaixas] = useState([]);
   const [regionais, setRegionais] = useState([]); // Added state
   const [searchTerm, setSearchTerm] = useState("");
+  const [tipoFilter, setTipoFilter] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
@@ -163,13 +164,15 @@ export default function Projects() {
   }, [loadData]);
 
   const filteredProjects = useMemo(() => {
-    return projects.filter(project =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.tipo_projeto?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [projects, searchTerm]);
+    return projects.filter(project => {
+      const matchesSearch =
+        project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.location?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesTipo = tipoFilter === 'all' || (project.tipo_projeto || 'CAUQ') === tipoFilter;
+      return matchesSearch && matchesTipo;
+    });
+  }, [projects, searchTerm, tipoFilter]);
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isAdmin = userAccessLevel === 'admin';
@@ -237,14 +240,28 @@ export default function Projects() {
 
         <Card className="mb-6 bg-white/20 backdrop-blur-lg border border-white/20">
           <CardContent className="p-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-[#BFCF99]" />
-              <Input
-                placeholder="Pesquisar projetos..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-transparent border-white/20 placeholder:text-[#00233B]/60 focus:border-[#BFCF99] focus:ring-[#BFCF99] text-[#00233B]"
-              />
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-[#BFCF99]" />
+                <Input
+                  placeholder="Pesquisar projetos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-transparent border-white/20 placeholder:text-[#00233B]/60 focus:border-[#BFCF99] focus:ring-[#BFCF99] text-[#00233B]"
+                />
+              </div>
+              <select
+                value={tipoFilter}
+                onChange={(e) => setTipoFilter(e.target.value)}
+                className="h-10 rounded-md border border-white/20 bg-white/30 px-3 py-2 text-sm text-[#00233B] focus:outline-none focus:ring-1 focus:ring-[#BFCF99]"
+              >
+                <option value="all">Todos os tipos</option>
+                <option value="CAUQ">CAUQ</option>
+                <option value="MRAF">MRAF</option>
+                <option value="BGS">BGS</option>
+                <option value="CARTA_TRACO_CONCRETO">Carta Traço Concreto</option>
+                <option value="CAMADAS_GRANULARES">Camadas Granulares</option>
+              </select>
             </div>
           </CardContent>
         </Card>
