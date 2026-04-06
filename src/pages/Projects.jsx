@@ -45,7 +45,10 @@ export default function Projects() {
 
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
+      // Se tem role admin na plataforma, vê todos os projetos
+      if (userData.role === 'admin') {
+        setProjects(projectsData);
+      } else if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
         const emailUsuario = userData.email.trim().toLowerCase();
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
@@ -81,11 +84,9 @@ export default function Projects() {
         console.log('[Projects] regional_ids permitidas:', [...regionalIdsPermitidos]);
         console.log('[Projects] project_ids nas regionais:', [...projectIdsPermitidos]);
         console.log('[Projects] Projetos filtrados:', projectsFiltrados.length, projectsFiltrados.map(p => p.name));
-        console.log('[Projects] Projetos com regional_id:', projectsData.filter(p => p.regional_id).map(p => ({ nome: p.name, regional_id: p.regional_id })));
 
         setProjects(projectsFiltrados);
       } else {
-        // admin, gestor_contrato e user veem todos os projetos
         setProjects(projectsData);
       }
     } catch (error) {
