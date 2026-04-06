@@ -154,10 +154,13 @@ export default function ProjectForm({ project, faixas, regionais, user, onSave, 
     }
     
     if (userAccessLevel === 'gestor_contrato') {
-      return regionais.filter(r => 
-        r.status === 'ativa' && 
-        r.gestor_contrato_responsavel?.toLowerCase() === user.email.toLowerCase()
-      );
+      const emailUsuario = user.email.toLowerCase();
+      return regionais.filter(r => {
+        if (r.status !== 'ativa') return false;
+        const gestores = r.gestores_contrato_responsaveis || [];
+        return r.gestor_contrato_responsavel?.toLowerCase() === emailUsuario ||
+               gestores.some(email => email.toLowerCase() === emailUsuario);
+      });
     }
     
     if (userAccessLevel === 'sala_tecnica_afirmaevias') {
