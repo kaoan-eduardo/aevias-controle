@@ -33,7 +33,7 @@ export default function Projects() {
     try {
       const [userData, projectsData, faixasData, regionaisData] = await Promise.all([ // Added regionaisData
         User.me(),
-        Project.list("-created_date", 100),
+        Project.list("-created_date", 500),
         FaixaGranulometrica.list(),
         Regional.list() // Added Regional.list()
       ]);
