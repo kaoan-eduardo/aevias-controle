@@ -174,9 +174,9 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
       novoEnsaio.taxa_aplicada = parseFloat((novoEnsaio.peso_emulsao / (1000 * areaBandeja)).toFixed(2));
     }
 
-    // Resíduo (%) = ((Peso final - Tara) / Peso inicial) × 100
+    // Resíduo (%) = ((Peso final - Tara) / (Peso inicial - Tara)) × 100
     if (ensaio.ensaio_residuo?.peso_inicial && ensaio.ensaio_residuo?.peso_final && ensaio.ensaio_residuo?.tara) {
-      novoEnsaio.ensaio_residuo.residuo = parseFloat((((ensaio.ensaio_residuo.peso_final - ensaio.ensaio_residuo.tara) / ensaio.ensaio_residuo.peso_inicial) * 100).toFixed(2));
+      novoEnsaio.ensaio_residuo.residuo = parseFloat((((ensaio.ensaio_residuo.peso_final - ensaio.ensaio_residuo.tara) / (ensaio.ensaio_residuo.peso_inicial - ensaio.ensaio_residuo.tara)) * 100).toFixed(2));
     }
 
     // Taxa de emulsão aplicada = Taxa aplicada × Resíduo

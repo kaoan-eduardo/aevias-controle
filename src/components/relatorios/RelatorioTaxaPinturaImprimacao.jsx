@@ -387,7 +387,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
                   </tr>
                   <tr>
                     <td className="border px-1 py-1 font-bold" style={{ borderColor: 'rgb(148, 163, 184)' }}>RESÍDUO</td>
-                    <td className="border px-1 py-1 text-center italic text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>R = (Pf - T) / Pᵢ × 100</td>
+                    <td className="border px-1 py-1 text-center italic text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>R = (Pf - T) / (Pᵢ - T) × 100</td>
                     <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>%</td>
                     {ensaiosComResiduo.map((e, i) => (
                       <td key={i} className="border px-1 py-1 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.ensaio_residuo?.residuo?.toFixed(2) || ''}</td>
