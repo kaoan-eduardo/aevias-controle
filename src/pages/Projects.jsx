@@ -46,20 +46,24 @@ export default function Projects() {
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
       if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
+        const emailUsuario = userData.email.trim().toLowerCase();
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
             const clientes = regional.clientes_responsaveis || [];
-            return clientes.some(email => email.toLowerCase() === userData.email.toLowerCase());
+            return clientes.some(email => email.trim().toLowerCase() === emailUsuario);
           } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
             const salas = regional.salas_tecnicas_responsaveis || [];
-            return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
+            return salas.some(email => email.trim().toLowerCase() === emailUsuario);
           } else if (userAccessLevel === 'gestor_contrato') {
             const gestores = regional.gestores_contrato_responsaveis || [];
-            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
-                   gestores.some(email => email.toLowerCase() === userData.email.toLowerCase());
+            return regional.gestor_contrato_responsavel?.trim().toLowerCase() === emailUsuario ||
+                   gestores.some(email => email.trim().toLowerCase() === emailUsuario);
           }
           return false;
         });
+
+        console.log('[Projects] Email usuario:', emailUsuario);
+        console.log('[Projects] Regionais encontradas:', regionaisDoUsuario.map(r => r.nome));
 
         const projectIdsPermitidos = new Set();
         regionaisDoUsuario.forEach(regional => {
@@ -73,6 +77,11 @@ export default function Projects() {
           projectIdsPermitidos.has(p.id) ||
           (p.regional_id && regionalIdsPermitidos.has(p.regional_id))
         );
+
+        console.log('[Projects] regional_ids permitidas:', [...regionalIdsPermitidos]);
+        console.log('[Projects] project_ids nas regionais:', [...projectIdsPermitidos]);
+        console.log('[Projects] Projetos filtrados:', projectsFiltrados.length, projectsFiltrados.map(p => p.name));
+        console.log('[Projects] Projetos com regional_id:', projectsData.filter(p => p.regional_id).map(p => ({ nome: p.name, regional_id: p.regional_id })));
 
         setProjects(projectsFiltrados);
       } else {
