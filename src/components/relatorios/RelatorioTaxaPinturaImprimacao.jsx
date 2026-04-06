@@ -313,7 +313,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
               </tr>
               <tr>
                 <td className="border px-1 py-1 font-bold" style={{ borderColor: 'rgb(148, 163, 184)' }}>TAXA DE EMULSÃO APLICADA</td>
-                <td className="border px-1 py-1 text-center italic text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>Tₑ = Tₐ × R/62</td>
+                <td className="border px-1 py-1 text-center italic text-[8px]" style={{ borderColor: 'rgb(148, 163, 184)' }}>Tᵉ = Tₐ × R</td>
                 <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>l/m²</td>
                 {ensaios.map((e, i) => (
                   <td key={i} className="border px-1 py-1 text-center font-bold" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.taxa_emulsao_aplicada?.toFixed(2) || ''}</td>
