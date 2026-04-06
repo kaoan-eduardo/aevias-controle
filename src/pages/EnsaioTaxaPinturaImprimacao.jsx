@@ -179,14 +179,14 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
       novoEnsaio.ensaio_residuo.residuo = parseFloat((((ensaio.ensaio_residuo.peso_final - ensaio.ensaio_residuo.tara) / (ensaio.ensaio_residuo.peso_inicial - ensaio.ensaio_residuo.tara)) * 100).toFixed(2));
     }
 
-    // Taxa de emulsão aplicada = Taxa aplicada × Resíduo
+    // Taxa de emulsão aplicada = Taxa aplicada × (Resíduo / 100)
     if (novoEnsaio.taxa_aplicada && novoEnsaio.ensaio_residuo?.residuo) {
-      novoEnsaio.taxa_emulsao_aplicada = parseFloat((novoEnsaio.taxa_aplicada * novoEnsaio.ensaio_residuo.residuo).toFixed(2));
+      novoEnsaio.taxa_emulsao_aplicada = parseFloat((novoEnsaio.taxa_aplicada * (novoEnsaio.ensaio_residuo.residuo / 100)).toFixed(4));
     }
 
-    // Taxa residual = Taxa aplicada × Resíduo
+    // Taxa residual = Taxa aplicada × (Resíduo / 100)
     if (novoEnsaio.taxa_aplicada && novoEnsaio.ensaio_residuo?.residuo) {
-      novoEnsaio.taxa_residual = parseFloat((novoEnsaio.taxa_aplicada * novoEnsaio.ensaio_residuo.residuo).toFixed(2));
+      novoEnsaio.taxa_residual = parseFloat((novoEnsaio.taxa_aplicada * (novoEnsaio.ensaio_residuo.residuo / 100)).toFixed(4));
     }
 
     return novoEnsaio;
