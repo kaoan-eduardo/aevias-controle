@@ -45,7 +45,7 @@ export default function Projects() {
 
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
+      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias') {
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
             const clientes = regional.clientes_responsaveis || [];
@@ -53,10 +53,6 @@ export default function Projects() {
           } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
             const salas = regional.salas_tecnicas_responsaveis || [];
             return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-          } else if (userAccessLevel === 'gestor_contrato') {
-            const gestores = regional.gestores_contrato_responsaveis || [];
-            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
-                   gestores.some(email => email.toLowerCase() === userData.email.toLowerCase());
           }
           return false;
         });
@@ -68,15 +64,15 @@ export default function Projects() {
           }
         });
 
-        // Agora também filtrar por regional_id direto
         const regionalIdsPermitidos = new Set(regionaisDoUsuario.map(r => r.id));
-        const projectsFiltrados = projectsData.filter(p => 
-          projectIdsPermitidos.has(p.id) || 
+        const projectsFiltrados = projectsData.filter(p =>
+          projectIdsPermitidos.has(p.id) ||
           (p.regional_id && regionalIdsPermitidos.has(p.regional_id))
         );
-        
+
         setProjects(projectsFiltrados);
       } else {
+        // admin, gestor_contrato e user veem todos os projetos
         setProjects(projectsData);
       }
     } catch (error) {
