@@ -45,7 +45,7 @@ export default function Projects() {
 
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
             const clientes = regional.clientes_responsaveis || [];
@@ -53,6 +53,10 @@ export default function Projects() {
           } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
             const salas = regional.salas_tecnicas_responsaveis || [];
             return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
+          } else if (userAccessLevel === 'gestor_contrato') {
+            const gestores = regional.gestores_contrato_responsaveis || [];
+            return regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
+                   gestores.some(email => email.toLowerCase() === userData.email.toLowerCase());
           }
           return false;
         });
