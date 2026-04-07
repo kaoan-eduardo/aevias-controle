@@ -8,15 +8,23 @@ export default function PullToRefresh({ children }) {
   const startYRef = useRef(null);
   const containerRef = useRef(null);
 
+  const isInputFocused = useCallback(() => {
+    const el = document.activeElement;
+    if (!el) return false;
+    const tag = el.tagName.toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+  }, []);
+
   const handleTouchStart = useCallback((e) => {
+    if (isInputFocused()) return;
     const scrollTop = containerRef.current?.scrollTop ?? 0;
     if (scrollTop === 0) {
       startYRef.current = e.touches[0].clientY;
     }
-  }, []);
+  }, [isInputFocused]);
 
   const handleTouchMove = useCallback((e) => {
-    if (startYRef.current === null || refreshing) return;
+    if (startYRef.current === null || refreshing || isInputFocused()) return;
     const delta = e.touches[0].clientY - startYRef.current;
     if (delta > 0) {
       setPullDistance(Math.min(delta * 0.5, THRESHOLD + 20));
