@@ -83,6 +83,9 @@ export default function EnsaioProctorPage() {
       peso_cilindro: "",
       peso_solo_umido: 0,
       volume_cilindro: "",
+      agua_adicionada_ml: "",
+      peso_seco: 0,
+      umidade_calculada: 0,
       dens_ap_umida: 0,
       dens_ap_seca: 0,
     })),
@@ -198,17 +201,30 @@ export default function EnsaioProctorPage() {
         const gammaW = p3 / v;
 
         let tW;
+        let pesoSeco = 0;
+        let umidadeCalc = 0;
+
         if (prev.correcao_densidade === "higroscopica") {
-          tW = prev.umidade_higroscopica ? parseFloat(prev.umidade_higroscopica) : prev.umidade_media;
+          const uhigro = parseFloat(prev.umidade_higroscopica);
+          if (!isNaN(uhigro) && p3 > 0) {
+            pesoSeco = (p3 / (100 + uhigro)) * 100;
+            const aguaAdd = parseFloat(d.agua_adicionada_ml);
+            if (!isNaN(aguaAdd) && pesoSeco > 0) {
+              umidadeCalc = (aguaAdd / pesoSeco * 100) + uhigro;
+            }
+          }
+          tW = umidadeCalc > 0 ? umidadeCalc : (prev.umidade_higroscopica ? parseFloat(prev.umidade_higroscopica) : prev.umidade_media);
         } else {
           tW = prev.umidades[index]?.teor_umidade_media || prev.umidade_media;
         }
 
-        const gammaS = tW != null && !isNaN(tW) ? (gammaW / (tW + 100)) * 100 : 0;
+        const gammaS = tW != null && !isNaN(tW) && tW > 0 ? (gammaW / (tW + 100)) * 100 : 0;
 
         updated[index] = {
           ...d,
           peso_solo_umido: parseFloat(p3.toFixed(3)),
+          peso_seco: parseFloat(pesoSeco.toFixed(3)),
+          umidade_calculada: parseFloat(umidadeCalc.toFixed(2)),
           dens_ap_umida: parseFloat(gammaW.toFixed(4)),
           dens_ap_seca: parseFloat(gammaS.toFixed(4)),
         };
@@ -597,12 +613,38 @@ export default function EnsaioProctorPage() {
                     </td>
                   ))}
                 </tr>
+                {form.correcao_densidade === "higroscopica" && (
+                  <tr className="bg-white/20">
+                    <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Água Adicionada (ml)</td>
+                    {form.densidades.map((d, idx) => (
+                      <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
+                        <Input type="number" step="0.01" value={d.agua_adicionada_ml || ''} onChange={(e) => { const updated = [...form.densidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" />
+                      </td>
+                    ))}
+                  </tr>
+                )}
                 <tr className="bg-gray-100/30">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Solo Úmido (g)</td>
                   {form.densidades.map((d, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{d.peso_solo_umido != null ? Number(d.peso_solo_umido).toFixed(3) : '-'}</td>
                   ))}
                 </tr>
+                {form.correcao_densidade === "higroscopica" && (
+                  <>
+                    <tr className="bg-gray-100/30">
+                      <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Seco (g)</td>
+                      {form.densidades.map((d, idx) => (
+                        <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{d.peso_seco != null && d.peso_seco > 0 ? Number(d.peso_seco).toFixed(3) : '-'}</td>
+                      ))}
+                    </tr>
+                    <tr className="bg-gray-100/30">
+                      <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Umidade Calc. (%)</td>
+                      {form.densidades.map((d, idx) => (
+                        <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{d.umidade_calculada != null && d.umidade_calculada > 0 ? Number(d.umidade_calculada).toFixed(2) : '-'}</td>
+                      ))}
+                    </tr>
+                  </>
+                )}
                 <tr className="bg-gray-100/30">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Dens. Ap. Úmida (g/cm³)</td>
                   {form.densidades.map((d, idx) => (
