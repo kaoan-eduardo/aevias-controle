@@ -451,7 +451,7 @@ export default function EnsaioProctorPage() {
           <div className="bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg p-3 mt-4">
             <p className="text-sm text-[#00233B]">
               <span className="font-semibold">Umidade Média: </span>
-              <span className="text-[#BFCF99] font-bold">{form.umidade_media.toFixed(2)}%</span>
+              <span className="text-[#BFCF99] font-bold">{form.umidade_media != null ? Number(form.umidade_media).toFixed(2) : '-'}%</span>
             </p>
           </div>
         </CardContent>
