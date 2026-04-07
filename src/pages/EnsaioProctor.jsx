@@ -400,33 +400,39 @@ export default function EnsaioProctorPage() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
+          {(() => {
+            const isHigro = form.correcao_densidade === 'higroscopica';
+            const umidadePoints = isHigro ? form.umidades.slice(0, 1) : form.umidades;
+            return (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-[#00233B]/10">
                   <th className="border border-[#00233B]/20 px-3 py-2 text-left font-medium text-[#00233B] w-40">Campo</th>
-                  {form.umidades.map((_, idx) => (
-                    <th key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Ponto {idx + 1}</th>
+                  {umidadePoints.map((_, idx) => (
+                    <th key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">
+                      {isHigro ? 'Umidade Higroscópica' : `Ponto ${idx + 1}`}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {/* Água adicionada */}
-                <tr className="bg-white/20">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Água (ml)</td>
-                  {form.umidades.map((u, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" value={u.agua_adicionada_ml} onChange={(e) => { const updated = [...form.umidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" />
-                    </td>
-                  ))}
-                </tr>
-                {/* Amostra 1 header */}
+                {!isHigro && (
+                  <tr className="bg-white/20">
+                    <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Água (ml)</td>
+                    {umidadePoints.map((u, idx) => (
+                      <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
+                        <Input type="number" value={u.agua_adicionada_ml} onChange={(e) => { const updated = [...form.umidades]; updated[idx].agua_adicionada_ml = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" />
+                      </td>
+                    ))}
+                  </tr>
+                )}
                 <tr className="bg-[#00233B]/10">
-                  <td colSpan={6} className="border border-[#00233B]/20 px-3 py-1 font-semibold text-[#00233B] text-xs">Amostra 1</td>
+                  <td colSpan={umidadePoints.length + 1} className="border border-[#00233B]/20 px-3 py-1 font-semibold text-[#00233B] text-xs">Amostra 1</td>
                 </tr>
                 <tr className="bg-white/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cáps. Nº</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input value={u.capsula_numero_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" />
                     </td>
@@ -434,7 +440,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/20">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Úm. (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.capsula_solo_umido_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
                     </td>
@@ -442,7 +448,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Sec. (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.capsula_solo_seco_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
                     </td>
@@ -450,7 +456,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/20">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Cap (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.peso_capsula_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
                     </td>
@@ -458,17 +464,16 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-[#BFCF99]/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#BFCF99] text-xs">t (%)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_1 || 0).toFixed(2)}</td>
                   ))}
                 </tr>
-                {/* Amostra 2 header */}
                 <tr className="bg-[#00233B]/10">
-                  <td colSpan={6} className="border border-[#00233B]/20 px-3 py-1 font-semibold text-[#00233B] text-xs">Amostra 2</td>
+                  <td colSpan={umidadePoints.length + 1} className="border border-[#00233B]/20 px-3 py-1 font-semibold text-[#00233B] text-xs">Amostra 2</td>
                 </tr>
                 <tr className="bg-white/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cáps. Nº</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input value={u.capsula_numero_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_numero_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); }} className="h-8 text-xs" />
                     </td>
@@ -476,7 +481,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/20">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Úm. (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.capsula_solo_umido_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
                     </td>
@@ -484,7 +489,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Sec. (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.capsula_solo_seco_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
                     </td>
@@ -492,7 +497,7 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-white/20">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Cap (g)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
                       <Input type="number" step="0.01" value={u.peso_capsula_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
                     </td>
@@ -500,20 +505,21 @@ export default function EnsaioProctorPage() {
                 </tr>
                 <tr className="bg-[#BFCF99]/10">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#BFCF99] text-xs">t (%)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_2 || 0).toFixed(2)}</td>
                   ))}
                 </tr>
-                {/* Média */}
                 <tr className="bg-[#BFCF99]/20">
                   <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-[#BFCF99] text-xs">Média (%)</td>
-                  {form.umidades.map((u, idx) => (
+                  {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-sm font-bold text-[#BFCF99] bg-[#BFCF99]/25">{(u.teor_umidade_media || 0).toFixed(2)}</td>
                   ))}
                 </tr>
               </tbody>
             </table>
-          </div>
+            </div>
+            );
+          })()}
 
           <div className="bg-[#BFCF99]/20 border border-[#BFCF99]/40 rounded-lg p-3 mt-4">
             <p className="text-sm text-[#00233B]">
