@@ -186,34 +186,36 @@ export default function EnsaioProctorPage() {
   };
 
   const calculateDensidade = (index) => {
-    const d = form.densidades[index];
-    const p1 = parseFloat(d.cilindro_solo_umido);
-    const p2 = parseFloat(d.peso_cilindro);
-    const v = parseFloat(d.volume_cilindro);
+    setForm(prev => {
+      const updated = [...prev.densidades];
+      const d = updated[index];
+      const p1 = parseFloat(d.cilindro_solo_umido);
+      const p2 = parseFloat(d.peso_cilindro);
+      const v = parseFloat(d.volume_cilindro);
 
-    if (!isNaN(p1) && !isNaN(p2) && !isNaN(v)) {
-      const p3 = p1 - p2;
-      const gammaW = p3 / v;
-      
-      let tW;
-      if (form.correcao_densidade === "higroscopica") {
-        tW = form.umidade_higroscopica ? parseFloat(form.umidade_higroscopica) : form.umidade_media;
-      } else {
-        tW = form.umidades[index]?.teor_umidade_media || form.umidade_media;
+      if (!isNaN(p1) && !isNaN(p2) && !isNaN(v) && v > 0) {
+        const p3 = p1 - p2;
+        const gammaW = p3 / v;
+
+        let tW;
+        if (prev.correcao_densidade === "higroscopica") {
+          tW = prev.umidade_higroscopica ? parseFloat(prev.umidade_higroscopica) : prev.umidade_media;
+        } else {
+          tW = prev.umidades[index]?.teor_umidade_media || prev.umidade_media;
+        }
+
+        const gammaS = tW != null && !isNaN(tW) ? (gammaW / (tW + 100)) * 100 : 0;
+
+        updated[index] = {
+          ...d,
+          peso_solo_umido: parseFloat(p3.toFixed(3)),
+          dens_ap_umida: parseFloat(gammaW.toFixed(4)),
+          dens_ap_seca: parseFloat(gammaS.toFixed(4)),
+        };
       }
 
-      const gammaS = (gammaW / (tW + 100)) * 100;
-
-      const updated = [...form.densidades];
-      updated[index] = {
-        ...updated[index],
-        peso_solo_umido: parseFloat(p3.toFixed(3)),
-        dens_ap_umida: parseFloat(gammaW.toFixed(4)),
-        dens_ap_seca: parseFloat(gammaS.toFixed(4)),
-      };
-
-      setForm(prev => ({ ...prev, densidades: updated }));
-    }
+      return { ...prev, densidades: updated };
+    });
   };
 
   const handleSave = async (status) => {
@@ -591,7 +593,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Vol Cilindro (cm³)</td>
                   {form.densidades.map((d, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={d.volume_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].volume_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={d.volume_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].volume_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
