@@ -478,10 +478,10 @@ export default function EnsaioProctorPage() {
                     </td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/10">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#BFCF99] text-xs">t (%)</td>
+                <tr className="bg-gray-100/30">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">t (%)</td>
                   {umidadePoints.map((u, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_1 || 0).toFixed(2)}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{(u.teor_umidade_1 || 0).toFixed(2)}</td>
                   ))}
                 </tr>
                 <tr className="bg-[#00233B]/10">
@@ -519,16 +519,16 @@ export default function EnsaioProctorPage() {
                     </td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/10">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#BFCF99] text-xs">t (%)</td>
+                <tr className="bg-gray-100/30">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">t (%)</td>
                   {umidadePoints.map((u, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/15">{(u.teor_umidade_2 || 0).toFixed(2)}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{(u.teor_umidade_2 || 0).toFixed(2)}</td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/20">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-[#BFCF99] text-xs">Média (%)</td>
+                <tr className="bg-gray-100/50">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-gray-400 text-xs">Média (%)</td>
                   {umidadePoints.map((u, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-sm font-bold text-[#BFCF99] bg-[#BFCF99]/25">{(u.teor_umidade_media || 0).toFixed(2)}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-sm font-bold text-gray-500 bg-gray-100/50">{(u.teor_umidade_media || 0).toFixed(2)}</td>
                   ))}
                 </tr>
               </tbody>
@@ -595,22 +595,22 @@ export default function EnsaioProctorPage() {
                     </td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/10">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#00233B] text-xs">Peso Solo Úmido (g)</td>
+                <tr className="bg-gray-100/30">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Solo Úmido (g)</td>
                   {form.densidades.map((d, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.peso_solo_umido != null ? Number(d.peso_solo_umido).toFixed(3) : '-'}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{d.peso_solo_umido != null ? Number(d.peso_solo_umido).toFixed(3) : '-'}</td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/15">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-[#00233B] text-xs">Dens. Ap. Úmida (g/cm³)</td>
+                <tr className="bg-gray-100/30">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Dens. Ap. Úmida (g/cm³)</td>
                   {form.densidades.map((d, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.dens_ap_umida != null ? Number(d.dens_ap_umida).toFixed(4) : '-'}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">{d.dens_ap_umida != null ? Number(d.dens_ap_umida).toFixed(4) : '-'}</td>
                   ))}
                 </tr>
-                <tr className="bg-[#BFCF99]/20">
-                  <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-[#BFCF99] text-xs">Dens. Ap. Seca (g/cm³)</td>
+                <tr className="bg-gray-100/50">
+                  <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-gray-400 text-xs">Dens. Ap. Seca (g/cm³)</td>
                   {form.densidades.map((d, idx) => (
-                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{d.dens_ap_seca != null ? Number(d.dens_ap_seca).toFixed(4) : '-'}</td>
+                    <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/50">{d.dens_ap_seca != null ? Number(d.dens_ap_seca).toFixed(4) : '-'}</td>
                   ))}
                 </tr>
               </tbody>
