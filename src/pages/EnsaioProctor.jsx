@@ -485,9 +485,9 @@ export default function EnsaioProctorPage() {
                     <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.cilindro_solo_umido} onChange={(e) => { const updated = [...form.densidades]; updated[idx].cilindro_solo_umido = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" /></td>
                     <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.peso_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].peso_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" /></td>
                     <td className="border border-[#00233B]/20 px-2 py-1"><Input type="number" step="0.01" value={d.volume_cilindro} onChange={(e) => { const updated = [...form.densidades]; updated[idx].volume_cilindro = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); }} className="h-8 text-xs" /></td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.peso_solo_umido.toFixed(3)}</td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.dens_ap_umida.toFixed(4)}</td>
-                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{d.dens_ap_seca.toFixed(4)}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.peso_solo_umido != null ? Number(d.peso_solo_umido).toFixed(3) : '-'}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#00233B] bg-[#BFCF99]/10">{d.dens_ap_umida != null ? Number(d.dens_ap_umida).toFixed(4) : '-'}</td>
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-[#BFCF99] bg-[#BFCF99]/20">{d.dens_ap_seca != null ? Number(d.dens_ap_seca).toFixed(4) : '-'}</td>
                   </tr>
                 ))}
               </tbody>
