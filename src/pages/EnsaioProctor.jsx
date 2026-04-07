@@ -139,34 +139,50 @@ export default function EnsaioProctorPage() {
   };
 
   const calculateUmidade = (index) => {
-    const u = form.umidades[index];
-    if (u.capsula_solo_umido && u.capsula_solo_seco && u.peso_capsula) {
-      const p4 = parseFloat(u.capsula_solo_umido);
-      const p5 = parseFloat(u.capsula_solo_seco);
-      const p6 = parseFloat(u.peso_capsula);
+    setForm(prev => {
+      const updated = [...prev.umidades];
+      const u = updated[index];
 
-      const pw = p4 - p5;
-      const pss = p5 - p6;
-      const teor = pss > 0 ? (pw / pss) * 100 : 0;
+      // Amostra 1
+      const p4_1 = parseFloat(u.capsula_solo_umido_1);
+      const p5_1 = parseFloat(u.capsula_solo_seco_1);
+      const p6_1 = parseFloat(u.peso_capsula_1);
+      let teor1 = 0;
+      if (!isNaN(p4_1) && !isNaN(p5_1) && !isNaN(p6_1)) {
+        const pw1 = p4_1 - p5_1;
+        const pss1 = p5_1 - p6_1;
+        teor1 = pss1 > 0 ? (pw1 / pss1) * 100 : 0;
+      }
 
-      const updated = [...form.umidades];
+      // Amostra 2
+      const p4_2 = parseFloat(u.capsula_solo_umido_2);
+      const p5_2 = parseFloat(u.capsula_solo_seco_2);
+      const p6_2 = parseFloat(u.peso_capsula_2);
+      let teor2 = 0;
+      if (!isNaN(p4_2) && !isNaN(p5_2) && !isNaN(p6_2)) {
+        const pw2 = p4_2 - p5_2;
+        const pss2 = p5_2 - p6_2;
+        teor2 = pss2 > 0 ? (pw2 / pss2) * 100 : 0;
+      }
+
+      const count = (teor1 > 0 ? 1 : 0) + (teor2 > 0 ? 1 : 0);
+      const media = count > 0 ? (teor1 + teor2) / count : 0;
+
       updated[index] = {
-        ...updated[index],
-        peso_agua: parseFloat(pw.toFixed(3)),
-        peso_solo_seco: parseFloat(pss.toFixed(3)),
-        teor_umidade: parseFloat(teor.toFixed(2)),
+        ...u,
+        teor_umidade_1: parseFloat(teor1.toFixed(2)),
+        teor_umidade_2: parseFloat(teor2.toFixed(2)),
+        teor_umidade_media: parseFloat(media.toFixed(2)),
       };
 
-      const media = updated
-        .filter((u, i) => i < 5 && u.teor_umidade > 0)
-        .reduce((sum, u) => sum + u.teor_umidade, 0) / updated.filter((u, i) => i < 5 && u.teor_umidade > 0).length;
+      // Umidade média geral (ponto a ponto)
+      const valid = updated.filter(p => p.teor_umidade_media > 0);
+      const umidade_media = valid.length > 0
+        ? parseFloat((valid.reduce((s, p) => s + p.teor_umidade_media, 0) / valid.length).toFixed(2))
+        : 0;
 
-      setForm(prev => ({
-        ...prev,
-        umidades: updated,
-        umidade_media: parseFloat(media.toFixed(2)),
-      }));
-    }
+      return { ...prev, umidades: updated, umidade_media };
+    });
   };
 
   const calculateDensidade = (index) => {
@@ -442,7 +458,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Úm. (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.capsula_solo_umido_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.capsula_solo_umido_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
@@ -450,7 +466,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Sec. (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.capsula_solo_seco_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.capsula_solo_seco_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
@@ -458,7 +474,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Cap (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.peso_capsula_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 1), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.peso_capsula_1 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_1 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
@@ -483,7 +499,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Úm. (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.capsula_solo_umido_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.capsula_solo_umido_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_umido_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
@@ -491,7 +507,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Cap+Solo Sec. (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.capsula_solo_seco_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.capsula_solo_seco_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].capsula_solo_seco_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
@@ -499,7 +515,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Cap (g)</td>
                   {umidadePoints.map((u, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                      <Input type="number" step="0.01" value={u.peso_capsula_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx, 2), 0); }} className="h-8 text-xs" />
+                      <Input type="number" step="0.01" value={u.peso_capsula_2 || ''} onChange={(e) => { const updated = [...form.umidades]; updated[idx].peso_capsula_2 = e.target.value; setForm(prev => ({ ...prev, umidades: updated })); setTimeout(() => calculateUmidade(idx), 0); }} className="h-8 text-xs" />
                     </td>
                   ))}
                 </tr>
