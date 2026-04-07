@@ -11,7 +11,7 @@ import { DiarioObra as DiarioObraEntity } from "@/entities/DiarioObra";
 import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { User } from "@/entities/User";
-import { UploadFile } from "@/integrations/Core";
+import { uploadMultipleFiles } from "@/utils/imageUpload";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
@@ -1059,107 +1059,31 @@ export default function DiarioObraPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const validateFile = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error(`Tipo de arquivo não suportado: ${file.type}. Use apenas JPEG, PNG, GIF ou WebP.`);
-    }
-
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error(`Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(2)}MB. Máximo permitido: 10MB.`);
-    }
-
-    return true;
-  };
-
-  const uploadFileWithRetry = async (file, maxRetries = 3) => {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        const result = await UploadFile({ file });
-        return result;
-      } catch (error) {
-        if (attempt === maxRetries) {
-          throw new Error(`Upload falhou após ${maxRetries} tentativas: ${error.message}`);
-        }
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    }
-  };
-
   const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
     if (files.length === 0) {
-        setSelectedFileNames("Nenhum ficheiro selecionado");
-        return;
-    }
-    
-    try {
-      files.forEach(file => validateFile(file));
-    } catch (error) {
-      alert(error.message);
-      e.target.value = '';
+      setSelectedFileNames("Nenhum ficheiro selecionado");
       return;
     }
 
     setLoadingUpload(true);
-    if (files.length === 1) {
-        setSelectedFileNames(files[0].name);
-    } else {
-        setSelectedFileNames(`${files.length} ficheiros selecionados`);
+    setSelectedFileNames(files.length === 1 ? files[0].name : `${files.length} ficheiros selecionados`);
+    setUploadProgress(files.map((file, i) => ({ id: i, fileName: file.name, status: 'pending', error: null })));
+
+    const { urls, errors } = await uploadMultipleFiles(files, (i, status, err) => {
+      setUploadProgress(prev => prev.map(p => p.id === i ? { ...p, status, error: err || null } : p));
+    });
+
+    if (urls.length > 0) {
+      setFormData(prev => ({ ...prev, fotos: [...(prev.fotos || []), ...urls] }));
+    }
+    if (errors.length > 0) {
+      alert(`${urls.length} de ${files.length} fotos enviadas.\n\nErros:\n` + errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
     }
 
-    setUploadProgress(files.map((file, index) => ({ id: `${file.name}-${index}`, fileName: file.name, status: 'pending', error: null })));
-
-    try {
-      const uploadedUrls = [];
-      const errors = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const currentFileId = `${file.name}-${i}`;
-
-        try {
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'uploading' } : p)
-          );
-
-          const result = await uploadFileWithRetry(file);
-          uploadedUrls.push(result.file_url);
-          
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'success' } : p)
-          );
-          
-        } catch (error) {
-          errors.push({ fileName: file.name, error: error.message });
-          
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'error', error: error.message } : p)
-          );
-        }
-      }
-
-      if (uploadedUrls.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          fotos: [...(prev.fotos || []), ...uploadedUrls],
-        }));
-      }
-
-      if (errors.length > 0) {
-        const errorMessage = `${uploadedUrls.length} de ${files.length} arquivos enviados com sucesso.\n\nErros:\n` +
-          errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n');
-        alert(errorMessage);
-      }
-
-    } catch (error) {
-      alert(`Erro geral no upload: ${error.message}`);
-    } finally {
-      setLoadingUpload(false);
-      setUploadProgress([]);
-      e.target.value = ''; // Clear file input
-    }
+    setLoadingUpload(false);
+    setUploadProgress([]);
+    e.target.value = '';
   };
 
   const handleRemovePhoto = (indexToRemove) => {

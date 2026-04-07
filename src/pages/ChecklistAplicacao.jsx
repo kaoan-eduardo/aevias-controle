@@ -11,6 +11,7 @@ import { AlertTriangle, Save, Eye, Upload, X, Loader2 } from "lucide-react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { uploadMultipleFiles } from "@/utils/imageUpload";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
@@ -468,29 +469,19 @@ export default function ChecklistAplicacaoPage() {
   }, []);
 
   const handlePhotoUpload = useCallback(async (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
     if (files.length === 0) return;
 
     setUploadingPhoto(true);
-    try {
-      const uploadedUrls = [];
-      for (const file of files) {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        uploadedUrls.push(file_url);
-      }
-      
-      setFormData(prev => ({
-        ...prev,
-        fotos: [...(prev.fotos || []), ...uploadedUrls]
-      }));
-      // Clear the input value so the same file can be selected again
-      e.target.value = ''; 
-    } catch (error) {
-      console.error("Erro ao fazer upload da foto:", error);
-      alert("Erro ao fazer upload da foto.");
-    } finally {
-      setUploadingPhoto(false);
+    const { urls, errors } = await uploadMultipleFiles(files);
+    if (urls.length > 0) {
+      setFormData(prev => ({ ...prev, fotos: [...(prev.fotos || []), ...urls] }));
     }
+    if (errors.length > 0) {
+      alert(`${urls.length} de ${files.length} fotos enviadas.\n\nErros:\n` + errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
+    }
+    setUploadingPhoto(false);
+    e.target.value = '';
   }, []);
 
   const handleRemovePhoto = useCallback((index) => {

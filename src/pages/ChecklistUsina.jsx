@@ -13,7 +13,7 @@ import { Regional } from "@/entities/Regional";
 import { User } from "@/entities/User";
 import { Project } from "@/entities/Project";
 import { FaixaGranulometrica } from "@/entities/FaixaGranulometrica";
-import { UploadFile } from "@/integrations/Core";
+import { uploadMultipleFiles } from "@/utils/imageUpload";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
@@ -442,82 +442,31 @@ export default function ChecklistUsinaPage() {
     }
   }, [formData.rodadas_producao.length]);
 
-  const validateFile = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error(`Tipo de arquivo não suportado: ${file.type}`);
-    }
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error(`Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
-    }
-    return true;
-  };
-
   const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
     if (files.length === 0) {
       setSelectedFileNames("Nenhum ficheiro selecionado");
       return;
     }
 
-    try {
-      files.forEach(file => validateFile(file));
-    } catch (error) {
-      alert(error.message);
-      e.target.value = '';
-      return;
-    }
-
     setLoadingUpload(true);
     setSelectedFileNames(files.length === 1 ? files[0].name : `${files.length} ficheiros selecionados`);
-    setUploadProgress(files.map((file, index) => ({ id: `${file.name}-${index}`, fileName: file.name, status: 'pending', error: null })));
+    setUploadProgress(files.map((file, i) => ({ id: i, fileName: file.name, status: 'pending', error: null })));
 
-    try {
-      const uploadedUrls = [];
-      const errors = [];
+    const { urls, errors } = await uploadMultipleFiles(files, (i, status, err) => {
+      setUploadProgress(prev => prev.map(p => p.id === i ? { ...p, status, error: err || null } : p));
+    });
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const currentFileId = `${file.name}-${i}`;
-
-        try {
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'uploading' } : p)
-          );
-
-          const result = await UploadFile({ file });
-          uploadedUrls.push(result.file_url);
-          
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'success' } : p)
-          );
-        } catch (error) {
-          errors.push({ fileName: file.name, error: error.message });
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'error', error: error.message } : p)
-          );
-        }
-      }
-
-      if (uploadedUrls.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          fotos: [...(prev.fotos || []), ...uploadedUrls],
-        }));
-      }
-
-      if (errors.length > 0) {
-        alert(`${uploadedUrls.length} de ${files.length} arquivos enviados.\n\nErros:\n` +
-          errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
-      }
-    } catch (error) {
-      alert(`Erro geral no upload: ${error.message}`);
-    } finally {
-      setLoadingUpload(false);
-      setUploadProgress([]);
-      e.target.value = '';
+    if (urls.length > 0) {
+      setFormData(prev => ({ ...prev, fotos: [...(prev.fotos || []), ...urls] }));
     }
+    if (errors.length > 0) {
+      alert(`${urls.length} de ${files.length} fotos enviadas.\n\nErros:\n` + errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
+    }
+
+    setLoadingUpload(false);
+    setUploadProgress([]);
+    e.target.value = '';
   };
 
   const handleRemovePhoto = useCallback((indexToRemove) => {
