@@ -56,8 +56,10 @@ function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, 
       tW = umidades[index]?.teor_umidade_media || umidade_media || 0;
     }
 
-    // Dens. Ap. Seca = γw / (100 + tW) * 100
-    const gammaS = tW > 0 ? (gammaW / (100 + tW)) * 100 : 0;
+    // Dens. Ap. Seca = γw / (1 + w/100)
+    // Para modo higroscópico, usa a umidade calculada; para ponto a ponto, usa tW
+    const wParaSeca = correcao === "higroscopica" ? umidadeCalc : tW;
+    const gammaS = wParaSeca > 0 ? gammaW / (1 + wParaSeca / 100) : 0;
 
     return {
       ...d,
