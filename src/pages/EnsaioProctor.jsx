@@ -239,14 +239,6 @@ export default function EnsaioProctorPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-[#BFCF99]" />
-      </div>
-    );
-  }
-
   const isHigro = form.correcao_densidade === "higroscopica";
   const umidadePoints = isHigro ? form.umidades.slice(0, 1) : form.umidades;
 
@@ -263,9 +255,16 @@ export default function EnsaioProctorPage() {
 
   const parabola = useMemo(() => fitParabola(chartPoints), [chartPoints]);
 
-  // Auto-fill densidade_maxima_seca and umidade_otima from parabola
   const densMaxAuto = parabola ? parabola.gamma_max.toFixed(4) : "";
   const umidOtimaAuto = parabola ? parabola.w_otima.toFixed(2) : "";
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[#BFCF99]" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6 min-h-screen bg-transparent">
