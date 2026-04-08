@@ -325,23 +325,6 @@ export default function EnsaioProctorPage() {
             </Select>
           </div>
 
-          {isHigro && (
-            <div>
-              <Label className="text-[#00233B]">Umidade Higroscópica (%)</Label>
-              <Input
-                type="number" step="0.01"
-                value={form.umidade_higroscopica}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setForm(prev => ({
-                    ...prev,
-                    umidade_higroscopica: val,
-                    densidades: recalcDensidades(prev.densidades, val, prev.correcao_densidade, prev.umidades, prev.umidade_media)
-                  }));
-                }}
-              />
-            </div>
-          )}
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
