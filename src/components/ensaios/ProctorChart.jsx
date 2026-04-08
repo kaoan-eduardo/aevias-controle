@@ -49,8 +49,8 @@ export function fitParabola(points) {
     if (!coeff) return null;
     const [a, b, c] = coeff;
     if (Math.abs(a) < 1e-10 || a >= 0) return null;
-    const w_otima = -b / (2*a);
-    const gamma_max = a*w_otima**2 + b*w_otima + c;
+    const w_otima = -b / (2 * a);
+    const gamma_max = a * w_otima**2 + b * w_otima + c;
     return { a, b, c, d: 0, degree: 2, w_otima, gamma_max };
   } else {
     // Degree 3: normal equations 4x4
@@ -71,19 +71,29 @@ export function fitParabola(points) {
     const coeff = gaussianElim(A);
     if (!coeff) return null;
     const [a, b, c, d] = coeff;
-    // Derivative: y' = 3ax² + 2bx + c = 0
-    const da = 3*a, db = 2*b, dc = c;
-    const delta = db**2 - 4*da*dc;
-    if (delta < 0) return null;
-    const x1 = (-db + Math.sqrt(delta)) / (2*da);
-    const x2 = (-db - Math.sqrt(delta)) / (2*da);
-    // Pick the root that is a maximum (y'' = 6ax + 2b < 0)
-    const isConcaveAt = x => 6*a*x + 2*b < 0;
-    let w_otima = null;
-    if (isConcaveAt(x1)) w_otima = x1;
-    else if (isConcaveAt(x2)) w_otima = x2;
-    if (w_otima === null) return null;
-    const gamma_max = a*w_otima**3 + b*w_otima**2 + c*w_otima + d;
+    const evalPoly = x => a*x**3 + b*x**2 + c*x + d;
+    // Find maximum numerically in the range of data points (extended by 5 on each side)
+    const xs = points.map(p => p.x);
+    const xMin = Math.min(...xs) - 5;
+    const xMax = Math.max(...xs) + 5;
+    const STEPS = 10000;
+    let w_otima = xMin;
+    let gamma_max = evalPoly(xMin);
+    for (let i = 1; i <= STEPS; i++) {
+      const xi = xMin + (xMax - xMin) * i / STEPS;
+      const yi = evalPoly(xi);
+      if (yi > gamma_max) { gamma_max = yi; w_otima = xi; }
+    }
+    // Refine with golden section search around found peak
+    let lo = w_otima - (xMax - xMin) / STEPS;
+    let hi = w_otima + (xMax - xMin) / STEPS;
+    for (let i = 0; i < 100; i++) {
+      const m1 = lo + (hi - lo) / 3;
+      const m2 = hi - (hi - lo) / 3;
+      if (evalPoly(m1) < evalPoly(m2)) lo = m1; else hi = m2;
+    }
+    w_otima = (lo + hi) / 2;
+    gamma_max = evalPoly(w_otima);
     return { a, b, c, d, degree: 3, w_otima, gamma_max };
   }
 }
