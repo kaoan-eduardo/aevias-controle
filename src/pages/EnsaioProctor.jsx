@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ProctorChart, { fitParabola } from "@/components/ensaios/ProctorChart";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -248,6 +249,23 @@ export default function EnsaioProctorPage() {
 
   const isHigro = form.correcao_densidade === "higroscopica";
   const umidadePoints = isHigro ? form.umidades.slice(0, 1) : form.umidades;
+
+  // Collect valid (umidade, dens_ap_seca) pairs from the filled density points
+  const chartPoints = useMemo(() => {
+    return form.densidades
+      .filter(d => d.dens_ap_seca > 0 && (isHigro ? d.umidade_calculada > 0 : true))
+      .map((d, idx) => ({
+        x: isHigro ? d.umidade_calculada : (form.umidades[idx]?.teor_umidade_media || 0),
+        y: d.dens_ap_seca,
+      }))
+      .filter(p => p.x > 0);
+  }, [form.densidades, form.umidades, isHigro]);
+
+  const parabola = useMemo(() => fitParabola(chartPoints), [chartPoints]);
+
+  // Auto-fill densidade_maxima_seca and umidade_otima from parabola
+  const densMaxAuto = parabola ? parabola.gamma_max.toFixed(4) : "";
+  const umidOtimaAuto = parabola ? parabola.w_otima.toFixed(2) : "";
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6 min-h-screen bg-transparent">
@@ -581,13 +599,58 @@ export default function EnsaioProctorPage() {
         </CardContent>
       </Card>
 
+      {/* Gráfico Proctor */}
+      <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+        <CardHeader>
+          <CardTitle className="text-lg text-[#00233B]">Gráfico de Compactação (Prévia)</CardTitle>
+          {parabola && (
+            <div className="flex gap-6 mt-1">
+              <p className="text-sm text-[#00233B]/80">
+                <span className="font-semibold">γd máx: </span>
+                <span className="text-[#00233B] font-bold">{parabola.gamma_max.toFixed(4)} g/cm³</span>
+              </p>
+              <p className="text-sm text-[#00233B]/80">
+                <span className="font-semibold">w ótima: </span>
+                <span className="text-[#00233B] font-bold">{parabola.w_otima.toFixed(2)}%</span>
+              </p>
+            </div>
+          )}
+        </CardHeader>
+        <CardContent>
+          <ProctorChart points={chartPoints} parabola={parabola} />
+          {chartPoints.length > 0 && chartPoints.length < 3 && (
+            <p className="text-xs text-[#00233B]/50 text-center mt-2">Preencha mais {3 - chartPoints.length} ponto(s) para gerar a curva de regressão</p>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Resultados */}
       <Card className="bg-white/20 backdrop-blur-lg border-white/20">
         <CardHeader><CardTitle className="text-lg text-[#00233B]">Resultados</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label className="text-[#00233B]">Densidade Máxima Seca (g/cm³)</Label><Input type="number" step="0.0001" value={form.densidade_maxima_seca} onChange={(e) => setForm(prev => ({ ...prev, densidade_maxima_seca: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Umidade Ótima (%)</Label><Input type="number" step="0.01" value={form.umidade_otima} onChange={(e) => setForm(prev => ({ ...prev, umidade_otima: e.target.value }))} /></div>
+            <div>
+              <Label className="text-[#00233B]">
+                Densidade Máxima Seca (g/cm³)
+                {densMaxAuto && <span className="ml-2 text-xs text-[#BFCF99] font-normal">(calculado: {densMaxAuto})</span>}
+              </Label>
+              <Input type="number" step="0.0001"
+                value={form.densidade_maxima_seca || densMaxAuto}
+                onChange={(e) => setForm(prev => ({ ...prev, densidade_maxima_seca: e.target.value }))}
+                placeholder={densMaxAuto || "—"}
+              />
+            </div>
+            <div>
+              <Label className="text-[#00233B]">
+                Umidade Ótima (%)
+                {umidOtimaAuto && <span className="ml-2 text-xs text-[#BFCF99] font-normal">(calculado: {umidOtimaAuto})</span>}
+              </Label>
+              <Input type="number" step="0.01"
+                value={form.umidade_otima || umidOtimaAuto}
+                onChange={(e) => setForm(prev => ({ ...prev, umidade_otima: e.target.value }))}
+                placeholder={umidOtimaAuto || "—"}
+              />
+            </div>
             <div><Label className="text-[#00233B]">ISC/CBR (%)</Label><Input type="number" step="0.01" value={form.isc_cbr} onChange={(e) => setForm(prev => ({ ...prev, isc_cbr: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Expansão (%)</Label><Input type="number" step="0.01" value={form.expansao} onChange={(e) => setForm(prev => ({ ...prev, expansao: e.target.value }))} /></div>
           </div>
