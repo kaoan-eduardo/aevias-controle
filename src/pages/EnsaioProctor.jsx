@@ -19,12 +19,16 @@ import { Loader2 } from "lucide-react";
 
 // Pure function — recalculates all 5 density points without any async/stale state issues
 function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, umidade_media) {
+  console.log('[recalcDensidades] correcao:', correcao);
+  console.log('[recalcDensidades] umidades[0]:', umidades[0]);
+  console.log('[recalcDensidades] umidade_higroscopica:', umidade_higroscopica);
   return densidades.map((d, index) => {
     const p1 = parseFloat(d.cilindro_solo_umido);
     const p2 = parseFloat(d.peso_cilindro);
     const v  = parseFloat(d.volume_cilindro);
+    console.log(`[recalcDensidades] ponto ${index}: p1=${p1} p2=${p2} v=${v} peso_amostra_umida=${d.peso_amostra_umida} agua_adicionada=${d.agua_adicionada_ml}`);
 
-    if (isNaN(p1) || isNaN(p2) || isNaN(v) || v <= 0) return d;
+    if (isNaN(p1) || isNaN(p2) || isNaN(v) || v <= 0) { console.log(`[recalcDensidades] ponto ${index}: retornando sem calcular (valores inválidos)`); return d; }
 
     const pesoSoloUmido = p1 - p2;
     const gammaW = pesoSoloUmido / v;
@@ -34,12 +38,12 @@ function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, 
     let tW = 0;
 
     if (correcao === "higroscopica") {
-      // Usar a média calculada da tabela de cápsulas; fallback para o campo manual
       const uhigro = umidades[0]?.teor_umidade_media || parseFloat(umidade_higroscopica) || 0;
       const pesoAmUmida = parseFloat(d.peso_amostra_umida);
-      if (!isNaN(uhigro) && !isNaN(pesoAmUmida) && pesoAmUmida > 0) {
-        // Peso Seco = (Peso Amostra Úmida / (100 + Uhigro)) * 100
+      console.log(`[higroscopica] ponto ${index}: uhigro=${uhigro} pesoAmUmida=${pesoAmUmida}`);
+      if (!isNaN(uhigro) && uhigro > 0 && !isNaN(pesoAmUmida) && pesoAmUmida > 0) {
         pesoSeco = (pesoAmUmida / (100 + uhigro)) * 100;
+        console.log(`[higroscopica] ponto ${index}: pesoSeco=${pesoSeco}`);
         const aguaAdd = parseFloat(d.agua_adicionada_ml);
         if (!isNaN(aguaAdd) && pesoSeco > 0) {
           // Umidade Calc = (Água Adicionada / Peso Seco) * 100 + Uhigro
@@ -190,7 +194,10 @@ export default function EnsaioProctorPage() {
       const valid = updated.filter(p => p.teor_umidade_media > 0);
       const umidade_media = valid.length > 0 ? parseFloat((valid.reduce((s, p) => s + p.teor_umidade_media, 0) / valid.length).toFixed(2)) : 0;
 
-      return { ...prev, umidades: updated, umidade_media };
+      // Re-recalculate densidades with the new umidade values
+      const densidadesRecalc = recalcDensidades(prev.densidades, prev.umidade_higroscopica, prev.correcao_densidade, updated, umidade_media);
+
+      return { ...prev, umidades: updated, umidade_media, densidades: densidadesRecalc };
     });
   };
 
