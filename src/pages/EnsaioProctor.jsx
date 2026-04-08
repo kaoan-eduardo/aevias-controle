@@ -34,7 +34,8 @@ function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, 
     let tW = 0;
 
     if (correcao === "higroscopica") {
-      const uhigro = parseFloat(umidade_higroscopica);
+      // Usar a média calculada da tabela de cápsulas; fallback para o campo manual
+      const uhigro = umidades[0]?.teor_umidade_media || parseFloat(umidade_higroscopica) || 0;
       const pesoAmUmida = parseFloat(d.peso_amostra_umida);
       if (!isNaN(uhigro) && !isNaN(pesoAmUmida) && pesoAmUmida > 0) {
         // Peso Seco = (Peso Amostra Úmida / (100 + Uhigro)) * 100
