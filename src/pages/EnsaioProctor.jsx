@@ -468,7 +468,14 @@ export default function EnsaioProctorPage() {
           {form.correcao_densidade === "higroscopica" && (
             <div>
               <Label className="text-[#00233B]">Umidade Higroscópica (%)</Label>
-              <Input type="number" step="0.01" value={form.umidade_higroscopica} onChange={(e) => setForm(prev => ({ ...prev, umidade_higroscopica: e.target.value }))} />
+              <Input
+                type="number" step="0.01"
+                value={form.umidade_higroscopica}
+                onChange={(e) => {
+                  setForm(prev => ({ ...prev, umidade_higroscopica: e.target.value }));
+                  form.densidades.forEach((_, idx) => setTimeout(() => calculateDensidade(idx), 0));
+                }}
+              />
             </div>
           )}
 
