@@ -63,11 +63,11 @@ function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, 
 
     return {
       ...d,
-      peso_solo_umido: parseFloat(pesoSoloUmido.toFixed(3)),
-      peso_seco: parseFloat(pesoSeco.toFixed(3)),
+      peso_solo_umido: parseFloat(pesoSoloUmido.toFixed(2)),
+      peso_seco: parseFloat(pesoSeco.toFixed(2)),
       umidade_calculada: parseFloat(umidadeCalc.toFixed(2)),
-      dens_ap_umida: parseFloat(gammaW.toFixed(4)),
-      dens_ap_seca: parseFloat(gammaS.toFixed(4)),
+      dens_ap_umida: parseFloat(gammaW.toFixed(3)),
+      dens_ap_seca: parseFloat(gammaS.toFixed(3)),
     };
   });
 }
@@ -443,7 +443,7 @@ export default function EnsaioProctorPage() {
                   <tr className="bg-gray-100/30">
                     <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Seco (g)</td>
                     <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
-                      {form.densidades[0]?.peso_seco > 0 ? Number(form.densidades[0].peso_seco).toFixed(3) : '-'}
+                      {form.densidades[0]?.peso_seco > 0 ? Number(form.densidades[0].peso_seco).toFixed(2) : '-'}
                     </td>
                   </tr>
                 </tbody>
@@ -531,7 +531,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Solo Úmido (g)</td>
                   {form.densidades.map((d, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
-                      {d.peso_solo_umido > 0 ? Number(d.peso_solo_umido).toFixed(3) : '-'}
+                      {d.peso_solo_umido > 0 ? Number(d.peso_solo_umido).toFixed(2) : '-'}
                     </td>
                   ))}
                 </tr>
@@ -541,7 +541,7 @@ export default function EnsaioProctorPage() {
                     <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Seco (g)</td>
                     {form.densidades.map((d, idx) => (
                       <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
-                        {d.peso_seco > 0 ? Number(d.peso_seco).toFixed(3) : '-'}
+                        {d.peso_seco > 0 ? Number(d.peso_seco).toFixed(2) : '-'}
                       </td>
                     ))}
                   </tr>
@@ -562,7 +562,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Dens. Ap. Úmida (g/cm³)</td>
                   {form.densidades.map((d, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
-                      {d.dens_ap_umida > 0 ? Number(d.dens_ap_umida).toFixed(4) : '-'}
+                      {d.dens_ap_umida > 0 ? Number(d.dens_ap_umida).toFixed(3) : '-'}
                     </td>
                   ))}
                 </tr>
@@ -571,7 +571,7 @@ export default function EnsaioProctorPage() {
                   <td className="border border-[#00233B]/20 px-3 py-2 font-bold text-gray-400 text-xs">Dens. Ap. Seca (g/cm³)</td>
                   {form.densidades.map((d, idx) => (
                     <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/50">
-                      {d.dens_ap_seca > 0 ? Number(d.dens_ap_seca).toFixed(4) : '-'}
+                      {d.dens_ap_seca > 0 ? Number(d.dens_ap_seca).toFixed(3) : '-'}
                     </td>
                   ))}
                 </tr>
