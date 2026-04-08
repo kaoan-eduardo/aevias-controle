@@ -41,11 +41,12 @@ function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, 
         pesoSeco = (pesoAmUmida / (100 + uhigro)) * 100;
         const aguaAdd = parseFloat(d.agua_adicionada_ml);
         if (!isNaN(aguaAdd) && pesoSeco > 0) {
-          // Umidade Calc = (Água Adicionada / Peso Seco * 100) + Uhigro
+          // Umidade Calc = (Água Adicionada / Peso Seco) * 100 + Uhigro
           umidadeCalc = (aguaAdd / pesoSeco) * 100 + uhigro;
         }
       }
-      tW = umidadeCalc;
+      // tW = média da umidade higroscópica calculada na tabela de umidade
+      tW = umidades[0]?.teor_umidade_media || 0;
     } else {
       tW = umidades[index]?.teor_umidade_media || umidade_media || 0;
     }
