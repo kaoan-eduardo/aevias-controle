@@ -53,14 +53,19 @@ export function fitParabola(points) {
     const gamma_max = a * w_otima**2 + b * w_otima + c;
     return { a, b, c, d: 0, degree: 2, w_otima, gamma_max };
   } else {
-    // Degree 3: normal equations 4x4
-    // y = ax³ + bx² + cx + d
+    // Degree 3 via least squares on CENTERED/SCALED x to avoid numerical issues
+    // t = (x - xMean) / xStd
+    const xs = points.map(p => p.x);
+    const xMean = xs.reduce((s, v) => s + v, 0) / n;
+    const xStd = Math.sqrt(xs.reduce((s, v) => s + (v - xMean)**2, 0) / n) || 1;
+    const scaled = points.map(({x, y}) => ({ t: (x - xMean) / xStd, y }));
+
     let s6=0,s5=0,s4=0,s3=0,s2=0,s1=0,s0=n;
     let s3y=0,s2y=0,s1y=0,sy=0;
-    for (const {x, y} of points) {
-      s6+=x**6; s5+=x**5; s4+=x**4; s3+=x**3;
-      s2+=x**2; s1+=x;
-      s3y+=x**3*y; s2y+=x**2*y; s1y+=x*y; sy+=y;
+    for (const {t, y} of scaled) {
+      s6+=t**6; s5+=t**5; s4+=t**4; s3+=t**3;
+      s2+=t**2; s1+=t;
+      s3y+=t**3*y; s2y+=t**2*y; s1y+=t*y; sy+=y;
     }
     const A = [
       [s6, s5, s4, s3, s3y],
@@ -71,30 +76,34 @@ export function fitParabola(points) {
     const coeff = gaussianElim(A);
     if (!coeff) return null;
     const [a, b, c, d] = coeff;
-    const evalPoly = x => a*x**3 + b*x**2 + c*x + d;
-    // Find maximum numerically in the range of data points (extended by 5 on each side)
-    const xs = points.map(p => p.x);
-    const xMin = Math.min(...xs) - 5;
-    const xMax = Math.max(...xs) + 5;
+    // Polynomial is in t-space: evalPoly(t) = at³ + bt² + ct + d
+    const evalPoly = t => a*t**3 + b*t**2 + c*t + d;
+    // Convert x → t for evaluation
+    const toT = x => (x - xMean) / xStd;
+    // Find maximum numerically in t-space over original x range
+    const xMin = Math.min(...xs) - 2;
+    const xMax = Math.max(...xs) + 2;
     const STEPS = 10000;
-    let w_otima = xMin;
-    let gamma_max = evalPoly(xMin);
+    let best_t = toT(xMin);
+    let gamma_max = evalPoly(best_t);
     for (let i = 1; i <= STEPS; i++) {
       const xi = xMin + (xMax - xMin) * i / STEPS;
-      const yi = evalPoly(xi);
-      if (yi > gamma_max) { gamma_max = yi; w_otima = xi; }
+      const ti = toT(xi);
+      const yi = evalPoly(ti);
+      if (yi > gamma_max) { gamma_max = yi; best_t = ti; }
     }
-    // Refine with golden section search around found peak
-    let lo = w_otima - (xMax - xMin) / STEPS;
-    let hi = w_otima + (xMax - xMin) / STEPS;
-    for (let i = 0; i < 100; i++) {
+    // Refine with golden section in t-space
+    const step = (toT(xMax) - toT(xMin)) / STEPS;
+    let lo = best_t - step, hi = best_t + step;
+    for (let i = 0; i < 200; i++) {
       const m1 = lo + (hi - lo) / 3;
       const m2 = hi - (hi - lo) / 3;
       if (evalPoly(m1) < evalPoly(m2)) lo = m1; else hi = m2;
     }
-    w_otima = (lo + hi) / 2;
-    gamma_max = evalPoly(w_otima);
-    return { a, b, c, d, degree: 3, w_otima, gamma_max };
+    best_t = (lo + hi) / 2;
+    gamma_max = evalPoly(best_t);
+    const w_otima = best_t * xStd + xMean;
+    return { a, b, c, d, xMean, xStd, degree: 3, w_otima, gamma_max };
   }
 }
 
@@ -120,9 +129,13 @@ export default function ProctorChart({ points, parabola, validCount }) {
     const result = [];
     for (let i = 0; i <= steps; i++) {
       const x = minX + (maxX - minX) * i / steps;
-      const y = parabola.degree === 3
-        ? parabola.a*x**3 + parabola.b*x**2 + parabola.c*x + parabola.d
-        : parabola.a*x**2 + parabola.b*x + parabola.c;
+      let y;
+      if (parabola.degree === 3) {
+        const t = (x - parabola.xMean) / parabola.xStd;
+        y = parabola.a*t**3 + parabola.b*t**2 + parabola.c*t + parabola.d;
+      } else {
+        y = parabola.a*x**2 + parabola.b*x + parabola.c;
+      }
       result.push({ umidade: parseFloat(x.toFixed(3)), densidade: parseFloat(y.toFixed(5)) });
     }
     return result;
