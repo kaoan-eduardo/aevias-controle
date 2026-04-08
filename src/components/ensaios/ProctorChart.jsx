@@ -26,85 +26,29 @@ function gaussianElim(A) {
   return coeff;
 }
 
-// Fits polynomial via least squares:
-// n=3 → degree 2 (y = ax² + bx + c)
-// n>=4 → degree 3 (y = ax³ + bx² + cx + d)
+// Fits a degree-2 polynomial (parabola) via least squares — standard ABNT Proctor method
+// y = ax² + bx + c  (always, regardless of number of points 3/4/5)
 export function fitParabola(points) {
   const n = points.length;
   if (n < 3) return null;
 
-  if (n === 3) {
-    // Degree 2: normal equations 3x3
-    let sx4=0, sx3=0, sx2=0, sx1=0, sx2y=0, sxy=0, sy=0;
-    for (const {x, y} of points) {
-      sx4+=x**4; sx3+=x**3; sx2+=x**2; sx1+=x;
-      sx2y+=x**2*y; sxy+=x*y; sy+=y;
-    }
-    const A = [
-      [sx4, sx3, sx2, sx2y],
-      [sx3, sx2, sx1, sxy],
-      [sx2, sx1, n,   sy],
-    ];
-    const coeff = gaussianElim(A);
-    if (!coeff) return null;
-    const [a, b, c] = coeff;
-    if (Math.abs(a) < 1e-10 || a >= 0) return null;
-    const w_otima = -b / (2 * a);
-    const gamma_max = a * w_otima**2 + b * w_otima + c;
-    return { a, b, c, d: 0, degree: 2, w_otima, gamma_max };
-  } else {
-    // Degree 3 via least squares on CENTERED/SCALED x to avoid numerical issues
-    // t = (x - xMean) / xStd
-    const xs = points.map(p => p.x);
-    const xMean = xs.reduce((s, v) => s + v, 0) / n;
-    const xStd = Math.sqrt(xs.reduce((s, v) => s + (v - xMean)**2, 0) / n) || 1;
-    const scaled = points.map(({x, y}) => ({ t: (x - xMean) / xStd, y }));
-
-    let s6=0,s5=0,s4=0,s3=0,s2=0,s1=0,s0=n;
-    let s3y=0,s2y=0,s1y=0,sy=0;
-    for (const {t, y} of scaled) {
-      s6+=t**6; s5+=t**5; s4+=t**4; s3+=t**3;
-      s2+=t**2; s1+=t;
-      s3y+=t**3*y; s2y+=t**2*y; s1y+=t*y; sy+=y;
-    }
-    const A = [
-      [s6, s5, s4, s3, s3y],
-      [s5, s4, s3, s2, s2y],
-      [s4, s3, s2, s1, s1y],
-      [s3, s2, s1, s0, sy],
-    ];
-    const coeff = gaussianElim(A);
-    if (!coeff) return null;
-    const [a, b, c, d] = coeff;
-    // Polynomial is in t-space: evalPoly(t) = at³ + bt² + ct + d
-    const evalPoly = t => a*t**3 + b*t**2 + c*t + d;
-    // Convert x → t for evaluation
-    const toT = x => (x - xMean) / xStd;
-    // Find maximum numerically in t-space over original x range
-    const xMin = Math.min(...xs) - 2;
-    const xMax = Math.max(...xs) + 2;
-    const STEPS = 10000;
-    let best_t = toT(xMin);
-    let gamma_max = evalPoly(best_t);
-    for (let i = 1; i <= STEPS; i++) {
-      const xi = xMin + (xMax - xMin) * i / STEPS;
-      const ti = toT(xi);
-      const yi = evalPoly(ti);
-      if (yi > gamma_max) { gamma_max = yi; best_t = ti; }
-    }
-    // Refine with golden section in t-space
-    const step = (toT(xMax) - toT(xMin)) / STEPS;
-    let lo = best_t - step, hi = best_t + step;
-    for (let i = 0; i < 200; i++) {
-      const m1 = lo + (hi - lo) / 3;
-      const m2 = hi - (hi - lo) / 3;
-      if (evalPoly(m1) < evalPoly(m2)) lo = m1; else hi = m2;
-    }
-    best_t = (lo + hi) / 2;
-    gamma_max = evalPoly(best_t);
-    const w_otima = best_t * xStd + xMean;
-    return { a, b, c, d, xMean, xStd, degree: 3, w_otima, gamma_max };
+  let sx4=0, sx3=0, sx2=0, sx1=0, sx2y=0, sxy=0, sy=0;
+  for (const {x, y} of points) {
+    sx4+=x**4; sx3+=x**3; sx2+=x**2; sx1+=x;
+    sx2y+=x**2*y; sxy+=x*y; sy+=y;
   }
+  const A = [
+    [sx4, sx3, sx2, sx2y],
+    [sx3, sx2, sx1, sxy],
+    [sx2, sx1, n,   sy],
+  ];
+  const coeff = gaussianElim(A);
+  if (!coeff) return null;
+  const [a, b, c] = coeff;
+  if (Math.abs(a) < 1e-10 || a >= 0) return null;
+  const w_otima = -b / (2 * a);
+  const gamma_max = a * w_otima**2 + b * w_otima + c;
+  return { a, b, c, w_otima, gamma_max };
 }
 
 const CustomTooltip = ({ active, payload }) => {
@@ -129,13 +73,7 @@ export default function ProctorChart({ points, parabola, validCount }) {
     const result = [];
     for (let i = 0; i <= steps; i++) {
       const x = minX + (maxX - minX) * i / steps;
-      let y;
-      if (parabola.degree === 3) {
-        const t = (x - parabola.xMean) / parabola.xStd;
-        y = parabola.a*t**3 + parabola.b*t**2 + parabola.c*t + parabola.d;
-      } else {
-        y = parabola.a*x**2 + parabola.b*x + parabola.c;
-      }
+      const y = parabola.a*x**2 + parabola.b*x + parabola.c;
       result.push({ umidade: parseFloat(x.toFixed(3)), densidade: parseFloat(y.toFixed(5)) });
     }
     return result;
