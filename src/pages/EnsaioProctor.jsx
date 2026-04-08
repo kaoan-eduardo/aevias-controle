@@ -408,44 +408,35 @@ export default function EnsaioProctorPage() {
                 <thead>
                   <tr className="bg-[#00233B]/10">
                     <th className="border border-[#00233B]/20 px-3 py-2 text-left font-medium text-[#00233B] w-40">Campo</th>
-                    {form.densidades.map((_, idx) => (
-                      <th key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Ponto {idx + 1}</th>
-                    ))}
+                    <th className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Massa</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-white/20">
                     <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Amostra Úmida (g)</td>
-                    {form.densidades.map((d, idx) => (
-                      <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
-                        <Input
-                          type="number" step="0.01"
-                          value={d.peso_amostra_umida || ''}
-                          onChange={(e) => {
-                            const updated = [...form.densidades];
-                            updated[idx].peso_amostra_umida = e.target.value;
-                            setForm(prev => ({ ...prev, densidades: updated }));
-                            setTimeout(() => calculateDensidade(idx), 0);
-                          }}
-                          className="h-8 text-xs"
-                        />
-                      </td>
-                    ))}
+                    <td className="border border-[#00233B]/20 px-1 py-1">
+                      <Input
+                        type="number" step="0.01"
+                        value={form.densidades[0]?.peso_amostra_umida || ''}
+                        onChange={(e) => {
+                          const updated = form.densidades.map(d => ({ ...d, peso_amostra_umida: e.target.value }));
+                          setForm(prev => ({ ...prev, densidades: updated }));
+                          updated.forEach((_, idx) => setTimeout(() => calculateDensidade(idx), 0));
+                        }}
+                        className="h-8 text-xs"
+                      />
+                    </td>
                   </tr>
                   <tr className="bg-gray-100/30">
                     <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Seco (g)</td>
-                    {form.densidades.map((d, idx) => {
-                      const uhigro = parseFloat(form.umidade_higroscopica);
-                      const pAm = parseFloat(d.peso_amostra_umida);
-                      const ps = (!isNaN(uhigro) && !isNaN(pAm) && pAm > 0)
-                        ? (pAm / (100 + uhigro)) * 100
-                        : null;
-                      return (
-                        <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
-                          {ps != null ? ps.toFixed(3) : '-'}
-                        </td>
-                      );
-                    })}
+                    <td className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
+                      {(() => {
+                        const uhigro = parseFloat(form.umidade_higroscopica);
+                        const pAm = parseFloat(form.densidades[0]?.peso_amostra_umida);
+                        const ps = (!isNaN(uhigro) && !isNaN(pAm) && pAm > 0) ? (pAm / (100 + uhigro)) * 100 : null;
+                        return ps != null ? ps.toFixed(3) : '-';
+                      })()}
+                    </td>
                   </tr>
                 </tbody>
               </table>
