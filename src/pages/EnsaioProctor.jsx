@@ -348,22 +348,7 @@ export default function EnsaioProctorPage() {
               <Label className="text-[#00233B]">Procedência</Label>
               <Input value={form.procedencia} onChange={(e) => setForm(prev => ({ ...prev, procedencia: e.target.value }))} />
             </div>
-            <div>
-              <Label className="text-[#00233B]">Amostra Úmida</Label>
-              <Select value={form.amostra_umida} onValueChange={(v) => setForm(prev => ({ ...prev, amostra_umida: v }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Pequena">Pequena</SelectItem>
-                  <SelectItem value="Grande">Grande</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-[#00233B]">Água Adicionada (ml)</Label>
-              <Input type="number" value={form.agua_adicionada} onChange={(e) => setForm(prev => ({ ...prev, agua_adicionada: e.target.value }))} />
-            </div>
+
             <div>
               <Label className="text-[#00233B]">Disco Especial</Label>
               <Select value={form.disco_especial} onValueChange={(v) => setForm(prev => ({ ...prev, disco_especial: v }))}>
