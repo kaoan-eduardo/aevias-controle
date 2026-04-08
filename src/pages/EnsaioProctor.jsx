@@ -207,21 +207,22 @@ export default function EnsaioProctorPage() {
 
         if (prev.correcao_densidade === "higroscopica") {
           const uhigro = parseFloat(prev.umidade_higroscopica);
+          // Peso Seco usa o peso_amostra_umida (campo global da tabela de massa)
           const pesoAmUmida = parseFloat(d.peso_amostra_umida);
-          const baseCalculo = !isNaN(pesoAmUmida) && pesoAmUmida > 0 ? pesoAmUmida : p3;
-          if (!isNaN(uhigro) && baseCalculo > 0) {
-            pesoSeco = (baseCalculo / (100 + uhigro)) * 100;
+          if (!isNaN(uhigro) && !isNaN(pesoAmUmida) && pesoAmUmida > 0) {
+            pesoSeco = (pesoAmUmida / (100 + uhigro)) * 100;
             const aguaAdd = parseFloat(d.agua_adicionada_ml);
             if (!isNaN(aguaAdd) && pesoSeco > 0) {
               umidadeCalc = (aguaAdd / pesoSeco * 100) + uhigro;
             }
           }
-          tW = umidadeCalc > 0 ? umidadeCalc : (prev.umidade_higroscopica ? parseFloat(prev.umidade_higroscopica) : prev.umidade_media);
+          tW = umidadeCalc;
         } else {
           tW = prev.umidades[index]?.teor_umidade_media || prev.umidade_media;
         }
 
-        const gammaS = tW != null && !isNaN(tW) && tW > 0 ? (gammaW / (tW + 100)) * 100 : 0;
+        // γs = γw / (100 + tW) * 100
+        const gammaS = tW != null && !isNaN(tW) && tW > 0 ? (gammaW / (100 + tW)) * 100 : 0;
 
         updated[index] = {
           ...d,
