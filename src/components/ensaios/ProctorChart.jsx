@@ -64,7 +64,7 @@ const CustomTooltip = ({ active, payload }) => {
   );
 };
 
-export default function ProctorChart({ points, parabola }) {
+export default function ProctorChart({ points, parabola, validCount }) {
   const curveData = useMemo(() => {
     if (!parabola) return [];
     const xs = points.map(p => p.x);

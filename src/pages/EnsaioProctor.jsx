@@ -245,12 +245,11 @@ export default function EnsaioProctorPage() {
   // Collect valid (umidade, dens_ap_seca) pairs from the filled density points
   const chartPoints = useMemo(() => {
     return form.densidades
-      .filter(d => d.dens_ap_seca > 0 && (isHigro ? d.umidade_calculada > 0 : true))
-      .map((d, idx) => ({
-        x: isHigro ? d.umidade_calculada : (form.umidades[idx]?.teor_umidade_media || 0),
+      .map((d, originalIdx) => ({
+        x: isHigro ? d.umidade_calculada : (form.umidades[originalIdx]?.teor_umidade_media || 0),
         y: d.dens_ap_seca,
       }))
-      .filter(p => p.x > 0);
+      .filter(p => p.x > 0 && p.y > 0);
   }, [form.densidades, form.umidades, isHigro]);
 
   const parabola = useMemo(() => fitParabola(chartPoints), [chartPoints]);
@@ -602,18 +601,26 @@ export default function EnsaioProctorPage() {
       <Card className="bg-white/20 backdrop-blur-lg border-white/20">
         <CardHeader>
           <CardTitle className="text-lg text-[#00233B]">Gráfico de Compactação (Prévia)</CardTitle>
-          {parabola && (
-            <div className="flex gap-6 mt-1">
-              <p className="text-sm text-[#00233B]/80">
-                <span className="font-semibold">γd máx: </span>
-                <span className="text-[#00233B] font-bold">{parabola.gamma_max.toFixed(4)} g/cm³</span>
-              </p>
-              <p className="text-sm text-[#00233B]/80">
-                <span className="font-semibold">w ótima: </span>
-                <span className="text-[#00233B] font-bold">{parabola.w_otima.toFixed(2)}%</span>
-              </p>
-            </div>
-          )}
+          <div className="flex flex-wrap gap-4 mt-1 items-center">
+            <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+              chartPoints.length >= 3 ? 'bg-[#BFCF99]/40 text-[#00233B]' : 'bg-red-100 text-red-600'
+            }`}>
+              {chartPoints.length} ponto{chartPoints.length !== 1 ? 's' : ''} válido{chartPoints.length !== 1 ? 's' : ''}
+              {chartPoints.length < 3 && ` — mínimo 3 para calcular`}
+            </span>
+            {parabola && (
+              <>
+                <p className="text-sm text-[#00233B]/80">
+                  <span className="font-semibold">γd máx: </span>
+                  <span className="text-[#00233B] font-bold">{parabola.gamma_max.toFixed(4)} g/cm³</span>
+                </p>
+                <p className="text-sm text-[#00233B]/80">
+                  <span className="font-semibold">w ótima: </span>
+                  <span className="text-[#00233B] font-bold">{parabola.w_otima.toFixed(2)}%</span>
+                </p>
+              </>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <ProctorChart points={chartPoints} parabola={parabola} />
