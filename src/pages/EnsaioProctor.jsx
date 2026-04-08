@@ -84,6 +84,7 @@ export default function EnsaioProctorPage() {
       peso_solo_umido: 0,
       volume_cilindro: "",
       agua_adicionada_ml: "",
+      peso_amostra_umida: "",
       peso_seco: 0,
       umidade_calculada: 0,
       dens_ap_umida: 0,
@@ -206,8 +207,10 @@ export default function EnsaioProctorPage() {
 
         if (prev.correcao_densidade === "higroscopica") {
           const uhigro = parseFloat(prev.umidade_higroscopica);
-          if (!isNaN(uhigro) && p3 > 0) {
-            pesoSeco = (p3 / (100 + uhigro)) * 100;
+          const pesoAmUmida = parseFloat(d.peso_amostra_umida);
+          const baseCalculo = !isNaN(pesoAmUmida) && pesoAmUmida > 0 ? pesoAmUmida : p3;
+          if (!isNaN(uhigro) && baseCalculo > 0) {
+            pesoSeco = (baseCalculo / (100 + uhigro)) * 100;
             const aguaAdd = parseFloat(d.agua_adicionada_ml);
             if (!isNaN(aguaAdd) && pesoSeco > 0) {
               umidadeCalc = (aguaAdd / pesoSeco * 100) + uhigro;
@@ -392,6 +395,64 @@ export default function EnsaioProctorPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Tabela Peso Amostra Úmida / Peso Seco — apenas modo higroscópico */}
+      {form.correcao_densidade === "higroscopica" && (
+        <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#00233B]">Peso Amostra Úmida por Ponto</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="bg-[#00233B]/10">
+                    <th className="border border-[#00233B]/20 px-3 py-2 text-left font-medium text-[#00233B] w-40">Campo</th>
+                    {form.densidades.map((_, idx) => (
+                      <th key={idx} className="border border-[#00233B]/20 px-3 py-2 text-center font-medium text-[#00233B]">Ponto {idx + 1}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-white/20">
+                    <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Amostra Úmida (g)</td>
+                    {form.densidades.map((d, idx) => (
+                      <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
+                        <Input
+                          type="number" step="0.01"
+                          value={d.peso_amostra_umida || ''}
+                          onChange={(e) => {
+                            const updated = [...form.densidades];
+                            updated[idx].peso_amostra_umida = e.target.value;
+                            setForm(prev => ({ ...prev, densidades: updated }));
+                            setTimeout(() => calculateDensidade(idx), 0);
+                          }}
+                          className="h-8 text-xs"
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="bg-gray-100/30">
+                    <td className="border border-[#00233B]/20 px-3 py-2 font-semibold text-gray-400 text-xs">Peso Seco (g)</td>
+                    {form.densidades.map((d, idx) => {
+                      const uhigro = parseFloat(form.umidade_higroscopica);
+                      const pAm = parseFloat(d.peso_amostra_umida);
+                      const ps = (!isNaN(uhigro) && !isNaN(pAm) && pAm > 0)
+                        ? (pAm / (100 + uhigro)) * 100
+                        : null;
+                      return (
+                        <td key={idx} className="border border-[#00233B]/20 px-2 py-2 text-center text-xs font-semibold text-gray-500 bg-gray-100/40">
+                          {ps != null ? ps.toFixed(3) : '-'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Umidades */}
       <Card className="bg-white/20 backdrop-blur-lg border-white/20">
@@ -598,6 +659,16 @@ export default function EnsaioProctorPage() {
                     </td>
                   ))}
                 </tr>
+                {form.correcao_densidade === "higroscopica" && (
+                  <tr className="bg-white/20">
+                    <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Peso Amostra Úmida (g)</td>
+                    {form.densidades.map((d, idx) => (
+                      <td key={idx} className="border border-[#00233B]/20 px-1 py-1">
+                        <Input type="number" step="0.01" value={d.peso_amostra_umida || ''} onChange={(e) => { const updated = [...form.densidades]; updated[idx].peso_amostra_umida = e.target.value; setForm(prev => ({ ...prev, densidades: updated })); setTimeout(() => calculateDensidade(idx), 0); }} className="h-8 text-xs" />
+                      </td>
+                    ))}
+                  </tr>
+                )}
                 {form.correcao_densidade === "higroscopica" && (
                   <tr className="bg-white/20">
                     <td className="border border-[#00233B]/20 px-3 py-2 font-medium text-[#00233B] text-xs">Água Adicionada (ml)</td>
