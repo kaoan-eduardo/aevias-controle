@@ -267,7 +267,7 @@ export default function EnsaioProctorPage() {
         isc254: sanitizeNum(c.isc254),
         isc508: sanitizeNum(c.isc508),
         isc: sanitizeNum(c.isc),
-        leituras: (c.leituras || []).map(l => sanitizeNum(l)),
+        leituras: (c.leituras || []).map(l => sanitizeNum(l)).map(l => l === null ? 0 : l),
       }));
       const cleanExpansao = (form.expansao_cilindros || []).map(e => ({
         ...e,
