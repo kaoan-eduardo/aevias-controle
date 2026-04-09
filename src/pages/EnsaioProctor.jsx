@@ -263,6 +263,10 @@ export default function EnsaioProctorPage() {
       }));
       const cleanCBR = (form.cbr_cilindros || []).map(c => ({
         ...c,
+        fator_anel: sanitizeNum(c.fator_anel),
+        isc254: sanitizeNum(c.isc254),
+        isc508: sanitizeNum(c.isc508),
+        isc: sanitizeNum(c.isc),
         leituras: (c.leituras || []).map(l => sanitizeNum(l)),
       }));
       const cleanExpansao = (form.expansao_cilindros || []).map(e => ({
