@@ -9,8 +9,8 @@ const TEMPOS = [0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0];
 // Standard pressure (kgf/cm²) at 2.54mm and 5.08mm
 const PRESSAO_PADRAO = { 3: 70.31, 5: 105.46 }; // index in PENETRACOES array
 
-function calcCBR(cilindro) {
-  const fator = parseFloat(cilindro.fator_anel);
+function calcCBR(cilindro, fatorAnel) {
+  const fator = parseFloat(fatorAnel);
   const leituras = cilindro.leituras || Array(9).fill('');
   const pressoes = leituras.map(l => {
     const v = parseFloat(l);
@@ -37,6 +37,9 @@ function calcExpansao(exp) {
 }
 
 export default function ProctorCBRExpansao({ form, setForm }) {
+  // Cylinder numbers auto-filled from compaction data
+  const cilindroNomes = (form.densidades || []).map(d => d.cilindro_numero || '');
+
   const updateCBR = (idx, field, value) => {
     setForm(prev => {
       const updated = prev.cbr_cilindros.map((c, i) => i === idx ? { ...c, [field]: value } : c);
@@ -55,6 +58,8 @@ export default function ProctorCBRExpansao({ form, setForm }) {
       return { ...prev, cbr_cilindros: updated };
     });
   };
+
+  const updateFatorAnel = (value) => setForm(prev => ({ ...prev, cbr_fator_anel: value }));
 
   const updateExpansao = (idx, field, value) => {
     setForm(prev => {
@@ -77,16 +82,10 @@ export default function ProctorCBRExpansao({ form, setForm }) {
             return (
               <div key={cidx} className="border border-[#00233B]/20 rounded-lg overflow-hidden">
                 {/* Header */}
-                <div className="bg-[#00233B]/10 px-3 py-2 flex flex-wrap items-center gap-4">
-                  <span className="font-semibold text-[#00233B] text-sm">Cilindro {cidx + 1}</span>
-                  <div className="flex items-center gap-2">
-                    <Label className="text-xs text-[#00233B]">Nº:</Label>
-                    <Input value={cil.cilindro_numero || ''} onChange={e => updateCBR(cidx, 'cilindro_numero', e.target.value)} className="h-7 w-20 text-xs" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label className="text-xs text-[#00233B]">Fator do Anel (k):</Label>
-                    <Input type="number" step="0.0001" value={cil.fator_anel || ''} onChange={e => updateCBR(cidx, 'fator_anel', e.target.value)} className="h-7 w-24 text-xs" placeholder="ex: 0.112" />
-                  </div>
+                <div className="bg-[#00233B]/10 px-3 py-2 flex items-center gap-4">
+                  <span className="font-semibold text-[#00233B] text-sm">
+                    Cilindro {cilindroNomes[cidx] || cidx + 1}
+                  </span>
                   {isc != null && (
                     <span className="ml-auto text-sm font-bold text-[#00233B]">ISC = {isc.toFixed(1)}%</span>
                   )}
@@ -180,7 +179,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                 <tr className="bg-[#00233B]/10">
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Data</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Hora</th>
-                  <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Nº Cilindro</th>
+                  <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Cilindro</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Alt. Inicial (mm)</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">1° dia</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">2° dia</th>
@@ -188,7 +187,6 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">4° dia</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Diferença (mm)</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] font-bold">Expansão (%)</th>
-                  <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">M. Solo Final (g)</th>
                 </tr>
               </thead>
               <tbody>
@@ -202,8 +200,8 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                       <td className="border border-[#00233B]/20 px-1 py-1">
                         <Input type="time" value={exp.hora || ''} onChange={e => updateExpansao(idx, 'hora', e.target.value)} className="h-7 text-xs p-1 w-24" />
                       </td>
-                      <td className="border border-[#00233B]/20 px-1 py-1">
-                        <Input value={exp.cilindro_numero || ''} onChange={e => updateExpansao(idx, 'cilindro_numero', e.target.value)} className="h-7 text-xs p-1 w-16" />
+                      <td className="border border-[#00233B]/20 px-2 py-1 text-center font-semibold text-[#00233B]">
+                        {cilindroNomes[idx] || idx + 1}
                       </td>
                       <td className="border border-[#00233B]/20 px-1 py-1">
                         <Input type="number" step="0.01" value={exp.altura_inicial || ''} onChange={e => updateExpansao(idx, 'altura_inicial', e.target.value)} className="h-7 text-xs p-1 w-20" />
@@ -218,9 +216,6 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                       </td>
                       <td className="border border-[#00233B]/20 px-2 py-1 text-center font-bold text-[#00233B]">
                         {expansao_pct != null ? expansao_pct.toFixed(1) : '—'}
-                      </td>
-                      <td className="border border-[#00233B]/20 px-1 py-1">
-                        <Input type="number" step="0.01" value={exp.massa_solo_final || ''} onChange={e => updateExpansao(idx, 'massa_solo_final', e.target.value)} className="h-7 text-xs p-1 w-24" />
                       </td>
                     </tr>
                   );

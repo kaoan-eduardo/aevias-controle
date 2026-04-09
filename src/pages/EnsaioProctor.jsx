@@ -138,6 +138,7 @@ export default function EnsaioProctorPage() {
     expansao: "",
     observacoes: "",
     realizar_cbr_expansao: false,
+    cbr_fator_anel: "",
     cbr_cilindros: Array(5).fill(null).map((_, i) => ({
       cilindro_numero: "",
       fator_anel: "",
