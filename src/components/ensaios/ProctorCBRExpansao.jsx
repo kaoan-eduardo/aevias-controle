@@ -86,8 +86,21 @@ export default function ProctorCBRExpansao({ form, setForm }) {
           <p className="text-xs text-[#00233B]/60">ABNT NBR 9895 / DNIT 172 — Penetrações em mm</p>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Fator do Anel Global */}
+          <div className="flex items-center gap-4 bg-[#BFCF99]/10 border border-[#BFCF99]/30 rounded-lg p-3">
+            <label className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Constante do Anel (kgf/div):</label>
+            <input
+              type="number"
+              step="0.0001"
+              value={form.cbr_fator_anel || ''}
+              onChange={e => updateFatorAnel(e.target.value)}
+              placeholder="Ex: 1.2345"
+              className="h-8 w-40 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </div>
+
           {(form.cbr_cilindros || []).map((cil, cidx) => {
-            const { pressoes, isc254, isc508, isc } = calcCBR(cil);
+            const { pressoes, isc254, isc508, isc } = calcCBR(cil, form.cbr_fator_anel);
             return (
               <div key={cidx} className="border border-[#00233B]/20 rounded-lg overflow-hidden">
                 {/* Header */}
