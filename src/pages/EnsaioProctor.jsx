@@ -261,7 +261,22 @@ export default function EnsaioProctorPage() {
         agua_adicionada_ml: sanitizeNum(d.agua_adicionada_ml),
         peso_amostra_umida: sanitizeNum(d.peso_amostra_umida),
       }));
-      const data = { ...form, status, umidades: cleanUmidades, densidades: cleanDensidades };
+      const cleanCBR = (form.cbr_cilindros || []).map(c => ({
+        ...c,
+        leituras: (c.leituras || []).map(l => sanitizeNum(l)),
+      }));
+      const cleanExpansao = (form.expansao_cilindros || []).map(e => ({
+        ...e,
+        altura_inicial: sanitizeNum(e.altura_inicial),
+        leitura_1dia: sanitizeNum(e.leitura_1dia),
+        leitura_2dia: sanitizeNum(e.leitura_2dia),
+        leitura_3dia: sanitizeNum(e.leitura_3dia),
+        leitura_4dia: sanitizeNum(e.leitura_4dia),
+        massa_solo_final: sanitizeNum(e.massa_solo_final),
+        diferenca: sanitizeNum(e.diferenca),
+        expansao_pct: sanitizeNum(e.expansao_pct),
+      }));
+      const data = { ...form, status, umidades: cleanUmidades, densidades: cleanDensidades, cbr_cilindros: cleanCBR, expansao_cilindros: cleanExpansao };
       if (recordId) {
         await base44.entities.EnsaioProctor.update(recordId, data);
         alert("Ensaio atualizado com sucesso!");
