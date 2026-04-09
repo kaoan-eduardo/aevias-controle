@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProctorChart, { fitParabola } from "@/components/ensaios/ProctorChart";
+import ProctorCBRExpansao from "@/components/ensaios/ProctorCBRExpansao";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -136,6 +137,26 @@ export default function EnsaioProctorPage() {
     isc_cbr: "",
     expansao: "",
     observacoes: "",
+    realizar_cbr_expansao: false,
+    cbr_cilindros: Array(5).fill(null).map((_, i) => ({
+      cilindro_numero: "",
+      fator_anel: "",
+      leituras: Array(9).fill(""),
+      isc254: null,
+      isc508: null,
+      isc: null,
+    })),
+    expansao_cilindros: Array(5).fill(null).map(() => ({
+      cilindro_numero: "",
+      data: new Date().toISOString().split("T")[0],
+      hora: "",
+      altura_inicial: "",
+      leitura_1dia: "",
+      leitura_2dia: "",
+      leitura_3dia: "",
+      leitura_4dia: "",
+      massa_solo_final: "",
+    })),
     status: "rascunho",
   });
 
@@ -665,6 +686,29 @@ export default function EnsaioProctorPage() {
             <Textarea value={form.observacoes} onChange={(e) => setForm(prev => ({ ...prev, observacoes: e.target.value }))} rows={4} />
           </div>
         </CardContent>
+      </Card>
+
+      {/* CBR / Expansão — Opcional */}
+      <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="realizar_cbr"
+              checked={!!form.realizar_cbr_expansao}
+              onChange={e => setForm(prev => ({ ...prev, realizar_cbr_expansao: e.target.checked }))}
+              className="w-4 h-4 accent-[#00233B]"
+            />
+            <label htmlFor="realizar_cbr" className="text-lg font-semibold text-[#00233B] cursor-pointer select-none">
+              Realizar Ensaio de ISC/CBR e Expansão <span className="text-sm font-normal text-[#00233B]/60">(ABNT 9895 / DNIT 172)</span>
+            </label>
+          </div>
+        </CardHeader>
+        {form.realizar_cbr_expansao && (
+          <CardContent className="pt-0">
+            <ProctorCBRExpansao form={form} setForm={setForm} />
+          </CardContent>
+        )}
       </Card>
 
       {/* Ações */}
