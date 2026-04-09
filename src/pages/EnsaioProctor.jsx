@@ -245,7 +245,23 @@ export default function EnsaioProctorPage() {
   const handleSave = async (status) => {
     setSaving(true);
     try {
-      const data = { ...form, status };
+      // Sanitize: convert empty strings to null for number fields
+      const sanitizeNum = (v) => (v === '' || v === null || v === undefined) ? null : isNaN(Number(v)) ? null : Number(v);
+      const numFields1 = ['capsula_solo_umido_1','capsula_solo_seco_1','peso_capsula_1','teor_umidade_1','teor_umidade_2','teor_umidade_media'];
+      const numFields2 = ['capsula_solo_umido_2','capsula_solo_seco_2','peso_capsula_2'];
+      const cleanUmidades = form.umidades.map(u => ({
+        ...u,
+        ...Object.fromEntries([...numFields1, ...numFields2].map(f => [f, sanitizeNum(u[f])]))
+      }));
+      const cleanDensidades = form.densidades.map(d => ({
+        ...d,
+        cilindro_solo_umido: sanitizeNum(d.cilindro_solo_umido),
+        peso_cilindro: sanitizeNum(d.peso_cilindro),
+        volume_cilindro: sanitizeNum(d.volume_cilindro),
+        agua_adicionada_ml: sanitizeNum(d.agua_adicionada_ml),
+        peso_amostra_umida: sanitizeNum(d.peso_amostra_umida),
+      }));
+      const data = { ...form, status, umidades: cleanUmidades, densidades: cleanDensidades };
       if (recordId) {
         await base44.entities.EnsaioProctor.update(recordId, data);
         alert("Ensaio atualizado com sucesso!");
