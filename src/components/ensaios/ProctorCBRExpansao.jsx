@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,8 +38,16 @@ function calcExpansao(exp) {
 }
 
 export default function ProctorCBRExpansao({ form, setForm }) {
-  // Cylinder numbers auto-filled from compaction data
   const cilindroNomes = (form.densidades || []).map(d => d.cilindro_numero || '');
+
+  // Sync data_ensaio from header into all expansion rows
+  useEffect(() => {
+    if (!form.data_ensaio) return;
+    setForm(prev => ({
+      ...prev,
+      expansao_cilindros: (prev.expansao_cilindros || []).map(e => ({ ...e, data: prev.data_ensaio }))
+    }));
+  }, [form.data_ensaio]);
 
   const updateCBR = (idx, field, value) => {
     setForm(prev => {
@@ -177,7 +186,6 @@ export default function ProctorCBRExpansao({ form, setForm }) {
             <table className="w-full text-xs border-collapse">
               <thead>
                 <tr className="bg-[#00233B]/10">
-                  <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Data</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Hora</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Cilindro</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Alt. Inicial (mm)</th>
@@ -194,9 +202,6 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                   const { diferenca, expansao_pct } = calcExpansao(exp);
                   return (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white/20' : 'bg-white/10'}>
-                      <td className="border border-[#00233B]/20 px-1 py-1">
-                        <Input type="date" value={exp.data || ''} onChange={e => updateExpansao(idx, 'data', e.target.value)} className="h-7 text-xs p-1 w-32" />
-                      </td>
                       <td className="border border-[#00233B]/20 px-1 py-1">
                         <Input type="time" value={exp.hora || ''} onChange={e => updateExpansao(idx, 'hora', e.target.value)} className="h-7 text-xs p-1 w-24" />
                       </td>
