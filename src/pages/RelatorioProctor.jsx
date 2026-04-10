@@ -241,10 +241,10 @@ function ExpansaoSection({ ensaio }) {
 }
 
 /* ─────────── GRÁFICOS (common) ─────────── */
-function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
+function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscParabola }) {
   const umidPorCil = isHigro
-    ? (ensaio.densidades || []).map(d => d.umidade_calculada)
-    : (ensaio.umidades || []).map(u => u.teor_umidade_media);
+    ? (ensaio?.densidades || []).map(d => d.umidade_calculada)
+    : (ensaio?.umidades || []).map(u => u.teor_umidade_media);
 
   const iscPoints = (ensaio.cbr_cilindros || [])
     .map((c, i) => {
@@ -300,15 +300,19 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">ISC (%)</div>
           <div style={{ height: 130 }}>
-            <MiniChart data={iscPoints} lineData={iscParabola ? (() => {
-              if (!iscPoints.length) return [];
-              const xs = iscPoints.map(p => p.x);
-              const minX = Math.min(...xs), maxX = Math.max(...xs);
-              return Array.from({ length: 60 }, (_, i) => {
-                const x = minX + (maxX - minX) * i / 59;
-                return { x: parseFloat(x.toFixed(2)), y: parseFloat((iscParabola.a * x ** 2 + iscParabola.b * x + iscParabola.c).toFixed(4)) };
-              });
-            })() : []} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            {iscParabola ? (
+              <MiniChart data={iscPoints} lineData={(() => {
+                if (!iscPoints.length) return [];
+                const xs = iscPoints.map(p => p.x);
+                const minX = Math.min(...xs), maxX = Math.max(...xs);
+                return Array.from({ length: 60 }, (_, i) => {
+                  const x = minX + (maxX - minX) * i / 59;
+                  return { x: parseFloat(x.toFixed(2)), y: parseFloat((iscParabola.a * x ** 2 + iscParabola.b * x + iscParabola.c).toFixed(4)) };
+                });
+              })()} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            ) : (
+              <MiniChart data={iscPoints} isLinear={true} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            )}
           </div>
         </div>
         {/* Expansão */}
@@ -689,7 +693,7 @@ export default function RelatorioProctor() {
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
 
           {/* GRÁFICOS */}
-          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} />
+          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscParabola={iscParabola} />
 
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
