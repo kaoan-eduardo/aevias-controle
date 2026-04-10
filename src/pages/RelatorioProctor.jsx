@@ -735,10 +735,12 @@ export default function RelatorioProctor() {
       <style>{`
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
-          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-          [class*="sidebar"] { display: none !important; }
-          [class*="Sidebar"] { display: none !important; }
-          nav { display: none !important; }
+          body, html { print-color-adjust: exact; -webkit-print-color-adjust: exact; background: white; }
+          * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+          [class*="sidebar"], [class*="Sidebar"], nav, [class*="Layout"], [class*="SidebarProvider"] { display: none !important; }
+          .relatorio-page { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+          main { width: 100% !important; }
+          @page { margin: 8mm 10mm; }
         }
         table tr { line-height: 1.1; }
         table td, table th { padding-top: 0.18rem; padding-bottom: 0.18rem; }
