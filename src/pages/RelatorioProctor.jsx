@@ -643,11 +643,11 @@ export default function RelatorioProctor() {
                 ["ISC/CBR (%)", fmtN(ensaio.isc_cbr, 1)],
                 ["Expansão (%)", fmtN(ensaio.expansao, 2)],
               ].map(([label, val]) => (
-                <div key={label} className="border border-slate-300 p-1 rounded text-center">
-                  <div className="text-gray-500 text-[8px]">{label}</div>
-                  <div className="font-bold text-blue-800 text-xs">{val}</div>
+                <div key={label} className="border border-slate-300 p-0.5 rounded text-center">
+                  <div className="text-gray-500 text-[7px]">{label}</div>
+                  <div className="font-bold text-blue-800 text-[8px]">{val}</div>
                 </div>
-              ))}
+              ))
             </div>
           </section>
 
@@ -703,7 +703,7 @@ export default function RelatorioProctor() {
         </footer>
       </div>
 
-      <style>{`
+      <style jsx>{`
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; margin: 0; padding: 0; }
