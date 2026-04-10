@@ -276,7 +276,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
   return (
     <section>
       <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">GRÁFICOS</div>
-      <div className="grid grid-cols-3 gap-2" style={{ height: 160 }}>
+      <div className="grid grid-cols-3 gap-2" style={{ height: 140 }}>
         {/* Proctor curve */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Densidade do Solo Seco (g/cm³)</div>
