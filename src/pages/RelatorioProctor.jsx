@@ -635,8 +635,8 @@ export default function RelatorioProctor() {
 
           {/* RESULTADOS FINAIS */}
           <section>
-            <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px] mb-1">RESULTADOS FINAIS</div>
-            <div className="grid grid-cols-4 gap-2 text-[9px]">
+            <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px] mb-1 text-center">RESULTADOS FINAIS</div>
+            <div className="grid grid-cols-4 gap-1 text-[8px]">
               {[
                 ["Dens. Máx. Seca (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
                 ["Umidade Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
