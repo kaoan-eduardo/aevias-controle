@@ -647,7 +647,7 @@ export default function RelatorioProctor() {
                   <div className="text-gray-500" style={{fontSize: '7px'}}>{label}</div>
                   <div className="font-bold text-blue-800" style={{fontSize: '8px'}}>{val}</div>
                 </div>
-              ))
+              ))}
             </div>
           </section>
 
