@@ -49,9 +49,35 @@ function calcExpansao(exp) {
   return { diferenca, expansao_pct };
 }
 
+function fitLinear(points) {
+  if (points.length < 2) return null;
+  const n = points.length;
+  const sx = points.reduce((s, p) => s + p.x, 0);
+  const sy = points.reduce((s, p) => s + p.y, 0);
+  const sxx = points.reduce((s, p) => s + p.x * p.x, 0);
+  const sxy = points.reduce((s, p) => s + p.x * p.y, 0);
+  const denom = n * sxx - sx * sx;
+  if (Math.abs(denom) < 1e-10) return null;
+  const a = (n * sxy - sx * sy) / denom;
+  const b = (sy - a * sx) / n;
+  return { a, b };
+}
+
 /* ─────────── MINI CHART ─────────── */
-function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color = "#1e3a5f" }) {
+function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color = "#1e3a5f", isLinear = false }) {
   if (!data?.length) return <div className="flex items-center justify-center h-full text-[8px] text-gray-400">Sem dados</div>;
+  
+  const lineDataFinal = isLinear && data.length >= 2 ? (() => {
+    const linear = fitLinear(data);
+    if (!linear) return [];
+    const xs = data.map(p => p.x);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    return Array.from({ length: 30 }, (_, i) => {
+      const x = minX + (maxX - minX) * i / 29;
+      return { x: parseFloat(x.toFixed(2)), y: parseFloat((linear.a * x + linear.b).toFixed(3)) };
+    });
+  })() : lineData || [];
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 8, right: 8, left: 8, bottom: 18 }}>
@@ -63,8 +89,8 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
           label={{ value: yLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(2)} width={40} />
         <Tooltip contentStyle={{ fontSize: 8 }} formatter={(v) => v.toFixed(3)} />
-        {lineData?.length > 0 && (
-          <Line data={lineData} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
+        {lineDataFinal?.length > 0 && (
+          <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
         <Scatter data={data} dataKey="y" fill="#6b8f3e" stroke={color} strokeWidth={1} r={4} name="Pontos" isAnimationActive={false} />
         {refX != null && <ReferenceLine x={refX} stroke="red" strokeDasharray="3 2" strokeWidth={1} />}
@@ -91,55 +117,70 @@ function ISCSection({ ensaio }) {
         if (!hasData) return null;
         return (
           <div key={cidx} className="mb-1">
-            <table className="w-full border-collapse border border-slate-400 text-[8px]">
+            <table className="w-full border-collapse border border-slate-400 text-[8px]" style={{ tableLayout: 'fixed' }}>
               <tbody>
                 <tr className="bg-slate-200">
                   <td className="border border-slate-400 px-1 py-0.5 font-bold" colSpan={2}>Cilindro Nº</td>
                   <td className="border border-slate-400 px-1 py-0.5 font-bold text-center" colSpan={9}>{cil.cilindro_numero || cidx + 1}</td>
                 </tr>
                 <tr className="bg-slate-100">
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold w-24">Penetração (mm)</td>
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold w-12 text-[7px]">Tempo (m)</td>
-                  {PENETRACOES.map((p, pi) => (
-                    <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-slate-300' : ''}`}>
-                      <div>{p}</div><div className="text-[7px] text-gray-500">{TEMPOS[pi]}</div>
-                    </td>
-                  ))}
+                  <td className="border border-slate-400 px-1 py-0.5 font-bold">Penetração (mm)</td>
+                  <td className="border border-slate-400 px-1 py-0.5 font-bold text-[7px]">Tempo (m)</td>
+                  {PENETRACOES.map((p, pi) => {
+                    const colWidth = `${100 / PENETRACOES.length}%`;
+                    return (
+                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-slate-300' : ''}`} style={{ width: colWidth }}>
+                        <div>{p}</div><div className="text-[7px] text-gray-500">{TEMPOS[pi]}</div>
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="bg-white">
                   <td className="border border-slate-400 px-1 py-0.5 font-medium" colSpan={2}>Leitura do anel</td>
-                  {(cil.leituras || Array(9).fill('')).map((l, li) => (
-                    <td key={li} className={`border border-slate-400 px-1 py-0.5 text-center ${li === 3 || li === 5 ? 'bg-yellow-50' : ''}`}>
-                      {parseFloat(l) > 0 ? fmtN(l, 0) : ''}
-                    </td>
-                  ))}
+                  {(cil.leituras || Array(9).fill('')).map((l, li) => {
+                    const colWidth = `${100 / PENETRACOES.length}%`;
+                    return (
+                      <td key={li} className={`border border-slate-400 px-1 py-0.5 text-center ${li === 3 || li === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
+                        {parseFloat(l) > 0 ? fmtN(l, 0) : ''}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="bg-slate-50">
                   <td className="border border-slate-400 px-1 py-0.5 font-medium">Pressão</td>
                   <td className="border border-slate-400 px-1 py-0.5 text-[7px] text-gray-500">kgf/cm² Padrão</td>
-                  {PENETRACOES.map((_, pi) => (
-                    <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-yellow-50' : ''}`}>
-                      {PRESSAO_PADRAO[pi] ?? ''}
-                    </td>
-                  ))}
+                  {PENETRACOES.map((_, pi) => {
+                    const colWidth = `${100 / PENETRACOES.length}%`;
+                    return (
+                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
+                        {PRESSAO_PADRAO[pi] ?? ''}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="bg-white">
                   <td className="border border-slate-400 px-1 py-0.5 font-medium">Pressão</td>
                   <td className="border border-slate-400 px-1 py-0.5 text-[7px] text-gray-500">kgf/cm² Corrigida</td>
-                  {pressoes.map((p, pi) => (
-                    <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center ${pi === 3 || pi === 5 ? 'bg-yellow-50' : ''}`}>
-                      {p != null ? fmtN(p, 2) : ''}
-                    </td>
-                  ))}
+                  {pressoes.map((p, pi) => {
+                    const colWidth = `${100 / PENETRACOES.length}%`;
+                    return (
+                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
+                        {p != null ? fmtN(p, 2) : ''}
+                      </td>
+                    );
+                  })}
                 </tr>
                 <tr className="bg-slate-200 font-bold">
                   <td className="border border-slate-400 px-1 py-0.5 font-bold" colSpan={2}>ISC (%)</td>
-                  {PENETRACOES.map((_, pi) => (
-                    <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-800 ${pi === 3 || pi === 5 ? 'bg-yellow-100' : ''}`}>
-                      {pi === 3 && isc254 != null ? isc254 : ''}
-                      {pi === 5 && isc508 != null ? isc508 : ''}
-                    </td>
-                  ))}
+                  {PENETRACOES.map((_, pi) => {
+                    const colWidth = `${100 / PENETRACOES.length}%`;
+                    return (
+                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-800 ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
+                        {pi === 3 && isc254 != null ? isc254 : ''}
+                        {pi === 5 && isc508 != null ? isc508 : ''}
+                      </td>
+                    );
+                  })}
                 </tr>
               </tbody>
             </table>
@@ -185,7 +226,7 @@ function ExpansaoSection({ ensaio }) {
                 <td className="border border-slate-400 px-1 py-0.5 text-center">{exp.hora || '-'}</td>
                 <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{cilNome}</td>
                 {['leitura_1dia', 'leitura_2dia', 'leitura_3dia', 'leitura_4dia'].map(f => (
-                  <td key={f} className="border border-slate-400 px-1 py-0.5 text-center bg-yellow-50">{fmtN(exp[f], 2)}</td>
+                  <td key={f} className="border border-slate-400 px-1 py-0.5 text-center bg-gray-100">{fmtN(exp[f], 2)}</td>
                 ))}
                 <td className="border border-slate-400 px-1 py-0.5 text-center">{diferenca != null ? fmtN(diferenca, 2) : '-'}</td>
                 <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-800">{expansao_pct != null ? fmtN(expansao_pct, 2) : '-'}</td>
@@ -222,7 +263,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
   const curveData = parabola ? (() => {
     if (!chartPoints.length) return [];
     const xs = chartPoints.map(p => p.x);
-    const minX = Math.min(...xs) - 2, maxX = Math.max(...xs) + 2;
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
     return Array.from({ length: 60 }, (_, i) => {
       const x = minX + (maxX - minX) * i / 59;
       return { x: parseFloat(x.toFixed(2)), y: parseFloat((parabola.a * x ** 2 + parabola.b * x + parabola.c).toFixed(4)) };
@@ -262,7 +303,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
             <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">CBR = {fmtN(maxISC, 1)}%</div>
           )}
           <div style={{ height: 130 }}>
-            <MiniChart data={iscPoints} refY={maxISC} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            <MiniChart data={iscPoints} isLinear={true} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
           </div>
         </div>
         {/* Expansão */}
@@ -272,7 +313,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
             <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">Exp. = {fmtN(maxExp, 2)}%</div>
           )}
           <div style={{ height: 130 }}>
-            <MiniChart data={expPoints} refY={maxExp} xLabel="Umidade (%)" yLabel="Exp. (%)" color="#1e3a5f" />
+            <MiniChart data={expPoints} isLinear={true} xLabel="Umidade (%)" yLabel="Exp. (%)" color="#1e3a5f" />
           </div>
         </div>
       </div>
@@ -425,11 +466,18 @@ function CompactacaoPontoAPonto({ ensaio }) {
     <section>
       <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">DETERMINAÇÃO DA UMIDADE E DENSIDADE</div>
       {/* Density table */}
-      <table className="w-full border-collapse border border-slate-400 text-[8px] mb-1">
+      <table className="w-full border-collapse border border-slate-400 text-[8px] mb-1" style={{ tableLayout: 'fixed' }}>
+        <colgroup>
+          <col style={{ width: '30%' }} />
+          <col style={{ width: '10%' }} />
+          {densidades.map((_, i) => (
+            <col key={i} style={{ width: `${60 / densidades.length}%` }} />
+          ))}
+        </colgroup>
         <thead>
           <tr className="bg-slate-200">
             <th className="border border-slate-400 px-1 py-0.5 text-left">Campo</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center w-8">Fórmula</th>
+            <th className="border border-slate-400 px-1 py-0.5 text-center">Fórmula</th>
             {densidades.map((d, i) => (
               <th key={i} className="border border-slate-400 px-1 py-0.5 text-center">Cil. {d.cilindro_numero || i+1}</th>
             ))}
@@ -450,11 +498,18 @@ function CompactacaoPontoAPonto({ ensaio }) {
         </tbody>
       </table>
       {/* Humidity table */}
-      <table className="w-full border-collapse border border-slate-400 text-[8px]">
+      <table className="w-full border-collapse border border-slate-400 text-[8px]" style={{ tableLayout: 'fixed' }}>
+        <colgroup>
+          <col style={{ width: '30%' }} />
+          <col style={{ width: '10%' }} />
+          {umidades.map((_, i) => (
+            <col key={i} style={{ width: `${60 / umidades.length}%` }} />
+          ))}
+        </colgroup>
         <thead>
           <tr className="bg-slate-200">
             <th className="border border-slate-400 px-1 py-0.5 text-left">Campo</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center w-8">Fórmula</th>
+            <th className="border border-slate-400 px-1 py-0.5 text-center">Fórmula</th>
             {umidades.map((_, i) => (
               <th key={i} className="border border-slate-400 px-1 py-0.5 text-center">Ponto {i+1}</th>
             ))}
