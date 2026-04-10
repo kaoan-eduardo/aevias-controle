@@ -46,6 +46,8 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Boletim de Sondagem (PI)", icon: FileText };
     case "BoletimSondagemTrado":
       return { name: "Boletim de Sondagem a Trado", icon: FileText };
+    case "EnsaioProctor":
+      return { name: "Ensaio Proctor", icon: FlaskConical };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }
@@ -96,6 +98,8 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioBoletimSondagem?id=${ensaio.id}`);
     case "BoletimSondagemTrado":
       return createPageUrl(`RelatorioBoletimSondagemTrado?id=${ensaio.id}`);
+    case "EnsaioProctor":
+      return createPageUrl(`RelatorioProctor?id=${ensaio.id}`);
     default:
       return "#";
   }
@@ -166,6 +170,9 @@ export const getDataFormatted = (ensaio) => {
     case "BoletimSondagemTrado":
       dateField = ensaio.data;
       break;
+    case "EnsaioProctor":
+      dateField = ensaio.data_ensaio;
+      break;
     default:
       dateField = ensaio.created_date;
   }
@@ -220,6 +227,8 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data;
     case "BoletimSondagemTrado":
       return ensaio.data;
+    case "EnsaioProctor":
+      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
@@ -245,7 +254,8 @@ export const getEntityMap = () => ({
   "EnsaioManchaPendulo": "EnsaioManchaPendulo",
   "EnsaioVigaBenkelman": "EnsaioVigaBenkelman",
   "BoletimSondagem": "BoletimSondagem",
-  "BoletimSondagemTrado": "BoletimSondagemTrado"
+  "BoletimSondagemTrado": "BoletimSondagemTrado",
+  "EnsaioProctor": "EnsaioProctor"
 });
 
 export const typeOptions = [
@@ -271,4 +281,5 @@ export const typeOptions = [
   { value: 'EnsaioTaxaMRAF', label: 'Taxa de MRAF' },
   { value: 'BoletimSondagem', label: 'Boletim de Sondagem (PI)' },
   { value: 'BoletimSondagemTrado', label: 'Boletim de Sondagem a Trado' },
+  { value: 'EnsaioProctor', label: 'Ensaio Proctor' },
 ];
