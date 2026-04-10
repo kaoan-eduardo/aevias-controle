@@ -634,17 +634,17 @@ export default function RelatorioProctor() {
 
           {/* RESULTADOS FINAIS */}
           <section>
-            <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px] mb-1 text-center">RESULTADOS FINAIS</div>
-            <div className="grid grid-cols-4 gap-1 text-[8px]">
+            <div className="bg-slate-200 px-2 py-0.5 font-bold text-[9px] mb-0.5 text-center">RESULTADOS FINAIS</div>
+            <div className="border border-slate-300 flex gap-2 text-[8px] px-2 py-1">
               {[
-                ["Dens. Máx. Seca (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
-                ["Umidade Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
+                ["Dens. Máx. (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
+                ["Umid. Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
                 ["ISC/CBR (%)", fmtN(ensaio.isc_cbr, 1)],
-                ["Expansão (%)", fmtN(ensaio.expansao, 2)],
+                ["Exp. (%)", fmtN(ensaio.expansao, 2)],
               ].map(([label, val]) => (
-                <div key={label} className="border border-slate-300 p-0.5 rounded text-center">
-                  <div className="text-gray-500" style={{fontSize: '7px'}}>{label}</div>
-                  <div className="font-bold text-blue-800" style={{fontSize: '8px'}}>{val}</div>
+                <div key={label} className="flex-1">
+                  <div style={{fontSize: '7px'}} className="text-gray-600">{label}</div>
+                  <div className="font-bold text-blue-800">{val}</div>
                 </div>
               ))}
             </div>
