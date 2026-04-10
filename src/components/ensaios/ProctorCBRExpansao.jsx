@@ -195,13 +195,30 @@ export default function ProctorCBRExpansao({ form, setForm }) {
           <p className="text-xs text-[#00233B]/60">ABNT NBR 9895 / DNIT 172</p>
         </CardHeader>
         <CardContent>
+          {/* Altura Inicial Global */}
+          <div className="flex items-center gap-4 bg-[#BFCF99]/10 border border-[#BFCF99]/30 rounded-lg p-3 mb-4">
+            <label className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Altura Inicial dos Cilindros (mm):</label>
+            <input
+              type="number"
+              step="0.01"
+              value={form.expansao_cilindros?.[0]?.altura_inicial || ''}
+              onChange={e => {
+                const val = e.target.value;
+                setForm(prev => ({
+                  ...prev,
+                  expansao_cilindros: (prev.expansao_cilindros || []).map(exp => ({ ...exp, altura_inicial: val }))
+                }));
+              }}
+              placeholder="Ex: 127.40"
+              className="h-8 w-40 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs border-collapse">
               <thead>
                 <tr className="bg-[#00233B]/10">
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Hora</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Cilindro</th>
-                  <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B]">Alt. Inicial (mm)</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">1° dia</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">2° dia</th>
                   <th className="border border-[#00233B]/20 px-2 py-2 text-[#00233B] bg-[#BFCF99]/10">3° dia</th>
@@ -221,9 +238,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                       <td className="border border-[#00233B]/20 px-2 py-1 text-center font-semibold text-[#00233B]">
                         {cilindroNomes[idx] || idx + 1}
                       </td>
-                      <td className="border border-[#00233B]/20 px-1 py-1">
-                        <Input type="number" step="0.01" value={exp.altura_inicial || ''} onChange={e => updateExpansao(idx, 'altura_inicial', e.target.value)} className="h-7 text-xs p-1 w-20" />
-                      </td>
+
                       {['leitura_1dia','leitura_2dia','leitura_3dia','leitura_4dia'].map(field => (
                         <td key={field} className="border border-[#00233B]/20 px-1 py-1 bg-[#BFCF99]/5">
                           <Input type="number" step="0.01" value={exp[field] || ''} onChange={e => updateExpansao(idx, field, e.target.value)} className="h-7 text-xs p-1 w-20" />
