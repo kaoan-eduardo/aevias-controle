@@ -607,17 +607,16 @@ export default function RelatorioProctor() {
 
       <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1 flex flex-col">
         {/* Header */}
-        <header className="grid items-start border-b-2 border-slate-900 pb-1 mb-2" style={{ gridTemplateColumns: '120px 1fr 120px' }}>
+        <header className="grid items-start border-b border-slate-900 py-0.5" style={{ gridTemplateColumns: '60px 1fr', gap: '8px' }}>
           <div>
             <img
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
-              alt="Logo" className="h-12 object-contain"
+              alt="Logo" className="h-8 object-contain"
             />
           </div>
-          <div className="text-center">
-            <h1 className="text-sm font-bold text-gray-800">{title}</h1>
+          <div className="text-left">
+            <h1 className="text-xs font-bold text-gray-800">{title}</h1>
           </div>
-          <div></div>
         </header>
 
         <main className="text-xs space-y-2">
