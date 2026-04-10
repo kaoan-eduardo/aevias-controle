@@ -617,11 +617,7 @@ export default function RelatorioProctor() {
           <div className="text-center">
             <h1 className="text-sm font-bold text-gray-800">{title}</h1>
           </div>
-          <div className="text-right text-[8px] text-gray-600 leading-tight">
-            <div className="font-bold">{docNum}</div>
-            <div>Emissão: {fmtDate(ensaio.data_ensaio)}</div>
-            <div>Rev.: 00</div>
-          </div>
+          <div></div>
         </header>
 
         <main className="text-xs space-y-2">
