@@ -82,10 +82,10 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 8, right: 8, left: 8, bottom: 18 }}>
         <CartesianGrid strokeDasharray="2 2" stroke="#ccc" />
-        <XAxis dataKey="x" type="number" domain={['auto', 'auto']}
+        <XAxis dataKey="x" type="number" domain={['dataMin - 0.3', 'dataMax + 0.3']}
           label={{ value: xLabel, position: 'insideBottom', offset: -12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(1)} />
-        <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
+        <YAxis dataKey="y" type="number" domain={['dataMin - 0.02', 'dataMax + 0.02']}
           label={{ value: yLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(2)} width={40} />
         <Tooltip contentStyle={{ fontSize: 8 }} formatter={(v) => v.toFixed(3)} />
