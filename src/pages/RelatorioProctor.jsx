@@ -241,10 +241,10 @@ function ExpansaoSection({ ensaio }) {
 }
 
 /* ─────────── GRÁFICOS (common) ─────────── */
-function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscParabola }) {
+function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
   const umidPorCil = isHigro
-    ? (ensaio?.densidades || []).map(d => d.umidade_calculada)
-    : (ensaio?.umidades || []).map(u => u.teor_umidade_media);
+    ? (ensaio.densidades || []).map(d => d.umidade_calculada)
+    : (ensaio.umidades || []).map(u => u.teor_umidade_media);
 
   const iscPoints = (ensaio.cbr_cilindros || [])
     .map((c, i) => {
@@ -299,25 +299,19 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscParabola }
         {/* ISC */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">ISC (%)</div>
+          {maxISC != null && (
+            <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">CBR = {fmtN(maxISC, 1)}%</div>
+          )}
           <div style={{ height: 130 }}>
-            {iscParabola ? (
-              <MiniChart data={iscPoints} lineData={(() => {
-                if (!iscPoints.length) return [];
-                const xs = iscPoints.map(p => p.x);
-                const minX = Math.min(...xs), maxX = Math.max(...xs);
-                return Array.from({ length: 60 }, (_, i) => {
-                  const x = minX + (maxX - minX) * i / 59;
-                  return { x: parseFloat(x.toFixed(2)), y: parseFloat((iscParabola.a * x ** 2 + iscParabola.b * x + iscParabola.c).toFixed(4)) };
-                });
-              })()} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
-            ) : (
-              <MiniChart data={iscPoints} isLinear={true} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
-            )}
+            <MiniChart data={iscPoints} isLinear={true} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
           </div>
         </div>
         {/* Expansão */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Expansão (%)</div>
+          {maxExp != null && (
+            <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">Exp. = {fmtN(maxExp, 2)}%</div>
+          )}
           <div style={{ height: 130 }}>
             <MiniChart data={expPoints} isLinear={true} xLabel="Umidade (%)" yLabel="Exp. (%)" color="#1e3a5f" />
           </div>
@@ -584,19 +578,6 @@ export default function RelatorioProctor() {
 
   const parabola = useMemo(() => fitParabola(chartPoints), [chartPoints]);
 
-  const iscParabola = useMemo(() => {
-    const umidPorCil = isHigro
-      ? (ensaio?.densidades || []).map(d => d.umidade_calculada)
-      : (ensaio?.umidades || []).map(u => u.teor_umidade_media);
-    const pts = (ensaio?.cbr_cilindros || [])
-      .map((c, i) => {
-        const { isc } = calcISC(c, ensaio?.cbr_fator_anel);
-        const x = umidPorCil[i];
-        return (x > 0 && isc != null) ? { x, y: isc } : null;
-      }).filter(Boolean);
-    return pts.length >= 3 ? fitParabola(pts) : null;
-  }, [ensaio, isHigro]);
-
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro"}</div>;
 
@@ -618,7 +599,7 @@ export default function RelatorioProctor() {
   return (
     <div className="relatorio-page bg-white min-h-screen">
       {/* Toolbar */}
-      <div className="sticky top-0 bg-white border-b border-slate-200 p-3 shadow-sm z-10 print:hidden">
+      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-3 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <h2 className="text-base font-semibold text-slate-800">Relatório Proctor — {isHigro ? 'Higroscópica' : 'Ponto a Ponto'}</h2>
           <div className="flex items-center gap-2">
@@ -693,7 +674,7 @@ export default function RelatorioProctor() {
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
 
           {/* GRÁFICOS */}
-          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscParabola={iscParabola} />
+          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} />
 
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
@@ -735,12 +716,7 @@ export default function RelatorioProctor() {
       <style>{`
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
-          body, html { print-color-adjust: exact; -webkit-print-color-adjust: exact; background: white; }
-          * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-          [class*="sidebar"], [class*="Sidebar"], nav, [class*="Layout"], [class*="SidebarProvider"] { display: none !important; }
-          .relatorio-page { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
-          main { width: 100% !important; }
-          @page { margin: 8mm 10mm; }
+          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
         }
         table tr { line-height: 1.1; }
         table td, table th { padding-top: 0.18rem; padding-bottom: 0.18rem; }
