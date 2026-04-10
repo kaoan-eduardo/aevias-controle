@@ -17,7 +17,7 @@ import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileText } from "lucide-react";
 
 // Pure function — recalculates all 5 density points without any async/stale state issues
 function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, umidade_media) {
@@ -339,9 +339,20 @@ export default function EnsaioProctorPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6 min-h-screen bg-transparent">
-      <div>
-        <h1 className="text-3xl font-bold text-[#00233B]">Ensaio Proctor</h1>
-        <p className="text-[#00233B]/80 mt-1">ABNT NBR 7182:2016 - Compactação de Solos</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-[#00233B]">Ensaio Proctor</h1>
+          <p className="text-[#00233B]/80 mt-1">ABNT NBR 7182:2016 - Compactação de Solos</p>
+        </div>
+        {recordId && (
+          <Button
+            variant="outline"
+            onClick={() => window.open(`/RelatorioProctor?id=${recordId}`, '_blank')}
+            className="flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" /> Ver Relatório
+          </Button>
+        )}
       </div>
 
       {/* Dados da Obra */}

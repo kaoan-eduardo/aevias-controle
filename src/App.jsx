@@ -14,6 +14,7 @@ import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
 import BoletimSondagemTrado from './pages/BoletimSondagemTrado';
 import RelatorioBoletimSondagemTrado from './pages/RelatorioBoletimSondagemTrado';
 import EnsaioProctor from './pages/EnsaioProctor';
+import RelatorioProctor from './pages/RelatorioProctor';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -118,6 +119,14 @@ function AuthenticatedApp() {
         element={
           <LayoutWrapper currentPageName="EnsaioProctor">
             <EnsaioProctor />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RelatorioProctor"
+        element={
+          <LayoutWrapper currentPageName="RelatorioProctor">
+            <RelatorioProctor />
           </LayoutWrapper>
         }
       />
