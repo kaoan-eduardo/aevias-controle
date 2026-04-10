@@ -281,7 +281,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Densidade do Solo Seco (g/cm³)</div>
           {parabola && (
-            <div className="absolute top-1 right-1 text-[6px] text-gray-600 text-right leading-tight">
+            <div className="absolute bottom-1 right-1 text-[6px] text-gray-600 text-right leading-tight print:hidden">
               <div>Dens. máx. = {fmtN(parabola.gamma_max, 3)} g/cm³</div>
               <div>Hótima = {fmtN(parabola.w_otima, 1)}%</div>
             </div>
@@ -299,19 +299,13 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
         {/* ISC */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">ISC (%)</div>
-          {maxISC != null && (
-            <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">CBR = {fmtN(maxISC, 1)}%</div>
-          )}
           <div style={{ height: 130 }}>
-            <MiniChart data={iscPoints} isLinear={true} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            <MiniChart data={iscPoints} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
           </div>
         </div>
         {/* Expansão */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Expansão (%)</div>
-          {maxExp != null && (
-            <div className="absolute top-1 right-1 text-[6px] text-red-600 font-bold">Exp. = {fmtN(maxExp, 2)}%</div>
-          )}
           <div style={{ height: 130 }}>
             <MiniChart data={expPoints} isLinear={true} xLabel="Umidade (%)" yLabel="Exp. (%)" color="#1e3a5f" />
           </div>
@@ -716,7 +710,8 @@ export default function RelatorioProctor() {
       <style>{`
         @media print {
           @page { size: A4 portrait; margin: 8mm 10mm; }
-          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; margin: 0; padding: 0; }
+          .relatorio-page > div:first-child { display: none !important; }
         }
         table tr { line-height: 1.1; }
         table td, table th { padding-top: 0.18rem; padding-bottom: 0.18rem; }
