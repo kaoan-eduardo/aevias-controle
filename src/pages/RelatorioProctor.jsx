@@ -708,8 +708,8 @@ export default function RelatorioProctor() {
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; margin: 0; padding: 0; }
           .relatorio-page > div:first-child { display: none !important; }
         }
-        table tr { line-height: 1.1; }
-        table td, table th { padding-top: 0.18rem; padding-bottom: 0.18rem; }
+        table tr { line-height: 1.078; }
+        table td, table th { padding-top: 0.176rem; padding-bottom: 0.176rem; }
       `}</style>
     </div>
   );
