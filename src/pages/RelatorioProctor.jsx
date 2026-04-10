@@ -644,8 +644,8 @@ export default function RelatorioProctor() {
                 ["Expansão (%)", fmtN(ensaio.expansao, 2)],
               ].map(([label, val]) => (
                 <div key={label} className="border border-slate-300 p-0.5 rounded text-center">
-                  <div className="text-gray-500 text-[7px]">{label}</div>
-                  <div className="font-bold text-blue-800 text-[8px]">{val}</div>
+                  <div className="text-gray-500" style={{fontSize: '7px'}}>{label}</div>
+                  <div className="font-bold text-blue-800" style={{fontSize: '8px'}}>{val}</div>
                 </div>
               ))
             </div>
@@ -669,8 +669,8 @@ export default function RelatorioProctor() {
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
             <section>
-              <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px]">OBSERVAÇÕES</div>
-              <div className="border border-slate-300 p-1 text-[9px] whitespace-pre-wrap">{ensaio.observacoes}</div>
+              <div className="bg-slate-200 px-2 py-0.5 font-bold" style={{fontSize: '10px'}}>OBSERVAÇÕES</div>
+              <div className="border border-slate-300 p-1 whitespace-pre-wrap" style={{fontSize: '9px'}}>{ensaio.observacoes}</div>
             </section>
           )}
         </main>
@@ -679,15 +679,15 @@ export default function RelatorioProctor() {
         <footer className="mt-4 pt-2">
           <div className="grid grid-cols-2 gap-8 text-center">
             <div>
-              <div className="min-h-[32px] flex flex-col justify-end items-center text-[8px] text-slate-500 mb-1">
+              <div className="flex flex-col justify-end items-center text-slate-500 mb-1" style={{minHeight: '32px', fontSize: '8px'}}>
                 {ensaio.laboratorista_name && <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>}
               </div>
               <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
+                <p className="font-semibold" style={{fontSize: '8px'}}>LABORATORISTA RESPONSÁVEL</p>
               </div>
             </div>
             <div>
-              <div className="min-h-[32px] flex flex-col justify-end items-center text-[8px] text-slate-500 mb-1">
+              <div className="flex flex-col justify-end items-center text-slate-500 mb-1" style={{minHeight: '32px', fontSize: '8px'}}>
                 {ensaio.approver_details?.name && (
                   <>
                     <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
@@ -696,7 +696,7 @@ export default function RelatorioProctor() {
                 )}
               </div>
               <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[8px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                <p className="font-semibold" style={{fontSize: '8px'}}>ENGENHEIRO RESPONSÁVEL</p>
               </div>
             </div>
           </div>
