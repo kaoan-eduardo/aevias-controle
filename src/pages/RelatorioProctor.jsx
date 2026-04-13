@@ -117,88 +117,67 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
 function ISCSection({ ensaio }) {
   const cbr = ensaio.cbr_cilindros || [];
   const fator = ensaio.cbr_fator_anel;
+  const hasData = cbr.some(c => (c.leituras || []).some(l => parseFloat(l) > 0));
+  
+  if (!hasData) return null;
+  
   return (
     <section>
-      <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">CÁLCULO DO ISC/CBR</div>
-      <div className="text-[9px] mb-1 flex gap-4 px-1">
-        <span><strong>Constante do Anel (kgf/div):</strong> {fmtN(fator, 4)}</span>
-      </div>
-      {cbr.map((cil, cidx) => {
-        const { pressoes, isc254, isc508, isc } = calcISC(cil, fator);
-        const hasData = (cil.leituras || []).some(l => parseFloat(l) > 0);
-        if (!hasData) return null;
-        return (
-          <div key={cidx} className="mb-1">
-            <table className="w-full border-collapse border border-slate-400 text-[8px]" style={{ tableLayout: 'fixed' }}>
-              <tbody>
-                <tr className="bg-slate-200">
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold" colSpan={2}>Cilindro Nº</td>
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold text-center" colSpan={9}>{cil.cilindro_numero || cidx + 1}</td>
-                </tr>
-                <tr className="bg-slate-100">
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold">Penetração (mm)</td>
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold text-[7px]">Tempo (m)</td>
-                  {PENETRACOES.map((p, pi) => {
-                    const colWidth = `${100 / PENETRACOES.length}%`;
-                    return (
-                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-slate-300' : ''}`} style={{ width: colWidth }}>
-                        <div>{p}</div><div className="text-[7px] text-gray-500">{TEMPOS[pi]}</div>
-                      </td>
-                    );
-                  })}
-                </tr>
-                <tr className="bg-white">
-                  <td className="border border-slate-400 px-1 py-0.5 font-medium" colSpan={2}>Leitura do anel</td>
-                  {(cil.leituras || Array(9).fill('')).map((l, li) => {
-                    const colWidth = `${100 / PENETRACOES.length}%`;
-                    return (
-                      <td key={li} className={`border border-slate-400 px-1 py-0.5 text-center ${li === 3 || li === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
-                        {parseFloat(l) > 0 ? fmtN(l, 0) : ''}
-                      </td>
-                    );
-                  })}
-                </tr>
+      <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">CÁLCULO DO ISC</div>
+      <table className="w-full border-collapse border border-slate-400 text-[8px]">
+        <tbody>
+          {/* Header com penetrações */}
+          <tr className="bg-slate-100">
+            <td className="border border-slate-400 px-1 py-0.5 font-bold">Penetração (mm)</td>
+            <td className="border border-slate-400 px-1 py-0.5 font-bold"></td>
+            {PENETRACOES.map((p, i) => (
+              <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{p}</td>
+            ))}
+          </tr>
+          {/* Tempos */}
+          <tr className="bg-slate-100">
+            <td className="border border-slate-400 px-1 py-0.5 font-bold">Tempo (m)</td>
+            <td className="border border-slate-400 px-1 py-0.5 font-bold"></td>
+            {TEMPOS.map((t, i) => (
+              <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{t}</td>
+            ))}
+          </tr>
+          {/* Cilindros */}
+          {cbr.map((cil, cidx) => {
+            const { pressoes, isc254, isc508 } = calcISC(cil, fator);
+            const hasDataCil = (cil.leituras || []).some(l => parseFloat(l) > 0);
+            if (!hasDataCil) return null;
+            return (
+              <React.Fragment key={cidx}>
+                {/* Pressão Padrão */}
                 <tr className="bg-slate-50">
-                  <td className="border border-slate-400 px-1 py-0.5 font-medium">Pressão</td>
-                  <td className="border border-slate-400 px-1 py-0.5 text-[7px] text-gray-500">kgf/cm² Padrão</td>
-                  {PENETRACOES.map((_, pi) => {
-                    const colWidth = `${100 / PENETRACOES.length}%`;
-                    return (
-                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
-                        {PRESSAO_PADRAO[pi] ?? ''}
-                      </td>
-                    );
-                  })}
+                  <td className="border border-slate-400 px-1 py-0.5 font-semibold" rowSpan={3}>{cil.cilindro_numero || cidx + 1}</td>
+                  <td className="border border-slate-400 px-1 py-0.5 text-[7px]">Pressão Padrão</td>
+                  {PENETRACOES.map((_, pi) => (
+                    <td key={pi} className="border border-slate-400 px-1 py-0.5 text-center">{PRESSAO_PADRAO[pi] || ''}</td>
+                  ))}
                 </tr>
+                {/* Leitura do anel */}
                 <tr className="bg-white">
-                  <td className="border border-slate-400 px-1 py-0.5 font-medium">Pressão</td>
-                  <td className="border border-slate-400 px-1 py-0.5 text-[7px] text-gray-500">kgf/cm² Corrigida</td>
-                  {pressoes.map((p, pi) => {
-                    const colWidth = `${100 / PENETRACOES.length}%`;
-                    return (
-                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
-                        {p != null ? fmtN(p, 2) : ''}
-                      </td>
-                    );
-                  })}
+                  <td className="border border-slate-400 px-1 py-0.5 text-[7px]">Leitura do anel</td>
+                  {(cil.leituras || Array(9).fill('')).map((l, li) => (
+                    <td key={li} className="border border-slate-400 px-1 py-0.5 text-center">{parseFloat(l) > 0 ? fmtN(l, 0) : ''}</td>
+                  ))}
                 </tr>
-                <tr className="bg-slate-200 font-bold">
-                  <td className="border border-slate-400 px-1 py-0.5 font-bold" colSpan={2}>ISC (%)</td>
-                  {PENETRACOES.map((_, pi) => {
-                    const colWidth = `${100 / PENETRACOES.length}%`;
-                    return (
-                      <td key={pi} className={`border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-800 ${pi === 3 || pi === 5 ? 'bg-gray-100' : ''}`} style={{ width: colWidth }}>
-                        {pi === 3 && isc254 != null ? isc254 : ''}
-                        {pi === 5 && isc508 != null ? isc508 : ''}
-                      </td>
-                    );
-                  })}
+                {/* ISC */}
+                <tr className="bg-slate-100 font-bold">
+                  <td className="border border-slate-400 px-1 py-0.5 text-[7px]">ISC (%)</td>
+                  {PENETRACOES.map((_, pi) => (
+                    <td key={pi} className="border border-slate-400 px-1 py-0.5 text-center text-blue-800">
+                      {pi === 3 && isc254 != null ? isc254 : pi === 5 && isc508 != null ? isc508 : '0.0'}
+                    </td>
+                  ))}
                 </tr>
-              </tbody>
-            </table>
-          </div>
-        );
-      })}
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
     </section>
   );
 }
