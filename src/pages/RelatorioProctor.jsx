@@ -727,7 +727,7 @@ export default function RelatorioProctor() {
 
         {/* Footer */}
         <footer className="mt-4 pt-2">
-          <div className="grid grid-cols-2 gap-8 items-end">
+          <div className="grid grid-cols-3 gap-8 items-end">
             {/* Laboratorista */}
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
@@ -759,6 +759,23 @@ export default function RelatorioProctor() {
               </div>
               <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
                 <p className="font-semibold text-[8px]">ENGENHEIRO RESPONSÁVEL</p>
+              </div>
+            </div>
+            {/* Cliente */}
+            <div className="text-center">
+              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
+                {ensaio.client_signature?.signed_by ? (
+                  <>
+                    <p>Assinado digitalmente por</p>
+                    <p className="font-bold text-slate-700">{ensaio.client_signature.engineer_name}</p>
+                    <p>{ensaio.client_signature.signed_by}</p>
+                    {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
+                    {ensaio.client_signature.signed_date && <p>em {fmtDateTime(ensaio.client_signature.signed_date)}</p>}
+                  </>
+                ) : null}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="font-semibold text-[8px]">ENGENHEIRO CLIENTE</p>
               </div>
             </div>
           </div>
