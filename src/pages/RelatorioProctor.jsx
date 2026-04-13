@@ -145,8 +145,6 @@ function ISCSection({ ensaio }) {
           {/* Cilindros */}
           {cbr.map((cil, cidx) => {
             const { pressoes, isc254, isc508 } = calcISC(cil, fator);
-            const hasDataCil = (cil.leituras || []).some(l => parseFloat(l) > 0);
-            if (!hasDataCil) return null;
             return (
               <React.Fragment key={cidx}>
                 {/* Pressão Padrão */}
