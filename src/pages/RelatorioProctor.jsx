@@ -245,7 +245,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
   return (
     <section>
       <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px] mb-1">GRÁFICOS</div>
-      <div className="grid grid-cols-3 gap-2" style={{ height: 168 }}>
+      <div className="grid grid-cols-3 gap-2" style={{ height: 185 }}>
         {/* Proctor curve */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Densidade do Solo Seco (g/cm³)</div>
@@ -255,7 +255,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
               <div>Hótima = {fmtN(parabola.w_otima, 1)}%</div>
             </div>
           )}
-          <div style={{ height: 156 }}>
+          <div style={{ height: 172 }}>
             <MiniChart
               data={chartPoints.map(p => ({ x: p.x, y: p.y }))}
               lineData={curveData}
@@ -268,7 +268,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
         {/* ISC */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">ISC (%)</div>
-          <div style={{ height: 156 }}>
+          <div style={{ height: 172 }}>
             <MiniChart
               data={iscPoints}
               lineData={buildCurve(iscPoints, iscParabola)}
@@ -282,7 +282,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
         {/* Expansão */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Expansão (%)</div>
-          <div style={{ height: 156 }}>
+          <div style={{ height: 172 }}>
             <MiniChart
               data={expPoints}
               lineData={buildCurve(expPoints, expParabola)}
