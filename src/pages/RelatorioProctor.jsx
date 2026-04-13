@@ -608,14 +608,14 @@ export default function RelatorioProctor() {
 
   const infoFields = [
     ["OBRA", obra?.name || '-'],
-    ["RODOVIA", ensaio.rodovia || '-'],
-    ["TRECHO", ensaio.trecho || '-'],
     ["LOCAL", ensaio.local_coleta || '-'],
+    ["MATERIAL", ensaio.material || '-'],
+    ["RODOVIA", ensaio.rodovia || '-'],
     ["ENERGIA", ensaio.energia_compactacao || '-'],
+    ["LABORATORISTA", ensaio.laboratorista_name || '-'],
+    ["TRECHO", ensaio.trecho || '-'],
     ["CAMADA", ensaio.camada || '-'],
     ["DATA", fmtDate(ensaio.data_ensaio)],
-    ["MATERIAL", ensaio.material || '-'],
-    ["LABORATORISTA", ensaio.laboratorista_name || '-'],
   ];
 
   return (
