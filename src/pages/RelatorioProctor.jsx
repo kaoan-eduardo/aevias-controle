@@ -128,16 +128,16 @@ function ISCSection({ ensaio }) {
         <tbody>
           {/* Header com penetrações */}
           <tr className="bg-slate-100">
+            <td className="border border-slate-400 px-1 py-0.5 font-bold">Nº Cilindro</td>
             <td className="border border-slate-400 px-1 py-0.5 font-bold">Penetração (mm)</td>
-            <td className="border border-slate-400 px-1 py-0.5 font-bold"></td>
             {PENETRACOES.map((p, i) => (
               <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{p}</td>
             ))}
           </tr>
           {/* Tempos */}
           <tr className="bg-slate-100">
-            <td className="border border-slate-400 px-1 py-0.5 font-bold">Tempo (m)</td>
             <td className="border border-slate-400 px-1 py-0.5 font-bold"></td>
+            <td className="border border-slate-400 px-1 py-0.5 font-bold">Tempo (m)</td>
             {TEMPOS.map((t, i) => (
               <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{t}</td>
             ))}
