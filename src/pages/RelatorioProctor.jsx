@@ -241,7 +241,7 @@ function ExpansaoSection({ ensaio }) {
 }
 
 /* ─────────── GRÁFICOS (common) ─────────── */
-function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, expPoints, iscParabola, expParabola }) {
+function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, expPoints, iscParabola, expParabola, iscAtWotima, expAtWotima }) {
   const buildCurve = (pts, par) => {
     if (!par || !pts.length) return [];
     const xs = pts.map(p => p.x);
@@ -284,8 +284,8 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
             <MiniChart
               data={iscPoints}
               lineData={buildCurve(iscPoints, iscParabola)}
-              refX={iscParabola?.w_otima}
-              refY={iscParabola?.gamma_max}
+              refX={parabola?.w_otima}
+              refY={iscAtWotima}
               xLabel="Umidade (%)" yLabel="ISC (%)"
               color="#1e3a5f"
             />
@@ -298,8 +298,8 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
             <MiniChart
               data={expPoints}
               lineData={buildCurve(expPoints, expParabola)}
-              refX={expParabola?.w_otima}
-              refY={expParabola?.gamma_max}
+              refX={parabola?.w_otima}
+              refY={expAtWotima}
               xLabel="Umidade (%)" yLabel="Exp. (%)"
               color="#1e3a5f"
             />
@@ -594,6 +594,17 @@ export default function RelatorioProctor() {
   const iscParabola = useMemo(() => fitParabola(iscPoints), [iscPoints]);
   const expParabola = useMemo(() => fitParabola(expPoints), [expPoints]);
 
+  // ISC e Expansão no ponto da umidade ótima do Proctor
+  const wOtima = parabola?.w_otima;
+  const iscAtWotima = useMemo(() => {
+    if (!iscParabola || wOtima == null) return null;
+    return parseFloat((iscParabola.a * wOtima ** 2 + iscParabola.b * wOtima + iscParabola.c).toFixed(2));
+  }, [iscParabola, wOtima]);
+  const expAtWotima = useMemo(() => {
+    if (!expParabola || wOtima == null) return null;
+    return parseFloat((expParabola.a * wOtima ** 2 + expParabola.b * wOtima + expParabola.c).toFixed(2));
+  }, [expParabola, wOtima]);
+
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro"}</div>;
 
@@ -661,8 +672,8 @@ export default function RelatorioProctor() {
               {[
                 ["Dens. Máx. (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
                 ["Umid. Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
-                ["ISC/CBR (%)", fmtN(iscParabola?.gamma_max ?? ensaio.isc_cbr, 1)],
-                ["Exp. (%)", fmtN(expParabola?.gamma_max ?? ensaio.expansao, 2)],
+                ["ISC/CBR (%)", fmtN(iscAtWotima ?? ensaio.isc_cbr, 1)],
+                ["Exp. (%)", fmtN(expAtWotima ?? ensaio.expansao, 2)],
               ].map(([label, val]) => (
                 <div key={label} className="flex-1">
                   <div style={{fontSize: '7px'}} className="text-gray-600">{label}</div>
@@ -685,7 +696,7 @@ export default function RelatorioProctor() {
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
 
           {/* GRÁFICOS */}
-          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} />
+          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} iscAtWotima={iscAtWotima} expAtWotima={expAtWotima} />
 
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
