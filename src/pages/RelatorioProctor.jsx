@@ -611,7 +611,7 @@ export default function RelatorioProctor() {
     ["RODOVIA", ensaio.rodovia || '-'],
     ["TRECHO", ensaio.trecho || '-'],
     ["LOCAL", ensaio.local_coleta || '-'],
-    ["PROCTOR", `${ensaio.soquete || ''} / ${ensaio.energia_compactacao || ''}`],
+    ["ENERGIA", ensaio.energia_compactacao || '-'],
     ["CAMADA", ensaio.camada || '-'],
     ["DATA", fmtDate(ensaio.data_ensaio)],
     ["MATERIAL", ensaio.material || '-'],
