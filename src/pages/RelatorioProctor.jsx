@@ -661,12 +661,8 @@ export default function RelatorioProctor() {
               {[
                 ["Dens. Máx. (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
                 ["Umid. Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
-                ["ISC/CBR (%)", fmtN(
-                  (iscParabola && parabola) ? (iscParabola.a * parabola.w_otima**2 + iscParabola.b * parabola.w_otima + iscParabola.c) : ensaio.isc_cbr
-                , 1)],
-                ["Exp. (%)", fmtN(
-                  (expParabola && parabola) ? (expParabola.a * parabola.w_otima**2 + expParabola.b * parabola.w_otima + expParabola.c) : ensaio.expansao
-                , 2)],
+                ["ISC/CBR (%)", fmtN(iscParabola?.gamma_max ?? ensaio.isc_cbr, 1)],
+                ["Exp. (%)", fmtN(expParabola?.gamma_max ?? ensaio.expansao, 2)],
               ].map(([label, val]) => (
                 <div key={label} className="flex-1">
                   <div style={{fontSize: '7px'}} className="text-gray-600">{label}</div>
