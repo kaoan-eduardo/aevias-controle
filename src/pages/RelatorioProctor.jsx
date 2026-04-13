@@ -341,23 +341,23 @@ function CompactacaoHigroscopica({ ensaio }) {
       <table className="w-full border-collapse border border-slate-400 text-[8px]">
         <thead>
           <tr className="bg-slate-200">
-            <th className="border border-slate-400 px-1 py-0.5 text-center" colSpan={3}>UMIDADE HIGROSCÓPICA</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center" colSpan={6}>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}} colSpan={3}>UMIDADE HIGROSCÓPICA</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}} colSpan={6}>
               Nº MOLDES — {densidades.map(d => d.cilindro_numero || '?').join(' | ')}
             </th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center" colSpan={3}>CILINDROS</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}} colSpan={3}>CILINDROS</th>
           </tr>
           <tr className="bg-slate-100">
-            <th className="border border-slate-400 px-1 py-0.5 text-left">Campo</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center">Am. 1</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center">Am. 2</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-left">Campo</th>
+            <th className="border border-slate-400 px-1 text-left" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Campo</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Am. 1</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Am. 2</th>
+            <th className="border border-slate-400 px-1 text-left" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Campo</th>
             {densidades.map((d, i) => (
-              <th key={i} className="border border-slate-400 px-1 py-0.5 text-center">{d.cilindro_numero || i+1}</th>
+              <th key={i} className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{d.cilindro_numero || i+1}</th>
             ))}
-            <th className="border border-slate-400 px-1 py-0.5 text-center">Nº</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center">Peso (g)</th>
-            <th className="border border-slate-400 px-1 py-0.5 text-center">Vol (cm³)</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Nº</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Peso (g)</th>
+            <th className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Vol (cm³)</th>
           </tr>
         </thead>
         <tbody>
@@ -366,39 +366,39 @@ function CompactacaoHigroscopica({ ensaio }) {
             const moldeLabel = moldeRowLabels[ri] || '';
             return (
               <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                <td className="border border-slate-400 px-1 py-0.5 font-medium">{label}</td>
+                <td className="border border-slate-400 px-1 font-medium" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{label}</td>
                 {isMediaRow ? (
-                  <td className="border border-slate-400 px-1 py-0.5 text-center font-bold" colSpan={2}>{am1}</td>
+                  <td className="border border-slate-400 px-1 text-center font-bold" colSpan={2} style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{am1}</td>
                 ) : (
                   <>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{am1}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{am2}</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{am1}</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{am2}</td>
                   </>
                 )}
-                <td className="border border-slate-400 px-1 py-0.5 font-medium">{moldeLabel}</td>
+                <td className="border border-slate-400 px-1 font-medium" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{moldeLabel}</td>
                 {densidades.map((_, di) => (
-                  <td key={di} className="border border-slate-400 px-1 py-0.5 text-center">
+                  <td key={di} className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>
                     {moldeRowValues[di]?.[ri] ?? '-'}
                   </td>
                 ))}
                 {ri < densidades.length ? (
                   <>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{densidades[ri].cilindro_numero || ri+1}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{fmtN(densidades[ri].peso_cilindro, 1)}</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{fmtN(densidades[ri].volume_cilindro, 1)}</td>
+                    <td className="border border-slate-400 px-1 text-center font-semibold" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{densidades[ri].cilindro_numero || ri+1}</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{fmtN(densidades[ri].peso_cilindro, 1)}</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{fmtN(densidades[ri].volume_cilindro, 1)}</td>
                   </>
                 ) : ri === densidades.length ? (
                   <>
-                    <td className="border border-slate-400 px-1 py-0.5 font-medium" colSpan={2}>Peso mat. (g)</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{fmtN(densidades[0]?.peso_amostra_umida, 1)}</td>
+                    <td className="border border-slate-400 px-1 font-medium" colSpan={2} style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Peso mat. (g)</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{fmtN(densidades[0]?.peso_amostra_umida, 1)}</td>
                   </>
                 ) : ri === densidades.length + 1 ? (
                   <>
-                    <td className="border border-slate-400 px-1 py-0.5 font-medium" colSpan={2}>Peso seco (g)</td>
-                    <td className="border border-slate-400 px-1 py-0.5 text-center">{fmtN(densidades[0]?.peso_seco, 1)}</td>
+                    <td className="border border-slate-400 px-1 font-medium" colSpan={2} style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>Peso seco (g)</td>
+                    <td className="border border-slate-400 px-1 text-center" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}>{fmtN(densidades[0]?.peso_seco, 1)}</td>
                   </>
                 ) : (
-                  <td colSpan={3} className="border border-slate-400"></td>
+                  <td colSpan={3} className="border border-slate-400" style={{paddingTop: '0.185rem', paddingBottom: '0.185rem'}}></td>
                 )}
               </tr>
             );
