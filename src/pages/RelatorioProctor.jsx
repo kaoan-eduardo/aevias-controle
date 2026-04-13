@@ -658,8 +658,8 @@ export default function RelatorioProctor() {
 
       <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1 flex flex-col">
         {/* Header */}
-        <header className="relative flex items-center justify-center py-1">
-          <div className="absolute left-0">
+        <header className="grid items-center py-1" style={{ gridTemplateColumns: '60px 1fr 60px' }}>
+          <div>
             <img
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
               alt="Logo" className="h-8 object-contain"
