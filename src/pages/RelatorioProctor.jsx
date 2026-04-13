@@ -602,7 +602,7 @@ export default function RelatorioProctor() {
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro"}</div>;
 
-  const title = isHigro ? 'CARACTERIZAÇÃO MECÂNICA' : 'ENSAIO DE COMPACTAÇÃO E ÍNDICE SUPORTE CALIFÓRNIA';
+  const title = 'CARACTERIZAÇÃO MECÂNICA';
   const docNum = isHigro ? 'FORM 101 E' : 'FORM 101 B';
 
   const infoFields = [
