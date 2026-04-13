@@ -385,19 +385,25 @@ function CompactacaoHigroscopica({ ensaio }) {
         </thead>
         <tbody>
           {higRows.map(([label, am1, am2], ri) => {
+            const isMediaRow = label === 'Umidade média (%)';
             const moldeLabel = moldeRowLabels[ri] || '';
             return (
               <tr key={ri} className={ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                 <td className="border border-slate-400 px-1 py-0.5 font-medium">{label}</td>
-                <td className="border border-slate-400 px-1 py-0.5 text-center">{am1}</td>
-                <td className="border border-slate-400 px-1 py-0.5 text-center">{am2}</td>
+                {isMediaRow ? (
+                  <td className="border border-slate-400 px-1 py-0.5 text-center font-bold" colSpan={2}>{am1}</td>
+                ) : (
+                  <>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{am1}</td>
+                    <td className="border border-slate-400 px-1 py-0.5 text-center">{am2}</td>
+                  </>
+                )}
                 <td className="border border-slate-400 px-1 py-0.5 font-medium">{moldeLabel}</td>
                 {densidades.map((_, di) => (
                   <td key={di} className="border border-slate-400 px-1 py-0.5 text-center">
                     {moldeRowValues[di]?.[ri] ?? '-'}
                   </td>
                 ))}
-                {/* CILINDROS column */}
                 {ri < densidades.length ? (
                   <>
                     <td className="border border-slate-400 px-1 py-0.5 text-center font-semibold">{densidades[ri].cilindro_numero || ri+1}</td>
