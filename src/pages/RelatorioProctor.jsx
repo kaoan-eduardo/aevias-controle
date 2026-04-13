@@ -84,10 +84,10 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
         <CartesianGrid strokeDasharray="2 2" stroke="#ccc" />
         <XAxis dataKey="x" type="number" domain={['dataMin - 0.3', 'dataMax + 0.3']}
           label={{ value: xLabel, position: 'insideBottom', offset: -12, fontSize: 7 }}
-          tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(1)} />
+          tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(1)} tickCount={6} />
         <YAxis dataKey="y" type="number" domain={['dataMin - 0.02', 'dataMax + 0.02']}
           label={{ value: yLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 7 }}
-          tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(2)} width={40} />
+          tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(2)} width={40} tickCount={6} />
         <Tooltip contentStyle={{ fontSize: 8 }} formatter={(v) => v.toFixed(3)} />
         {lineDataFinal?.length > 0 && (
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
