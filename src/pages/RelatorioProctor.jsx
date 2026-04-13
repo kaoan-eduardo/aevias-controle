@@ -64,6 +64,18 @@ function fitLinear(points) {
 }
 
 /* ─────────── MINI CHART ─────────── */
+function MiniChartTooltip({ active, payload, xLabel, yLabel }) {
+  if (!active || !payload?.length) return null;
+  const pt = payload[0]?.payload;
+  if (!pt) return null;
+  return (
+    <div style={{ background: '#fff', border: '1px solid #ccc', padding: '4px 8px', fontSize: 8 }}>
+      <div><strong>Umidade:</strong> {Number(pt.x).toFixed(2)}%</div>
+      <div><strong>{yLabel}:</strong> {Number(pt.y).toFixed(3)}</div>
+    </div>
+  );
+}
+
 function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color = "#1e3a5f", isLinear = false }) {
   if (!data?.length) return <div className="flex items-center justify-center h-full text-[8px] text-gray-400">Sem dados</div>;
   
@@ -88,7 +100,7 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
         <YAxis dataKey="y" type="number" domain={['dataMin - 0.02', 'dataMax + 0.02']}
           label={{ value: yLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(2)} width={40} tickCount={6} />
-        <Tooltip contentStyle={{ fontSize: 8 }} formatter={(v) => v.toFixed(3)} />
+        <Tooltip content={<MiniChartTooltip xLabel={xLabel} yLabel={yLabel} />} />
         {lineDataFinal?.length > 0 && (
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
