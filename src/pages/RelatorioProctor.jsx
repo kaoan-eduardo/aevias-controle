@@ -727,26 +727,38 @@ export default function RelatorioProctor() {
 
         {/* Footer */}
         <footer className="mt-4 pt-2">
-          <div className="grid grid-cols-2 gap-8 text-center">
-            <div>
-              <div className="flex flex-col justify-end items-center text-slate-500 mb-1" style={{minHeight: '32px', fontSize: '8px'}}>
-                {ensaio.laboratorista_name && <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="font-semibold" style={{fontSize: '8px'}}>LABORATORISTA RESPONSÁVEL</p>
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-col justify-end items-center text-slate-500 mb-1" style={{minHeight: '32px', fontSize: '8px'}}>
-                {ensaio.approver_details?.name && (
+          <div className="grid grid-cols-2 gap-8 items-end">
+            {/* Laboratorista */}
+            <div className="text-center">
+              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
+                {ensaio.laboratorista_name && (
                   <>
-                    <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
-                    {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
+                    <p>Assinado digitalmente por</p>
+                    <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>
+                    <p>{ensaio.created_by}</p>
+                    {ensaio.created_date && <p>em {fmtDateTime(ensaio.created_date)}</p>}
                   </>
                 )}
               </div>
               <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="font-semibold" style={{fontSize: '8px'}}>ENGENHEIRO RESPONSÁVEL</p>
+                <p className="font-semibold text-[8px]">LABORATORISTA RESPONSÁVEL</p>
+              </div>
+            </div>
+            {/* Engenheiro */}
+            <div className="text-center">
+              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
+                {ensaio.approver_details?.name ? (
+                  <>
+                    <p>Aprovado digitalmente por</p>
+                    <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
+                    <p>{ensaio.approved_by}</p>
+                    {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
+                    {ensaio.approved_date && <p>em {fmtDateTime(ensaio.approved_date)}</p>}
+                  </>
+                ) : null}
+              </div>
+              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+                <p className="font-semibold text-[8px]">ENGENHEIRO RESPONSÁVEL</p>
               </div>
             </div>
           </div>
