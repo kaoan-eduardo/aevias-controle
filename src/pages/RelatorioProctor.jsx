@@ -733,7 +733,6 @@ export default function RelatorioProctor() {
               <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
                 {ensaio.laboratorista_name && (
                   <>
-                    <p>Assinado digitalmente por</p>
                     <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>
                     <p>{ensaio.created_by}</p>
                     {ensaio.created_date && <p>em {fmtDateTime(ensaio.created_date)}</p>}
@@ -749,7 +748,6 @@ export default function RelatorioProctor() {
               <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
                 {ensaio.approver_details?.name ? (
                   <>
-                    <p>Aprovado digitalmente por</p>
                     <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
                     <p>{ensaio.approved_by}</p>
                     {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
@@ -766,7 +764,6 @@ export default function RelatorioProctor() {
               <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
                 {ensaio.client_signature?.signed_by ? (
                   <>
-                    <p>Assinado digitalmente por</p>
                     <p className="font-bold text-slate-700">{ensaio.client_signature.engineer_name}</p>
                     <p>{ensaio.client_signature.signed_by}</p>
                     {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
