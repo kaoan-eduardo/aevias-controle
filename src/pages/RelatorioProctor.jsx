@@ -167,7 +167,7 @@ function ISCSection({ ensaio }) {
                   <td className="border border-slate-400 px-1 py-0.5 text-[7px]">ISC (%)</td>
                   {PENETRACOES.map((_, pi) => (
                     <td key={pi} className="border border-slate-400 px-1 py-0.5 text-center text-blue-800">
-                      {pi === 3 && isc254 != null ? isc254 : pi === 5 && isc508 != null ? isc508 : '0.0'}
+                      {pi === 3 && isc254 != null ? isc254 : pi === 5 && isc508 != null ? isc508 : ''}
                     </td>
                   ))}
                 </tr>
