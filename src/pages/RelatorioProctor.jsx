@@ -241,37 +241,18 @@ function ExpansaoSection({ ensaio }) {
 }
 
 /* ─────────── GRÁFICOS (common) ─────────── */
-function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
-  const umidPorCil = isHigro
-    ? (ensaio.densidades || []).map(d => d.umidade_calculada)
-    : (ensaio.umidades || []).map(u => u.teor_umidade_media);
-
-  const iscPoints = (ensaio.cbr_cilindros || [])
-    .map((c, i) => {
-      const { isc } = calcISC(c, ensaio.cbr_fator_anel);
-      const x = umidPorCil[i];
-      return (x > 0 && isc != null) ? { x, y: isc } : null;
-    }).filter(Boolean);
-
-  const expPoints = (ensaio.expansao_cilindros || [])
-    .map((e, i) => {
-      const { expansao_pct } = calcExpansao(e);
-      const x = umidPorCil[i];
-      return (x > 0 && expansao_pct != null) ? { x, y: expansao_pct } : null;
-    }).filter(Boolean);
-
-  const curveData = parabola ? (() => {
-    if (!chartPoints.length) return [];
-    const xs = chartPoints.map(p => p.x);
+function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, expPoints, iscParabola, expParabola }) {
+  const buildCurve = (pts, par) => {
+    if (!par || !pts.length) return [];
+    const xs = pts.map(p => p.x);
     const minX = Math.min(...xs), maxX = Math.max(...xs);
-    return Array.from({ length: 60 }, (_, i) => {
-      const x = minX + (maxX - minX) * i / 59;
-      return { x: parseFloat(x.toFixed(2)), y: parseFloat((parabola.a * x ** 2 + parabola.b * x + parabola.c).toFixed(4)) };
+    return Array.from({ length: 30 }, (_, i) => {
+      const x = minX + (maxX - minX) * i / 29;
+      return { x: parseFloat(x.toFixed(2)), y: parseFloat((par.a * x ** 2 + par.b * x + par.c).toFixed(3)) };
     });
-  })() : [];
+  };
 
-  const maxISC = iscPoints.length ? Math.max(...iscPoints.map(p => p.y)) : null;
-  const maxExp = expPoints.length ? Math.max(...expPoints.map(p => p.y)) : null;
+  const curveData = buildCurve(chartPoints, parabola);
 
   return (
     <section>
@@ -300,14 +281,28 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola }) {
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">ISC (%)</div>
           <div style={{ height: 130 }}>
-            <MiniChart data={iscPoints} xLabel="Umidade (%)" yLabel="ISC (%)" color="#1e3a5f" />
+            <MiniChart
+              data={iscPoints}
+              lineData={buildCurve(iscPoints, iscParabola)}
+              refX={iscParabola?.w_otima}
+              refY={iscParabola?.gamma_max}
+              xLabel="Umidade (%)" yLabel="ISC (%)"
+              color="#1e3a5f"
+            />
           </div>
         </div>
         {/* Expansão */}
         <div className="border border-slate-300 p-1 relative">
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Expansão (%)</div>
           <div style={{ height: 130 }}>
-            <MiniChart data={expPoints} isLinear={true} xLabel="Umidade (%)" yLabel="Exp. (%)" color="#1e3a5f" />
+            <MiniChart
+              data={expPoints}
+              lineData={buildCurve(expPoints, expParabola)}
+              refX={expParabola?.w_otima}
+              refY={expParabola?.gamma_max}
+              xLabel="Umidade (%)" yLabel="Exp. (%)"
+              color="#1e3a5f"
+            />
           </div>
         </div>
       </div>
@@ -572,6 +567,33 @@ export default function RelatorioProctor() {
 
   const parabola = useMemo(() => fitParabola(chartPoints), [chartPoints]);
 
+  const iscPoints = useMemo(() => {
+    if (!ensaio) return [];
+    const umidPorCil = isHigro
+      ? (ensaio.densidades || []).map(d => d.umidade_calculada)
+      : (ensaio.umidades || []).map(u => u.teor_umidade_media);
+    return (ensaio.cbr_cilindros || []).map((c, i) => {
+      const { isc } = calcISC(c, ensaio.cbr_fator_anel);
+      const x = umidPorCil[i];
+      return (x > 0 && isc != null) ? { x, y: isc } : null;
+    }).filter(Boolean);
+  }, [ensaio, isHigro]);
+
+  const expPoints = useMemo(() => {
+    if (!ensaio) return [];
+    const umidPorCil = isHigro
+      ? (ensaio.densidades || []).map(d => d.umidade_calculada)
+      : (ensaio.umidades || []).map(u => u.teor_umidade_media);
+    return (ensaio.expansao_cilindros || []).map((e, i) => {
+      const { expansao_pct } = calcExpansao(e);
+      const x = umidPorCil[i];
+      return (x > 0 && expansao_pct != null) ? { x, y: expansao_pct } : null;
+    }).filter(Boolean);
+  }, [ensaio, isHigro]);
+
+  const iscParabola = useMemo(() => fitParabola(iscPoints), [iscPoints]);
+  const expParabola = useMemo(() => fitParabola(expPoints), [expPoints]);
+
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro"}</div>;
 
@@ -639,8 +661,8 @@ export default function RelatorioProctor() {
               {[
                 ["Dens. Máx. (g/cm³)", fmtN(ensaio.densidade_maxima_seca || parabola?.gamma_max, 4)],
                 ["Umid. Ótima (%)", fmtN(ensaio.umidade_otima || parabola?.w_otima, 2)],
-                ["ISC/CBR (%)", fmtN(ensaio.isc_cbr, 1)],
-                ["Exp. (%)", fmtN(ensaio.expansao, 2)],
+                ["ISC/CBR (%)", fmtN(iscParabola?.gamma_max ?? ensaio.isc_cbr, 1)],
+                ["Exp. (%)", fmtN(expParabola?.gamma_max ?? ensaio.expansao, 2)],
               ].map(([label, val]) => (
                 <div key={label} className="flex-1">
                   <div style={{fontSize: '7px'}} className="text-gray-600">{label}</div>
@@ -663,7 +685,7 @@ export default function RelatorioProctor() {
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
 
           {/* GRÁFICOS */}
-          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} />
+          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} />
 
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
