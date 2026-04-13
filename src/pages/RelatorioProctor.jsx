@@ -141,21 +141,22 @@ function ISCSection({ ensaio }) {
               <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{t}</td>
             ))}
           </tr>
+          {/* Header: Pressão Padrão */}
+          <tr className="bg-slate-200 font-bold">
+            <td className="border border-slate-400 px-1 py-0.5 text-[7px]"></td>
+            <td className="border border-slate-400 px-1 py-0.5 text-[7px]">Pressão Padrão</td>
+            {PENETRACOES.map((_, pi) => (
+              <td key={pi} className="border border-slate-400 px-1 py-0.5 text-center text-[7px]">{PRESSAO_PADRAO[pi] || ''}</td>
+            ))}
+          </tr>
           {/* Cilindros */}
           {cbr.map((cil, cidx) => {
             const { pressoes, isc254, isc508 } = calcISC(cil, fator);
             return (
               <React.Fragment key={cidx}>
-                {/* Pressão Padrão */}
-                <tr className="bg-slate-50">
-                  <td className="border border-slate-400 px-1 py-0.5 font-semibold" rowSpan={3}>{cil.cilindro_numero || cidx + 1}</td>
-                  <td className="border border-slate-400 px-1 py-0.5 text-[7px]">Pressão Padrão</td>
-                  {PENETRACOES.map((_, pi) => (
-                    <td key={pi} className="border border-slate-400 px-1 py-0.5 text-center">{PRESSAO_PADRAO[pi] || ''}</td>
-                  ))}
-                </tr>
                 {/* Leitura do anel */}
                 <tr className="bg-white">
+                  <td className="border border-slate-400 px-1 py-0.5 font-semibold" rowSpan={2}>{cil.cilindro_numero || cidx + 1}</td>
                   <td className="border border-slate-400 px-1 py-0.5 text-[7px]">Leitura do anel</td>
                   {(cil.leituras || Array(9).fill('')).map((l, li) => (
                     <td key={li} className="border border-slate-400 px-1 py-0.5 text-center">{parseFloat(l) > 0 ? fmtN(l, 0) : ''}</td>
