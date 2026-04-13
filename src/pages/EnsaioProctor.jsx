@@ -171,7 +171,14 @@ export default function EnsaioProctorPage() {
       setForm(prev => ({ ...prev, laboratorista_name: userData.laboratorista_name || userData.full_name }));
 
       const obrasData = await Obra.list();
-      setObras(obrasData);
+      // Filter obras: only show obras where laboratorista is in the regional's laboratoristas_responsaveis
+      const regionaisData = await base44.entities.Regional.list();
+      const regionaisDoLab = regionaisData.filter(r => 
+        (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
+      );
+      const regionalIds = regionaisDoLab.map(r => r.id);
+      const filteredObras = obrasData.filter(o => regionalIds.includes(o.regional_id));
+      setObras(filteredObras);
 
       if (recordId) {
         const record = await base44.entities.EnsaioProctor.get(recordId);
@@ -243,6 +250,25 @@ export default function EnsaioProctorPage() {
   };
 
   const handleSave = async (status) => {
+    // Validate required fields for "Dados da Obra" and "Dados do Material" sections
+    const requiredFields = [
+      { field: 'obra_id', label: 'Obra' },
+      { field: 'rodovia', label: 'Rodovia' },
+      { field: 'trecho', label: 'Trecho' },
+      { field: 'local_coleta', label: 'Local de Coleta' },
+      { field: 'data_ensaio', label: 'Data do Ensaio' },
+      { field: 'camada', label: 'Camada' },
+      { field: 'material', label: 'Material' },
+      { field: 'procedencia', label: 'Procedência' },
+    ];
+
+    const emptyFields = requiredFields.filter(f => !form[f.field]);
+    if (emptyFields.length > 0) {
+      alert(`Preencha os campos obrigatórios:\n${emptyFields.map(f => f.label).join(', ')}`);
+      setSaving(false);
+      return;
+    }
+
     setSaving(true);
     try {
       // Sanitize: convert empty strings to null for number fields
@@ -376,9 +402,9 @@ export default function EnsaioProctorPage() {
             </div>
             <div><Label className="text-[#00233B]">Cliente</Label><Input value={form.cliente} onChange={(e) => setForm(prev => ({ ...prev, cliente: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Contrato</Label><Input value={form.contrato} onChange={(e) => setForm(prev => ({ ...prev, contrato: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Rodovia</Label><Input value={form.rodovia} onChange={(e) => setForm(prev => ({ ...prev, rodovia: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Trecho</Label><Input value={form.trecho} onChange={(e) => setForm(prev => ({ ...prev, trecho: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Local de Coleta</Label><Input value={form.local_coleta} onChange={(e) => setForm(prev => ({ ...prev, local_coleta: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Rodovia *</Label><Input value={form.rodovia} onChange={(e) => setForm(prev => ({ ...prev, rodovia: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Trecho *</Label><Input value={form.trecho} onChange={(e) => setForm(prev => ({ ...prev, trecho: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Local de Coleta *</Label><Input value={form.local_coleta} onChange={(e) => setForm(prev => ({ ...prev, local_coleta: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Data do Ensaio *</Label><Input type="date" value={form.data_ensaio} onChange={(e) => setForm(prev => ({ ...prev, data_ensaio: e.target.value }))} /></div>
           </div>
         </CardContent>
@@ -389,9 +415,9 @@ export default function EnsaioProctorPage() {
         <CardHeader><CardTitle className="text-lg text-[#00233B]">Dados do Material</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label className="text-[#00233B]">Camada</Label><Input value={form.camada} onChange={(e) => setForm(prev => ({ ...prev, camada: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Material</Label><Input value={form.material} onChange={(e) => setForm(prev => ({ ...prev, material: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Procedência</Label><Input value={form.procedencia} onChange={(e) => setForm(prev => ({ ...prev, procedencia: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Camada *</Label><Input value={form.camada} onChange={(e) => setForm(prev => ({ ...prev, camada: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Material *</Label><Input value={form.material} onChange={(e) => setForm(prev => ({ ...prev, material: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Procedência *</Label><Input value={form.procedencia} onChange={(e) => setForm(prev => ({ ...prev, procedencia: e.target.value }))} /></div>
             <div>
               <Label className="text-[#00233B]">Disco Especial</Label>
               <Select value={form.disco_especial} onValueChange={(v) => setForm(prev => ({ ...prev, disco_especial: v }))}>
