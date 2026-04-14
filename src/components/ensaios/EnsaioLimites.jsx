@@ -251,7 +251,7 @@ export default function EnsaioLimites({ data, onChange }) {
     });
   }, [granGrossaRetidos, data.amostra_total_seca]);
 
-  const amostraTotalSeca = n(data.amostra_total_seca);
+  const amostraTotalSeca = amostraTotalSecaAuto || n(data.amostra_total_seca);
 
   /* ─── derived: Granulometria Fina ─── */
   const amostParcSeca = n(data.amostra_parcial_seca);
@@ -293,7 +293,14 @@ export default function EnsaioLimites({ data, onChange }) {
     return parseFloat((soloUmPassando10 / (higroH / 100 + 1)).toFixed(3));
   }, [soloUmPassando10, higroH]);
 
-  // Amostra Total Seca = SR10 + SP10
+  // Amostra Total Seca calculada: Sₜ = Uₜ / (1 + H/100)
+  const amostraTotalSecaAuto = useMemo(() => {
+    const ut = n(data.amostra_total_umida);
+    if (ut == null || higroH == null) return null;
+    return parseFloat((ut / (1 + higroH / 100)).toFixed(3));
+  }, [data.amostra_total_umida, higroH]);
+
+  // Amostra Total Seca = SR10 + SP10 (alternativa se manual)
   const amostraTotalSecaCalc = useMemo(() => {
     if (soloSecoRetido10 == null || sp10 == null) return null;
     return parseFloat((soloSecoRetido10 + sp10).toFixed(3));
@@ -475,9 +482,11 @@ export default function EnsaioLimites({ data, onChange }) {
               <Input className={fieldCls} type="number" step="0.001" value={data.amostra_total_umida || ""} onChange={e => set("amostra_total_umida", e.target.value)} />
             </div>
             <div>
-              <Label className="text-[10px] text-[#00233B]">Amostra Total Seca — Sₜ (g)</Label>
-              <Input className={fieldCls} type="number" step="0.001" value={data.amostra_total_seca || ""} onChange={e => set("amostra_total_seca", e.target.value)} />
-            </div>
+               <Label className="text-[10px] text-[#00233B]">Amostra Total Seca — Sₜ (calculado: Uₜ/(1+H%))</Label>
+               <div className="h-8 text-xs border border-[#00233B]/20 rounded-md bg-gray-100/40 flex items-center px-2 text-gray-500 font-semibold">
+                 {amostraTotalSecaAuto != null ? amostraTotalSecaAuto.toFixed(3) : "-"}
+               </div>
+             </div>
             {/* Campos calculados automaticamente */}
             {[
               { label: "Solo Seco Retido na #Nº10 — SR₁₀ (g)", value: soloSecoRetido10 },
