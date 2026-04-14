@@ -646,8 +646,8 @@ export default function EnsaioLimites({ data, onChange }) {
                   {llCurve.length > 0 && (
                     <Line data={llCurve} dataKey="y" type="monotone" stroke="#00233B" strokeWidth={2} dot={false} isAnimationActive={false} name="Curva LL" />
                   )}
-                  {llFit && <ReferenceLine x={25} stroke="transparent"
-                   label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 9, position: 'top', offset: 8 }} />}
+                  {llFit && <ReferenceLine x={25} stroke="red" strokeDasharray="4 3" strokeWidth={1.5}
+                    label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 9, position: 'top' }} />}
                   <Scatter data={llPoints} dataKey="y" fill="#BFCF99" stroke="#00233B" strokeWidth={1.5} r={5} name="Pontos" />
                 </ComposedChart>
               </ResponsiveContainer>
