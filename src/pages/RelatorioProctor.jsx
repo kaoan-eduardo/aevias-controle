@@ -8,7 +8,7 @@ import { fitParabola } from "@/components/ensaios/ProctorChart";
 import RelatorioLimites from "@/components/relatorios/RelatorioLimites";
 import {
   ComposedChart, Scatter, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ResponsiveContainer,
+  ResponsiveContainer,
 } from "recharts";
 
 const PENETRACOES = [0.64, 1.27, 1.91, 2.54, 3.81, 5.08, 6.35, 7.62, 8.89];
