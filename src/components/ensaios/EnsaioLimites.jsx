@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line, ComposedChart, Tooltip as RechartsTooltip
+  ResponsiveContainer, LineChart, Line, ComposedChart
 } from "recharts";
 
 /* ─── helpers ─── */

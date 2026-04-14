@@ -91,16 +91,11 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
     });
   })() : lineData || [];
 
-  const xs = data.map(p => p.x);
-  const domainMinX = Math.min(...xs) - 0.3;
-  const yMin = Math.min(...data.map(p => p.y));
-  const refLabel2 = refY != null ? parseFloat(refY).toFixed(2) : '';
-
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 8, right: 8, left: 8, bottom: 18 }}>
         <CartesianGrid strokeDasharray="2 2" stroke="#ccc" />
-        <XAxis dataKey="x" type="number" domain={[domainMinX, Math.max(...xs) + 0.3]}
+        <XAxis dataKey="x" type="number" domain={['dataMin - 0.3', 'dataMax + 0.3']}
           label={{ value: xLabel, position: 'insideBottom', offset: -12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(1)} tickCount={6} />
         <YAxis dataKey="y" type="number" domain={['dataMin - 0.02', 'dataMax + 0.02']}
@@ -111,19 +106,9 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
         <Scatter data={data} dataKey="y" fill="#6b8f3e" stroke={color} strokeWidth={1} r={4} name="Pontos" isAnimationActive={false} />
-        {refX != null && refY != null && (
-          <>
-            <Line data={[
-              { x: refX, y: yMin },
-              { x: refX, y: refY }
-            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false} name="Ref X" />
-            <Line data={[
-              { x: domainMinX, y: refY },
-              { x: refX, y: refY }
-            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false}
-              label={{ value: refLabel2, fill: 'red', fontSize: 7, position: 'insideTopLeft' }} />
-          </>
-        )}
+        {refX != null && <ReferenceLine x={refX} stroke="red" strokeDasharray="3 2" strokeWidth={1} />}
+        {refY != null && <ReferenceLine y={refY} stroke="red" strokeDasharray="3 2" strokeWidth={1}
+          label={{ value: refLabel, fill: 'red', fontSize: 7, position: 'insideTopRight' }} />}
       </ComposedChart>
     </ResponsiveContainer>
   );
@@ -266,8 +251,8 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Densidade do Solo Seco (g/cm³)</div>
           {parabola && (
             <div className="absolute bottom-1 right-1 text-[6px] text-gray-600 text-right leading-tight print:hidden">
-              <div>Dens. máx. = {fmtN(parabola.gamma_max, 4)} g/cm³</div>
-              <div>Hótima = {fmtN(parabola.w_otima, 2)}%</div>
+              <div>Dens. máx. = {fmtN(parabola.gamma_max, 3)} g/cm³</div>
+              <div>Hótima = {fmtN(parabola.w_otima, 1)}%</div>
             </div>
           )}
           <div style={{ height: 198 }}>
