@@ -444,14 +444,6 @@ export default function EnsaioLimites({ data, onChange }) {
                     ))}
                   </tr>
                 ))}
-                <tr className="bg-gray-100/30">
-                  <td className={tdCls + " font-medium text-[#00233B]"}>Água (Mω=M₁-M₂, g)</td>
-                  {(data.ll_rows || []).map((_, i) => <td key={i} className={tdCalcCls}>{llCalc[i]?.agua != null ? llCalc[i].agua.toFixed(3) : "-"}</td>)}
-                </tr>
-                <tr className="bg-gray-100/30">
-                  <td className={tdCls + " font-medium text-[#00233B]"}>Solo Seco (Mss=M₂-Tʟ, g)</td>
-                  {(data.ll_rows || []).map((_, i) => <td key={i} className={tdCalcCls}>{llCalc[i]?.solo != null ? llCalc[i].solo.toFixed(3) : "-"}</td>)}
-                </tr>
                 <tr className="bg-gray-100/40 font-bold">
                   <td className={tdCls + " font-bold text-[#00233B]"}>Teor de Umidade (%)</td>
                   {(data.ll_rows || []).map((_, i) => <td key={i} className={tdCalcCls + " font-bold text-blue-700"}>{llCalc[i]?.teor != null ? llCalc[i].teor.toFixed(2) : "-"}</td>)}
