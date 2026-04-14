@@ -222,20 +222,24 @@ export default function EnsaioLimites({ data, onChange }) {
   /* ─── derived: SP10 e campos calculados automaticamente ─── */
   const higroH = higroTeor;
 
-  // Solo Úmido Passando na #10 = passando acumulado da última peneira grossa
-  const soloUmPassando10 = useMemo(() => {
-    if (!granGrossaCalc.length) return null;
-    return granGrossaCalc[granGrossaCalc.length - 1]?.passando ?? null;
-  }, [granGrossaCalc]);
-
-  // Solo Seco Retido na #10 = soma dos retidos de todas as peneiras grossas
+  // Solo Seco Retido na #10 = soma dos retidos (secos) de todas as peneiras grossas
   const soloSecoRetido10 = useMemo(() => {
     if (!granGrossaRetidos.length) return null;
     const total = granGrossaRetidos.reduce((s, r) => s + r, 0);
     return total > 0 ? parseFloat(total.toFixed(3)) : null;
   }, [granGrossaRetidos]);
 
-  // SP10 = Solo Seco Passando na #10
+  // Solo Úmido Passando na #10 = Amostra Total Úmida − soma dos retidos úmidos
+  // Os retidos nas peneiras grossas são pesados úmidos, então: UmPassando = Uₜ − ΣRetidos
+  const soloUmPassando10 = useMemo(() => {
+    const ut = n(data.amostra_total_umida);
+    if (!ut || !granGrossaRetidos.length) return null;
+    const totalRetidoUmido = granGrossaRetidos.reduce((s, r) => s + r, 0);
+    const result = parseFloat((ut - totalRetidoUmido).toFixed(3));
+    return result > 0 ? result : null;
+  }, [data.amostra_total_umida, granGrossaRetidos]);
+
+  // SP10 = Solo Seco Passando na #10 = soloUmPassando10 / (H/100 + 1)
   const sp10 = useMemo(() => {
     if (soloUmPassando10 == null || higroH == null) return null;
     return parseFloat((soloUmPassando10 / (higroH / 100 + 1)).toFixed(3));
