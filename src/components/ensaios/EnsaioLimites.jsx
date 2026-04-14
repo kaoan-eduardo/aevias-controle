@@ -94,8 +94,8 @@ export function defaultLimites() {
     peneiras_finas: PENEIRAS_FINAS.map(p => ({ ...p, retido: "" })),
     // LL - 5 pontos
     ll_rows: Array(5).fill(null).map(defaultLLRow),
-    // LP - 3 pontos
-    lp_rows: Array(3).fill(null).map(defaultLPRow),
+    // LP - 5 pontos
+    lp_rows: Array(5).fill(null).map(defaultLPRow),
   };
 }
 
