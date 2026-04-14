@@ -584,7 +584,7 @@ export default function RelatorioProctor() {
       const { expansao_pct } = calcExpansao(e);
       const x = umidPorCil[i];
       return (x > 0 && expansao_pct != null) ? { x, y: expansao_pct } : null;
-    }).filter(Boolean);
+    }).filter(p => p !== null);
   }, [ensaio, isHigro]);
 
   const iscParabola = useMemo(() => fitParabola(iscPoints), [iscPoints]);
@@ -689,13 +689,13 @@ export default function RelatorioProctor() {
           {/* EXPANSÃO */}
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
 
+          {/* GRÁFICOS */}
+          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} iscAtWotima={iscAtWotima} expAtWotima={expAtWotima} />
+
           {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO */}
           {ensaio.realizar_limites && ensaio.limites && (
             <RelatorioLimites limites={ensaio.limites} />
           )}
-
-          {/* GRÁFICOS */}
-          <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} iscAtWotima={iscAtWotima} expAtWotima={expAtWotima} />
 
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (

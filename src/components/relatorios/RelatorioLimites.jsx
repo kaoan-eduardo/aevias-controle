@@ -84,7 +84,7 @@ function LLChart({ llPoints, llFit }) {
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 6, right: 6, left: 6, bottom: 16 }}>
         <CartesianGrid strokeDasharray="2 2" stroke="#ccc" />
-        <XAxis dataKey="x" type="number" domain={[minX, maxX]}
+        <XAxis dataKey="x" type="number" domain={[maxX, minX]} reversed
           label={{ value: 'Nº Golpes', position: 'insideBottom', offset: -10, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickCount={6} />
         <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
