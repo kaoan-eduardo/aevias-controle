@@ -255,6 +255,33 @@ export default function EnsaioLimites({ data, onChange }) {
     return parseFloat((llFit.ll - lpMedia).toFixed(1));
   }, [llFit, lpMedia]);
 
+  /* ─── derived: Índice de Grupo (IG) ─── */
+  // pct passante na #200 (0,075mm) em relação ao total
+  const pct200 = useMemo(() => {
+    if (!granFinaCalc.length || !amostraTotalSeca || sp10 == null || amostParcSeca == null || amostParcSeca <= 0) return null;
+    const passando200 = granFinaCalc[granFinaCalc.length - 1]?.passando || 0;
+    return parseFloat(((passando200 / amostParcSeca) * (sp10 / amostraTotalSeca) * 100).toFixed(1));
+  }, [granFinaCalc, amostraTotalSeca, sp10, amostParcSeca]);
+
+  const igCalc = useMemo(() => {
+    if (pct200 == null || llFit?.ll == null || IP == null) return null;
+    const F = pct200;
+    const ll = llFit.ll;
+    const ip = IP;
+
+    // LL#200: se F < 35 → 0, senão min(F,75) - 35
+    const ll200 = F < 35 ? 0 : Math.min(F, 75) - 35;
+    // IP#200: se F < 15 → 0, senão min(F,55) - 15
+    const ip200 = F < 15 ? 0 : Math.min(F, 55) - 15;
+    // LL@: se LL < 40 → 0, senão min(LL,60) - 40
+    const llAt = ll < 40 ? 0 : Math.min(ll, 60) - 40;
+    // IP@: se IP < 10 → 0, senão min(IP,30) - 10
+    const ipAt = ip < 10 ? 0 : Math.min(ip, 30) - 10;
+
+    const ig = parseFloat((0.2 * ll200 + 0.005 * ll200 * llAt + 0.01 * ip200 * ipAt).toFixed(0));
+    return Math.max(0, ig);
+  }, [pct200, llFit, IP]);
+
   // Granulometria % totais (pedregulho, areias, finos)
   const pctPedregulho = useMemo(() => {
     if (!amostraTotalSeca || !granGrossaCalc.length) return null;
@@ -577,7 +604,7 @@ export default function EnsaioLimites({ data, onChange }) {
                 { label: "Limite de Liquidez", value: llFit?.ll != null ? `${llFit.ll}%` : "-", highlight: true },
                 { label: "Limite de Plasticidade", value: lpMedia != null ? `${lpMedia}%` : "0,0", highlight: true },
                 { label: "Índice de Plasticidade", value: IP != null ? `${IP}%` : "-", highlight: true },
-                { label: "Índice de Grupo", value: "-" },
+                { label: "Índice de Grupo (IG)", value: igCalc != null ? `${igCalc}` : "-" },
                 { label: "Classificação HRB", value: "-" },
               ].map(row => (
                 <tr key={row.label} className={row.highlight ? "bg-[#BFCF99]/20" : "bg-white/10"}>
