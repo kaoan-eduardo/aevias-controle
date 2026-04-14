@@ -205,6 +205,14 @@ export default function EnsaioLimites({ data, onChange }) {
     })).filter(p => p.x > 0 && p.y != null),
     [data.ll_rows, llCalc]
   );
+
+  const llYAxisDomain = useMemo(() => {
+    if (llPoints.length === 0) return ['auto', 'auto'];
+    const yValues = llPoints.map(p => p.y).filter(y => y != null);
+    const minY = Math.min(...yValues);
+    const maxY = Math.max(...yValues);
+    return [parseFloat((minY - 5).toFixed(2)), parseFloat((maxY + 5).toFixed(2))];
+  }, [llPoints]);
   const llFit = useMemo(() => fitLogLine(llPoints), [llPoints]);
   const llCurve = useMemo(() => {
     if (!llFit) return [];
@@ -639,7 +647,7 @@ export default function EnsaioLimites({ data, onChange }) {
                   <XAxis dataKey="x" type="number" 
                     label={{ value: 'Nº de Golpes', position: 'insideBottom', offset: -15, fill: '#00233B', fontSize: 11 }}
                     tick={{ fontSize: 10, fill: '#00233B' }} />
-                  <YAxis dataKey="y" type="number" domain={['dataMin - 5', 'dataMax + 5']}
+                  <YAxis dataKey="y" type="number" domain={llYAxisDomain}
                    label={{ value: '% de Água', angle: -90, position: 'insideLeft', offset: 10, fill: '#00233B', fontSize: 11 }}
                    tick={{ fontSize: 10, fill: '#00233B' }} width={45} />
                   <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />

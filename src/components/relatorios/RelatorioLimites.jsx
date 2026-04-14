@@ -72,7 +72,7 @@ const PENEIRAS_GROSSAS = [
 const PENEIRAS_FINAS = [{ label: '40', mm: 0.42 }, { label: '200', mm: 0.075 }];
 
 /* ─── LL curve data ─── */
-function LLChart({ llPoints, llFit }) {
+function LLChart({ llPoints, llFit, llYAxisDomain }) {
   if (llPoints.length < 2) return <div className="text-[7px] text-gray-400 flex items-center justify-center h-full">Insuficiente</div>;
   const xs = llPoints.map(p => p.x);
   const minX = Math.max(1, Math.min(...xs) - 2), maxX = Math.max(...xs) + 2;
@@ -87,7 +87,7 @@ function LLChart({ llPoints, llFit }) {
         <XAxis dataKey="x" type="number"
           label={{ value: 'Nº Golpes', position: 'insideBottom', offset: -10, fontSize: 7 }}
           tick={{ fontSize: 7 }} />
-        <YAxis dataKey="y" type="number" domain={['dataMin - 5', 'dataMax + 5']}
+        <YAxis dataKey="y" type="number" domain={llYAxisDomain}
           label={{ value: '% Água', angle: -90, position: 'insideLeft', offset: 10, fontSize: 7 }}
           tick={{ fontSize: 7 }} width={36} tickCount={6} />
         <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
@@ -178,6 +178,14 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
     llRows.map((r, i) => ({ x: parseFloat(r.num_golpes), y: llCalc[i].teor }))
       .filter(p => p.x > 0 && p.y != null),
     [llRows, llCalc]);
+
+  const llYAxisDomain = useMemo(() => {
+    if (llPoints.length === 0) return ['auto', 'auto'];
+    const yValues = llPoints.map(p => p.y).filter(y => y != null);
+    const minY = Math.min(...yValues);
+    const maxY = Math.max(...yValues);
+    return [parseFloat((minY - 5).toFixed(2)), parseFloat((maxY + 5).toFixed(2))];
+  }, [llPoints]);
   const llFit = useMemo(() => fitLogLine(llPoints), [llPoints]);
 
   /* LP */
@@ -448,7 +456,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
         <div>
           <div className="bg-slate-200 px-1 py-0.5 font-bold text-[9px] mb-0.5">Gráfico — Limite de Liquidez</div>
           <div style={{ height: 208 }}>
-            <LLChart llPoints={llPoints} llFit={llFit} />
+           <LLChart llPoints={llPoints} llFit={llFit} llYAxisDomain={llYAxisDomain} />
           </div>
         </div>
       )}
