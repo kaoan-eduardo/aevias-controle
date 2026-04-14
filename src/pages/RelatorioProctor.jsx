@@ -108,7 +108,7 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
         <Scatter data={data} dataKey="y" fill="#6b8f3e" stroke={color} strokeWidth={1} r={4} name="Pontos" isAnimationActive={false} />
-        {refX != null && (
+        {refX != null && refY != null && (
           <>
             <Line data={[
               { x: refX, y: yMin },
@@ -262,8 +262,8 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
           <div className="text-[7px] text-center text-gray-500 mb-0.5 font-semibold">Densidade do Solo Seco (g/cm³)</div>
           {parabola && (
             <div className="absolute bottom-1 right-1 text-[6px] text-gray-600 text-right leading-tight print:hidden">
-              <div>Dens. máx. = {fmtN(parabola.gamma_max, 3)} g/cm³</div>
-              <div>Hótima = {fmtN(parabola.w_otima, 1)}%</div>
+              <div>Dens. máx. = {fmtN(parabola.gamma_max, 4)} g/cm³</div>
+              <div>Hótima = {fmtN(parabola.w_otima, 2)}%</div>
             </div>
           )}
           <div style={{ height: 198 }}>
