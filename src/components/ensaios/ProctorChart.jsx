@@ -45,7 +45,7 @@ export function fitParabola(points) {
   const coeff = gaussianElim(A);
   if (!coeff) return null;
   const [a, b, c] = coeff;
-  if (Math.abs(a) < 1e-10 || a >= 0) return null;
+  if (Math.abs(a) < 1e-12) return null;
   const w_otima = -b / (2 * a);
   const gamma_max = a * w_otima**2 + b * w_otima + c;
   return { a, b, c, w_otima, gamma_max };
