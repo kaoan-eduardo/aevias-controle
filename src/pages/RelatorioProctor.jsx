@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from "@/components/relatorios/AprovacaoBar";
 import { fitParabola } from "@/components/ensaios/ProctorChart";
+import RelatorioLimites from "@/components/relatorios/RelatorioLimites";
 import {
   ComposedChart, Scatter, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer,
@@ -687,6 +688,11 @@ export default function RelatorioProctor() {
 
           {/* EXPANSÃO */}
           {ensaio.realizar_cbr_expansao && <ExpansaoSection ensaio={ensaio} />}
+
+          {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO */}
+          {ensaio.realizar_limites && ensaio.limites && (
+            <RelatorioLimites limites={ensaio.limites} />
+          )}
 
           {/* GRÁFICOS */}
           <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} iscAtWotima={iscAtWotima} expAtWotima={expAtWotima} />

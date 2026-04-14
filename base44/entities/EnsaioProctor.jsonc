@@ -210,34 +210,29 @@
             "type": "string"
           },
           "fator_anel": {
-            "type": "number",
-            "description": "Constante de calibra\u00e7\u00e3o do anel de carga"
+            "type": "number"
           },
           "leituras": {
             "type": "array",
             "items": {
               "type": "number"
-            },
-            "description": "Leituras do anel nas 9 penetra\u00e7\u00f5es (kgf)"
+            }
           },
           "isc254": {
-            "type": "number",
-            "description": "ISC calculado a 2.54mm (%)"
+            "type": "number"
           },
           "isc508": {
-            "type": "number",
-            "description": "ISC calculado a 5.08mm (%)"
+            "type": "number"
           },
           "isc": {
-            "type": "number",
-            "description": "ISC final - maior entre 2.54 e 5.08mm (%)"
+            "type": "number"
           }
         }
       }
     },
     "expansao_cilindros": {
       "type": "array",
-      "description": "Dados de expans\u00e3o por cilindro (ABNT 9895 / DNIT 172)",
+      "description": "Dados de expans\u00e3o por cilindro",
       "items": {
         "type": "object",
         "properties": {
@@ -252,8 +247,7 @@
             "type": "string"
           },
           "altura_inicial": {
-            "type": "number",
-            "description": "Altura inicial do CP (mm)"
+            "type": "number"
           },
           "leitura_1dia": {
             "type": "number"
@@ -268,16 +262,13 @@
             "type": "number"
           },
           "diferenca": {
-            "type": "number",
-            "description": "Diferen\u00e7a calculada (mm)"
+            "type": "number"
           },
           "expansao_pct": {
-            "type": "number",
-            "description": "Expans\u00e3o calculada (%)"
+            "type": "number"
           },
           "massa_solo_final": {
-            "type": "number",
-            "description": "Massa do solo final (g)"
+            "type": "number"
           }
         }
       }
@@ -289,6 +280,71 @@
     "expansao": {
       "type": "number",
       "description": "Valor de expans\u00e3o final (%)"
+    },
+    "realizar_limites": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se deve realizar ensaios f\u00edsicos de caracteriza\u00e7\u00e3o (LL, LP, granulometria)"
+    },
+    "limites": {
+      "type": "object",
+      "description": "Dados dos ensaios f\u00edsicos de caracteriza\u00e7\u00e3o (ABNT NBR 7181 | 6459 | 7180)",
+      "properties": {
+        "higro_solo_umido_capsula_1": {
+          "type": "number"
+        },
+        "higro_solo_umido_capsula_2": {
+          "type": "number"
+        },
+        "higro_solo_seco_capsula_1": {
+          "type": "number"
+        },
+        "higro_solo_seco_capsula_2": {
+          "type": "number"
+        },
+        "higro_peso_capsula_1": {
+          "type": "number"
+        },
+        "higro_peso_capsula_2": {
+          "type": "number"
+        },
+        "peneiras_grossas": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "amostra_total_umida": {
+          "type": "number"
+        },
+        "amostra_total_seca": {
+          "type": "number"
+        },
+        "amostra_parcial_umida": {
+          "type": "number"
+        },
+        "amostra_parcial_seca": {
+          "type": "number"
+        },
+        "peneiras_finas": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "ll_rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "lp_rows": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
     },
     "observacoes": {
       "type": "string",
@@ -320,6 +376,24 @@
           "type": "string"
         },
         "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    },
+    "client_signature": {
+      "type": "object",
+      "properties": {
+        "signed_by": {
+          "type": "string"
+        },
+        "signed_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engineer_name": {
           "type": "string"
         },
         "crea_number": {
