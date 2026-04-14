@@ -18,6 +18,7 @@ import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, FileText } from "lucide-react";
+import EnsaioLimites, { defaultLimites } from "@/components/ensaios/EnsaioLimites";
 
 // Pure function — recalculates all 5 density points without any async/stale state issues
 function recalcDensidades(densidades, umidade_higroscopica, correcao, umidades, umidade_media) {
@@ -138,6 +139,8 @@ export default function EnsaioProctorPage() {
     expansao: "",
     observacoes: "",
     realizar_cbr_expansao: false,
+    realizar_limites: false,
+    limites: defaultLimites(),
     cbr_fator_anel: "",
     cbr_cilindros: Array(5).fill(null).map((_, i) => ({
       cilindro_numero: "",
@@ -778,6 +781,32 @@ export default function EnsaioProctorPage() {
             <Textarea value={form.observacoes} onChange={(e) => setForm(prev => ({ ...prev, observacoes: e.target.value }))} rows={4} />
           </div>
         </CardContent>
+      </Card>
+
+      {/* Ensaio de Limites — Opcional */}
+      <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="realizar_limites"
+              checked={!!form.realizar_limites}
+              onChange={e => setForm(prev => ({ ...prev, realizar_limites: e.target.checked }))}
+              className="w-4 h-4 accent-[#00233B]"
+            />
+            <label htmlFor="realizar_limites" className="text-lg font-semibold text-[#00233B] cursor-pointer select-none">
+              Realizar Ensaios Físicos de Caracterização <span className="text-sm font-normal text-[#00233B]/60">(ABNT NBR 7181/2025 | 6459/2017 | 7180/2016)</span>
+            </label>
+          </div>
+        </CardHeader>
+        {form.realizar_limites && (
+          <CardContent className="pt-0">
+            <EnsaioLimites
+              data={form.limites || defaultLimites()}
+              onChange={limites => setForm(prev => ({ ...prev, limites }))}
+            />
+          </CardContent>
+        )}
       </Card>
 
       {/* CBR / Expansão — Opcional */}
