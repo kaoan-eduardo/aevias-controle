@@ -251,8 +251,6 @@ export default function EnsaioLimites({ data, onChange }) {
     });
   }, [granGrossaRetidos, data.amostra_total_seca]);
 
-  const amostraTotalSeca = amostraTotalSecaAuto || n(data.amostra_total_seca);
-
   /* ─── derived: Granulometria Fina ─── */
   const amostParcSeca = n(data.amostra_parcial_seca);
   const granFinaCalc = useMemo(() => {
@@ -269,6 +267,15 @@ export default function EnsaioLimites({ data, onChange }) {
 
   /* ─── derived: SP10 e campos calculados automaticamente ─── */
   const higroH = higroTeor;
+
+  // Amostra Total Seca calculada: Sₜ = Uₜ / (1 + H/100)
+  const amostraTotalSecaAuto = useMemo(() => {
+    const ut = n(data.amostra_total_umida);
+    if (ut == null || higroH == null) return null;
+    return parseFloat((ut / (1 + higroH / 100)).toFixed(3));
+  }, [data.amostra_total_umida, higroH]);
+
+  const amostraTotalSeca = amostraTotalSecaAuto || n(data.amostra_total_seca);
 
   // Solo Seco Retido na #10 = soma dos retidos (secos) de todas as peneiras grossas
   const soloSecoRetido10 = useMemo(() => {
@@ -292,13 +299,6 @@ export default function EnsaioLimites({ data, onChange }) {
     if (soloUmPassando10 == null || higroH == null) return null;
     return parseFloat((soloUmPassando10 / (higroH / 100 + 1)).toFixed(3));
   }, [soloUmPassando10, higroH]);
-
-  // Amostra Total Seca calculada: Sₜ = Uₜ / (1 + H/100)
-  const amostraTotalSecaAuto = useMemo(() => {
-    const ut = n(data.amostra_total_umida);
-    if (ut == null || higroH == null) return null;
-    return parseFloat((ut / (1 + higroH / 100)).toFixed(3));
-  }, [data.amostra_total_umida, higroH]);
 
   // Amostra Total Seca = SR10 + SP10 (alternativa se manual)
   const amostraTotalSecaCalc = useMemo(() => {
