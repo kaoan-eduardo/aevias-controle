@@ -636,9 +636,9 @@ export default function EnsaioLimites({ data, onChange }) {
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart margin={{ top: 10, right: 20, left: 10, bottom: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#00233B20" />
-                  <XAxis dataKey="x" type="number" domain={['dataMin - 2', 'dataMax + 2']} scale="linear"
+                  <XAxis dataKey="x" type="number" 
                     label={{ value: 'Nº de Golpes', position: 'insideBottom', offset: -15, fill: '#00233B', fontSize: 11 }}
-                    tick={{ fontSize: 10, fill: '#00233B' }} tickCount={8} interval="preserveStartEnd" />
+                    tick={{ fontSize: 10, fill: '#00233B' }} />
                   <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
                     label={{ value: '% de Água', angle: -90, position: 'insideLeft', offset: 10, fill: '#00233B', fontSize: 11 }}
                     tick={{ fontSize: 10, fill: '#00233B' }} width={45} />
