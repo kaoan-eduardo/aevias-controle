@@ -99,24 +99,22 @@ export function defaultLimites() {
   };
 }
 
-/* ─── Log fit for LL curve ─── */
+/* ─── Linear fit for LL curve ─── */
 function fitLogLine(points) {
-  // y = a * ln(x) + b → linearize with ln(x)
+  // y = a*x + b  (regressão linear simples)
   const valid = points.filter(p => p.x > 0 && p.y != null);
   if (valid.length < 2) return null;
-  const lnx = valid.map(p => Math.log(p.x));
-  const y = valid.map(p => p.y);
   const n = valid.length;
-  const sx = lnx.reduce((s, v) => s + v, 0);
-  const sy = y.reduce((s, v) => s + v, 0);
-  const sxx = lnx.reduce((s, v) => s + v * v, 0);
-  const sxy = lnx.reduce((s, v, i) => s + v * y[i], 0);
+  const sx = valid.reduce((s, p) => s + p.x, 0);
+  const sy = valid.reduce((s, p) => s + p.y, 0);
+  const sxx = valid.reduce((s, p) => s + p.x * p.x, 0);
+  const sxy = valid.reduce((s, p) => s + p.x * p.y, 0);
   const denom = n * sxx - sx * sx;
   if (Math.abs(denom) < 1e-10) return null;
   const a = (n * sxy - sx * sy) / denom;
   const b = (sy - a * sx) / n;
   // LL = umidade at 25 golpes
-  const ll = parseFloat((a * Math.log(25) + b).toFixed(1));
+  const ll = parseFloat((a * 25 + b).toFixed(1));
   return { a, b, ll };
 }
 
@@ -171,10 +169,10 @@ export default function EnsaioLimites({ data, onChange }) {
     const xs = llPoints.map(p => p.x);
     const minX = Math.max(1, Math.min(...xs) - 2);
     const maxX = Math.max(...xs) + 2;
-    return Array.from({ length: 40 }, (_, i) => {
-      const x = minX + (maxX - minX) * i / 39;
-      return { x: parseFloat(x.toFixed(1)), y: parseFloat((llFit.a * Math.log(x) + llFit.b).toFixed(2)) };
-    });
+    return [
+      { x: minX, y: parseFloat((llFit.a * minX + llFit.b).toFixed(2)) },
+      { x: maxX, y: parseFloat((llFit.a * maxX + llFit.b).toFixed(2)) },
+    ];
   }, [llFit, llPoints]);
 
   /* ─── derived: Granulometria Grossa ─── */
