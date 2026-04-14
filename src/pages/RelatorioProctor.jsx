@@ -91,13 +91,16 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
     });
   })() : lineData || [];
 
+  const xs = data.map(p => p.x);
+  const domainMinX = Math.min(...xs) - 0.3;
   const yMin = Math.min(...data.map(p => p.y));
+  const refLabel2 = refY != null ? parseFloat(refY).toFixed(2) : '';
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 8, right: 8, left: 8, bottom: 18 }}>
         <CartesianGrid strokeDasharray="2 2" stroke="#ccc" />
-        <XAxis dataKey="x" type="number" domain={['dataMin - 0.3', 'dataMax + 0.3']}
+        <XAxis dataKey="x" type="number" domain={[domainMinX, Math.max(...xs) + 0.3]}
           label={{ value: xLabel, position: 'insideBottom', offset: -12, fontSize: 7 }}
           tick={{ fontSize: 7 }} tickFormatter={v => v.toFixed(1)} tickCount={6} />
         <YAxis dataKey="y" type="number" domain={['dataMin - 0.02', 'dataMax + 0.02']}
@@ -113,11 +116,12 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
             <Line data={[
               { x: refX, y: yMin },
               { x: refX, y: refY }
-            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} name="Ref X" />
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false} name="Ref X" />
             <Line data={[
-              { x: Math.min(...data.map(p => p.x)), y: refY },
+              { x: domainMinX, y: refY },
               { x: refX, y: refY }
-            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false} label={{ value: refLabel, fill: 'red', fontSize: 7, position: 'insideTopRight' }} />
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false}
+              label={{ value: refLabel2, fill: 'red', fontSize: 7, position: 'insideTopLeft' }} />
           </>
         )}
       </ComposedChart>
