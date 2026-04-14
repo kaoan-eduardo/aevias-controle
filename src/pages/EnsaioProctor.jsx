@@ -207,13 +207,19 @@ export default function EnsaioProctorPage() {
   };
 
   const handleObraChange = async (id) => {
-    setForm(prev => ({ ...prev, obra_id: id, project_id: "" }));
-    if (id) {
-      const obra = obras.find(o => o.id === id);
-      if (obra?.project_ids?.length > 0) {
-        const projs = await Promise.all(obra.project_ids.map(pid => base44.entities.Project.get(pid)));
-        setProjetos(projs);
-      }
+    const obra = obras.find(o => o.id === id);
+    // Busca o cliente da regional da obra
+    let clienteAuto = "";
+    if (obra?.regional_id) {
+      try {
+        const regional = await base44.entities.Regional.get(obra.regional_id);
+        clienteAuto = regional?.cliente || "";
+      } catch {}
+    }
+    setForm(prev => ({ ...prev, obra_id: id, project_id: "", cliente: clienteAuto }));
+    if (id && obra?.project_ids?.length > 0) {
+      const projs = await Promise.all(obra.project_ids.map(pid => base44.entities.Project.get(pid)));
+      setProjetos(projs);
     }
   };
 
@@ -411,8 +417,7 @@ export default function EnsaioProctorPage() {
                 <SelectContent>{projetos.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div><Label className="text-[#00233B]">Cliente</Label><Input value={form.cliente} onChange={(e) => setForm(prev => ({ ...prev, cliente: e.target.value }))} /></div>
-            <div><Label className="text-[#00233B]">Contrato</Label><Input value={form.contrato} onChange={(e) => setForm(prev => ({ ...prev, contrato: e.target.value }))} /></div>
+            <div><Label className="text-[#00233B]">Cliente</Label><Input value={form.cliente} readOnly className="bg-gray-100/50 cursor-not-allowed" /></div>
             <div><Label className="text-[#00233B]">Rodovia *</Label><Input value={form.rodovia} onChange={(e) => setForm(prev => ({ ...prev, rodovia: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Trecho *</Label><Input value={form.trecho} onChange={(e) => setForm(prev => ({ ...prev, trecho: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Local de Coleta *</Label><Input value={form.local_coleta} onChange={(e) => setForm(prev => ({ ...prev, local_coleta: e.target.value }))} /></div>
