@@ -632,7 +632,7 @@ export default function EnsaioLimites({ data, onChange }) {
         {llPoints.length >= 2 && (
           <div className="mt-4">
             <p className="text-[11px] font-bold text-[#00233B] mb-1 text-center uppercase">Gráfico do Limite de Liquidez</p>
-            <div style={{ height: 220 }}>
+            <div style={{ height: 286 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart margin={{ top: 10, right: 20, left: 10, bottom: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#00233B20" />

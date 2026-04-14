@@ -447,7 +447,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
       {llPoints.length >= 2 && llFit && (
         <div>
           <div className="bg-slate-200 px-1 py-0.5 font-bold text-[9px] mb-0.5">Gráfico — Limite de Liquidez</div>
-          <div style={{ height: 160 }}>
+          <div style={{ height: 208 }}>
             <LLChart llPoints={llPoints} llFit={llFit} />
           </div>
         </div>
