@@ -313,20 +313,20 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
                   <td className={td}>{pen.label}</td>
                   <td className={tdC}>{pen.mm}</td>
                   <td className={tdC}>{fmtN(pen.retido, 2)}</td>
-                  <td className={tdCalc}>{granGrossaCalc[i]?.passando != null ? granGrossaCalc[i].passando.toFixed(2) : '-'}</td>
-                  <td className={tdCalc}>{granGrossaCalc[i]?.passPct != null ? granGrossaCalc[i].passPct.toFixed(1) : '-'}</td>
+                  <td className={tdCalc}>{granGrossaCalc[i]?.passando != null ? fmtN(granGrossaCalc[i].passando, 2) : '-'}</td>
+                  <td className={tdCalc}>{granGrossaCalc[i]?.passPct != null ? fmtN(granGrossaCalc[i].passPct, 2) : '-'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <div className="mt-1 text-[8px] space-y-0.5">
             {[
-              ["Amostra Total Úmida (g)", fmtN(lim.amostra_total_umida, 3)],
-              ["Amostra Total Seca (g)", fmtN(lim.amostra_total_seca, 3)],
-              ["Solo Seco Retido #10 (g)", fmtN(soloSecoRetido10, 3)],
-              ["Solo Úmido Passando #10 (g)", fmtN(soloUmPassando10, 3)],
-              ["Solo Seco Passando #10 — SP₁₀ (g)", fmtN(sp10, 3)],
-              ["Total Seca Calc. SR₁₀+SP₁₀ (g)", fmtN(amostraTotalSecaCalc, 3)],
+              ["Amostra Total Úmida (g)", fmtN(lim.amostra_total_umida, 2)],
+              ["Amostra Total Seca (g)", fmtN(lim.amostra_total_seca, 2)],
+              ["Solo Seco Retido #10 (g)", fmtN(soloSecoRetido10, 2)],
+              ["Solo Úmido Passando #10 (g)", fmtN(soloUmPassando10, 2)],
+              ["Solo Seco Passando #10 — SP₁₀ (g)", fmtN(sp10, 2)],
+              ["Total Seca Calc. SR₁₀+SP₁₀ (g)", fmtN(amostraTotalSecaCalc, 2)],
             ].map(([label, val]) => (
               <div key={label} className="flex justify-between border-b border-slate-200 pb-0.5">
                 <span className="text-gray-700">{label}</span>
@@ -352,9 +352,9 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
                     <td className={td}>{pen.label}</td>
                     <td className={tdC}>{pen.mm}</td>
                     <td className={tdC}>{fmtN(pen.retido, 2)}</td>
-                    <td className={tdCalc}>{granFinaCalc[i]?.passando != null ? granFinaCalc[i].passando.toFixed(2) : '-'}</td>
-                    <td className={tdCalc}>{granFinaCalc[i]?.passPct != null ? granFinaCalc[i].passPct.toFixed(1) : '-'}</td>
-                    <td className={tdCalc}>{totalPasePct != null ? totalPasePct.toFixed(1) : '-'}</td>
+                    <td className={tdCalc}>{granFinaCalc[i]?.passando != null ? fmtN(granFinaCalc[i].passando, 2) : '-'}</td>
+                    <td className={tdCalc}>{granFinaCalc[i]?.passPct != null ? fmtN(granFinaCalc[i].passPct, 2) : '-'}</td>
+                    <td className={tdCalc}>{totalPasePct != null ? fmtN(totalPasePct, 2) : '-'}</td>
                   </tr>
                 );
               })}
@@ -362,8 +362,8 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
           </table>
           <div className="mt-1 text-[8px] space-y-0.5">
             {[
-              ["Amostra Parcial Úmida (g)", fmtN(lim.amostra_parcial_umida, 3)],
-              ["Amostra Parcial Seca (g)", fmtN(lim.amostra_parcial_seca, 3)],
+              ["Amostra Parcial Úmida (g)", fmtN(lim.amostra_parcial_umida, 2)],
+              ["Amostra Parcial Seca (g)", fmtN(lim.amostra_parcial_seca, 2)],
             ].map(([label, val]) => (
               <div key={label} className="flex justify-between border-b border-slate-200 pb-0.5">
                 <span className="text-gray-700">{label}</span>
