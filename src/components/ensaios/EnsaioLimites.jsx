@@ -78,9 +78,12 @@ const defaultLPRow = () => ({
 export function defaultLimites() {
   return {
     // Umidade Higroscópica
-    higro_solo_umido_capsula: "",
-    higro_solo_seco_capsula: "",
-    higro_peso_capsula: "",
+    higro_solo_umido_capsula_1: "",
+    higro_solo_umido_capsula_2: "",
+    higro_solo_seco_capsula_1: "",
+    higro_solo_seco_capsula_2: "",
+    higro_peso_capsula_1: "",
+    higro_peso_capsula_2: "",
     // Peneiramento Grosso
     peneiras_grossas: PENEIRAS_GROSSAS.map(p => ({ ...p, retido: "" })),
     amostra_total_umida: "",
@@ -133,10 +136,19 @@ export default function EnsaioLimites({ data, onChange }) {
   };
 
   /* ─── derived: Umidade Higroscópica ─── */
-  const higroTeor = useMemo(() =>
-    calcUmidade(data.higro_solo_umido_capsula, data.higro_solo_seco_capsula, data.higro_peso_capsula),
-    [data.higro_solo_umido_capsula, data.higro_solo_seco_capsula, data.higro_peso_capsula]
+  const higroTeor1 = useMemo(() =>
+    calcUmidade(data.higro_solo_umido_capsula_1, data.higro_solo_seco_capsula_1, data.higro_peso_capsula_1),
+    [data.higro_solo_umido_capsula_1, data.higro_solo_seco_capsula_1, data.higro_peso_capsula_1]
   );
+  const higroTeor2 = useMemo(() =>
+    calcUmidade(data.higro_solo_umido_capsula_2, data.higro_solo_seco_capsula_2, data.higro_peso_capsula_2),
+    [data.higro_solo_umido_capsula_2, data.higro_solo_seco_capsula_2, data.higro_peso_capsula_2]
+  );
+  const higroTeorMedia = useMemo(() => {
+    const valid = [higroTeor1, higroTeor2].filter(v => v != null);
+    return valid.length > 0 ? parseFloat((valid.reduce((s, v) => s + v, 0) / valid.length).toFixed(2)) : null;
+  }, [higroTeor1, higroTeor2]);
+  const higroTeor = higroTeorMedia;
 
   /* ─── derived: LL rows ─── */
   const llCalc = useMemo(() => (data.ll_rows || []).map(calcLLRow), [data.ll_rows]);
@@ -276,45 +288,34 @@ export default function EnsaioLimites({ data, onChange }) {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[#00233B]/8">
-                  <th className={thCls}>Campo</th><th className={thCls}>Cálculo</th><th className={thCls}>Un.</th><th className={thCls}>Valor</th>
+                  <th className={thCls}>Campo</th>
+                  <th className={thCls + " text-center"}>Am. 1</th>
+                  <th className={thCls + " text-center"}>Am. 2</th>
+                  <th className={thCls + " text-center"}>Média</th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  { label: "Solo Úmido+Cápsula", sym: "P₁", field: "higro_solo_umido_capsula" },
-                  { label: "Solo Seco+Cápsula", sym: "P₂", field: "higro_solo_seco_capsula" },
-                  { label: "Peso da Cápsula", sym: "Tᵤ", field: "higro_peso_capsula" },
+                  { label: "Solo Úmido+Cápsula (g)", f1: "higro_solo_umido_capsula_1", f2: "higro_solo_umido_capsula_2" },
+                  { label: "Solo Seco+Cápsula (g)", f1: "higro_solo_seco_capsula_1", f2: "higro_solo_seco_capsula_2" },
+                  { label: "Peso da Cápsula (g)", f1: "higro_peso_capsula_1", f2: "higro_peso_capsula_2" },
                 ].map(row => (
-                  <tr key={row.field} className="bg-white/10">
+                  <tr key={row.f1} className="bg-white/10">
                     <td className={tdCls + " text-[10px] text-[#00233B]"}>{row.label}</td>
-                    <td className={tdCls + " text-[10px] text-center text-gray-400"}>{row.sym}</td>
-                    <td className={tdCls + " text-[10px] text-center text-gray-400"}>g</td>
-                    <td className={tdCls}><Input className={fieldCls} type="number" step="0.001" value={data[row.field] || ""} onChange={e => set(row.field, e.target.value)} /></td>
+                    <td className={tdCls}><Input className={fieldCls} type="number" step="0.001" value={data[row.f1] || ""} onChange={e => set(row.f1, e.target.value)} /></td>
+                    <td className={tdCls}><Input className={fieldCls} type="number" step="0.001" value={data[row.f2] || ""} onChange={e => set(row.f2, e.target.value)} /></td>
+                    <td className={tdCalcCls}>-</td>
                   </tr>
                 ))}
                 <tr className="bg-gray-100/30">
-                  <td className={tdCls + " text-[10px] text-[#00233B]"}>Água</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>Pω=P₁-P₂</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>g</td>
-                  <td className={tdCalcCls}>{n(data.higro_solo_umido_capsula) != null && n(data.higro_solo_seco_capsula) != null ? (n(data.higro_solo_umido_capsula) - n(data.higro_solo_seco_capsula)).toFixed(3) : "-"}</td>
-                </tr>
-                <tr className="bg-gray-100/30">
-                  <td className={tdCls + " text-[10px] text-[#00233B]"}>Solo Seco</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>Pss=P₂-Tᵤ</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>g</td>
-                  <td className={tdCalcCls}>{n(data.higro_solo_seco_capsula) != null && n(data.higro_peso_capsula) != null ? (n(data.higro_solo_seco_capsula) - n(data.higro_peso_capsula)).toFixed(3) : "-"}</td>
-                </tr>
-                <tr className="bg-gray-100/30">
-                  <td className={tdCls + " text-[10px] text-[#00233B]"}>Teor de Umidade</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>tω = (Pω/Pss)×100</td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>%</td>
-                  <td className={tdCalcCls}>{higroTeor != null ? higroTeor.toFixed(2) : "-"}</td>
+                  <td className={tdCls + " text-[10px] text-[#00233B]"}>Teor de Umidade (%)</td>
+                  <td className={tdCalcCls}>{higroTeor1 != null ? higroTeor1.toFixed(2) : "-"}</td>
+                  <td className={tdCalcCls}>{higroTeor2 != null ? higroTeor2.toFixed(2) : "-"}</td>
+                  <td className={tdCalcCls}>{higroTeorMedia != null ? higroTeorMedia.toFixed(2) : "-"}</td>
                 </tr>
                 <tr className="bg-[#BFCF99]/20 font-bold">
-                  <td className={tdCls + " text-[10px] text-[#00233B] font-bold"}>Umidade Média (H)</td>
-                  <td className={tdCls + " text-[10px] text-center"}></td>
-                  <td className={tdCls + " text-[10px] text-center text-gray-400"}>%</td>
-                  <td className={tdCalcCls + " font-bold text-[#00233B]"}>{higroTeor != null ? higroTeor.toFixed(2) : "-"}</td>
+                  <td className={tdCls + " text-[10px] text-[#00233B] font-bold"}>Umidade Média — H (%)</td>
+                  <td colSpan={3} className={tdCalcCls + " font-bold text-[#00233B]"}>{higroTeorMedia != null ? higroTeorMedia.toFixed(2) : "-"}</td>
                 </tr>
               </tbody>
             </table>
