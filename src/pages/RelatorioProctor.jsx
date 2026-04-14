@@ -203,7 +203,6 @@ function ExpansaoSection({ ensaio }) {
             <th className="border border-slate-400 px-1 py-0.5 bg-slate-100">4° dia (mm)</th>
             <th className="border border-slate-400 px-1 py-0.5">Dif. (mm)</th>
             <th className="border border-slate-400 px-1 py-0.5 font-bold">Exp. (%)</th>
-            <th className="border border-slate-400 px-1 py-0.5">M. solo final (g)</th>
           </tr>
         </thead>
         <tbody>
@@ -220,7 +219,6 @@ function ExpansaoSection({ ensaio }) {
                 ))}
                 <td className="border border-slate-400 px-1 py-0.5 text-center">{diferenca != null ? fmtN(diferenca, 2) : '-'}</td>
                 <td className="border border-slate-400 px-1 py-0.5 text-center font-bold text-blue-800">{expansao_pct != null ? fmtN(expansao_pct, 2) : '-'}</td>
-                <td className="border border-slate-400 px-1 py-0.5 text-center">{fmtN(exp.massa_solo_final, 1)}</td>
               </tr>
             );
           })}
