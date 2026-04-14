@@ -91,6 +91,8 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
     });
   })() : lineData || [];
 
+  const yMin = Math.min(...data.map(p => p.y));
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart margin={{ top: 8, right: 8, left: 8, bottom: 18 }}>
@@ -106,9 +108,18 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
         <Scatter data={data} dataKey="y" fill="#6b8f3e" stroke={color} strokeWidth={1} r={4} name="Pontos" isAnimationActive={false} />
-        {refX != null && <ReferenceLine x={refX} stroke="red" strokeDasharray="3 2" strokeWidth={1} />}
-        {refY != null && <ReferenceLine y={refY} stroke="red" strokeDasharray="3 2" strokeWidth={1}
-          label={{ value: refLabel, fill: 'red', fontSize: 7, position: 'insideTopRight' }} />}
+        {refX != null && (
+          <>
+            <Line data={[
+              { x: refX, y: yMin },
+              { x: refX, y: refY }
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} name="Ref X" />
+            <Line data={[
+              { x: Math.min(...data.map(p => p.x)), y: refY },
+              { x: refX, y: refY }
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false} label={{ value: refLabel, fill: 'red', fontSize: 7, position: 'insideTopRight' }} />
+          </>
+        )}
       </ComposedChart>
     </ResponsiveContainer>
   );
