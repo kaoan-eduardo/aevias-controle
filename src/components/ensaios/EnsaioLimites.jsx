@@ -99,6 +99,50 @@ export function defaultLimites() {
   };
 }
 
+/* ─── Classificação HRB (AASHTO) ─── */
+function classificarHRB(F10, F40, F200, ll, ip) {
+  // F10, F40, F200 = % passante nas respectivas peneiras
+  // ll, ip = Limite de Liquidez e Índice de Plasticidade
+
+  const f200 = F200 ?? 0;
+  const f40  = F40  ?? 0;
+  const f10  = F10  ?? 0;
+  const llv  = ll   ?? 0;
+  const ipv  = ip   ?? 0;
+
+  // ── Solos Granulares: F200 ≤ 35 ──
+  if (f200 <= 35) {
+    // A1-a: F10 ≤ 50, F40 ≤ 30, IP ≤ 6
+    if (f10 <= 50 && f40 <= 30 && ipv <= 6) return "A1-a";
+    // A1-b: F40 ≤ 50, IP ≤ 6
+    if (f40 <= 50 && ipv <= 6) return "A1-b";
+    // A3: F40 ≥ 51, IP = NP (considera IP = 0)
+    if (f40 >= 51 && ipv === 0 && f200 <= 10) return "A3";
+    // A2-4: F200 ≤ 35, LL ≤ 40, IP ≤ 10
+    if (f200 <= 35 && llv <= 40 && ipv <= 10) return "A2-4";
+    // A2-5: F200 ≤ 35, LL ≥ 41, IP ≤ 10
+    if (f200 <= 35 && llv >= 41 && ipv <= 10) return "A2-5";
+    // A2-6: F200 ≤ 35, LL ≤ 40, IP ≥ 11
+    if (f200 <= 35 && llv <= 40 && ipv >= 11) return "A2-6";
+    // A2-7: F200 ≤ 35, LL ≥ 41, IP ≥ 11
+    if (f200 <= 35 && llv >= 41 && ipv >= 11) return "A2-7";
+  }
+
+  // ── Solos Siltosos e Argilosos: F200 > 35 ──
+  // A4: LL ≤ 40, IP ≤ 10
+  if (f200 >= 36 && llv <= 40 && ipv <= 10) return "A4";
+  // A5: LL ≥ 41, IP ≤ 10
+  if (f200 >= 36 && llv >= 41 && ipv <= 10) return "A5";
+  // A6: LL ≤ 40, IP ≥ 11
+  if (f200 >= 36 && llv <= 40 && ipv >= 11) return "A6";
+  // A7-5: LL ≥ 41, IP ≤ (LL - 30)
+  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv <= (llv - 30)) return "A7-5";
+  // A7-6: LL ≥ 41, IP > (LL - 30)
+  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv > (llv - 30)) return "A7-6";
+
+  return "-";
+}
+
 /* ─── Linear fit for LL curve ─── */
 function fitLogLine(points) {
   // y = a*x + b  (regressão linear simples)
@@ -312,6 +356,28 @@ export default function EnsaioLimites({ data, onChange }) {
     const pct = (passando200 / amostParcSeca) * (sp10 / amostraTotalSeca) * 100;
     return parseFloat(pct.toFixed(1));
   }, [granFinaCalc, amostraTotalSeca, sp10, amostParcSeca]);
+
+  // % passante na #10 (2mm) e #40 (0,42mm) em relação ao total
+  const pct10 = useMemo(() => {
+    if (!granGrossaCalc.length || !amostraTotalSeca) return null;
+    // peneira #10 (2mm) é o índice 5 (última da grossas)
+    const passando10 = granGrossaCalc[5]?.passando;
+    if (passando10 == null) return null;
+    return parseFloat((passando10 / amostraTotalSeca * 100).toFixed(1));
+  }, [granGrossaCalc, amostraTotalSeca]);
+
+  const pct40 = useMemo(() => {
+    if (!granFinaCalc.length || !amostraTotalSeca || sp10 == null || amostParcSeca == null || amostParcSeca <= 0) return null;
+    // peneira #40 (0,42mm) é o índice 0 da fina (passando)
+    const passando40 = granFinaCalc[0]?.passando;
+    if (passando40 == null) return null;
+    return parseFloat(((passando40 / amostParcSeca) * (sp10 / amostraTotalSeca) * 100).toFixed(1));
+  }, [granFinaCalc, amostParcSeca, amostraTotalSeca, sp10]);
+
+  const classificacaoHRB = useMemo(() => {
+    if (pct200 == null) return "-";
+    return classificarHRB(pct10, pct40, pct200, llFit?.ll ?? null, IP);
+  }, [pct10, pct40, pct200, llFit, IP]);
 
   const fieldCls = "h-8 text-xs border-[#00233B]/30";
   const thCls = "border border-[#00233B]/20 px-2 py-1.5 text-left font-semibold text-[#00233B] text-[10px] bg-[#00233B]/8";
@@ -605,7 +671,7 @@ export default function EnsaioLimites({ data, onChange }) {
                 { label: "Limite de Plasticidade", value: lpMedia != null ? `${lpMedia}%` : "0,0", highlight: true },
                 { label: "Índice de Plasticidade", value: IP != null ? `${IP}%` : "-", highlight: true },
                 { label: "Índice de Grupo (IG)", value: igCalc != null ? `${igCalc}` : "-" },
-                { label: "Classificação HRB", value: "-" },
+                { label: "Classificação HRB", value: classificacaoHRB },
               ].map(row => (
                 <tr key={row.label} className={row.highlight ? "bg-[#BFCF99]/20" : "bg-white/10"}>
                   <td className="border border-[#00233B]/20 px-2 py-1.5 font-medium text-[#00233B] w-3/4">{row.label}</td>
