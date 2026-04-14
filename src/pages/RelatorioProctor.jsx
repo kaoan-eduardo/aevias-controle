@@ -694,7 +694,7 @@ export default function RelatorioProctor() {
 
           {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO */}
           {ensaio.realizar_limites && ensaio.limites && (
-            <RelatorioLimites limites={ensaio.limites} />
+            <RelatorioLimites limites={ensaio.limites} ensaio={ensaio} obra={obra} regional={regional} />
           )}
 
           {/* OBSERVAÇÕES */}

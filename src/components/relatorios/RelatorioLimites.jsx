@@ -101,7 +101,7 @@ function LLChart({ llPoints, llFit }) {
 }
 
 /* ─── MAIN EXPORT ─── */
-export default function RelatorioLimites({ limites }) {
+export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
   const lim = limites || {};
 
   /* Umidade higroscópica */
@@ -201,13 +201,50 @@ export default function RelatorioLimites({ limites }) {
 
   if (!limites) return null;
 
+  const fmtDate = (d) => d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('pt-BR') : '-';
+
   const th = "border border-slate-400 px-1 py-0.5 text-left font-semibold bg-slate-100 text-[8px]";
   const td = "border border-slate-400 px-1 py-0.5 text-[8px]";
   const tdC = "border border-slate-400 px-1 py-0.5 text-center text-[8px]";
   const tdCalc = "border border-slate-400 px-1 py-0.5 text-center text-[8px] bg-gray-50 text-gray-600 font-semibold";
 
+  const infoFields = ensaio ? [
+    ["OBRA", obra?.name || '-'],
+    ["LOCAL", ensaio.local_coleta || '-'],
+    ["MATERIAL", ensaio.material || '-'],
+    ["RODOVIA", ensaio.rodovia || '-'],
+    ["ENERGIA", ensaio.energia_compactacao || '-'],
+    ["LABORATORISTA", ensaio.laboratorista_name || '-'],
+    ["TRECHO", ensaio.trecho || '-'],
+    ["CAMADA", ensaio.camada || '-'],
+    ["DATA", fmtDate(ensaio.data_ensaio)],
+  ] : [];
+
   return (
-    <section className="space-y-2">
+    <section className="space-y-2" style={{ pageBreakBefore: 'always' }}>
+
+      {/* Cabeçalho repetido */}
+      <header className="grid items-center py-1 mb-1" style={{ gridTemplateColumns: '60px 1fr 60px' }}>
+        <div>
+          <img
+            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
+            alt="Logo" className="h-8 object-contain"
+          />
+        </div>
+        <h1 className="text-xs font-bold text-gray-800 text-center">CARACTERIZAÇÃO MECÂNICA</h1>
+      </header>
+
+      {infoFields.length > 0 && (
+        <div className="grid grid-cols-3 gap-x-4 gap-y-0.5 text-[9px] border border-slate-300 p-1 rounded mb-1">
+          {infoFields.map(([label, val]) => (
+            <div key={label}>
+              <span className="font-bold text-gray-700">{label}: </span>
+              <span className="text-gray-900">{val}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="bg-slate-700 text-white px-2 py-0.5 font-bold text-center text-[10px]">
         ENSAIOS FÍSICOS DE CARACTERIZAÇÃO (ABNT NBR 7181 | 6459 | 7180)
       </div>
