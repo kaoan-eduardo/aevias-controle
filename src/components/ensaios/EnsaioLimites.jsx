@@ -278,25 +278,7 @@ export default function EnsaioLimites({ data, onChange }) {
     // IP@: se IP < 10 → 0, senão min(IP,30) - 10
     const ipAt = ip < 10 ? 0 : Math.min(ip, 30) - 10;
 
-    const igRaw = 0.2 * ll200 + 0.005 * ll200 * llAt + 0.01 * ip200 * ipAt;
-    const ig = parseFloat(igRaw.toFixed(0));
-
-    console.log("=== CÁLCULO DO ÍNDICE DE GRUPO ===");
-    console.log(`F (% passante #200): ${F}`);
-    console.log(`LL original: ${ll}`);
-    console.log(`IP original: ${ip}`);
-    console.log("--- Variáveis intermediárias ---");
-    console.log(`LL#200 = ${F < 35 ? `F(${F}) < 35 → 0` : `min(F=${F}, 75) - 35 = ${Math.min(F,75)} - 35`} = ${ll200}`);
-    console.log(`IP#200 = ${F < 15 ? `F(${F}) < 15 → 0` : `min(F=${F}, 55) - 15 = ${Math.min(F,55)} - 15`} = ${ip200}`);
-    console.log(`LL@    = ${ll < 40 ? `LL(${ll}) < 40 → 0` : `min(LL=${ll}, 60) - 40 = ${Math.min(ll,60)} - 40`} = ${llAt}`);
-    console.log(`IP@    = ${ip < 10 ? `IP(${ip}) < 10 → 0` : `min(IP=${ip}, 30) - 10 = ${Math.min(ip,30)} - 10`} = ${ipAt}`);
-    console.log("--- Fórmula ---");
-    console.log(`IG = 0,2×${ll200} + 0,005×${ll200}×${llAt} + 0,01×${ip200}×${ipAt}`);
-    console.log(`IG = ${0.2*ll200} + ${0.005*ll200*llAt} + ${0.01*ip200*ipAt}`);
-    console.log(`IG (raw) = ${igRaw}`);
-    console.log(`IG (arredondado) = ${ig}`);
-    console.log("==================================");
-
+    const ig = parseFloat((0.2 * ll200 + 0.005 * ll200 * llAt + 0.01 * ip200 * ipAt).toFixed(0));
     return Math.max(0, ig);
   }, [pct200, llFit, IP]);
 
