@@ -202,6 +202,11 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
   if (!limites) return null;
 
   const fmtDate = (d) => d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('pt-BR') : '-';
+  const fmtDateTime = (d) => {
+    if (!d) return '-';
+    const n = (!d.endsWith('Z') && !d.includes('+')) ? d + 'Z' : d;
+    return new Date(n).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' });
+  };
 
   const th = "border border-slate-400 px-1 py-0.5 text-left font-semibold bg-slate-100 text-[8px]";
   const td = "border border-slate-400 px-1 py-0.5 text-[8px]";
@@ -477,6 +482,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
                   <>
                     <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>
                     <p>{ensaio.created_by}</p>
+                    {ensaio.created_date && <p>em {fmtDateTime(ensaio.created_date)}</p>}
                   </>
                 )}
               </div>
@@ -492,6 +498,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
                     <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
                     <p>{ensaio.approved_by}</p>
                     {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
+                    {ensaio.approved_date && <p>em {fmtDateTime(ensaio.approved_date)}</p>}
                   </>
                 )}
               </div>
@@ -507,6 +514,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
                     <p className="font-bold text-slate-700">{ensaio.client_signature.engineer_name}</p>
                     <p>{ensaio.client_signature.signed_by}</p>
                     {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
+                    {ensaio.client_signature.signed_date && <p>em {fmtDateTime(ensaio.client_signature.signed_date)}</p>}
                   </>
                 )}
               </div>
