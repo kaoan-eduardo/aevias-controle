@@ -173,21 +173,31 @@ export default function EnsaioProctorPage() {
       const userData = await User.me();
       setForm(prev => ({ ...prev, laboratorista_name: userData.laboratorista_name || userData.full_name }));
 
-      const obrasData = await Obra.list();
-      // Filter obras: only show obras where laboratorista is in the regional's laboratoristas_responsaveis
-      const regionaisData = await base44.entities.Regional.list();
-      const regionaisDoLab = regionaisData.filter(r => 
+      // Busca paralela para reduzir chamadas e evitar rate limit
+      const [obrasData, regionaisData, recordData] = await Promise.all([
+        Obra.list(),
+        base44.entities.Regional.list(),
+        recordId ? base44.entities.EnsaioProctor.get(recordId) : Promise.resolve(null),
+      ]);
+
+      // Filtra obras pela regional onde o laboratorista está cadastrado
+      const regionaisDoLab = regionaisData.filter(r =>
         (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
       );
       const regionalIds = regionaisDoLab.map(r => r.id);
-      const filteredObras = obrasData.filter(o => regionalIds.includes(o.regional_id));
+
+      // Admin/sala técnica/gestor veem todas as obras; laboratorista só vê as da sua regional
+      const isLabUser = !userData.role || userData.role === 'user';
+      const filteredObras = isLabUser
+        ? obrasData.filter(o => regionalIds.includes(o.regional_id))
+        : obrasData;
+
       setObras(filteredObras);
 
-      if (recordId) {
-        const record = await base44.entities.EnsaioProctor.get(recordId);
-        setForm(record);
-        if (record.project_id) {
-          const projectData = await base44.entities.Project.get(record.project_id);
+      if (recordData) {
+        setForm(recordData);
+        if (recordData.project_id) {
+          const projectData = await base44.entities.Project.get(recordData.project_id);
           setProjetos([projectData]);
         }
       }
