@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import {
   ComposedChart, Scatter, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ResponsiveContainer,
+  ResponsiveContainer,
 } from "recharts";
 
 const fmtN = (v, d = 2) => (v !== null && v !== undefined && !isNaN(parseFloat(v))) ? parseFloat(v).toFixed(d) : '-';
@@ -92,8 +92,14 @@ function LLChart({ llPoints, llFit }) {
           tick={{ fontSize: 7 }} width={36} tickCount={5} />
         <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
         <Line data={curveData} dataKey="y" type="monotone" stroke="#1e3a5f" strokeWidth={1.5} dot={false} isAnimationActive={false} />
-        <ReferenceLine x={25} stroke="red" strokeDasharray="3 2" strokeWidth={1}
-          label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 7, position: 'top' }} />
+        <Line data={[
+          { x: 25, y: 0 },
+          { x: 25, y: llFit.ll }
+        ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} name="LL ref" />
+        <Line data={[
+          { x: 0, y: llFit.ll },
+          { x: 25, y: llFit.ll }
+        ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="3 2" strokeWidth={1} dot={false} isAnimationActive={false} label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 7, position: 'top' }} />
         <Scatter data={llPoints} dataKey="y" fill="#6b8f3e" stroke="#1e3a5f" r={4} isAnimationActive={false} />
       </ComposedChart>
     </ResponsiveContainer>
