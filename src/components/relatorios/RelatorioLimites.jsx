@@ -91,7 +91,7 @@ function LLChart({ llPoints, llFit }) {
           label={{ value: '% Água', angle: -90, position: 'insideLeft', offset: 10, fontSize: 7 }}
           tick={{ fontSize: 7 }} width={36} tickCount={5} />
         <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
-        <Line data={[...curveData].sort((a, b) => b.x - a.x)} dataKey="y" type="monotone" stroke="#1e3a5f" strokeWidth={1.5} dot={false} isAnimationActive={false} />
+        <Line data={curveData} dataKey="y" type="monotone" stroke="#1e3a5f" strokeWidth={1.5} dot={false} isAnimationActive={false} />
         <ReferenceLine x={25} stroke="red" strokeDasharray="3 2" strokeWidth={1}
           label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 7, position: 'top' }} />
         <Scatter data={llPoints} dataKey="y" fill="#6b8f3e" stroke="#1e3a5f" r={4} isAnimationActive={false} />

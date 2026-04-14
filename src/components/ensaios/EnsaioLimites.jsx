@@ -636,7 +636,7 @@ export default function EnsaioLimites({ data, onChange }) {
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart margin={{ top: 10, right: 20, left: 10, bottom: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#00233B20" />
-                  <XAxis dataKey="x" type="number" domain={['dataMax + 2', 'dataMin - 2']} reversed
+                  <XAxis dataKey="x" type="number" domain={['dataMin - 2', 'dataMax + 2']}
                     label={{ value: 'Nº de Golpes', position: 'insideBottom', offset: -15, fill: '#00233B', fontSize: 11 }}
                     tick={{ fontSize: 10, fill: '#00233B' }} tickCount={6} />
                   <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
@@ -644,7 +644,7 @@ export default function EnsaioLimites({ data, onChange }) {
                     tick={{ fontSize: 10, fill: '#00233B' }} width={45} />
                   <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
                   {llCurve.length > 0 && (
-                    <Line data={[...llCurve].sort((a, b) => b.x - a.x)} dataKey="y" type="monotone" stroke="#00233B" strokeWidth={2} dot={false} isAnimationActive={false} name="Curva LL" />
+                    <Line data={llCurve} dataKey="y" type="monotone" stroke="#00233B" strokeWidth={2} dot={false} isAnimationActive={false} name="Curva LL" />
                   )}
                   {llFit && <ReferenceLine x={25} stroke="red" strokeDasharray="4 3" strokeWidth={1.5}
                     label={{ value: `LL=${llFit.ll}%`, fill: 'red', fontSize: 9, position: 'top' }} />}
