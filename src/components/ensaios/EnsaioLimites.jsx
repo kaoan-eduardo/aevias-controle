@@ -87,9 +87,6 @@ export function defaultLimites() {
     // Peneiramento Grosso
     peneiras_grossas: PENEIRAS_GROSSAS.map(p => ({ ...p, retido: "" })),
     amostra_total_umida: "",
-    solo_seco_retido_10: "",
-    solo_umido_passando_10: "",
-    solo_seco_passando_10: "",
     amostra_total_seca: "",
     // Peneiramento Fino
     amostra_parcial_umida: "",
@@ -181,18 +178,32 @@ export default function EnsaioLimites({ data, onChange }) {
   }, [llFit, llPoints]);
 
   /* ─── derived: Granulometria Grossa ─── */
-  const amostraTotalSeca = n(data.amostra_total_seca);
+  // Amostra total seca = soma de todos os retidos + passando da última peneira (calculado ao final)
+  // Para calcular %, usamos a soma dos retidos de todas as peneiras + passando final
+  const granGrossaRetidos = useMemo(() => {
+    return (data.peneiras_grossas || []).map(pen => n(pen.retido) || 0);
+  }, [data.peneiras_grossas]);
+
+  // amostraTotalSeca = soma de todos os retidos das peneiras grossas + SP10 (calculado depois)
+  // Para o % passante usamos o passando acumulado direto sem precisar do total
   const granGrossaCalc = useMemo(() => {
-    if (!amostraTotalSeca || amostraTotalSeca <= 0) return [];
-    let acumPassando = amostraTotalSeca;
-    return (data.peneiras_grossas || []).map(pen => {
-      const retido = n(pen.retido) || 0;
+    const retidos = granGrossaRetidos;
+    const totalRetido = retidos.reduce((s, r) => s + r, 0);
+    // Usamos totalRetido + valor do passando da última peneira = amostraTotalSeca
+    // Mas amostraTotalSeca depende de SP10 que depende de soloUmPassando10 que depende daqui
+    // Então usamos o total manual se disponível, senão null
+    const totalSeca = n(data.amostra_total_seca) || null;
+    if (!totalSeca || totalSeca <= 0) return [];
+    let acumPassando = totalSeca;
+    return retidos.map(retido => {
       const passando = parseFloat((acumPassando - retido).toFixed(3));
-      const passPct = parseFloat((passando / amostraTotalSeca * 100).toFixed(1));
+      const passPct = parseFloat((passando / totalSeca * 100).toFixed(1));
       acumPassando = passando;
       return { retido, passando, passPct };
     });
-  }, [data.peneiras_grossas, amostraTotalSeca]);
+  }, [granGrossaRetidos, data.amostra_total_seca]);
+
+  const amostraTotalSeca = n(data.amostra_total_seca);
 
   /* ─── derived: Granulometria Fina ─── */
   const amostParcSeca = n(data.amostra_parcial_seca);
@@ -208,25 +219,33 @@ export default function EnsaioLimites({ data, onChange }) {
     });
   }, [data.peneiras_finas, amostParcSeca]);
 
-  /* ─── derived: SP10 ─── */
+  /* ─── derived: SP10 e campos calculados automaticamente ─── */
   const higroH = higroTeor;
-  const soloUmPassando10 = n(data.solo_umido_passando_10);
-  const soloSecoRetido10 = n(data.solo_seco_retido_10);
-  const amostraTotalUmida = n(data.amostra_total_umida);
 
+  // Solo Úmido Passando na #10 = passando acumulado da última peneira grossa
+  const soloUmPassando10 = useMemo(() => {
+    if (!granGrossaCalc.length) return null;
+    return granGrossaCalc[granGrossaCalc.length - 1]?.passando ?? null;
+  }, [granGrossaCalc]);
+
+  // Solo Seco Retido na #10 = soma dos retidos de todas as peneiras grossas
+  const soloSecoRetido10 = useMemo(() => {
+    if (!granGrossaRetidos.length) return null;
+    const total = granGrossaRetidos.reduce((s, r) => s + r, 0);
+    return total > 0 ? parseFloat(total.toFixed(3)) : null;
+  }, [granGrossaRetidos]);
+
+  // SP10 = Solo Seco Passando na #10
   const sp10 = useMemo(() => {
     if (soloUmPassando10 == null || higroH == null) return null;
     return parseFloat((soloUmPassando10 / (higroH / 100 + 1)).toFixed(3));
   }, [soloUmPassando10, higroH]);
 
-  const sr10 = useMemo(() => {
-    return soloSecoRetido10;
-  }, [soloSecoRetido10]);
-
-  const st = useMemo(() => {
-    if (sr10 == null || sp10 == null) return null;
-    return parseFloat((sr10 + sp10).toFixed(3));
-  }, [sr10, sp10]);
+  // Amostra Total Seca = SR10 + SP10
+  const amostraTotalSecaCalc = useMemo(() => {
+    if (soloSecoRetido10 == null || sp10 == null) return null;
+    return parseFloat((soloSecoRetido10 + sp10).toFixed(3));
+  }, [soloSecoRetido10, sp10]);
 
   /* ─── derived: Resumo ─── */
   const IP = useMemo(() => {
@@ -349,23 +368,29 @@ export default function EnsaioLimites({ data, onChange }) {
         <div className="mt-4">
           <p className="text-[11px] font-bold text-[#00233B] mb-1 text-center uppercase">Dados da Amostra — Peneiramento Grosso</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {/* Apenas Amostra Total Úmida e Total Seca são manuais */}
+            <div>
+              <Label className="text-[10px] text-[#00233B]">Amostra Total Úmida — Uₜ (g)</Label>
+              <Input className={fieldCls} type="number" step="0.001" value={data.amostra_total_umida || ""} onChange={e => set("amostra_total_umida", e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-[10px] text-[#00233B]">Amostra Total Seca — Sₜ (g)</Label>
+              <Input className={fieldCls} type="number" step="0.001" value={data.amostra_total_seca || ""} onChange={e => set("amostra_total_seca", e.target.value)} />
+            </div>
+            {/* Campos calculados automaticamente */}
             {[
-              { label: "Amostra Total Úmida (Uₜ)", field: "amostra_total_umida", unit: "g" },
-              { label: "Solo Seco Retido na #Nº10 (SR₁₀)", field: "solo_seco_retido_10", unit: "g" },
-              { label: "Solo Úmido Passando na #Nº10", field: "solo_umido_passando_10", unit: "g" },
-              { label: "Amostra Total Seca (Sₜ)", field: "amostra_total_seca", unit: "g" },
+              { label: "Solo Seco Retido na #Nº10 — SR₁₀ (g)", value: soloSecoRetido10 },
+              { label: "Solo Úmido Passando na #Nº10 (g)", value: soloUmPassando10 },
+              { label: "Solo Seco Passando na #Nº10 — SP₁₀ (g)", value: sp10 },
+              { label: "Amostra Total Seca Calculada — SR₁₀+SP₁₀ (g)", value: amostraTotalSecaCalc },
             ].map(f => (
-              <div key={f.field}>
+              <div key={f.label}>
                 <Label className="text-[10px] text-[#00233B]">{f.label}</Label>
-                <Input className={fieldCls} type="number" step="0.001" value={data[f.field] || ""} onChange={e => set(f.field, e.target.value)} />
+                <div className="h-8 text-xs border border-[#00233B]/20 rounded-md bg-gray-100/40 flex items-center px-2 text-gray-500 font-semibold">
+                  {f.value != null ? f.value.toFixed(3) : "-"}
+                </div>
               </div>
             ))}
-            <div>
-              <Label className="text-[10px] text-[#00233B]">Solo Seco Passando na #Nº10 (SP₁₀) — calculado</Label>
-              <div className="h-8 text-xs border border-[#00233B]/20 rounded-md bg-gray-100/40 flex items-center px-2 text-gray-500 font-semibold">
-                {sp10 != null ? sp10.toFixed(3) : "-"}
-              </div>
-            </div>
           </div>
         </div>
 
