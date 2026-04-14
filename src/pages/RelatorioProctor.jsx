@@ -692,11 +692,6 @@ export default function RelatorioProctor() {
           {/* GRÁFICOS */}
           <GraficosSection ensaio={ensaio} isHigro={isHigro} chartPoints={chartPoints} parabola={parabola} iscPoints={iscPoints} expPoints={expPoints} iscParabola={iscParabola} expParabola={expParabola} iscAtWotima={iscAtWotima} expAtWotima={expAtWotima} />
 
-          {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO */}
-          {ensaio.realizar_limites && ensaio.limites && (
-            <RelatorioLimites limites={ensaio.limites} ensaio={ensaio} obra={obra} regional={regional} />
-          )}
-
           {/* OBSERVAÇÕES */}
           {ensaio.observacoes && (
             <section>
@@ -706,7 +701,7 @@ export default function RelatorioProctor() {
           )}
         </main>
 
-        {/* Footer */}
+        {/* Footer — página 1 */}
         <footer className="mt-4 pt-2">
           <div className="grid grid-cols-3 gap-8 items-end">
             {/* Laboratorista */}
@@ -759,6 +754,11 @@ export default function RelatorioProctor() {
           </div>
         </footer>
       </div>
+
+      {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO — página 2 */}
+      {ensaio.realizar_limites && ensaio.limites && (
+        <RelatorioLimites limites={ensaio.limites} ensaio={ensaio} obra={obra} regional={regional} />
+      )}
 
       <style jsx>{`
         @media print {
