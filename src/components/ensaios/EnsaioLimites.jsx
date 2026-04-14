@@ -489,18 +489,18 @@ export default function EnsaioLimites({ data, onChange }) {
              </div>
             {/* Campos calculados automaticamente */}
             {[
-              { label: "Solo Seco Retido na #Nº10 — SR₁₀ (g)", value: soloSecoRetido10 },
-              { label: "Solo Úmido Passando na #Nº10 (g)", value: soloUmPassando10 },
-              { label: "Solo Seco Passando na #Nº10 — SP₁₀ (g)", value: sp10 },
-              { label: "Amostra Total Seca Calculada — SR₁₀+SP₁₀ (g)", value: amostraTotalSecaCalc },
-            ].map(f => (
-              <div key={f.label}>
-                <Label className="text-[10px] text-[#00233B]">{f.label}</Label>
-                <div className="h-8 text-xs border border-[#00233B]/20 rounded-md bg-gray-100/40 flex items-center px-2 text-gray-500 font-semibold">
-                  {f.value != null ? f.value.toFixed(3) : "-"}
-                </div>
-              </div>
-            ))}
+               { label: "Solo Seco Retido na #Nº10 — SR₁₀ (g)", value: soloSecoRetido10 },
+               { label: "Solo Úmido Passando na #Nº10 (g)", value: soloUmPassando10 },
+               { label: "Solo Seco Passando na #Nº10 — SP₁₀ (g)", value: sp10 },
+               { label: "Amostra Total Seca Calculada — SR₁₀+SP₁₀ (g)", value: amostraTotalSecaCalc },
+             ].map(f => (
+               <div key={f.label}>
+                 <Label className="text-[10px] text-[#00233B]">{f.label}</Label>
+                 <div className="h-8 text-xs border border-[#00233B]/20 rounded-md bg-gray-100/40 flex items-center px-2 text-gray-500 font-semibold">
+                   {f.value != null ? f.value.toFixed(2) : "-"}
+                 </div>
+               </div>
+             ))}
           </div>
         </div>
 
