@@ -174,14 +174,20 @@ export default function EnsaioProctorPage() {
       setForm(prev => ({ ...prev, laboratorista_name: userData.laboratorista_name || userData.full_name }));
 
       const obrasData = await Obra.list();
-      // Filter obras: only show obras where laboratorista is in the regional's laboratoristas_responsaveis
-      const regionaisData = await base44.entities.Regional.list();
-      const regionaisDoLab = regionaisData.filter(r => 
-        (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
-      );
-      const regionalIds = regionaisDoLab.map(r => r.id);
-      const filteredObras = obrasData.filter(o => regionalIds.includes(o.regional_id));
-      setObras(filteredObras);
+      const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
+
+      if (userAccessLevel === 'user') {
+        // Laboratorista: filtrar apenas obras da sua regional
+        const regionaisData = await base44.entities.Regional.list();
+        const regionaisDoLab = regionaisData.filter(r =>
+          (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
+        );
+        const regionalIds = regionaisDoLab.map(r => r.id);
+        setObras(obrasData.filter(o => regionalIds.includes(o.regional_id)));
+      } else {
+        // Admin, gestor, sala_técnica: mostrar todas as obras
+        setObras(obrasData);
+      }
 
       if (recordId) {
         const record = await base44.entities.EnsaioProctor.get(recordId);
