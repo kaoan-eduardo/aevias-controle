@@ -100,45 +100,43 @@ export function defaultLimites() {
 }
 
 /* ─── Classificação HRB (AASHTO) ─── */
-function classificarHRB(F10, F40, F200, ll, ip) {
-  // F10, F40, F200 = % passante nas respectivas peneiras
-  // ll, ip = Limite de Liquidez e Índice de Plasticidade
-
+function classificarHRB(F10, F40, F200, ll, ip, ig) {
   const f200 = F200 ?? 0;
   const f40  = F40  ?? 0;
   const f10  = F10  ?? 0;
   const llv  = ll   ?? 0;
   const ipv  = ip   ?? 0;
+  const igv  = ig   ?? 0;
 
   // ── Solos Granulares: F200 ≤ 35 ──
   if (f200 <= 35) {
-    // A1-a: F10 ≤ 50, F40 ≤ 30, IP ≤ 6
-    if (f10 <= 50 && f40 <= 30 && ipv <= 6) return "A1-a";
-    // A1-b: F40 ≤ 50, IP ≤ 6
-    if (f40 <= 50 && ipv <= 6) return "A1-b";
-    // A3: F40 ≥ 51, IP = NP (considera IP = 0)
-    if (f40 >= 51 && ipv === 0 && f200 <= 10) return "A3";
-    // A2-4: F200 ≤ 35, LL ≤ 40, IP ≤ 10
-    if (f200 <= 35 && llv <= 40 && ipv <= 10) return "A2-4";
-    // A2-5: F200 ≤ 35, LL ≥ 41, IP ≤ 10
-    if (f200 <= 35 && llv >= 41 && ipv <= 10) return "A2-5";
-    // A2-6: F200 ≤ 35, LL ≤ 40, IP ≥ 11
-    if (f200 <= 35 && llv <= 40 && ipv >= 11) return "A2-6";
-    // A2-7: F200 ≤ 35, LL ≥ 41, IP ≥ 11
-    if (f200 <= 35 && llv >= 41 && ipv >= 11) return "A2-7";
+    // A1-a: F10 ≤ 50, F40 ≤ 30, IP ≤ 6, IG = 0
+    if (f10 <= 50 && f40 <= 30 && ipv <= 6 && igv === 0) return "A1-a";
+    // A1-b: F40 ≤ 50, IP ≤ 6, IG = 0
+    if (f40 <= 50 && ipv <= 6 && igv === 0) return "A1-b";
+    // A3: F40 ≥ 51, IP = NP (0), F200 ≤ 10, IG = 0
+    if (f40 >= 51 && ipv === 0 && f200 <= 10 && igv === 0) return "A3";
+    // A2-4: LL ≤ 40, IP ≤ 10, IG = 0
+    if (llv <= 40 && ipv <= 10 && igv === 0) return "A2-4";
+    // A2-5: LL ≥ 41, IP ≤ 10, IG = 0
+    if (llv >= 41 && ipv <= 10 && igv === 0) return "A2-5";
+    // A2-6: LL ≤ 40, IP ≥ 11, IG ≤ 4
+    if (llv <= 40 && ipv >= 11 && igv <= 4) return "A2-6";
+    // A2-7: LL ≥ 41, IP ≥ 11, IG ≤ 4
+    if (llv >= 41 && ipv >= 11 && igv <= 4) return "A2-7";
   }
 
   // ── Solos Siltosos e Argilosos: F200 > 35 ──
-  // A4: LL ≤ 40, IP ≤ 10
-  if (f200 >= 36 && llv <= 40 && ipv <= 10) return "A4";
-  // A5: LL ≥ 41, IP ≤ 10
-  if (f200 >= 36 && llv >= 41 && ipv <= 10) return "A5";
-  // A6: LL ≤ 40, IP ≥ 11
-  if (f200 >= 36 && llv <= 40 && ipv >= 11) return "A6";
-  // A7-5: LL ≥ 41, IP ≤ (LL - 30)
-  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv <= (llv - 30)) return "A7-5";
-  // A7-6: LL ≥ 41, IP > (LL - 30)
-  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv > (llv - 30)) return "A7-6";
+  // A4: LL ≤ 40, IP ≤ 10, IG ≤ 8
+  if (f200 >= 36 && llv <= 40 && ipv <= 10 && igv <= 8) return "A4";
+  // A5: LL ≥ 41, IP ≤ 10, IG ≤ 12
+  if (f200 >= 36 && llv >= 41 && ipv <= 10 && igv <= 12) return "A5";
+  // A6: LL ≤ 40, IP ≥ 11, IG ≤ 16
+  if (f200 >= 36 && llv <= 40 && ipv >= 11 && igv <= 16) return "A6";
+  // A7-5: LL ≥ 41, IP ≤ (LL - 30), IG ≤ 20
+  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv <= (llv - 30) && igv <= 20) return "A7-5";
+  // A7-6: LL ≥ 41, IP > (LL - 30), IG ≤ 20
+  if (f200 >= 36 && llv >= 41 && ipv >= 11 && ipv > (llv - 30) && igv <= 20) return "A7-6";
 
   return "-";
 }
@@ -376,8 +374,8 @@ export default function EnsaioLimites({ data, onChange }) {
 
   const classificacaoHRB = useMemo(() => {
     if (pct200 == null) return "-";
-    return classificarHRB(pct10, pct40, pct200, llFit?.ll ?? null, IP);
-  }, [pct10, pct40, pct200, llFit, IP]);
+    return classificarHRB(pct10, pct40, pct200, llFit?.ll ?? null, IP, igCalc);
+  }, [pct10, pct40, pct200, llFit, IP, igCalc]);
 
   const fieldCls = "h-8 text-xs border-[#00233B]/30";
   const thCls = "border border-[#00233B]/20 px-2 py-1.5 text-left font-semibold text-[#00233B] text-[10px] bg-[#00233B]/8";
