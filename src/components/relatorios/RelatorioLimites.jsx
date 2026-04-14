@@ -87,9 +87,9 @@ function LLChart({ llPoints, llFit }) {
         <XAxis dataKey="x" type="number"
           label={{ value: 'Nº Golpes', position: 'insideBottom', offset: -10, fontSize: 7 }}
           tick={{ fontSize: 7 }} />
-        <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
+        <YAxis dataKey="y" type="number" domain={['dataMin - 5', 'dataMax + 5']}
           label={{ value: '% Água', angle: -90, position: 'insideLeft', offset: 10, fontSize: 7 }}
-          tick={{ fontSize: 7 }} width={36} tickCount={5} />
+          tick={{ fontSize: 7 }} width={36} tickCount={6} />
         <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
         <Line data={curveData} dataKey="y" type="monotone" stroke="#1e3a5f" strokeWidth={1.5} dot={false} isAnimationActive={false} />
         <Line data={[

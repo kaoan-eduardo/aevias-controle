@@ -639,9 +639,9 @@ export default function EnsaioLimites({ data, onChange }) {
                   <XAxis dataKey="x" type="number" 
                     label={{ value: 'Nº de Golpes', position: 'insideBottom', offset: -15, fill: '#00233B', fontSize: 11 }}
                     tick={{ fontSize: 10, fill: '#00233B' }} />
-                  <YAxis dataKey="y" type="number" domain={['auto', 'auto']}
-                    label={{ value: '% de Água', angle: -90, position: 'insideLeft', offset: 10, fill: '#00233B', fontSize: 11 }}
-                    tick={{ fontSize: 10, fill: '#00233B' }} width={45} />
+                  <YAxis dataKey="y" type="number" domain={['dataMin - 5', 'dataMax + 5']}
+                   label={{ value: '% de Água', angle: -90, position: 'insideLeft', offset: 10, fill: '#00233B', fontSize: 11 }}
+                   tick={{ fontSize: 10, fill: '#00233B' }} width={45} />
                   <Tooltip formatter={(v) => `${Number(v).toFixed(2)}%`} />
                   {llCurve.length > 0 && (
                     <Line data={llCurve} dataKey="y" type="monotone" stroke="#00233B" strokeWidth={2} dot={false} isAnimationActive={false} name="Curva LL" />
