@@ -138,14 +138,12 @@ export default function ProctorChart({ points, parabola, validCount }) {
             name="Pontos"
           />
 
-          {/* Optimal point vertical line */}
+          {/* Optimal point marker */}
           {parabola && (
             <ReferenceLine
               x={parseFloat(parabola.w_otima.toFixed(2))}
-              stroke="#FF6B35"
-              strokeDasharray="4 3"
-              strokeWidth={1.5}
-              label={{ value: `w_ót=${parabola.w_otima.toFixed(2)}%`, fill: '#FF6B35', fontSize: 10, position: 'top' }}
+              stroke="transparent"
+              label={{ value: `w_ót=${parabola.w_otima.toFixed(2)}%`, fill: '#FF6B35', fontSize: 10, position: 'top', offset: 10 }}
             />
           )}
         </ComposedChart>
