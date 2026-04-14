@@ -106,9 +106,19 @@ function MiniChart({ data, lineData, refX, refY, xLabel, yLabel, refLabel, color
           <Line data={lineDataFinal} dataKey="y" type="monotone" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} name="Curva" />
         )}
         <Scatter data={data} dataKey="y" fill="#6b8f3e" stroke={color} strokeWidth={1} r={4} name="Pontos" isAnimationActive={false} />
-        {refX != null && <ReferenceLine x={refX} stroke="red" strokeDasharray="3 2" strokeWidth={1} />}
-        {refY != null && <ReferenceLine y={refY} stroke="red" strokeDasharray="3 2" strokeWidth={1}
-          label={{ value: refLabel, fill: 'red', fontSize: 7, position: 'insideTopRight' }} />}
+        {refX != null && refY != null && (
+          <>
+            <Line data={[
+              { x: refX, y: 0 },
+              { x: refX, y: refY }
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="2 2" strokeWidth={1} dot={false} isAnimationActive={false} />
+            <Line data={[
+              { x: Math.min(...data.map(p => p.x)) - 0.5, y: refY },
+              { x: refX, y: refY }
+            ]} dataKey="y" type="monotone" stroke="red" strokeDasharray="2 2" strokeWidth={1} dot={false} isAnimationActive={false} 
+              label={{ value: refLabel ? `${refLabel}=${refY.toFixed(2)}` : refY.toFixed(2), fill: 'red', fontSize: 6, position: 'top' }} />
+          </>
+        )}
       </ComposedChart>
     </ResponsiveContainer>
   );
@@ -262,6 +272,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
               refX={parabola?.w_otima}
               refY={parabola?.gamma_max}
               xLabel="Umidade (%)" yLabel="γd (g/cm³)"
+              refLabel="ρd"
             />
           </div>
         </div>
@@ -276,6 +287,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
               refY={iscAtWotima}
               xLabel="Umidade (%)" yLabel="ISC (%)"
               color="#1e3a5f"
+              refLabel="ISC"
             />
           </div>
         </div>
@@ -290,6 +302,7 @@ function GraficosSection({ ensaio, isHigro, chartPoints, parabola, iscPoints, ex
               refY={expAtWotima}
               xLabel="Umidade (%)" yLabel="Exp. (%)"
               color="#1e3a5f"
+              refLabel="Exp"
             />
           </div>
         </div>
