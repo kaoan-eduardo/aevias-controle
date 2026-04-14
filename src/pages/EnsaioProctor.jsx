@@ -100,10 +100,8 @@ export default function EnsaioProctorPage() {
     camada: "",
     material: "",
     procedencia: "",
-    disco_especial: "6.20",
-    soquete: "Grande",
     num_golpes: 12,
-    energia_compactacao: "Intermediária",
+    energia_compactacao: "Normal",
     correcao_densidade: "higroscopica",
     umidade_higroscopica: "",
     umidades: Array(5).fill(null).map(() => ({
@@ -432,26 +430,22 @@ export default function EnsaioProctorPage() {
             <div><Label className="text-[#00233B]">Material *</Label><Input value={form.material} onChange={(e) => setForm(prev => ({ ...prev, material: e.target.value }))} /></div>
             <div><Label className="text-[#00233B]">Procedência *</Label><Input value={form.procedencia} onChange={(e) => setForm(prev => ({ ...prev, procedencia: e.target.value }))} /></div>
             <div>
-              <Label className="text-[#00233B]">Disco Especial</Label>
-              <Select value={form.disco_especial} onValueChange={(v) => setForm(prev => ({ ...prev, disco_especial: v }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent><SelectItem value="5.20">5.20</SelectItem><SelectItem value="6.20">6.20</SelectItem></SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-[#00233B]">Soquete</Label>
-              <Select value={form.soquete} onValueChange={(v) => setForm(prev => ({ ...prev, soquete: v }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent><SelectItem value="Pequeno">Pequeno</SelectItem><SelectItem value="Grande">Grande</SelectItem></SelectContent>
-              </Select>
-            </div>
-            <div><Label className="text-[#00233B]">Nº de Golpes</Label><Input type="number" value={form.num_golpes} onChange={(e) => setForm(prev => ({ ...prev, num_golpes: parseInt(e.target.value) }))} /></div>
-            <div>
               <Label className="text-[#00233B]">Energia de Compactação</Label>
-              <Select value={form.energia_compactacao} onValueChange={(v) => setForm(prev => ({ ...prev, energia_compactacao: v }))}>
+              <Select value={form.energia_compactacao} onValueChange={(v) => {
+                const golpes = v === "Normal" ? 12 : v === "Intermediária" ? 26 : 55;
+                setForm(prev => ({ ...prev, energia_compactacao: v, num_golpes: golpes }));
+              }}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent><SelectItem value="Intermediária">Intermediária</SelectItem><SelectItem value="Modificada">Modificada</SelectItem></SelectContent>
+                <SelectContent>
+                  <SelectItem value="Normal">Normal</SelectItem>
+                  <SelectItem value="Intermediária">Intermediária</SelectItem>
+                  <SelectItem value="Modificada">Modificada</SelectItem>
+                </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label className="text-[#00233B]">Nº de Golpes</Label>
+              <Input type="number" value={form.num_golpes} readOnly className="bg-gray-100/50 cursor-not-allowed" />
             </div>
           </div>
         </CardContent>
@@ -793,6 +787,29 @@ export default function EnsaioProctorPage() {
         </CardContent>
       </Card>
 
+      {/* CBR / Expansão — Opcional */}
+      <Card className="bg-white/20 backdrop-blur-lg border-white/20">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="realizar_cbr"
+              checked={!!form.realizar_cbr_expansao}
+              onChange={e => setForm(prev => ({ ...prev, realizar_cbr_expansao: e.target.checked }))}
+              className="w-4 h-4 accent-[#00233B]"
+            />
+            <label htmlFor="realizar_cbr" className="text-lg font-semibold text-[#00233B] cursor-pointer select-none">
+              Realizar Ensaio de ISC/CBR e Expansão <span className="text-sm font-normal text-[#00233B]/60">(ABNT 9895 / DNIT 172)</span>
+            </label>
+          </div>
+        </CardHeader>
+        {form.realizar_cbr_expansao && (
+          <CardContent className="pt-0">
+            <ProctorCBRExpansao form={form} setForm={setForm} />
+          </CardContent>
+        )}
+      </Card>
+
       {/* Ensaio de Limites — Opcional */}
       <Card className="bg-white/20 backdrop-blur-lg border-white/20">
         <CardHeader>
@@ -815,29 +832,6 @@ export default function EnsaioProctorPage() {
               data={form.limites || defaultLimites()}
               onChange={limites => setForm(prev => ({ ...prev, limites }))}
             />
-          </CardContent>
-        )}
-      </Card>
-
-      {/* CBR / Expansão — Opcional */}
-      <Card className="bg-white/20 backdrop-blur-lg border-white/20">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="realizar_cbr"
-              checked={!!form.realizar_cbr_expansao}
-              onChange={e => setForm(prev => ({ ...prev, realizar_cbr_expansao: e.target.checked }))}
-              className="w-4 h-4 accent-[#00233B]"
-            />
-            <label htmlFor="realizar_cbr" className="text-lg font-semibold text-[#00233B] cursor-pointer select-none">
-              Realizar Ensaio de ISC/CBR e Expansão <span className="text-sm font-normal text-[#00233B]/60">(ABNT 9895 / DNIT 172)</span>
-            </label>
-          </div>
-        </CardHeader>
-        {form.realizar_cbr_expansao && (
-          <CardContent className="pt-0">
-            <ProctorCBRExpansao form={form} setForm={setForm} />
           </CardContent>
         )}
       </Card>
