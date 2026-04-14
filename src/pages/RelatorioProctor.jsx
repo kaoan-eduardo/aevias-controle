@@ -757,7 +757,9 @@ export default function RelatorioProctor() {
 
       {/* ENSAIOS FÍSICOS DE CARACTERIZAÇÃO — página 2 */}
       {ensaio.realizar_limites && ensaio.limites && (
-        <RelatorioLimites limites={ensaio.limites} ensaio={ensaio} obra={obra} regional={regional} />
+        <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-2 print:p-1">
+          <RelatorioLimites limites={ensaio.limites} ensaio={ensaio} obra={obra} regional={regional} />
+        </div>
       )}
 
       <style jsx>{`
