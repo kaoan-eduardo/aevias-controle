@@ -214,7 +214,10 @@ export default function ChecklistReciclagem() {
           if (checklistToEdit.obra_id) {
             const obraDoChecklist = obrasData.find(o => o.id === checklistToEdit.obra_id);
             if (obraDoChecklist?.regional_id) {
-              const projetosFiltrados = projectsData.filter(p => p.regional_id === obraDoChecklist.regional_id);
+              const projetosFiltrados = projectsData.filter(p =>
+                p.regional_id === obraDoChecklist.regional_id &&
+                p.tipo_projeto === 'CAMADAS_GRANULARES'
+              );
               setProjects(projetosFiltrados);
             }
           }
@@ -569,7 +572,8 @@ export default function ChecklistReciclagem() {
                          const obraSelecionada = obras.find(o => o.id === obraId);
                          if (obraSelecionada?.regional_id) {
                            const projetosFiltrados = allProjects.filter(p =>
-                             p.regional_id === obraSelecionada.regional_id
+                             p.regional_id === obraSelecionada.regional_id &&
+                             p.tipo_projeto === 'CAMADAS_GRANULARES'
                            );
                            setProjects(projetosFiltrados);
                          } else {
