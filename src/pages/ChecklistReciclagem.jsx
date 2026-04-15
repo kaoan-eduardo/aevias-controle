@@ -210,6 +210,14 @@ export default function ChecklistReciclagem() {
         const checklistToEdit = await base44.entities.ChecklistReciclagem.get(editId);
         
         if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
+          // Carregar projetos da regional da obra ao editar
+          if (checklistToEdit.obra_id) {
+            const obraDoChecklist = obrasData.find(o => o.id === checklistToEdit.obra_id);
+            if (obraDoChecklist?.regional_id) {
+              const projetosFiltrados = projectsData.filter(p => p.regional_id === obraDoChecklist.regional_id);
+              setProjects(projetosFiltrados);
+            }
+          }
           setEditingChecklist(checklistToEdit);
           setFormData(checklistToEdit);
         } else {
@@ -561,8 +569,7 @@ export default function ChecklistReciclagem() {
                          const obraSelecionada = obras.find(o => o.id === obraId);
                          if (obraSelecionada?.regional_id) {
                            const projetosFiltrados = allProjects.filter(p =>
-                             p.regional_id === obraSelecionada.regional_id &&
-                             p.tipo_projeto === 'CAMADAS_GRANULARES'
+                             p.regional_id === obraSelecionada.regional_id
                            );
                            setProjects(projetosFiltrados);
                          } else {
@@ -701,7 +708,7 @@ export default function ChecklistReciclagem() {
                           
                           setFormData({ ...formData, project_id: projectId, faixa: nomeFaixa });
                         }}
-                        disabled={!formData.obra_id || projects.length === 0}
+                        disabled={!formData.obra_id}
                         className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
                       >
                         <option value="">Selecione o projeto</option>
