@@ -18,6 +18,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
+import MedicaoUsina from "@/components/checklists/MedicaoUsina";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -110,6 +111,11 @@ const getInitialFormData = () => ({
   acoes_corretivas_descricao: "",
   nao_conformidades: [],
   fotos: [],
+  medicoes_usina: {
+    sub_trecho: "",
+    servico: "",
+    cargas: []
+  },
   status: "rascunho",
   approved: null,
   rejection_reason: null
@@ -1871,6 +1877,13 @@ export default function ChecklistUsinaPage() {
                   </div>
                 </div>
               </div>
+
+              {/* MEDIÇÃO DE CARGAS DA USINA */}
+              <MedicaoUsina
+                medicoes_usina={formData.medicoes_usina}
+                onChange={(val) => handleChange('medicoes_usina', val)}
+                disabled={!isEditable || isApproved}
+              />
 
               <div className="flex justify-end gap-4 mt-6">
                 <Button type="button" variant="outline" onClick={() => {
