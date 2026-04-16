@@ -1,0 +1,345 @@
+{
+  "name": "ChecklistUsina",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto vinculado"
+    },
+    "data": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do checklist"
+    },
+    "jornada": {
+      "type": "object",
+      "description": "Jornada de trabalho do funcion\u00e1rio",
+      "properties": {
+        "horario_inicio": {
+          "type": "string"
+        },
+        "horario_fim": {
+          "type": "string"
+        }
+      }
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "usina": {
+      "type": "string",
+      "description": "Nome da usina"
+    },
+    "projeto_utilizado": {
+      "type": "string"
+    },
+    "faixa_especificada": {
+      "type": "string"
+    },
+    "ligante": {
+      "type": "string"
+    },
+    "pedreira": {
+      "type": "string"
+    },
+    "inspetor_campo": {
+      "type": "string"
+    },
+    "engenheiro_responsavel": {
+      "type": "string"
+    },
+    "controle_agregados": {
+      "type": "array",
+      "description": "Controle din\u00e2mico de agregados",
+      "items": {
+        "type": "object"
+      }
+    },
+    "equivalente_areia_status": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "realizado",
+        "nao_realizado",
+        null
+      ],
+      "default": null
+    },
+    "equivalente_areia_quantidade": {
+      "type": "number",
+      "default": 0
+    },
+    "equivalente_areia_resultados": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "observacoes_agregados": {
+      "type": "string"
+    },
+    "rodadas_producao": {
+      "type": "array",
+      "description": "Rodadas de produ\u00e7\u00e3o (at\u00e9 4)",
+      "items": {
+        "type": "object"
+      }
+    },
+    "controle_cauq": {
+      "type": "object",
+      "description": "Controle de CAUQ"
+    },
+    "controle_ligante_ativo": {
+      "type": "boolean",
+      "default": false
+    },
+    "controle_ligante": {
+      "type": "object",
+      "properties": {
+        "nota_fiscal": {
+          "type": "string"
+        },
+        "fornecedor": {
+          "type": "string"
+        },
+        "placa_carreta": {
+          "type": "string"
+        },
+        "quantidade_toneladas": {
+          "type": "number"
+        },
+        "viscosidade_1_temp": {
+          "type": "string"
+        },
+        "viscosidade_1_sp": {
+          "type": "string"
+        },
+        "viscosidade_1_rpm": {
+          "type": "string"
+        },
+        "viscosidade_1_resultado": {
+          "type": "number"
+        },
+        "viscosidade_1_limite": {
+          "type": "string"
+        },
+        "viscosidade_1_conforme": {
+          "type": "boolean"
+        },
+        "viscosidade_2_temp": {
+          "type": "string"
+        },
+        "viscosidade_2_sp": {
+          "type": "string"
+        },
+        "viscosidade_2_rpm": {
+          "type": "string"
+        },
+        "viscosidade_2_resultado": {
+          "type": "number"
+        },
+        "viscosidade_2_limite": {
+          "type": "string"
+        },
+        "viscosidade_2_conforme": {
+          "type": "boolean"
+        },
+        "viscosidade_3_temp": {
+          "type": "string"
+        },
+        "viscosidade_3_sp": {
+          "type": "string"
+        },
+        "viscosidade_3_rpm": {
+          "type": "string"
+        },
+        "viscosidade_3_resultado": {
+          "type": "number"
+        },
+        "viscosidade_3_limite": {
+          "type": "string"
+        },
+        "viscosidade_3_conforme": {
+          "type": "boolean"
+        },
+        "recuperacao_elastica_resultado": {
+          "type": "number"
+        },
+        "recuperacao_elastica_limite": {
+          "type": "string"
+        },
+        "recuperacao_elastica_conforme": {
+          "type": "boolean"
+        },
+        "penetracao_resultado": {
+          "type": "number"
+        },
+        "penetracao_limite": {
+          "type": "string"
+        },
+        "penetracao_conforme": {
+          "type": "boolean"
+        },
+        "ponto_amolecimento_resultado": {
+          "type": "number"
+        },
+        "ponto_amolecimento_limite": {
+          "type": "string"
+        },
+        "ponto_amolecimento_conforme": {
+          "type": "boolean"
+        },
+        "ponto_fulgor_resultado": {
+          "type": "number"
+        },
+        "ponto_fulgor_limite": {
+          "type": "string"
+        },
+        "ponto_fulgor_conforme": {
+          "type": "boolean"
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "medicoes_usina": {
+      "type": "object",
+      "description": "Medi\u00e7\u00e3o de cargas da usina",
+      "properties": {
+        "sub_trecho": {
+          "type": "string",
+          "description": "Sub-trecho"
+        },
+        "servico": {
+          "type": "string",
+          "description": "Tipo de servi\u00e7o (capa, reperfilagem, remendo, capa_reperfilagem)"
+        },
+        "cargas": {
+          "type": "array",
+          "description": "Lista de cargas registradas",
+          "items": {
+            "type": "object",
+            "properties": {
+              "numero_ticket": {
+                "type": "string",
+                "description": "N\u00famero do ticket / nota fiscal"
+              },
+              "placa": {
+                "type": "string",
+                "description": "Placa do caminh\u00e3o"
+              },
+              "quantidade_toneladas": {
+                "type": "number",
+                "description": "Quantidade em toneladas"
+              },
+              "temperatura": {
+                "type": "number",
+                "description": "Temperatura em \u00b0C"
+              },
+              "rodovia_destino": {
+                "type": "string",
+                "description": "Rodovia de destino"
+              },
+              "equipe": {
+                "type": "string",
+                "description": "Equipe respons\u00e1vel"
+              },
+              "observacoes": {
+                "type": "string",
+                "description": "Observa\u00e7\u00f5es"
+              }
+            }
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string"
+    },
+    "acoes_corretivas_realizado": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "acoes_corretivas_descricao": {
+      "type": "string"
+    },
+    "nao_conformidades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "local_nc": {
+            "type": "string"
+          },
+          "categoria_nc": {
+            "type": "string"
+          },
+          "parametro_nc": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}
