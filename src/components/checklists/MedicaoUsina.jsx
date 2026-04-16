@@ -27,7 +27,10 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled }) {
     update({ cargas });
   };
 
-  const addCarga = () => update({ cargas: [...(data.cargas || []), novaCarga()] });
+  const addCarga = () => {
+    if ((data.cargas || []).length >= 20) return;
+    update({ cargas: [...(data.cargas || []), novaCarga()] });
+  };
 
   const removeCarga = (index) => {
     const cargas = (data.cargas || []).filter((_, i) => i !== index);
@@ -40,9 +43,9 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled }) {
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg">Medição de Cargas da Usina</CardTitle>
           {!disabled && (
-            <Button type="button" variant="outline" onClick={addCarga}>
+            <Button type="button" variant="outline" onClick={addCarga} disabled={(data.cargas || []).length >= 20}>
               <Plus className="w-4 h-4 mr-2" />
-              Adicionar Carga
+              Adicionar Carga {(data.cargas || []).length > 0 && `(${(data.cargas || []).length}/20)`}
             </Button>
           )}
         </div>

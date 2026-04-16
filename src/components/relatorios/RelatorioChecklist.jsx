@@ -659,44 +659,35 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 </div>
               </div>
 
-              {/* Tabela de cargas */}
-              <main className="flex-grow">
-                <table className="w-full border-collapse border border-slate-400 text-xs">
+              {/* Tabela de cargas — sempre 20 linhas para preencher a página */}
+              <main className="flex-grow flex flex-col">
+                <table className="w-full border-collapse border border-slate-400 text-xs flex-grow" style={{ tableLayout: 'fixed' }}>
                   <thead>
                     <tr className="bg-slate-200">
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">Nº TICKET<br/>(NOTA FISCAL)</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">PLACA</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">QTE.<br/>(t)</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">TEMPERATURA<br/>(°C)</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">RODOVIA DESTINO</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">EQUIPE</th>
-                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">OBSERVAÇÕES</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'13%'}}>Nº TICKET<br/>(NOTA FISCAL)</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'10%'}}>PLACA</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'8%'}}>QTE.<br/>(t)</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'12%'}}>TEMPERATURA<br/>(°C)</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'20%'}}>RODOVIA DESTINO</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'15%'}}>EQUIPE</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'22%'}}>OBSERVAÇÕES</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {medicoes.cargas.map((carga, i) => (
-                      <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.numero_ticket || ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.placa || ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.quantidade_toneladas ?? ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.temperatura ?? ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.rodovia_destino || ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.equipe || ''}</td>
-                        <td className="border border-slate-300 px-2 py-1.5">{carga.observacoes || ''}</td>
-                      </tr>
-                    ))}
-                    {/* Linhas vazias para preencher espaço (mínimo 15 linhas visíveis) */}
-                    {Array.from({ length: Math.max(0, 15 - medicoes.cargas.length) }).map((_, i) => (
-                      <tr key={`empty-${i}`}>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                        <td className="border border-slate-300 px-2 py-3"></td>
-                      </tr>
-                    ))}
+                    {Array.from({ length: 20 }).map((_, i) => {
+                      const carga = (medicoes.cargas || [])[i];
+                      return (
+                        <tr key={i} style={{ height: '30px' }} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.numero_ticket || ''}</td>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.placa || ''}</td>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.quantidade_toneladas ?? ''}</td>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.temperatura ?? ''}</td>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.rodovia_destino || ''}</td>
+                          <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.equipe || ''}</td>
+                          <td className="border border-slate-300 px-1 overflow-hidden">{carga?.observacoes || ''}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </main>
