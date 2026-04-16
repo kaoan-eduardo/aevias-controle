@@ -336,7 +336,8 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
   
   const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
   const temControleLigante = checklist.controle_ligante_ativo === true;
-  const totalPages = 1 + 1 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0) + photoChunks.length;
+  const temMedicaoUsina = (checklist.medicoes_usina?.cargas?.length || 0) > 0;
+  const totalPages = 1 + 1 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0) + (temMedicaoUsina ? 1 : 0) + photoChunks.length;
 
   return (
     <div className="bg-white font-sans">
@@ -614,6 +615,101 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
         </div>
       )}
 
+      {/* --- Página: Medição de Cargas da Usina (se houver) --- */}
+      {temMedicaoUsina && (() => {
+        const medicoes = checklist.medicoes_usina;
+        const pageNum = 2 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0) + 1;
+        const servicoLabel = {
+          capa: 'Capa',
+          reperfilagem: 'Reperfilagem',
+          remendo: 'Remendo',
+          capa_reperfilagem: 'Capa/Reperfilagem'
+        }[medicoes.servico] || medicoes.servico || '-';
+
+        return (
+          <div className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
+            <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
+              {/* Cabeçalho próprio igual ao do PDF */}
+              <header className="border-b-2 border-slate-900 pb-2 mb-3">
+                <div className="flex justify-between items-center">
+                  <img
+                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
+                    alt="Logo" className="h-14 object-contain"
+                  />
+                  <h1 className="text-xl font-bold text-center text-gray-800 flex-1 mx-4">MEDIÇÃO DE CARGAS DA USINA</h1>
+                  <div className="border border-gray-400 p-2 rounded-md text-sm">
+                    <p className="font-semibold">{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                  </div>
+                </div>
+              </header>
+
+              {/* Dados de cabeçalho */}
+              <div className="grid grid-cols-2 gap-x-8 text-sm mb-3 border border-slate-300 p-2">
+                <div className="space-y-1">
+                  <p><span className="font-bold">OBRA:</span> {obra?.name || '-'}</p>
+                  <p><span className="font-bold">USINA:</span> {checklist.usina || '-'}</p>
+                  <p><span className="font-bold">TRECHO:</span> {medicoes.sub_trecho || '-'}</p>
+                  <p><span className="font-bold">SUB-TRECHO:</span> {medicoes.sub_trecho || '-'}</p>
+                </div>
+                <div className="space-y-1">
+                  <p><span className="font-bold">DATA:</span> {new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                  <p><span className="font-bold">FISCAL DE CAMPO:</span> {checklist.inspetor_campo || '-'}</p>
+                  <p><span className="font-bold">EMPREITEIRA:</span> {obra?.empreiteiras?.[0] || '-'}</p>
+                  <p><span className="font-bold">SERVIÇO:</span> {servicoLabel}</p>
+                </div>
+              </div>
+
+              {/* Tabela de cargas */}
+              <main className="flex-grow">
+                <table className="w-full border-collapse border border-slate-400 text-xs">
+                  <thead>
+                    <tr className="bg-slate-200">
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">Nº TICKET<br/>(NOTA FISCAL)</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">PLACA</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">QTE.<br/>(t)</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">TEMPERATURA<br/>(°C)</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">RODOVIA DESTINO</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">EQUIPE</th>
+                      <th className="border border-slate-400 px-2 py-1.5 text-center font-bold">OBSERVAÇÕES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {medicoes.cargas.map((carga, i) => (
+                      <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.numero_ticket || ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.placa || ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.quantidade_toneladas ?? ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.temperatura ?? ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.rodovia_destino || ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5 text-center">{carga.equipe || ''}</td>
+                        <td className="border border-slate-300 px-2 py-1.5">{carga.observacoes || ''}</td>
+                      </tr>
+                    ))}
+                    {/* Linhas vazias para preencher espaço (mínimo 15 linhas visíveis) */}
+                    {Array.from({ length: Math.max(0, 15 - medicoes.cargas.length) }).map((_, i) => (
+                      <tr key={`empty-${i}`}>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                        <td className="border border-slate-300 px-2 py-3"></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </main>
+
+              <ReportFooter checklist={checklist} formatDateBrasilia={formatDateBrasilia} creatorUser={creatorUser} />
+              <footer className="mt-2 pt-1 text-center text-sm print:text-xs text-gray-400">
+                Página {pageNum} de {totalPages}
+              </footer>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* --- Páginas seguintes: Relatório Fotográfico --- */}
       {photoChunks.map((chunk, pageIndex) => (
         <div key={pageIndex} className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
@@ -653,7 +749,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               ))}
             </main>
             <footer className="mt-auto pt-2 text-center text-sm print:text-xs text-gray-500">
-              Página {pageIndex + 3 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0)} de {totalPages}
+              Página {pageIndex + 3 + (temControleLigante ? 1 : 0) + (temAcoesCorretivas ? 1 : 0) + (temMedicaoUsina ? 1 : 0)} de {totalPages}
             </footer>
           </div>
         </div>
