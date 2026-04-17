@@ -676,7 +676,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     {Array.from({ length: 30 }).map((_, i) => {
                       const carga = (medicoes.cargas || [])[i];
                       return (
-                        <tr key={i} style={{ height: '30px' }} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <tr key={i} style={{ height: '20px' }} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                           <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.numero_ticket || ''}</td>
                           <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.placa || ''}</td>
                           <td className="border border-slate-300 px-1 text-center overflow-hidden">{carga?.quantidade_toneladas ?? ''}</td>
