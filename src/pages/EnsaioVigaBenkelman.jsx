@@ -157,7 +157,6 @@ export default function EnsaioVigaBenkelman() {
         // Novo ensaio: setar apenas o laboratorista
         setFormData(prev => ({ ...prev, laboratorista_name: currentUser.laboratorista_name || currentUser.full_name }));
       }
-      }
 
       setLoading(false);
     } catch (error) {
