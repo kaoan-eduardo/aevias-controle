@@ -77,24 +77,25 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empre
               </SelectContent>
             </Select>
           </div>
-          {empreiteiras && empreiteiras.length > 0 && (
-            <div>
-              <Label>Empreiteira</Label>
-              <Select
-                value={data.empreiteira || ''}
-                onValueChange={(v) => update({ empreiteira: v })}
-                disabled={disabled}
-              >
-                <SelectTrigger><SelectValue placeholder="Selecione a empreiteira" /></SelectTrigger>
-                <SelectContent>
-                  {empreiteiras.map((emp) => (
-                    <SelectItem key={emp} value={emp}>{emp}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
         </div>
+
+        {empreiteiras && empreiteiras.length > 0 && (
+          <div>
+            <Label>Empreiteira</Label>
+            <Select
+              value={data.empreiteira || ''}
+              onValueChange={(v) => update({ empreiteira: v })}
+              disabled={disabled}
+            >
+              <SelectTrigger><SelectValue placeholder="Selecione a empreiteira" /></SelectTrigger>
+              <SelectContent>
+                {empreiteiras.map((emp) => (
+                  <SelectItem key={emp} value={emp}>{emp}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {(data.cargas?.length || 0) > 0 ? (
           <div className="overflow-x-auto">
