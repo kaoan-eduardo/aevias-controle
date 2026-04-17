@@ -1,0 +1,210 @@
+{
+  "name": "EnsaioRompimentoConcreto",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto (Carta Tra\u00e7o de Concreto)"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string",
+      "description": "Nome do laboratorista"
+    },
+    "cliente": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "rodovia": {
+      "type": "string",
+      "description": "Rodovia"
+    },
+    "volume_betonado": {
+      "type": "number",
+      "description": "Volume betonado (m\u00b3)"
+    },
+    "fornecedor": {
+      "type": "string",
+      "description": "Fornecedor/Concreteira"
+    },
+    "hora_moldagem": {
+      "type": "string",
+      "description": "Hora da moldagem"
+    },
+    "trecho": {
+      "type": "string",
+      "description": "Trecho"
+    },
+    "projeto_trac": {
+      "type": "string",
+      "description": "Projeto/Tra\u00e7o"
+    },
+    "numero_moldagem": {
+      "type": "string",
+      "description": "N\u00famero de moldagem"
+    },
+    "estrutura": {
+      "type": "string",
+      "description": "Estrutura"
+    },
+    "construtora": {
+      "type": "string",
+      "description": "Construtora"
+    },
+    "nota_fiscal": {
+      "type": "string",
+      "description": "Nota fiscal"
+    },
+    "estaca_moldagem": {
+      "type": "string",
+      "description": "Estaca de moldagem"
+    },
+    "slump_test": {
+      "type": "number",
+      "description": "Slump test (mm)"
+    },
+    "temperatura_ambiente": {
+      "type": "number",
+      "description": "Temperatura ambiente (\u00b0C)"
+    },
+    "hora_saida_usina": {
+      "type": "string",
+      "description": "Hora de sa\u00edda da usina"
+    },
+    "hora_chegada_campo": {
+      "type": "string",
+      "description": "Hora de chegada no campo"
+    },
+    "compressao_axial": {
+      "type": "array",
+      "description": "Dados de resist\u00eancia \u00e0 compress\u00e3o axial",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero_cp": {
+            "type": "string",
+            "description": "N\u00famero do corpo de prova"
+          },
+          "idade": {
+            "type": "number",
+            "description": "Idade (dias)"
+          },
+          "dimensao": {
+            "type": "string",
+            "enum": [
+              "5x10",
+              "15x30",
+              "10x20"
+            ],
+            "description": "Dimens\u00e3o do CP"
+          },
+          "data_ruptura": {
+            "type": "string",
+            "format": "date",
+            "description": "Data da ruptura"
+          },
+          "carga_ruptura": {
+            "type": "number",
+            "description": "Carga de ruptura (tf)"
+          },
+          "area_cp": {
+            "type": "number",
+            "description": "\u00c1rea do corpo de prova (cm\u00b2)"
+          },
+          "resistencia": {
+            "type": "number",
+            "description": "Resist\u00eancia (MPa)"
+          }
+        }
+      }
+    },
+    "tracao_flexao": {
+      "type": "array",
+      "description": "Dados de resist\u00eancia \u00e0 tra\u00e7\u00e3o na flex\u00e3o",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero_cp": {
+            "type": "string",
+            "description": "N\u00famero do corpo de prova"
+          },
+          "idade": {
+            "type": "number",
+            "description": "Idade (dias)"
+          },
+          "data_ruptura": {
+            "type": "string",
+            "format": "date",
+            "description": "Data da ruptura"
+          },
+          "carga_ruptura": {
+            "type": "number",
+            "description": "Carga de ruptura (tf)"
+          },
+          "vao_central": {
+            "type": "number",
+            "description": "V\u00e3o central do CP (cm\u00b2)"
+          },
+          "resistencia": {
+            "type": "number",
+            "description": "Resist\u00eancia (MPa)"
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho",
+      "description": "Status do registro"
+    },
+    "approved": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null,
+      "description": "Status de aprova\u00e7\u00e3o"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que aprovou"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id",
+    "data_ensaio"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}
