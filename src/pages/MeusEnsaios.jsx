@@ -674,75 +674,86 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           <CopyIdButton id={ensaio.id} />
                           {(() => {
-                            const naoConformidades = getNaoConformidades(ensaio);
-                            const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
-                            
-                            if (naoConformidades.length > 0) {
-                              const mensagem = temAcoesCorretivas 
-                                ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
-                                : `Não conformidades:\n${naoConformidades.join('\n')}`;
-                              return (
-                                <span 
-                                  className="text-red-600 cursor-help" 
-                                  title={mensagem}
-                                >
-                                  ⚠️
-                                </span>
-                              );
-                            }
-                            if (temAcoesCorretivas) {
-                              return (
-                                <span 
-                                  className="text-orange-500 cursor-help" 
-                                  title="Ações corretivas realizadas"
-                                >
-                                  ⚠️
-                                </span>
-                              );
-                            }
-                            return null;
-                          })()}
-                        </div>
-                      </td>
-                      <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
-                      <td className="px-2 py-2">
-                        <div className="font-medium text-[#00233B] text-xs truncate max-w-[140px]" title={obra?.name}>{obra?.name || 'N/A'}</div>
-                        <div className="text-[10px] text-[#00233B]/70">{obra?.code}</div>
-                      </td>
-                      <td className="px-2 py-2 text-[#00233B]/90 text-xs truncate max-w-[100px]" title={laboratorista}>{laboratorista}</td>
-                      <td className="px-2 py-2">
-                        <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
-                        <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
-                      </td>
-                      <td className="px-2 py-2">
-                        {getEmpireiteiraInfo(ensaio) ? (
-                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
-                        ) : (
-                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                        )}
-                      </td>
-                      <td className="px-2 py-2">
-                        {projeto ? (
-                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
-                        ) : (
-                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                        )}
-                      </td>
-                      <td className="px-2 py-2 text-center">
-                       <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
-                         <status.icon className="w-3 h-3" />
-                         {status.text}
-                       </Badge>
-                      </td>
-                      <td className="px-2 py-2">
-                        <div className="flex items-center gap-1">
-                          <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
-                            <Link to={reportUrl} target="_blank">
-                              <FileText className="w-3 h-3" />
-                            </Link>
-                          </Button>
+                              const naoConformidades = getNaoConformidades(ensaio);
+                              const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+                              const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
 
-                          {canApprove && ensaio.status !== 'rascunho' && (
+                              if (naoConformidades.length > 0) {
+                                const mensagem = temAcoesCorretivas 
+                                  ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
+                                  : `Não conformidades:\n${naoConformidades.join('\n')}`;
+                                return (
+                                  <span 
+                                    className="text-red-600 cursor-help" 
+                                    title={mensagem}
+                                  >
+                                    ⚠️
+                                  </span>
+                                );
+                              }
+                              if (temDeflexaoExcessiva) {
+                                return (
+                                  <span 
+                                    className="cursor-help" 
+                                    title="Pontos com deflexão acima do limite admissível"
+                                  >
+                                    🟡
+                                  </span>
+                                );
+                              }
+                              if (temAcoesCorretivas) {
+                                return (
+                                  <span 
+                                    className="text-orange-500 cursor-help" 
+                                    title="Ações corretivas realizadas"
+                                  >
+                                    ⚠️
+                                  </span>
+                                );
+                              }
+                              return null;
+                            })()}
+                          </div>
+                          </td>
+                          <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
+                          <td className="px-2 py-2">
+                          <div className="font-medium text-[#00233B] text-xs truncate max-w-[140px]" title={obra?.name}>{obra?.name || 'N/A'}</div>
+                          <div className="text-[10px] text-[#00233B]/70">{obra?.code}</div>
+                          </td>
+                          <td className="px-2 py-2 text-[#00233B]/90 text-xs truncate max-w-[100px]" title={laboratorista}>{laboratorista}</td>
+                          <td className="px-2 py-2">
+                          <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
+                          <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
+                          </td>
+                          <td className="px-2 py-2">
+                          {getEmpireiteiraInfo(ensaio) ? (
+                            <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
+                          ) : (
+                            <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                          )}
+                          </td>
+                          <td className="px-2 py-2">
+                          {projeto ? (
+                            <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
+                          ) : (
+                            <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                          )}
+                          </td>
+                          <td className="px-2 py-2 text-center">
+                          <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
+                           <status.icon className="w-3 h-3" />
+                           {status.text}
+                          </Badge>
+                          </td>
+                          <td className="px-2 py-2">
+                          <div className="flex items-center gap-1">
+                            <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 hover:text-[#00233B] hover:border-[#00233B]/30 border-white/20 transition-colors h-7 px-2 text-xs">
+                              <Link to={reportUrl} target="_blank">
+                                <FileText className="w-3 h-3" />
+                              </Link>
+                            </Button>
+
+                            {canApprove && ensaio.status !== 'rascunho' && (
                               <div className="flex gap-1">
                                 {(ensaio.approved === null || ensaio.approved === false) && (
                                   <Button
@@ -886,6 +897,7 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 {(() => {
                   const naoConformidades = getNaoConformidades(ensaio);
                   const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+                  const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
 
                   if (naoConformidades.length > 0) {
                     const mensagem = temAcoesCorretivas 
@@ -897,6 +909,16 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                         title={mensagem}
                       >
                         ⚠️
+                      </span>
+                    );
+                  }
+                  if (temDeflexaoExcessiva) {
+                    return (
+                      <span 
+                        className="cursor-help text-xl" 
+                        title="Pontos com deflexão acima do limite admissível"
+                      >
+                        🟡
                       </span>
                     );
                   }
