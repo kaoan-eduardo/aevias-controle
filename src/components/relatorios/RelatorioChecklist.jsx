@@ -652,7 +652,6 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                   <p><span className="font-bold">SUB-TRECHO:</span> {medicoes.sub_trecho || '-'}</p>
                 </div>
                 <div className="space-y-1">
-                  <p><span className="font-bold">DATA:</span> {new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                   <p><span className="font-bold">FISCAL DE CAMPO:</span> {checklist.inspetor_campo || '-'}</p>
                   <p><span className="font-bold">EMPREITEIRA:</span> {obra?.empreiteiras?.[0] || '-'}</p>
                   <p><span className="font-bold">SERVIÇO:</span> {servicoLabel}</p>

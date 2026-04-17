@@ -16,7 +16,7 @@ const novaCarga = () => ({
   observacoes: ''
 });
 
-export default function MedicaoUsina({ medicoes_usina, onChange, disabled }) {
+export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empreiteiras }) {
   const data = medicoes_usina || { sub_trecho: '', servico: '', cargas: [] };
 
   const update = (patch) => onChange({ ...data, ...patch });
@@ -77,6 +77,23 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled }) {
               </SelectContent>
             </Select>
           </div>
+          {empreiteiras && empreiteiras.length > 0 && (
+            <div>
+              <Label>Empreiteira</Label>
+              <Select
+                value={data.empreiteira || ''}
+                onValueChange={(v) => update({ empreiteira: v })}
+                disabled={disabled}
+              >
+                <SelectTrigger><SelectValue placeholder="Selecione a empreiteira" /></SelectTrigger>
+                <SelectContent>
+                  {empreiteiras.map((emp) => (
+                    <SelectItem key={emp} value={emp}>{emp}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
 
         {(data.cargas?.length || 0) > 0 ? (

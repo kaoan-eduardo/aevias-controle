@@ -1883,6 +1883,7 @@ export default function ChecklistUsinaPage() {
                 medicoes_usina={formData.medicoes_usina}
                 onChange={(val) => handleChange('medicoes_usina', val)}
                 disabled={!isEditable || isApproved}
+                empreiteiras={obraSelecionada?.empreiteiras || []}
               />
 
               <div className="flex justify-end gap-4 mt-6">
