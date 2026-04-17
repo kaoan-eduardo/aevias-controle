@@ -10,6 +10,7 @@ const novaCarga = () => ({
   numero_ticket: '',
   placa: '',
   quantidade_toneladas: null,
+  volume_m3: null,
   temperatura: null,
   rodovia_destino: '',
   equipe: '',
@@ -105,6 +106,7 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empre
                   <th className="border border-slate-300 px-2 py-2 text-left font-medium">Nº Ticket (NF)</th>
                   <th className="border border-slate-300 px-2 py-2 text-left font-medium">Placa</th>
                   <th className="border border-slate-300 px-2 py-2 text-center font-medium">Qtde (t)</th>
+                  <th className="border border-slate-300 px-2 py-2 text-center font-medium">Volume (m³)</th>
                   <th className="border border-slate-300 px-2 py-2 text-center font-medium">Temp. (°C)</th>
                   <th className="border border-slate-300 px-2 py-2 text-left font-medium">Rodovia Destino</th>
                   <th className="border border-slate-300 px-2 py-2 text-left font-medium">Equipe</th>
@@ -123,6 +125,9 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empre
                     </td>
                     <td className="border border-slate-300 px-1 py-1">
                       <Input type="number" step="0.01" min="0" value={carga.quantidade_toneladas ?? ''} onChange={(e) => updateCarga(index, 'quantidade_toneladas', e.target.value ? parseFloat(e.target.value) : null)} disabled={disabled} className="h-8 text-sm text-center" placeholder="0.00" />
+                    </td>
+                    <td className="border border-slate-300 px-1 py-1">
+                      <Input type="number" step="0.01" min="0" value={carga.volume_m3 ?? ''} onChange={(e) => updateCarga(index, 'volume_m3', e.target.value ? parseFloat(e.target.value) : null)} disabled={disabled} className="h-8 text-sm text-center" placeholder="0.00" />
                     </td>
                     <td className="border border-slate-300 px-1 py-1">
                       <Input type="number" step="0.1" value={carga.temperatura ?? ''} onChange={(e) => updateCarga(index, 'temperatura', e.target.value ? parseFloat(e.target.value) : null)} disabled={disabled} className="h-8 text-sm text-center" placeholder="180" />

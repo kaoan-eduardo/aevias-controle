@@ -221,6 +221,10 @@
           "type": "string",
           "description": "Tipo de servi\u00e7o (capa, reperfilagem, remendo, capa_reperfilagem)"
         },
+        "empreiteira": {
+          "type": "string",
+          "description": "Empreiteira respons\u00e1vel"
+        },
         "cargas": {
           "type": "array",
           "description": "Lista de cargas registradas",
@@ -238,6 +242,10 @@
               "quantidade_toneladas": {
                 "type": "number",
                 "description": "Quantidade em toneladas"
+              },
+              "volume_m3": {
+                "type": "number",
+                "description": "Volume em m\u00b3"
               },
               "temperatura": {
                 "type": "number",
