@@ -27,6 +27,18 @@ const calcularAreaCP = (dimensao) => {
   return area.toFixed(2);
 };
 
+// Calcula resistência em MPa
+// Fórmula: R = (CARGA_RUPTURA / ÁREA / 10,197) * 1000
+const calcularResistencia = (cargaRuptura, area) => {
+  const carga = parseFloat(cargaRuptura);
+  const areaCM2 = parseFloat(area);
+  
+  if (!carga || !areaCM2 || carga <= 0 || areaCM2 <= 0) return '';
+  
+  const resistencia = (carga / areaCM2 / 10.197) * 1000;
+  return resistencia.toFixed(2);
+};
+
 export default function EnsaioRompimentoConcretoPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -187,6 +199,20 @@ export default function EnsaioRompimentoConcretoPage() {
       if (field === 'dimensao') {
         const area = calcularAreaCP(value);
         novo.compressao_axial[idx].area_cp = area;
+        // Recalcular resistência se houver carga ruptura
+        if (novo.compressao_axial[idx].carga_ruptura) {
+          const resistencia = calcularResistencia(novo.compressao_axial[idx].carga_ruptura, area);
+          novo.compressao_axial[idx].resistencia = resistencia;
+        }
+      }
+      
+      // Calcular resistência ao alterar carga ruptura ou área
+      if (field === 'carga_ruptura' || field === 'area_cp') {
+        const resistencia = calcularResistencia(
+          novo.compressao_axial[idx].carga_ruptura,
+          novo.compressao_axial[idx].area_cp
+        );
+        novo.compressao_axial[idx].resistencia = resistencia;
       }
       
       return novo;
@@ -593,7 +619,9 @@ export default function EnsaioRompimentoConcretoPage() {
                           step="0.01"
                           value={cp.resistencia}
                           onChange={(e) => updateCompressaoAxial(idx, 'resistencia', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          readOnly
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                          title="Calculada automaticamente"
                         />
                       </div>
                     </div>
