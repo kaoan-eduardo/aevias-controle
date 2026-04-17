@@ -74,7 +74,6 @@ export default function EnsaioVigaBenkelman() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      setFormData(prev => ({ ...prev, laboratorista_name: currentUser.laboratorista_name || currentUser.full_name }));
 
       const [obrasData, projectsData, regionaisData] = await Promise.all([
         base44.entities.Obra.list(),
@@ -131,7 +130,6 @@ export default function EnsaioVigaBenkelman() {
         } else {
           faixasReconstruidas = faixasOrder.map((nome, idx) => {
             const levsDaFaixa = faixasMap[nome];
-            // Pad to 20 rows
             const levantamentos = [...levsDaFaixa];
             while (levantamentos.length < 20) {
               levantamentos.push({
@@ -147,12 +145,18 @@ export default function EnsaioVigaBenkelman() {
 
         setFormData({
           ...ensaio,
+          observacoes: ensaio.observacoes || '',
           faixas: faixasReconstruidas,
           nextFaixaId: faixasReconstruidas.length + 1
         });
+
         if (faixasReconstruidas.length > 0) {
           setActiveFaixaTab(String(faixasReconstruidas[0].id));
         }
+      } else {
+        // Novo ensaio: setar apenas o laboratorista
+        setFormData(prev => ({ ...prev, laboratorista_name: currentUser.laboratorista_name || currentUser.full_name }));
+      }
       }
 
       setLoading(false);
