@@ -673,7 +673,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     </tr>
                   </thead>
                   <tbody>
-                    {Array.from({ length: 20 }).map((_, i) => {
+                    {Array.from({ length: 30 }).map((_, i) => {
                       const carga = (medicoes.cargas || [])[i];
                       return (
                         <tr key={i} style={{ height: '30px' }} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
