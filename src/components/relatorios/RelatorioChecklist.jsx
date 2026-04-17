@@ -667,7 +667,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'10%'}}>PLACA</th>
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'8%'}}>QTE.<br/>(t)</th>
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'9%'}}>VOLUME<br/>(m³)</th>
-                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'10%'}}>TEMPERATURA<br/>(°C)</th>
+                      <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'10%'}}>TEMP.<br/>(°C)</th>
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'20%'}}>RODOVIA DESTINO</th>
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'15%'}}>EQUIPE</th>
                       <th className="border border-slate-400 px-1 py-1.5 text-center font-bold" style={{width:'22%'}}>OBSERVAÇÕES</th>
