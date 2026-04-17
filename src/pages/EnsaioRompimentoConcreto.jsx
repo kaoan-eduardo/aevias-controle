@@ -10,6 +10,23 @@ import { createPageUrl } from '@/utils';
 
 const DIMENSOES_CP = ['5x10', '15x30', '10x20'];
 
+// Calcula área do corpo de prova baseado na dimensão (diâmetro em cm)
+// Fórmula: A = π * (d/2)²
+const calcularAreaCP = (dimensao) => {
+  const diametroDiametros = {
+    '5x10': 5,
+    '15x30': 15,
+    '10x20': 10
+  };
+  
+  const diametro = diametroDiametros[dimensao];
+  if (!diametro) return '';
+  
+  const raio = diametro / 2;
+  const area = Math.PI * (raio * raio);
+  return area.toFixed(2);
+};
+
 export default function EnsaioRompimentoConcretoPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -165,6 +182,13 @@ export default function EnsaioRompimentoConcretoPage() {
     setFormData(prev => {
       const novo = { ...prev };
       novo.compressao_axial[idx] = { ...novo.compressao_axial[idx], [field]: value };
+      
+      // Calcular área automaticamente ao alterar dimensão
+      if (field === 'dimensao') {
+        const area = calcularAreaCP(value);
+        novo.compressao_axial[idx].area_cp = area;
+      }
+      
       return novo;
     });
   };
@@ -557,7 +581,9 @@ export default function EnsaioRompimentoConcretoPage() {
                           step="0.01"
                           value={cp.area_cp}
                           onChange={(e) => updateCompressaoAxial(idx, 'area_cp', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          readOnly
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                          title="Calculada automaticamente pela dimensão"
                         />
                       </div>
                       <div>
