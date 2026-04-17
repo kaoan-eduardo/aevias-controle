@@ -458,11 +458,14 @@ export default function RelatorioVigaBenkelman() {
             <div className="text-center">
               <div className="text-[8px] text-slate-500 mb-0 min-h-[24px] flex flex-col justify-end items-center">
                 {ensaio.laboratorista_name && (
-                  <>
-                    <p className="font-bold text-slate-600 text-[8px]">{ensaio.laboratorista_name}</p>
-                    <p className="text-[6px]">{ensaio.created_by}</p>
-                  </>
-                )}
+                   <>
+                     <p className="font-bold text-slate-600 text-[8px]">{ensaio.laboratorista_name}</p>
+                     <p className="text-[6px]">{ensaio.created_by}</p>
+                     {ensaio.created_date && (
+                       <p className="text-[6px]">{new Date(ensaio.created_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</p>
+                     )}
+                   </>
+                 )}
               </div>
               <div className="border-t border-gray-500 pt-0 w-3/4 mx-auto">
                 <p className="text-[7px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
