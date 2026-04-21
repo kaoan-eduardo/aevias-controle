@@ -600,7 +600,7 @@ export default function UsersPage() {
           </CardContent>
         </Card>
 
-        <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg overflow-hidden">
+        <div className="bg-white/20 backdrop-blur-lg border border-white/20 rounded-lg overflow-x-auto">
           <table className="min-w-full divide-y divide-white/10">
             <thead className="bg-black/5">
               <tr>
