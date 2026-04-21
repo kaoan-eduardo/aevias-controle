@@ -200,15 +200,15 @@ export default function RelatorioRompimentoConcreto() {
         </table>
 
         {/* ENSAIO DE COMPRESSÃO AXIAL */}
-        <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
-        <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
+         <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
+         <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
 
-        {/* ENSAIO DE TRAÇÃO NA FLEXÃO */}
-        <SectionHeader label="ENSAIO DE RESISTÊNCIA À TRAÇÃO NA FLEXÃO - ABNT NBR 12142:2010" />
-        <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
+         {/* ENSAIO DE TRAÇÃO NA FLEXÃO */}
+         <SectionHeader label="ENSAIO DE RESISTÊNCIA À TRAÇÃO NA FLEXÃO - ABNT NBR 12142:2010" />
+         <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
 
-        {/* OBSERVAÇÕES */}
-        <div className="border border-slate-400 border-t-0 p-2 text-[9px] min-h-[60px]">
+         {/* OBSERVAÇÕES */}
+         <div className="border border-slate-400 p-2 text-[9px] min-h-[60px]">
           <span className="font-semibold">OBS.:</span>
           <div className="mt-1 whitespace-pre-wrap">{ensaio.observacoes || ''}</div>
         </div>
