@@ -134,8 +134,8 @@ export default function RelatorioRompimentoConcreto() {
            <div className="text-xs font-semibold text-gray-800 text-right">{fmtDate(ensaio.data_ensaio)}</div>
          </header>
 
-         <div style={{ backgroundColor: '#1e293b' }} className="p-1 text-center mt-1">
-            <span className="text-[10px] font-bold text-white">DADOS DO CLIENTE</span>
+         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 font-bold text-center text-[10px] mt-1">
+            DADOS DO CLIENTE
          </div>
 
          <table className="w-full border-collapse text-[10px] mt-0">
