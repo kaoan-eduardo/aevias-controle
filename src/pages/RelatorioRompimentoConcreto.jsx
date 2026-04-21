@@ -149,17 +149,17 @@ export default function RelatorioRompimentoConcreto() {
              <div className="px-2 py-1 bg-white">{ensaio.concreteira || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.numero_moldagem || ''}</div>
              {/* Linha 2: Labels */}
-             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">OBRA:</div>
-             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">TRECHO:</div>
-             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">PROJETO / TRAÇO:</div>
-             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">LABORATORISTA:</div>
-             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">HORA MOLDAGEM:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">OBRA:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">TRECHO:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">PROJETO / TRAÇO:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">LABORATORISTA:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">HORA MOLDAGEM:</div>
              {/* Linha 2: Valores */}
-             <div className="px-2 py-1 min-h-[40px] border-t border-slate-400 bg-white">{obra?.name || ''}</div>
-             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.trecho || ''}</div>
-             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.projeto_trac || ''}</div>
-             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.laboratorista_name || ''}</div>
-             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.hora_moldagem || ''}</div>
+             <div className="px-2 py-1 min-h-[40px] bg-white">{obra?.name || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.trecho || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.projeto_trac || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.laboratorista_name || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.hora_moldagem || ''}</div>
            </div>
          </div>
 
