@@ -134,35 +134,35 @@ export default function RelatorioRompimentoConcreto() {
            <div className="text-xs font-semibold text-gray-800 text-right">{fmtDate(ensaio.data_ensaio)}</div>
          </header>
 
-         <table className="w-full border-collapse text-[10px]">
+         <table className="w-full border-collapse text-[10px] border border-slate-400">
            <tbody>
              <tr>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">CLIENTE:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">RODOVIA:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">VOLUME BETONADO:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">FORNECEDOR:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">N° DE MOLDAGEM:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">CLIENTE:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">RODOVIA:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">VOLUME BETONADO:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">FORNECEDOR:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5">N° DE MOLDAGEM:</td>
              </tr>
-             <tr>
-               <td className="border border-slate-400 px-2 py-1 min-h-[40px]">{obra?.client || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.rodovia || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.volume || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.concreteira || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.numero_moldagem || ''}</td>
+             <tr className="border-t border-slate-400">
+               <td className="px-2 py-1 min-h-[40px] border-r border-slate-400">{obra?.client || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.rodovia || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.volume || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.concreteira || ''}</td>
+               <td className="px-2 py-1">{ensaio.numero_moldagem || ''}</td>
              </tr>
-             <tr>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">OBRA:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">TRECHO:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">PROJETO / TRAÇO:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">LABORATORISTA:</td>
-               <td className="border border-slate-400 px-2 py-0.5 font-semibold w-1/5">HORA MOLDAGEM:</td>
+             <tr className="border-t border-slate-400">
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">OBRA:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">TRECHO:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">PROJETO / TRAÇO:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">LABORATORISTA:</td>
+               <td className="px-2 py-0.5 font-semibold w-1/5">HORA MOLDAGEM:</td>
              </tr>
-             <tr>
-               <td className="border border-slate-400 px-2 py-1 min-h-[40px]">{obra?.name || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.trecho || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.projeto_trac || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.laboratorista_name || ''}</td>
-               <td className="border border-slate-400 px-2 py-1">{ensaio.hora_moldagem || ''}</td>
+             <tr className="border-t border-slate-400">
+               <td className="px-2 py-1 min-h-[40px] border-r border-slate-400">{obra?.name || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.trecho || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.projeto_trac || ''}</td>
+               <td className="px-2 py-1 border-r border-slate-400">{ensaio.laboratorista_name || ''}</td>
+               <td className="px-2 py-1">{ensaio.hora_moldagem || ''}</td>
              </tr>
            </tbody>
          </table>
