@@ -297,7 +297,7 @@ function CompressaoAxialTable({ series, ensaio }) {
    const dimensao = series[0]?.[0]?.dimensao || '';
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ transform: 'scale(0.97)', transformOrigin: 'top left', width: '103.09%' }}>
       <tbody>
         {/* Linha: N° CPs e dimensões */}
         <tr>
@@ -403,7 +403,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
    const totalCPs = series.reduce((acc, s) => acc + s.length, 0);
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ transform: 'scale(0.97)', transformOrigin: 'top left', width: '103.09%' }}>
       <tbody>
         {/* N° CPs */}
         <tr>
