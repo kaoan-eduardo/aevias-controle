@@ -134,38 +134,34 @@ export default function RelatorioRompimentoConcreto() {
            <div className="text-xs font-semibold text-gray-800 text-right">{fmtDate(ensaio.data_ensaio)}</div>
          </header>
 
-         <table className="w-full border-collapse text-[10px] border border-slate-400">
-           <tbody>
-             <tr>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">CLIENTE:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">RODOVIA:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">VOLUME BETONADO:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">FORNECEDOR:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5">N° DE MOLDAGEM:</td>
-             </tr>
-             <tr className="border-t border-slate-400">
-               <td className="px-2 py-1 min-h-[40px] border-r border-slate-400">{obra?.client || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.rodovia || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.volume || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.concreteira || ''}</td>
-               <td className="px-2 py-1">{ensaio.numero_moldagem || ''}</td>
-             </tr>
-             <tr className="border-t border-slate-400">
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">OBRA:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">TRECHO:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">PROJETO / TRAÇO:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5 border-r border-slate-400">LABORATORISTA:</td>
-               <td className="px-2 py-0.5 font-semibold w-1/5">HORA MOLDAGEM:</td>
-             </tr>
-             <tr className="border-t border-slate-400">
-               <td className="px-2 py-1 min-h-[40px] border-r border-slate-400">{obra?.name || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.trecho || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.projeto_trac || ''}</td>
-               <td className="px-2 py-1 border-r border-slate-400">{ensaio.laboratorista_name || ''}</td>
-               <td className="px-2 py-1">{ensaio.hora_moldagem || ''}</td>
-             </tr>
-           </tbody>
-         </table>
+         <div className="border border-slate-400 text-[10px]">
+           <div className="grid grid-cols-5 gap-0">
+             {/* Linha 1: Labels */}
+             <div className="px-2 py-0.5 font-semibold bg-white">CLIENTE:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">RODOVIA:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">VOLUME BETONADO:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">FORNECEDOR:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">N° DE MOLDAGEM:</div>
+             {/* Linha 1: Valores */}
+             <div className="px-2 py-1 min-h-[40px] bg-white">{obra?.client || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.rodovia || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.volume || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.concreteira || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.numero_moldagem || ''}</div>
+             {/* Linha 2: Labels */}
+             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">OBRA:</div>
+             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">TRECHO:</div>
+             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">PROJETO / TRAÇO:</div>
+             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">LABORATORISTA:</div>
+             <div className="px-2 py-0.5 font-semibold border-t border-slate-400 bg-white">HORA MOLDAGEM:</div>
+             {/* Linha 2: Valores */}
+             <div className="px-2 py-1 min-h-[40px] border-t border-slate-400 bg-white">{obra?.name || ''}</div>
+             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.trecho || ''}</div>
+             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.projeto_trac || ''}</div>
+             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.laboratorista_name || ''}</div>
+             <div className="px-2 py-1 border-t border-slate-400 bg-white">{ensaio.hora_moldagem || ''}</div>
+           </div>
+         </div>
 
          {/* DADOS DO ENSAIO */}
          <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 font-bold text-center text-[10px] mt-1">DADOS DO ENSAIO</div>
