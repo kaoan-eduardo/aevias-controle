@@ -123,34 +123,35 @@ export default function RelatorioRompimentoConcreto() {
       <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-4 print:p-2 flex flex-col gap-0">
 
         {/* CABEÇALHO */}
-        <div className="flex items-center justify-between mb-2">
-          <img
-            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
-            alt="Logo" className="h-10 object-contain"
-          />
-          <h1 className="text-sm font-bold text-gray-900 uppercase tracking-wide">FICHA DE MOLDAGEM</h1>
-          <div className="text-[10px] text-gray-600 font-medium">{fmtDate(ensaio.data_ensaio)}</div>
-        </div>
+         <div className="flex items-center justify-between mb-2">
+           <img
+             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
+             alt="Logo" className="h-10 object-contain"
+           />
+           <h1 className="text-sm font-bold text-gray-900 uppercase tracking-wide">FICHA DE MOLDAGEM</h1>
+           <div className="text-[10px] text-gray-600 font-medium">{fmtDate(ensaio.data_ensaio)}</div>
+         </div>
 
-        <div className="border border-slate-400 p-3 text-[11px] mb-0">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-1.5">
-              <div><span className="font-semibold">OBRA:</span> <span>{obra?.name || ''}</span></div>
-              <div><span className="font-semibold">RODOVIA:</span> <span>{ensaio.rodovia || ''}</span></div>
-              <div><span className="font-semibold">TRECHO:</span> <span>{ensaio.trecho || ''}</span></div>
-            </div>
-            <div className="space-y-1.5">
-              <div><span className="font-semibold">LOCAL:</span> <span>{ensaio.estrutura || ''}</span></div>
-              <div><span className="font-semibold">ENERGIA:</span> <span>Modificada</span></div>
-              <div><span className="font-semibold">CAMADA:</span> <span>ATERRO</span></div>
-            </div>
-            <div className="space-y-1.5">
-              <div><span className="font-semibold">MATERIAL:</span> <span>{ensaio.projeto_trac || ''}</span></div>
-              <div><span className="font-semibold">LABORATORISTA:</span> <span>{ensaio.laboratorista_name || ''}</span></div>
-              <div><span className="font-semibold">DATA:</span> <span>{fmtDate(ensaio.data_ensaio)}</span></div>
-            </div>
-          </div>
-        </div>
+         <SubSectionHeader label="DADOS DE MOLDAGEM" />
+         <div className="border border-slate-400 p-3 text-[11px] mb-0">
+           <div className="grid grid-cols-3 gap-4">
+             <div className="space-y-1.5">
+               <div><span className="font-semibold">OBRA:</span> <span>{obra?.name || ''}</span></div>
+               <div><span className="font-semibold">RODOVIA:</span> <span>{ensaio.rodovia || ''}</span></div>
+               <div><span className="font-semibold">TRECHO:</span> <span>{ensaio.trecho || ''}</span></div>
+             </div>
+             <div className="space-y-1.5">
+               <div><span className="font-semibold">LOCAL:</span> <span>{ensaio.estrutura || ''}</span></div>
+               <div><span className="font-semibold">ENERGIA:</span> <span>Modificada</span></div>
+               <div><span className="font-semibold">CAMADA:</span> <span>ATERRO</span></div>
+             </div>
+             <div className="space-y-1.5">
+               <div><span className="font-semibold">MATERIAL:</span> <span>{ensaio.projeto_trac || ''}</span></div>
+               <div><span className="font-semibold">LABORATORISTA:</span> <span>{ensaio.laboratorista_name || ''}</span></div>
+               <div className="border border-slate-400 px-2 py-1"><span className="font-semibold">DATA:</span> <span>{fmtDate(ensaio.data_ensaio)}</span></div>
+             </div>
+           </div>
+         </div>
 
         {/* DADOS DO ENSAIO */}
         <SectionHeader label="DADOS DO ENSAIO" />
