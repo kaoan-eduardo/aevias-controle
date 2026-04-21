@@ -123,35 +123,49 @@ export default function RelatorioRompimentoConcreto() {
       <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-4 print:p-2 flex flex-col gap-0">
 
         {/* CABEÇALHO */}
-         <div className="flex items-center justify-between mb-2">
+         <div className="flex items-center justify-between border border-slate-400 p-3 mb-0">
            <img
              src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
-             alt="Logo" className="h-10 object-contain"
+             alt="Logo" className="h-12 object-contain"
            />
-           <h1 className="text-sm font-bold text-gray-900 uppercase tracking-wide">FICHA DE MOLDAGEM</h1>
-           <div className="text-[10px] text-gray-600 font-medium">{fmtDate(ensaio.data_ensaio)}</div>
+           <h1 className="text-base font-bold text-gray-900 uppercase tracking-wide">FICHA DE MOLDAGEM</h1>
+           <div className="border border-slate-400 px-3 py-2 text-[11px] font-semibold text-gray-900">{fmtDate(ensaio.data_ensaio)}</div>
          </div>
 
-         <SubSectionHeader label="DADOS DE MOLDAGEM" />
-         <div className="border border-slate-400 p-3 text-[11px] mb-0">
-           <div className="grid grid-cols-3 gap-4">
-             <div className="space-y-1.5">
-               <div><span className="font-semibold">OBRA:</span> <span>{obra?.name || ''}</span></div>
-               <div><span className="font-semibold">RODOVIA:</span> <span>{ensaio.rodovia || ''}</span></div>
-               <div><span className="font-semibold">TRECHO:</span> <span>{ensaio.trecho || ''}</span></div>
-             </div>
-             <div className="space-y-1.5">
-               <div><span className="font-semibold">LOCAL:</span> <span>{ensaio.estrutura || ''}</span></div>
-               <div><span className="font-semibold">ENERGIA:</span> <span>Modificada</span></div>
-               <div><span className="font-semibold">CAMADA:</span> <span>ATERRO</span></div>
-             </div>
-             <div className="space-y-1.5">
-               <div><span className="font-semibold">MATERIAL:</span> <span>{ensaio.projeto_trac || ''}</span></div>
-               <div><span className="font-semibold">LABORATORISTA:</span> <span>{ensaio.laboratorista_name || ''}</span></div>
-               <div className="border border-slate-400 px-2 py-1"><span className="font-semibold">DATA:</span> <span>{fmtDate(ensaio.data_ensaio)}</span></div>
-             </div>
-           </div>
+         <div style={{ backgroundColor: '#B8D96B' }} className="border border-slate-400 p-2 text-center">
+           <span className="text-[11px] font-bold text-slate-800">DADOS DO CLIENTE</span>
          </div>
+
+         <table className="w-full border-collapse border border-slate-400 text-[10px] mb-0">
+           <tbody>
+             <tr>
+               <td className="border border-slate-400 px-2 py-1 font-semibold w-[20%]">CLIENTE:</td>
+               <td className="border border-slate-400 px-2 py-1 w-[15%] min-h-[40px]">{obra?.client || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold w-[15%]">RODOVIA:</td>
+               <td className="border border-slate-400 px-2 py-1 w-[15%]">{ensaio.rodovia || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold w-[18%]">VOLUME BETONADO:</td>
+               <td className="border border-slate-400 px-2 py-1 w-[10%]">{ensaio.volume || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold w-[15%]">FORNECEDOR:</td>
+               <td className="border border-slate-400 px-2 py-1 w-[12%]">{ensaio.concreteira || ''}</td>
+             </tr>
+             <tr>
+               <td className="border border-slate-400 px-2 py-1 font-semibold">OBRA:</td>
+               <td className="border border-slate-400 px-2 py-1 min-h-[40px]">{obra?.name || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold">TRECHO:</td>
+               <td className="border border-slate-400 px-2 py-1">{ensaio.trecho || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold">PROJETO / TRAÇO:</td>
+               <td className="border border-slate-400 px-2 py-1">{ensaio.projeto_trac || ''}</td>
+               <td className="border border-slate-400 px-2 py-1 font-semibold">N° DE MOLDAGEM:</td>
+               <td className="border border-slate-400 px-2 py-1">{ensaio.numero_moldagem || ''}</td>
+             </tr>
+             <tr>
+               <td colSpan={8} className="border border-slate-400 px-2 py-1">
+                 <span className="font-semibold">LABORATORISTA:</span> <span>{ensaio.laboratorista_name || ''}</span>
+                 <span className="ml-6"><span className="font-semibold">HORA MOLDAGEM:</span> <span>{ensaio.hora_moldagem || ''}</span></span>
+               </td>
+             </tr>
+           </tbody>
+         </table>
 
         {/* DADOS DO ENSAIO */}
         <SectionHeader label="DADOS DO ENSAIO" />
