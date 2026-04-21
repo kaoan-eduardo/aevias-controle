@@ -692,9 +692,12 @@ export default function EnsaioRompimentoConcretoPage() {
             <CardHeader className="bg-[#BFCF99]/20 border-b border-white/10">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-[#00233B]">Resistência à Tração na Flexão</CardTitle>
-                <Button onClick={addTracaoFlexao} size="sm" className="bg-[#00233B] text-white">
-                  <Plus className="w-4 h-4 mr-1" /> Adicionar
-                </Button>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-[#00233B]/70">{formData.tracao_flexao.length}/4 CPs</span>
+                  <Button onClick={addTracaoFlexao} size="sm" disabled={formData.tracao_flexao.length >= 4} className="bg-[#00233B] text-white disabled:opacity-50">
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-6">
