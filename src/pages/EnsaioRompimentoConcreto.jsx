@@ -168,26 +168,32 @@ export default function EnsaioRompimentoConcretoPage() {
   const empreiteirasObra = obraAtual?.empreiteiras || [];
   const projectsDaObra = projects.filter(p => formData.obra_id ? true : false);
 
-  const addCompressaoAxial = () => {
+  const novoCP = () => ({
+    numero_cp: '',
+    idade: '',
+    dimensao: '5x10',
+    data_ruptura: '',
+    carga_ruptura: '',
+    area_cp: calcularAreaCP('5x10'),
+    resistencia: ''
+  });
+
+  const numSeries = Math.ceil(formData.compressao_axial.length / 2);
+
+  const addSerie = () => {
+    if (numSeries >= 4) return;
     setFormData(prev => ({
       ...prev,
-      compressao_axial: [...prev.compressao_axial, {
-        numero_cp: '',
-        idade: '',
-        dimensao: '5x10',
-        data_ruptura: '',
-        carga_ruptura: '',
-        area_cp: '',
-        resistencia: ''
-      }]
+      compressao_axial: [...prev.compressao_axial, novoCP(), novoCP()]
     }));
   };
 
-  const removeCompressaoAxial = (idx) => {
-    setFormData(prev => ({
-      ...prev,
-      compressao_axial: prev.compressao_axial.filter((_, i) => i !== idx)
-    }));
+  const removeSerie = (serieIdx) => {
+    setFormData(prev => {
+      const novo = [...prev.compressao_axial];
+      novo.splice(serieIdx * 2, 2);
+      return { ...prev, compressao_axial: novo };
+    });
   };
 
   const updateCompressaoAxial = (idx, field, value) => {
@@ -531,104 +537,116 @@ export default function EnsaioRompimentoConcretoPage() {
             <CardHeader className="bg-[#BFCF99]/20 border-b border-white/10">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-[#00233B]">Resistência à Compressão Axial</CardTitle>
-                <Button onClick={addCompressaoAxial} size="sm" className="bg-[#00233B] text-white">
-                  <Plus className="w-4 h-4 mr-1" /> Adicionar
-                </Button>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-[#00233B]/70">{numSeries}/4 séries</span>
+                  <Button onClick={addSerie} size="sm" disabled={numSeries >= 4} className="bg-[#00233B] text-white disabled:opacity-50">
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Série
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="space-y-4">
-                {formData.compressao_axial.map((cp, idx) => (
-                  <div key={idx} className="border border-white/20 rounded-lg p-4 bg-white/5 space-y-3">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-semibold text-[#00233B]">CP #{idx + 1}</h4>
-                      <Button
-                        onClick={() => removeCompressaoAxial(idx)}
-                        variant="destructive"
-                        size="sm"
-                        className="h-8 px-2"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Número CP</label>
-                        <Input
-                          value={cp.numero_cp}
-                          onChange={(e) => updateCompressaoAxial(idx, 'numero_cp', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
-                        <Input
-                          type="number"
-                          value={cp.idade}
-                          onChange={(e) => updateCompressaoAxial(idx, 'idade', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Dimensão</label>
-                        <select
-                          value={cp.dimensao}
-                          onChange={(e) => updateCompressaoAxial(idx, 'dimensao', e.target.value)}
-                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
+              <div className="space-y-6">
+                {Array.from({ length: numSeries }).map((_, serieIdx) => {
+                  const cp1 = formData.compressao_axial[serieIdx * 2];
+                  const cp2 = formData.compressao_axial[serieIdx * 2 + 1];
+                  return (
+                    <div key={serieIdx} className="border border-[#BFCF99]/40 rounded-lg p-4 bg-white/5">
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="font-semibold text-[#00233B]">Série {serieIdx + 1}</h4>
+                        <Button
+                          onClick={() => removeSerie(serieIdx)}
+                          variant="destructive"
+                          size="sm"
+                          className="h-7 px-2"
                         >
-                          {DIMENSOES_CP.map(d => (
-                            <option key={d} value={d}>{d}</option>
-                          ))}
-                        </select>
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Data Ruptura</label>
-                        <Input
-                          type="date"
-                          value={cp.data_ruptura}
-                          onChange={(e) => updateCompressaoAxial(idx, 'data_ruptura', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (tf)</label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={cp.carga_ruptura}
-                          onChange={(e) => updateCompressaoAxial(idx, 'carga_ruptura', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Área CP (cm²)</label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={cp.area_cp}
-                          onChange={(e) => updateCompressaoAxial(idx, 'area_cp', e.target.value)}
-                          readOnly
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
-                          title="Calculada automaticamente pela dimensão"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={cp.resistencia}
-                          onChange={(e) => updateCompressaoAxial(idx, 'resistencia', e.target.value)}
-                          readOnly
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
-                          title="Calculada automaticamente"
-                        />
+                      <div className="space-y-3">
+                        {[cp1, cp2].map((cp, cpIdx) => {
+                          const absIdx = serieIdx * 2 + cpIdx;
+                          if (!cp) return null;
+                          return (
+                            <div key={cpIdx} className="border border-white/10 rounded p-3 bg-white/5">
+                              <p className="text-xs font-semibold text-[#00233B]/70 mb-2">CP {cpIdx + 1}</p>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Número CP</label>
+                                  <Input
+                                    value={cp.numero_cp}
+                                    onChange={(e) => updateCompressaoAxial(absIdx, 'numero_cp', e.target.value)}
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
+                                  <Input
+                                    type="number"
+                                    value={cp.idade}
+                                    onChange={(e) => updateCompressaoAxial(absIdx, 'idade', e.target.value)}
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Dimensão</label>
+                                  <select
+                                    value={cp.dimensao}
+                                    onChange={(e) => updateCompressaoAxial(absIdx, 'dimensao', e.target.value)}
+                                    className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
+                                  >
+                                    {DIMENSOES_CP.map(d => (
+                                      <option key={d} value={d}>{d}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Data Ruptura</label>
+                                  <Input
+                                    type="date"
+                                    value={cp.data_ruptura}
+                                    onChange={(e) => updateCompressaoAxial(absIdx, 'data_ruptura', e.target.value)}
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (tf)</label>
+                                  <Input
+                                    type="number"
+                                    step="0.01"
+                                    value={cp.carga_ruptura}
+                                    onChange={(e) => updateCompressaoAxial(absIdx, 'carga_ruptura', e.target.value)}
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Área CP (cm²)</label>
+                                  <Input
+                                    value={cp.area_cp}
+                                    readOnly
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                                    title="Calculada automaticamente pela dimensão"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
+                                  <Input
+                                    value={cp.resistencia}
+                                    readOnly
+                                    className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                                    title="Calculada automaticamente"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
-                ))}
-                {formData.compressao_axial.length === 0 && (
-                  <p className="text-center text-[#00233B]/60 py-4">Nenhum CP adicionado</p>
+                  );
+                })}
+                {numSeries === 0 && (
+                  <p className="text-center text-[#00233B]/60 py-4">Nenhuma série adicionada. Clique em "Adicionar Série" para começar.</p>
                 )}
               </div>
             </CardContent>
