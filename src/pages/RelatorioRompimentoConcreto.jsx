@@ -135,7 +135,7 @@ export default function RelatorioRompimentoConcreto() {
          </header>
 
          <div style={{ backgroundColor: '#1e293b' }} className="p-1 text-center mt-1">
-           <span className="text-[10px] font-bold text-slate-800">DADOS DO CLIENTE</span>
+            <span className="text-[10px] font-bold text-white">DADOS DO CLIENTE</span>
          </div>
 
          <table className="w-full border-collapse text-[10px] mt-0">
