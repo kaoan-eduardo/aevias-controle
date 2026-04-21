@@ -358,7 +358,7 @@ export default function EnsaioRompimentoConcretoPage() {
                   <select
                     value={formData.obra_id}
                     onChange={(e) => handleObraChange(e.target.value)}
-                    className="w-full px-3 py-3 border border-white/20 rounded-lg bg-white/10 text-[#00233B]"
+                    className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B]"
                   >
                     <option value="">Selecionar obra...</option>
                     {obras.map(obra => (
@@ -373,7 +373,7 @@ export default function EnsaioRompimentoConcretoPage() {
                     value={formData.rodovia}
                     onChange={(e) => handleInputChange('rodovia', e.target.value)}
                     disabled={!formData.obra_id}
-                    className="w-full px-3 py-3 border border-white/20 rounded-lg bg-white/10 text-[#00233B] disabled:opacity-50"
+                    className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B] disabled:opacity-50"
                   >
                     <option value="">Selecionar...</option>
                     {rodoviasDaObra.map((rod, idx) => (
@@ -606,7 +606,7 @@ export default function EnsaioRompimentoConcretoPage() {
                           type="number"
                           value={serie.idade}
                           onChange={(e) => updateSerie(serieIdx, 'idade', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-10 text-sm"
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
@@ -614,7 +614,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         <select
                           value={serie.dimensao}
                           onChange={(e) => updateSerie(serieIdx, 'dimensao', e.target.value)}
-                          className="w-full px-2 py-2 border border-white/20 rounded bg-white/20 text-[#00233B] text-sm h-10"
+                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/20 text-[#00233B] text-sm h-8"
                         >
                           {DIMENSOES_CP.map(d => (
                             <option key={d} value={d}>{d}</option>
@@ -627,7 +627,7 @@ export default function EnsaioRompimentoConcretoPage() {
                           type="date"
                           value={serie.data_ruptura}
                           onChange={(e) => updateSerie(serieIdx, 'data_ruptura', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-10 text-sm"
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
@@ -652,7 +652,7 @@ export default function EnsaioRompimentoConcretoPage() {
                               <Input
                                 value={cp.numero_cp}
                                 onChange={(e) => updateSerieCP(serieIdx, cpIdx, 'numero_cp', e.target.value)}
-                                className="bg-white/10 border-white/20 text-[#00233B] h-10 text-sm"
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
                               />
                             </div>
                             <div>
@@ -662,7 +662,7 @@ export default function EnsaioRompimentoConcretoPage() {
                                 step="0.01"
                                 value={cp.carga_ruptura}
                                 onChange={(e) => updateSerieCP(serieIdx, cpIdx, 'carga_ruptura', e.target.value)}
-                                className="bg-white/10 border-white/20 text-[#00233B] h-10 text-sm"
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
                               />
                             </div>
                             <div>
@@ -670,7 +670,7 @@ export default function EnsaioRompimentoConcretoPage() {
                               <Input
                                 value={cp.resistencia}
                                 readOnly
-                                className="bg-white/10 border-white/20 text-[#00233B] h-10 text-sm opacity-70 cursor-not-allowed"
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
                                 title="Calculada automaticamente"
                               />
                             </div>
