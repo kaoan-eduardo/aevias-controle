@@ -256,7 +256,7 @@ export default function RelatorioRompimentoConcreto() {
 
 function SectionHeader({ label }) {
   return (
-    <div className="bg-slate-500 text-white text-[9px] font-bold text-center py-0.5 border border-slate-400 border-b-0 mt-1">
+    <div className="bg-slate-700 text-white text-[9px] font-bold text-center py-0.5 border border-slate-400 border-b-0 mt-1">
       {label}
     </div>
   );
