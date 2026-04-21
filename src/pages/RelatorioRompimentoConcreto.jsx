@@ -301,7 +301,7 @@ function CompressaoAxialTable({ series, ensaio }) {
       <tbody>
         {/* Linha: N° CPs e dimensões */}
         <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA MOLDADOS:</td>
+          <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° DE CP'S:</td>
           <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
