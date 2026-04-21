@@ -28,14 +28,14 @@ const calcularAreaCP = (dimensao) => {
 };
 
 // Calcula resistência em MPa
-// Fórmula: R = (CARGA_RUPTURA / ÁREA) / (10,197 * 1000)
+// Fórmula: R = (CARGA_RUPTURA / ÁREA) * 98,0665
 const calcularResistencia = (cargaRuptura, area) => {
   const carga = parseFloat(cargaRuptura);
   const areaCM2 = parseFloat(area);
   
   if (!carga || !areaCM2 || carga <= 0 || areaCM2 <= 0) return '';
   
-  const resistencia = (carga / areaCM2) / (10.197 * 1000);
+  const resistencia = (carga / areaCM2) * 98.0665;
   return resistencia.toFixed(2);
 };
 
