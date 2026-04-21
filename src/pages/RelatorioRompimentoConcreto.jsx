@@ -131,7 +131,7 @@ export default function RelatorioRompimentoConcreto() {
              />
            </div>
            <h1 className="text-xs font-bold text-gray-800 text-center">FICHA DE MOLDAGEM</h1>
-           <div className="text-xs font-semibold text-gray-800 text-right border border-slate-400 rounded px-2 py-1">{fmtDate(ensaio.data_ensaio)}</div>
+           <div className="text-xs font-semibold text-gray-800 text-right border border-slate-400 rounded px-2 py-0.5 h-fit flex items-center justify-center">{fmtDate(ensaio.data_ensaio)}</div>
         </header>
 
          <div className="border border-slate-400 text-[10px]">
