@@ -132,19 +132,19 @@ export default function RelatorioRompimentoConcreto() {
           <div className="text-[10px] text-gray-600 font-medium">{fmtDate(ensaio.data_ensaio)}</div>
         </div>
 
-        <div className="border border-slate-400 p-3 text-[11px] mb-0">
+        <div className="border border-slate-400 p-4 text-[13px] mb-0">
           <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               <div><span className="font-semibold">OBRA:</span> <span>{obra?.name || ''}</span></div>
               <div><span className="font-semibold">RODOVIA:</span> <span>{ensaio.rodovia || ''}</span></div>
               <div><span className="font-semibold">TRECHO:</span> <span>{ensaio.trecho || ''}</span></div>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               <div><span className="font-semibold">LOCAL:</span> <span>{ensaio.estrutura || ''}</span></div>
               <div><span className="font-semibold">ENERGIA:</span> <span>Modificada</span></div>
               <div><span className="font-semibold">CAMADA:</span> <span>ATERRO</span></div>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2.5">
               <div><span className="font-semibold">MATERIAL:</span> <span>{ensaio.projeto_trac || ''}</span></div>
               <div><span className="font-semibold">LABORATORISTA:</span> <span>{ensaio.laboratorista_name || ''}</span></div>
               <div><span className="font-semibold">DATA:</span> <span>{fmtDate(ensaio.data_ensaio)}</span></div>
@@ -155,43 +155,43 @@ export default function RelatorioRompimentoConcreto() {
         {/* DADOS DO ENSAIO */}
         <SectionHeader label="DADOS DO ENSAIO" />
         <SubSectionHeader label="LOCAL DE APLICAÇÃO" />
-        <table className="w-full border-collapse border border-slate-400 text-[10px] mb-0">
+        <table className="w-full border-collapse border border-slate-400 text-[12px] mb-0">
           <tbody>
             <tr>
-              <td className="border border-slate-400 px-2 py-1 font-semibold w-[14%]">ESTRUTURA:</td>
-              <td className="border border-slate-400 px-2 py-1 w-[35%]">{ensaio.estrutura || ''}</td>
-              <td className="border border-slate-400 px-2 py-1 font-semibold w-[15%]">CONSTRUTORA:</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.construtora || ''}</td>
+              <td className="border border-slate-400 px-3 py-2 font-semibold w-[14%]">ESTRUTURA:</td>
+              <td className="border border-slate-400 px-3 py-2 w-[35%]">{ensaio.estrutura || ''}</td>
+              <td className="border border-slate-400 px-3 py-2 font-semibold w-[15%]">CONSTRUTORA:</td>
+              <td className="border border-slate-400 px-3 py-2">{ensaio.construtora || ''}</td>
             </tr>
             <tr>
-              <td className="border border-slate-400 px-2 py-1 font-semibold">NOTA FISCAL</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.nota_fiscal || ''}</td>
-              <td className="border border-slate-400 px-2 py-1 font-semibold">ESTACA DE MOLDAGEM:</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.estaca_moldagem || ''}</td>
+              <td className="border border-slate-400 px-3 py-2 font-semibold">NOTA FISCAL</td>
+              <td className="border border-slate-400 px-3 py-2">{ensaio.nota_fiscal || ''}</td>
+              <td className="border border-slate-400 px-3 py-2 font-semibold">ESTACA DE MOLDAGEM:</td>
+              <td className="border border-slate-400 px-3 py-2">{ensaio.estaca_moldagem || ''}</td>
             </tr>
           </tbody>
         </table>
 
         {/* ENSAIOS CONCRETO FRESCO */}
         <SubSectionHeader label="ENSAIOS CONCRETO FRESCO" />
-        <table className="w-full border-collapse border border-slate-400 text-[10px] mb-0">
+        <table className="w-full border-collapse border border-slate-400 text-[12px] mb-0">
           <tbody>
             <tr>
-              <td className="border border-gray-400 px-2 py-1.5 w-[50%]">
+              <td className="border border-gray-400 px-3 py-2.5 w-[50%]">
                 <span className="font-semibold">SLUMP TEST (mm):</span>
                 <span className="ml-2">{ensaio.slump_test ?? ''}</span>
               </td>
-              <td className="border border-gray-400 px-2 py-1.5">
+              <td className="border border-gray-400 px-3 py-2.5">
                 <span className="font-semibold">Hora de saída da usina:</span>
                 <span className="ml-2">{ensaio.hora_saida_usina || ''}</span>
               </td>
             </tr>
             <tr>
-              <td className="border border-gray-400 px-2 py-1.5">
+              <td className="border border-gray-400 px-3 py-2.5">
                 <span className="font-semibold">TEMPERATURA AMBIENTE (°C):</span>
                 <span className="ml-2">{ensaio.temperatura_ambiente ?? ''}</span>
               </td>
-              <td className="border border-gray-400 px-2 py-1.5">
+              <td className="border border-gray-400 px-3 py-2.5">
                 <span className="font-semibold">Hora de chegada campo:</span>
                 <span className="ml-2">{ensaio.hora_chegada_campo || ''}</span>
               </td>
@@ -297,14 +297,14 @@ function CompressaoAxialTable({ series, ensaio }) {
    const dimensao = series[0]?.[0]?.dimensao || '';
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[12px]">
       <tbody>
         {/* Linha: N° CPs e dimensões */}
         <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA MOLDADOS:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
-          <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
+          <td className="border border-slate-400 px-3 py-2 font-semibold w-[28%]">N° CORPOS DE PROVA MOLDADOS:</td>
+           <td className="border border-slate-400 px-3 py-2 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
+           <td className="border border-slate-400 px-3 py-2 font-semibold text-center">DIMENSÕES:</td>
+           <td className="border border-slate-400 px-3 py-2 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
             {dimensao ? `(${dimensao}) cm` : <span className="text-gray-400 italic text-[7px]">SELECIONAR (5X10); (15X30); (10X20)</span>}
           </td>
         </tr>
@@ -318,77 +318,77 @@ function CompressaoAxialTable({ series, ensaio }) {
               {s[0]?.idade ? `${s[0].idade} dias` : ''}
             </td>
           ))}
-          {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
+          {series.length === 0 && <td className="border border-slate-400 px-3 py-2" colSpan={4}></td>}
           </tr>
           {/* Linha: N° CP */}
           <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold">N° CP</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-500 italic"></td>
-          <td className="border border-slate-400 px-2 py-1 text-center"></td>
-          {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center font-semibold">{cp.numero_cp || ''}</td>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">N° CP</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-500 italic"></td>
+            <td className="border border-slate-400 px-3 py-2 text-center"></td>
+            {series.map((s, si) =>
+              s.map((cp, ci) => (
+                <td key={`${si}-${ci}`} className="border border-slate-400 px-3 py-2 text-center font-semibold">{cp.numero_cp || ''}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           </tr>
           {/* DATA DA RUPTURA */}
           <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold">DATA DA RUPTURA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
-          {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{cp.data_ruptura ? fmtDate(cp.data_ruptura) : ''}</td>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">DATA DA RUPTURA</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-400">-</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-400">-</td>
+            {series.map((s, si) =>
+              s.map((cp, ci) => (
+                <td key={`${si}-${ci}`} className="border border-slate-400 px-3 py-2 text-center">{cp.data_ruptura ? fmtDate(cp.data_ruptura) : ''}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           </tr>
           {/* CARGA DE RUPTURA */}
           <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold">CARGA DE RUPTURA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">C</td>
-          <td className="border border-slate-400 px-2 py-1 text-center">tf</td>
-          {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.carga_ruptura, 2)}</td>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">CARGA DE RUPTURA</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-600 italic">C</td>
+            <td className="border border-slate-400 px-3 py-2 text-center">tf</td>
+            {series.map((s, si) =>
+              s.map((cp, ci) => (
+                <td key={`${si}-${ci}`} className="border border-slate-400 px-3 py-2 text-center">{fmtN(cp.carga_ruptura, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           </tr>
           {/* ÁREA DO CP */}
           <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold">ÁREA DO CORPO DE PROVA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">A</td>
-          <td className="border border-slate-400 px-2 py-1 text-center">cm²</td>
-          {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.area_cp, 2)}</td>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">ÁREA DO CORPO DE PROVA</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-600 italic">A</td>
+            <td className="border border-slate-400 px-3 py-2 text-center">cm²</td>
+            {series.map((s, si) =>
+              s.map((cp, ci) => (
+                <td key={`${si}-${ci}`} className="border border-slate-400 px-3 py-2 text-center">{fmtN(cp.area_cp, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           </tr>
           {/* RESISTÊNCIA */}
           <tr className="bg-slate-50">
-          <td className="border border-slate-400 px-2 py-1 font-semibold">RESISTÊNCIA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-[8px] text-gray-600 italic">
-            Rfck = C/A × 1000/10,197
-          </td>
-          <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
-          {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-blue-800 font-semibold">{fmtN(cp.resistencia, 2)}</td>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">RESISTÊNCIA</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-[9px] text-gray-600 italic">
+              Rfck = C/A × 1000/10,197
+            </td>
+            <td className="border border-slate-400 px-3 py-2 text-center">MPa</td>
+            {series.map((s, si) =>
+              s.map((cp, ci) => (
+                <td key={`${si}-${ci}`} className="border border-slate-400 px-3 py-2 text-center text-blue-800 font-semibold">{fmtN(cp.resistencia, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           </tr>
           {/* RESIST. DO EXEMPLAR — média por série (colspan 2) */}
           <tr className="bg-slate-100">
-          <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">Rfck</td>
-          <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
-          {series.map((s, si) => (
-            <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
+            <td className="border border-slate-400 px-3 py-2 font-semibold">RESIST. DO EXEMPLAR</td>
+            <td className="border border-slate-400 px-3 py-2 text-center text-gray-600 italic">Rfck</td>
+            <td className="border border-slate-400 px-3 py-2 text-center">MPa</td>
+            {series.map((s, si) => (
+              <td key={si} className="border border-slate-400 px-3 py-2 text-center font-bold text-blue-900" colSpan={2}>
               {resistenciaExemplar(s)}
             </td>
           ))}
@@ -403,18 +403,18 @@ function TracaoFlexaoTable({ series, ensaio }) {
    const totalCPs = series.reduce((acc, s) => acc + s.length, 0);
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[12px]">
       <tbody>
         {/* N° CPs */}
         <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA EXTRAÍDOS:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
-          <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={series.length * 2 || 1}>
+          <td className="border border-slate-400 px-3 py-2 font-semibold w-[28%]">N° CORPOS DE PROVA EXTRAÍDOS:</td>
+          <td className="border border-slate-400 px-3 py-2 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
+          <td className="border border-slate-400 px-3 py-2 font-semibold text-center">DIMENSÕES:</td>
+          <td className="border border-slate-400 px-3 py-2 text-center font-bold" colSpan={series.length * 2 || 1}>
             CP PRISMÁTICO
           </td>
-          <td className="border border-slate-400 px-2 py-1 text-[8px] text-gray-600 text-center">h = 100 cm</td>
-          <td className="border border-slate-400 px-2 py-1 text-[8px] text-gray-600 text-center">g = 9,80665 m/s²</td>
+          <td className="border border-slate-400 px-3 py-2 text-[9px] text-gray-600 text-center">h = 100 cm</td>
+          <td className="border border-slate-400 px-3 py-2 text-[9px] text-gray-600 text-center">g = 9,80665 m/s²</td>
         </tr>
         {/* IDADE */}
         <tr className="bg-slate-100">
@@ -426,7 +426,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
               {s[0]?.idade ? `${s[0].idade} dias` : ''}
             </td>
           ))}
-          {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
+          {series.length === 0 && <td className="border border-slate-400 px-3 py-2" colSpan={4}></td>}
           <td className="border border-slate-400 px-2 py-1 text-[8px] text-gray-600 text-center">l = 100 cm</td>
           <td className="border border-slate-400 px-2 py-1"></td>
         </tr>
@@ -440,7 +440,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center font-semibold">{cp.numero_cp || ''}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
         {/* DATA DA RUPTURA */}
@@ -453,7 +453,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{cp.data_ruptura ? fmtDate(cp.data_ruptura) : ''}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
         {/* CARGA DE RUPTURA */}
@@ -466,7 +466,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.carga_ruptura, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
         {/* VÃO CENTRAL */}
@@ -479,7 +479,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.vao_central, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
         {/* RESISTÊNCIA */}
@@ -494,20 +494,20 @@ function TracaoFlexaoTable({ series, ensaio }) {
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-blue-800 font-semibold">{fmtN(cp.resistencia, 2)}</td>
             ))
           )}
-          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+          {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-3 py-2"></td>)}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
         {/* RESIST. DO EXEMPLAR */}
         <tr className="bg-slate-100">
-          <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">Rfctm</td>
-          <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
+          <td className="border border-slate-400 px-3 py-2 font-semibold">RESIST. DO EXEMPLAR</td>
+          <td className="border border-slate-400 px-3 py-2 text-center text-gray-600 italic">Rfctm</td>
+          <td className="border border-slate-400 px-3 py-2 text-center">MPa</td>
           {series.map((s, si) => (
-            <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
+            <td key={si} className="border border-slate-400 px-3 py-2 text-center font-bold text-blue-900" colSpan={2}>
               {resistenciaExemplar(s)}
             </td>
           ))}
-          {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
+          {series.length === 0 && <td className="border border-slate-400 px-3 py-2" colSpan={4}></td>}
           <td className="border border-slate-400 px-2 py-1" colSpan={2}></td>
         </tr>
       </tbody>
