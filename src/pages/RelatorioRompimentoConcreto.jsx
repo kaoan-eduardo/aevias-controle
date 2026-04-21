@@ -134,7 +134,7 @@ export default function RelatorioRompimentoConcreto() {
            <div className="text-xs font-semibold text-gray-800 text-right">{fmtDate(ensaio.data_ensaio)}</div>
          </header>
 
-         <div style={{ backgroundColor: '#B8D96B' }} className="p-1 text-center mt-1">
+         <div style={{ backgroundColor: '#1e293b' }} className="p-1 text-center mt-1">
            <span className="text-[10px] font-bold text-slate-800">DADOS DO CLIENTE</span>
          </div>
 
@@ -172,7 +172,7 @@ export default function RelatorioRompimentoConcreto() {
          </table>
 
          {/* DADOS DO ENSAIO */}
-         <div style={{ backgroundColor: '#1e3a5f' }} className="text-white px-2 py-0.5 text-center mt-1">
+         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 text-center mt-1">
            <span className="text-[10px] font-bold">DADOS DO ENSAIO</span>
          </div>
          <div style={{ backgroundColor: '#f0f0f0' }} className="px-2 py-0.5 text-center">
@@ -281,7 +281,7 @@ export default function RelatorioRompimentoConcreto() {
 
 function SectionHeader({ label }) {
    return (
-     <div style={{ backgroundColor: '#1e3a5f' }} className="text-white text-[10px] font-bold text-center py-0.5 mt-1">
+     <div style={{ backgroundColor: '#1e293b' }} className="text-white text-[10px] font-bold text-center py-0.5 mt-1">
        {label}
      </div>
    );
