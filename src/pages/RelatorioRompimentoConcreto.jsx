@@ -168,57 +168,29 @@ export default function RelatorioRompimentoConcreto() {
          </table>
 
          {/* DADOS DO ENSAIO */}
-         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 text-center mt-1">
-           <span className="text-[10px] font-bold">DADOS DO ENSAIO</span>
-         </div>
-         <div style={{ backgroundColor: '#f0f0f0' }} className="px-2 py-0.5 text-center">
-           <span className="text-[9px] font-semibold text-gray-700">LOCAL DE APLICAÇÃO</span>
-         </div>
-         <table className="w-full border-collapse border border-slate-400 text-[10px] mb-0">
-          <tbody>
-            <tr>
-              <td className="border border-slate-400 px-2 py-1 font-semibold w-[14%]">ESTRUTURA:</td>
-              <td className="border border-slate-400 px-2 py-1 w-[35%]">{ensaio.estrutura || ''}</td>
-              <td className="border border-slate-400 px-2 py-1 font-semibold w-[15%]">CONSTRUTORA:</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.construtora || ''}</td>
-            </tr>
-            <tr>
-              <td className="border border-slate-400 px-2 py-1 font-semibold">NOTA FISCAL</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.nota_fiscal || ''}</td>
-              <td className="border border-slate-400 px-2 py-1 font-semibold">ESTACA DE MOLDAGEM:</td>
-              <td className="border border-slate-400 px-2 py-1">{ensaio.estaca_moldagem || ''}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {/* ENSAIOS CONCRETO FRESCO */}
-        <div style={{ backgroundColor: '#f0f0f0' }} className="px-2 py-0.5 text-center">
-          <span className="text-[9px] font-semibold text-gray-700">ENSAIOS CONCRETO FRESCO</span>
-        </div>
-        <table className="w-full border-collapse border border-slate-400 text-[10px] mb-0">
-          <tbody>
-            <tr>
-              <td className="border border-gray-400 px-2 py-1.5 w-[50%]">
-                <span className="font-semibold">SLUMP TEST (mm):</span>
-                <span className="ml-2">{ensaio.slump_test ?? ''}</span>
-              </td>
-              <td className="border border-gray-400 px-2 py-1.5">
-                <span className="font-semibold">Hora de saída da usina:</span>
-                <span className="ml-2">{ensaio.hora_saida_usina || ''}</span>
-              </td>
-            </tr>
-            <tr>
-              <td className="border border-gray-400 px-2 py-1.5">
-                <span className="font-semibold">TEMPERATURA AMBIENTE (°C):</span>
-                <span className="ml-2">{ensaio.temperatura_ambiente ?? ''}</span>
-              </td>
-              <td className="border border-gray-400 px-2 py-1.5">
-                <span className="font-semibold">Hora de chegada campo:</span>
-                <span className="ml-2">{ensaio.hora_chegada_campo || ''}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 font-bold text-center text-[10px] mt-1">DADOS DO ENSAIO</div>
+         {(() => {
+           const infoFields = [
+             ["ESTRUTURA", ensaio.estrutura || ''],
+             ["CONSTRUTORA", ensaio.construtora || ''],
+             ["NOTA FISCAL", ensaio.nota_fiscal || ''],
+             ["ESTACA DE MOLDAGEM", ensaio.estaca_moldagem || ''],
+             ["SLUMP TEST (mm)", ensaio.slump_test ?? ''],
+             ["HORA DE SAÍDA DA USINA", ensaio.hora_saida_usina || ''],
+             ["TEMPERATURA AMBIENTE (°C)", ensaio.temperatura_ambiente ?? ''],
+             ["HORA DE CHEGADA CAMPO", ensaio.hora_chegada_campo || ''],
+           ];
+           return (
+             <div className="grid grid-cols-4 gap-x-4 gap-y-2 text-[9px] p-2 mb-0">
+               {infoFields.map(([label, val]) => (
+                 <div key={label}>
+                   <span className="font-semibold text-gray-800">{label}: </span>
+                   <span className="text-gray-900">{val}</span>
+                 </div>
+               ))}
+             </div>
+           );
+         })()}
 
         {/* ENSAIO DE COMPRESSÃO AXIAL */}
          <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
