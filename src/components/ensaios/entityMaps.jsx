@@ -28,5 +28,6 @@ export const getEntityMap = () => ({
   "EnsaioTaxaMRAF": base44.entities.EnsaioTaxaMRAF,
   "BoletimSondagem": base44.entities.BoletimSondagem,
   "BoletimSondagemTrado": base44.entities.BoletimSondagemTrado,
-  "EnsaioProctor": base44.entities.EnsaioProctor
+  "EnsaioProctor": base44.entities.EnsaioProctor,
+  "EnsaioRompimentoConcreto": base44.entities.EnsaioRompimentoConcreto
 });
