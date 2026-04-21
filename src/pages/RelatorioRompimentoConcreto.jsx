@@ -130,7 +130,7 @@ export default function RelatorioRompimentoConcreto() {
                alt="Logo" className="h-8 object-contain"
              />
            </div>
-           <h1 className="text-xs font-bold text-gray-800 text-center">FICHA DE MOLDAGEM</h1>
+           <h1 className="text-xs font-bold text-white text-center">FICHA DE MOLDAGEM</h1>
            <div className="text-xs font-semibold text-gray-800 text-right">{fmtDate(ensaio.data_ensaio)}</div>
          </header>
 
