@@ -134,7 +134,7 @@ export default function RelatorioRompimentoConcreto() {
 
         {/* DADOS DO CLIENTE */}
         <SectionHeader label="DADOS DO CLIENTE" />
-        <table className="w-full border-collapse border border-gray-400 text-[9px] mb-0">
+        <table className="w-full border-collapse border border-slate-400 text-[9px] mb-0">
           <tbody>
             <tr>
               <td className="border border-slate-400 px-1 py-0.5 font-semibold w-[15%]">CLIENTE:</td>
@@ -166,7 +166,7 @@ export default function RelatorioRompimentoConcreto() {
         {/* DADOS DO ENSAIO */}
         <SectionHeader label="DADOS DO ENSAIO" />
         <SubSectionHeader label="LOCAL DE APLICAÇÃO" />
-        <table className="w-full border-collapse border border-gray-400 text-[9px] mb-0">
+        <table className="w-full border-collapse border border-slate-400 text-[9px] mb-0">
           <tbody>
             <tr>
               <td className="border border-slate-400 px-1 py-0.5 font-semibold w-[14%]">ESTRUTURA:</td>
@@ -185,7 +185,7 @@ export default function RelatorioRompimentoConcreto() {
 
         {/* ENSAIOS CONCRETO FRESCO */}
         <SubSectionHeader label="ENSAIOS CONCRETO FRESCO" />
-        <table className="w-full border-collapse border border-gray-400 text-[9px] mb-0">
+        <table className="w-full border-collapse border border-slate-400 text-[9px] mb-0">
           <tbody>
             <tr>
               <td className="border border-gray-400 px-1 py-1 w-[50%]">
@@ -267,7 +267,7 @@ export default function RelatorioRompimentoConcreto() {
 
 function SectionHeader({ label }) {
   return (
-    <div className="bg-[#c8d8a0] text-gray-900 text-[9px] font-bold text-center py-0.5 border border-gray-400 border-b-0 mt-1">
+    <div className="bg-slate-500 text-white text-[9px] font-bold text-center py-0.5 border border-slate-400 border-b-0 mt-1">
       {label}
     </div>
   );
@@ -275,7 +275,7 @@ function SectionHeader({ label }) {
 
 function SubSectionHeader({ label }) {
   return (
-    <div className="text-[9px] font-semibold text-center py-0.5 border border-gray-400 border-b-0 bg-slate-50">
+    <div className="text-[9px] font-semibold text-center py-0.5 border border-slate-400 border-b-0 bg-slate-50">
       {label}
     </div>
   );
@@ -308,7 +308,7 @@ function CompressaoAxialTable({ series, ensaio }) {
   const dimensao = series[0]?.[0]?.dimensao || '';
 
   return (
-    <table className="w-full border-collapse border border-gray-400 text-[8.5px]">
+    <table className="w-full border-collapse border border-slate-400 text-[8.5px]">
       <tbody>
         {/* Linha: N° CPs e dimensões */}
         <tr>
@@ -414,7 +414,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
   const totalCPs = series.reduce((acc, s) => acc + s.length, 0);
 
   return (
-    <table className="w-full border-collapse border border-gray-400 text-[8.5px]">
+    <table className="w-full border-collapse border border-slate-400 text-[8.5px]">
       <tbody>
         {/* N° CPs */}
         <tr>
