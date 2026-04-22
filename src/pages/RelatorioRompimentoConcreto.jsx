@@ -246,9 +246,13 @@ export default function RelatorioRompimentoConcreto() {
         .relatorio-page table tr th {
           height: 22px;
           min-height: 22px;
-          max-height: 22px;
           overflow: hidden;
           white-space: nowrap;
+          text-align: center;
+          vertical-align: middle;
+        }
+        .relatorio-page table tr td:first-child {
+          text-align: left;
         }
         @media print {
           .relatorio-page table {
