@@ -220,14 +220,14 @@ export default function RelatorioRompimentoConcreto() {
          <footer className="mt-auto pt-4 print:fixed print:bottom-0 print:left-0 print:right-0 print:px-10 print:pb-4 print:bg-white">
            <div className="grid grid-cols-3 gap-6 text-center">
              <AssinaturaCol
-               titulo="Técnico de Campo"
+               cargoFixo="Laboratorista"
                nome={ensaio.laboratorista_name}
                email={ensaio.created_by}
                data={ensaio.created_date}
                label="Assinado digitalmente por"
              />
              <AssinaturaCol
-               titulo={ensaio.approver_details?.position || "Analista de Engenharia"}
+               cargoFixo="Engenheiro"
                nome={ensaio.approver_details?.name}
                email={ensaio.approved_by}
                data={ensaio.approved_date}
@@ -235,7 +235,7 @@ export default function RelatorioRompimentoConcreto() {
                label="Aprovado digitalmente por"
              />
              <AssinaturaCol
-               titulo="Engenheiro Cliente"
+               cargoFixo="Engenheiro Cliente"
                nome={ensaio.client_signature?.engineer_name}
                email={ensaio.client_signature?.signed_by}
                data={ensaio.client_signature?.signed_date}
@@ -287,25 +287,25 @@ function SectionHeader({ label }) {
    );
 }
 
-function AssinaturaCol({ titulo, nome, email, data, crea, label }) {
-  return (
-    <div className="text-center">
-      <div className="text-[8px] text-slate-500 mb-2 h-14 flex flex-col justify-end items-center">
-        {nome && (
-          <>
-            {label && <p className="text-[7px] text-gray-400 italic">{label}</p>}
-            <p className="font-bold text-slate-700">{nome}</p>
-            {email && <p className="text-[7px]">{email}</p>}
-            {crea && <p className="text-[7px]">CREA: {crea}</p>}
-            {data && <p className="text-[7px]">em {fmtDateTime(data)}</p>}
-          </>
-        )}
-      </div>
-      <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-        <p className="font-semibold text-[8px]">{titulo}</p>
-      </div>
-    </div>
-  );
+function AssinaturaCol({ cargoFixo, nome, email, data, crea, label }) {
+   return (
+     <div className="text-center">
+       <div className="text-[8px] text-slate-500 mb-2 h-14 flex flex-col justify-end items-center">
+         {nome && (
+           <>
+             {label && <p className="text-[7px] text-gray-400 italic">{label}</p>}
+             <p className="font-bold text-slate-700">{nome}</p>
+             {email && <p className="text-[7px]">{email}</p>}
+             {crea && <p className="text-[7px]">CREA: {crea}</p>}
+             {data && <p className="text-[7px]">em {fmtDateTime(data)}</p>}
+           </>
+         )}
+       </div>
+       <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
+         <p className="font-semibold text-[8px]">{cargoFixo}</p>
+       </div>
+     </div>
+   );
 }
 
 function CompressaoAxialTable({ series, ensaio }) {
