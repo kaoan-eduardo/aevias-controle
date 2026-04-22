@@ -170,7 +170,7 @@ export default function RelatorioRompimentoConcreto() {
          </div>
 
          {/* DADOS DO ENSAIO */}
-         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 font-bold text-center text-[10px] mt-1">DADOS DO ENSAIO</div>
+         <div style={{ backgroundColor: '#1e293b' }} className="text-white px-2 py-0.5 font-bold text-center text-[10px] mt-4">DADOS DO ENSAIO</div>
          {(() => {
            const infoFields = [
              ["ESTRUTURA", ensaio.estrutura || ''],
@@ -195,19 +195,23 @@ export default function RelatorioRompimentoConcreto() {
          })()}
 
         {/* ENSAIO DE COMPRESSÃO AXIAL */}
-         <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
-         <div className="overflow-x-auto print:overflow-visible">
-           <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
+         <div className="mt-4">
+           <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
+           <div className="overflow-x-auto print:overflow-visible">
+             <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
+           </div>
          </div>
 
          {/* ENSAIO DE TRAÇÃO NA FLEXÃO */}
-         <SectionHeader label="ENSAIO DE RESISTÊNCIA À TRAÇÃO NA FLEXÃO - ABNT NBR 12142:2010" />
-         <div className="overflow-x-auto print:overflow-visible">
-           <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
+         <div className="mt-4">
+           <SectionHeader label="ENSAIO DE RESISTÊNCIA À TRAÇÃO NA FLEXÃO - ABNT NBR 12142:2010" />
+           <div className="overflow-x-auto print:overflow-visible">
+             <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
+           </div>
          </div>
 
          {/* OBSERVAÇÕES */}
-         <div className="border border-slate-400 p-2 text-[9px] min-h-[120px]">
+         <div className="mt-4 border border-slate-400 p-2 text-[9px] min-h-[120px]">
           <span className="font-semibold">OBS.:</span>
           <div className="mt-1 whitespace-pre-wrap">{ensaio.observacoes || ''}</div>
         </div>
