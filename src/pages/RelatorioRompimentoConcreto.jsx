@@ -217,33 +217,33 @@ export default function RelatorioRompimentoConcreto() {
         </div>
 
         {/* ASSINATURAS */}
-        <footer className="mt-auto pt-4 print:fixed print:bottom-0 print:left-0 print:right-0 print:px-10 print:pb-4 print:bg-white">
-          <div className="grid grid-cols-3 gap-6 text-center">
-            <AssinaturaCol
-              titulo="Técnico de Campo"
-              nome={ensaio.laboratorista_name}
-              email={ensaio.created_by}
-              data={ensaio.created_date}
-              label="Assinado digitalmente por"
-            />
-            <AssinaturaCol
-              titulo="Analista de Engenharia"
-              nome={ensaio.approver_details?.name}
-              email={ensaio.approved_by}
-              data={ensaio.approved_date}
-              crea={ensaio.approver_details?.crea_number}
-              label="Aprovado digitalmente por"
-            />
-            <AssinaturaCol
-              titulo="Engenheiro Cliente"
-              nome={ensaio.client_signature?.engineer_name}
-              email={ensaio.client_signature?.signed_by}
-              data={ensaio.client_signature?.signed_date}
-              crea={ensaio.client_signature?.crea_number}
-              label="Assinado digitalmente por"
-            />
-          </div>
-        </footer>
+         <footer className="mt-auto pt-4 print:fixed print:bottom-0 print:left-0 print:right-0 print:px-10 print:pb-4 print:bg-white">
+           <div className="grid grid-cols-3 gap-6 text-center">
+             <AssinaturaCol
+               titulo="Técnico de Campo"
+               nome={ensaio.laboratorista_name}
+               email={ensaio.created_by}
+               data={ensaio.created_date}
+               label="Assinado digitalmente por"
+             />
+             <AssinaturaCol
+               titulo={ensaio.approver_details?.position || "Analista de Engenharia"}
+               nome={ensaio.approver_details?.name}
+               email={ensaio.approved_by}
+               data={ensaio.approved_date}
+               crea={ensaio.approver_details?.crea_number}
+               label="Aprovado digitalmente por"
+             />
+             <AssinaturaCol
+               titulo="Engenheiro Cliente"
+               nome={ensaio.client_signature?.engineer_name}
+               email={ensaio.client_signature?.signed_by}
+               data={ensaio.client_signature?.signed_date}
+               crea={ensaio.client_signature?.crea_number}
+               label="Assinado digitalmente por"
+             />
+           </div>
+         </footer>
       </div>
 
       <style>{`
