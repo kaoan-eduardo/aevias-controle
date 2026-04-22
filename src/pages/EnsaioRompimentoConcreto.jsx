@@ -276,7 +276,8 @@ export default function EnsaioRompimentoConcretoPage() {
         data_ruptura: '',
         carga_ruptura: '',
         vao_central: '',
-        resistencia: ''
+        resistencia: '',
+        ponto_ruptura: ''
       }]
     }));
   };
@@ -763,16 +764,28 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={cp.resistencia}
-                          onChange={(e) => updateTracaoFlexao(idx, 'resistencia', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
+                       <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
+                       <Input
+                         type="number"
+                         step="0.01"
+                         value={cp.resistencia}
+                         onChange={(e) => updateTracaoFlexao(idx, 'resistencia', e.target.value)}
+                         className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                       />
                       </div>
-                    </div>
+                      <div>
+                       <label className="block text-xs font-medium text-[#00233B] mb-1">Ponto de Ruptura</label>
+                       <select
+                         value={cp.ponto_ruptura || ''}
+                         onChange={(e) => updateTracaoFlexao(idx, 'ponto_ruptura', e.target.value)}
+                         className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
+                       >
+                         <option value="">Selecionar...</option>
+                         <option value="No terço médio">No terço médio</option>
+                         <option value="Fora do terço médio">Fora do terço médio</option>
+                       </select>
+                      </div>
+                      </div>
                   </div>
                 ))}
                 {formData.tracao_flexao.length === 0 && (
