@@ -317,8 +317,8 @@ function CompressaoAxialTable({ series, ensaio }) {
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° DE CP'S:</td>
            <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
-           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
+           <td className="border border-slate-400 px-2 py-1 font-semibold text-center" colSpan={2}>DIMENSÕES:</td>
+          <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={Math.max((series.length * 2) - 1, 1)}>
             {dimensao ? `(${dimensao}) cm` : <span className="text-gray-400 italic text-[7px]">SELECIONAR (5X10); (15X30); (10X20)</span>}
           </td>
         </tr>
@@ -422,8 +422,8 @@ function TracaoFlexaoTable({ series, ensaio }) {
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA EXTRAÍDOS:</td>
            <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
-           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
+           <td className="border border-slate-400 px-2 py-1 font-semibold text-center" colSpan={2}>DIMENSÕES:</td>
+           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={Math.max((series.length * 2) - 1, 1)}>
              CP PRISMÁTICO
            </td>
          </tr>
