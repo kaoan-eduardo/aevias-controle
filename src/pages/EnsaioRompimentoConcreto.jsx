@@ -112,14 +112,14 @@ export default function EnsaioRompimentoConcretoPage() {
         if (regionalDoLaboratorista) {
           obrasFiltradas = obrasData.filter(obra => 
             obra.regional_id === regionalDoLaboratorista.id &&
-            (obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'conservacao')
+            (obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'supervisao')
           );
         } else {
           obrasFiltradas = [];
         }
       } else {
         obrasFiltradas = obrasData.filter(obra => 
-          obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'conservacao'
+          obra.tipo_obra === 'implantacao' || obra.tipo_obra === 'conservacao' || obra.tipo_obra === 'supervisao'
         );
       }
 
