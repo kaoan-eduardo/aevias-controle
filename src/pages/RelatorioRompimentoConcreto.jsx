@@ -460,6 +460,17 @@ function TracaoFlexaoTable({ series, ensaio }) {
            )}
            {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
          </tr>
+         {/* PONTO DE RUPTURA */}
+         <tr>
+           <td className="border border-slate-400 px-2 py-1 font-semibold">PONTO DE RUPTURA</td>
+           <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
+           {series.map((s, si) =>
+             s.map((cp, ci) => (
+               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-[9px]">{cp.ponto_ruptura || ''}</td>
+             ))
+           )}
+           {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
+         </tr>
          {/* CARGA DE RUPTURA */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">CARGA DE RUPTURA</td>
@@ -474,7 +485,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* VÃO CENTRAL */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">VÃO CENTRAL DO CP</td>
-           <td className="border border-slate-400 px-2 py-1 text-center">cm²</td>
+           <td className="border border-slate-400 px-2 py-1 text-center">mm</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
                <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.vao_central, 2)}</td>
@@ -503,17 +514,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
              </td>
            ))}
            {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
-         </tr>
-         {/* PONTO DE RUPTURA */}
-         <tr>
-           <td className="border border-slate-400 px-2 py-1 font-semibold">PONTO DE RUPTURA</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
-           {series.map((s, si) =>
-             s.map((cp, ci) => (
-               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-[9px]">{cp.ponto_ruptura || ''}</td>
-             ))
-           )}
-           {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
          </tr>
        </tbody>
      </table>
