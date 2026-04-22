@@ -244,8 +244,8 @@ export default function RelatorioRompimentoConcreto() {
         }
         .relatorio-page table tr td,
         .relatorio-page table tr th {
-          height: 22px;
-          min-height: 22px;
+          height: 24px;
+          min-height: 24px;
           overflow: hidden;
           white-space: nowrap;
           text-align: center;
@@ -306,19 +306,20 @@ function CompressaoAxialTable({ series, ensaio }) {
    return (
      <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ tableLayout: 'fixed' }}>
        <colgroup>
-         <col style={{ width: '30%' }} />
+         <col style={{ width: '28%' }} />
          <col style={{ width: '8%' }} />
+         <col style={{ width: '14%' }} />
          {Array.from({ length: totalCpCols }).map((_, i) => (
-           <col key={i} style={{ width: `${62 / totalCpCols}%` }} />
+           <col key={i} style={{ width: `${50 / totalCpCols}%` }} />
          ))}
        </colgroup>
       <tbody>
         {/* Linha: N° CPs e dimensões */}
          <tr>
-           <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° DE CP'S:</td>
+           <td className="border border-slate-400 px-2 py-1 font-semibold">N° DE CP'S:</td>
            <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
            <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
+          <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={totalCpCols}>
             {dimensao ? `(${dimensao}) cm` : <span className="text-gray-400 italic text-[7px]">SELECIONAR (5X10); (15X30); (10X20)</span>}
           </td>
         </tr>
@@ -411,19 +412,20 @@ function TracaoFlexaoTable({ series, ensaio }) {
    return (
      <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ tableLayout: 'fixed' }}>
        <colgroup>
-         <col style={{ width: '30%' }} />
+         <col style={{ width: '28%' }} />
          <col style={{ width: '8%' }} />
+         <col style={{ width: '14%' }} />
          {Array.from({ length: totalCpCols }).map((_, i) => (
-           <col key={i} style={{ width: `${62 / totalCpCols}%` }} />
+           <col key={i} style={{ width: `${50 / totalCpCols}%` }} />
          ))}
        </colgroup>
        <tbody>
          {/* N° CPs e DIMENSÕES */}
          <tr>
-           <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA EXTRAÍDOS:</td>
+           <td className="border border-slate-400 px-2 py-1 font-semibold">N° CORPOS DE PROVA EXTRAÍDOS:</td>
            <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
            <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
-           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
+           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={totalCpCols}>
              CP PRISMÁTICO
            </td>
          </tr>
