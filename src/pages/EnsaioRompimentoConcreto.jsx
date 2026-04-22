@@ -267,11 +267,14 @@ export default function EnsaioRompimentoConcretoPage() {
 
 
 
-  const calcularResistenciaFlexao = (cp) => {
+  // ---- SÉRIES DE TRAÇÃO NA FLEXÃO ----
+  const [seriesFlexao, setSeriesFlexao] = useState([]);
+
+  const calcularResistenciaFlexaoCp = (cp, serieCompartilhada) => {
     const carga = parseFloat(cp.carga_ruptura);
-    const vao = parseFloat(cp.vao_central);
-    const altura = parseFloat(cp.altura_cp);
-    const largura = parseFloat(cp.largura_cp);
+    const vao = parseFloat(serieCompartilhada.vao_central);
+    const altura = parseFloat(serieCompartilhada.altura_cp);
+    const largura = parseFloat(serieCompartilhada.largura_cp);
     if (!carga || !vao || !altura || !largura || largura <= 0 || altura <= 0) return '';
     if (cp.ponto_ruptura === 'No terço médio') {
       return ((carga * 9.80665 * vao) / (altura * (largura ** 2))).toFixed(2);
@@ -281,40 +284,95 @@ export default function EnsaioRompimentoConcretoPage() {
     return '';
   };
 
-  const addTracaoFlexao = () => {
-    setFormData(prev => ({
-      ...prev,
-      tracao_flexao: [...prev.tracao_flexao, {
-        numero_cp: '',
-        ponto_ruptura: '',
-        idade: '',
-        data_ruptura: '',
-        carga_ruptura: '',
-        vao_central: '',
-        altura_cp: '',
-        largura_cp: '',
-        resistencia: ''
-      }]
+  // Sincronizar seriesFlexao → formData.tracao_flexao
+  useEffect(() => {
+    const cps = [];
+    seriesFlexao.forEach(s => {
+      s.cps.forEach(cp => {
+        cps.push({
+          numero_cp: cp.numero_cp,
+          ponto_ruptura: cp.ponto_ruptura,
+          idade: s.idade,
+          data_ruptura: s.data_ruptura,
+          vao_central: s.vao_central,
+          altura_cp: s.altura_cp,
+          largura_cp: s.largura_cp,
+          carga_ruptura: cp.carga_ruptura,
+          resistencia: cp.resistencia
+        });
+      });
+    });
+    setFormData(prev => ({ ...prev, tracao_flexao: cps }));
+  }, [seriesFlexao]);
+
+  // Reconstruir seriesFlexao ao carregar editId
+  useEffect(() => {
+    if (formData.tracao_flexao && formData.tracao_flexao.length > 0 && seriesFlexao.length === 0) {
+      const reconstruidas = [];
+      for (let i = 0; i < formData.tracao_flexao.length; i += 2) {
+        const cp1 = formData.tracao_flexao[i] || {};
+        const cp2 = formData.tracao_flexao[i + 1] || {};
+        reconstruidas.push({
+          idade: cp1.idade || '',
+          data_ruptura: cp1.data_ruptura || '',
+          vao_central: cp1.vao_central || '',
+          altura_cp: cp1.altura_cp || '',
+          largura_cp: cp1.largura_cp || '',
+          cps: [
+            { numero_cp: cp1.numero_cp || '', ponto_ruptura: cp1.ponto_ruptura || '', carga_ruptura: cp1.carga_ruptura || '', resistencia: cp1.resistencia || '' },
+            { numero_cp: cp2.numero_cp || '', ponto_ruptura: cp2.ponto_ruptura || '', carga_ruptura: cp2.carga_ruptura || '', resistencia: cp2.resistencia || '' }
+          ]
+        });
+      }
+      if (reconstruidas.length > 0) setSeriesFlexao(reconstruidas);
+    }
+  }, [formData.tracao_flexao]);
+
+  const novaSerieFlexao = () => ({
+    idade: '',
+    data_ruptura: '',
+    vao_central: '',
+    altura_cp: '',
+    largura_cp: '',
+    cps: [
+      { numero_cp: '', ponto_ruptura: '', carga_ruptura: '', resistencia: '' },
+      { numero_cp: '', ponto_ruptura: '', carga_ruptura: '', resistencia: '' }
+    ]
+  });
+
+  const addSerieFlexao = () => {
+    if (seriesFlexao.length >= 2) return;
+    setSeriesFlexao(prev => [...prev, novaSerieFlexao()]);
+  };
+
+  const removeSerieFlexao = (idx) => {
+    setSeriesFlexao(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const updateSerieFlexao = (serieIdx, field, value) => {
+    setSeriesFlexao(prev => prev.map((s, i) => {
+      if (i !== serieIdx) return s;
+      const updated = { ...s, [field]: value };
+      // Recalcular resistência dos CPs quando campos compartilhados mudam
+      updated.cps = updated.cps.map(cp => ({
+        ...cp,
+        resistencia: calcularResistenciaFlexaoCp(cp, updated)
+      }));
+      return updated;
     }));
   };
 
-  const removeTracaoFlexao = (idx) => {
-    setFormData(prev => ({
-      ...prev,
-      tracao_flexao: prev.tracao_flexao.filter((_, i) => i !== idx)
-    }));
-  };
-
-  const updateTracaoFlexao = (idx, field, value) => {
-    setFormData(prev => {
-      const novos = prev.tracao_flexao.map((cp, i) => {
-        if (i !== idx) return cp;
+  const updateSerieFlexaoCP = (serieIdx, cpIdx, field, value) => {
+    setSeriesFlexao(prev => prev.map((s, i) => {
+      if (i !== serieIdx) return s;
+      const novasCps = s.cps.map((cp, j) => {
+        if (j !== cpIdx) return cp;
         const updated = { ...cp, [field]: value };
-        updated.resistencia = calcularResistenciaFlexao(updated);
+        updated.resistencia = calcularResistenciaFlexaoCp(updated, s);
         return updated;
       });
-      return { ...prev, tracao_flexao: novos };
-    });
+      return { ...s, cps: novasCps };
+    }));
   };
 
   const handleSave = async (asFinal = false) => {
@@ -714,75 +772,42 @@ export default function EnsaioRompimentoConcretoPage() {
               <div className="flex justify-between items-center">
                 <CardTitle className="text-[#00233B]">Resistência à Tração na Flexão</CardTitle>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-[#00233B]/70">{formData.tracao_flexao.length}/4 CPs</span>
-                  <Button onClick={addTracaoFlexao} size="sm" disabled={formData.tracao_flexao.length >= 4} className="bg-[#00233B] text-white disabled:opacity-50">
-                    <Plus className="w-4 h-4 mr-1" /> Adicionar
+                  <span className="text-sm text-[#00233B]/70">{seriesFlexao.length}/2 séries</span>
+                  <Button onClick={addSerieFlexao} size="sm" disabled={seriesFlexao.length >= 2} className="bg-[#00233B] text-white disabled:opacity-50">
+                    <Plus className="w-4 h-4 mr-1" /> Adicionar Série
                   </Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="space-y-4">
-                {formData.tracao_flexao.map((cp, idx) => (
-                  <div key={idx} className="border border-white/20 rounded-lg p-4 bg-white/5 space-y-3">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-semibold text-[#00233B]">CP #{idx + 1}</h4>
-                      <Button
-                        onClick={() => removeTracaoFlexao(idx)}
-                        variant="destructive"
-                        size="sm"
-                        className="h-8 px-2"
-                      >
+              <div className="space-y-6">
+                {seriesFlexao.map((serie, serieIdx) => (
+                  <div key={serieIdx} className="border border-[#BFCF99]/40 rounded-lg p-4 bg-white/5">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-semibold text-[#00233B]">Série {serieIdx + 1}</h4>
+                      <Button onClick={() => removeSerieFlexao(serieIdx)} variant="destructive" size="sm" className="h-7 px-2">
                         <X className="w-4 h-4" />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Número CP</label>
-                        <Input
-                          value={cp.numero_cp}
-                          onChange={(e) => updateTracaoFlexao(idx, 'numero_cp', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Ponto de Ruptura</label>
-                        <select
-                          value={cp.ponto_ruptura || ''}
-                          onChange={(e) => updateTracaoFlexao(idx, 'ponto_ruptura', e.target.value)}
-                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
-                        >
-                          <option value="">Selecionar...</option>
-                          <option value="No terço médio">No terço médio</option>
-                          <option value="Fora do terço médio">Fora do terço médio</option>
-                        </select>
-                      </div>
+
+                    {/* Campos compartilhados da série */}
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4 p-3 bg-[#BFCF99]/10 rounded-lg border border-[#BFCF99]/20">
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
                         <Input
                           type="number"
-                          value={cp.idade}
-                          onChange={(e) => updateTracaoFlexao(idx, 'idade', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          value={serie.idade}
+                          onChange={(e) => updateSerieFlexao(serieIdx, 'idade', e.target.value)}
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Data Ruptura</label>
                         <Input
                           type="date"
-                          value={cp.data_ruptura}
-                          onChange={(e) => updateTracaoFlexao(idx, 'data_ruptura', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (kgf)</label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={cp.carga_ruptura}
-                          onChange={(e) => updateTracaoFlexao(idx, 'carga_ruptura', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          value={serie.data_ruptura}
+                          onChange={(e) => updateSerieFlexao(serieIdx, 'data_ruptura', e.target.value)}
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
@@ -790,9 +815,9 @@ export default function EnsaioRompimentoConcretoPage() {
                         <Input
                           type="number"
                           step="0.01"
-                          value={cp.vao_central}
-                          onChange={(e) => updateTracaoFlexao(idx, 'vao_central', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          value={serie.vao_central}
+                          onChange={(e) => updateSerieFlexao(serieIdx, 'vao_central', e.target.value)}
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
@@ -800,9 +825,9 @@ export default function EnsaioRompimentoConcretoPage() {
                         <Input
                           type="number"
                           step="0.01"
-                          value={cp.altura_cp || ''}
-                          onChange={(e) => updateTracaoFlexao(idx, 'altura_cp', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                          value={serie.altura_cp}
+                          onChange={(e) => updateSerieFlexao(serieIdx, 'altura_cp', e.target.value)}
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                       <div>
@@ -810,25 +835,66 @@ export default function EnsaioRompimentoConcretoPage() {
                         <Input
                           type="number"
                           step="0.01"
-                          value={cp.largura_cp || ''}
-                          onChange={(e) => updateTracaoFlexao(idx, 'largura_cp', e.target.value)}
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
-                        <Input
-                          value={cp.resistencia || ''}
-                          readOnly
-                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
-                          title="Calculada automaticamente"
+                          value={serie.largura_cp}
+                          onChange={(e) => updateSerieFlexao(serieIdx, 'largura_cp', e.target.value)}
+                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
                         />
                       </div>
                     </div>
+
+                    {/* CPs individuais */}
+                    <div className="space-y-3">
+                      {serie.cps.map((cp, cpIdx) => (
+                        <div key={cpIdx} className="border border-white/10 rounded p-3 bg-white/5">
+                          <p className="text-xs font-semibold text-[#00233B]/70 mb-2">CP {cpIdx + 1}</p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                              <label className="block text-xs font-medium text-[#00233B] mb-1">Número CP</label>
+                              <Input
+                                value={cp.numero_cp}
+                                onChange={(e) => updateSerieFlexaoCP(serieIdx, cpIdx, 'numero_cp', e.target.value)}
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-[#00233B] mb-1">Ponto de Ruptura</label>
+                              <select
+                                value={cp.ponto_ruptura || ''}
+                                onChange={(e) => updateSerieFlexaoCP(serieIdx, cpIdx, 'ponto_ruptura', e.target.value)}
+                                className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
+                              >
+                                <option value="">Selecionar...</option>
+                                <option value="No terço médio">No terço médio</option>
+                                <option value="Fora do terço médio">Fora do terço médio</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (kgf)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={cp.carga_ruptura}
+                                onChange={(e) => updateSerieFlexaoCP(serieIdx, cpIdx, 'carga_ruptura', e.target.value)}
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
+                              <Input
+                                value={cp.resistencia || ''}
+                                readOnly
+                                className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                                title="Calculada automaticamente"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
-                {formData.tracao_flexao.length === 0 && (
-                  <p className="text-center text-[#00233B]/60 py-4">Nenhum CP adicionado</p>
+                {seriesFlexao.length === 0 && (
+                  <p className="text-center text-[#00233B]/60 py-4">Nenhuma série adicionada. Clique em "Adicionar Série" para começar.</p>
                 )}
               </div>
             </CardContent>
