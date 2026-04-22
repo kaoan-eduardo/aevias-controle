@@ -776,7 +776,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (tf)</label>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Carga Ruptura (kgf)</label>
                         <Input
                           type="number"
                           step="0.01"
@@ -786,7 +786,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Vão Central (cm)</label>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Vão Central (mm)</label>
                         <Input
                           type="number"
                           step="0.01"
@@ -796,7 +796,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Altura CP (cm)</label>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Altura CP (mm)</label>
                         <Input
                           type="number"
                           step="0.01"
@@ -806,7 +806,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Largura CP (cm)</label>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Largura CP (mm)</label>
                         <Input
                           type="number"
                           step="0.01"
