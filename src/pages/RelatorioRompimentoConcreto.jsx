@@ -238,6 +238,14 @@ export default function RelatorioRompimentoConcreto() {
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; margin: 0; padding: 0; }
           .relatorio-page > div:first-child { display: none !important; }
         }
+        .relatorio-page table tr td,
+        .relatorio-page table tr th {
+          height: 22px;
+          min-height: 22px;
+          max-height: 22px;
+          overflow: hidden;
+          white-space: nowrap;
+        }
       `}</style>
     </div>
   );
