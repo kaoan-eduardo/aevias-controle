@@ -64,6 +64,7 @@ export default function RelatorioRompimentoConcreto() {
   const [ensaio, setEnsaio] = useState(null);
   const [obra, setObra] = useState(null);
   const [regional, setRegional] = useState(null);
+  const [cartaTraco, setCartaTraco] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -77,6 +78,10 @@ export default function RelatorioRompimentoConcreto() {
       if (!id) { setError("ID não fornecido"); setLoading(false); return; }
       const data = await base44.entities.EnsaioRompimentoConcreto.get(id);
       setEnsaio(data);
+      if (data.project_id) {
+        const proj = await base44.entities.Project.get(data.project_id);
+        setCartaTraco(proj);
+      }
       if (data.obra_id) {
         const obraData = await base44.entities.Obra.get(data.obra_id);
         setObra(obraData);
@@ -152,13 +157,13 @@ export default function RelatorioRompimentoConcreto() {
              {/* Linha 2: Labels */}
              <div className="px-2 py-0.5 font-semibold bg-white">OBRA:</div>
              <div className="px-2 py-0.5 font-semibold bg-white">TRECHO:</div>
-             <div className="px-2 py-0.5 font-semibold bg-white">PROJETO / TRAÇO:</div>
+             <div className="px-2 py-0.5 font-semibold bg-white">CARTA TRAÇO:</div>
              <div className="px-2 py-0.5 font-semibold bg-white">LABORATORISTA:</div>
              <div className="px-2 py-0.5 font-semibold bg-white">HORA MOLDAGEM:</div>
              {/* Linha 2: Valores */}
              <div className="px-2 py-1 min-h-[40px] bg-white">{obra?.name || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.trecho || ''}</div>
-             <div className="px-2 py-1 bg-white">{ensaio.projeto_trac || ''}</div>
+             <div className="px-2 py-1 bg-white">{cartaTraco?.name || ensaio.projeto_trac || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.laboratorista_name || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.hora_moldagem || ''}</div>
            </div>
