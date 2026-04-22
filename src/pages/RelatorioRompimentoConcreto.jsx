@@ -303,10 +303,10 @@ function CompressaoAxialTable({ series, ensaio }) {
      <table className="w-full border-collapse border border-slate-400 text-[10px]">
       <tbody>
         {/* Linha: N° CPs e dimensões */}
-        <tr>
-          <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° DE CP'S:</td>
-          <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
-          <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
+         <tr>
+           <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° DE CP'S:</td>
+           <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
+           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
           <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
             {dimensao ? `(${dimensao}) cm` : <span className="text-gray-400 italic text-[7px]">SELECIONAR (5X10); (15X30); (10X20)</span>}
           </td>
@@ -314,7 +314,6 @@ function CompressaoAxialTable({ series, ensaio }) {
         {/* Linha de IDADE — uma por série (colspan 2 = 2 CPs) */}
         <tr className="bg-slate-100">
           <td className="border border-slate-400 px-2 py-1 font-semibold">IDADE</td>
-          <td className="border border-slate-400 px-2 py-1 font-semibold text-center">CÁLCULO</td>
           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">UNIDADE</td>
           {series.map((s, si) => (
             <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={2}>
@@ -326,7 +325,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           {/* Linha: N° CP */}
           <tr>
           <td className="border border-slate-400 px-2 py-1 font-semibold">N° CP</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-500 italic"></td>
           <td className="border border-slate-400 px-2 py-1 text-center"></td>
           {series.map((s, si) =>
             s.map((cp, ci) => (
@@ -339,7 +337,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           <tr>
           <td className="border border-slate-400 px-2 py-1 font-semibold">DATA DA RUPTURA</td>
           <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
           {series.map((s, si) =>
             s.map((cp, ci) => (
               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{cp.data_ruptura ? fmtDate(cp.data_ruptura) : ''}</td>
@@ -350,7 +347,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           {/* CARGA DE RUPTURA */}
           <tr>
           <td className="border border-slate-400 px-2 py-1 font-semibold">CARGA DE RUPTURA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">C</td>
           <td className="border border-slate-400 px-2 py-1 text-center">tf</td>
           {series.map((s, si) =>
             s.map((cp, ci) => (
@@ -362,7 +358,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           {/* ÁREA DO CP */}
           <tr>
           <td className="border border-slate-400 px-2 py-1 font-semibold">ÁREA DO CORPO DE PROVA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">A</td>
           <td className="border border-slate-400 px-2 py-1 text-center">cm²</td>
           {series.map((s, si) =>
             s.map((cp, ci) => (
@@ -374,9 +369,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           {/* RESISTÊNCIA */}
           <tr className="bg-slate-50">
           <td className="border border-slate-400 px-2 py-1 font-semibold">RESISTÊNCIA</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-[8px] text-gray-600 italic">
-            Rfck = C/A × 1000/10,197
-          </td>
           <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
           {series.map((s, si) =>
             s.map((cp, ci) => (
@@ -388,7 +380,6 @@ function CompressaoAxialTable({ series, ensaio }) {
           {/* RESIST. DO EXEMPLAR — média por série (colspan 2) */}
           <tr className="bg-slate-100">
           <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
-          <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">Rfck</td>
           <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
           {series.map((s, si) => (
             <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
@@ -411,7 +402,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* N° CPs e DIMENSÕES */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold w-[28%]">N° CORPOS DE PROVA EXTRAÍDOS:</td>
-           <td className="border border-slate-400 px-2 py-1 text-center font-bold" colSpan={2}>{totalCPs || ''}</td>
+           <td className="border border-slate-400 px-2 py-1 text-center font-bold">{totalCPs || ''}</td>
            <td className="border border-slate-400 px-2 py-1 font-semibold text-center">DIMENSÕES:</td>
            <td className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={series.length * 2 || 1}>
              CP PRISMÁTICO
@@ -420,7 +411,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* IDADE */}
          <tr className="bg-slate-100">
            <td className="border border-slate-400 px-2 py-1 font-semibold">IDADE</td>
-           <td className="border border-slate-400 px-2 py-1 font-semibold text-center">CÁLCULO</td>
            <td className="border border-slate-400 px-2 py-1 font-semibold text-center">UNIDADE</td>
            {series.map((s, si) => (
              <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-800" colSpan={2}>
@@ -432,7 +422,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* N° CP */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">N° CP</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-500 italic"></td>
            <td className="border border-slate-400 px-2 py-1 text-center"></td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
@@ -445,7 +434,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">DATA DA RUPTURA</td>
            <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-400">-</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
                <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{cp.data_ruptura ? fmtDate(cp.data_ruptura) : ''}</td>
@@ -456,7 +444,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* CARGA DE RUPTURA */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">CARGA DE RUPTURA</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">C</td>
            <td className="border border-slate-400 px-2 py-1 text-center">tf</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
@@ -468,7 +455,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* VÃO CENTRAL */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">VÃO CENTRAL DO CP</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">V</td>
            <td className="border border-slate-400 px-2 py-1 text-center">cm²</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
@@ -480,9 +466,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* RESISTÊNCIA */}
          <tr className="bg-slate-50">
            <td className="border border-slate-400 px-2 py-1 font-semibold">RESISTÊNCIA</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-[8px] text-gray-600 italic">
-             Rfctm=(C×g×V)/(l×h²)
-           </td>
            <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
@@ -494,7 +477,6 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* RESIST. DO EXEMPLAR */}
          <tr className="bg-slate-100">
            <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
-           <td className="border border-slate-400 px-2 py-1 text-center text-gray-600 italic">Rfctm</td>
            <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
            {series.map((s, si) => (
              <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
