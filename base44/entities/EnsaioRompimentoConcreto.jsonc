@@ -136,6 +136,14 @@
             "type": "string",
             "description": "N\u00famero do corpo de prova"
           },
+          "ponto_ruptura": {
+            "type": "string",
+            "enum": [
+              "No ter\u00e7o m\u00e9dio",
+              "Fora do ter\u00e7o m\u00e9dio"
+            ],
+            "description": "Ponto de ruptura do CP"
+          },
           "idade": {
             "type": "number",
             "description": "Idade (dias)"
@@ -147,11 +155,19 @@
           },
           "carga_ruptura": {
             "type": "number",
-            "description": "Carga de ruptura (tf)"
+            "description": "Carga de ruptura (kgf)"
           },
           "vao_central": {
             "type": "number",
-            "description": "V\u00e3o central do CP (cm\u00b2)"
+            "description": "V\u00e3o central do CP (mm)"
+          },
+          "altura_cp": {
+            "type": "number",
+            "description": "Altura do CP (mm)"
+          },
+          "largura_cp": {
+            "type": "number",
+            "description": "Largura do CP (mm)"
           },
           "resistencia": {
             "type": "number",
