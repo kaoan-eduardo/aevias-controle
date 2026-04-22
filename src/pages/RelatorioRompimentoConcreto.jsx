@@ -144,10 +144,10 @@ export default function RelatorioRompimentoConcreto() {
              <div className="px-2 py-0.5 font-semibold bg-white">FORNECEDOR:</div>
              <div className="px-2 py-0.5 font-semibold bg-white">N° DE MOLDAGEM:</div>
              {/* Linha 1: Valores */}
-             <div className="px-2 py-1 min-h-[40px] bg-white">{obra?.client || ''}</div>
+             <div className="px-2 py-1 min-h-[40px] bg-white">{ensaio.cliente || obra?.client || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.rodovia || ''}</div>
-             <div className="px-2 py-1 bg-white">{ensaio.volume || ''}</div>
-             <div className="px-2 py-1 bg-white">{ensaio.concreteira || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.volume_betonado || ''}</div>
+             <div className="px-2 py-1 bg-white">{ensaio.fornecedor || ''}</div>
              <div className="px-2 py-1 bg-white">{ensaio.numero_moldagem || ''}</div>
              {/* Linha 2: Labels */}
              <div className="px-2 py-0.5 font-semibold bg-white">OBRA:</div>
