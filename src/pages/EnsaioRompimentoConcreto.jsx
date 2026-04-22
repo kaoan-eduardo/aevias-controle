@@ -163,19 +163,41 @@ export default function EnsaioRompimentoConcretoPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleObraChange = (obraId) => {
-    handleInputChange('obra_id', obraId);
+  const handleObraChange = async (obraId) => {
     const obra = obras.find(o => o.id === obraId);
-    if (obra) {
-      handleInputChange('rodovia', '');
-      handleInputChange('fornecedor', '');
+    // Buscar cliente da regional
+    let clienteNome = '';
+    if (obra?.regional_id) {
+      try {
+        const reg = await base44.entities.Regional.get(obra.regional_id);
+        clienteNome = reg?.cliente || '';
+      } catch (_) {}
     }
+    const construtora = obra?.tipo_obra !== 'supervisao' ? clienteNome : '';
+    setFormData(prev => ({
+      ...prev,
+      obra_id: obraId,
+      rodovia: '',
+      fornecedor: '',
+      project_id: '',
+      cliente: clienteNome,
+      construtora
+    }));
   };
 
   const obraAtual = obras.find(o => o.id === formData.obra_id);
   const rodoviasDaObra = obraAtual?.rodovias || [];
   const empreiteirasObra = obraAtual?.empreiteiras || [];
-  const projectsDaObra = projects.filter(p => formData.obra_id ? true : false);
+  const isSupervisao = obraAtual?.tipo_obra === 'supervisao';
+
+  // Projetos filtrados pela regional da obra selecionada
+  const projectsDaObra = obraAtual
+    ? projects.filter(p => {
+        // Pegar regional da obra e comparar com regional dos projetos
+        const regionalId = obraAtual.regional_id;
+        return p.regional_id === regionalId;
+      })
+    : [];
 
   // Séries: cada série tem campos compartilhados + 2 CPs com número e carga individuais
   const [series, setSeries] = useState(() => {
@@ -476,16 +498,12 @@ export default function EnsaioRompimentoConcretoPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Fornecedor</label>
-                  <select
+                  <Input
                     value={formData.fornecedor}
                     onChange={(e) => handleInputChange('fornecedor', e.target.value)}
-                    className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B]"
-                  >
-                    <option value="">Selecionar...</option>
-                    {empreiteirasObra.map((emp, idx) => (
-                      <option key={idx} value={emp}>{emp}</option>
-                    ))}
-                  </select>
+                    placeholder="Nome do fornecedor"
+                    className="bg-white/10 border-white/20 text-[#00233B]"
+                  />
                 </div>
 
                 <div>
@@ -506,8 +524,8 @@ export default function EnsaioRompimentoConcretoPage() {
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Cliente</label>
                   <Input
                     value={formData.cliente}
-                    onChange={(e) => handleInputChange('cliente', e.target.value)}
-                    className="bg-white/10 border-white/20 text-[#00233B]"
+                    readOnly
+                    className="bg-white/10 border-white/20 text-[#00233B] opacity-70 cursor-not-allowed"
                   />
                 </div>
 
@@ -559,14 +577,7 @@ export default function EnsaioRompimentoConcretoPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Projeto/Traço</label>
-                  <Input
-                    value={formData.projeto_trac}
-                    onChange={(e) => handleInputChange('projeto_trac', e.target.value)}
-                    className="bg-white/10 border-white/20 text-[#00233B]"
-                  />
-                </div>
+
 
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Número Moldagem</label>
@@ -588,11 +599,24 @@ export default function EnsaioRompimentoConcretoPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-[#00233B] mb-2">Construtora</label>
-                  <Input
-                    value={formData.construtora}
-                    onChange={(e) => handleInputChange('construtora', e.target.value)}
-                    className="bg-white/10 border-white/20 text-[#00233B]"
-                  />
+                  {isSupervisao ? (
+                    <select
+                      value={formData.construtora}
+                      onChange={(e) => handleInputChange('construtora', e.target.value)}
+                      className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B]"
+                    >
+                      <option value="">Selecionar empreiteira...</option>
+                      {empreiteirasObra.map((emp, idx) => (
+                        <option key={idx} value={emp}>{emp}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      value={formData.construtora}
+                      readOnly
+                      className="bg-white/10 border-white/20 text-[#00233B] opacity-70 cursor-not-allowed"
+                    />
+                  )}
                 </div>
 
                 <div>
