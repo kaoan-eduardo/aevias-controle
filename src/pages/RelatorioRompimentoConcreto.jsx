@@ -475,7 +475,7 @@ function TracaoFlexaoTable({ series, ensaio }) {
          {/* CARGA DE RUPTURA */}
          <tr>
            <td className="border border-slate-400 px-2 py-1 font-semibold">CARGA DE RUPTURA</td>
-           <td className="border border-slate-400 px-2 py-1 text-center">tf</td>
+           <td className="border border-slate-400 px-2 py-1 text-center">kgf</td>
            {series.map((s, si) =>
              s.map((cp, ci) => (
                <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.carga_ruptura, 2)}</td>
