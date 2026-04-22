@@ -207,7 +207,7 @@ export default function RelatorioRompimentoConcreto() {
         </div>
 
         {/* ASSINATURAS */}
-        <footer className="mt-4 pt-2">
+        <footer className="mt-auto pt-4 print:fixed print:bottom-0 print:left-0 print:right-0 print:px-10 print:pb-4 print:bg-white">
           <div className="grid grid-cols-3 gap-6 text-center">
             <AssinaturaCol
               titulo="Técnico de Campo"
