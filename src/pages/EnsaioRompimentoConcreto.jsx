@@ -267,17 +267,33 @@ export default function EnsaioRompimentoConcretoPage() {
 
 
 
+  const calcularResistenciaFlexao = (cp) => {
+    const carga = parseFloat(cp.carga_ruptura);
+    const vao = parseFloat(cp.vao_central);
+    const altura = parseFloat(cp.altura_cp);
+    const largura = parseFloat(cp.largura_cp);
+    if (!carga || !vao || !altura || !largura || largura <= 0 || altura <= 0) return '';
+    if (cp.ponto_ruptura === 'No terço médio') {
+      return ((carga * 9.80665 * vao) / (altura * (largura ** 2))).toFixed(2);
+    } else if (cp.ponto_ruptura === 'Fora do terço médio') {
+      return ((3 * carga * 9.80665 * vao) / (altura * (largura ** 2))).toFixed(2);
+    }
+    return '';
+  };
+
   const addTracaoFlexao = () => {
     setFormData(prev => ({
       ...prev,
       tracao_flexao: [...prev.tracao_flexao, {
         numero_cp: '',
+        ponto_ruptura: '',
         idade: '',
         data_ruptura: '',
         carga_ruptura: '',
         vao_central: '',
-        resistencia: '',
-        ponto_ruptura: ''
+        altura_cp: '',
+        largura_cp: '',
+        resistencia: ''
       }]
     }));
   };
@@ -291,9 +307,13 @@ export default function EnsaioRompimentoConcretoPage() {
 
   const updateTracaoFlexao = (idx, field, value) => {
     setFormData(prev => {
-      const novo = { ...prev };
-      novo.tracao_flexao[idx] = { ...novo.tracao_flexao[idx], [field]: value };
-      return novo;
+      const novos = prev.tracao_flexao.map((cp, i) => {
+        if (i !== idx) return cp;
+        const updated = { ...cp, [field]: value };
+        updated.resistencia = calcularResistenciaFlexao(updated);
+        return updated;
+      });
+      return { ...prev, tracao_flexao: novos };
     });
   };
 
@@ -726,6 +746,18 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Ponto de Ruptura</label>
+                        <select
+                          value={cp.ponto_ruptura || ''}
+                          onChange={(e) => updateTracaoFlexao(idx, 'ponto_ruptura', e.target.value)}
+                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
+                        >
+                          <option value="">Selecionar...</option>
+                          <option value="No terço médio">No terço médio</option>
+                          <option value="Fora do terço médio">Fora do terço médio</option>
+                        </select>
+                      </div>
+                      <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
                         <Input
                           type="number"
@@ -754,7 +786,7 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-[#00233B] mb-1">Vão Central (cm²)</label>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Vão Central (cm)</label>
                         <Input
                           type="number"
                           step="0.01"
@@ -764,28 +796,35 @@ export default function EnsaioRompimentoConcretoPage() {
                         />
                       </div>
                       <div>
-                       <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
-                       <Input
-                         type="number"
-                         step="0.01"
-                         value={cp.resistencia}
-                         onChange={(e) => updateTracaoFlexao(idx, 'resistencia', e.target.value)}
-                         className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
-                       />
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Altura CP (cm)</label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={cp.altura_cp || ''}
+                          onChange={(e) => updateTracaoFlexao(idx, 'altura_cp', e.target.value)}
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                        />
                       </div>
                       <div>
-                       <label className="block text-xs font-medium text-[#00233B] mb-1">Ponto de Ruptura</label>
-                       <select
-                         value={cp.ponto_ruptura || ''}
-                         onChange={(e) => updateTracaoFlexao(idx, 'ponto_ruptura', e.target.value)}
-                         className="w-full px-2 py-1 border border-white/20 rounded bg-white/10 text-[#00233B] text-sm h-8"
-                       >
-                         <option value="">Selecionar...</option>
-                         <option value="No terço médio">No terço médio</option>
-                         <option value="Fora do terço médio">Fora do terço médio</option>
-                       </select>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Largura CP (cm)</label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={cp.largura_cp || ''}
+                          onChange={(e) => updateTracaoFlexao(idx, 'largura_cp', e.target.value)}
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm"
+                        />
                       </div>
+                      <div>
+                        <label className="block text-xs font-medium text-[#00233B] mb-1">Resistência (MPa)</label>
+                        <Input
+                          value={cp.resistencia || ''}
+                          readOnly
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                          title="Calculada automaticamente"
+                        />
                       </div>
+                    </div>
                   </div>
                 ))}
                 {formData.tracao_flexao.length === 0 && (
