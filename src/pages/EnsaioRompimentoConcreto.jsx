@@ -9,6 +9,15 @@ import { ArrowLeft, Plus, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 const DIMENSOES_CP = ['5x10', '15x30', '10x20'];
+const IDADES_CP = [3, 7, 28, 63];
+
+// Soma `dias` à data de moldagem e retorna string YYYY-MM-DD
+const calcularDataRuptura = (dataMoldagem, dias) => {
+  if (!dataMoldagem || !dias) return '';
+  const d = new Date(dataMoldagem + 'T00:00:00');
+  d.setDate(d.getDate() + parseInt(dias));
+  return d.toISOString().split('T')[0];
+};
 
 // Calcula área do corpo de prova baseado na dimensão (diâmetro em cm)
 // Fórmula: A = π * (d/2)²
@@ -241,11 +250,13 @@ export default function EnsaioRompimentoConcretoPage() {
       if (field === 'dimensao') {
         const area = calcularAreaCP(value);
         novo[serieIdx].area_cp = area;
-        // Recalcular resistência dos 2 CPs
         novo[serieIdx].cps = novo[serieIdx].cps.map(cp => ({
           ...cp,
           resistencia: cp.carga_ruptura ? calcularResistencia(cp.carga_ruptura, area) : ''
         }));
+      }
+      if (field === 'idade') {
+        novo[serieIdx].data_ruptura = calcularDataRuptura(formData.data_ensaio, value);
       }
       return novo;
     });
@@ -353,7 +364,9 @@ export default function EnsaioRompimentoConcretoPage() {
     setSeriesFlexao(prev => prev.map((s, i) => {
       if (i !== serieIdx) return s;
       const updated = { ...s, [field]: value };
-      // Recalcular resistência dos CPs quando campos compartilhados mudam
+      if (field === 'idade') {
+        updated.data_ruptura = calcularDataRuptura(formData.data_ensaio, value);
+      }
       updated.cps = updated.cps.map(cp => ({
         ...cp,
         resistencia: calcularResistenciaFlexaoCp(cp, updated)
@@ -681,12 +694,16 @@ export default function EnsaioRompimentoConcretoPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 p-3 bg-[#BFCF99]/10 rounded-lg border border-[#BFCF99]/20">
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
-                        <Input
-                          type="number"
+                        <select
                           value={serie.idade}
                           onChange={(e) => updateSerie(serieIdx, 'idade', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
+                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/20 text-[#00233B] text-sm h-8"
+                        >
+                          <option value="">Selecionar...</option>
+                          {IDADES_CP.map(d => (
+                            <option key={d} value={d}>{d} dias</option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Dimensão</label>
@@ -703,10 +720,10 @@ export default function EnsaioRompimentoConcretoPage() {
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Data Ruptura</label>
                         <Input
-                          type="date"
                           value={serie.data_ruptura}
-                          onChange={(e) => updateSerie(serieIdx, 'data_ruptura', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
+                          readOnly
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                          title="Calculada automaticamente pela idade + data do ensaio"
                         />
                       </div>
                       <div>
@@ -794,20 +811,24 @@ export default function EnsaioRompimentoConcretoPage() {
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4 p-3 bg-[#BFCF99]/10 rounded-lg border border-[#BFCF99]/20">
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Idade (dias)</label>
-                        <Input
-                          type="number"
+                        <select
                           value={serie.idade}
                           onChange={(e) => updateSerieFlexao(serieIdx, 'idade', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
-                        />
+                          className="w-full px-2 py-1 border border-white/20 rounded bg-white/20 text-[#00233B] text-sm h-8"
+                        >
+                          <option value="">Selecionar...</option>
+                          {IDADES_CP.map(d => (
+                            <option key={d} value={d}>{d} dias</option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#00233B] mb-1">Data Ruptura</label>
                         <Input
-                          type="date"
                           value={serie.data_ruptura}
-                          onChange={(e) => updateSerieFlexao(serieIdx, 'data_ruptura', e.target.value)}
-                          className="bg-white/20 border-white/20 text-[#00233B] h-8 text-sm"
+                          readOnly
+                          className="bg-white/10 border-white/20 text-[#00233B] h-8 text-sm opacity-70 cursor-not-allowed"
+                          title="Calculada automaticamente pela idade + data do ensaio"
                         />
                       </div>
                       <div>
