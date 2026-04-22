@@ -38,7 +38,7 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
     }
   }, [storageKey, setFormData, isEditing, formKey, hasEditId]);
 
-  // Auto-save quando formData muda (debounced) - não salvar quando estiver editando via editId
+  // Auto-save quando formData muda (debounced 1s) - não salvar quando estiver editando via editId
   useEffect(() => {
     if (isInitialMount.current) return;
     if (hasEditId) return; // Nunca salvar no sessionStorage quando editando registro existente
@@ -46,14 +46,13 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
     const timeoutId = setTimeout(() => {
       try {
         sessionStorage.setItem(storageKey, JSON.stringify(formData));
-        console.log('💾 Auto-save realizado:', formKey);
       } catch (error) {
-        console.error('Erro ao salvar dados do formulário:', error);
+        // silently ignore storage errors
       }
-    }, 500);
+    }, 1000); // Aumentado para 1s para reduzir frequência de writes
 
     return () => clearTimeout(timeoutId);
-  }, [formData, storageKey, formKey, hasEditId]);
+  }, [formData, storageKey, hasEditId]);
 
   // Função para limpar dados salvos (chamar após submissão ou cancelamento)
   const clearSavedData = () => {

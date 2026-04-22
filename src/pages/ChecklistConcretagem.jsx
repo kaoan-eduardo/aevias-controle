@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -90,32 +90,28 @@ export default function ChecklistConcretagem() {
     loadInitialData();
   }, []);
 
+  const projectsRef = useRef(projects);
+  useEffect(() => { projectsRef.current = projects; }, [projects]);
+
   useEffect(() => {
-    if (formData.project_id && projects.length > 0) {
-      const selectedProject = projects.find(p => p.id === formData.project_id);
-      if (selectedProject) {
-        setFormData(prev => ({
-          ...prev,
-          // Só preencher concreteira/fck se estiver vazio (não sobrescrever edição existente)
-          concreteira: prev.concreteira || selectedProject.concreteira || "",
-          fck: prev.fck || (selectedProject.fck ? selectedProject.fck.toString() : ""),
-          // Atualizar apenas o limite de slump nas cargas, sem sobrescrever outros campos
-          cargas_concreto: prev.cargas_concreto.map(carga => {
-            const slumpLimite = selectedProject.slump_minimo && selectedProject.slump_maximo
-              ? `${selectedProject.slump_minimo} a ${selectedProject.slump_maximo} cm`
-              : "";
-            return {
-              ...carga,
-              slump_test: {
-                ...carga.slump_test,
-                limite: slumpLimite
-              }
-            };
-          })
-        }));
-      }
+    if (!formData.project_id) return;
+    const projectsList = projectsRef.current;
+    if (!projectsList.length) return;
+    const selectedProject = projectsList.find(p => p.id === formData.project_id);
+    if (selectedProject) {
+      setFormData(prev => ({
+        ...prev,
+        concreteira: prev.concreteira || selectedProject.concreteira || "",
+        fck: prev.fck || (selectedProject.fck ? selectedProject.fck.toString() : ""),
+        cargas_concreto: prev.cargas_concreto.map(carga => {
+          const slumpLimite = selectedProject.slump_minimo && selectedProject.slump_maximo
+            ? `${selectedProject.slump_minimo} a ${selectedProject.slump_maximo} cm`
+            : "";
+          return { ...carga, slump_test: { ...carga.slump_test, limite: slumpLimite } };
+        })
+      }));
     }
-  }, [formData.project_id, projects]);
+  }, [formData.project_id]); // Isolado de 'projects' via ref para evitar loop
 
   // Filtrar projetos quando obra é selecionada
   useEffect(() => {
@@ -160,7 +156,7 @@ export default function ChecklistConcretagem() {
         }
       }
     }
-  }, [formData.obra_id, obras, allProjects, regionais, projects]); // Added 'projects' to dependency array for projectStillAvailable check.
+  }, [formData.obra_id]); // Depende apenas da obra para evitar re-renders em cascata
 
 
 

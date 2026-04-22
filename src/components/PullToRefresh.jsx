@@ -32,7 +32,7 @@ export default function PullToRefresh({ children }) {
   }, [refreshing]);
 
   const handleTouchEnd = useCallback(async () => {
-    if (pullDistance >= THRESHOLD) {
+    if (pullDistance >= THRESHOLD && !isInputFocused()) {
       setRefreshing(true);
       setPullDistance(THRESHOLD);
       await new Promise((r) => setTimeout(r, 800));
@@ -41,15 +41,23 @@ export default function PullToRefresh({ children }) {
       setPullDistance(0);
     }
     startYRef.current = null;
-  }, [pullDistance]);
+  }, [pullDistance, isInputFocused]);
 
   const progress = Math.min(pullDistance / THRESHOLD, 1);
   const showIndicator = pullDistance > 5;
 
+  // Desabilitar pull-to-refresh em páginas de formulário/digitação
+  const isFormPage = typeof window !== 'undefined' && 
+    (window.location.pathname.includes('Checklist') || 
+     window.location.pathname.includes('Ensaio') ||
+     window.location.pathname.includes('Diario') ||
+     window.location.pathname.includes('Boletim') ||
+     window.location.pathname.includes('Acompanhamento'));
+
   return (
     <div className="relative flex-1 flex flex-col overflow-hidden">
-      {/* Pull indicator */}
-      {showIndicator && (
+      {/* Pull indicator - desabilitado em páginas de formulário */}
+      {showIndicator && !isFormPage && (
         <div
           className="absolute top-0 left-0 right-0 flex items-center justify-center z-30 pointer-events-none transition-all"
           style={{ height: pullDistance, opacity: progress }}
@@ -66,17 +74,17 @@ export default function PullToRefresh({ children }) {
         </div>
       )}
 
-      {/* Scrollable content */}
+      {/* Scrollable content - pull-to-refresh desabilitado em formulários */}
       <div
         ref={containerRef}
         className="flex-1 overflow-auto bg-transparent"
         style={{
-          transform: pullDistance > 0 ? `translateY(${pullDistance}px)` : undefined,
+          transform: pullDistance > 0 && !isFormPage ? `translateY(${pullDistance}px)` : undefined,
           transition: pullDistance === 0 ? "transform 0.3s ease" : undefined,
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={isFormPage ? undefined : handleTouchStart}
+        onTouchMove={isFormPage ? undefined : handleTouchMove}
+        onTouchEnd={isFormPage ? undefined : handleTouchEnd}
       >
         {children}
       </div>
