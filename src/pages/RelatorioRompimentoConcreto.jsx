@@ -190,11 +190,15 @@ export default function RelatorioRompimentoConcreto() {
 
         {/* ENSAIO DE COMPRESSÃO AXIAL */}
          <SectionHeader label="ENSAIO DE RESISTÊNCIA À COMPRESSÃO AXIAL" />
-         <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
+         <div className="overflow-x-auto print:overflow-visible">
+           <CompressaoAxialTable series={seriesCompressao} ensaio={ensaio} />
+         </div>
 
          {/* ENSAIO DE TRAÇÃO NA FLEXÃO */}
          <SectionHeader label="ENSAIO DE RESISTÊNCIA À TRAÇÃO NA FLEXÃO - ABNT NBR 12142:2010" />
-         <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
+         <div className="overflow-x-auto print:overflow-visible">
+           <TracaoFlexaoTable series={seriesFlexao} ensaio={ensaio} />
+         </div>
 
          {/* OBSERVAÇÕES */}
          <div className="border border-slate-400 p-2 text-[9px] min-h-[60px]">
@@ -245,6 +249,16 @@ export default function RelatorioRompimentoConcreto() {
           max-height: 22px;
           overflow: hidden;
           white-space: nowrap;
+        }
+        @media print {
+          .relatorio-page table {
+            font-size: 8px !important;
+            width: 100% !important;
+          }
+          .relatorio-page table td,
+          .relatorio-page table th {
+            padding: 1px 3px !important;
+          }
         }
       `}</style>
     </div>
