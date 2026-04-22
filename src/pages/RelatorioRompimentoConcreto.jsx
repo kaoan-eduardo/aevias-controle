@@ -295,12 +295,19 @@ function AssinaturaCol({ titulo, nome, email, data, crea, label }) {
 }
 
 function CompressaoAxialTable({ series, ensaio }) {
-   // Conta total de CPs = soma dos CPs de todas as séries
    const totalCPs = series.reduce((acc, s) => acc + s.length, 0);
    const dimensao = series[0]?.[0]?.dimensao || '';
+   const totalCpCols = Math.max(series.reduce((a, s) => a + s.length, 0), 1);
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ tableLayout: 'fixed' }}>
+       <colgroup>
+         <col style={{ width: '30%' }} />
+         <col style={{ width: '8%' }} />
+         {Array.from({ length: totalCpCols }).map((_, i) => (
+           <col key={i} style={{ width: `${62 / totalCpCols}%` }} />
+         ))}
+       </colgroup>
       <tbody>
         {/* Linha: N° CPs e dimensões */}
          <tr>
@@ -395,9 +402,17 @@ function CompressaoAxialTable({ series, ensaio }) {
 
 function TracaoFlexaoTable({ series, ensaio }) {
    const totalCPs = series.reduce((acc, s) => acc + s.length, 0);
+   const totalCpCols = Math.max(series.reduce((a, s) => a + s.length, 0), 1);
 
    return (
-     <table className="w-full border-collapse border border-slate-400 text-[10px]">
+     <table className="w-full border-collapse border border-slate-400 text-[10px]" style={{ tableLayout: 'fixed' }}>
+       <colgroup>
+         <col style={{ width: '30%' }} />
+         <col style={{ width: '8%' }} />
+         {Array.from({ length: totalCpCols }).map((_, i) => (
+           <col key={i} style={{ width: `${62 / totalCpCols}%` }} />
+         ))}
+       </colgroup>
        <tbody>
          {/* N° CPs e DIMENSÕES */}
          <tr>
