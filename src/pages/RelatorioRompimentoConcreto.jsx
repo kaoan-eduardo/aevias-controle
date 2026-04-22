@@ -40,11 +40,11 @@ function agruparEmSeries(cps) {
   return series;
 }
 
-// Calcula resistência do exemplar (média dos CPs da série)
+// Calcula resistência do exemplar (maior valor da série)
 function resistenciaExemplar(serieCps) {
   const vals = serieCps.map(cp => parseFloat(cp.resistencia)).filter(v => !isNaN(v) && v > 0);
   if (vals.length === 0) return '-';
-  return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2);
+  return Math.max(...vals).toFixed(2);
 }
 
 function getValorLinha(row, cp, serie) {
@@ -505,17 +505,15 @@ function TracaoFlexaoTable({ series, ensaio }) {
            )}
            {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
          </tr>
-         {/* RESIST. DO EXEMPLAR */}
+         {/* RESIST. DO EXEMPLAR — maior valor por série (colspan 2) */}
          <tr className="bg-slate-100">
            <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
            <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
-           {series.map((s, si) =>
-             s.map((cp, ci) => (
-               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900">
-                 {fmtN(cp.resistencia, 2)}
-               </td>
-             ))
-           )}
+           {series.map((s, si) => (
+             <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
+               {resistenciaExemplar(s)}
+             </td>
+           ))}
            {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
          </tr>
          </tbody>
