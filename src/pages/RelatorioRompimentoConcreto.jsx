@@ -96,7 +96,8 @@ export default function RelatorioRompimentoConcreto() {
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro ao carregar"}</div>;
 
   const seriesCompressao = agruparEmSeries(ensaio.compressao_axial || []);
-  const seriesFlexao = agruparEmSeries(ensaio.tracao_flexao || []);
+  // Flexão: cada CP é individual, não agrupa em pares
+  const seriesFlexao = (ensaio.tracao_flexao || []).map(cp => [cp]);
 
   // Total de CPs = total de colunas de dados (cada série tem 2 CPs)
   const totalColunas = Math.max(seriesCompressao.length * 2, 4); // mínimo 4 colunas
@@ -508,14 +509,16 @@ function TracaoFlexaoTable({ series, ensaio }) {
          <tr className="bg-slate-100">
            <td className="border border-slate-400 px-2 py-1 font-semibold">RESIST. DO EXEMPLAR</td>
            <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
-           {series.map((s, si) => (
-             <td key={si} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900" colSpan={2}>
-               {resistenciaExemplar(s)}
-             </td>
-           ))}
+           {series.map((s, si) =>
+             s.map((cp, ci) => (
+               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center font-bold text-blue-900">
+                 {fmtN(cp.resistencia, 2)}
+               </td>
+             ))
+           )}
            {series.length === 0 && <td className="border border-slate-400 px-2 py-1" colSpan={4}></td>}
          </tr>
-       </tbody>
-     </table>
-   );
-}
+         </tbody>
+         </table>
+         );
+         }
