@@ -999,7 +999,7 @@ export default function ChecklistTerraplanagem() {
                           { key: 'granulometria', label: 'Análise Granulométrica por Peneiramento', step: null },
                         ].map(({ key, label, step }) => {
                           const e = formData.ensaios_empreiteira[key] || {};
-                          const qtde = e.quantidade || 0;
+                          const qtde = e.quantidade;
                           const resultados = Array.isArray(e.resultados)
                             ? e.resultados
                             : (typeof e.resultados === 'string' && e.resultados.trim() !== '')
@@ -1015,10 +1015,10 @@ export default function ChecklistTerraplanagem() {
                               </td>
                               <td className="border border-slate-300 px-1 py-1">
                                 <Input type="number" min="0" max="3"
-                                  value={qtde || ''}
+                                  value={qtde ?? ''}
                                   onChange={(ev) => handleEnsaioChange(key, 'quantidade', ev.target.value)}
                                   disabled={!e.realizado}
-                                  className="h-8 text-sm text-center" placeholder="0" />
+                                  className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 {e.realizado && qtde > 0 ? (
