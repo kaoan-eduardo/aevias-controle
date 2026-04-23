@@ -385,6 +385,18 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     });
   }, [filteredEnsaios, selectedIds]);
 
+  const ensaiosSelecionadosAdmin = useMemo(() => {
+    return filteredEnsaios
+      .filter(e => selectedIds.has(e.id))
+      .map(e => ({
+        url: getReportLink(e),
+        laboratorista: getLaboratoristaInfo(e, allUsers),
+        tipoRegistro: getEnsaioTypeInfo(e).name,
+        data: getDataFormatted(e),
+      }))
+      .filter(e => e.url && e.url !== '#');
+  }, [filteredEnsaios, selectedIds, allUsers]);
+
   const handleApprove = useCallback(async (ensaio) => {
     if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
 
@@ -880,6 +892,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
       <BulkSelectionBar
         selectedCount={selectedIds.size}
+        ensaiosSelecionados={ensaiosSelecionadosAdmin}
         onOpenAll={handleOpenSelected}
         onClear={() => setSelectedIds(new Set())}
       />
@@ -1399,6 +1412,18 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     });
   }, [filteredEnsaios, selectedIds]);
 
+  const ensaiosSelecionadosCliente = useMemo(() => {
+    return filteredEnsaios
+      .filter(e => selectedIds.has(e.id))
+      .map(e => ({
+        url: getReportLink(e),
+        laboratorista: getLaboratoristaInfo(e, allUsers),
+        tipoRegistro: getEnsaioTypeInfo(e).name,
+        data: getDataFormatted(e),
+      }))
+      .filter(e => e.url && e.url !== '#');
+  }, [filteredEnsaios, selectedIds, allUsers]);
+
   const handleAssinar = useCallback(async (ensaio) => {
     try {
       if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
@@ -1695,6 +1720,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
 
       <BulkSelectionBar
         selectedCount={selectedIds.size}
+        ensaiosSelecionados={ensaiosSelecionadosCliente}
         onOpenAll={handleOpenSelectedCliente}
         onClear={() => setSelectedIds(new Set())}
       />
