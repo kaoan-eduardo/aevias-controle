@@ -1054,7 +1054,7 @@ export default function ChecklistTerraplanagem() {
 
                         {/* Umidade Ótima — Qtde + campos manuais */}
                         {(() => {
-                          const uoQtde = formData.umidade_otima_quantidade || 0;
+                          const uoQtde = formData.umidade_otima_quantidade;
                           const uoResultados = Array.isArray(formData.umidade_otima_resultados)
                             ? formData.umidade_otima_resultados
                             : (typeof formData.umidade_otima_resultados === 'string' && formData.umidade_otima_resultados.trim() !== '')
@@ -1099,7 +1099,7 @@ export default function ChecklistTerraplanagem() {
 
                         {/* Umidade In Situ — Qtde + campos manuais */}
                         {(() => {
-                          const uisQtde = formData.umidade_in_situ_quantidade || 0;
+                          const uisQtde = formData.umidade_in_situ_quantidade;
                           const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
                             ? formData.umidade_in_situ_resultados
                             : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
@@ -1144,7 +1144,7 @@ export default function ChecklistTerraplanagem() {
 
                         {/* Variação de Umidade — Qtde + campos manuais */}
                         {(() => {
-                          const vuQtde = formData.ensaios_empreiteira.variacao_umidade_quantidade || 0;
+                          const vuQtde = formData.ensaios_empreiteira.variacao_umidade_quantidade;
                           const vuResultados = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
                             ? formData.ensaios_empreiteira.variacao_umidade_resultados
                             : (variacaoUmidade !== null ? [variacaoUmidade] : []);
@@ -1195,7 +1195,7 @@ export default function ChecklistTerraplanagem() {
 
                         {/* Grau de Compactação — Qtde + campos manuais */}
                         {(() => {
-                          const gcQtde = formData.ensaios_empreiteira.grau_compactacao_quantidade || 0;
+                          const gcQtde = formData.ensaios_empreiteira.grau_compactacao_quantidade;
                           const gcResultados = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
                             ? formData.ensaios_empreiteira.grau_compactacao_resultados
                             : (grauCompactacao !== null ? [grauCompactacao] : []);
