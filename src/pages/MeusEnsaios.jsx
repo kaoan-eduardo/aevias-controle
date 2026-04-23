@@ -40,7 +40,6 @@ import { loadAllData } from "@/components/ensaios/dataLoader";
 import { Pagination } from "@/components/ensaios/Pagination";
 import { ReprovacaoModal } from "@/components/ensaios/ReprovacaoModal";
 import { ExclusaoModal } from "@/components/ensaios/ExclusaoModal";
-import BulkSelectionBar from "@/components/ensaios/BulkSelectionBar";
 
 // Botão copiar ID
 const CopyIdButton = React.memo(({ id }) => {
@@ -229,7 +228,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const itemsPerPage = 20;
   
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
-  const [selectedIds, setSelectedIds] = useState(new Set());
   const [selectedEnsaio, setSelectedEnsaio] = useState(null);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(null);
 
@@ -350,52 +348,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
     setFilteredEnsaios(filtered);
     setCurrentPage(1);
-    setSelectedIds(new Set()); // Reset selection when filters change
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
-
-  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
-  const paginatedEnsaios = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredEnsaios, currentPage]);
-
-  const allPageSelected = paginatedEnsaios.length > 0 && paginatedEnsaios.every(e => selectedIds.has(e.id));
-
-  const toggleSelect = useCallback((id) => {
-    setSelectedIds(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }, []);
-
-  const toggleSelectAll = useCallback(() => {
-    setSelectedIds(prev =>
-      prev.size === paginatedEnsaios.length
-        ? new Set()
-        : new Set(paginatedEnsaios.map(e => e.id))
-    );
-  }, [paginatedEnsaios]);
-
-  const handleOpenSelected = useCallback(() => {
-    const selected = filteredEnsaios.filter(e => selectedIds.has(e.id));
-    selected.forEach(ensaio => {
-      const url = getReportLink(ensaio);
-      if (url && url !== '#') window.open(url, '_blank');
-    });
-  }, [filteredEnsaios, selectedIds]);
-
-  const ensaiosSelecionadosAdmin = useMemo(() => {
-    return filteredEnsaios
-      .filter(e => selectedIds.has(e.id))
-      .map(e => ({
-        url: getReportLink(e),
-        laboratorista: getLaboratoristaInfo(e, allUsers),
-        tipoRegistro: getEnsaioTypeInfo(e).name,
-        data: getDataFormatted(e),
-      }))
-      .filter(e => e.url && e.url !== '#');
-  }, [filteredEnsaios, selectedIds, allUsers]);
 
   const handleApprove = useCallback(async (ensaio) => {
     if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
@@ -494,6 +447,12 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       statusObraFilter !== 'all'
     );
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
+
+  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
+  const paginatedEnsaios = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredEnsaios, currentPage]);
 
   const statusColors = useMemo(() => ({
     planejamento: "bg-blue-100 text-blue-800",
@@ -600,15 +559,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
             <table className="w-full text-sm">
               <thead className="bg-black/5 border-b border-white/10">
                 <tr>
-                  <th className="px-2 py-2 w-8">
-                    <input
-                      type="checkbox"
-                      checked={allPageSelected}
-                      onChange={toggleSelectAll}
-                      className="w-3.5 h-3.5 rounded cursor-pointer"
-                      title="Selecionar todos da página"
-                    />
-                  </th>
                    <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                      <div className="flex items-center gap-1">
                        <span>Tipo</span>
@@ -717,19 +667,11 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                    const projeto = ensaio.project_id ? projects.find(p => p.id === ensaio.project_id) : null;
 
                    return (
-                     <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${selectedIds.has(ensaio.id) ? 'bg-[#BFCF99]/10' : index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
-                       <td className="px-2 py-2 w-8">
-                         <input
-                           type="checkbox"
-                           checked={selectedIds.has(ensaio.id)}
-                           onChange={() => toggleSelect(ensaio.id)}
-                           className="w-3.5 h-3.5 rounded cursor-pointer"
-                         />
-                       </td>
+                     <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
                        <td className="px-2 py-2">
-                         <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
-                           <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
-                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
+                        <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
+                          <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
+                          <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           <CopyIdButton id={ensaio.id} />
                           {(() => {
                               const naoConformidades = getNaoConformidades(ensaio);
@@ -888,13 +830,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         isOpen={!!deletingEnsaio}
         onClose={() => setDeletingEnsaio(null)}
         onDelete={handleDelete}
-      />
-
-      <BulkSelectionBar
-        selectedCount={selectedIds.size}
-        ensaiosSelecionados={ensaiosSelecionadosAdmin}
-        onOpenAll={handleOpenSelected}
-        onClear={() => setSelectedIds(new Set())}
       />
       </div>
       );
@@ -1247,7 +1182,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [sortOrder, setSortOrder] = useState('desc');
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState(new Set());
   const itemsPerPage = 20;
 
   const toggleSortOrder = useCallback(() => {
@@ -1349,7 +1283,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
 
     setFilteredEnsaios(filtered);
     setCurrentPage(1);
-    setSelectedIds(new Set());
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, sortOrder, allUsers]);
 
   const clearFilters = useCallback(() => {
@@ -1385,44 +1318,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredEnsaios, currentPage]);
-
-  const allPageSelectedCliente = paginatedEnsaios.length > 0 && paginatedEnsaios.every(e => selectedIds.has(e.id));
-
-  const toggleSelectCliente = useCallback((id) => {
-    setSelectedIds(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }, []);
-
-  const toggleSelectAllCliente = useCallback(() => {
-    setSelectedIds(prev =>
-      prev.size === paginatedEnsaios.length
-        ? new Set()
-        : new Set(paginatedEnsaios.map(e => e.id))
-    );
-  }, [paginatedEnsaios]);
-
-  const handleOpenSelectedCliente = useCallback(() => {
-    const selected = filteredEnsaios.filter(e => selectedIds.has(e.id));
-    selected.forEach(ensaio => {
-      const url = getReportLink(ensaio);
-      if (url && url !== '#') window.open(url, '_blank');
-    });
-  }, [filteredEnsaios, selectedIds]);
-
-  const ensaiosSelecionadosCliente = useMemo(() => {
-    return filteredEnsaios
-      .filter(e => selectedIds.has(e.id))
-      .map(e => ({
-        url: getReportLink(e),
-        laboratorista: getLaboratoristaInfo(e, allUsers),
-        tipoRegistro: getEnsaioTypeInfo(e).name,
-        data: getDataFormatted(e),
-      }))
-      .filter(e => e.url && e.url !== '#');
-  }, [filteredEnsaios, selectedIds, allUsers]);
 
   const handleAssinar = useCallback(async (ensaio) => {
     try {
@@ -1484,15 +1379,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
             <table className="w-full text-sm">
               <thead className="bg-black/5 border-b border-white/10">
                 <tr>
-                  <th className="px-2 py-2 w-8">
-                    <input
-                      type="checkbox"
-                      checked={allPageSelectedCliente}
-                      onChange={toggleSelectAllCliente}
-                      className="w-3.5 h-3.5 rounded cursor-pointer"
-                      title="Selecionar todos da página"
-                    />
-                  </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
                     <div className="flex items-center gap-1">
                       <span>Tipo</span>
@@ -1600,15 +1486,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                   const podeAssinar = ensaio.approved === true && !ensaio.client_signature?.signed_by;
 
                   return (
-                    <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${selectedIds.has(ensaio.id) ? 'bg-[#BFCF99]/10' : index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
-                      <td className="px-2 py-2 w-8">
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.has(ensaio.id)}
-                          onChange={() => toggleSelectCliente(ensaio.id)}
-                          className="w-3.5 h-3.5 rounded cursor-pointer"
-                        />
-                      </td>
+                    <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
                       <td className="px-2 py-2">
                         <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
                           <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
@@ -1716,13 +1594,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-      />
-
-      <BulkSelectionBar
-        selectedCount={selectedIds.size}
-        ensaiosSelecionados={ensaiosSelecionadosCliente}
-        onOpenAll={handleOpenSelectedCliente}
-        onClear={() => setSelectedIds(new Set())}
       />
     </div>
   );
