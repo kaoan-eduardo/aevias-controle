@@ -200,7 +200,7 @@ export default function ChecklistTerraplanagem() {
             if (val && typeof val === 'object' && !Array.isArray(val)) {
               const r = val.resultados;
               const arr = Array.isArray(r) ? r
-                : (typeof r === 'string' && r.trim() !== '') ? r.split(',').map(s => s.trim())
+                : (typeof r === 'string' && r.trim() !== '') ? r.split('|').map(s => s.trim())
                 : (r !== null && r !== undefined && r !== '') ? [String(r)]
                 : [];
               ensaiosNorm[key] = { ...val, resultados: arr, quantidade: arr.length || (val.quantidade || 0) };
@@ -442,9 +442,9 @@ export default function ChecklistTerraplanagem() {
         ensaios_empreiteira: Object.fromEntries(
           Object.entries(formData.ensaios_empreiteira).map(([key, value]) => {
             if (!value || typeof value !== 'object') return [key, value];
-            // Se resultados é array, converter para string separada por vírgula
+            // Se resultados é array, converter para string separada por |
             const resultados = Array.isArray(value.resultados)
-              ? value.resultados.filter(r => r !== null && r !== '').join(', ')
+              ? value.resultados.filter(r => r !== null && r !== '').join(' | ')
               : (value.resultados ?? '');
             return [key, {
               ...value,
