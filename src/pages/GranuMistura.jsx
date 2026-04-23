@@ -69,6 +69,8 @@ export default function GranuMistura() {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [faixaGran, setFaixaGran] = useState(null);
+  const [faixasDisponiveis, setFaixasDisponiveis] = useState([]);
+  const [faixaSelecionada, setFaixaSelecionada] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -80,10 +82,11 @@ export default function GranuMistura() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      const [obrasData, regionaisData, projectsData] = await Promise.all([
+      const [obrasData, regionaisData, projectsData, faixasData] = await Promise.all([
         base44.entities.Obra.list(),
         base44.entities.Regional.list(),
-        base44.entities.Project.list()
+        base44.entities.Project.list(),
+        base44.entities.FaixaGranulometrica.list()
       ]);
       const userAccessLevel = currentUser.access_level || (currentUser.role === "admin" ? "admin" : "user");
       let availableObras = obrasData;
@@ -94,6 +97,7 @@ export default function GranuMistura() {
       setObras(availableObras);
       setRegionais(regionaisData);
       setProjects(projectsData);
+      setFaixasDisponiveis(faixasData);
 
       const params = new URLSearchParams(location.search);
       const editId = params.get("editId");
@@ -137,18 +141,31 @@ export default function GranuMistura() {
   }, [formData.obra_id, formData.material, obras, regionais, projects]);
 
   useEffect(() => {
-    if (!formData.project_id) { setSelectedProject(null); setFaixaGran(null); return; }
-    const proj = projects.find(p => p.id === formData.project_id);
-    setSelectedProject(proj || null);
-    if (proj?.faixa_granulometrica_id) {
-      base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id).then(f => setFaixaGran(f)).catch(() => setFaixaGran(null));
-    } else {
+    if (formData.material === "OUTRO") {
+      setSelectedProject(null);
       setFaixaGran(null);
+      // Carregar faixa selecionada se houver
+      if (formData.faixa) {
+        const fx = faixasDisponiveis.find(f => f.id === formData.faixa);
+        setFaixaSelecionada(fx || null);
+      } else {
+        setFaixaSelecionada(null);
+      }
+    } else {
+      setFaixaSelecionada(null);
+      if (!formData.project_id) { setSelectedProject(null); setFaixaGran(null); return; }
+      const proj = projects.find(p => p.id === formData.project_id);
+      setSelectedProject(proj || null);
+      if (proj?.faixa_granulometrica_id) {
+        base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id).then(f => setFaixaGran(f)).catch(() => setFaixaGran(null));
+      } else {
+        setFaixaGran(null);
+      }
+      if (proj?.pedreira) {
+        setFormData(prev => ({ ...prev, pedreira: proj.pedreira }));
+      }
     }
-    if (proj?.pedreira) {
-      setFormData(prev => ({ ...prev, pedreira: proj.pedreira }));
-    }
-  }, [formData.project_id, projects]);
+  }, [formData.project_id, formData.faixa, formData.material, projects, faixasDisponiveis]);
 
   const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
 
@@ -265,8 +282,9 @@ export default function GranuMistura() {
     return { min: selectedProject.faixa_trabalho_min?.[peneiraKey], max: selectedProject.faixa_trabalho_max?.[peneiraKey] };
   };
   const getEspecificacao = (peneiraKey) => {
-    if (!faixaGran) return { min: null, max: null };
-    const peneira = faixaGran.peneiras?.find(p => {
+    const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
+    if (!faixa) return { min: null, max: null };
+    const peneira = faixa.peneiras?.find(p => {
       const ab = parseFloat(p.abertura);
       const penMap = {
         peneira_19_0mm: 19.0, peneira_12_5mm: 12.5, peneira_9_5mm: 9.5, peneira_4_75mm: 4.75,
@@ -276,6 +294,13 @@ export default function GranuMistura() {
       return Math.abs(ab - (penMap[peneiraKey] || 0)) < 0.01;
     });
     return peneira ? { min: peneira.min, max: peneira.max } : { min: null, max: null };
+  };
+  const getPeneirasExibidos = () => {
+    const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
+    if (!faixa?.peneiras) return PENEIRAS_PADRAO;
+    return PENEIRAS_PADRAO.filter(p => 
+      faixa.peneiras.some(fp => Math.abs(parseFloat(fp.abertura) - p.abertura_mm) < 0.01)
+    );
   };
 
   return (
@@ -385,7 +410,10 @@ export default function GranuMistura() {
               <div className="border-t pt-4 mt-4 space-y-4">
                 <div className="max-w-xs">
                   <Label className="text-xs font-bold">FAIXA ESPECIFICADA</Label>
-                  <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Digite a faixa especificada" />
+                  <Select value={formData.faixa} onValueChange={v => handleChange("faixa", v)} disabled={isApproved}>
+                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                    <SelectContent>{faixasDisponiveis.map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
+                  </Select>
                 </div>
               </div>
             )}
@@ -450,21 +478,24 @@ export default function GranuMistura() {
                   )}
                 </thead>
                 <tbody>
-                  {formData.peneiras.map((peneira, idx) => {
-                    const pKey = `peneira_${String(peneira.abertura_mm).replace(".", "_")}mm`;
-                    const ft = getFaixaTrabalho(pKey);
-                    const esp = getEspecificacao(pKey);
-                    return (
-                      <tr key={idx} className="hover:bg-slate-50">
-                        <td className="border border-slate-300 px-2 py-1 text-center font-medium">{peneira.astm}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center">{peneira.abertura_mm}</td>
-                        <td className="border border-slate-300 px-1 py-1">
-                          <Input type="number" step="0.01" value={peneira.retido_g}
+                   {getPeneirasExibidos().map((peneira) => {
+                     const idx = formData.peneiras.findIndex(p => p.abertura_mm === peneira.abertura_mm);
+                     if (idx === -1) return null;
+                     const peneiraData = formData.peneiras[idx];
+                     const pKey = `peneira_${String(peneira.abertura_mm).replace(".", "_")}mm`;
+                     const ft = getFaixaTrabalho(pKey);
+                     const esp = getEspecificacao(pKey);
+                     return (
+                       <tr key={idx} className="hover:bg-slate-50">
+                         <td className="border border-slate-300 px-2 py-1 text-center font-medium">{peneira.astm}</td>
+                         <td className="border border-slate-300 px-2 py-1 text-center">{peneira.abertura_mm}</td>
+                         <td className="border border-slate-300 px-1 py-1">
+                           <Input type="number" step="0.01" value={peneiraData.retido_g}
                             onChange={e => handlePeneiraChange(idx, "retido_g", e.target.value)}
                             disabled={isApproved} className="h-6 text-[9px] text-center p-1" />
                         </td>
-                        <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 text-[9px]">{peneira.passante_g || "-"}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 font-bold text-[9px]">{peneira.passante_pct || "-"}</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 text-[9px]">{peneiraData.passante_g || "-"}</td>
+                        <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 font-bold text-[9px]">{peneiraData.passante_pct || "-"}</td>
                         {formData.material !== "OUTRO" && (
                           <>
                             <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.min ?? "-"}</td>
