@@ -130,7 +130,7 @@ export default function GranuMistura() {
     const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
     if (!regional?.project_ids) { setFilteredProjects([]); return; }
     let projs = projects.filter(p => regional.project_ids.includes(p.id));
-    if (formData.material && formData.material !== "OUTRO") {
+    if (["CAUQ", "MRAF", "BGS"].includes(formData.material)) {
       projs = projs.filter(p => p.tipo_projeto === formData.material);
     }
     setFilteredProjects(projs);
@@ -338,17 +338,27 @@ export default function GranuMistura() {
                     <SelectContent>
                       <SelectItem value="CAUQ">CAUQ</SelectItem>
                       <SelectItem value="MRAF">MRAF</SelectItem>
+                      <SelectItem value="BGS">BGS</SelectItem>
                       <SelectItem value="OUTRO">OUTRO</SelectItem>
                     </SelectContent>
                   </Select>
                   {formData.material === "OUTRO" && (
                     <Input value={formData.material_outro || ""} onChange={e => handleChange("material_outro", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Especifique o material ensaiado" />
                   )}
-                </div>
-                <div>
+                  </div>
+                  {formData.material !== "OUTRO" && (
+                  <div>
+                  <Label className="text-xs font-bold">PROJETO *</Label>
+                  <Select value={formData.project_id} onValueChange={v => handleChange("project_id", v)} disabled={!!editingId || isApproved}>
+                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                    <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
+                  </Select>
+                  </div>
+                  )}
+                  <div>
                   <Label className="text-xs font-bold">PEDREIRA</Label>
                   <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DEPENDE PROJETO" />
-                </div>
+                  </div>
                 <div>
                   <Label className="text-xs font-bold">FAIXA</Label>
                   <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
@@ -418,16 +428,22 @@ export default function GranuMistura() {
                     <th className="border border-slate-300 px-2 py-1">RETIDO (g)</th>
                     <th className="border border-slate-300 px-2 py-1">PASS. (g)</th>
                     <th className="border border-slate-300 px-2 py-1">% PASS</th>
-                    <th className="border border-slate-300 px-2 py-1" colSpan="2">FAIXA DE TRABALHO</th>
-                    <th className="border border-slate-300 px-2 py-1" colSpan="2">ESPECIFICAÇÃO</th>
+                    {formData.material !== "OUTRO" && (
+                      <>
+                        <th className="border border-slate-300 px-2 py-1" colSpan="2">FAIXA DE TRABALHO</th>
+                        <th className="border border-slate-300 px-2 py-1" colSpan="2">ESPECIFICAÇÃO</th>
+                      </>
+                    )}
                   </tr>
-                  <tr>
-                    <th colSpan="5" className="border border-slate-300 bg-slate-50"></th>
-                    <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
-                    <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
-                    <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
-                    <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
-                  </tr>
+                  {formData.material !== "OUTRO" && (
+                    <tr>
+                      <th colSpan="5" className="border border-slate-300 bg-slate-50"></th>
+                      <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
+                      <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
+                      <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
+                      <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
+                    </tr>
+                  )}
                 </thead>
                 <tbody>
                   {formData.peneiras.map((peneira, idx) => {
@@ -445,10 +461,14 @@ export default function GranuMistura() {
                         </td>
                         <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 text-[9px]">{peneira.passante_g || "-"}</td>
                         <td className="border border-slate-300 px-2 py-1 text-center bg-gray-50 font-bold text-[9px]">{peneira.passante_pct || "-"}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.min ?? "-"}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.max ?? "-"}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.min ?? "-"}</td>
-                        <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.max ?? "-"}</td>
+                        {formData.material !== "OUTRO" && (
+                          <>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.min ?? "-"}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.max ?? "-"}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.min ?? "-"}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.max ?? "-"}</td>
+                          </>
+                        )}
                       </tr>
                     );
                   })}
