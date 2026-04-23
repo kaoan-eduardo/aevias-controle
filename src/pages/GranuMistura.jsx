@@ -278,7 +278,7 @@ export default function GranuMistura() {
   const isEditable = !isApproved;
 
   const getFaixaTrabalho = (peneiraKey) => {
-    if (!selectedProject?.faixa_trabalho) return { min: null, max: null };
+    if (!selectedProject?.faixa_trabalho_min && !selectedProject?.faixa_trabalho_max) return { min: null, max: null };
     return { min: selectedProject.faixa_trabalho_min?.[peneiraKey], max: selectedProject.faixa_trabalho_max?.[peneiraKey] };
   };
   const getEspecificacao = (peneiraKey) => {
