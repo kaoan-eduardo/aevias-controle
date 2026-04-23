@@ -378,24 +378,22 @@ export default function GranuMistura() {
         {/* 1. DETERMINAÇÃO DE UMIDADE */}
         <Card className="bg-slate-50">
           <CardHeader><CardTitle className="text-base">1. Determinação de Umidade da Mistura</CardTitle></CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div className="space-y-1">
-                <Label className="text-xs font-bold">Peso Úmido — P₁ (g)</Label>
-                <Input type="number" step="0.01" value={formData.umidade.peso_umido} onChange={e => handleUmidadeChange("peso_umido", e.target.value)} disabled={isApproved} className="text-sm" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs font-bold">Peso Seco — P₂ (g)</Label>
-                <Input type="number" step="0.01" value={formData.umidade.peso_seco} onChange={e => handleUmidadeChange("peso_seco", e.target.value)} disabled={isApproved} className="text-sm" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs font-bold">Peso Água — Pω = P₁ − P₂ (g)</Label>
-                <Input value={formData.umidade.peso_agua || ""} disabled className="bg-gray-100 text-sm" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs font-bold">Umidade — U = (Pω/P₂)×100 (%)</Label>
-                <Input value={formData.umidade.umidade_pct || ""} disabled className="bg-gray-100 text-sm font-bold" />
-              </div>
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-xs font-bold">Peso Úmido — P₁ (g)</Label>
+              <Input type="number" step="0.01" value={formData.umidade.peso_umido} onChange={e => handleUmidadeChange("peso_umido", e.target.value)} disabled={isApproved} className="text-sm" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs font-bold">Peso Seco — P₂ (g)</Label>
+              <Input type="number" step="0.01" value={formData.umidade.peso_seco} onChange={e => handleUmidadeChange("peso_seco", e.target.value)} disabled={isApproved} className="text-sm" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs font-bold">Peso Água — Pω = P₁ − P₂ (g)</Label>
+              <Input value={formData.umidade.peso_agua || ""} disabled className="bg-gray-100 text-sm" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs font-bold">Umidade — U = (Pω/P₂)×100 (%)</Label>
+              <Input value={formData.umidade.umidade_pct || ""} disabled className="bg-gray-100 text-sm font-bold" />
             </div>
           </CardContent>
         </Card>
