@@ -359,10 +359,12 @@ export default function GranuMistura() {
                   <Label className="text-xs font-bold">PEDREIRA</Label>
                   <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DEPENDE PROJETO" />
                   </div>
-                <div>
-                  <Label className="text-xs font-bold">FAIXA</Label>
-                  <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
-                </div>
+                  {formData.material !== "OUTRO" && (
+                    <div>
+                      <Label className="text-xs font-bold">FAIXA</Label>
+                      <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
+                    </div>
+                  )}
               </div>
 
               {/* Coluna 3 */}
@@ -385,6 +387,14 @@ export default function GranuMistura() {
                 </div>
               </div>
             </div>
+            {formData.material === "OUTRO" && (
+              <div className="border-t pt-4 mt-4 space-y-4">
+                <div className="max-w-xs">
+                  <Label className="text-xs font-bold">FAIXA ESPECIFICADA</Label>
+                  <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Digite a faixa especificada" />
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
