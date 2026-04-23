@@ -297,10 +297,12 @@ export default function GranuMistura() {
   };
   const getPeneirasExibidos = () => {
     const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
-    if (!faixa?.peneiras) return PENEIRAS_PADRAO;
-    return PENEIRAS_PADRAO.filter(p => 
-      faixa.peneiras.some(fp => Math.abs(parseFloat(fp.abertura) - p.abertura_mm) < 0.01)
-    );
+    if (!faixa?.peneiras || faixa.peneiras.length === 0) return [];
+    const peneirasMapeadas = faixa.peneiras.map(fp => {
+      const ab = parseFloat(fp.abertura);
+      return PENEIRAS_PADRAO.find(p => Math.abs(p.abertura_mm - ab) < 0.01);
+    }).filter(Boolean);
+    return peneirasMapeadas;
   };
 
   return (
