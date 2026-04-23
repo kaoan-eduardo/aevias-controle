@@ -108,7 +108,6 @@ import Users from './pages/Users';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
 import GranuMistura from './pages/GranuMistura';
 import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
-import EnsaioGranAreia from './pages/EnsaioGranAreia';
 import __Layout from './Layout.jsx';
 
 
@@ -174,7 +173,6 @@ export const PAGES = {
     "RelatorioBoletimSondagem": RelatorioBoletimSondagem,
     "GranuMistura": GranuMistura,
     "RelatorioGranuMistura": RelatorioGranuMistura,
-    "EnsaioGranAreia": EnsaioGranAreia,
 }
 
 export const pagesConfig = {

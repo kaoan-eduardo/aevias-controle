@@ -19,7 +19,6 @@ import EnsaioRompimentoConcreto from './pages/EnsaioRompimentoConcreto';
 import RelatorioRompimentoConcreto from './pages/RelatorioRompimentoConcreto';
 import GranuMistura from './pages/GranuMistura';
 import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
-import EnsaioGranAreia from './pages/EnsaioGranAreia';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -167,14 +166,7 @@ function AuthenticatedApp() {
           </LayoutWrapper>
         }
       />
-      <Route
-        path="/EnsaioGranAreia"
-        element={
-          <LayoutWrapper currentPageName="EnsaioGranAreia">
-            <EnsaioGranAreia />
-          </LayoutWrapper>
-        }
-      />
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
