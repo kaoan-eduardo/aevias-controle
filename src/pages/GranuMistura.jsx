@@ -368,10 +368,6 @@ export default function GranuMistura() {
               {/* Coluna 3 */}
               <div className="space-y-4">
                 <div>
-                  <Label className="text-xs font-bold">Nº PROJETO</Label>
-                  <Input value={formData.numero_projeto} onChange={e => handleChange("numero_projeto", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DIGITAR" />
-                </div>
-                <div>
                   <Label className="text-xs font-bold">LOCAL DE COLETA</Label>
                   <Input value={formData.local_coleta} onChange={e => handleChange("local_coleta", e.target.value)} disabled={isApproved} className="text-xs" placeholder="INPUT" />
                 </div>
