@@ -194,7 +194,21 @@ export default function ChecklistTerraplanagem() {
         
         if (userAccessLevel === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
           setEditingChecklist(checklistToEdit);
-          setFormData(checklistToEdit);
+          // Normalizar resultados: string "a, b" → array para uso no form
+          const ensaiosNorm = {};
+          Object.entries(checklistToEdit.ensaios_empreiteira || {}).forEach(([key, val]) => {
+            if (val && typeof val === 'object' && !Array.isArray(val)) {
+              const r = val.resultados;
+              const arr = Array.isArray(r) ? r
+                : (typeof r === 'string' && r.trim() !== '') ? r.split(',').map(s => s.trim())
+                : (r !== null && r !== undefined && r !== '') ? [String(r)]
+                : [];
+              ensaiosNorm[key] = { ...val, resultados: arr, quantidade: arr.length || (val.quantidade || 0) };
+            } else {
+              ensaiosNorm[key] = val;
+            }
+          });
+          setFormData({ ...checklistToEdit, ensaios_empreiteira: { ...checklistToEdit.ensaios_empreiteira, ...ensaiosNorm } });
         } else {
           alert("Você não tem permissão para editar este registro.");
           navigate(createPageUrl('MeusEnsaios'));
@@ -427,19 +441,16 @@ export default function ChecklistTerraplanagem() {
         })),
         ensaios_empreiteira: Object.fromEntries(
           Object.entries(formData.ensaios_empreiteira).map(([key, value]) => {
-            // Se o valor é null, undefined ou não é um objeto, retorna como está
-            if (!value || typeof value !== 'object') {
-              return [key, value];
-            }
-            
-            // Se é um objeto, processa a quantidade
-            return [
-              key,
-              {
-                ...value,
-                quantidade: value.quantidade ? parseInt(value.quantidade) : null
-              }
-            ];
+            if (!value || typeof value !== 'object') return [key, value];
+            // Se resultados é array, converter para string separada por vírgula
+            const resultados = Array.isArray(value.resultados)
+              ? value.resultados.filter(r => r !== null && r !== '').join(', ')
+              : (value.resultados ?? '');
+            return [key, {
+              ...value,
+              quantidade: parseInt(value.quantidade) || 0,
+              resultados
+            }];
           })
         )
       };
