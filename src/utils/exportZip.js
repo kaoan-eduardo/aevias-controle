@@ -17,79 +17,89 @@ function sanitizeFileName(str) {
 }
 
 /**
- * Espera até que os textos de loading desapareçam do documento do iframe.
- * Textos de loading conhecidos: "Carregando relatório...", "Otimizando imagens para impressão..."
+ * Espera até o relatório no iframe estar completamente renderizado.
+ * Verifica que os textos de loading sumiram E que há conteúdo real.
  */
-function waitForReportReady(iframeDoc, maxWait = 30000) {
+function waitForReportReady(iframeDoc, maxWait = 60000) {
   const loadingTexts = [
     'Carregando relatório',
     'Otimizando imagens para impressão',
     'Carregando...',
+    'carregando',
   ];
 
   return new Promise((resolve, reject) => {
     const start = Date.now();
 
     function check() {
-      const bodyText = iframeDoc.body ? iframeDoc.body.innerText || '' : '';
       const elapsed = Date.now() - start;
+      const body = iframeDoc.body;
 
-      const isLoading = loadingTexts.some(t => bodyText.includes(t));
-      const hasContent = bodyText.trim().length > 100; // Tem conteúdo real
+      if (!body) {
+        if (elapsed >= maxWait) return reject(new Error('Timeout: body nunca apareceu'));
+        return setTimeout(check, 500);
+      }
+
+      const bodyText = body.innerText || '';
+      const isLoading = loadingTexts.some(t => bodyText.toLowerCase().includes(t.toLowerCase()));
+      const hasContent = bodyText.trim().length > 200;
 
       if (!isLoading && hasContent) {
-        // Aguarda mais um pouco para garantir renderização de imagens
-        setTimeout(resolve, 2000);
+        // Aguarda mais 4 segundos para imagens e estilos renderizarem
+        setTimeout(resolve, 4000);
       } else if (elapsed >= maxWait) {
-        reject(new Error('Timeout aguardando relatório carregar'));
+        reject(new Error(`Timeout aguardando relatório (${Math.round(elapsed / 1000)}s)`));
       } else {
-        setTimeout(check, 500);
+        setTimeout(check, 800);
       }
     }
 
-    check();
+    // Começa checando após 2 segundos (tempo mínimo de boot do React)
+    setTimeout(check, 2000);
   });
 }
 
 /**
- * Carrega uma URL do relatório em um iframe oculto e aguarda estar pronto
+ * Carrega URL em iframe oculto e aguarda relatório estar pronto
  */
 function loadReportInIframe(url) {
   return new Promise((resolve, reject) => {
     const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.left = '-9999px';
-    iframe.style.top = '0';
-    iframe.style.width = '1200px';
-    iframe.style.height = '1600px';
-    iframe.style.opacity = '0';
-    iframe.style.pointerEvents = 'none';
-    iframe.style.zIndex = '-1';
+    iframe.style.cssText = `
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 1240px;
+      height: 1754px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+      border: none;
+    `;
     document.body.appendChild(iframe);
 
-    const timeout = setTimeout(() => {
-      document.body.removeChild(iframe);
-      reject(new Error('Timeout carregando relatório'));
-    }, 60000);
+    const hardTimeout = setTimeout(() => {
+      if (document.body.contains(iframe)) document.body.removeChild(iframe);
+      reject(new Error('Hard timeout (90s) carregando relatório'));
+    }, 90000);
 
     iframe.onload = async () => {
       try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
-        // Aguarda o relatório terminar de renderizar
-        await waitForReportReady(doc, 45000);
-        clearTimeout(timeout);
+        await waitForReportReady(doc, 60000);
+        clearTimeout(hardTimeout);
         resolve({ iframe, doc });
       } catch (err) {
-        clearTimeout(timeout);
-        document.body.removeChild(iframe);
+        clearTimeout(hardTimeout);
+        if (document.body.contains(iframe)) document.body.removeChild(iframe);
         reject(err);
       }
     };
 
     iframe.onerror = () => {
-      clearTimeout(timeout);
-      document.body.removeChild(iframe);
-      reject(new Error('Erro ao carregar relatório'));
+      clearTimeout(hardTimeout);
+      if (document.body.contains(iframe)) document.body.removeChild(iframe);
+      reject(new Error('Erro ao carregar iframe'));
     };
 
     iframe.src = url;
@@ -97,37 +107,43 @@ function loadReportInIframe(url) {
 }
 
 /**
- * Converte o documento do iframe em PDF (blob)
+ * Captura o documento do iframe e gera PDF blob
  */
 async function documentToPdfBlob(iframeDoc, iframeEl) {
   const body = iframeDoc.body;
   if (!body) throw new Error('Documento sem body');
+
+  // Esconder a barra de aprovação (print:hidden) antes de capturar
+  const printHiddenEls = iframeDoc.querySelectorAll('.print\\:hidden, .no-print');
+  printHiddenEls.forEach(el => { el.style.display = 'none'; });
+
+  const scrollH = Math.max(body.scrollHeight, body.offsetHeight, 800);
 
   const canvas = await html2canvas(body, {
     useCORS: true,
     allowTaint: true,
     scale: 1.5,
     logging: false,
-    windowWidth: 1200,
-    windowHeight: body.scrollHeight,
+    windowWidth: 1240,
+    windowHeight: scrollH,
     scrollX: 0,
     scrollY: 0,
-    width: 1200,
-    height: body.scrollHeight,
+    width: 1240,
+    height: scrollH,
   });
 
   const imgData = canvas.toDataURL('image/jpeg', 0.88);
-  const pdfWidth = 210; // mm A4
+  const pdfWidth = 210; // A4 mm
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
   const pdf = new jsPDF({
-    orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+    orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
   });
 
-  let yOffset = 0;
   const pageHeight = pdf.internal.pageSize.getHeight();
+  let yOffset = 0;
 
   while (yOffset < pdfHeight) {
     if (yOffset > 0) pdf.addPage();
@@ -135,13 +151,13 @@ async function documentToPdfBlob(iframeDoc, iframeEl) {
     yOffset += pageHeight;
   }
 
-  document.body.removeChild(iframeEl);
+  if (document.body.contains(iframeEl)) document.body.removeChild(iframeEl);
 
   return pdf.output('blob');
 }
 
 /**
- * Exporta múltiplos ensaios como PDFs zipados
+ * Exporta múltiplos ensaios como PDFs num ZIP
  * @param {Array} ensaios - lista de { url, laboratorista, tipoRegistro, data }
  * @param {Function} onProgress - callback(current, total)
  */
@@ -164,7 +180,7 @@ export async function exportarRelatoriosZip(ensaios, onProgress) {
       const pdfBlob = await documentToPdfBlob(doc, iframe);
       zip.file(fileName, pdfBlob);
     } catch (err) {
-      console.error(`Erro ao gerar PDF para ${ensaios[i].tipoRegistro}:`, err);
+      console.error(`Erro ao gerar PDF [${ensaios[i].tipoRegistro}]:`, err.message);
     }
   }
 
