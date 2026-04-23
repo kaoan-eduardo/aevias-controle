@@ -375,13 +375,38 @@ export default function GranuMistura() {
           </CardContent>
         </Card>
 
-        {/* ANÁLISE GRANULOMÉTRICA */}
+        {/* 1. DETERMINAÇÃO DE UMIDADE */}
         <Card className="bg-slate-50">
-          <CardHeader><CardTitle className="text-base">Análise Granulométrica</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">1. Determinação de Umidade da Mistura</CardTitle></CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Peso Úmido — P₁ (g)</Label>
+                <Input type="number" step="0.01" value={formData.umidade.peso_umido} onChange={e => handleUmidadeChange("peso_umido", e.target.value)} disabled={isApproved} className="text-sm" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Peso Seco — P₂ (g)</Label>
+                <Input type="number" step="0.01" value={formData.umidade.peso_seco} onChange={e => handleUmidadeChange("peso_seco", e.target.value)} disabled={isApproved} className="text-sm" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Peso Água — Pω = P₁ − P₂ (g)</Label>
+                <Input value={formData.umidade.peso_agua || ""} disabled className="bg-gray-100 text-sm" />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Umidade — U = (Pω/P₂)×100 (%)</Label>
+                <Input value={formData.umidade.umidade_pct || ""} disabled className="bg-gray-100 text-sm font-bold" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 2. ANÁLISE GRANULOMÉTRICA */}
+        <Card className="bg-slate-50">
+          <CardHeader><CardTitle className="text-base">2. Análise Granulométrica</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <div>
+            <div className="max-w-xs">
               <Label className="text-xs font-bold">Peso da Amostra (g)</Label>
-              <Input type="number" step="0.01" value={formData.peso_amostra} onChange={e => handlePesoAmostraChange(e.target.value)} disabled={isApproved} className="text-xs mt-1" />
+              <Input type="number" step="0.01" value={formData.peso_amostra} onChange={e => handlePesoAmostraChange(e.target.value)} disabled={isApproved} className="text-sm mt-1" />
             </div>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300 text-[11px]">
@@ -432,97 +457,58 @@ export default function GranuMistura() {
           </CardContent>
         </Card>
 
-        {/* CÁLCULOS - 3 painéis lado a lado */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Umidade */}
-          <Card className="bg-slate-50">
-            <CardHeader><CardTitle className="text-sm">Determinação de Umidade da Mistura</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="font-bold">Peso Úmido</span>
-                <span>P₁</span>
-                <span>g</span>
-              </div>
-              <Input type="number" step="0.01" value={formData.umidade.peso_umido} onChange={e => handleUmidadeChange("peso_umido", e.target.value)} disabled={isApproved} className="text-xs h-7" />
-              <div className="flex justify-between">
-                <span className="font-bold">Peso Seco</span>
-                <span>P₂</span>
-                <span>g</span>
-              </div>
-              <Input type="number" step="0.01" value={formData.umidade.peso_seco} onChange={e => handleUmidadeChange("peso_seco", e.target.value)} disabled={isApproved} className="text-xs h-7" />
-              <div className="flex justify-between">
-                <span className="font-bold">Peso Água</span>
-                <span>Pω = P₁ - P₂</span>
-                <span>g</span>
-              </div>
-              <Input value={formData.umidade.peso_agua || ""} disabled className="bg-gray-50 text-xs h-7" />
-              <div className="flex justify-between">
-                <span className="font-bold">Umidade</span>
-                <span className="text-[10px]">U = (Pω/P₂)×100</span>
-                <span>%</span>
-              </div>
-              <Input value={formData.umidade.umidade_pct || ""} disabled className="bg-gray-50 text-xs h-7 font-bold" />
-            </CardContent>
-          </Card>
-
-          {/* Equivalente de Areia */}
-          <Card className="bg-slate-50">
-            <CardHeader><CardTitle className="text-sm">Determinação de Equivalente de Areia</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-xs">
+        {/* 3. EQUIVALENTE DE AREIA */}
+        <Card className="bg-slate-50">
+          <CardHeader><CardTitle className="text-base">3. Determinação de Equivalente de Areia</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {formData.equivalente_areia.medicoes.map((m, idx) => (
-                <div key={idx} className="border rounded p-2 space-y-1">
-                  <p className="font-bold text-[9px]">Medição {idx + 1}</p>
-                  <div className="grid grid-cols-3 gap-1">
-                    <div>
-                      <Label className="text-[9px]">Topo Argila</Label>
-                      <Input type="number" step="0.01" value={m.topo_argila} onChange={e => handleEAChange(idx, "topo_argila", e.target.value)} disabled={isApproved} className="h-6 text-[9px] p-1" />
+                <div key={idx} className="border rounded-lg p-4 bg-white space-y-3">
+                  <p className="font-bold text-sm text-slate-700">Medição {idx + 1}</p>
+                  <div className="space-y-2">
+                    <div className="space-y-1">
+                      <Label className="text-xs font-bold">Topo de Argila</Label>
+                      <Input type="number" step="0.01" value={m.topo_argila} onChange={e => handleEAChange(idx, "topo_argila", e.target.value)} disabled={isApproved} className="text-sm" />
                     </div>
-                    <div>
-                      <Label className="text-[9px]">Topo Areia</Label>
-                      <Input type="number" step="0.01" value={m.topo_areia} onChange={e => handleEAChange(idx, "topo_areia", e.target.value)} disabled={isApproved} className="h-6 text-[9px] p-1" />
+                    <div className="space-y-1">
+                      <Label className="text-xs font-bold">Topo de Areia</Label>
+                      <Input type="number" step="0.01" value={m.topo_areia} onChange={e => handleEAChange(idx, "topo_areia", e.target.value)} disabled={isApproved} className="text-sm" />
                     </div>
-                    <div>
-                      <Label className="text-[9px]">EA (%)</Label>
-                      <Input value={m.equivalente || ""} disabled className="h-6 bg-gray-50 text-[9px] p-1" />
+                    <div className="space-y-1">
+                      <Label className="text-xs font-bold">Equiv. Areia — EA = (T.Areia/T.Argila)×100 (%)</Label>
+                      <Input value={m.equivalente || ""} disabled className="bg-gray-100 text-sm font-bold" />
                     </div>
                   </div>
                 </div>
               ))}
-              <div className="border-t pt-2">
-                <div className="flex justify-between">
-                  <span className="font-bold">Média:</span>
-                  <span className="text-[10px]">EA = (T.Areia/T.Argila)×100</span>
-                </div>
-                <Input value={formData.equivalente_areia.media || ""} disabled className="bg-gray-50 text-xs h-7 font-bold mt-1" />
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="flex items-center gap-4 pt-2 border-t">
+              <Label className="text-sm font-bold">Média das Medições (%):</Label>
+              <Input value={formData.equivalente_areia.media || ""} disabled className="bg-gray-100 text-sm font-bold max-w-[140px]" />
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Materiais Pulverulentos */}
-          <Card className="bg-slate-50">
-            <CardHeader><CardTitle className="text-sm">Determinação de Materiais Pulverulentos</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="font-bold">Peso Inicial</span>
-                <span>Pᵢ</span>
-                <span>g</span>
+        {/* 4. MATERIAIS PULVERULENTOS */}
+        <Card className="bg-slate-50">
+          <CardHeader><CardTitle className="text-base">4. Determinação de Materiais Pulverulentos</CardTitle></CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Peso Inicial — Pᵢ (g)</Label>
+                <Input type="number" step="0.01" value={formData.materiais_pulverulentos.peso_inicial} onChange={e => handlePulvChange("peso_inicial", e.target.value)} disabled={isApproved} className="text-sm" />
               </div>
-              <Input type="number" step="0.01" value={formData.materiais_pulverulentos.peso_inicial} onChange={e => handlePulvChange("peso_inicial", e.target.value)} disabled={isApproved} className="text-xs h-7" />
-              <div className="flex justify-between">
-                <span className="font-bold">Peso Após Lavagem</span>
-                <span>Pf</span>
-                <span>g</span>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Peso Após Lavagem — Pf (g)</Label>
+                <Input type="number" step="0.01" value={formData.materiais_pulverulentos.peso_apos_lavagem} onChange={e => handlePulvChange("peso_apos_lavagem", e.target.value)} disabled={isApproved} className="text-sm" />
               </div>
-              <Input type="number" step="0.01" value={formData.materiais_pulverulentos.peso_apos_lavagem} onChange={e => handlePulvChange("peso_apos_lavagem", e.target.value)} disabled={isApproved} className="text-xs h-7" />
-              <div className="flex justify-between">
-                <span className="font-bold">Teor de Pulverulentos</span>
-                <span className="text-[10px]">% = ((Pi-Pf)/Pi)×100</span>
-                <span>%</span>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold">Teor de Pulverulentos — ((Pi−Pf)/Pi)×100 (%)</Label>
+                <Input value={formData.materiais_pulverulentos.teor_pct || ""} disabled className="bg-gray-100 text-sm font-bold" />
               </div>
-              <Input value={formData.materiais_pulverulentos.teor_pct || ""} disabled className="bg-gray-50 text-xs h-7 font-bold" />
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Observações */}
         <div>
