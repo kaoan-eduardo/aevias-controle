@@ -470,7 +470,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                         {ensaio?.quantidade || '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                        {ensaio?.resultados ? `${ensaio.resultados} g/cm³` : '-'}
+                        {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
@@ -505,15 +505,15 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                         {ensaio?.quantidade || '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                        {ensaio?.resultados ? `${ensaio.resultados}%` : '-'}
+                        {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                    </tr>
-                  );
-                })()}
-                
-                {/* Massa Específica In Situ */}
+                      </tr>
+                      );
+                      })()}
+
+                      {/* Massa Específica In Situ */}
                 {(() => {
                   const ensaio = checklist.ensaios_empreiteira?.massa_especifica_in_situ;
                   return (
@@ -526,15 +526,15 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                         {ensaio?.quantidade || '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                        {ensaio?.resultados ? `${ensaio.resultados} g/cm³` : '-'}
+                        {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                    </tr>
-                  );
-                })()}
-                
-                {/* Umidade In Situ */}
+                      </tr>
+                      );
+                      })()}
+
+                      {/* Umidade In Situ */}
                 <tr style={{ height: '19.6px' }}>
                   <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade In Situ (%)</td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">
@@ -561,7 +561,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                         {ensaio?.quantidade || '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                        {ensaio?.resultados || '-'}
+                        {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
                       <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
@@ -569,11 +569,11 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                       <td className="border border-slate-300 px-1 py-0.5 text-center">
                         {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
                       </td>
-                    </tr>
-                  );
-                })()}
-                
-                {/* Variação de Umidade - Calculado */}
+                      </tr>
+                      );
+                      })()}
+
+                      {/* Variação de Umidade - Calculado */}
                 <tr style={{ height: '19.6px' }}>
                   <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Variação de Umidade (%)</td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">
