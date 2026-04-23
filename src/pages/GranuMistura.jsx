@@ -333,14 +333,18 @@ export default function GranuMistura() {
                 </div>
                 <div>
                   <Label className="text-xs font-bold">MATERIAL</Label>
-                  <Select value={formData.material} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); }} disabled={isApproved}>
-                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CAUQ">CAUQ</SelectItem>
-                      <SelectItem value="MRAF">MRAF</SelectItem>
-                      <SelectItem value="OUTRO">OUTRO</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {formData.material === "OUTRO" ? (
+                    <Input value={formData.material} onChange={e => { handleChange("material", e.target.value); handleChange("project_id", ""); }} disabled={isApproved} className="text-xs" placeholder="Digite o material ensaiado" />
+                  ) : (
+                    <Select value={formData.material} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); }} disabled={isApproved}>
+                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CAUQ">CAUQ</SelectItem>
+                        <SelectItem value="MRAF">MRAF</SelectItem>
+                        <SelectItem value="OUTRO">OUTRO</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
                 <div>
                   <Label className="text-xs font-bold">PEDREIRA</Label>
