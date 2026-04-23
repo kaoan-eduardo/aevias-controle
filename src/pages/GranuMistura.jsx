@@ -331,19 +331,18 @@ export default function GranuMistura() {
                   <Label className="text-xs font-bold">CAMADA</Label>
                   <Input value={formData.camada} onChange={e => handleChange("camada", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DIGITAR" />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label className="text-xs font-bold">MATERIAL</Label>
-                  {formData.material === "OUTRO" ? (
-                    <Input value={formData.material} onChange={e => { handleChange("material", e.target.value); handleChange("project_id", ""); }} disabled={isApproved} className="text-xs" placeholder="Digite o material ensaiado" />
-                  ) : (
-                    <Select value={formData.material} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); }} disabled={isApproved}>
-                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="CAUQ">CAUQ</SelectItem>
-                        <SelectItem value="MRAF">MRAF</SelectItem>
-                        <SelectItem value="OUTRO">OUTRO</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <Select value={["CAUQ","MRAF","OUTRO"].includes(formData.material) ? formData.material : "OUTRO"} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); if (v !== "OUTRO") handleChange("material_outro", ""); }} disabled={isApproved}>
+                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CAUQ">CAUQ</SelectItem>
+                      <SelectItem value="MRAF">MRAF</SelectItem>
+                      <SelectItem value="OUTRO">OUTRO</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {formData.material === "OUTRO" && (
+                    <Input value={formData.material_outro || ""} onChange={e => handleChange("material_outro", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Especifique o material ensaiado" />
                   )}
                 </div>
                 <div>
