@@ -17,8 +17,9 @@ import EnsaioProctor from './pages/EnsaioProctor';
 import RelatorioProctor from './pages/RelatorioProctor';
 import EnsaioRompimentoConcreto from './pages/EnsaioRompimentoConcreto';
 import RelatorioRompimentoConcreto from './pages/RelatorioRompimentoConcreto';
-import EnsaioGranMistura from './pages/EnsaioGranMistura';
-import RelatorioGranMistura from './pages/RelatorioGranMistura';
+import GranuMistura from './pages/GranuMistura';
+import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
+import EnsaioGranAreia from './pages/EnsaioGranAreia';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -151,18 +152,26 @@ function AuthenticatedApp() {
         }
       />
       <Route
-        path="/EnsaioGranMistura"
+        path="/GranuMistura"
         element={
-          <LayoutWrapper currentPageName="EnsaioGranMistura">
-            <EnsaioGranMistura />
+          <LayoutWrapper currentPageName="GranuMistura">
+            <GranuMistura />
           </LayoutWrapper>
         }
       />
       <Route
-        path="/RelatorioGranMistura"
+        path="/RelatorioGranuMistura"
         element={
-          <LayoutWrapper currentPageName="RelatorioGranMistura">
-            <RelatorioGranMistura />
+          <LayoutWrapper currentPageName="RelatorioGranuMistura">
+            <RelatorioGranuMistura />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/EnsaioGranAreia"
+        element={
+          <LayoutWrapper currentPageName="EnsaioGranAreia">
+            <EnsaioGranAreia />
           </LayoutWrapper>
         }
       />

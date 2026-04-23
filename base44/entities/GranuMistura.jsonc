@@ -1,0 +1,171 @@
+{
+  "name": "GranuMistura",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date"
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "trecho": {
+      "type": "string"
+    },
+    "camada": {
+      "type": "string"
+    },
+    "numero_projeto": {
+      "type": "string"
+    },
+    "material": {
+      "type": "string"
+    },
+    "local_coleta": {
+      "type": "string"
+    },
+    "pedreira": {
+      "type": "string"
+    },
+    "faixa": {
+      "type": "string"
+    },
+    "horario": {
+      "type": "string"
+    },
+    "peso_amostra": {
+      "type": "number"
+    },
+    "peneiras": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "astm": {
+            "type": "string"
+          },
+          "abertura_mm": {
+            "type": "number"
+          },
+          "retido_g": {
+            "type": "number"
+          },
+          "passante_g": {
+            "type": "number"
+          },
+          "passante_pct": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "umidade": {
+      "type": "object",
+      "properties": {
+        "peso_umido": {
+          "type": "number"
+        },
+        "peso_seco": {
+          "type": "number"
+        },
+        "peso_agua": {
+          "type": "number"
+        },
+        "umidade_pct": {
+          "type": "number"
+        }
+      }
+    },
+    "equivalente_areia": {
+      "type": "object",
+      "properties": {
+        "medicoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topo_argila": {
+                "type": "number"
+              },
+              "topo_areia": {
+                "type": "number"
+              },
+              "equivalente": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "media": {
+          "type": "number"
+        }
+      }
+    },
+    "materiais_pulverulentos": {
+      "type": "object",
+      "properties": {
+        "peso_inicial": {
+          "type": "number"
+        },
+        "peso_apos_lavagem": {
+          "type": "number"
+        },
+        "teor_pct": {
+          "type": "number"
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id",
+    "data_ensaio"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}

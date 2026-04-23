@@ -198,7 +198,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
-        { title: "Granulometria da Mistura", url: createPageUrl("EnsaioGranMistura"), icon: FlaskConical },
+        { title: "Granulometria da Mistura", url: createPageUrl("GranuMistura"), icon: FlaskConical },
         { title: "Rompimento Concreto", url: createPageUrl("EnsaioRompimentoConcreto"), icon: FlaskConical },
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
@@ -223,7 +223,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
         { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
         { title: "Granulometria + Equiv. Areia", url: createPageUrl("EnsaioGranAreia"), icon: FlaskConical },
         { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
-        { title: "Granulometria da Mistura", url: createPageUrl("EnsaioGranMistura"), icon: FlaskConical },
+        { title: "Granulometria da Mistura", url: createPageUrl("GranuMistura"), icon: FlaskConical },
         { title: "Rompimento Concreto", url: createPageUrl("EnsaioRompimentoConcreto"), icon: FlaskConical },
         { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
         { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
@@ -954,7 +954,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem", "RelatorioBoletimSondagemTrado", "RelatorioProctor", "RelatorioRompimentoConcreto", "RelatorioGranMistura"], []);
+  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem", "RelatorioBoletimSondagemTrado", "RelatorioProctor", "RelatorioRompimentoConcreto", "RelatorioGranuMistura"], []);
 
   if (reportPages.includes(currentPageName)) {
     return <>{children}</>;

@@ -106,8 +106,9 @@ import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
-import EnsaioGranMistura from './pages/EnsaioGranMistura';
-import RelatorioGranMistura from './pages/RelatorioGranMistura';
+import GranuMistura from './pages/GranuMistura';
+import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
+import EnsaioGranAreia from './pages/EnsaioGranAreia';
 import __Layout from './Layout.jsx';
 
 
@@ -171,8 +172,9 @@ export const PAGES = {
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
     "RelatorioBoletimSondagem": RelatorioBoletimSondagem,
-    "EnsaioGranMistura": EnsaioGranMistura,
-    "RelatorioGranMistura": RelatorioGranMistura,
+    "GranuMistura": GranuMistura,
+    "RelatorioGranuMistura": RelatorioGranuMistura,
+    "EnsaioGranAreia": EnsaioGranAreia,
 }
 
 export const pagesConfig = {
