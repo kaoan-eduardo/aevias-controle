@@ -277,21 +277,23 @@ export default function GranuMistura() {
   const isApproved = formData.approved === true;
   const isEditable = !isApproved;
 
-  const getFaixaTrabalho = (peneiraKey) => {
+  const getFaixaTrabalho = (peneiraKey, peneiraKeyAlt) => {
     if (!selectedProject?.faixa_trabalho_min && !selectedProject?.faixa_trabalho_max) return { min: null, max: null };
-    return { min: selectedProject.faixa_trabalho_min?.[peneiraKey], max: selectedProject.faixa_trabalho_max?.[peneiraKey] };
+    const min = selectedProject.faixa_trabalho_min?.[peneiraKey] ?? (peneiraKeyAlt ? selectedProject.faixa_trabalho_min?.[peneiraKeyAlt] : null);
+    const max = selectedProject.faixa_trabalho_max?.[peneiraKey] ?? (peneiraKeyAlt ? selectedProject.faixa_trabalho_max?.[peneiraKeyAlt] : null);
+    return { min, max };
   };
-  const getEspecificacao = (peneiraKey) => {
+  const getEspecificacao = (peneiraKey, peneiraKeyAlt) => {
     const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
     if (!faixa) return { min: null, max: null };
     const peneira = faixa.peneiras?.find(p => {
       const ab = parseFloat(p.abertura);
       const penMap = {
         peneira_19_0mm: 19.0, peneira_12_5mm: 12.5, peneira_9_5mm: 9.5, peneira_4_75mm: 4.75,
-        peneira_2_36mm: 2.36, peneira_2_0mm: 2.0, peneira_1_18mm: 1.18, peneira_0_6mm: 0.6,
+        peneira_2_36mm: 2.36, peneira_2_0mm: 2.0, peneira_2_00mm: 2.0, peneira_1_18mm: 1.18, peneira_0_6mm: 0.6,
         peneira_0_42mm: 0.42, peneira_0_3mm: 0.3, peneira_0_15mm: 0.15, peneira_0_075mm: 0.075
       };
-      return Math.abs(ab - (penMap[peneiraKey] || 0)) < 0.01;
+      return Math.abs(ab - (penMap[peneiraKey] || penMap[peneiraKeyAlt] || 0)) < 0.01;
     });
     return peneira ? { min: peneira.min, max: peneira.max } : { min: null, max: null };
   };
@@ -484,9 +486,10 @@ export default function GranuMistura() {
                      const idx = formData.peneiras.findIndex(p => p.abertura_mm === peneira.abertura_mm);
                      if (idx === -1) return null;
                      const peneiraData = formData.peneiras[idx];
-                     const pKey = `peneira_${String(peneira.abertura_mm).replace(".", "_")}mm`;
-                     const ft = getFaixaTrabalho(pKey);
-                     const esp = getEspecificacao(pKey);
+                     const pKey = `peneira_${String(peneira.abertura_mm).replace(/\./g, "_")}mm`;
+                     const pKeyAlt = peneira.abertura_mm === 2.0 ? `peneira_2_00mm` : null;
+                     const ft = getFaixaTrabalho(pKey, pKeyAlt);
+                     const esp = getEspecificacao(pKey, pKeyAlt);
                      return (
                        <tr key={idx} className="hover:bg-slate-50">
                          <td className="border border-slate-300 px-2 py-1 text-center font-medium">{peneira.astm}</td>
