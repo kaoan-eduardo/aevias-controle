@@ -1005,6 +1005,7 @@ export default function ChecklistTerraplanagem() {
                             : (typeof e.resultados === 'string' && e.resultados.trim() !== '')
                               ? e.resultados.split('|').map(s => s.trim())
                               : [];
+                          const isGranulometria = key === 'granulometria';
                           return (
                             <tr key={key}>
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">{label}</td>
@@ -1014,27 +1015,31 @@ export default function ChecklistTerraplanagem() {
                                   className="w-4 h-4" />
                               </td>
                               <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="0" max="3"
-                                  value={qtde ?? ''}
-                                  onChange={(ev) => handleEnsaioChange(key, 'quantidade', ev.target.value)}
-                                  disabled={!e.realizado}
-                                  className="h-8 text-sm text-center" placeholder="" />
+                                {isGranulometria ? <span className="text-slate-400 text-xs px-2">-</span> : (
+                                  <Input type="number" min="0" max="3"
+                                    value={qtde ?? ''}
+                                    onChange={(ev) => handleEnsaioChange(key, 'quantidade', ev.target.value)}
+                                    disabled={!e.realizado}
+                                    className="h-8 text-sm text-center" placeholder="" />
+                                )}
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
-                                {e.realizado && qtde > 0 ? (
-                                  <div className="flex flex-wrap gap-1">
-                                    {Array.from({ length: qtde }).map((_, idx) => (
-                                      <Input key={idx}
-                                        type={step ? 'number' : 'text'}
-                                        step={step || undefined}
-                                        value={resultados[idx] ?? ''}
-                                        onChange={(ev) => handleEnsaioChange(key, `resultado_${idx}`, ev.target.value)}
-                                        className="h-8 text-sm text-center"
-                                        style={{ width: qtde > 1 ? '90px' : '100%' }}
-                                        placeholder={qtde > 1 ? `R${idx + 1}` : 'Resultado'} />
-                                    ))}
-                                  </div>
-                                ) : <span className="text-slate-400 text-xs px-2">-</span>}
+                                {isGranulometria ? <span className="text-slate-400 text-xs px-2">-</span> : (
+                                  e.realizado && qtde > 0 ? (
+                                    <div className="flex flex-wrap gap-1">
+                                      {Array.from({ length: qtde }).map((_, idx) => (
+                                        <Input key={idx}
+                                          type={step ? 'number' : 'text'}
+                                          step={step || undefined}
+                                          value={resultados[idx] ?? ''}
+                                          onChange={(ev) => handleEnsaioChange(key, `resultado_${idx}`, ev.target.value)}
+                                          className="h-8 text-sm text-center"
+                                          style={{ width: qtde > 1 ? '90px' : '100%' }}
+                                          placeholder={qtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                      ))}
+                                    </div>
+                                  ) : <span className="text-slate-400 text-xs px-2">-</span>
+                                )}
                               </td>
                               <td className="border border-slate-300 px-2 py-1 text-center">
                                 <input type="checkbox" checked={e.conforme === true}
