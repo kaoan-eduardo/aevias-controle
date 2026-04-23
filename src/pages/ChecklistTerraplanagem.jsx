@@ -1066,14 +1066,14 @@ export default function ChecklistTerraplanagem() {
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade Ótima (%)</td>
                               <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                               <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="1" max="3" value={uoQtde}
+                                <Input type="number" min="0" max="3" value={uoQtde}
                                   onChange={(e) => {
-                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
                                     const cur = Array.isArray(formData.umidade_otima_resultados) ? formData.umidade_otima_resultados : [];
                                     const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
                                     setUO({ umidade_otima_quantidade: n, umidade_otima_resultados: newArr });
                                   }}
-                                  className="h-8 text-sm text-center" />
+                                  className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 <div className="flex flex-wrap gap-1">
@@ -1111,14 +1111,14 @@ export default function ChecklistTerraplanagem() {
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade In Situ (%)</td>
                               <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                               <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="1" max="3" value={uisQtde}
+                                <Input type="number" min="0" max="3" value={uisQtde}
                                   onChange={(e) => {
-                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
                                     const cur = Array.isArray(formData.umidade_in_situ_resultados) ? formData.umidade_in_situ_resultados : [];
                                     const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
                                     setUIS({ umidade_in_situ_quantidade: n, umidade_in_situ_resultados: newArr });
                                   }}
-                                  className="h-8 text-sm text-center" />
+                                  className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 <div className="flex flex-wrap gap-1">
@@ -1154,14 +1154,14 @@ export default function ChecklistTerraplanagem() {
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">Variação de Umidade (%)</td>
                               <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                               <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="1" max="3" value={vuQtde}
+                                <Input type="number" min="0" max="3" value={vuQtde}
                                   onChange={(e) => {
-                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
                                     const cur = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados) ? formData.ensaios_empreiteira.variacao_umidade_resultados : [];
                                     const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
                                     setVU({ variacao_umidade_quantidade: n, variacao_umidade_resultados: newArr });
                                   }}
-                                  className="h-8 text-sm text-center" />
+                                  className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 <div className="flex flex-wrap gap-1">
@@ -1205,14 +1205,14 @@ export default function ChecklistTerraplanagem() {
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
                               <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                               <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="1" max="3" value={gcQtde}
+                                <Input type="number" min="0" max="3" value={gcQtde}
                                   onChange={(e) => {
-                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
                                     const cur = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados) ? formData.ensaios_empreiteira.grau_compactacao_resultados : [];
                                     const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
                                     setGC({ grau_compactacao_quantidade: n, grau_compactacao_resultados: newArr });
                                   }}
-                                  className="h-8 text-sm text-center" />
+                                  className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 <div className="flex flex-wrap gap-1">
