@@ -444,6 +444,15 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
               </tbody>
             </table>
 
+            {checklist.acompanhamento_execucao?.observacoes && (
+              <>
+                <SectionTitle>Observações do Acompanhamento</SectionTitle>
+                <div className="text-xs mb-0.5 p-1 bg-white rounded border border-slate-300">
+                  {checklist.acompanhamento_execucao.observacoes}
+                </div>
+              </>
+            )}
+
             <SectionTitle>Ensaios da Camada Realizados pela Empreiteira</SectionTitle>
             <table className="w-full border-collapse border border-slate-300 mb-0.5">
               <thead className="bg-white">
