@@ -346,15 +346,13 @@ export default function GranuMistura() {
                     <Input value={formData.material_outro || ""} onChange={e => handleChange("material_outro", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Especifique o material ensaiado" />
                   )}
                   </div>
-                  {formData.material !== "OUTRO" && (
                   <div>
-                  <Label className="text-xs font-bold">PROJETO *</Label>
+                  <Label className="text-xs font-bold">PROJETO {formData.material !== "OUTRO" ? "*" : ""}</Label>
                   <Select value={formData.project_id} onValueChange={v => handleChange("project_id", v)} disabled={!!editingId || isApproved}>
                     <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
                     <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
                   </Select>
                   </div>
-                  )}
                   <div>
                   <Label className="text-xs font-bold">PEDREIRA</Label>
                   <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DEPENDE PROJETO" />
