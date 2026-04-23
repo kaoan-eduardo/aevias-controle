@@ -17,6 +17,8 @@ import EnsaioProctor from './pages/EnsaioProctor';
 import RelatorioProctor from './pages/RelatorioProctor';
 import EnsaioRompimentoConcreto from './pages/EnsaioRompimentoConcreto';
 import RelatorioRompimentoConcreto from './pages/RelatorioRompimentoConcreto';
+import EnsaioGranMistura from './pages/EnsaioGranMistura';
+import RelatorioGranMistura from './pages/RelatorioGranMistura';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -145,6 +147,22 @@ function AuthenticatedApp() {
         element={
           <LayoutWrapper currentPageName="RelatorioRompimentoConcreto">
             <RelatorioRompimentoConcreto />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/EnsaioGranMistura"
+        element={
+          <LayoutWrapper currentPageName="EnsaioGranMistura">
+            <EnsaioGranMistura />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RelatorioGranMistura"
+        element={
+          <LayoutWrapper currentPageName="RelatorioGranMistura">
+            <RelatorioGranMistura />
           </LayoutWrapper>
         }
       />

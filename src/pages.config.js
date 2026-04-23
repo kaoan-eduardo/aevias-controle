@@ -106,6 +106,8 @@ import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
+import EnsaioGranMistura from './pages/EnsaioGranMistura';
+import RelatorioGranMistura from './pages/RelatorioGranMistura';
 import __Layout from './Layout.jsx';
 
 
@@ -169,6 +171,8 @@ export const PAGES = {
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
     "RelatorioBoletimSondagem": RelatorioBoletimSondagem,
+    "EnsaioGranMistura": EnsaioGranMistura,
+    "RelatorioGranMistura": RelatorioGranMistura,
 }
 
 export const pagesConfig = {

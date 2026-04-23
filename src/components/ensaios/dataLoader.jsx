@@ -52,7 +52,8 @@ export const loadAllData = async () => {
     boletimSondagemData,
     boletimSondagemTradoData,
     ensaioProctorData,
-    rompimentoConcretoData
+    rompimentoConcretoData,
+    granMisturaData
   ] = await Promise.all([
     Obra.list(),
     Regional.list(),
@@ -79,7 +80,8 @@ export const loadAllData = async () => {
     base44.entities.BoletimSondagem.list("-created_date", 5000),
     base44.entities.BoletimSondagemTrado.list("-created_date", 5000),
     base44.entities.EnsaioProctor.list("-created_date", 5000),
-    base44.entities.EnsaioRompimentoConcreto.list("-created_date", 5000)
+    base44.entities.EnsaioRompimentoConcreto.list("-created_date", 5000),
+    base44.entities.EnsaioGranMistura.list("-created_date", 5000)
   ]);
 
   console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
@@ -119,7 +121,8 @@ export const loadAllData = async () => {
     ...boletimSondagemData.map((d) => ({ ...d, entityType: "BoletimSondagem" })),
     ...boletimSondagemTradoData.map((d) => ({ ...d, entityType: "BoletimSondagemTrado" })),
     ...ensaioProctorData.map((d) => ({ ...d, entityType: "EnsaioProctor" })),
-    ...rompimentoConcretoData.map((d) => ({ ...d, entityType: "EnsaioRompimentoConcreto" }))
+    ...rompimentoConcretoData.map((d) => ({ ...d, entityType: "EnsaioRompimentoConcreto" })),
+    ...granMisturaData.map((d) => ({ ...d, entityType: "EnsaioGranMistura" }))
   ].sort((a, b) => {
     const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
     

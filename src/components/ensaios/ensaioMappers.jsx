@@ -50,6 +50,8 @@ export const getEnsaioTypeInfo = (ensaio) => {
       return { name: "Ensaio Proctor", icon: FlaskConical };
     case "EnsaioRompimentoConcreto":
       return { name: "Rompimento Concreto", icon: FlaskConical };
+    case "EnsaioGranMistura":
+      return { name: "Granulometria da Mistura", icon: FlaskConical };
     default:
       return { name: "Ensaio Desconhecido", icon: FileText };
   }
@@ -104,6 +106,8 @@ export const getReportLink = (ensaio) => {
       return createPageUrl(`RelatorioProctor?id=${ensaio.id}`);
     case "EnsaioRompimentoConcreto":
       return createPageUrl(`RelatorioRompimentoConcreto?id=${ensaio.id}`);
+    case "EnsaioGranMistura":
+      return createPageUrl(`RelatorioGranMistura?id=${ensaio.id}`);
     default:
       return "#";
   }
@@ -180,6 +184,9 @@ export const getDataFormatted = (ensaio) => {
     case "EnsaioRompimentoConcreto":
       dateField = ensaio.data_ensaio;
       break;
+    case "EnsaioGranMistura":
+      dateField = ensaio.data_ensaio;
+      break;
     default:
       dateField = ensaio.created_date;
   }
@@ -238,6 +245,8 @@ export const getDataEnsaio = (ensaio) => {
       return ensaio.data_ensaio;
     case "EnsaioRompimentoConcreto":
       return ensaio.data_ensaio;
+    case "EnsaioGranMistura":
+      return ensaio.data_ensaio;
     default:
       return ensaio.created_date;
   }
@@ -292,4 +301,5 @@ export const typeOptions = [
   { value: 'BoletimSondagemTrado', label: 'Boletim de Sondagem a Trado' },
   { value: 'EnsaioProctor', label: 'Ensaio Proctor' },
   { value: 'EnsaioRompimentoConcreto', label: 'Rompimento Concreto' },
+  { value: 'EnsaioGranMistura', label: 'Granulometria da Mistura' },
 ];
