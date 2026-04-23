@@ -482,11 +482,13 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                 <tr style={{ height: '19.6px' }}>
                   <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade Ótima (%)</td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {checklist.umidade_otima_proctor ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
+                    {checklist.umidade_otima_quantidade ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
+                    {checklist.umidade_otima_quantidade || '-'}
+                  </td>
                   <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                    {checklist.umidade_otima_proctor ? `${checklist.umidade_otima_proctor}%` : '-'}
+                    {checklist.umidade_otima_resultados ? checklist.umidade_otima_resultados.split(' | ').join(' | ') : '-'}
                   </td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
@@ -507,8 +509,12 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
+                        {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
+                        {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
+                      </td>
                       </tr>
                       );
                       })()}
@@ -528,25 +534,31 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                       <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
                         {ensaio?.resultados ? ensaio.resultados.split(' | ').join(' | ') : '-'}
                       </td>
-                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                      <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
+                        {ensaio?.conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
+                      </td>
+                      <td className="border border-slate-300 px-1 py-0.5 text-center">
+                        {ensaio?.conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
+                      </td>
                       </tr>
                       );
                       })()}
 
                       {/* Umidade In Situ */}
-                <tr style={{ height: '19.6px' }}>
-                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade In Situ (%)</td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {checklist.umidade_in_situ ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                    {checklist.umidade_in_situ ? `${checklist.umidade_in_situ}%` : '-'}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
-                </tr>
+                      <tr style={{ height: '19.6px' }}>
+                        <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Umidade In Situ (%)</td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">
+                          {checklist.umidade_in_situ_quantidade ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
+                          {checklist.umidade_in_situ_quantidade || '-'}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
+                          {checklist.umidade_in_situ_resultados ? checklist.umidade_in_situ_resultados.split(' | ').join(' | ') : '-'}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">-</td>
+                      </tr>
                 
                 {/* Análise Granulométrica */}
                 {(() => {
@@ -574,32 +586,36 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                       })()}
 
                       {/* Variação de Umidade - Calculado */}
-                <tr style={{ height: '19.6px' }}>
-                  <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Variação de Umidade (%)</td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {variacaoUmidade !== null ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                    {variacaoUmidade !== null ? `${variacaoUmidade}%` : '-'}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {checklist.ensaios_empreiteira?.variacao_umidade_conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
-                  </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {checklist.ensaios_empreiteira?.variacao_umidade_conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
-                  </td>
-                </tr>
+                      <tr style={{ height: '19.6px' }}>
+                        <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Variação de Umidade (%)</td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">
+                          {checklist.ensaios_empreiteira?.variacao_umidade_quantidade ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
+                          {checklist.ensaios_empreiteira?.variacao_umidade_quantidade || '-'}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
+                          {checklist.ensaios_empreiteira?.variacao_umidade_resultados ? checklist.ensaios_empreiteira.variacao_umidade_resultados.split(' | ').join(' | ') : '-'}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">
+                          {checklist.ensaios_empreiteira?.variacao_umidade_conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
+                        </td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">
+                          {checklist.ensaios_empreiteira?.variacao_umidade_conforme === false && <span className="text-red-600 font-bold text-base">✗</span>}
+                        </td>
+                      </tr>
                 
                 {/* Grau de Compactação - Calculado */}
                 <tr style={{ height: '19.6px' }}>
                   <td className="border border-slate-300 px-1 py-0.5 bg-white text-xs">Grau de Compactação (%)</td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">
-                    {grauCompactacao !== null ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
+                    {checklist.ensaios_empreiteira?.grau_compactacao_quantidade ? <span className="text-green-600 font-bold text-base">✓</span> : <span className="text-slate-500">-</span>}
                   </td>
-                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">-</td>
+                  <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
+                    {checklist.ensaios_empreiteira?.grau_compactacao_quantidade || '-'}
+                  </td>
                   <td className="border border-slate-300 px-1 py-0.5 text-xs font-medium text-center">
-                    {grauCompactacao !== null ? `${grauCompactacao}%` : '-'}
+                    {checklist.ensaios_empreiteira?.grau_compactacao_resultados ? checklist.ensaios_empreiteira.grau_compactacao_resultados.split(' | ').join(' | ') : '-'}
                   </td>
                   <td className="border border-slate-300 px-1 py-0.5 text-center">
                     {checklist.ensaios_empreiteira?.grau_compactacao_conforme === true && <span className="text-green-600 font-bold text-base">✓</span>}
