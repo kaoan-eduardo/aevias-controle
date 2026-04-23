@@ -271,7 +271,11 @@ export default function ChecklistTerraplanagem() {
       } else if (field === 'quantidade') {
         const newQty = Math.max(0, Math.min(parseInt(value) || 0, 3));
         ensaio.quantidade = newQty;
-        const current = Array.isArray(ensaio.resultados) ? ensaio.resultados : [];
+        const current = Array.isArray(ensaio.resultados)
+          ? ensaio.resultados
+          : (typeof ensaio.resultados === 'string' && ensaio.resultados.trim() !== '')
+            ? ensaio.resultados.split('|').map(s => s.trim())
+            : [];
         if (newQty > current.length) {
           ensaio.resultados = [...current, ...Array(newQty - current.length).fill(null)];
         } else {
@@ -282,7 +286,11 @@ export default function ChecklistTerraplanagem() {
         ensaio.conforme = value;
       } else if (field.startsWith('resultado_')) {
         const idx = parseInt(field.replace('resultado_', ''));
-        const novos = Array.isArray(ensaio.resultados) ? [...ensaio.resultados] : [];
+        const novos = Array.isArray(ensaio.resultados)
+          ? [...ensaio.resultados]
+          : (typeof ensaio.resultados === 'string' && ensaio.resultados.trim() !== '')
+            ? ensaio.resultados.split('|').map(s => s.trim())
+            : [];
         novos[idx] = value !== '' ? value : null;
         ensaio.resultados = novos;
       } else {
@@ -984,7 +992,11 @@ export default function ChecklistTerraplanagem() {
                         ].map(({ key, label, step }) => {
                           const e = formData.ensaios_empreiteira[key] || {};
                           const qtde = e.quantidade || 0;
-                          const resultados = Array.isArray(e.resultados) ? e.resultados : [];
+                          const resultados = Array.isArray(e.resultados)
+                            ? e.resultados
+                            : (typeof e.resultados === 'string' && e.resultados.trim() !== '')
+                              ? e.resultados.split('|').map(s => s.trim())
+                              : [];
                           return (
                             <tr key={key}>
                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">{label}</td>
