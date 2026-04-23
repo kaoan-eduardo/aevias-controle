@@ -353,6 +353,14 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     setSelectedIds(new Set()); // Reset selection when filters change
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
 
+  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
+  const paginatedEnsaios = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredEnsaios, currentPage]);
+
+  const allPageSelected = paginatedEnsaios.length > 0 && paginatedEnsaios.every(e => selectedIds.has(e.id));
+
   const toggleSelect = useCallback((id) => {
     setSelectedIds(prev => {
       const next = new Set(prev);
@@ -474,14 +482,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       statusObraFilter !== 'all'
     );
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
-
-  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
-  const paginatedEnsaios = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredEnsaios.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredEnsaios, currentPage]);
-
-  const allPageSelected = paginatedEnsaios.length > 0 && paginatedEnsaios.every(e => selectedIds.has(e.id));
 
   const statusColors = useMemo(() => ({
     planejamento: "bg-blue-100 text-blue-800",
