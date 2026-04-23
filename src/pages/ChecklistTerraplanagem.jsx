@@ -130,13 +130,10 @@ export default function ChecklistTerraplanagem() {
   })();
 
   const grauCompactacao = (() => {
-    const densInSituResult = formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados;
-    const densProctorResult = formData.ensaios_empreiteira.compactacao_proctor?.resultados;
-
-    // Check if the results are valid numbers
-    const densInSitu = parseFloat(densInSituResult);
-    const densProctor = parseFloat(densProctorResult);
-
+    const inSituArr = formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados;
+    const proctorArr = formData.ensaios_empreiteira.compactacao_proctor?.resultados;
+    const densInSitu = parseFloat(Array.isArray(inSituArr) ? inSituArr[0] : inSituArr);
+    const densProctor = parseFloat(Array.isArray(proctorArr) ? proctorArr[0] : proctorArr);
     if (isNaN(densInSitu) || isNaN(densProctor) || densProctor === 0) return null;
     return ((densInSitu / densProctor) * 100).toFixed(2);
   })();
@@ -245,17 +242,42 @@ export default function ChecklistTerraplanagem() {
     }));
   };
 
-  const handleEnsaioChange = (ensaio, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      ensaios_empreiteira: {
-        ...prev.ensaios_empreiteira, // Keep existing ensaios_empreiteira properties
-        [ensaio]: {
-          ...prev.ensaios_empreiteira[ensaio],
-          [field]: value
+  const handleEnsaioChange = (ensaioKey, field, value) => {
+    setFormData(prev => {
+      const ensaio = { ...(prev.ensaios_empreiteira[ensaioKey] || {}) };
+      const ensaios = { ...prev.ensaios_empreiteira };
+
+      if (field === 'realizado') {
+        ensaio.realizado = value;
+        if (!value) {
+          ensaio.quantidade = 0;
+          ensaio.resultados = [];
+          ensaio.conforme = null;
         }
+      } else if (field === 'quantidade') {
+        const newQty = Math.max(0, Math.min(parseInt(value) || 0, 3));
+        ensaio.quantidade = newQty;
+        const current = Array.isArray(ensaio.resultados) ? ensaio.resultados : [];
+        if (newQty > current.length) {
+          ensaio.resultados = [...current, ...Array(newQty - current.length).fill(null)];
+        } else {
+          ensaio.resultados = current.slice(0, newQty);
+        }
+        if (newQty === 0) ensaio.conforme = null;
+      } else if (field === 'conforme') {
+        ensaio.conforme = value;
+      } else if (field.startsWith('resultado_')) {
+        const idx = parseInt(field.replace('resultado_', ''));
+        const novos = Array.isArray(ensaio.resultados) ? [...ensaio.resultados] : [];
+        novos[idx] = value !== '' ? value : null;
+        ensaio.resultados = novos;
+      } else {
+        ensaio[field] = value;
       }
-    }));
+
+      ensaios[ensaioKey] = ensaio;
+      return { ...prev, ensaios_empreiteira: ensaios };
+    });
   };
 
   const validateFile = (file) => {
@@ -904,145 +926,81 @@ export default function ChecklistTerraplanagem() {
                       <thead>
                         <tr className="bg-slate-100">
                           <th className="border border-slate-300 px-2 py-2 text-left font-medium">Ensaios</th>
-                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-24">Realizado</th>
-                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-20">Qtde</th>
-                          <th className="border border-slate-300 px-2 py-2 text-left font-medium">Resultados</th>
-                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-32">Conformidade</th>
+                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-20">Realizado</th>
+                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-16">Qtde</th>
+                          <th className="border border-slate-300 px-2 py-2 text-left font-medium">Resultado(s)</th>
+                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-10">✓</th>
+                          <th className="border border-slate-300 px-2 py-2 text-center font-medium w-10">✗</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {/* Compactação - Proctor */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Compactação - Proctor (g/cm³)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input
-                              type="checkbox"
-                              checked={formData.ensaios_empreiteira.compactacao_proctor.realizado}
-                              onChange={(e) => handleEnsaioChange('compactacao_proctor', 'realizado', e.target.checked)}
-                              className="w-4 h-4"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              min="0"
-                              value={formData.ensaios_empreiteira.compactacao_proctor.quantidade || ''}
-                              onChange={(e) => handleEnsaioChange('compactacao_proctor', 'quantidade', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.compactacao_proctor.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="0"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              step="0.001"
-                              value={formData.ensaios_empreiteira.compactacao_proctor.resultados}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
-                                  handleEnsaioChange('compactacao_proctor', 'resultados', value);
-                                }
-                              }}
-                              disabled={!formData.ensaios_empreiteira.compactacao_proctor.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="Ex: 2.510"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                        </tr>
+                        {[
+                          { key: 'compactacao_proctor', label: 'Compactação - Proctor (g/cm³)', step: '0.001' },
+                          { key: 'isc', label: 'ISC - Índice de Suporte Califórnia (%)', step: '0.1' },
+                          { key: 'umidade_frigideira', label: 'Umidade (Frigideira) (%)', step: '0.01' },
+                          { key: 'massa_especifica_in_situ', label: 'Massa Específica In Situ (g/cm³)', step: '0.001' },
+                          { key: 'granulometria', label: 'Análise Granulométrica por Peneiramento', step: null },
+                        ].map(({ key, label, step }) => {
+                          const e = formData.ensaios_empreiteira[key] || {};
+                          const qtde = e.quantidade || 0;
+                          const resultados = Array.isArray(e.resultados) ? e.resultados : [];
+                          return (
+                            <tr key={key}>
+                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">{label}</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={e.realizado || false}
+                                  onChange={(ev) => handleEnsaioChange(key, 'realizado', ev.target.checked)}
+                                  className="w-4 h-4" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-1">
+                                <Input type="number" min="0" max="3"
+                                  value={qtde || ''}
+                                  onChange={(ev) => handleEnsaioChange(key, 'quantidade', ev.target.value)}
+                                  disabled={!e.realizado}
+                                  className="h-8 text-sm text-center" placeholder="0" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-2">
+                                {e.realizado && qtde > 0 ? (
+                                  <div className="flex flex-wrap gap-1">
+                                    {Array.from({ length: qtde }).map((_, idx) => (
+                                      <Input key={idx}
+                                        type={step ? 'number' : 'text'}
+                                        step={step || undefined}
+                                        value={resultados[idx] ?? ''}
+                                        onChange={(ev) => handleEnsaioChange(key, `resultado_${idx}`, ev.target.value)}
+                                        className="h-8 text-sm text-center"
+                                        style={{ width: qtde > 1 ? '90px' : '100%' }}
+                                        placeholder={qtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                    ))}
+                                  </div>
+                                ) : <span className="text-slate-400 text-xs px-2">-</span>}
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={e.conforme === true}
+                                  onChange={(ev) => handleEnsaioChange(key, 'conforme', ev.target.checked ? true : null)}
+                                  disabled={!e.realizado}
+                                  className="w-4 h-4 accent-green-500" />
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={e.conforme === false}
+                                  onChange={(ev) => handleEnsaioChange(key, 'conforme', ev.target.checked ? false : null)}
+                                  disabled={!e.realizado}
+                                  className="w-4 h-4 accent-red-500" />
+                              </td>
+                            </tr>
+                          );
+                        })}
 
                         {/* Umidade Ótima */}
                         <tr>
                           <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade Ótima (%)</td>
                           <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={formData.umidade_otima_proctor}
+                          <td className="border border-slate-300 px-1 py-1" colSpan="3">
+                            <Input type="number" step="0.01" value={formData.umidade_otima_proctor}
                               onChange={(e) => setFormData({ ...formData, umidade_otima_proctor: e.target.value })}
-                              className="h-8 text-sm text-center"
-                              placeholder="Ex: 12.5"
-                            />
+                              className="h-8 text-sm text-center" placeholder="Ex: 12.5" />
                           </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                        </tr>
-
-                        {/* ISC */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">ISC - Índice de Suporte Califórnia (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input
-                              type="checkbox"
-                              checked={formData.ensaios_empreiteira.isc.realizado}
-                              onChange={(e) => handleEnsaioChange('isc', 'realizado', e.target.checked)}
-                              className="w-4 h-4"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              min="0"
-                              value={formData.ensaios_empreiteira.isc.quantidade || ''}
-                              onChange={(e) => handleEnsaioChange('isc', 'quantidade', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.isc.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="0"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              value={formData.ensaios_empreiteira.isc.resultados}
-                              onChange={(e) => handleEnsaioChange('isc', 'resultados', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.isc.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="Ex: 10"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                        </tr>
-
-                        {/* Massa Específica In Situ */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Massa Específica In Situ (g/cm³)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input
-                              type="checkbox"
-                              checked={formData.ensaios_empreiteira.massa_especifica_in_situ.realizado}
-                              onChange={(e) => handleEnsaioChange('massa_especifica_in_situ', 'realizado', e.target.checked)}
-                              className="w-4 h-4"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              min="0"
-                              value={formData.ensaios_empreiteira.massa_especifica_in_situ.quantidade || ''}
-                              onChange={(e) => handleEnsaioChange('massa_especifica_in_situ', 'quantidade', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.massa_especifica_in_situ.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="0"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              step="0.001"
-                              value={formData.ensaios_empreiteira.massa_especifica_in_situ.resultados}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === '' || /^\d*\.?\d{0,3}$/.test(value)) {
-                                  handleEnsaioChange('massa_especifica_in_situ', 'resultados', value);
-                                }
-                              }}
-                              disabled={!formData.ensaios_empreiteira.massa_especifica_in_situ.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="Ex: 2.450"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                         </tr>
 
                         {/* Umidade In Situ */}
@@ -1050,149 +1008,54 @@ export default function ChecklistTerraplanagem() {
                           <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade In Situ (%)</td>
                           <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={formData.umidade_in_situ}
+                          <td className="border border-slate-300 px-1 py-1" colSpan="3">
+                            <Input type="number" step="0.01" value={formData.umidade_in_situ}
                               onChange={(e) => setFormData({ ...formData, umidade_in_situ: e.target.value })}
-                              className="h-8 text-sm text-center"
-                              placeholder="Ex: 13.2"
-                            />
+                              className="h-8 text-sm text-center" placeholder="Ex: 13.2" />
                           </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                         </tr>
 
-                        {/* Análise Granulométrica */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Análise Granulométrica por Peneiramento</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input
-                              type="checkbox"
-                              checked={formData.ensaios_empreiteira.granulometria.realizado}
-                              onChange={(e) => handleEnsaioChange('granulometria', 'realizado', e.target.checked)}
-                              className="w-4 h-4"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              type="number"
-                              min="0"
-                              value={formData.ensaios_empreiteira.granulometria.quantidade || ''}
-                              onChange={(e) => handleEnsaioChange('granulometria', 'quantidade', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.granulometria.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="0"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-1 py-1">
-                            <Input
-                              value={formData.ensaios_empreiteira.granulometria.resultados}
-                              onChange={(e) => handleEnsaioChange('granulometria', 'resultados', e.target.value)}
-                              disabled={!formData.ensaios_empreiteira.granulometria.realizado}
-                              className="h-8 text-sm text-center"
-                              placeholder="Resultados"
-                            />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                        </tr>
-
-                        {/* Campos calculados - somente leitura */}
+                        {/* Variação de Umidade — calculado */}
                         <tr>
                           <td className="border border-slate-300 px-2 py-2 bg-slate-50">Variação de Umidade (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            {variacaoUmidade !== null ? <span className="text-blue-600 text-lg">📊</span> : '-'}
-                          </td>
+                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-1 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-2 py-1">
-                            <div className="h-8 flex items-center justify-center text-sm">
+                            <div className="h-8 flex items-center justify-center text-sm font-medium">
                               {variacaoUmidade !== null ? variacaoUmidade : '-'}
                             </div>
                           </td>
-                          <td className="border border-slate-300 px-2 py-1">
-                            <div className="flex gap-2 justify-center">
-                              <label className="flex items-center gap-1 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={formData.ensaios_empreiteira.variacao_umidade_conforme === true}
-                                  onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    ensaios_empreiteira: {
-                                      ...prev.ensaios_empreiteira,
-                                      variacao_umidade_conforme: e.target.checked ? true : null
-                                    }
-                                  }))}
-                                  disabled={variacaoUmidade === null}
-                                  className="w-4 h-4 accent-green-500"
-                                />
-                                <span className="text-xs text-green-600">✓</span>
-                              </label>
-                              <label className="flex items-center gap-1 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={formData.ensaios_empreiteira.variacao_umidade_conforme === false}
-                                  onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    ensaios_empreiteira: {
-                                      ...prev.ensaios_empreiteira,
-                                      variacao_umidade_conforme: e.target.checked ? false : null
-                                    }
-                                  }))}
-                                  disabled={variacaoUmidade === null}
-                                  className="w-4 h-4 accent-red-500"
-                                />
-                                <span className="text-xs text-red-600">✗</span>
-                              </label>
-                            </div>
+                          <td className="border border-slate-300 px-2 py-1 text-center">
+                            <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === true}
+                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, variacao_umidade_conforme: e.target.checked ? true : null } }))}
+                              disabled={variacaoUmidade === null} className="w-4 h-4 accent-green-500" />
+                          </td>
+                          <td className="border border-slate-300 px-2 py-1 text-center">
+                            <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === false}
+                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, variacao_umidade_conforme: e.target.checked ? false : null } }))}
+                              disabled={variacaoUmidade === null} className="w-4 h-4 accent-red-500" />
                           </td>
                         </tr>
 
+                        {/* Grau de Compactação — calculado */}
                         <tr>
                           <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            {grauCompactacao !== null ? <span className="text-green-600 text-lg">📊</span> : '-'}
-                          </td>
+                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-1 py-1 text-center">-</td>
                           <td className="border border-slate-300 px-2 py-1">
-                            <div className="h-8 flex items-center justify-center text-sm">
+                            <div className="h-8 flex items-center justify-center text-sm font-medium">
                               {grauCompactacao !== null ? grauCompactacao : '-'}
                             </div>
                           </td>
-                          <td className="border border-slate-300 px-2 py-1">
-                            <div className="flex gap-2 justify-center">
-                              <label className="flex items-center gap-1 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
-                                  onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    ensaios_empreiteira: {
-                                      ...prev.ensaios_empreiteira,
-                                      grau_compactacao_conforme: e.target.checked ? true : null
-                                    }
-                                  }))}
-                                  disabled={grauCompactacao === null}
-                                  className="w-4 h-4 accent-green-500"
-                                />
-                                <span className="text-xs text-green-600">✓</span>
-                              </label>
-                              <label className="flex items-center gap-1 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
-                                  onChange={(e) => setFormData(prev => ({
-                                    ...prev,
-                                    ensaios_empreiteira: {
-                                      ...prev.ensaios_empreiteira,
-                                      grau_compactacao_conforme: e.target.checked ? false : null
-                                    }
-                                  }))}
-                                  disabled={grauCompactacao === null}
-                                  className="w-4 h-4 accent-red-500"
-                                />
-                                <span className="text-xs text-red-600">✗</span>
-                              </label>
-                            </div>
+                          <td className="border border-slate-300 px-2 py-1 text-center">
+                            <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
+                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, grau_compactacao_conforme: e.target.checked ? true : null } }))}
+                              disabled={grauCompactacao === null} className="w-4 h-4 accent-green-500" />
+                          </td>
+                          <td className="border border-slate-300 px-2 py-1 text-center">
+                            <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
+                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, grau_compactacao_conforme: e.target.checked ? false : null } }))}
+                              disabled={grauCompactacao === null} className="w-4 h-4 accent-red-500" />
                           </td>
                         </tr>
                       </tbody>
