@@ -439,20 +439,50 @@ export default function ChecklistTerraplanagem() {
           ...p,
           temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
         })),
-        ensaios_empreiteira: Object.fromEntries(
-          Object.entries(formData.ensaios_empreiteira).map(([key, value]) => {
-            if (!value || typeof value !== 'object') return [key, value];
-            // Se resultados é array, converter para string separada por |
-            const resultados = Array.isArray(value.resultados)
-              ? value.resultados.filter(r => r !== null && r !== '').join(' | ')
-              : (value.resultados ?? '');
-            return [key, {
-              ...value,
-              quantidade: parseInt(value.quantidade) || 0,
-              resultados
-            }];
-          })
-        )
+        ensaios_empreiteira: {
+          ...formData.ensaios_empreiteira,
+          compactacao_proctor: {
+            ...formData.ensaios_empreiteira.compactacao_proctor,
+            quantidade: parseInt(formData.ensaios_empreiteira.compactacao_proctor.quantidade) || 0,
+            resultados: Array.isArray(formData.ensaios_empreiteira.compactacao_proctor.resultados)
+              ? formData.ensaios_empreiteira.compactacao_proctor.resultados.filter(r => r !== null && r !== '').join(' | ')
+              : (formData.ensaios_empreiteira.compactacao_proctor.resultados ?? '')
+          },
+          isc: {
+            ...formData.ensaios_empreiteira.isc,
+            quantidade: parseInt(formData.ensaios_empreiteira.isc.quantidade) || 0,
+            resultados: Array.isArray(formData.ensaios_empreiteira.isc.resultados)
+              ? formData.ensaios_empreiteira.isc.resultados.filter(r => r !== null && r !== '').join(' | ')
+              : (formData.ensaios_empreiteira.isc.resultados ?? '')
+          },
+          umidade_frigideira: {
+            ...formData.ensaios_empreiteira.umidade_frigideira,
+            quantidade: parseInt(formData.ensaios_empreiteira.umidade_frigideira.quantidade) || 0,
+            resultados: Array.isArray(formData.ensaios_empreiteira.umidade_frigideira.resultados)
+              ? formData.ensaios_empreiteira.umidade_frigideira.resultados.filter(r => r !== null && r !== '').join(' | ')
+              : (formData.ensaios_empreiteira.umidade_frigideira.resultados ?? '')
+          },
+          massa_especifica_in_situ: {
+            ...formData.ensaios_empreiteira.massa_especifica_in_situ,
+            quantidade: parseInt(formData.ensaios_empreiteira.massa_especifica_in_situ.quantidade) || 0,
+            resultados: Array.isArray(formData.ensaios_empreiteira.massa_especifica_in_situ.resultados)
+              ? formData.ensaios_empreiteira.massa_especifica_in_situ.resultados.filter(r => r !== null && r !== '').join(' | ')
+              : (formData.ensaios_empreiteira.massa_especifica_in_situ.resultados ?? '')
+          },
+          granulometria: {
+            ...formData.ensaios_empreiteira.granulometria,
+            quantidade: parseInt(formData.ensaios_empreiteira.granulometria.quantidade) || 0,
+            resultados: Array.isArray(formData.ensaios_empreiteira.granulometria.resultados)
+              ? formData.ensaios_empreiteira.granulometria.resultados.filter(r => r !== null && r !== '').join(' | ')
+              : (formData.ensaios_empreiteira.granulometria.resultados ?? '')
+          },
+          variacao_umidade_resultados: Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
+            ? formData.ensaios_empreiteira.variacao_umidade_resultados.filter(r => r !== null && r !== '').join(' | ')
+            : (formData.ensaios_empreiteira.variacao_umidade_resultados ?? ''),
+          grau_compactacao_resultados: Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
+            ? formData.ensaios_empreiteira.grau_compactacao_resultados.filter(r => r !== null && r !== '').join(' | ')
+            : (formData.ensaios_empreiteira.grau_compactacao_resultados ?? '')
+        }
       };
 
       console.log("🟢 [CHECKLIST TERRAPLANAGEM] Dados que serão salvos:", {
