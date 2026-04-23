@@ -1015,49 +1015,107 @@ export default function ChecklistTerraplanagem() {
                           </td>
                         </tr>
 
-                        {/* Variação de Umidade — calculado */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Variação de Umidade (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-2 py-1">
-                            <div className="h-8 flex items-center justify-center text-sm font-medium">
-                              {variacaoUmidade !== null ? variacaoUmidade : '-'}
-                            </div>
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === true}
-                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, variacao_umidade_conforme: e.target.checked ? true : null } }))}
-                              disabled={variacaoUmidade === null} className="w-4 h-4 accent-green-500" />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === false}
-                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, variacao_umidade_conforme: e.target.checked ? false : null } }))}
-                              disabled={variacaoUmidade === null} className="w-4 h-4 accent-red-500" />
-                          </td>
-                        </tr>
+                        {/* Variação de Umidade — Qtde + campos manuais */}
+                        {(() => {
+                          const vuQtde = formData.ensaios_empreiteira.variacao_umidade_quantidade || 1;
+                          const vuResultados = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
+                            ? formData.ensaios_empreiteira.variacao_umidade_resultados
+                            : (variacaoUmidade !== null ? [variacaoUmidade] : []);
+                          const setVU = (patch) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, ...patch } }));
+                          return (
+                            <tr>
+                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">Variação de Umidade (%)</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-1 py-1">
+                                <Input type="number" min="1" max="3" value={vuQtde}
+                                  onChange={(e) => {
+                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const cur = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados) ? formData.ensaios_empreiteira.variacao_umidade_resultados : [];
+                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
+                                    setVU({ variacao_umidade_quantidade: n, variacao_umidade_resultados: newArr });
+                                  }}
+                                  className="h-8 text-sm text-center" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {Array.from({ length: vuQtde }).map((_, idx) => (
+                                    <Input key={idx} type="number" step="0.01"
+                                      value={vuResultados[idx] ?? (idx === 0 && variacaoUmidade !== null ? variacaoUmidade : '')}
+                                      onChange={(e) => {
+                                        const arr = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados) ? [...formData.ensaios_empreiteira.variacao_umidade_resultados] : Array(vuQtde).fill(null);
+                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
+                                        setVU({ variacao_umidade_resultados: arr });
+                                      }}
+                                      className="h-8 text-sm text-center"
+                                      style={{ width: vuQtde > 1 ? '90px' : '100%' }}
+                                      placeholder={vuQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === true}
+                                  onChange={(e) => setVU({ variacao_umidade_conforme: e.target.checked ? true : null })}
+                                  className="w-4 h-4 accent-green-500" />
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={formData.ensaios_empreiteira.variacao_umidade_conforme === false}
+                                  onChange={(e) => setVU({ variacao_umidade_conforme: e.target.checked ? false : null })}
+                                  className="w-4 h-4 accent-red-500" />
+                              </td>
+                            </tr>
+                          );
+                        })()}
 
-                        {/* Grau de Compactação — calculado */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-2 py-1">
-                            <div className="h-8 flex items-center justify-center text-sm font-medium">
-                              {grauCompactacao !== null ? grauCompactacao : '-'}
-                            </div>
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
-                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, grau_compactacao_conforme: e.target.checked ? true : null } }))}
-                              disabled={grauCompactacao === null} className="w-4 h-4 accent-green-500" />
-                          </td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">
-                            <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
-                              onChange={(e) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, grau_compactacao_conforme: e.target.checked ? false : null } }))}
-                              disabled={grauCompactacao === null} className="w-4 h-4 accent-red-500" />
-                          </td>
-                        </tr>
+                        {/* Grau de Compactação — Qtde + campos manuais */}
+                        {(() => {
+                          const gcQtde = formData.ensaios_empreiteira.grau_compactacao_quantidade || 1;
+                          const gcResultados = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
+                            ? formData.ensaios_empreiteira.grau_compactacao_resultados
+                            : (grauCompactacao !== null ? [grauCompactacao] : []);
+                          const setGC = (patch) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, ...patch } }));
+                          return (
+                            <tr>
+                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-1 py-1">
+                                <Input type="number" min="1" max="3" value={gcQtde}
+                                  onChange={(e) => {
+                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const cur = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados) ? formData.ensaios_empreiteira.grau_compactacao_resultados : [];
+                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
+                                    setGC({ grau_compactacao_quantidade: n, grau_compactacao_resultados: newArr });
+                                  }}
+                                  className="h-8 text-sm text-center" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {Array.from({ length: gcQtde }).map((_, idx) => (
+                                    <Input key={idx} type="number" step="0.01"
+                                      value={gcResultados[idx] ?? (idx === 0 && grauCompactacao !== null ? grauCompactacao : '')}
+                                      onChange={(e) => {
+                                        const arr = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados) ? [...formData.ensaios_empreiteira.grau_compactacao_resultados] : Array(gcQtde).fill(null);
+                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
+                                        setGC({ grau_compactacao_resultados: arr });
+                                      }}
+                                      className="h-8 text-sm text-center"
+                                      style={{ width: gcQtde > 1 ? '90px' : '100%' }}
+                                      placeholder={gcQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
+                                  onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? true : null })}
+                                  className="w-4 h-4 accent-green-500" />
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">
+                                <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
+                                  onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? false : null })}
+                                  className="w-4 h-4 accent-red-500" />
+                              </td>
+                            </tr>
+                          );
+                        })()}
                       </tbody>
                     </table>
                   </div>
