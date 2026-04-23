@@ -50,8 +50,20 @@
     "umidade_otima_proctor": {
       "type": "number"
     },
+    "umidade_otima_quantidade": {
+      "type": "number"
+    },
+    "umidade_otima_resultados": {
+      "type": "string"
+    },
     "umidade_in_situ": {
       "type": "number"
+    },
+    "umidade_in_situ_quantidade": {
+      "type": "number"
+    },
+    "umidade_in_situ_resultados": {
+      "type": "string"
     },
     "ensaio_realizado_por": {
       "type": "string",
@@ -291,6 +303,24 @@
               "type": "string"
             }
           }
+        },
+        "variacao_umidade_quantidade": {
+          "type": "number"
+        },
+        "variacao_umidade_resultados": {
+          "type": "string"
+        },
+        "variacao_umidade_conforme": {
+          "type": "boolean"
+        },
+        "grau_compactacao_quantidade": {
+          "type": "number"
+        },
+        "grau_compactacao_resultados": {
+          "type": "string"
+        },
+        "grau_compactacao_conforme": {
+          "type": "boolean"
         }
       }
     },

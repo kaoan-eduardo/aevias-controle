@@ -442,7 +442,15 @@ export default function ChecklistTerraplanagem() {
         status: saveStatus,
         ensaio_realizado_por: formData.ensaio_realizado_por,
         umidade_otima_proctor: formData.umidade_otima_proctor ? parseFloat(formData.umidade_otima_proctor) : null,
+        umidade_otima_quantidade: parseInt(formData.umidade_otima_quantidade) || 0,
+        umidade_otima_resultados: Array.isArray(formData.umidade_otima_resultados)
+          ? formData.umidade_otima_resultados.filter(r => r !== null && r !== '').join(' | ')
+          : (formData.umidade_otima_resultados ?? ''),
         umidade_in_situ: formData.umidade_in_situ ? parseFloat(formData.umidade_in_situ) : null,
+        umidade_in_situ_quantidade: parseInt(formData.umidade_in_situ_quantidade) || 0,
+        umidade_in_situ_resultados: Array.isArray(formData.umidade_in_situ_resultados)
+          ? formData.umidade_in_situ_resultados.filter(r => r !== null && r !== '').join(' | ')
+          : (formData.umidade_in_situ_resultados ?? ''),
         periodos_clima: formData.periodos_clima.map(p => ({
           ...p,
           temperatura_ambiente: p.temperatura_ambiente ? parseFloat(p.temperatura_ambiente) : null
@@ -1044,29 +1052,95 @@ export default function ChecklistTerraplanagem() {
                           );
                         })}
 
-                        {/* Umidade Ótima */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade Ótima (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1" colSpan="3">
-                            <Input type="number" step="0.01" value={formData.umidade_otima_proctor}
-                              onChange={(e) => setFormData({ ...formData, umidade_otima_proctor: e.target.value })}
-                              className="h-8 text-sm text-center" placeholder="Ex: 12.5" />
-                          </td>
-                        </tr>
+                        {/* Umidade Ótima — Qtde + campos manuais */}
+                        {(() => {
+                          const uoQtde = formData.umidade_otima_quantidade || 1;
+                          const uoResultados = Array.isArray(formData.umidade_otima_resultados)
+                            ? formData.umidade_otima_resultados
+                            : (typeof formData.umidade_otima_resultados === 'string' && formData.umidade_otima_resultados.trim() !== '')
+                              ? formData.umidade_otima_resultados.split('|').map(s => s.trim())
+                              : [];
+                          const setUO = (patch) => setFormData(prev => ({ ...prev, ...patch }));
+                          return (
+                            <tr>
+                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade Ótima (%)</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-1 py-1">
+                                <Input type="number" min="1" max="3" value={uoQtde}
+                                  onChange={(e) => {
+                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const cur = Array.isArray(formData.umidade_otima_resultados) ? formData.umidade_otima_resultados : [];
+                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
+                                    setUO({ umidade_otima_quantidade: n, umidade_otima_resultados: newArr });
+                                  }}
+                                  className="h-8 text-sm text-center" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {Array.from({ length: uoQtde }).map((_, idx) => (
+                                    <Input key={idx} type="number" step="0.01"
+                                      value={uoResultados[idx] ?? ''}
+                                      onChange={(e) => {
+                                        const arr = Array.isArray(formData.umidade_otima_resultados) ? [...formData.umidade_otima_resultados] : Array(uoQtde).fill(null);
+                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
+                                        setUO({ umidade_otima_resultados: arr });
+                                      }}
+                                      className="h-8 text-sm text-center"
+                                      style={{ width: uoQtde > 1 ? '90px' : '100%' }}
+                                      placeholder={uoQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                            </tr>
+                          );
+                        })()}
 
-                        {/* Umidade In Situ */}
-                        <tr>
-                          <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade In Situ (%)</td>
-                          <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1 text-center">-</td>
-                          <td className="border border-slate-300 px-1 py-1" colSpan="3">
-                            <Input type="number" step="0.01" value={formData.umidade_in_situ}
-                              onChange={(e) => setFormData({ ...formData, umidade_in_situ: e.target.value })}
-                              className="h-8 text-sm text-center" placeholder="Ex: 13.2" />
-                          </td>
-                        </tr>
+                        {/* Umidade In Situ — Qtde + campos manuais */}
+                        {(() => {
+                          const uisQtde = formData.umidade_in_situ_quantidade || 1;
+                          const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
+                            ? formData.umidade_in_situ_resultados
+                            : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
+                              ? formData.umidade_in_situ_resultados.split('|').map(s => s.trim())
+                              : [];
+                          const setUIS = (patch) => setFormData(prev => ({ ...prev, ...patch }));
+                          return (
+                            <tr>
+                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">Umidade In Situ (%)</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-1 py-1">
+                                <Input type="number" min="1" max="3" value={uisQtde}
+                                  onChange={(e) => {
+                                    const n = Math.max(1, Math.min(3, parseInt(e.target.value) || 1));
+                                    const cur = Array.isArray(formData.umidade_in_situ_resultados) ? formData.umidade_in_situ_resultados : [];
+                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
+                                    setUIS({ umidade_in_situ_quantidade: n, umidade_in_situ_resultados: newArr });
+                                  }}
+                                  className="h-8 text-sm text-center" />
+                              </td>
+                              <td className="border border-slate-300 px-1 py-2">
+                                <div className="flex flex-wrap gap-1">
+                                  {Array.from({ length: uisQtde }).map((_, idx) => (
+                                    <Input key={idx} type="number" step="0.01"
+                                      value={uisResultados[idx] ?? ''}
+                                      onChange={(e) => {
+                                        const arr = Array.isArray(formData.umidade_in_situ_resultados) ? [...formData.umidade_in_situ_resultados] : Array(uisQtde).fill(null);
+                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
+                                        setUIS({ umidade_in_situ_resultados: arr });
+                                      }}
+                                      className="h-8 text-sm text-center"
+                                      style={{ width: uisQtde > 1 ? '90px' : '100%' }}
+                                      placeholder={uisQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                            </tr>
+                          );
+                        })()}
 
                         {/* Variação de Umidade — Qtde + campos manuais */}
                         {(() => {
