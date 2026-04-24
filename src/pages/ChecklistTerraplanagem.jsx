@@ -493,13 +493,40 @@ export default function ChecklistTerraplanagem() {
               : (formData.ensaios_empreiteira.granulometria.resultados ?? '')
           },
           variacao_umidade_quantidade: parseInt(formData.ensaios_empreiteira.variacao_umidade_quantidade) || 0,
-          variacao_umidade_resultados: Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
-            ? formData.ensaios_empreiteira.variacao_umidade_resultados.filter(r => r !== null && r !== '').join(' | ')
-            : (formData.ensaios_empreiteira.variacao_umidade_resultados ?? ''),
+          variacao_umidade_resultados: (() => {
+            const vuQtde = parseInt(formData.ensaios_empreiteira.variacao_umidade_quantidade) || 0;
+            const uOtima = parseFloat(formData.umidade_otima_proctor);
+            const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
+              ? formData.umidade_in_situ_resultados
+              : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
+                ? formData.umidade_in_situ_resultados.split('|').map(s => s.trim())
+                : [];
+            return Array.from({ length: vuQtde }).map((_, idx) => {
+              const uInSitu = parseFloat(uisResultados[idx]);
+              if (isNaN(uOtima) || isNaN(uInSitu)) return null;
+              return (uInSitu - uOtima).toFixed(2);
+            }).filter(r => r !== null).join(' | ');
+          })(),
           grau_compactacao_quantidade: parseInt(formData.ensaios_empreiteira.grau_compactacao_quantidade) || 0,
-          grau_compactacao_resultados: Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
-            ? formData.ensaios_empreiteira.grau_compactacao_resultados.filter(r => r !== null && r !== '').join(' | ')
-            : (formData.ensaios_empreiteira.grau_compactacao_resultados ?? '')
+          grau_compactacao_resultados: (() => {
+            const gcQtde = parseInt(formData.ensaios_empreiteira.grau_compactacao_quantidade) || 0;
+            const proctorResultados = Array.isArray(formData.ensaios_empreiteira.compactacao_proctor?.resultados)
+              ? formData.ensaios_empreiteira.compactacao_proctor.resultados
+              : (typeof formData.ensaios_empreiteira.compactacao_proctor?.resultados === 'string' && formData.ensaios_empreiteira.compactacao_proctor.resultados.trim() !== '')
+                ? formData.ensaios_empreiteira.compactacao_proctor.resultados.split('|').map(s => s.trim())
+                : [];
+            const inSituResultados = Array.isArray(formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados)
+              ? formData.ensaios_empreiteira.massa_especifica_in_situ.resultados
+              : (typeof formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados === 'string' && formData.ensaios_empreiteira.massa_especifica_in_situ.resultados.trim() !== '')
+                ? formData.ensaios_empreiteira.massa_especifica_in_situ.resultados.split('|').map(s => s.trim())
+                : [];
+            return Array.from({ length: gcQtde }).map((_, idx) => {
+              const proctor = parseFloat(proctorResultados[idx]);
+              const inSitu = parseFloat(inSituResultados[idx]);
+              if (isNaN(proctor) || isNaN(inSitu) || proctor === 0) return null;
+              return ((inSitu / proctor) * 100).toFixed(2);
+            }).filter(r => r !== null).join(' | ');
+          })()
         }
       };
 
@@ -997,9 +1024,9 @@ export default function ChecklistTerraplanagem() {
                           { key: 'compactacao_proctor', label: 'Compactação - Proctor (g/cm³)', step: '0.001' },
                           { key: 'isc', label: 'ISC - Índice de Suporte Califórnia (%)', step: '0.1' },
                           { key: 'umidade_frigideira', label: 'Umidade (Frigideira) (%)', step: '0.01' },
-                          { key: 'massa_especifica_in_situ', label: 'Massa Específica In Situ (g/cm³)', step: '0.001' },
+                          { key: 'massa_especifica_in_situ', label: 'Massa Específica In Situ (g/cm³)', step: '0.001', syncQtde: true },
                           { key: 'granulometria', label: 'Análise Granulométrica por Peneiramento', step: null },
-                        ].map(({ key, label, step }) => {
+                        ].map(({ key, label, step, syncQtde }) => {
                           const e = formData.ensaios_empreiteira[key] || {};
                           const qtde = e.quantidade;
                           const resultados = Array.isArray(e.resultados)
@@ -1020,7 +1047,22 @@ export default function ChecklistTerraplanagem() {
                                 {isGranulometria ? <span className="text-slate-400 text-xs px-2">-</span> : (
                                   <Input type="number" min="0" max="3"
                                     value={qtde ?? ''}
-                                    onChange={(ev) => handleEnsaioChange(key, 'quantidade', ev.target.value)}
+                                    onChange={(ev) => {
+                                      handleEnsaioChange(key, 'quantidade', ev.target.value);
+                                      if (syncQtde) {
+                                        const n = Math.max(0, Math.min(3, parseInt(ev.target.value) || 0));
+                                        setFormData(prev => ({
+                                          ...prev,
+                                          ensaios_empreiteira: {
+                                            ...prev.ensaios_empreiteira,
+                                            variacao_umidade_quantidade: n,
+                                            variacao_umidade_resultados: [],
+                                            grau_compactacao_quantidade: n,
+                                            grau_compactacao_resultados: []
+                                          }
+                                        }));
+                                      }
+                                    }}
                                     disabled={!e.realizado}
                                     className="h-8 text-sm text-center" placeholder="" />
                                 )}
@@ -1149,12 +1191,23 @@ export default function ChecklistTerraplanagem() {
                           );
                         })()}
 
-                        {/* Variação de Umidade — Qtde + campos manuais */}
+                        {/* Variação de Umidade — Calculada automaticamente por R */}
                         {(() => {
                           const vuQtde = formData.ensaios_empreiteira.variacao_umidade_quantidade;
-                          const vuResultados = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
-                            ? formData.ensaios_empreiteira.variacao_umidade_resultados
-                            : (variacaoUmidade !== null ? [variacaoUmidade] : []);
+                          const uOtima = parseFloat(formData.umidade_otima_proctor);
+                          const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
+                            ? formData.umidade_in_situ_resultados
+                            : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
+                              ? formData.umidade_in_situ_resultados.split('|').map(s => s.trim())
+                              : [];
+
+                          const calculateVU = (idx) => {
+                            const uInSitu = parseFloat(uisResultados[idx]);
+                            if (isNaN(uOtima) || isNaN(uInSitu)) return null;
+                            return (uInSitu - uOtima).toFixed(2);
+                          };
+
+                          const vuResultados = Array.from({ length: vuQtde }).map((_, idx) => calculateVU(idx));
                           const setVU = (patch) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, ...patch } }));
                           return (
                             <tr>
@@ -1164,25 +1217,17 @@ export default function ChecklistTerraplanagem() {
                                 <Input type="number" min="0" max="3" value={vuQtde}
                                   onChange={(e) => {
                                     const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
-                                    const cur = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados) ? formData.ensaios_empreiteira.variacao_umidade_resultados : [];
-                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
-                                    setVU({ variacao_umidade_quantidade: n, variacao_umidade_resultados: newArr });
+                                    setVU({ variacao_umidade_quantidade: n, variacao_umidade_resultados: [] });
                                   }}
                                   className="h-8 text-sm text-center" placeholder="" />
                               </td>
                               <td className="border border-slate-300 px-1 py-2">
                                 <div className="flex flex-wrap gap-1">
                                   {Array.from({ length: vuQtde }).map((_, idx) => (
-                                    <Input key={idx} type="number" step="0.01"
-                                      value={vuResultados[idx] ?? (idx === 0 && variacaoUmidade !== null ? variacaoUmidade : '')}
-                                      onChange={(e) => {
-                                        const arr = Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados) ? [...formData.ensaios_empreiteira.variacao_umidade_resultados] : Array(vuQtde).fill(null);
-                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
-                                        setVU({ variacao_umidade_resultados: arr });
-                                      }}
-                                      className="h-8 text-sm text-center"
-                                      style={{ width: vuQtde > 1 ? '90px' : '100%' }}
-                                      placeholder={vuQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
+                                    <div key={idx} className="h-8 flex items-center px-2 bg-slate-100 rounded border border-slate-300 text-sm text-center font-medium"
+                                      style={{ width: vuQtde > 1 ? '90px' : '100%' }}>
+                                      {vuResultados[idx] ?? '-'}
+                                    </div>
                                   ))}
                                 </div>
                               </td>
