@@ -162,9 +162,7 @@ export default function GranuMistura() {
       } else {
         setFaixaGran(null);
       }
-      if (proj?.pedreira) {
-        setFormData(prev => ({ ...prev, pedreira: proj.pedreira }));
-      }
+      setFormData(prev => ({ ...prev, pedreira: proj?.pedreira || "" }));
     }
   }, [formData.project_id, formData.faixa, formData.material, projects, faixasDisponiveis]);
 
