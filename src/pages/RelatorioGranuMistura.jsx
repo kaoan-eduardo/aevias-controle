@@ -171,7 +171,7 @@ export default function RelatorioGranuMistura() {
             <div className="px-2 py-0.5 font-semibold bg-white">FAIXA:</div>
             <div className="px-2 py-0.5 font-semibold bg-white">HORÁRIO:</div>
             <div className="px-2 py-0.5 font-semibold bg-white">LABORATORISTA:</div>
-            <div className="px-2 py-1 bg-white">{project?.name || '—'}</div>
+            <div className="px-2 py-1 bg-white">{record.material === 'OUTRO' ? 'N/A' : (project?.name || '—')}</div>
             <div className="px-2 py-1 bg-white">{faixa?.nome || record.faixa || '—'}</div>
             <div className="px-2 py-1 bg-white">{record.horario || '—'}</div>
             <div className="px-2 py-1 bg-white">{record.laboratorista_name || '—'}</div>
