@@ -224,7 +224,7 @@ export default function RelatorioGranuMistura() {
           <div className="col-span-1 space-y-2">
             {/* Umidade */}
             <div className="border border-slate-400">
-              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px]">DETERMINAÇÃO DE UMIDADE</div>
+              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px] text-center">DETERMINAÇÃO DE UMIDADE</div>
               <table className="w-full text-[9px]">
                 <tbody>
                   {[
@@ -245,7 +245,7 @@ export default function RelatorioGranuMistura() {
 
             {/* Equivalente de Areia */}
             <div className="border border-slate-400">
-              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px]">EQUIVALENTE DE AREIA</div>
+              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px] text-center">EQUIVALENTE DE AREIA</div>
               <table className="w-full text-[9px]">
                 <thead>
                   <tr className="bg-slate-50">
@@ -284,7 +284,7 @@ export default function RelatorioGranuMistura() {
 
             {/* Materiais Pulverulentos */}
             <div className="border border-slate-400">
-              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px]">MATERIAIS PULVERULENTOS</div>
+              <div className="bg-slate-100 px-2 py-0.5 font-bold text-[9px] text-center">MATERIAIS PULVERULENTOS</div>
               <table className="w-full text-[9px]">
                 <tbody>
                   {[
