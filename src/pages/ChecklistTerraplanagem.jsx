@@ -495,13 +495,18 @@ export default function ChecklistTerraplanagem() {
           variacao_umidade_quantidade: parseInt(formData.ensaios_empreiteira.variacao_umidade_quantidade) || 0,
           variacao_umidade_resultados: (() => {
             const vuQtde = parseInt(formData.ensaios_empreiteira.variacao_umidade_quantidade) || 0;
-            const uOtima = parseFloat(formData.umidade_otima_proctor);
+            const uOtimaResultados = Array.isArray(formData.umidade_otima_resultados)
+              ? formData.umidade_otima_resultados
+              : (typeof formData.umidade_otima_resultados === 'string' && formData.umidade_otima_resultados.trim() !== '')
+                ? formData.umidade_otima_resultados.split('|').map(s => s.trim())
+                : [];
             const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
               ? formData.umidade_in_situ_resultados
               : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
                 ? formData.umidade_in_situ_resultados.split('|').map(s => s.trim())
                 : [];
             return Array.from({ length: vuQtde }).map((_, idx) => {
+              const uOtima = parseFloat(uOtimaResultados[idx]);
               const uInSitu = parseFloat(uisResultados[idx]);
               if (isNaN(uOtima) || isNaN(uInSitu)) return null;
               return (uInSitu - uOtima).toFixed(2);
@@ -1194,7 +1199,11 @@ export default function ChecklistTerraplanagem() {
                         {/* Variação de Umidade — Calculada automaticamente por R */}
                         {(() => {
                           const vuQtde = formData.ensaios_empreiteira.variacao_umidade_quantidade;
-                          const uOtima = parseFloat(formData.umidade_otima_proctor);
+                          const uOtimaResultados = Array.isArray(formData.umidade_otima_resultados)
+                            ? formData.umidade_otima_resultados
+                            : (typeof formData.umidade_otima_resultados === 'string' && formData.umidade_otima_resultados.trim() !== '')
+                              ? formData.umidade_otima_resultados.split('|').map(s => s.trim())
+                              : [];
                           const uisResultados = Array.isArray(formData.umidade_in_situ_resultados)
                             ? formData.umidade_in_situ_resultados
                             : (typeof formData.umidade_in_situ_resultados === 'string' && formData.umidade_in_situ_resultados.trim() !== '')
@@ -1202,6 +1211,7 @@ export default function ChecklistTerraplanagem() {
                               : [];
 
                           const calculateVU = (idx) => {
+                            const uOtima = parseFloat(uOtimaResultados[idx]);
                             const uInSitu = parseFloat(uisResultados[idx]);
                             if (isNaN(uOtima) || isNaN(uInSitu)) return null;
                             return (uInSitu - uOtima).toFixed(2);
