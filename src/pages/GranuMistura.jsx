@@ -11,6 +11,7 @@ import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
 const PENEIRAS_PADRAO = [
+  { astm: "1\"", abertura_mm: 25.0 },
   { astm: "3/4\"", abertura_mm: 19.0 },
   { astm: "1/2\"", abertura_mm: 12.5 },
   { astm: "3/8\"", abertura_mm: 9.5 },
@@ -21,6 +22,7 @@ const PENEIRAS_PADRAO = [
   { astm: "#30", abertura_mm: 0.6 },
   { astm: "#40", abertura_mm: 0.42 },
   { astm: "#50", abertura_mm: 0.3 },
+  { astm: "#80", abertura_mm: 0.18 },
   { astm: "#100", abertura_mm: 0.15 },
   { astm: "#200", abertura_mm: 0.075 }
 ];
