@@ -300,14 +300,25 @@ export default function GranuMistura() {
     });
     return peneira ? { min: peneira.min, max: peneira.max } : { min: null, max: null };
   };
-  const getPeneirasExibidos = () => {
+  // Retorna Set de abertura_mm das peneiras que constam na faixa do projeto
+  const getFaixaAberturas = () => {
     const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
-    if (!faixa?.peneiras || faixa.peneiras.length === 0) return [];
-    const peneirasMapeadas = faixa.peneiras.map(fp => {
+    if (!faixa?.peneiras) return null; // null = sem faixa carregada, mostrar tudo
+    const set = new Set();
+    faixa.peneiras.forEach(fp => {
       const ab = parseFloat(fp.abertura);
-      return PENEIRAS_PADRAO.find(p => Math.abs(p.abertura_mm - ab) < 0.01);
-    }).filter(Boolean);
-    return peneirasMapeadas;
+      if (!isNaN(ab)) set.add(ab);
+    });
+    return set;
+  };
+
+  const getPeneirasExibidos = () => {
+    const faixaAberturas = getFaixaAberturas();
+    if (faixaAberturas === null) return PENEIRAS_PADRAO; // sem faixa: mostrar todas
+    // Com faixa: mostrar apenas as que pertencem à faixa do projeto
+    return PENEIRAS_PADRAO.filter(p =>
+      [...faixaAberturas].some(ab => Math.abs(p.abertura_mm - ab) < 0.01)
+    );
   };
 
   return (
