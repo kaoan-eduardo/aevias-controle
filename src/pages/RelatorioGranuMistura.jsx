@@ -13,6 +13,10 @@ export default function RelatorioGranuMisturaPage() {
 
   useEffect(() => {
     if (recordId) setLoading(false);
+    // Forçar light mode
+    document.documentElement.classList.remove('dark');
+    document.body.style.colorScheme = 'light';
+    document.body.style.zoom = '100%';
   }, [recordId]);
 
   if (!recordId) {
@@ -27,8 +31,16 @@ export default function RelatorioGranuMisturaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 !light" style={{ colorScheme: 'light' }}>
-      <div className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-50 print:relative">
+    <div className="min-h-screen bg-gray-100" style={{ colorScheme: 'light', zoom: '100%', userSelect: 'none' }}>
+      <style>{`
+        * { color-scheme: light !important; }
+        .dark { display: none !important; }
+        body, html { zoom: 100% !important; }
+        @media print {
+          body { zoom: 100% !important; }
+        }
+      `}</style>
+      <div className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-50 print:relative" style={{ colorScheme: 'light' }}>
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ChevronLeft className="w-4 h-4" /> Voltar
         </Button>
@@ -38,7 +50,7 @@ export default function RelatorioGranuMisturaPage() {
         </Button>
       </div>
 
-      <div className="p-4 pt-24 print:pt-4">
+      <div className="p-4 pt-24 print:pt-4" style={{ colorScheme: 'light' }}>
         {loading ? (
           <div className="flex justify-center items-center h-96">
             <Loader2 className="w-8 h-8 animate-spin" />
