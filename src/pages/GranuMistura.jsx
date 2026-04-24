@@ -487,11 +487,21 @@ export default function GranuMistura() {
                      const idx = formData.peneiras.findIndex(p => p.abertura_mm === peneira.abertura_mm);
                      if (idx === -1) return null;
                      const peneiraData = formData.peneiras[idx];
-                     const pKey = `peneira_${String(peneira.abertura_mm).replace(/\./g, "_")}mm`;
-                     let pKeyAlt = null;
-                     if (peneira.abertura_mm === 2.0) pKeyAlt = `peneira_2_00mm`;
-                     else if (peneira.abertura_mm === 25.0) pKeyAlt = `peneira_25_00mm`;
-                     else if (peneira.abertura_mm === 19.0) pKeyAlt = `peneira_19_00mm`;
+                     // Mapa explícito para garantir chaves corretas independente de como JS converte o float
+                     const aberturaKeyMap = {
+                       75.0: "peneira_75_0mm", 63.0: "peneira_63_0mm", 50.0: "peneira_50_0mm",
+                       37.5: "peneira_37_5mm", 25.0: "peneira_25_0mm", 19.0: "peneira_19_0mm",
+                       16.0: "peneira_16_0mm", 12.5: "peneira_12_5mm", 9.5: "peneira_9_5mm",
+                       4.75: "peneira_4_75mm", 2.36: "peneira_2_36mm", 2.0: "peneira_2_0mm",
+                       1.18: "peneira_1_18mm", 0.6: "peneira_0_6mm", 0.42: "peneira_0_42mm",
+                       0.3: "peneira_0_3mm", 0.18: "peneira_0_18mm", 0.15: "peneira_0_15mm",
+                       0.075: "peneira_0_075mm"
+                     };
+                     const altKeyMap = {
+                       2.0: "peneira_2_00mm", 25.0: "peneira_25_00mm", 19.0: "peneira_19_00mm"
+                     };
+                     const pKey = aberturaKeyMap[peneira.abertura_mm] || `peneira_${String(peneira.abertura_mm).replace(/\./g, "_")}mm`;
+                     const pKeyAlt = altKeyMap[peneira.abertura_mm] || null;
                      const ft = getFaixaTrabalho(pKey, pKeyAlt);
                      const esp = getEspecificacao(pKey, pKeyAlt);
                      return (
