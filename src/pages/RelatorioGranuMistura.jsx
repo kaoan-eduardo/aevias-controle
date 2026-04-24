@@ -249,24 +249,34 @@ export default function RelatorioGranuMistura() {
               <table className="w-full text-[9px]">
                 <thead>
                   <tr className="bg-slate-50">
-                    <th className="border-b border-slate-300 px-2 py-0.5">Medição</th>
-                    <th className="border-b border-slate-300 px-2 py-0.5">T. Argila</th>
-                    <th className="border-b border-slate-300 px-2 py-0.5">T. Areia</th>
-                    <th className="border-b border-slate-300 px-2 py-0.5">EA (%)</th>
+                    <th className="border-b border-slate-300 px-2 py-0.5"></th>
+                    {(record.equivalente_areia?.medicoes || []).map((m, idx) => (
+                      <th key={idx} className="border-b border-slate-300 px-2 py-0.5 text-center">M{idx + 1}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {(record.equivalente_areia?.medicoes || []).map((m, idx) => (
-                    <tr key={idx}>
-                      <td className="px-2 py-0.5 text-center">{idx + 1}</td>
-                      <td className="px-2 py-0.5 text-center">{m.topo_argila || '—'}</td>
-                      <td className="px-2 py-0.5 text-center">{m.topo_areia || '—'}</td>
-                      <td className="px-2 py-0.5 text-center font-bold text-blue-800">{m.equivalente || '—'}</td>
-                    </tr>
-                  ))}
+                  <tr>
+                    <td className="px-2 py-0.5 font-semibold text-gray-700">T. Argila</td>
+                    {(record.equivalente_areia?.medicoes || []).map((m, idx) => (
+                      <td key={idx} className="px-2 py-0.5 text-center">{m.topo_argila || '—'}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-2 py-0.5 font-semibold text-gray-700">T. Areia</td>
+                    {(record.equivalente_areia?.medicoes || []).map((m, idx) => (
+                      <td key={idx} className="px-2 py-0.5 text-center">{m.topo_areia || '—'}</td>
+                    ))}
+                  </tr>
+                  <tr className="bg-slate-50">
+                    <td className="px-2 py-0.5 font-semibold text-gray-700">EA (%)</td>
+                    {(record.equivalente_areia?.medicoes || []).map((m, idx) => (
+                      <td key={idx} className="px-2 py-0.5 text-center font-bold text-blue-800">{m.equivalente || '—'}</td>
+                    ))}
+                  </tr>
                   <tr className="bg-slate-100 font-bold">
-                    <td className="px-2 py-0.5 text-center" colSpan={3}>MÉDIA</td>
-                    <td className="px-2 py-0.5 text-center text-blue-900">{record.equivalente_areia?.media || '—'}%</td>
+                    <td className="px-2 py-0.5">MÉDIA</td>
+                    <td colSpan={record.equivalente_areia?.medicoes?.length || 1} className="px-2 py-0.5 text-center text-blue-900">{record.equivalente_areia?.media || '—'}%</td>
                   </tr>
                 </tbody>
               </table>
