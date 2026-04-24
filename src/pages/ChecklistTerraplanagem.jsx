@@ -1200,55 +1200,63 @@ export default function ChecklistTerraplanagem() {
                           );
                         })()}
 
-                        {/* Grau de Compactação — Qtde + campos manuais */}
+                        {/* Grau de Compactação — Calculado automaticamente por R */}
                         {(() => {
-                          const gcQtde = formData.ensaios_empreiteira.grau_compactacao_quantidade;
-                          const gcResultados = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
-                            ? formData.ensaios_empreiteira.grau_compactacao_resultados
-                            : (grauCompactacao !== null ? [grauCompactacao] : []);
-                          const setGC = (patch) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, ...patch } }));
-                          return (
-                            <tr>
-                              <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
-                              <td className="border border-slate-300 px-2 py-1 text-center">-</td>
-                              <td className="border border-slate-300 px-1 py-1">
-                                <Input type="number" min="0" max="3" value={gcQtde}
-                                  onChange={(e) => {
-                                    const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
-                                    const cur = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados) ? formData.ensaios_empreiteira.grau_compactacao_resultados : [];
-                                    const newArr = n > cur.length ? [...cur, ...Array(n - cur.length).fill(null)] : cur.slice(0, n);
-                                    setGC({ grau_compactacao_quantidade: n, grau_compactacao_resultados: newArr });
-                                  }}
-                                  className="h-8 text-sm text-center" placeholder="" />
-                              </td>
-                              <td className="border border-slate-300 px-1 py-2">
-                                <div className="flex flex-wrap gap-1">
-                                  {Array.from({ length: gcQtde }).map((_, idx) => (
-                                    <Input key={idx} type="number" step="0.01"
-                                      value={gcResultados[idx] ?? (idx === 0 && grauCompactacao !== null ? grauCompactacao : '')}
-                                      onChange={(e) => {
-                                        const arr = Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados) ? [...formData.ensaios_empreiteira.grau_compactacao_resultados] : Array(gcQtde).fill(null);
-                                        arr[idx] = e.target.value !== '' ? e.target.value : null;
-                                        setGC({ grau_compactacao_resultados: arr });
-                                      }}
-                                      className="h-8 text-sm text-center"
-                                      style={{ width: gcQtde > 1 ? '90px' : '100%' }}
-                                      placeholder={gcQtde > 1 ? `R${idx + 1}` : 'Resultado'} />
-                                  ))}
-                                </div>
-                              </td>
-                              <td className="border border-slate-300 px-2 py-1 text-center">
-                                <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
-                                  onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? true : null })}
-                                  className="w-4 h-4 accent-green-500" />
-                              </td>
-                              <td className="border border-slate-300 px-2 py-1 text-center">
-                                <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
-                                  onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? false : null })}
-                                  className="w-4 h-4 accent-red-500" />
-                              </td>
-                            </tr>
-                          );
+                           const gcQtde = formData.ensaios_empreiteira.grau_compactacao_quantidade;
+                           const proctorResultados = Array.isArray(formData.ensaios_empreiteira.compactacao_proctor?.resultados)
+                             ? formData.ensaios_empreiteira.compactacao_proctor.resultados
+                             : (typeof formData.ensaios_empreiteira.compactacao_proctor?.resultados === 'string' && formData.ensaios_empreiteira.compactacao_proctor.resultados.trim() !== '')
+                               ? formData.ensaios_empreiteira.compactacao_proctor.resultados.split('|').map(s => s.trim())
+                               : [];
+                           const inSituResultados = Array.isArray(formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados)
+                             ? formData.ensaios_empreiteira.massa_especifica_in_situ.resultados
+                             : (typeof formData.ensaios_empreiteira.massa_especifica_in_situ?.resultados === 'string' && formData.ensaios_empreiteira.massa_especifica_in_situ.resultados.trim() !== '')
+                               ? formData.ensaios_empreiteira.massa_especifica_in_situ.resultados.split('|').map(s => s.trim())
+                               : [];
+
+                           const calculateGC = (idx) => {
+                             const proctor = parseFloat(proctorResultados[idx]);
+                             const inSitu = parseFloat(inSituResultados[idx]);
+                             if (isNaN(proctor) || isNaN(inSitu) || proctor === 0) return null;
+                             return ((inSitu / proctor) * 100).toFixed(2);
+                           };
+
+                           const gcResultados = Array.from({ length: gcQtde }).map((_, idx) => calculateGC(idx));
+                           const setGC = (patch) => setFormData(prev => ({ ...prev, ensaios_empreiteira: { ...prev.ensaios_empreiteira, ...patch } }));
+                           return (
+                             <tr>
+                               <td className="border border-slate-300 px-2 py-2 bg-slate-50">Grau de Compactação (%)</td>
+                               <td className="border border-slate-300 px-2 py-1 text-center">-</td>
+                               <td className="border border-slate-300 px-1 py-1">
+                                 <Input type="number" min="0" max="3" value={gcQtde}
+                                   onChange={(e) => {
+                                     const n = Math.max(0, Math.min(3, parseInt(e.target.value) || 0));
+                                     setGC({ grau_compactacao_quantidade: n, grau_compactacao_resultados: [] });
+                                   }}
+                                   className="h-8 text-sm text-center" placeholder="" />
+                               </td>
+                               <td className="border border-slate-300 px-1 py-2">
+                                 <div className="flex flex-wrap gap-1">
+                                   {Array.from({ length: gcQtde }).map((_, idx) => (
+                                     <div key={idx} className="h-8 flex items-center px-2 bg-slate-100 rounded border border-slate-300 text-sm text-center font-medium"
+                                       style={{ width: gcQtde > 1 ? '90px' : '100%' }}>
+                                       {gcResultados[idx] ?? '-'}
+                                     </div>
+                                   ))}
+                                 </div>
+                               </td>
+                               <td className="border border-slate-300 px-2 py-1 text-center">
+                                 <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === true}
+                                   onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? true : null })}
+                                   className="w-4 h-4 accent-green-500" />
+                               </td>
+                               <td className="border border-slate-300 px-2 py-1 text-center">
+                                 <input type="checkbox" checked={formData.ensaios_empreiteira.grau_compactacao_conforme === false}
+                                   onChange={(e) => setGC({ grau_compactacao_conforme: e.target.checked ? false : null })}
+                                   className="w-4 h-4 accent-red-500" />
+                               </td>
+                             </tr>
+                           );
                         })()}
                       </tbody>
                     </table>
