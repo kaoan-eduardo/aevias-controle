@@ -294,7 +294,7 @@ export default function GranuMistura() {
         peneira_25_0mm: 25.0, peneira_25_00mm: 25.0,
         peneira_19_0mm: 19.0, peneira_19_00mm: 19.0, peneira_12_5mm: 12.5, peneira_9_5mm: 9.5, peneira_4_75mm: 4.75,
         peneira_2_36mm: 2.36, peneira_2_0mm: 2.0, peneira_2_00mm: 2.0, peneira_1_18mm: 1.18, peneira_0_6mm: 0.6,
-        peneira_0_42mm: 0.42, peneira_0_3mm: 0.3, peneira_0_15mm: 0.15, peneira_0_075mm: 0.075
+        peneira_0_42mm: 0.42, peneira_0_3mm: 0.3, peneira_0_18mm: 0.18, peneira_0_15mm: 0.15, peneira_0_075mm: 0.075
       };
       return Math.abs(ab - (penMap[peneiraKey] || penMap[peneiraKeyAlt] || 0)) < 0.01;
     });
