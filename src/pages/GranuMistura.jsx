@@ -246,6 +246,7 @@ export default function GranuMistura() {
     try {
       const dataToSave = {
         ...formData,
+        numero_projeto: formData.project_id,
         status: saveStatus,
         laboratorista_name: formData.laboratorista_name || user?.laboratorista_name || user?.full_name
       };
