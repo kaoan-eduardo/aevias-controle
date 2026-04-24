@@ -27,8 +27,8 @@ export default function RelatorioGranuMisturaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex justify-between items-center p-4 bg-white border-b sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-100 !light" style={{ colorScheme: 'light' }}>
+      <div className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-50 print:relative">
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ChevronLeft className="w-4 h-4" /> Voltar
         </Button>
@@ -38,7 +38,7 @@ export default function RelatorioGranuMisturaPage() {
         </Button>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 pt-24 print:pt-4">
         {loading ? (
           <div className="flex justify-center items-center h-96">
             <Loader2 className="w-8 h-8 animate-spin" />

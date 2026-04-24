@@ -68,7 +68,7 @@ export default function RelatorioGranuMistura({ recordId }) {
   }));
 
   return (
-    <div className="p-8 bg-white min-h-screen font-sans text-xs">
+    <div className="p-8 bg-white min-h-screen font-sans text-xs !light" style={{ colorScheme: 'light' }}>
       {/* Header */}
       <div className="flex justify-between items-start mb-6 border-b-2 border-black pb-3">
         <div>
