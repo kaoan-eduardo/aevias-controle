@@ -492,9 +492,11 @@ export default function ChecklistTerraplanagem() {
               ? formData.ensaios_empreiteira.granulometria.resultados.filter(r => r !== null && r !== '').join(' | ')
               : (formData.ensaios_empreiteira.granulometria.resultados ?? '')
           },
+          variacao_umidade_quantidade: parseInt(formData.ensaios_empreiteira.variacao_umidade_quantidade) || 0,
           variacao_umidade_resultados: Array.isArray(formData.ensaios_empreiteira.variacao_umidade_resultados)
             ? formData.ensaios_empreiteira.variacao_umidade_resultados.filter(r => r !== null && r !== '').join(' | ')
             : (formData.ensaios_empreiteira.variacao_umidade_resultados ?? ''),
+          grau_compactacao_quantidade: parseInt(formData.ensaios_empreiteira.grau_compactacao_quantidade) || 0,
           grau_compactacao_resultados: Array.isArray(formData.ensaios_empreiteira.grau_compactacao_resultados)
             ? formData.ensaios_empreiteira.grau_compactacao_resultados.filter(r => r !== null && r !== '').join(' | ')
             : (formData.ensaios_empreiteira.grau_compactacao_resultados ?? '')
