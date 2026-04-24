@@ -346,12 +346,16 @@ export default function GranuMistura() {
                   <Input value={regionalSelecionada?.cliente || ""} disabled className="bg-gray-50 text-xs mt-1" />
                 </div>
                 <div>
-                  <Label className="text-xs font-bold">OBRA *</Label>
-                  <Select value={formData.obra_id} onValueChange={v => handleChange("obra_id", v)} disabled={!!editingId || isApproved}>
-                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                    <SelectContent>{obras.map(o => <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
+                    <Label className="text-xs font-bold">DATA DO ENSAIO *</Label>
+                    <Input type="date" value={formData.data_ensaio} onChange={e => handleChange("data_ensaio", e.target.value)} disabled={!!editingId || isApproved} className="text-xs" />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-bold">OBRA *</Label>
+                    <Select value={formData.obra_id} onValueChange={v => handleChange("obra_id", v)} disabled={!!editingId || isApproved}>
+                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                      <SelectContent>{obras.map(o => <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
                 <div>
                   <Label className="text-xs font-bold">RODOVIA</Label>
                   <Select value={formData.rodovia} onValueChange={v => handleChange("rodovia", v)} disabled={isApproved}>

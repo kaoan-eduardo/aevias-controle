@@ -12,6 +12,12 @@
       "type": "string",
       "format": "date"
     },
+    "numero_projeto": {
+      "type": "string"
+    },
+    "material_outro": {
+      "type": "string"
+    },
     "laboratorista_name": {
       "type": "string"
     },
@@ -22,9 +28,6 @@
       "type": "string"
     },
     "camada": {
-      "type": "string"
-    },
-    "numero_projeto": {
       "type": "string"
     },
     "material": {
