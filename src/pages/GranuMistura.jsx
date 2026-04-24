@@ -140,6 +140,23 @@ export default function GranuMistura() {
     setFilteredProjects(projs);
   }, [formData.obra_id, formData.material, obras, regionais, projects, editingId]);
 
+  // Sincroniza formData.peneiras para incluir todas as peneiras da faixa selecionada
+  const syncPeneirasComFaixa = (faixa) => {
+    if (!faixa?.peneiras) return;
+    setFormData(prev => {
+      const novasPeneiras = faixa.peneiras
+        .map(fp => ({ astm: fp.astm, abertura_mm: parseFloat(fp.abertura) }))
+        .sort((a, b) => b.abertura_mm - a.abertura_mm);
+
+      const peneirasAtuais = prev.peneiras;
+      const peneirasSync = novasPeneiras.map(np => {
+        const existente = peneirasAtuais.find(p => Math.abs(p.abertura_mm - np.abertura_mm) < 0.01);
+        return existente || { ...np, retido_g: "", passante_g: "", passante_pct: "" };
+      });
+      return { ...prev, peneiras: peneirasSync };
+    });
+  };
+
   useEffect(() => {
     if (formData.material === "OUTRO") {
       setSelectedProject(null);
@@ -147,6 +164,7 @@ export default function GranuMistura() {
       if (formData.faixa) {
         const fx = faixasDisponiveis.find(f => f.id === formData.faixa);
         setFaixaSelecionada(fx || null);
+        syncPeneirasComFaixa(fx || null);
       } else {
         setFaixaSelecionada(null);
       }
@@ -156,7 +174,10 @@ export default function GranuMistura() {
       const proj = projects.find(p => p.id === formData.numero_projeto);
       setSelectedProject(proj || null);
       if (proj?.faixa_granulometrica_id) {
-        base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id).then(f => setFaixaGran(f)).catch(() => setFaixaGran(null));
+        base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id).then(f => {
+          setFaixaGran(f);
+          syncPeneirasComFaixa(f);
+        }).catch(() => setFaixaGran(null));
       } else {
         setFaixaGran(null);
       }
