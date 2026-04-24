@@ -31,13 +31,23 @@ export default function RelatorioGranuMisturaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100" style={{ colorScheme: 'light', zoom: '100%', userSelect: 'none' }}>
+    <div className="min-h-screen bg-gray-100" style={{ colorScheme: 'light', userSelect: 'none' }}>
       <style>{`
-        * { color-scheme: light !important; }
+        html, body {
+          zoom: 100% !important;
+          transform: scale(1) !important;
+          transform-origin: 0 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
+        * {
+          color-scheme: light !important;
+          zoom: 100% !important;
+          transform: scale(1) !important;
+        }
         .dark { display: none !important; }
-        body, html { zoom: 100% !important; }
         @media print {
-          body { zoom: 100% !important; }
+          html, body { zoom: 100% !important; }
         }
       `}</style>
       <div className="flex justify-between items-center p-4 bg-white border-b fixed top-0 left-0 right-0 z-50 print:relative" style={{ colorScheme: 'light' }}>
