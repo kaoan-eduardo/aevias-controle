@@ -317,21 +317,11 @@ export default function GranuMistura() {
 
   const getPeneirasExibidos = () => {
     const faixa = formData.material === "OUTRO" ? faixaSelecionada : faixaGran;
-    if (!faixa?.peneiras) return PENEIRAS_PADRAO; // sem faixa: mostrar todas
-    // Com faixa: mostrar peneiras padrão que pertencem à faixa + peneiras adicionais da faixa
-    const faixaAberturas = new Set();
-    faixa.peneiras.forEach(fp => {
-      const ab = parseFloat(fp.abertura);
-      if (!isNaN(ab)) faixaAberturas.add(ab);
-    });
-    const peneirasParao = PENEIRAS_PADRAO.filter(p =>
-      [...faixaAberturas].some(ab => Math.abs(p.abertura_mm - ab) < 0.01)
-    );
-    const peneirasAdicionais = [...faixaAberturas]
-      .filter(ab => !PENEIRAS_PADRAO.some(p => Math.abs(p.abertura_mm - ab) < 0.01))
-      .map(ab => ({ astm: `${ab}mm`, abertura_mm: ab }))
+    if (!faixa?.peneiras) return PENEIRAS_PADRAO;
+    // Mostrar exatamente as peneiras da faixa, ordenadas por abertura decrescente
+    return faixa.peneiras
+      .map(fp => ({ astm: fp.astm, abertura_mm: parseFloat(fp.abertura) }))
       .sort((a, b) => b.abertura_mm - a.abertura_mm);
-    return [...peneirasParao, ...peneirasAdicionais].sort((a, b) => b.abertura_mm - a.abertura_mm);
   };
 
   return (
