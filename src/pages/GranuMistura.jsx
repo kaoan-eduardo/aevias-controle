@@ -410,7 +410,7 @@ export default function GranuMistura() {
                     <Label className="text-xs font-bold">FAIXA ESPECIFICADA</Label>
                     <Select value={formData.faixa} onValueChange={v => handleChange("faixa", v)} disabled={isApproved}>
                       <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                      <SelectContent>{faixasDisponiveis.map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
+                      <SelectContent>{faixasDisponiveis.filter(f => f.tipo === "CAMADAS_GRANULARES").map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
                   )}
