@@ -32,33 +32,32 @@ const getInitialPeneiras = () => PENEIRAS_PADRAO.map(p => ({
 }));
 
 const getInitialForm = () => ({
-  obra_id: "",
-  project_id: "",
-  data_ensaio: new Date().toISOString().split("T")[0],
-  horario: "",
-  laboratorista_name: "",
-  rodovia: "",
-  trecho: "",
-  camada: "",
-  numero_projeto: "",
-  material: "",
-  local_coleta: "",
-  pedreira: "",
-  faixa: "",
-  peso_amostra: "",
-  peneiras: getInitialPeneiras(),
-  umidade: { peso_umido: "", peso_seco: "", peso_agua: "", umidade_pct: "" },
-  equivalente_areia: {
-    medicoes: [
-      { topo_argila: "", topo_areia: "", equivalente: "" },
-      { topo_argila: "", topo_areia: "", equivalente: "" },
-      { topo_argila: "", topo_areia: "", equivalente: "" }
-    ],
-    media: ""
-  },
-  materiais_pulverulentos: { peso_inicial: "", peso_apos_lavagem: "", teor_pct: "" },
-  observacoes: "",
-  status: "rascunho"
+   obra_id: "",
+   numero_projeto: "",
+   data_ensaio: new Date().toISOString().split("T")[0],
+   horario: "",
+   laboratorista_name: "",
+   rodovia: "",
+   trecho: "",
+   camada: "",
+   material: "",
+   local_coleta: "",
+   pedreira: "",
+   faixa: "",
+   peso_amostra: "",
+   peneiras: getInitialPeneiras(),
+   umidade: { peso_umido: "", peso_seco: "", peso_agua: "", umidade_pct: "" },
+   equivalente_areia: {
+     medicoes: [
+       { topo_argila: "", topo_areia: "", equivalente: "" },
+       { topo_argila: "", topo_areia: "", equivalente: "" },
+       { topo_argila: "", topo_areia: "", equivalente: "" }
+     ],
+     media: ""
+   },
+   materiais_pulverulentos: { peso_inicial: "", peso_apos_lavagem: "", teor_pct: "" },
+   observacoes: "",
+   status: "rascunho"
 });
 
 export default function GranuMistura() {
@@ -108,8 +107,8 @@ export default function GranuMistura() {
         if (currentUser.role === "admin" || (rec.created_by === currentUser.email && (rec.status === "rascunho" || rec.approved === false))) {
           setEditingId(editId);
           setFormData({ ...getInitialForm(), ...rec, peneiras: rec.peneiras || getInitialPeneiras() });
-          if (rec.project_id) {
-            const proj = projectsData.find(p => p.id === rec.project_id);
+          if (rec.numero_projeto) {
+            const proj = projectsData.find(p => p.id === rec.numero_projeto);
             setSelectedProject(proj || null);
           }
         } else {
@@ -139,7 +138,7 @@ export default function GranuMistura() {
       projs = projs.filter(p => p.tipo_projeto === formData.material);
     }
     setFilteredProjects(projs);
-  }, [formData.obra_id, formData.material, obras, regionais, projects]);
+  }, [formData.obra_id, formData.material, obras, regionais, projects, editingId]);
 
   useEffect(() => {
     if (formData.material === "OUTRO") {
@@ -153,8 +152,8 @@ export default function GranuMistura() {
       }
     } else {
       setFaixaSelecionada(null);
-      if (!formData.project_id) { setSelectedProject(null); setFaixaGran(null); return; }
-      const proj = projects.find(p => p.id === formData.project_id);
+      if (!formData.numero_projeto) { setSelectedProject(null); setFaixaGran(null); return; }
+      const proj = projects.find(p => p.id === formData.numero_projeto);
       setSelectedProject(proj || null);
       if (proj?.faixa_granulometrica_id) {
         base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id).then(f => setFaixaGran(f)).catch(() => setFaixaGran(null));
@@ -162,7 +161,7 @@ export default function GranuMistura() {
         setFaixaGran(null);
       }
     }
-  }, [formData.project_id, formData.faixa, formData.material, projects, faixasDisponiveis]);
+  }, [formData.numero_projeto, formData.faixa, formData.material, projects, faixasDisponiveis]);
 
 
 
@@ -246,7 +245,6 @@ export default function GranuMistura() {
     try {
       const dataToSave = {
         ...formData,
-        numero_projeto: formData.project_id,
         status: saveStatus,
         laboratorista_name: formData.laboratorista_name || user?.laboratorista_name || user?.full_name
       };
@@ -394,10 +392,10 @@ export default function GranuMistura() {
                 {formData.material !== "OUTRO" && (
                   <div>
                     <Label className="text-xs font-bold">PROJETO *</Label>
-                    <Select value={formData.project_id} onValueChange={v => handleChange("project_id", v)} disabled={!!editingId || isApproved}>
-                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                      <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
-                    </Select>
+                    <Select value={formData.numero_projeto} onValueChange={v => handleChange("numero_projeto", v)} disabled={!!editingId || isApproved}>
+                        <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                        <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
+                      </Select>
                   </div>
                 )}
                 {formData.material === "OUTRO" && (
@@ -408,17 +406,17 @@ export default function GranuMistura() {
                       <SelectContent>{faixasDisponiveis.map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
-                )}
-                <div>
-                  <Label className="text-xs font-bold">PEDREIRA</Label>
-                  <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: Pedreira São João" />
-                </div>
-                {formData.material !== "OUTRO" && (
+                  )}
+                  {formData.material !== "OUTRO" && (
                   <div>
                     <Label className="text-xs font-bold">FAIXA</Label>
                     <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
                   </div>
-                )}
+                  )}
+                  <div>
+                    <Label className="text-xs font-bold">PEDREIRA</Label>
+                    <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: Pedreira São João" />
+                  </div>
               </div>
 
               {/* Coluna 3 */}
