@@ -383,7 +383,7 @@ export default function GranuMistura() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-bold">MATERIAL</Label>
-                  <Select value={["CAUQ","MRAF","BGS","OUTRO"].includes(formData.material) ? formData.material : "OUTRO"} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); handleChange("faixa", ""); }} disabled={isApproved}>
+                  <Select value={formData.material} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); handleChange("faixa", ""); }} disabled={isApproved}>
                     <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CAUQ">CAUQ</SelectItem>
