@@ -145,7 +145,6 @@ export default function GranuMistura() {
     if (formData.material === "OUTRO") {
       setSelectedProject(null);
       setFaixaGran(null);
-      // Carregar faixa selecionada se houver
       if (formData.faixa) {
         const fx = faixasDisponiveis.find(f => f.id === formData.faixa);
         setFaixaSelecionada(fx || null);
@@ -162,9 +161,17 @@ export default function GranuMistura() {
       } else {
         setFaixaGran(null);
       }
-      setFormData(prev => ({ ...prev, pedreira: proj?.pedreira || "" }));
     }
   }, [formData.project_id, formData.faixa, formData.material, projects, faixasDisponiveis]);
+
+  // Preenche pedreira automaticamente ao selecionar projeto (apenas CAUQ/MRAF/BGS)
+  useEffect(() => {
+    if (formData.material === "OUTRO" || !formData.project_id) return;
+    const proj = projects.find(p => p.id === formData.project_id);
+    if (proj) {
+      setFormData(prev => ({ ...prev, pedreira: proj.pedreira || "" }));
+    }
+  }, [formData.project_id]);
 
   const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
 
