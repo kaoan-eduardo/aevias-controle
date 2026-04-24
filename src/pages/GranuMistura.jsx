@@ -245,6 +245,13 @@ export default function GranuMistura() {
     try {
       const dataToSave = {
         ...formData,
+        peneiras: formData.peneiras.map(p => ({
+          astm: p.astm,
+          abertura_mm: p.abertura_mm,
+          retido_g: p.retido_g ? parseFloat(p.retido_g) : null,
+          passante_g: p.passante_g ? parseFloat(p.passante_g) : null,
+          passante_pct: p.passante_pct ? parseFloat(p.passante_pct) : null
+        })),
         status: saveStatus,
         laboratorista_name: formData.laboratorista_name || user?.laboratorista_name || user?.full_name
       };
