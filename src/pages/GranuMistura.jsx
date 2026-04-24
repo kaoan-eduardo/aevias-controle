@@ -376,7 +376,7 @@ export default function GranuMistura() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-bold">MATERIAL</Label>
-                  <Select value={["CAUQ","MRAF","OUTRO"].includes(formData.material) ? formData.material : "OUTRO"} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); if (v !== "OUTRO") handleChange("material_outro", ""); }} disabled={isApproved}>
+                  <Select value={["CAUQ","MRAF","BGS","OUTRO"].includes(formData.material) ? formData.material : "OUTRO"} onValueChange={v => { handleChange("material", v); handleChange("project_id", ""); handleChange("faixa", ""); }} disabled={isApproved}>
                     <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="CAUQ">CAUQ</SelectItem>
@@ -388,24 +388,35 @@ export default function GranuMistura() {
                   {formData.material === "OUTRO" && (
                     <Input value={formData.material_outro || ""} onChange={e => handleChange("material_outro", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Especifique o material ensaiado" />
                   )}
-                  </div>
+                </div>
+                {formData.material !== "OUTRO" && (
                   <div>
-                  <Label className="text-xs font-bold">PROJETO {formData.material !== "OUTRO" ? "*" : ""}</Label>
-                  <Select value={formData.project_id} onValueChange={v => handleChange("project_id", v)} disabled={!!editingId || isApproved}>
-                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                    <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
-                  </Select>
+                    <Label className="text-xs font-bold">PROJETO *</Label>
+                    <Select value={formData.project_id} onValueChange={v => handleChange("project_id", v)} disabled={!!editingId || isApproved}>
+                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                      <SelectContent>{filteredProjects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}</SelectContent>
+                    </Select>
                   </div>
+                )}
+                {formData.material === "OUTRO" && (
                   <div>
+                    <Label className="text-xs font-bold">FAIXA ESPECIFICADA</Label>
+                    <Select value={formData.faixa} onValueChange={v => handleChange("faixa", v)} disabled={isApproved}>
+                      <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
+                      <SelectContent>{faixasDisponiveis.map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <div>
                   <Label className="text-xs font-bold">PEDREIRA</Label>
                   <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DEPENDE PROJETO" />
+                </div>
+                {formData.material !== "OUTRO" && (
+                  <div>
+                    <Label className="text-xs font-bold">FAIXA</Label>
+                    <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
                   </div>
-                  {formData.material !== "OUTRO" && (
-                    <div>
-                      <Label className="text-xs font-bold">FAIXA</Label>
-                      <Input value={formData.faixa} onChange={e => handleChange("faixa", e.target.value)} disabled={isApproved} className="text-xs" placeholder={faixaGran?.nome || ""} />
-                    </div>
-                  )}
+                )}
               </div>
 
               {/* Coluna 3 */}
@@ -424,17 +435,7 @@ export default function GranuMistura() {
                 </div>
               </div>
             </div>
-            {formData.material === "OUTRO" && (
-              <div className="border-t pt-4 mt-4 space-y-4">
-                <div className="max-w-xs">
-                  <Label className="text-xs font-bold">FAIXA ESPECIFICADA</Label>
-                  <Select value={formData.faixa} onValueChange={v => handleChange("faixa", v)} disabled={isApproved}>
-                    <SelectTrigger><SelectValue placeholder="SELECT" /></SelectTrigger>
-                    <SelectContent>{faixasDisponiveis.map(f => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
+
           </CardContent>
         </Card>
 
@@ -484,12 +485,22 @@ export default function GranuMistura() {
                         <th className="border border-slate-300 px-2 py-1" colSpan="2">ESPECIFICAÇÃO</th>
                       </>
                     )}
+                    {formData.material === "OUTRO" && faixaSelecionada && (
+                      <th className="border border-slate-300 px-2 py-1" colSpan="2">ESPECIFICAÇÃO</th>
+                    )}
                   </tr>
                   {formData.material !== "OUTRO" && (
                     <tr>
                       <th colSpan="5" className="border border-slate-300 bg-slate-50"></th>
                       <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
                       <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
+                      <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
+                      <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
+                    </tr>
+                  )}
+                  {formData.material === "OUTRO" && faixaSelecionada && (
+                    <tr>
+                      <th colSpan="5" className="border border-slate-300 bg-slate-50"></th>
                       <th className="border border-slate-300 px-2 py-1">MÍN. (%)</th>
                       <th className="border border-slate-300 px-2 py-1">MÁX. (%)</th>
                     </tr>
@@ -532,6 +543,12 @@ export default function GranuMistura() {
                           <>
                             <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.min ?? "-"}</td>
                             <td className="border border-slate-300 px-2 py-1 text-center text-blue-700 text-[9px]">{ft.max ?? "-"}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.min ?? "-"}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.max ?? "-"}</td>
+                          </>
+                        )}
+                        {formData.material === "OUTRO" && faixaSelecionada && (
+                          <>
                             <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.min ?? "-"}</td>
                             <td className="border border-slate-300 px-2 py-1 text-center text-green-700 text-[9px]">{esp.max ?? "-"}</td>
                           </>
