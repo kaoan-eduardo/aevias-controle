@@ -164,14 +164,7 @@ export default function GranuMistura() {
     }
   }, [formData.project_id, formData.faixa, formData.material, projects, faixasDisponiveis]);
 
-  // Preenche pedreira automaticamente ao selecionar projeto (apenas CAUQ/MRAF/BGS)
-  useEffect(() => {
-    if (formData.material === "OUTRO" || !formData.project_id) return;
-    const proj = projects.find(p => p.id === formData.project_id);
-    if (proj) {
-      setFormData(prev => ({ ...prev, pedreira: proj.pedreira || "" }));
-    }
-  }, [formData.project_id]);
+
 
   const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
 
