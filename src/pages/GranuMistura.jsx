@@ -119,7 +119,6 @@ export default function GranuMistura() {
       } else {
         const init = getInitialForm();
         init.laboratorista_name = currentUser.laboratorista_name || currentUser.full_name || "";
-        if (availableObras.length > 0) init.obra_id = availableObras[0].id;
         setFormData(init);
       }
     } catch (err) {
@@ -364,7 +363,7 @@ export default function GranuMistura() {
                 </div>
                 <div>
                   <Label className="text-xs font-bold">TRECHO</Label>
-                  <Input value={formData.trecho} onChange={e => handleChange("trecho", e.target.value)} disabled={isApproved} className="text-xs" placeholder="INPUT" />
+                  <Input value={formData.trecho} onChange={e => handleChange("trecho", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: km 12+300 ao km 15+100" />
                 </div>
               </div>
 
@@ -372,7 +371,7 @@ export default function GranuMistura() {
               <div className="space-y-4">
                 <div>
                   <Label className="text-xs font-bold">CAMADA</Label>
-                  <Input value={formData.camada} onChange={e => handleChange("camada", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DIGITAR" />
+                  <Input value={formData.camada} onChange={e => handleChange("camada", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: Capa de rolamento" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-bold">MATERIAL</Label>
@@ -409,7 +408,7 @@ export default function GranuMistura() {
                 )}
                 <div>
                   <Label className="text-xs font-bold">PEDREIRA</Label>
-                  <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="DEPENDE PROJETO" />
+                  <Input value={formData.pedreira} onChange={e => handleChange("pedreira", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: Pedreira São João" />
                 </div>
                 {formData.material !== "OUTRO" && (
                   <div>
@@ -423,7 +422,7 @@ export default function GranuMistura() {
               <div className="space-y-4">
                 <div>
                   <Label className="text-xs font-bold">LOCAL DE COLETA</Label>
-                  <Input value={formData.local_coleta} onChange={e => handleChange("local_coleta", e.target.value)} disabled={isApproved} className="text-xs" placeholder="INPUT" />
+                  <Input value={formData.local_coleta} onChange={e => handleChange("local_coleta", e.target.value)} disabled={isApproved} className="text-xs" placeholder="Ex: Usina / Pista - km 13+500" />
                 </div>
                 <div>
                   <Label className="text-xs font-bold">HORÁRIO</Label>
@@ -431,7 +430,7 @@ export default function GranuMistura() {
                 </div>
                 <div>
                   <Label className="text-xs font-bold">LABORATORISTA</Label>
-                  <Input value={formData.laboratorista_name} onChange={e => handleChange("laboratorista_name", e.target.value)} disabled={isApproved} className="text-xs bg-gray-50" placeholder="AUTOMÁTICO" />
+                  <Input value={formData.laboratorista_name} onChange={e => handleChange("laboratorista_name", e.target.value)} disabled={isApproved} className="text-xs bg-gray-50" placeholder="Nome do laboratorista" />
                 </div>
               </div>
             </div>
