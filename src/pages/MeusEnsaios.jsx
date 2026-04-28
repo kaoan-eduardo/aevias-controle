@@ -1066,7 +1066,8 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
   const emExecucao = useMemo(() => {
     const filtered = ensaios.filter((e) => {
       // Rascunhos OU reprovados (approved === false) vão para Em Execução
-      return (e.status === 'rascunho' || e.approved === false) && e.approved !== true && !e.client_signature?.signed_by;
+      // status === 'rascunho' tem prioridade independente do approved
+      return (e.status === 'rascunho' || e.approved === false) && !e.client_signature?.signed_by;
     });
     return filtered;
   }, [ensaios]);
