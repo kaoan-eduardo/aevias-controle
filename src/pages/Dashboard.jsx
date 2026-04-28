@@ -21,9 +21,8 @@ import {
   Filter, 
   X
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
-import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays, parseISO } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -84,9 +83,7 @@ export default function Dashboard() {
     obraId: null,
     status: null,
     tipoRegistro: null,
-    periodo: '6meses',
-    dataInicio: '',
-    dataFim: ''
+    periodo: '6meses'
   });
   
   const [stats, setStats] = useState({
@@ -412,26 +409,17 @@ export default function Dashboard() {
       filtered = filtered.filter(e => e.entityType === filters.tipoRegistro);
     }
 
-    // Filtro por data customizada ou período
-    if (filters.dataInicio || filters.dataFim) {
-      filtered = filtered.filter(e => {
-        const d = new Date(e.created_date);
-        if (filters.dataInicio && d < new Date(filters.dataInicio + 'T00:00:00')) return false;
-        if (filters.dataFim && d > new Date(filters.dataFim + 'T23:59:59')) return false;
-        return true;
-      });
+    // Filtro por período
+    const now = new Date();
+    let startDate;
+    if (filters.periodo === '1mes') {
+      startDate = subMonths(now, 1);
+    } else if (filters.periodo === '3meses') {
+      startDate = subMonths(now, 3);
     } else {
-      const now = new Date();
-      let startDate;
-      if (filters.periodo === '1mes') {
-        startDate = subMonths(now, 1);
-      } else if (filters.periodo === '3meses') {
-        startDate = subMonths(now, 3);
-      } else {
-        startDate = subMonths(now, 6);
-      }
-      filtered = filtered.filter(e => new Date(e.created_date) >= startDate);
+      startDate = subMonths(now, 6);
     }
+    filtered = filtered.filter(e => new Date(e.created_date) >= startDate);
 
     return { ensaios: filtered, obras: allData.obras };
   }, [allData, filters]);
@@ -620,13 +608,11 @@ export default function Dashboard() {
       obraId: null,
       status: null,
       tipoRegistro: null,
-      periodo: '6meses',
-      dataInicio: '',
-      dataFim: ''
+      periodo: '6meses'
     });
   }, []);
 
-  const hasActiveFilters = filters.obraId || filters.status || filters.tipoRegistro || filters.dataInicio || filters.dataFim;
+  const hasActiveFilters = filters.obraId || filters.status || filters.tipoRegistro;
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isCliente = userAccessLevel === 'cliente';
@@ -686,7 +672,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Obra</label>
                   <Select value={filters.obraId || 'todas'} onValueChange={(value) => setFilters(prev => ({ ...prev, obraId: value === 'todas' ? null : value }))}>
@@ -739,14 +725,7 @@ export default function Dashboard() {
 
                 <div>
                   <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Período</label>
-                  <Select
-                    value={filters.dataInicio || filters.dataFim ? 'custom' : filters.periodo}
-                    onValueChange={(value) => {
-                      if (value !== 'custom') {
-                        setFilters(prev => ({ ...prev, periodo: value, dataInicio: '', dataFim: '' }));
-                      }
-                    }}
-                  >
+                  <Select value={filters.periodo} onValueChange={(value) => setFilters(prev => ({ ...prev, periodo: value }))}>
                     <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B]">
                       <SelectValue />
                     </SelectTrigger>
@@ -754,31 +733,8 @@ export default function Dashboard() {
                       <SelectItem value="1mes">Último Mês</SelectItem>
                       <SelectItem value="3meses">Últimos 3 Meses</SelectItem>
                       <SelectItem value="6meses">Últimos 6 Meses</SelectItem>
-                      {(filters.dataInicio || filters.dataFim) && (
-                        <SelectItem value="custom">Personalizado</SelectItem>
-                      )}
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Data Início</label>
-                  <Input
-                    type="date"
-                    value={filters.dataInicio}
-                    onChange={(e) => setFilters(prev => ({ ...prev, dataInicio: e.target.value }))}
-                    className="bg-white/50 border-white/30 text-[#00233B]"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Data Fim</label>
-                  <Input
-                    type="date"
-                    value={filters.dataFim}
-                    onChange={(e) => setFilters(prev => ({ ...prev, dataFim: e.target.value }))}
-                    className="bg-white/50 border-white/30 text-[#00233B]"
-                  />
                 </div>
               </div>
 
