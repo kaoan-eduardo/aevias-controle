@@ -561,7 +561,7 @@ export default function ChecklistUsinaPage() {
         const updateData = { ...dataToSave };
         let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
         
-        if (editingChecklist.approved === false && saveStatus === 'finalizado') {
+        if ((editingChecklist.approved === false || editingChecklist.approved === null) && saveStatus === 'finalizado' && editingChecklist.status === 'finalizado') {
           updateData.approved = null;
           updateData.rejection_reason = null;
           updateData.approved_by = null;
@@ -665,7 +665,7 @@ export default function ChecklistUsinaPage() {
           const checklistToEdit = await ChecklistUsinaEntity.get(editId); // Corrected entity name
           setEditingChecklist(checklistToEdit);
 
-          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
+          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false || checklistToEdit.approved === null))) {
             const initialForm = getInitialFormData();
             let loadedFormData = {
               ...initialForm,
@@ -782,8 +782,8 @@ export default function ChecklistUsinaPage() {
   
 
 
-  const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
+  const isApproved = formData.approved === true && formData.status !== 'rascunho';
+  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false || formData.approved === null));
   const isEditable = !editingChecklist?.id || userCanEdit;
 
   if (loading) {
