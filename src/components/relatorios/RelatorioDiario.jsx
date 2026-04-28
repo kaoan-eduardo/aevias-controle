@@ -26,8 +26,8 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            const maxWidth = 1200;
-            const maxHeight = 900;
+            const maxWidth = 800;
+            const maxHeight = 600;
             let width = img.width;
             let height = img.height;
             
@@ -41,7 +41,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
             canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
             
-            return canvas.toDataURL('image/jpeg', 0.8);
+            return canvas.toDataURL('image/jpeg', 0.5);
           } catch (error) {
             console.error('Erro ao comprimir imagem:', error);
             return photoUrl;
