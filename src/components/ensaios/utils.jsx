@@ -184,6 +184,10 @@ export const getNaoConformidades = (ensaio) => {
 };
 
 export const getStatusInfo = (ensaio) => {
+  // Se status foi revertido para rascunho, tem prioridade sobre approved
+  if (ensaio.status === 'rascunho' && !ensaio.client_signature?.signed_by) {
+    return { text: "Em Execução", icon: "Clock", className: "bg-blue-100/80 text-blue-800 border border-blue-300/50 hover:bg-blue-200/80 hover:border-blue-400/50 transition-colors" };
+  }
   if (ensaio.client_signature?.signed_by) {
     return { text: "Assinado", icon: "CheckCircle", className: "bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 hover:bg-[#00233B]/20 hover:border-[#00233B]/40 transition-colors" };
   }
