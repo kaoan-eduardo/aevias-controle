@@ -1,4 +1,4 @@
-import { MapPin, Building } from "lucide-react";
+import { MapPin, Building, Clock, CheckCircle, XCircle } from "lucide-react";
 
 export const getLocalInfo = (ensaio) => {
   const entityType = ensaio.entityType;
@@ -186,19 +186,19 @@ export const getNaoConformidades = (ensaio) => {
 export const getStatusInfo = (ensaio) => {
   // Se status foi revertido para rascunho, tem prioridade sobre approved
   if (ensaio.status === 'rascunho' && !ensaio.client_signature?.signed_by) {
-    return { text: "Em Execução", icon: "Clock", className: "bg-blue-100/80 text-blue-800 border border-blue-300/50 hover:bg-blue-200/80 hover:border-blue-400/50 transition-colors" };
+    return { text: "Em Execução", icon: Clock, className: "bg-blue-100/80 text-blue-800 border border-blue-300/50 hover:bg-blue-200/80 hover:border-blue-400/50 transition-colors" };
   }
   if (ensaio.client_signature?.signed_by) {
-    return { text: "Assinado", icon: "CheckCircle", className: "bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 hover:bg-[#00233B]/20 hover:border-[#00233B]/40 transition-colors" };
+    return { text: "Assinado", icon: CheckCircle, className: "bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 hover:bg-[#00233B]/20 hover:border-[#00233B]/40 transition-colors" };
   }
   if (ensaio.approved === true) {
-    return { text: "Aprovado", icon: "CheckCircle", className: "bg-[#566E3D]/10 text-[#566E3D] border border-[#566E3D]/30 hover:bg-[#566E3D]/20 hover:border-[#566E3D]/40 transition-colors" };
+    return { text: "Aprovado", icon: CheckCircle, className: "bg-[#566E3D]/10 text-[#566E3D] border border-[#566E3D]/30 hover:bg-[#566E3D]/20 hover:border-[#566E3D]/40 transition-colors" };
   }
   if (ensaio.approved === false) {
-    return { text: "Reprovado", icon: "XCircle", className: "bg-[#800020]/10 text-[#800020] border border-[#800020]/30 hover:bg-[#800020]/20 hover:border-[#800020]/40 transition-colors" };
+    return { text: "Reprovado", icon: XCircle, className: "bg-[#800020]/10 text-[#800020] border border-[#800020]/30 hover:bg-[#800020]/20 hover:border-[#800020]/40 transition-colors" };
   }
   if (ensaio.was_rejected === true) {
-    return { text: "Pendente", icon: "Clock", className: "bg-orange-100/80 text-orange-800 border border-orange-300/50 hover:bg-orange-200/80 hover:border-orange-400/50 transition-colors", wasRejected: true };
+    return { text: "Pendente", icon: Clock, className: "bg-orange-100/80 text-orange-800 border border-orange-300/50 hover:bg-orange-200/80 hover:border-orange-400/50 transition-colors", wasRejected: true };
   }
-  return { text: "Pendente", icon: "Clock", className: "bg-[#FBBF24]/10 text-[#854d0e] border border-[#FBBF24]/30 hover:bg-[#FBBF24]/20 hover:border-[#FBBF24]/40 transition-colors" };
+  return { text: "Pendente", icon: Clock, className: "bg-[#FBBF24]/10 text-[#854d0e] border border-[#FBBF24]/30 hover:bg-[#FBBF24]/20 hover:border-[#FBBF24]/40 transition-colors" };
 };
