@@ -11,8 +11,8 @@ import { FileText, Edit, Clock, CheckCircle, XCircle, MessageSquare, Loader2, Ma
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  PopoverTrigger } from
+"@/components/ui/popover";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User } from "@/entities/User";
@@ -31,8 +31,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter
-} from "@/components/ui/dialog";
+  DialogFooter } from
+"@/components/ui/dialog";
 import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
 import { getEntityMap } from "@/components/ensaios/entityMaps";
 import { getLocalInfo, getLaboratoristaInfo, getResponsavelInfo, getEmpireiteiraInfo, getRodoviaInfo, getTrechoInfo, getNaoConformidades, getStatusInfo } from "@/components/ensaios/utils";
@@ -54,12 +54,12 @@ const CopyIdButton = React.memo(({ id }) => {
     <button
       onClick={handleCopy}
       title={`Copiar ID: ${id}`}
-      className="inline-flex items-center gap-1 text-[9px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors text-[#00233B]/70 hover:text-[#00233B]"
-    >
+      className="inline-flex items-center gap-1 text-[9px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors text-[#00233B]/70 hover:text-[#00233B]">
+      
       {copied ? <Check className="w-2.5 h-2.5 text-green-600" /> : <Copy className="w-2.5 h-2.5" />}
       <span className="truncate max-w-[60px]">{id.slice(0, 8)}…</span>
-    </button>
-  );
+    </button>);
+
 });
 CopyIdButton.displayName = 'CopyIdButton';
 
@@ -80,8 +80,8 @@ const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndCh
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 text-xs font-normal hover:bg-black/10"
-        >
+          className="h-8 text-xs font-normal hover:bg-black/10">
+          
           <Filter className={`w-3 h-3 mr-1 ${startDate || endDate ? 'text-[#BFCF99]' : ''}`} />
           {formatDateRange()}
         </Button>
@@ -94,8 +94,8 @@ const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndCh
               type="date"
               value={startDate}
               onChange={(e) => onStartChange(e.target.value)}
-              className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8"
-            />
+              className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8" />
+            
           </div>
           <div>
             <Label className="text-xs text-[#00233B]/80">Data Fim</Label>
@@ -103,8 +103,8 @@ const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndCh
               type="date"
               value={endDate}
               onChange={(e) => onEndChange(e.target.value)}
-              className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8"
-            />
+              className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8" />
+            
           </div>
           <Button
             size="sm"
@@ -114,14 +114,14 @@ const DateRangePicker = React.memo(({ startDate, endDate, onStartChange, onEndCh
               onStartChange('');
               onEndChange('');
               setIsOpen(false);
-            }}
-          >
+            }}>
+            
             Limpar
           </Button>
         </div>
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>);
+
 });
 
 DateRangePicker.displayName = 'DateRangePicker';
@@ -136,8 +136,8 @@ const TextColumnFilter = React.memo(({ value, onChange, placeholder }) => {
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 text-xs font-normal hover:bg-black/10"
-        >
+          className="h-8 text-xs font-normal hover:bg-black/10">
+          
           <Filter className={`w-3 h-3 ${value ? 'text-[#BFCF99]' : ''}`} />
         </Button>
       </PopoverTrigger>
@@ -148,8 +148,8 @@ const TextColumnFilter = React.memo(({ value, onChange, placeholder }) => {
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8"
-          />
+            className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8" />
+          
           <Button
             size="sm"
             variant="outline"
@@ -157,14 +157,14 @@ const TextColumnFilter = React.memo(({ value, onChange, placeholder }) => {
             onClick={() => {
               onChange('');
               setIsOpen(false);
-            }}
-          >
+            }}>
+            
             Limpar
           </Button>
         </div>
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>);
+
 });
 
 TextColumnFilter.displayName = 'TextColumnFilter';
@@ -179,32 +179,32 @@ const SelectColumnFilter = React.memo(({ value, onChange, options, placeholder }
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 text-xs font-normal hover:bg-black/10"
-        >
+          className="h-8 text-xs font-normal hover:bg-black/10">
+          
           <Filter className={`w-3 h-3 ${value !== 'all' ? 'text-[#BFCF99]' : ''}`} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 bg-[#F2F1EF]/95 backdrop-blur-lg border-white/20" align="start">
         <div className="space-y-1">
           <Label className="text-xs text-[#00233B]/80 px-2">{placeholder}</Label>
-          {options.map((option) => (
-            <Button
-              key={option.value}
-              variant="ghost"
-              size="sm"
-              className={`w-full justify-start text-xs h-8 ${value === option.value ? 'bg-black/10' : ''}`}
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-            >
+          {options.map((option) =>
+          <Button
+            key={option.value}
+            variant="ghost"
+            size="sm"
+            className={`w-full justify-start text-xs h-8 ${value === option.value ? 'bg-black/10' : ''}`}
+            onClick={() => {
+              onChange(option.value);
+              setIsOpen(false);
+            }}>
+            
               {option.label}
             </Button>
-          ))}
+          )}
         </div>
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>);
+
 });
 
 SelectColumnFilter.displayName = 'SelectColumnFilter';
@@ -226,7 +226,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [sortOrder, setSortOrder] = useState('desc'); // 'asc', 'desc', or null
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
-  
+
   const [filteredEnsaios, setFilteredEnsaios] = useState([]);
   const [selectedEnsaio, setSelectedEnsaio] = useState(null);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(null);
@@ -240,7 +240,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
 
   const toggleSortOrder = useCallback(() => {
-    setSortOrder(prev => {
+    setSortOrder((prev) => {
       if (prev === 'desc') return 'asc';
       if (prev === 'asc') return null;
       return 'desc';
@@ -261,11 +261,11 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
         return obra?.name?.toLowerCase().includes(obraFilter.toLowerCase()) ||
-          obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
+        obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
       });
     }
 
-    if (projetoFilter) { // New filter logic for project
+    if (projetoFilter) {// New filter logic for project
       filtered = filtered.filter((ensaio) => {
         if (!ensaio.project_id) return false;
         const projeto = projects.find((p) => p.id === ensaio.project_id);
@@ -277,7 +277,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       filtered = filtered.filter((ensaio) => {
         const localInfo = getLocalInfo(ensaio);
         return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
-          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+        localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
       });
     }
 
@@ -365,28 +365,28 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       if (user.access_level === 'sala_tecnica_afirmaevias') {
         try {
           const regionaisData = await Regional.list();
-          
+
           // Encontrar a obra do ensaio
-          const obraDoEnsaio = obras.find(o => o.id === ensaio.obra_id);
-          
+          const obraDoEnsaio = obras.find((o) => o.id === ensaio.obra_id);
+
           if (obraDoEnsaio) {
             // Encontrar a regional da obra
-            const regionalDaObra = regionaisData.find(r => r.id === obraDoEnsaio.regional_id);
-            
+            const regionalDaObra = regionaisData.find((r) => r.id === obraDoEnsaio.regional_id);
+
             if (regionalDaObra && regionalDaObra.gestor_contrato_responsavel) {
               // Buscar os dados do gestor
               const allUsers = await User.list();
-              const gestorUser = allUsers.find(u => 
-                u.email.toLowerCase() === regionalDaObra.gestor_contrato_responsavel.toLowerCase()
+              const gestorUser = allUsers.find((u) =>
+              u.email.toLowerCase() === regionalDaObra.gestor_contrato_responsavel.toLowerCase()
               );
-              
+
               if (gestorUser) {
                 approverDetails = {
                   name: gestorUser.laboratorista_name || gestorUser.full_name || regionalDaObra.gestor_contrato_responsavel,
                   position: gestorUser.position || 'Gestor de Contrato',
                   crea_number: gestorUser.crea_number || 'Não informado'
                 };
-                
+
                 console.log('✅ Sala Técnica aprovando - Assinatura será do Gestor:', approverDetails);
               }
             }
@@ -444,8 +444,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
       typeFilter !== '' ||
-      statusObraFilter !== 'all'
-    );
+      statusObraFilter !== 'all');
+
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter]);
 
   const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
@@ -464,20 +464,20 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
 
 
   const statusOptions = [
-    { value: 'all', label: 'Todos os status' },
-    { value: 'pending', label: 'Pendentes' },
-    { value: 'approved', label: 'Aprovados' },
-    { value: 'rejected', label: 'Reprovados' },
-    { value: 'signed', label: 'Assinados' },
-  ];
+  { value: 'all', label: 'Todos os status' },
+  { value: 'pending', label: 'Pendentes' },
+  { value: 'approved', label: 'Aprovados' },
+  { value: 'rejected', label: 'Reprovados' },
+  { value: 'signed', label: 'Assinados' }];
+
 
   const statusObraOptions = [
-    { value: 'all', label: 'Todos os status' },
-    { value: 'planejamento', label: 'Planejamento' },
-    { value: 'em_andamento', label: 'Em Andamento' },
-    { value: 'concluida', label: 'Concluída' },
-    { value: 'pausada', label: 'Pausada' },
-  ];
+  { value: 'all', label: 'Todos os status' },
+  { value: 'planejamento', label: 'Planejamento' },
+  { value: 'em_andamento', label: 'Em Andamento' },
+  { value: 'concluida', label: 'Concluída' },
+  { value: 'pausada', label: 'Pausada' }];
+
 
   return (
     <div className="space-y-6">
@@ -485,16 +485,16 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         <div>
            <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
              <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
-             {isAnyFilterActive && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearFilters}
-                className="h-7 text-xs text-[#00233B]/80 hover:bg-black/10"
-              >
+             {isAnyFilterActive &&
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-7 text-xs text-[#00233B]/80 hover:bg-black/10">
+              
                 Limpar todos os filtros
               </Button>
-            )}
+            }
           </div>
         </div>
         <div className="flex gap-2">
@@ -563,19 +563,19 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                      <div className="flex items-center gap-1">
                        <span>Tipo</span>
                        <SelectColumnFilter
-                         value={typeFilter}
-                         onChange={setTypeFilter}
-                         options={typeOptions}
-                         placeholder="Filtrar por tipo"
-                       />
+                        value={typeFilter}
+                        onChange={setTypeFilter}
+                        options={typeOptions}
+                        placeholder="Filtrar por tipo" />
+                      
                      </div>
                    </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={toggleSortOrder}
-                        className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors"
-                      >
+                        className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors">
+                        
                         <span>Data</span>
                         {sortOrder === 'desc' && <ArrowDown className="w-3 h-3" />}
                         {sortOrder === 'asc' && <ArrowUp className="w-3 h-3" />}
@@ -585,8 +585,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                         startDate={dataInicioFilter}
                         endDate={dataFimFilter}
                         onStartChange={setDataInicioFilter}
-                        onEndChange={setDataFimFilter}
-                      />
+                        onEndChange={setDataFimFilter} />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -595,8 +595,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <TextColumnFilter
                         value={obraFilter}
                         onChange={setObraFilter}
-                        placeholder="Filtrar por obra..."
-                      />
+                        placeholder="Filtrar por obra..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -605,8 +605,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <TextColumnFilter
                         value={nomeFilter}
                         onChange={setNomeFilter}
-                        placeholder="Filtrar por nome..."
-                      />
+                        placeholder="Filtrar por nome..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -615,8 +615,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <TextColumnFilter
                         value={localFilter}
                         onChange={setLocalFilter}
-                        placeholder="Filtrar por local..."
-                      />
+                        placeholder="Filtrar por local..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -625,8 +625,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <TextColumnFilter
                         value={empreiteiraFilter}
                         onChange={setEmpreiteiraFilter}
-                        placeholder="Filtrar por empreiteira..."
-                      />
+                        placeholder="Filtrar por empreiteira..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -635,8 +635,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                       <TextColumnFilter
                         value={projetoFilter}
                         onChange={setProjetoFilter}
-                        placeholder="Filtrar por projeto..."
-                      />
+                        placeholder="Filtrar por projeto..." />
+                      
                     </div>
                   </th>
                   <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
@@ -646,8 +646,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                         value={statusFilter}
                         onChange={setStatusFilter}
                         options={statusOptions}
-                        placeholder="Filtrar por status"
-                      />
+                        placeholder="Filtrar por status" />
+                      
                     </div>
                   </th>
                   <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '140px' }}>Ações</th>
@@ -655,64 +655,64 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
               </thead>
               <tbody>
                 {paginatedEnsaios.map((ensaio, index) => {
-                   const obra = obras.find((o) => o.id === ensaio.obra_id);
-                   const status = getStatusInfo(ensaio);
-                   const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
-                   const reportUrl = getReportLink(ensaio);
-                   const localInfo = getLocalInfo(ensaio);
-                   const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
-                   const dataFormatted = getDataFormatted(ensaio);
+                  const obra = obras.find((o) => o.id === ensaio.obra_id);
+                  const status = getStatusInfo(ensaio);
+                  const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
+                  const reportUrl = getReportLink(ensaio);
+                  const localInfo = getLocalInfo(ensaio);
+                  const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
+                  const dataFormatted = getDataFormatted(ensaio);
 
-                   // Buscar projeto se existir project_id
-                   const projeto = ensaio.project_id ? projects.find(p => p.id === ensaio.project_id) : null;
+                  // Buscar projeto se existir project_id
+                  const projeto = ensaio.project_id ? projects.find((p) => p.id === ensaio.project_id) : null;
 
-                   return (
-                     <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
+                  return (
+                    <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
                        <td className="px-2 py-2">
                         <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
                           <TypeIcon className="w-3 h-3 text-[#BFCF99]" /> 
                           <span className="truncate max-w-[120px]" title={name}>{name}</span>
                           <CopyIdButton id={ensaio.id} />
                           {(() => {
-                              const naoConformidades = getNaoConformidades(ensaio);
-                              const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
-                              const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
+                            const naoConformidades = getNaoConformidades(ensaio);
+                            const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
+                            const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
 
-                              if (naoConformidades.length > 0) {
-                                const mensagem = temAcoesCorretivas 
-                                  ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
-                                  : `Não conformidades:\n${naoConformidades.join('\n')}`;
-                                return (
-                                  <span 
-                                    className="text-red-600 cursor-help" 
-                                    title={mensagem}
-                                  >
+                            if (naoConformidades.length > 0) {
+                              const mensagem = temAcoesCorretivas ?
+                              `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas` :
+                              `Não conformidades:\n${naoConformidades.join('\n')}`;
+                              return (
+                                <span
+                                  className="text-red-600 cursor-help"
+                                  title={mensagem}>
+                                  
                                     ⚠️
-                                  </span>
-                                );
-                              }
-                              if (temDeflexaoExcessiva) {
-                                return (
-                                  <span 
-                                    className="cursor-help" 
-                                    title="Pontos com deflexão acima do limite admissível"
-                                  >
+                                  </span>);
+
+                            }
+                            if (temDeflexaoExcessiva) {
+                              return (
+                                <span
+                                  className="cursor-help"
+                                  title="Pontos com deflexão acima do limite admissível">
+                                  
                                     🟡
-                                  </span>
-                                );
-                              }
-                              if (temAcoesCorretivas) {
-                                return (
-                                  <span 
-                                    className="text-orange-500 cursor-help" 
-                                    title="Ações corretivas realizadas"
-                                  >
+                                  </span>);
+
+                            }
+                            if (temAcoesCorretivas) {
+                              return (
+                                <span
+                                  className="text-orange-500 cursor-help"
+                                  title="Ações corretivas realizadas">
+                                  
                                     ⚠️
-                                  </span>
-                                );
-                              }
-                              return null;
-                            })()}
+                                  </span>);
+
+                            }
+                            return null;
+                          })()}
                           </div>
                           </td>
                           <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
@@ -726,21 +726,21 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                           <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
                           </td>
                           <td className="px-2 py-2">
-                          {getEmpireiteiraInfo(ensaio) ? (
-                            <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
-                          ) : (
-                            <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                          )}
+                          {getEmpireiteiraInfo(ensaio) ?
+                        <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div> :
+
+                        <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        }
                           </td>
                           <td className="px-2 py-2">
-                          {projeto ? (
-                            <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
-                          ) : (
-                            <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                          )}
+                          {projeto ?
+                        <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div> :
+
+                        <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        }
                           </td>
                           <td className="px-2 py-2 text-center">
-                          <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
+                          <Badge className="bg-blue-100/80 text-[10px] px-10 font-semibold rounded-md inline-flex items-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow border border-blue-300/50 hover:bg-blue-200/80 hover:border-blue-400/50 transition-colors gap-1">
                            <status.icon className="w-3 h-3" />
                            {status.text}
                           </Badge>
@@ -753,89 +753,89 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                               </Link>
                             </Button>
 
-                            {canApprove && ensaio.status !== 'rascunho' && (
-                              <div className="flex gap-1">
-                                {(ensaio.approved === null || ensaio.approved === false) && (
-                                  <Button
-                                    size="sm"
-                                    style={{ backgroundColor: '#566E3D' }}
-                                    className="text-white hover:opacity-90 transition-opacity h-7 px-2"
-                                    onClick={() => handleApprove(ensaio)}
-                                    title="Aprovar"
-                                  >
+                            {canApprove && ensaio.status !== 'rascunho' &&
+                          <div className="flex gap-1">
+                                {(ensaio.approved === null || ensaio.approved === false) &&
+                            <Button
+                              size="sm"
+                              style={{ backgroundColor: '#566E3D' }}
+                              className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                              onClick={() => handleApprove(ensaio)}
+                              title="Aprovar">
+                              
                                     <CheckCircle className="w-3 h-3" />
                                   </Button>
-                                )}
-                                {ensaio.approved === null && (
-                                  <Button
-                                    size="sm"
-                                    style={{ backgroundColor: '#800020' }}
-                                    className="text-white hover:opacity-90 transition-opacity h-7 px-2"
-                                    onClick={() => setReprovingEnsaio(ensaio)}
-                                    title="Reprovar"
-                                  >
+                            }
+                                {ensaio.approved === null &&
+                            <Button
+                              size="sm"
+                              style={{ backgroundColor: '#800020' }}
+                              className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                              onClick={() => setReprovingEnsaio(ensaio)}
+                              title="Reprovar">
+                              
                                     <XCircle className="w-3 h-3" />
                                   </Button>
-                                )}
+                            }
                                 </div>
-                                )}
-                                {canApprove && ensaio.status === 'rascunho' && (
-                                <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
-                                )}
-                                {canApprove && (
-                                  <Button
-                                    size="sm"
-                                    variant="destructive"
-                                    className="h-7 px-2"
-                                    onClick={() => setDeletingEnsaio(ensaio)}
-                                    title="Excluir"
-                                  >
+                          }
+                                {canApprove && ensaio.status === 'rascunho' &&
+                          <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>
+                          }
+                                {canApprove &&
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-7 px-2"
+                            onClick={() => setDeletingEnsaio(ensaio)}
+                            title="Excluir">
+                            
                                     <Trash2 className="w-3 h-3" />
                                   </Button>
-                                )}
+                          }
                         </div>
                       </td>
-                    </tr>
-                  );
+                    </tr>);
+
                 })}
               </tbody>
             </table>
 
-            {filteredEnsaios.length === 0 && (
-              <div className="text-center py-12 text-[#00233B]/70">
+            {filteredEnsaios.length === 0 &&
+            <div className="text-center py-12 text-[#00233B]/70">
                 <FileText className="w-12 h-12 text-[#00233B]/30 mx-auto mb-4" />
                 <h3 className="font-medium text-[#00233B] mb-2">Nenhum registro encontrado</h3>
                 <p>Ajuste os filtros ou aguarde novos registros.</p>
               </div>
-            )}
+            }
           </div>
         </CardContent>
       </Card>
 
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+        onPageChange={setCurrentPage} />
+      
 
       <ReprovacaoModal
         ensaio={reprovingEnsaio}
         isOpen={!!reprovingEnsaio}
         onClose={() => setReprovingEnsaio(null)}
-        onReprove={handleReject}
-      />
+        onReprove={handleReject} />
+      
 
       <ExclusaoModal
         ensaio={deletingEnsaio}
         isOpen={!!deletingEnsaio}
         onClose={() => setDeletingEnsaio(null)}
-        onDelete={handleDelete}
-      />
-      </div>
-      );
-      });
+        onDelete={handleDelete} />
+      
+      </div>);
 
-      AdminInterface.displayName = 'AdminInterface';
+});
+
+AdminInterface.displayName = 'AdminInterface';
 
 // Componente EnsaioCard memoizado
 const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
@@ -876,7 +876,7 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
         console.log('Tentando assinar registro:', ensaio.id, 'com dados:', signatureData);
 
         await Entity.update(ensaio.id, signatureData);
-        
+
         alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
         window.location.reload();
       }
@@ -900,37 +900,37 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                   const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
 
                   if (naoConformidades.length > 0) {
-                    const mensagem = temAcoesCorretivas 
-                      ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
-                      : `Não conformidades:\n${naoConformidades.join('\n')}`;
+                    const mensagem = temAcoesCorretivas ?
+                    `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas` :
+                    `Não conformidades:\n${naoConformidades.join('\n')}`;
                     return (
-                      <span 
-                        className="text-red-600 cursor-help text-xl" 
-                        title={mensagem}
-                      >
+                      <span
+                        className="text-red-600 cursor-help text-xl"
+                        title={mensagem}>
+                        
                         ⚠️
-                      </span>
-                    );
+                      </span>);
+
                   }
                   if (temDeflexaoExcessiva) {
                     return (
-                      <span 
-                        className="cursor-help text-xl" 
-                        title="Pontos com deflexão acima do limite admissível"
-                      >
+                      <span
+                        className="cursor-help text-xl"
+                        title="Pontos com deflexão acima do limite admissível">
+                        
                         🟡
-                      </span>
-                    );
+                      </span>);
+
                   }
                   if (temAcoesCorretivas) {
                     return (
-                      <span 
-                        className="text-orange-500 cursor-help text-xl" 
-                        title="Ações corretivas realizadas"
-                      >
+                      <span
+                        className="text-orange-500 cursor-help text-xl"
+                        title="Ações corretivas realizadas">
+                        
                         ⚠️
-                      </span>
-                    );
+                      </span>);
+
                   }
                   return null;
                 })()}
@@ -942,16 +942,16 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 <status.icon className="w-3 h-3" />
                 {status.text}
               </Badge>
-              {status.wasRejected && (
-                <Badge className="bg-orange-100/80 text-orange-800 border border-orange-300/50 text-xs">
+              {status.wasRejected &&
+              <Badge className="bg-orange-100/80 text-orange-800 border border-orange-300/50 text-xs">
                   🔄 Editado após reprovação
                 </Badge>
-              )}
-              {jaAssinado && (
-                <Badge className="bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 text-xs">
+              }
+              {jaAssinado &&
+              <Badge className="bg-[#00233B]/10 text-[#00233B] border border-[#00233B]/30 text-xs">
                   ✍️ Assinado por você
                 </Badge>
-              )}
+              }
             </div>
           </div>
 
@@ -966,96 +966,96 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
                 <UserIconSmall className="w-4 h-4 text-[#BFCF99] shrink-0" />
                 <span>{laboratorista}</span>
               </div>
-              {getRodoviaInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Rodovia">
+              {getRodoviaInfo(ensaio) &&
+              <div className="flex items-center gap-1.5" title="Rodovia">
                   <MapPin className="w-4 h-4 text-[#BFCF99] shrink-0" />
                   <span className="font-medium">{getRodoviaInfo(ensaio)}</span>
                 </div>
-              )}
-              {getTrechoInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Trecho">
+              }
+              {getTrechoInfo(ensaio) &&
+              <div className="flex items-center gap-1.5" title="Trecho">
                   <MapPin className="w-4 h-4 text-[#BFCF99] shrink-0" />
                   <span className="text-xs">Trecho: {getTrechoInfo(ensaio)}</span>
                 </div>
-              )}
-              {getResponsavelInfo(ensaio) && (
-                <div className="flex items-center gap-1.5" title="Responsável">
+              }
+              {getResponsavelInfo(ensaio) &&
+              <div className="flex items-center gap-1.5" title="Responsável">
                   <Building className="w-4 h-4 text-[#BFCF99] shrink-0" />
                   <span className="font-medium">{getResponsavelInfo(ensaio)}</span>
                 </div>
-              )}
+              }
             </div>
 
-            {ensaio.sample_id && (
-              <div className="text-sm">
+            {ensaio.sample_id &&
+            <div className="text-sm">
                 <span className="font-medium text-[#00233B]">Amostra/ID: </span>
                 <span className="text-[#00233B]/90">{ensaio.sample_id}</span>
               </div>
-            )}
+            }
 
-            {ensaio.client_signature?.signed_by && (
-              <div className="text-sm bg-[#00233B]/5 p-2 rounded border border-[#00233B]/20">
+            {ensaio.client_signature?.signed_by &&
+            <div className="text-sm bg-[#00233B]/5 p-2 rounded border border-[#00233B]/20">
                 <span className="font-medium text-[#00233B]">Assinado por: </span>
                 <span className="text-[#00233B]/80">{ensaio.client_signature.engineer_name}</span>
-                {ensaio.client_signature.crea_number && (
-                  <>
+                {ensaio.client_signature.crea_number &&
+              <>
                     <br />
                     <span className="font-medium text-[#00233B]">CREA: </span>
                     <span className="text-[#00233B]/80">{ensaio.client_signature.crea_number}</span>
                   </>
-                )}
+              }
                 <br />
                 <span className="text-xs text-[#00233B]/70">
                   {new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR')}
                 </span>
               </div>
-            )}
+            }
 
-            {ensaio.rejection_reason && (
-              <div className="text-sm bg-[#800020]/5 p-2 rounded border border-[#800020]/20">
+            {ensaio.rejection_reason &&
+            <div className="text-sm bg-[#800020]/5 p-2 rounded border border-[#800020]/20">
                 <span className="font-medium text-[#800020]">Motivo da Reprovação: </span>
                 <span className="text-[#800020]/80">{ensaio.rejection_reason}</span>
               </div>
-            )}
+            }
           </div>
 
           <div className="border-t border-white/20 pt-3 flex items-center gap-2 flex-wrap min-h-[38px]">
-            {podeVerPDF && (
-              <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-black/10 border-white/20">
+            {podeVerPDF &&
+            <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-black/10 border-white/20">
                 <Link to={reportUrl} target="_blank">
                   <FileText className="w-4 h-4 mr-1 text-[#BFCF99]" /> Ver PDF
                 </Link>
               </Button>
-            )}
+            }
             
-            {podeAssinar && (
-              <Button 
-                size="sm" 
-                style={{ backgroundColor: '#566E3D' }}
-                className="text-white hover:opacity-90 transition-opacity"
-                onClick={handleAssinar}
-              >
+            {podeAssinar &&
+            <Button
+              size="sm"
+              style={{ backgroundColor: '#566E3D' }}
+              className="text-white hover:opacity-90 transition-opacity"
+              onClick={handleAssinar}>
+              
                 <MessageSquare className="w-4 h-4 mr-1" /> Assinar Registro
               </Button>
-            )}
+            }
             
-            {podeEditar && (
-              <Button asChild size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">
+            {podeEditar &&
+            <Button asChild size="sm" className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90">
                 <Link to={editLink}>
                   <Edit className="w-4 h-4 mr-1 text-[#BFCF99]" /> Editar
                 </Link>
               </Button>
-            )}
-            {ensaio.status === 'finalizado' && ensaio.approved === null && !isCliente && (
-              <p className="text-sm text-[#00233B]/70 italic">
+            }
+            {ensaio.status === 'finalizado' && ensaio.approved === null && !isCliente &&
+            <p className="text-sm text-[#00233B]/70 italic">
                 Aguardando aprovação do administrador.
               </p>
-            )}
+            }
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 });
 
 EnsaioCard.displayName = 'EnsaioCard';
@@ -1105,14 +1105,14 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
 
       <TabsContent value="emExecucao" className="mt-4 space-y-4">
         {emExecucao.length > 0 ?
-          emExecucao.map((ensaio) => (
-            <EnsaioCard
-              key={ensaio.id}
-              ensaio={ensaio}
-              obra={obras.find((o) => o.id === ensaio.obra_id)}
-              user={user}
-              allUsers={allUsers} />
-          )) :
+          emExecucao.map((ensaio) =>
+          <EnsaioCard
+            key={ensaio.id}
+            ensaio={ensaio}
+            obra={obras.find((o) => o.id === ensaio.obra_id)}
+            user={user}
+            allUsers={allUsers} />
+          ) :
           <div className="text-center py-12 text-[#00233B]/70">
             <FileText className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-[#00233B] mb-2">
@@ -1120,19 +1120,19 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
             </h3>
             <p>Comece criando um novo registro ou finalize os em rascunho.</p>
           </div>
-        }
+          }
       </TabsContent>
 
       <TabsContent value="pendentes" className="mt-4 space-y-4">
         {pendentes.length > 0 ?
-          pendentes.map((ensaio) => (
-            <EnsaioCard
-              key={ensaio.id}
-              ensaio={ensaio}
-              obra={obras.find((o) => o.id === ensaio.obra_id)}
-              user={user}
-              allUsers={allUsers} />
-          )) :
+          pendentes.map((ensaio) =>
+          <EnsaioCard
+            key={ensaio.id}
+            ensaio={ensaio}
+            obra={obras.find((o) => o.id === ensaio.obra_id)}
+            user={user}
+            allUsers={allUsers} />
+          ) :
           <div className="text-center py-12 text-[#00233B]/70">
             <FileText className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-[#00233B] mb-2">
@@ -1140,19 +1140,19 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
             </h3>
             <p>Todos os ensaios e diários estão aprovados ou não há registros.</p>
           </div>
-        }
+          }
       </TabsContent>
 
       <TabsContent value="aprovados" className="mt-4 space-y-4">
         {aprovados.length > 0 ?
-          aprovados.map((ensaio) => (
-            <EnsaioCard
-              key={ensaio.id}
-              ensaio={ensaio}
-              obra={obras.find((o) => o.id === ensaio.obra_id)}
-              user={user}
-              allUsers={allUsers} />
-          )) :
+          aprovados.map((ensaio) =>
+          <EnsaioCard
+            key={ensaio.id}
+            ensaio={ensaio}
+            obra={obras.find((o) => o.id === ensaio.obra_id)}
+            user={user}
+            allUsers={allUsers} />
+          ) :
           <div className="text-center py-12 text-[#00233B]/70">
             <CheckCircle className="w-16 h-16 text-[#00233B]/30 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-[#00233B] mb-2">
@@ -1160,11 +1160,11 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
             </h3>
             <p>Aguarde a aprovação dos ensaios pelo administrador.</p>
           </div>
-        }
+          }
       </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>);
+
 });
 
 LaboratoristaInterface.displayName = 'LaboratoristaInterface';
@@ -1186,7 +1186,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const itemsPerPage = 20;
 
   const toggleSortOrder = useCallback(() => {
-    setSortOrder(prev => {
+    setSortOrder((prev) => {
       if (prev === 'desc') return 'asc';
       if (prev === 'asc') return null;
       return 'desc';
@@ -1207,7 +1207,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
         return obra?.name?.toLowerCase().includes(obraFilter.toLowerCase()) ||
-          obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
+        obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
       });
     }
 
@@ -1223,7 +1223,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       filtered = filtered.filter((ensaio) => {
         const localInfo = getLocalInfo(ensaio);
         return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
-          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+        localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
       });
     }
 
@@ -1310,8 +1310,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
       dataInicioFilter !== '' ||
       dataFimFilter !== '' ||
       statusFilter !== 'all' ||
-      typeFilter !== 'all'
-    );
+      typeFilter !== 'all');
+
   }, [nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter]);
 
   const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
@@ -1336,7 +1336,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         };
 
         await Entity.update(ensaio.id, signatureData);
-        
+
         alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
         window.location.reload();
       }
@@ -1349,10 +1349,10 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
 
 
   const statusOptions = [
-    { value: 'all', label: 'Todos os status' },
-    { value: 'approved', label: 'Aprovados (não assinados)' },
-    { value: 'signed', label: 'Assinados' },
-  ];
+  { value: 'all', label: 'Todos os status' },
+  { value: 'approved', label: 'Aprovados (não assinados)' },
+  { value: 'signed', label: 'Assinados' }];
+
 
   return (
     <div className="space-y-6">
@@ -1360,16 +1360,16 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         <div>
           <div className="flex items-center gap-4 mt-2 text-sm text-[#00233B]/70">
             <span>{filteredEnsaios.length} registro(s) encontrado(s)</span>
-            {isAnyFilterActive && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearFilters}
-                className="h-7 text-xs text-[#00233B]/80 hover:bg-black/10"
-              >
+            {isAnyFilterActive &&
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-7 text-xs text-[#00233B]/80 hover:bg-black/10">
+              
                 Limpar todos os filtros
               </Button>
-            )}
+            }
           </div>
         </div>
       </div>
@@ -1387,16 +1387,16 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                         value={typeFilter}
                         onChange={setTypeFilter}
                         options={typeOptions}
-                        placeholder="Filtrar por tipo"
-                      />
+                        placeholder="Filtrar por tipo" />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
                         onClick={toggleSortOrder}
-                        className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors"
-                      >
+                        className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors">
+                        
                         <span>Data</span>
                         {sortOrder === 'desc' && <ArrowDown className="w-3 h-3" />}
                         {sortOrder === 'asc' && <ArrowUp className="w-3 h-3" />}
@@ -1406,8 +1406,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                         startDate={dataInicioFilter}
                         endDate={dataFimFilter}
                         onStartChange={setDataInicioFilter}
-                        onEndChange={setDataFimFilter}
-                      />
+                        onEndChange={setDataFimFilter} />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -1416,8 +1416,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <TextColumnFilter
                         value={obraFilter}
                         onChange={setObraFilter}
-                        placeholder="Filtrar por obra..."
-                      />
+                        placeholder="Filtrar por obra..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -1426,8 +1426,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <TextColumnFilter
                         value={nomeFilter}
                         onChange={setNomeFilter}
-                        placeholder="Filtrar por nome..."
-                      />
+                        placeholder="Filtrar por nome..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -1436,8 +1436,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <TextColumnFilter
                         value={localFilter}
                         onChange={setLocalFilter}
-                        placeholder="Filtrar por local..."
-                      />
+                        placeholder="Filtrar por local..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -1446,8 +1446,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <TextColumnFilter
                         value={empreiteiraFilter}
                         onChange={setEmpreiteiraFilter}
-                        placeholder="Filtrar por empreiteira..."
-                      />
+                        placeholder="Filtrar por empreiteira..." />
+                      
                     </div>
                   </th>
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs">
@@ -1456,8 +1456,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                       <TextColumnFilter
                         value={projetoFilter}
                         onChange={setProjetoFilter}
-                        placeholder="Filtrar por projeto..."
-                      />
+                        placeholder="Filtrar por projeto..." />
+                      
                     </div>
                   </th>
                   <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
@@ -1467,8 +1467,8 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                         value={statusFilter}
                         onChange={setStatusFilter}
                         options={statusOptions}
-                        placeholder="Filtrar por status"
-                      />
+                        placeholder="Filtrar por status" />
+                      
                     </div>
                   </th>
                   <th className="text-center px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '120px' }}>Ações</th>
@@ -1483,7 +1483,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                   const localInfo = getLocalInfo(ensaio);
                   const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
                   const dataFormatted = getDataFormatted(ensaio);
-                  const projeto = ensaio.project_id ? projects.find(p => p.id === ensaio.project_id) : null;
+                  const projeto = ensaio.project_id ? projects.find((p) => p.id === ensaio.project_id) : null;
                   const podeAssinar = ensaio.approved === true && !ensaio.client_signature?.signed_by;
 
                   return (
@@ -1496,29 +1496,29 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                           {(() => {
                             const naoConformidades = getNaoConformidades(ensaio);
                             const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
-                            
+
                             if (naoConformidades.length > 0) {
-                              const mensagem = temAcoesCorretivas 
-                                ? `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas`
-                                : `Não conformidades:\n${naoConformidades.join('\n')}`;
+                              const mensagem = temAcoesCorretivas ?
+                              `Não conformidades:\n${naoConformidades.join('\n')}\n\n✓ Ações corretivas foram realizadas` :
+                              `Não conformidades:\n${naoConformidades.join('\n')}`;
                               return (
-                                <span 
-                                  className="text-red-600 cursor-help" 
-                                  title={mensagem}
-                                >
+                                <span
+                                  className="text-red-600 cursor-help"
+                                  title={mensagem}>
+                                  
                                   ⚠️
-                                </span>
-                              );
+                                </span>);
+
                             }
                             if (temAcoesCorretivas) {
                               return (
-                                <span 
-                                  className="text-orange-500 cursor-help" 
-                                  title="Ações corretivas realizadas"
-                                >
+                                <span
+                                  className="text-orange-500 cursor-help"
+                                  title="Ações corretivas realizadas">
+                                  
                                   ⚠️
-                                </span>
-                              );
+                                </span>);
+
                             }
                             return null;
                           })()}
@@ -1535,18 +1535,18 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                         <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
                       </td>
                       <td className="px-2 py-2">
-                        {getEmpireiteiraInfo(ensaio) ? (
-                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div>
-                        ) : (
-                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                        )}
+                        {getEmpireiteiraInfo(ensaio) ?
+                        <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={getEmpireiteiraInfo(ensaio)}>{getEmpireiteiraInfo(ensaio)}</div> :
+
+                        <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        }
                       </td>
                       <td className="px-2 py-2">
-                        {projeto ? (
-                          <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div>
-                        ) : (
-                          <div className="text-[#00233B]/50 text-center text-xs">-</div>
-                        )}
+                        {projeto ?
+                        <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div> :
+
+                        <div className="text-[#00233B]/50 text-center text-xs">-</div>
+                        }
                       </td>
                       <td className="px-2 py-2 text-center">
                         <Badge className={`${status.className} gap-1 text-[10px] px-2 py-0.5`}>
@@ -1561,43 +1561,43 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                               <FileText className="w-3 h-3" />
                             </Link>
                           </Button>
-                          {podeAssinar && (
-                            <Button 
-                              size="sm" 
-                              style={{ backgroundColor: '#566E3D' }}
-                              className="text-white hover:opacity-90 transition-opacity h-7 px-2"
-                              onClick={() => handleAssinar(ensaio)}
-                              title="Assinar"
-                            >
+                          {podeAssinar &&
+                          <Button
+                            size="sm"
+                            style={{ backgroundColor: '#566E3D' }}
+                            className="text-white hover:opacity-90 transition-opacity h-7 px-2"
+                            onClick={() => handleAssinar(ensaio)}
+                            title="Assinar">
+                            
                               <MessageSquare className="w-3 h-3" />
                             </Button>
-                          )}
+                          }
                         </div>
                       </td>
-                    </tr>
-                  );
+                    </tr>);
+
                 })}
               </tbody>
             </table>
 
-            {filteredEnsaios.length === 0 && (
-              <div className="text-center py-12 text-[#00233B]/70">
+            {filteredEnsaios.length === 0 &&
+            <div className="text-center py-12 text-[#00233B]/70">
                 <FileText className="w-12 h-12 text-[#00233B]/30 mx-auto mb-4" />
                 <h3 className="font-medium text-[#00233B] mb-2">Nenhum registro encontrado</h3>
                 <p>Ajuste os filtros ou aguarde novos registros aprovados.</p>
               </div>
-            )}
+            }
           </div>
         </CardContent>
       </Card>
 
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
-    </div>
-  );
+        onPageChange={setCurrentPage} />
+      
+    </div>);
+
 });
 
 ClienteInterface.displayName = 'ClienteInterface';
@@ -1617,14 +1617,14 @@ export default function MeusEnsaios() {
   const isGestorContrato = userAccessLevel === 'gestor_contrato';
   const isCliente = userAccessLevel === 'cliente';
   const canApprove = isAdmin || isSalaTecnica || isGestorContrato;
-  const canCreate = isAdmin || (!isSalaTecnica && !isGestorContrato && !isCliente);
-  const canEdit = isAdmin || (!isSalaTecnica && !isGestorContrato && !isCliente);
+  const canCreate = isAdmin || !isSalaTecnica && !isGestorContrato && !isCliente;
+  const canEdit = isAdmin || !isSalaTecnica && !isGestorContrato && !isCliente;
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const { currentUser, allUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
-      
+
       setUser(currentUser);
       setAllUsers(allUsers);
       setObras(obrasData);
@@ -1636,7 +1636,7 @@ export default function MeusEnsaios() {
       // Apply access level filtering logic
       if (currentUserAccessLevel === 'sala_tecnica_afirmaevias') {
         const regionaisDoUsuario = regionaisData.filter((regional) =>
-          (regional.salas_tecnicas_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
+        (regional.salas_tecnicas_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
         );
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
         const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
@@ -1646,7 +1646,7 @@ export default function MeusEnsaios() {
         const regionaisDoUsuario = regionaisData.filter((regional) => {
           const gestores = regional.gestores_contrato_responsaveis || [];
           return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase() ||
-                 gestores.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
+          gestores.some((email) => email.toLowerCase() === currentUser.email.toLowerCase());
         });
         console.log("📊 [DEBUG] Gestor - Regionais do usuário:", regionaisDoUsuario);
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
@@ -1655,37 +1655,37 @@ export default function MeusEnsaios() {
         console.log("📊 [DEBUG] Gestor - Obras permitidas (IDs):", obrasPermitidasIds);
         ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
         console.log("📊 [DEBUG] Gestor Contrato - Ensaios filtrados:", ensaiosForUser.length);
-        console.log("📊 [DEBUG] Gestor - ChecklistAplicacao na lista:", ensaiosForUser.filter(e => e.entityType === 'ChecklistAplicacao'));
+        console.log("📊 [DEBUG] Gestor - ChecklistAplicacao na lista:", ensaiosForUser.filter((e) => e.entityType === 'ChecklistAplicacao'));
       } else if (currentUserAccessLevel === 'cliente') {
         const regionaisDoUsuario = regionaisData.filter((regional) =>
-          (regional.clientes_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
+        (regional.clientes_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
         );
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
         const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
-        
+
         // IMPORTANTE: Cliente vê APENAS ensaios APROVADOS (approved === true) OU ASSINADOS
-        ensaiosForUser = combinedEnsaios.filter((ensaio) => 
-          obrasPermitidasIds.includes(ensaio.obra_id) && 
-          (ensaio.approved === true || ensaio.client_signature?.signed_by)
+        ensaiosForUser = combinedEnsaios.filter((ensaio) =>
+        obrasPermitidasIds.includes(ensaio.obra_id) && (
+        ensaio.approved === true || ensaio.client_signature?.signed_by)
         );
         console.log("📊 [DEBUG] Cliente - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel !== 'admin') {
         console.log("📊 [DEBUG] User email:", currentUser.email);
         console.log("📊 [DEBUG] User laboratorista_name:", currentUser.laboratorista_name);
         console.log("📊 [DEBUG] Total combinedEnsaios antes do filtro:", combinedEnsaios.length);
-        
+
         // Filtrar por created_by OU laboratorista_name
         ensaiosForUser = combinedEnsaios.filter((e) => {
           const emailMatch = e.created_by?.toLowerCase() === currentUser.email?.toLowerCase();
-          const nameMatch = currentUser.laboratorista_name && 
-                           e.laboratorista_name?.toLowerCase() === currentUser.laboratorista_name?.toLowerCase();
+          const nameMatch = currentUser.laboratorista_name &&
+          e.laboratorista_name?.toLowerCase() === currentUser.laboratorista_name?.toLowerCase();
           return emailMatch || nameMatch;
         });
-        
+
         console.log("📊 [DEBUG] User - Ensaios filtrados (email OU nome):", ensaiosForUser.length);
         console.log("📊 [DEBUG] Detalhes dos ensaios filtrados:");
         ensaiosForUser.forEach((e, i) => {
-          console.log(`  ${i+1}. Tipo: ${e.entityType}, Status: ${e.status}, Approved: ${e.approved}, Created by: ${e.created_by}, Lab name: ${e.laboratorista_name}`);
+          console.log(`  ${i + 1}. Tipo: ${e.entityType}, Status: ${e.status}, Approved: ${e.approved}, Created by: ${e.created_by}, Lab name: ${e.laboratorista_name}`);
         });
       } else {
         console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
@@ -1743,14 +1743,14 @@ export default function MeusEnsaios() {
       return;
     }
     try {
-       const entityMap = getEntityMap();
-       const Entity = entityMap[ensaio.entityType];
-       await Entity.update(ensaio.id, {
-         approved: false,
-         approved_by: user.email,
-         approved_date: new Date().toISOString(),
-         rejection_reason: motivo
-       });
+      const entityMap = getEntityMap();
+      const Entity = entityMap[ensaio.entityType];
+      await Entity.update(ensaio.id, {
+        approved: false,
+        approved_by: user.email,
+        approved_date: new Date().toISOString(),
+        rejection_reason: motivo
+      });
 
       loadData();
       alert('Registro reprovado com sucesso!');
@@ -1785,49 +1785,49 @@ export default function MeusEnsaios() {
           <h1 className="text-3xl font-bold text-[#00233B]">Ensaios Realizados</h1>
           <p className="text-[#00233B]/80 mt-1">
             {isAdmin ?
-              "Gerencie e aprove todos os registros de suas obras." :
-              isSalaTecnica || isGestorContrato ?
-                "Gerencie e aprove todos os registros de suas obras." :
-                isCliente ?
-                  "Visualize os ensaios e diários aprovados das suas obras." :
-                  "Visualize e gerencie todos os ensaios e diários registrados."}
+            "Gerencie e aprove todos os registros de suas obras." :
+            isSalaTecnica || isGestorContrato ?
+            "Gerencie e aprove todos os registros de suas obras." :
+            isCliente ?
+            "Visualize os ensaios e diários aprovados das suas obras." :
+            "Visualize e gerencie todos os ensaios e diários registrados."}
           </p>
         </div>
 
         {loading ?
-          <div className="text-center py-12">
+        <div className="text-center py-12">
             <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#00233B]/50" />
             <p className="text-[#00233B]/80 mt-2">Carregando registros...</p>
           </div> :
-          canApprove ?
-            <AdminInterface
-              ensaios={ensaios}
-              obras={obras}
-              projects={projects}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onDelete={handleDeleteEnsaio}
-              user={user}
-              canApprove={canApprove}
-              canCreate={canCreate}
-              canEdit={canEdit}
-              allUsers={allUsers} />
-            :
-            isCliente ?
-              <ClienteInterface
-                ensaios={ensaios}
-                obras={obras}
-                projects={projects}
-                user={user}
-                allUsers={allUsers} />
-              :
-              <LaboratoristaInterface
-                ensaios={ensaios}
-                obras={obras}
-                user={user}
-                allUsers={allUsers} />
+        canApprove ?
+        <AdminInterface
+          ensaios={ensaios}
+          obras={obras}
+          projects={projects}
+          onApprove={handleApprove}
+          onReject={handleReject}
+          onDelete={handleDeleteEnsaio}
+          user={user}
+          canApprove={canApprove}
+          canCreate={canCreate}
+          canEdit={canEdit}
+          allUsers={allUsers} /> :
+
+        isCliente ?
+        <ClienteInterface
+          ensaios={ensaios}
+          obras={obras}
+          projects={projects}
+          user={user}
+          allUsers={allUsers} /> :
+
+        <LaboratoristaInterface
+          ensaios={ensaios}
+          obras={obras}
+          user={user}
+          allUsers={allUsers} />
         }
       </div>
-    </div>
-  );
+    </div>);
+
 }
