@@ -740,7 +740,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                         }
                           </td>
                           <td className="px-2 py-2 text-center">
-                          <Badge className="bg-blue-100/80 text-[10px] ml-1 pt-1 pr-1 pb-1 font-semibold rounded inline-flex items-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shadow border border-blue-300/50 hover:bg-blue-200/80 hover:border-blue-400/50 transition-colors gap-1">
+                          <Badge className={`${status.className} text-[10px] px-2 py-0.5 gap-1`}>
                            <status.icon className="w-3 h-3" />
                            {status.text}
                           </Badge>
