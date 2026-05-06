@@ -29,7 +29,7 @@ export default function SignatureFooter({
   const textSize = sizePrint ? 'text-[7px] print:text-[6px]' : 'text-xs print:text-[9px]';
   const headerSize = sizePrint ? 'text-[6px] print:text-[5px]' : 'text-[10px] print:text-[9px]';
   const minHeight = sizePrint ? 'min-h-[28px] print:min-h-[20px]' : 'min-h-[36px] print:min-h-[28px]';
-  const signatureStyle = { fontFamily: "'Segoe Print', 'Courier New', monospace" };
+  const signatureStyle = { fontFamily: "'Freestyle Script', 'Great Vibes', 'Brush Script MT', cursive" };
 
   return (
     <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5">
