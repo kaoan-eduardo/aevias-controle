@@ -713,13 +713,13 @@ export default function ChecklistMRAFPage() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {formData.periodos_clima.map((periodo, index) => (
-                      <div key={index} className="bg-white border border-slate-200 rounded-lg p-4">
-                        <h4 className="text-base font-semibold text-slate-700 mb-3 capitalize">
+                      <div key={index} className="bg-card border border-border rounded-lg p-4">
+                        <h4 className="text-base font-semibold text-foreground mb-3 capitalize">
                           {periodo.periodo === 'manha' ? 'Manhã' : 'Tarde'}
                         </h4>
                         <div className="space-y-3">
                           <div>
-                            <Label className="text-sm">Temperatura Ambiente (°C)</Label>
+                            <Label className="text-sm text-foreground">Temperatura Ambiente (°C)</Label>
                             <Input
                               type="number"
                               value={periodo.temperatura_ambiente || ''}
@@ -732,12 +732,12 @@ export default function ChecklistMRAFPage() {
                                 handleChange('periodos_clima', novosClimas);
                               }}
                               disabled={!isEditable || isApproved}
-                              className="bg-white border-slate-200 text-slate-700 h-10 text-base"
+                              className="h-10 text-base"
                             />
                           </div>
 
                           <div>
-                            <Label className="text-sm">Condições Climáticas</Label>
+                            <Label className="text-sm text-foreground">Condições Climáticas</Label>
                             <Select
                               value={periodo.condicoes_climaticas}
                               onValueChange={(value) => {
