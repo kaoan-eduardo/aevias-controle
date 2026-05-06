@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
+import SignatureFooter from '../components/relatorios/SignatureFooter';
 
 const PENEIRAS_CONFIG = [
   { label: 'Nº 3"', abertura: '75,0', key: 'peneira_75_0mm' },
@@ -101,12 +102,7 @@ export default function RelatorioCAUQ() {
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const getCargoLabel = (email) => {
-    if (!email) return 'Responsável';
-    // Buscar cargo do usuário pelo email
-    // Por enquanto retorna um padrão, será carregado conforme implementação
-    return 'Responsável';
-  };
+
 
   // Cálculos de granulometria - apenas peneiras da faixa
   const calcularGranulometria = () => {
@@ -1089,68 +1085,23 @@ export default function RelatorioCAUQ() {
 
           {/* Footer com assinaturas */}
           <footer className={`px-1.5 print:break-inside-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-[150px]'}`}>
-            <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5">
-              <div className="text-center">
-                <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
-                  {ensaio.laboratorista_name && (
-                    <>
-                      <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
-                      <p className="text-[7px]">{ensaio.created_by}</p>
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.created_date)}</p>
-                    </>
-                  )}
-                </div>
-                <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                  <p className="text-[7px] print:text-[6px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
-                </div>
-              </div>
-
-              <div className="text-center">
-                {ensaio.approver_details ? (
-                  <>
-                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
-                      <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
-                      <p className="text-[7px]">{ensaio.approved_by}</p>
-                      {ensaio.approver_details.crea_number && <p className="text-[7px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
-                    </div>
-                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold uppercase">{ensaio.approver_details.position || 'RESPONSÁVEL'}</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
-                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">RESPONSÁVEL</p>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="text-center">
-                {ensaio.client_signature?.signed_by ? (
-                  <>
-                    <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
-                      <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
-                      <p className="text-[7px]">{ensaio.client_signature.signed_by}</p>
-                      {ensaio.client_signature.crea_number && <p className="text-[7px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
-                    </div>
-                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold uppercase">{ensaio.client_signature.position || 'CLIENTE'}</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
-                    <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">CLIENTE</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+            <SignatureFooter 
+              labName={ensaio.laboratorista_name}
+              labEmail={ensaio.created_by}
+              labCreatedDate={ensaio.created_date}
+              labPosition="Laboratorista"
+              approverName={ensaio.approver_details?.name}
+              approverEmail={ensaio.approved_by}
+              approverPosition={ensaio.approver_details?.position}
+              approverCREA={ensaio.approver_details?.crea_number}
+              approverDate={ensaio.approved_date}
+              clientName={ensaio.client_signature?.engineer_name}
+              clientEmail={ensaio.client_signature?.signed_by}
+              clientPosition={ensaio.client_signature?.position}
+              clientCREA={ensaio.client_signature?.crea_number}
+              clientDate={ensaio.client_signature?.signed_date}
+              sizePrint={true}
+            />
           </footer>
         </div>
       </div>
