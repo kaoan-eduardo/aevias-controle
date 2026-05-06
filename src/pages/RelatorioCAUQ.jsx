@@ -1026,7 +1026,7 @@ export default function RelatorioCAUQ() {
             {!ensaio.realizar_marshall && !ensaio.realizar_densidade_rice && (
               <div className="mt-0 print:mt-0 print:mb-auto">
                 <div className="bg-slate-200 font-bold px-2 py-1 text-[10px] print:text-[8px] print:py-1">OBSERVAÇÕES</div>
-                <div className="border border-slate-300 p-2 text-[10px] h-[60px] print:text-[8px] print:p-1 print:h-[45px] overflow-hidden">
+                <div className="border border-slate-300 p-2 text-[10px] h-[60px] print:text-[8px] print:p-1 print:h-[30px] overflow-hidden">
                   {ensaio.observacoes || ''}
                 </div>
               </div>
