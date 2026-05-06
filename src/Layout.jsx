@@ -210,26 +210,44 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
     },
     {
       nome: "Conservação",
-
       icon: Wrench,
       cor: "text-[#00233B]",
       corFundo: "bg-[#BFCF99]/20 border-[#BFCF99]/30",
       tipo_obra: "conservacao",
-      ensaios: [
-        { title: "Ensaio de CAUQ", url: createPageUrl("EnsaioCAUQ"), icon: FlaskConical },
-        { title: "Ensaio MRAF", url: createPageUrl("EnsaioMRAF"), icon: FlaskConical },
-        { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
-        { title: "Acompanhamento de Cargas", url: createPageUrl("AcompanhamentoCarga"), icon: FlaskConical },
-        { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
-        { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
-        { title: "Granulometria da Mistura", url: createPageUrl("GranuMistura"), icon: FlaskConical },
-        { title: "Rompimento Concreto", url: createPageUrl("EnsaioRompimentoConcreto"), icon: FlaskConical },
-        { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
-        { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
-        { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
-        { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
-        { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
-        { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical }
+      setores: [
+        {
+          nome: "Usina",
+          ensaios: [
+            { title: "Ensaio de CAUQ", url: createPageUrl("EnsaioCAUQ"), icon: FlaskConical },
+            { title: "Acompanhamento de Usinagem", url: createPageUrl("AcompanhamentoUsinagem"), icon: FlaskConical },
+            { title: "Rompimento Concreto", url: createPageUrl("EnsaioRompimentoConcreto"), icon: FlaskConical },
+            { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
+            { title: "Granulometria da Mistura", url: createPageUrl("GranuMistura"), icon: FlaskConical },
+            { title: "Sondagem", url: createPageUrl("EnsaioSondagem"), icon: Gauge },
+          ]
+        },
+        {
+          nome: "MRAF",
+          ensaios: [
+            { title: "Ensaio MRAF", url: createPageUrl("EnsaioMRAF"), icon: FlaskConical },
+            { title: "Taxa MRAF", url: createPageUrl("EnsaioTaxaMRAF"), icon: FlaskConical },
+            { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
+            { title: "Granulometria Individual", url: createPageUrl("EnsaioGranulometriaIndividual"), icon: FlaskConical },
+            { title: "Granulometria da Mistura", url: createPageUrl("GranuMistura"), icon: FlaskConical },
+          ]
+        },
+        {
+          nome: "Campo",
+          ensaios: [
+            { title: "Ensaio de CAUQ", url: createPageUrl("EnsaioCAUQ"), icon: FlaskConical },
+            { title: "Taxa de Pintura/Imprimação", url: createPageUrl("EnsaioTaxaPinturaImprimacao"), icon: FlaskConical },
+            { title: "Acompanhamento de Cargas", url: createPageUrl("AcompanhamentoCarga"), icon: FlaskConical },
+            { title: "Viga Benkelman", url: createPageUrl("EnsaioVigaBenkelman"), icon: Gauge },
+            { title: "Densidade In Situ", url: createPageUrl("EnsaioDensidadeInSitu"), icon: Gauge },
+            { title: "Ensaio Proctor", url: createPageUrl("EnsaioProctor"), icon: FlaskConical },
+            { title: "Mancha + Pêndulo", url: createPageUrl("EnsaioManchaPendulo"), icon: Gauge },
+          ]
+        },
       ]
     },
     {
@@ -261,6 +279,13 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
     categorias.filter(categoria => tiposObraDisponiveis.has(categoria.tipo_obra)),
     [categorias, tiposObraDisponiveis]
   );
+
+  const getTotalEnsaios = useCallback((categoria) => {
+    if (categoria.setores) {
+      return categoria.setores.reduce((acc, s) => acc + s.ensaios.length, 0);
+    }
+    return categoria.ensaios?.length || 0;
+  }, []);
 
   const handleSelect = useCallback((url) => {
     navigate(url);
@@ -316,14 +341,30 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
                 <div className="flex items-center gap-2 mb-3">
                   <categoria.icon className={`w-5 h-5 ${categoria.cor}`} />
                   <h4 className={`font-bold ${categoria.cor}`}>{categoria.nome}</h4>
-                  {categoria.ensaios.length > 0 && (
-                    <Badge variant="secondary" className="ml-auto bg-black/10 text-[#00233B]">
-                      {categoria.ensaios.length} {categoria.ensaios.length === 1 ? 'ensaio' : 'ensaios'}
-                    </Badge>
-                  )}
                 </div>
 
-                {categoria.ensaios.length > 0 ? (
+                {/* Categoria com setores (ex: Conservação) */}
+                {categoria.setores ? (
+                  <div className="space-y-3">
+                    {categoria.setores.map((setor) => (
+                      <div key={setor.nome}>
+                        <p className="text-xs font-semibold text-[#00233B]/60 uppercase tracking-wider mb-1.5 px-1">{setor.nome}</p>
+                        <div className="grid grid-cols-1 gap-1.5">
+                          {setor.ensaios.map((ensaio) => (
+                            <button
+                              key={ensaio.title}
+                              onClick={() => handleSelect(ensaio.url)}
+                              className="flex items-center gap-3 p-3 bg-[#F2F1EF]/30 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-200 text-left"
+                            >
+                              <ensaio.icon className="w-5 h-5 text-[#BFCF99]" />
+                              <p className="font-medium text-[#00233B] text-sm">{ensaio.title}</p>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : categoria.ensaios?.length > 0 ? (
                   <div className="grid grid-cols-1 gap-2">
                     {categoria.ensaios.map((ensaio) => (
                       <button
