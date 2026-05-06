@@ -1023,10 +1023,18 @@ export default function RelatorioCAUQ() {
             )}
 
             {/* Observações */}
-            {ensaio.observacoes && (
-              <div className={`mt-0 print:mt-0 ${ensaio.realizar_marshall ? 'mb-0' : 'mb-2'}`}>
-                <div className={`bg-slate-200 font-bold ${ensaio.realizar_marshall ? 'px-1 py-0 text-[8px] print:text-[7px] print:py-0' : 'px-2 py-1 text-[10px] print:text-[8px] print:py-1'}`}>OBSERVAÇÕES</div>
-                <div className={`border border-slate-300 ${ensaio.realizar_marshall ? 'p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]' : 'p-2 text-[10px] min-h-[20px] print:text-[8px] print:p-1 print:min-h-[16px]'}`}>
+            {!ensaio.realizar_marshall && !ensaio.realizar_densidade_rice && (
+              <div className="mt-0 print:mt-0 mb-2">
+                <div className="bg-slate-200 font-bold px-2 py-1 text-[10px] print:text-[8px] print:py-1">OBSERVAÇÕES</div>
+                <div className="border border-slate-300 p-2 text-[10px] min-h-[60px] print:text-[8px] print:p-1 print:min-h-[40px]">
+                  {ensaio.observacoes || ''}
+                </div>
+              </div>
+            )}
+            {ensaio.realizar_marshall && ensaio.observacoes && (
+              <div className={`mt-0 print:mt-0 mb-0`}>
+                <div className={`bg-slate-200 font-bold px-1 py-0 text-[8px] print:text-[7px] print:py-0`}>OBSERVAÇÕES</div>
+                <div className={`border border-slate-300 p-0.5 text-[8px] min-h-[12px] print:text-[6px] print:p-0 print:px-0.5 print:min-h-[8px]`}>
                   {ensaio.observacoes}
                 </div>
               </div>
