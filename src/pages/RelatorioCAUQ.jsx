@@ -377,12 +377,17 @@ export default function RelatorioCAUQ() {
 
                         const paddingClass = ensaio.realizar_marshall ? 'px-0' : 'px-1.5';
 
+                        const percentualPassante = parseFloat(dado.percentualPassante);
+                        const faixaMin = parseFloat(dado.faixaTrabalhoMin);
+                        const faixaMax = parseFloat(dado.faixaTrabalhoMax);
+                        const foraFaixa = (faixaMin && faixaMax) && (percentualPassante < faixaMin || percentualPassante > faixaMax);
+                        
                         return (
                           <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center font-semibold ${heightClass}`}>{dado.astm}</td>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.retido}</td>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.passante}</td>
-                            <td className={`border-r border-slate-300 ${paddingClass} text-center font-semibold ${heightClass}`}>{dado.percentualPassante}</td>
+                            <td className={`border-r border-slate-300 ${paddingClass} text-center font-semibold ${heightClass} ${foraFaixa ? 'text-red-600' : ''}`}>{dado.percentualPassante}</td>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.faixaTrabalhoMin ? parseFloat(dado.faixaTrabalhoMin).toFixed(1) : ''}</td>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.faixaTrabalhoMax ? parseFloat(dado.faixaTrabalhoMax).toFixed(1) : ''}</td>
                             <td className={`border-r border-slate-300 ${paddingClass} text-center ${heightClass}`}>{dado.limiteMin ? parseFloat(dado.limiteMin).toFixed(1) : ''}</td>
@@ -436,7 +441,12 @@ export default function RelatorioCAUQ() {
                           </tr>
                           <tr className="bg-white">
                             <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEOR LIG.:</td>
-                            <td className={`font-semibold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
+                            <td className={`font-semibold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'} ${
+                              project?.teor_ligante && ensaio.extracao_ligante.teor_ligante && (
+                                parseFloat(ensaio.extracao_ligante.teor_ligante) < parseFloat(project.teor_ligante.min) || 
+                                parseFloat(ensaio.extracao_ligante.teor_ligante) > parseFloat(project.teor_ligante.max)
+                              ) ? 'text-red-600' : ''
+                            }`}>{ensaio.extracao_ligante.teor_ligante || '-'}%</td>
                           </tr>
                           <tr className="bg-slate-50">
                             <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>FILLER/BET.:</td>
@@ -444,10 +454,15 @@ export default function RelatorioCAUQ() {
                           </tr>
 
                           {ensaio.extracao_ligante.teor_ligante_real && (
-                            <tr className="bg-blue-50">
-                              <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEOR LIG. REAL:</td>
-                              <td className={`font-semibold text-blue-700 ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>{ensaio.extracao_ligante.teor_ligante_real}%</td>
-                            </tr>
+                           <tr className="bg-blue-50">
+                             <td className={`border-r border-slate-300 font-bold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'}`}>TEOR LIG. REAL:</td>
+                             <td className={`font-semibold ${ensaio.realizar_marshall ? 'px-0.5 py-0' : 'px-2 py-1.5'} ${
+                               project?.teor_ligante && ensaio.extracao_ligante.teor_ligante_real && (
+                                 parseFloat(ensaio.extracao_ligante.teor_ligante_real) < parseFloat(project.teor_ligante.min) || 
+                                 parseFloat(ensaio.extracao_ligante.teor_ligante_real) > parseFloat(project.teor_ligante.max)
+                               ) ? 'text-red-600' : 'text-blue-700'
+                             }`}>{ensaio.extracao_ligante.teor_ligante_real}%</td>
+                           </tr>
                           )}
 
                           {ensaio.extracao_ligante.amostra_umida && (
