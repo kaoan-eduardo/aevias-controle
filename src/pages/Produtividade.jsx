@@ -91,7 +91,7 @@ export default function ProdutividadePage() {
       const [
         diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF,
         checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem,
-        ensaiosCAUQ, ensaiosDensidade, ensaiosDensidadeInSitu, ensaiosGranAreia,
+        ensaiosCAUQ, ensaiosDensidade, ensaiosDensidadeInSitu,
         ensaiosSondagem, ensaiosTaxaPintura, acompanhamentoCarga, produtividadeDiaria
       ] = await Promise.all([
         base44.entities.DiarioObra.list(),
@@ -104,7 +104,6 @@ export default function ProdutividadePage() {
         base44.entities.EnsaioCAUQ.list(),
         base44.entities.EnsaioDensidade.list(),
         base44.entities.EnsaioDensidadeInSitu.list(),
-        base44.entities.EnsaioGranAreia.list(),
         base44.entities.EnsaioSondagem.list(),
         base44.entities.EnsaioTaxaPinturaImprimacao.list(),
         base44.entities.AcompanhamentoCarga.list(),
@@ -163,7 +162,6 @@ export default function ProdutividadePage() {
       processarRegistros(ensaiosCAUQ, 'EnsaioCAUQ');
       processarRegistros(ensaiosDensidade, 'EnsaioDensidade');
       processarRegistros(ensaiosDensidadeInSitu, 'EnsaioDensidadeInSitu');
-      processarRegistros(ensaiosGranAreia, 'EnsaioGranAreia');
       processarRegistros(ensaiosSondagem, 'EnsaioSondagem');
       processarRegistros(ensaiosTaxaPintura, 'EnsaioTaxaPinturaImprimacao');
       processarRegistros(acompanhamentoCarga, 'AcompanhamentoCarga');
