@@ -122,15 +122,15 @@ export default function ProdutividadePage() {
         EnsaioSondagem: 'data',
         EnsaioTaxaPinturaImprimacao: 'data_ensaio',
         AcompanhamentoCarga: 'data',
-        EnsaioMRAF: 'data',
-        EnsaioManchaPendulo: 'data',
-        EnsaioVigaBenkelman: 'data',
-        EnsaioTaxaMRAF: 'data',
+        EnsaioMRAF: 'data_ensaio',
+        EnsaioManchaPendulo: 'data_ensaio',
+        EnsaioVigaBenkelman: 'data_ensaio',
+        EnsaioTaxaMRAF: 'data_ensaio',
         AcompanhamentoUsinagem: 'data',
-        EnsaioGranulometriaIndividual: 'data',
+        EnsaioGranulometriaIndividual: 'data_ensaio',
         GranuMistura: 'data',
-        EnsaioProctor: 'data',
-        EnsaioRompimentoConcreto: 'data',
+        EnsaioProctor: 'data_ensaio',
+        EnsaioRompimentoConcreto: 'data_ensaio',
         BoletimSondagem: 'data',
         BoletimSondagemTrado: 'data',
       };
@@ -138,10 +138,13 @@ export default function ProdutividadePage() {
       // prodData: { email: { dia: [registros] } }
       const prodData = {};
 
+      // Entidades que não possuem campo status (sempre contam)
+      const SEM_STATUS = new Set(['BoletimSondagem', 'BoletimSondagemTrado']);
+
       const processarRegistros = (registros, entityName) => {
         const dateField = DATE_FIELD[entityName] || 'data';
         registros.forEach(reg => {
-          if (reg.status !== 'finalizado') return;
+          if (!SEM_STATUS.has(entityName) && reg.status !== 'finalizado') return;
           if (!obrasVisiveisIds.has(reg.obra_id)) return;
 
           const rawDate = reg[dateField];
