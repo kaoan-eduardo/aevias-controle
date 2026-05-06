@@ -71,7 +71,10 @@ export default function ProdutividadePage() {
         });
       }
 
-      const labUsers = allUsers.filter(u => labEmailsSet.has(u.email.toLowerCase()));
+      const labUsers = allUsers.filter(u =>
+        labEmailsSet.has(u.email.toLowerCase()) &&
+        u.position?.toLowerCase() === 'laboratorista'
+      );
 
       // ── 4. Empreiteiras e usinas das obras visíveis ──────────────────────────
       const empresasSet = new Set();
