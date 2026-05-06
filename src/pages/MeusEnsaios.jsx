@@ -1074,8 +1074,10 @@ const LaboratoristaInterface = React.memo(({ ensaios, obras, user, allUsers }) =
 
   const pendentes = useMemo(() => {
     const filtered = ensaios.filter((e) => {
-      // Apenas finalizados aguardando aprovação (não reprovados)
-      return e.status === 'finalizado' && e.approved === null && !e.client_signature?.signed_by;
+      // Finalizados aguardando aprovação (não reprovados)
+      // Também inclui registros sem campo status (legados) que ainda não foram aprovados/reprovados
+      const isFinalizadoOuSemStatus = e.status === 'finalizado' || (!e.status && e.status !== 'rascunho');
+      return isFinalizadoOuSemStatus && e.approved === null && !e.client_signature?.signed_by && e.approved !== false;
     });
     return filtered;
   }, [ensaios]);
