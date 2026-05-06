@@ -45,7 +45,7 @@ export default function Projects() {
 
       const userAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      if (userAccessLevel === 'cliente' || userAccessLevel === 'sala_tecnica_afirmaevias' || userAccessLevel === 'gestor_contrato') {
+      if (userAccessLevel !== 'admin') {
         const emailUsuario = userData.email.trim().toLowerCase();
         const regionaisDoUsuario = regionaisData.filter(regional => {
           if (userAccessLevel === 'cliente') {
@@ -58,8 +58,11 @@ export default function Projects() {
             const gestores = regional.gestores_contrato_responsaveis || [];
             return regional.gestor_contrato_responsavel?.trim().toLowerCase() === emailUsuario ||
                    gestores.some(email => email.trim().toLowerCase() === emailUsuario);
+          } else {
+            // laboratorista (user)
+            const laboratoristas = regional.laboratoristas_responsaveis || [];
+            return laboratoristas.some(email => email.trim().toLowerCase() === emailUsuario);
           }
-          return false;
         });
 
         const projectIdsPermitidos = new Set();
@@ -77,7 +80,6 @@ export default function Projects() {
 
         setProjects(projectsFiltrados);
       } else {
-        // admin vê todos os projetos
         setProjects(projectsData);
       }
     } catch (error) {
