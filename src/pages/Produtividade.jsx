@@ -30,9 +30,8 @@ export default function ProdutividadePage() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
 
-      const userAccessLevel = currentUser?.access_level || 'user';
-      // Admin puro: sem access_level customizado E role === 'admin'
-      const isAdminPuro = !currentUser?.access_level && currentUser?.role === 'admin';
+      const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
+      const isAdminPuro = userAccessLevel === 'admin';
 
       const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
@@ -237,7 +236,8 @@ export default function ProdutividadePage() {
     setDiaDialog({ open: false, laborista: null, dia: null });
   };
 
-  const userCanEdit = user?.access_level === 'admin' || 
+  const userCanEdit = user?.role === 'admin' || 
+                            user?.access_level === 'admin' || 
                             user?.access_level === 'gestor_contrato' || 
                             user?.access_level === 'sala_tecnica_afirmaevias';
 
