@@ -285,14 +285,14 @@ export default function ProdutividadePage() {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   return (
-    <div className="min-h-screen bg-[#F2F1EF] p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-[95vw] mx-auto">
-        <Card className="bg-white/80 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Calendar className="w-6 h-6 text-[#BFCF99]" />
-                <CardTitle className="text-2xl text-[#00233B]">
+                <CardTitle className="text-2xl text-foreground">
                   Produtividade dos Laboratoristas
                 </CardTitle>
               </div>
@@ -331,14 +331,14 @@ export default function ProdutividadePage() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[#00233B]">
-                    <th className="border border-[#BFCF99]/20 p-2 text-left text-[#F2F1EF] font-semibold sticky left-0 bg-[#00233B] z-10 min-w-[200px]">
+                  <tr className="bg-primary">
+                    <th className="border border-border p-2 text-left text-primary-foreground font-semibold sticky left-0 bg-primary z-10 min-w-[200px]">
                       Laboratorista
                     </th>
                     {days.map(day => (
                       <th
                         key={day}
-                        className="border border-[#BFCF99]/20 p-2 text-center text-[#F2F1EF] font-medium min-w-[50px]"
+                        className="border border-border p-2 text-center text-primary-foreground font-medium min-w-[50px]"
                       >
                         <div className="text-xs">{getDayOfWeek(day)}</div>
                         <div className="text-sm font-bold">{day}</div>
@@ -350,13 +350,13 @@ export default function ProdutividadePage() {
                   {laboratoristas.map((lab, index) => (
                     <tr
                       key={lab.email}
-                      className={index % 2 === 0 ? "bg-white" : "bg-[#F2F1EF]/50"}
+                      className={index % 2 === 0 ? "bg-card" : "bg-muted/30"}
                     >
-                      <td className="border border-[#BFCF99]/20 p-2 sticky left-0 z-10 bg-inherit">
-                        <div className="font-medium text-[#00233B]">
+                      <td className="border border-border p-2 sticky left-0 z-10 bg-inherit">
+                        <div className="font-medium text-foreground">
                           {lab.laboratorista_name || lab.full_name}
                         </div>
-                        <div className="text-xs text-[#00233B]/60">
+                        <div className="text-xs text-muted-foreground">
                           {lab.email}
                         </div>
                       </td>
@@ -370,7 +370,7 @@ export default function ProdutividadePage() {
                         return (
                           <td
                             key={day}
-                            className="border border-[#BFCF99]/20 p-1 text-center align-middle"
+                            className="border border-border p-1 text-center align-middle"
                           >
                             {hasRegistros ? (
                               <div className="flex flex-col gap-0.5">
@@ -414,7 +414,7 @@ export default function ProdutividadePage() {
             </div>
             {laboratoristas.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-[#00233B]/60">Nenhum laboratorista encontrado</p>
+                <p className="text-muted-foreground">Nenhum laboratorista encontrado</p>
               </div>
             )}
           </CardContent>
