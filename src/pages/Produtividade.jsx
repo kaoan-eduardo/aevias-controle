@@ -91,16 +91,39 @@ export default function ProdutividadePage() {
       ]);
 
       // ── 4. Processar registros — acumular por email ──────────────────────────
+      // Cada entidade pode usar um campo de data diferente
+      const DATE_FIELD = {
+        DiarioObra: 'data',
+        ChecklistUsina: 'data',
+        ChecklistAplicacao: 'data',
+        ChecklistMRAF: 'data',
+        ChecklistConcretagem: 'data',
+        ChecklistTerraplanagem: 'data',
+        ChecklistReciclagem: 'data',
+        EnsaioCAUQ: 'data_ensaio',
+        EnsaioDensidade: 'extraction_date',
+        EnsaioDensidadeInSitu: 'data_ensaio',
+        EnsaioSondagem: 'data',
+        EnsaioTaxaPinturaImprimacao: 'data_ensaio',
+        AcompanhamentoCarga: 'data',
+      };
+
       // prodData: { email: { dia: [registros] } }
       const prodData = {};
 
       const processarRegistros = (registros, entityName) => {
+        const dateField = DATE_FIELD[entityName] || 'data';
         registros.forEach(reg => {
           if (reg.status !== 'finalizado') return;
           if (!obrasVisiveisIds.has(reg.obra_id)) return;
-          if (!reg.data || !reg.created_by) return;
 
-          const [y, m, d] = reg.data.split('-').map(Number);
+          const rawDate = reg[dateField];
+          if (!rawDate || !reg.created_by) return;
+
+          // Suporta "YYYY-MM-DD" e "YYYY-MM-DDTHH:mm:ss..."
+          const datePart = rawDate.substring(0, 10);
+          const [y, m, d] = datePart.split('-').map(Number);
+          if (!y || !m || !d) return;
           const regDate = new Date(y, m - 1, d);
           if (regDate < startDate || regDate > endDate) return;
 
@@ -186,19 +209,30 @@ export default function ProdutividadePage() {
   };
 
   const ENSAIO_LABELS = {
-    DiarioObra: 'Diário',
+    DiarioObra: 'Diário de Obra',
     ChecklistUsina: 'CL Usina',
-    ChecklistAplicacao: 'CL Aplic.',
+    ChecklistAplicacao: 'CL Aplicação',
     ChecklistMRAF: 'CL MRAF',
-    ChecklistConcretagem: 'CL Concr.',
-    ChecklistTerraplanagem: 'CL Terra.',
-    ChecklistReciclagem: 'CL Recicl.',
-    EnsaioCAUQ: 'CAUQ',
-    EnsaioDensidade: 'Densidade',
-    EnsaioDensidadeInSitu: 'Dens. InSitu',
+    ChecklistConcretagem: 'CL Concretagem',
+    ChecklistTerraplanagem: 'CL Terraplanagem',
+    ChecklistReciclagem: 'CL Reciclagem',
+    EnsaioCAUQ: 'Ensaio CAUQ',
+    EnsaioDensidade: 'Densidade CP',
+    EnsaioDensidadeInSitu: 'Dens. In Situ',
     EnsaioSondagem: 'Sondagem',
     EnsaioTaxaPinturaImprimacao: 'Taxa Pintura',
     AcompanhamentoCarga: 'Ac. Carga',
+    EnsaioMRAF: 'Ensaio MRAF',
+    EnsaioManchaPendulo: 'Mancha+Pêndulo',
+    EnsaioVigaBenkelman: 'Viga Benkelman',
+    EnsaioTaxaMRAF: 'Taxa MRAF',
+    AcompanhamentoUsinagem: 'Ac. Usinagem',
+    EnsaioGranulometriaIndividual: 'Granu. Indiv.',
+    GranuMistura: 'Granu. Mistura',
+    EnsaioProctor: 'Proctor',
+    EnsaioRompimentoConcreto: 'Romp. Concreto',
+    BoletimSondagem: 'Boletim Sond.',
+    BoletimSondagemTrado: 'Boletim Trado',
   };
 
   const getDayOfWeek = (day) => {
