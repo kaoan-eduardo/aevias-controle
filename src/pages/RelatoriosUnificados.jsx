@@ -82,22 +82,21 @@ export default function RelatoriosUnificados() {
 
     try {
       const registros = [];
-      const dataFimObj = new Date(dataFim);
-      dataFimObj.setDate(dataFimObj.getDate() + 1);
+      const entityNames = Object.keys(REGISTRO_TYPES);
 
-      for (const [entityName] of Object.entries(REGISTRO_TYPES)) {
+      // Carregar sequencialmente com delays maiores
+      for (let i = 0; i < entityNames.length; i++) {
         try {
-          const data = await base44.entities[entityName].filter({
+          await new Promise(resolve => setTimeout(resolve, 150));
+          const data = await base44.entities[entityNames[i]].filter({
             obra_id: obraId,
             data: { $gte: dataInicio, $lt: dataFim.split('T')[0] }
           });
           registros.push(...(data || []));
         } catch (err) {
           // Continuar se falhar em um tipo de registro
-          console.warn(`Erro ao carregar ${entityName}:`, err);
+          console.warn(`Erro ao carregar ${entityNames[i]}:`, err);
         }
-        // Delay pequeno para evitar rate limit
-        await new Promise(resolve => setTimeout(resolve, 50));
       }
 
       const labSet = new Set(registros.map(r => r.laboratorista_name).filter(Boolean));
@@ -115,10 +114,13 @@ export default function RelatoriosUnificados() {
     try {
       const typesEncontrados = new Set();
       const selectedLabs = Object.keys(selectedLaboratoristas).filter(l => selectedLaboratoristas[l]);
+      const entityNames = Object.keys(REGISTRO_TYPES);
 
-      for (const [entityName] of Object.entries(REGISTRO_TYPES)) {
+      // Carregar sequencialmente com delays maiores
+      for (let i = 0; i < entityNames.length; i++) {
         try {
-          const data = await base44.entities[entityName].filter({
+          await new Promise(resolve => setTimeout(resolve, 150));
+          const data = await base44.entities[entityNames[i]].filter({
             obra_id: obraId,
             data: { $gte: dataInicio, $lt: dataFim.split('T')[0] }
           });
@@ -128,14 +130,12 @@ export default function RelatoriosUnificados() {
           );
 
           if (filtered.length > 0) {
-            typesEncontrados.add(entityName);
+            typesEncontrados.add(entityNames[i]);
           }
         } catch (err) {
           // Continuar se falhar em um tipo de registro
-          console.warn(`Erro ao carregar ${entityName}:`, err);
+          console.warn(`Erro ao carregar ${entityNames[i]}:`, err);
         }
-        // Delay pequeno para evitar rate limit
-        await new Promise(resolve => setTimeout(resolve, 50));
       }
 
       setRegistroTypes(Array.from(typesEncontrados).sort());
