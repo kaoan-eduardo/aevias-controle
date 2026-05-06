@@ -27,7 +27,7 @@ export default function SignatureFooter({
   sizePrint = false 
 }) {
   const textSize = sizePrint ? 'text-[7px] print:text-[6px]' : 'text-xs print:text-[9px]';
-  const headerSize = sizePrint ? 'text-[6px] print:text-[5px]' : 'text-[9px] print:text-[8px]';
+  const headerSize = sizePrint ? 'text-[6px] print:text-[5px]' : 'text-[10px] print:text-[9px]';
   const minHeight = sizePrint ? 'min-h-[28px] print:min-h-[20px]' : 'min-h-[36px] print:min-h-[28px]';
   const signatureStyle = { fontFamily: "'Segoe Print', 'Courier New', monospace" };
 
