@@ -1195,14 +1195,15 @@ export default function DiarioObraPage() {
         let availableObras = obrasData;
         
         if (currentUserAccessLevel === 'user') {
-          const regionalDoLaboratorista = regionaisData.find(regional => {
+          const regionaisDoLaboratorista = regionaisData.filter(regional => {
             const laboratoristas = regional.laboratoristas_responsaveis || [];
             return laboratoristas.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
           });
           
-          if (regionalDoLaboratorista) {
+          if (regionaisDoLaboratorista.length > 0) {
+            const regionaisIds = regionaisDoLaboratorista.map(r => r.id);
             availableObras = obrasData.filter(obra => 
-              obra.regional_id === regionalDoLaboratorista.id &&
+              regionaisIds.includes(obra.regional_id) &&
               obra.status === 'em_andamento'
             );
           } else {
