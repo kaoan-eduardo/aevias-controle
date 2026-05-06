@@ -101,6 +101,13 @@ export default function RelatorioCAUQ() {
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
+  const getCargoLabel = (email) => {
+    if (!email) return 'Responsável';
+    // Buscar cargo do usuário pelo email
+    // Por enquanto retorna um padrão, será carregado conforme implementação
+    return 'Responsável';
+  };
+
   // Cálculos de granulometria - apenas peneiras da faixa
   const calcularGranulometria = () => {
     if (!ensaio?.granulometria?.peso_retido_peneiras) return [];
@@ -1108,14 +1115,14 @@ export default function RelatorioCAUQ() {
                       <p className="text-[7px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[7px] print:text-[6px] font-semibold uppercase">{ensaio.approver_details.position || 'RESPONSÁVEL'}</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
+                      <p className="text-[7px] print:text-[6px] font-semibold">RESPONSÁVEL</p>
                     </div>
                   </>
                 )}
@@ -1131,14 +1138,14 @@ export default function RelatorioCAUQ() {
                       <p className="text-[7px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
                     </div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[7px] print:text-[6px] font-semibold uppercase">{ensaio.client_signature.position || 'CLIENTE'}</p>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="min-h-[28px] mb-0 print:min-h-[20px] print:mb-0"></div>
                     <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                      <p className="text-[7px] print:text-[6px] font-semibold">ENGENHEIRO CLIENTE</p>
+                      <p className="text-[7px] print:text-[6px] font-semibold">CLIENTE</p>
                     </div>
                   </>
                 )}
