@@ -1,4 +1,5 @@
 import React from 'react';
+import SignatureFooter from './SignatureFooter';
 
 export default function RelatorioDiario({ diario, obra, project, user, regional, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
@@ -276,67 +277,22 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
         </main>
 
         <footer className="mt-auto pt-4 flex-shrink-0">
-          <div className="grid grid-cols-3 gap-8 items-end">
-            <div className="text-center">
-              <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600 truncate max-w-full">{diario.laboratorista_name}</p>
-                <p className="truncate max-w-full">{diario.created_by}</p>
-                <p>em {formatDateBrasilia(diario.created_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-2">
-                <p className="text-xs text-gray-600">{creatorUser?.position || 'Laboratorista Responsável'}</p>
-              </div>
-            </div>
-
-            <div className="text-center">
-               {diario.approver_details ? (
-                <>
-                  <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                    <p>Aprovado digitalmente por</p>
-                    <p className="font-bold text-slate-600 truncate max-w-full">{diario.approver_details.name}</p>
-                    <p className="truncate max-w-full">{diario.approved_by}</p>
-                    {diario.approver_details.crea_number && <p>CREA: {diario.approver_details.crea_number}</p>}
-                    <p>em {formatDateBrasilia(diario.approved_date)}</p>
-                  </div>
-                  <div className="border-t border-gray-500 pt-2">
-                    <p className="text-xs text-gray-600">{diario.approver_details.position}</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="h-24 mb-2"></div>
-                  <div className="border-t border-gray-500 pt-2">
-                    <p className="text-xs text-gray-600">Aprovação</p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="text-center">
-              {diario.client_signature?.signed_by ? (
-                 <>
-                    <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                      <p>Assinado digitalmente por</p>
-                      <p className="font-bold text-slate-600 truncate max-w-full">{diario.client_signature.engineer_name}</p>
-                      <p className="truncate max-w-full">{diario.client_signature.signed_by}</p>
-                      {diario.client_signature.crea_number && <p>CREA: {diario.client_signature.crea_number}</p>}
-                      <p>em {formatDateBrasilia(diario.client_signature.signed_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-500 pt-2">
-                      <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                    </div>
-                 </>
-              ) : (
-                <>
-                  <div className="h-24 mb-2"></div>
-                  <div className="border-t border-gray-500 pt-2">
-                    <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          <SignatureFooter 
+            labName={diario.laboratorista_name}
+            labEmail={diario.created_by}
+            labCreatedDate={diario.created_date}
+            labPosition={creatorUser?.position || 'Laboratorista'}
+            approverName={diario.approver_details?.name}
+            approverEmail={diario.approved_by}
+            approverPosition={diario.approver_details?.position}
+            approverCREA={diario.approver_details?.crea_number}
+            approverDate={diario.approved_date}
+            clientName={diario.client_signature?.engineer_name}
+            clientEmail={diario.client_signature?.signed_by}
+            clientPosition={diario.client_signature?.position}
+            clientCREA={diario.client_signature?.crea_number}
+            clientDate={diario.client_signature?.signed_date}
+          />
         </footer>
       </div>
 

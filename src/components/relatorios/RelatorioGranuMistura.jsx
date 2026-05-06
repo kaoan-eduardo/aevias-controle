@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import SignatureFooter from './SignatureFooter';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from "@/api/base44Client";
 
@@ -283,17 +284,22 @@ export default function RelatorioGranuMistura({ recordId }) {
 
       {/* Assinaturas */}
       <div className="mt-8 border-t pt-6">
-        <div className="grid grid-cols-3 gap-4 text-[9px]">
-          <div className="text-center">
-            <p className="border-t border-black mt-8">LABORATORISTA RESPONSÁVEL</p>
-          </div>
-          <div className="text-center">
-            <p className="border-t border-black mt-8">ENGENHEIRO RESPONSÁVEL</p>
-          </div>
-          <div className="text-center">
-            <p className="border-t border-black mt-8">ENGENHEIRO CLIENTE</p>
-          </div>
-        </div>
+        <SignatureFooter
+          labName={record.laboratorista_name}
+          labEmail={record.created_by}
+          labCreatedDate={record.created_date}
+          labPosition="Laboratorista"
+          approverName={record.approver_details?.name}
+          approverEmail={record.approved_by}
+          approverPosition={record.approver_details?.position}
+          approverCREA={record.approver_details?.crea_number}
+          approverDate={record.approved_date}
+          clientName={record.client_signature?.engineer_name}
+          clientEmail={record.client_signature?.signed_by}
+          clientPosition={record.client_signature?.position}
+          clientCREA={record.client_signature?.crea_number}
+          clientDate={record.client_signature?.signed_date}
+        />
       </div>
     </div>
   );

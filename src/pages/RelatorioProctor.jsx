@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from "@/components/relatorios/AprovacaoBar";
+import SignatureFooter from "@/components/relatorios/SignatureFooter";
 import { fitParabola } from "@/components/ensaios/ProctorChart";
 import RelatorioLimites from "@/components/relatorios/RelatorioLimites";
 import {
@@ -701,55 +702,22 @@ export default function RelatorioProctor() {
 
         {/* Footer — página 1 */}
         <footer className="mt-4 pt-2">
-          <div className="grid grid-cols-3 gap-8 items-end">
-            {/* Laboratorista */}
-            <div className="text-center">
-              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
-                {ensaio.laboratorista_name && (
-                  <>
-                    <p className="font-bold text-slate-700">{ensaio.laboratorista_name}</p>
-                    <p>{ensaio.created_by}</p>
-                    {ensaio.created_date && <p>em {fmtDateTime(ensaio.created_date)}</p>}
-                  </>
-                )}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="font-semibold text-[8px]">LABORATORISTA RESPONSÁVEL</p>
-              </div>
-            </div>
-            {/* Engenheiro */}
-            <div className="text-center">
-              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
-                {ensaio.approver_details?.name ? (
-                  <>
-                    <p className="font-bold text-slate-700">{ensaio.approver_details.name}</p>
-                    <p>{ensaio.approved_by}</p>
-                    {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
-                    {ensaio.approved_date && <p>em {fmtDateTime(ensaio.approved_date)}</p>}
-                  </>
-                ) : null}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="font-semibold text-[8px]">ENGENHEIRO RESPONSÁVEL</p>
-              </div>
-            </div>
-            {/* Cliente */}
-            <div className="text-center">
-              <div className="text-[8px] text-slate-500 mb-2 h-16 flex flex-col justify-end items-center">
-                {ensaio.client_signature?.signed_by ? (
-                  <>
-                    <p className="font-bold text-slate-700">{ensaio.client_signature.engineer_name}</p>
-                    <p>{ensaio.client_signature.signed_by}</p>
-                    {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
-                    {ensaio.client_signature.signed_date && <p>em {fmtDateTime(ensaio.client_signature.signed_date)}</p>}
-                  </>
-                ) : null}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="font-semibold text-[8px]">ENGENHEIRO CLIENTE</p>
-              </div>
-            </div>
-          </div>
+          <SignatureFooter
+            labName={ensaio.laboratorista_name}
+            labEmail={ensaio.created_by}
+            labCreatedDate={ensaio.created_date}
+            labPosition="Laboratorista"
+            approverName={ensaio.approver_details?.name}
+            approverEmail={ensaio.approved_by}
+            approverPosition={ensaio.approver_details?.position}
+            approverCREA={ensaio.approver_details?.crea_number}
+            approverDate={ensaio.approved_date}
+            clientName={ensaio.client_signature?.engineer_name}
+            clientEmail={ensaio.client_signature?.signed_by}
+            clientPosition={ensaio.client_signature?.position}
+            clientCREA={ensaio.client_signature?.crea_number}
+            clientDate={ensaio.client_signature?.signed_date}
+          />
         </footer>
       </div>
 

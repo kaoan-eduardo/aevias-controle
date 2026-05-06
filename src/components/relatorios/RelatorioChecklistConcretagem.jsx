@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import SignatureFooter from './SignatureFooter';
 
 export default function RelatorioChecklistConcretagem({ checklist, creatorUser, obra: obraProp, regional: regionalProp, project: projectProp }) {
   const [obra, setObra] = useState(obraProp || null);
@@ -220,61 +221,22 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
   // Componente do Footer COM assinaturas (apenas última página)
   const ReportFooterWithSignatures = () => (
-    <footer className="pt-0">
-      <div className="grid grid-cols-3 gap-2 items-end">
-        <div className="text-center">
-          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-            {checklist.laboratorista_name && (
-              <>
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
-                <p>{checklist.created_by}</p>
-                <p>em {formatDateBrasilia(checklist.created_date)}</p>
-              </>
-            )}
-          </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
-        </div>
-        <div className="text-center">
-          {checklist.approver_details ? (
-            <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Aprovado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                <p>{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.approved_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
-            </>
-          ) : (
-            <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
-            </>
-          )}
-        </div>
-        <div className="text-center">
-          {checklist.client_signature?.signed_by ? (
-            <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                <p>{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
-            </>
-          ) : (
-            <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
-            </>
-          )}
-        </div>
-      </div>
-    </footer>
+    <SignatureFooter
+      labName={checklist.laboratorista_name}
+      labEmail={checklist.created_by}
+      labCreatedDate={checklist.created_date}
+      labPosition={creatorUser?.position || 'Laboratorista'}
+      approverName={checklist.approver_details?.name}
+      approverEmail={checklist.approved_by}
+      approverPosition={checklist.approver_details?.position}
+      approverCREA={checklist.approver_details?.crea_number}
+      approverDate={checklist.approved_date}
+      clientName={checklist.client_signature?.engineer_name}
+      clientEmail={checklist.client_signature?.signed_by}
+      clientPosition={checklist.client_signature?.position}
+      clientCREA={checklist.client_signature?.crea_number}
+      clientDate={checklist.client_signature?.signed_date}
+    />
   );
 
   // Componente do Footer SEM assinaturas (páginas intermediárias)

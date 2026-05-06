@@ -26,6 +26,8 @@ const PENEIRAS_MAP = {
   "peneira_0_075mm": { astm: "#200", mm: "0,075" }
 };
 
+import SignatureFooter from './SignatureFooter';
+
 export default function RelatorioGranulometriaIndividual({ ensaio, obra, project, user, regional }) {
   if (!ensaio) {
     return (
@@ -320,67 +322,22 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
 
       {/* Assinaturas */}
       <footer className="mt-6 pt-6 print:break-inside-avoid">
-        <div className="grid grid-cols-3 gap-8 items-end">
-          <div className="text-center">
-            <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-              <p>Assinado digitalmente por</p>
-              <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.laboratorista_name}</p>
-              <p className="truncate max-w-full">{ensaio.created_by}</p>
-              <p>em {formatDateBrasilia(ensaio.created_date)}</p>
-            </div>
-            <div className="border-t border-gray-500 pt-2">
-              <p className="text-xs text-gray-600">Laboratorista Responsável</p>
-            </div>
-          </div>
-
-          <div className="text-center">
-            {ensaio.approver_details ? (
-              <>
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Aprovado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.approver_details.name}</p>
-                  <p className="truncate max-w-full">{ensaio.approved_by}</p>
-                  {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
-                  <p>em {formatDateBrasilia(ensaio.approved_date)}</p>
-                </div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">{ensaio.approver_details.position}</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="h-24 mb-2"></div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">Engenheiro Responsável</p>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="text-center">
-            {ensaio.client_signature?.signed_by ? (
-              <>
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Assinado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.client_signature.engineer_name}</p>
-                  <p className="truncate max-w-full">{ensaio.client_signature.signed_by}</p>
-                  {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
-                  <p>em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
-                </div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="h-24 mb-2"></div>
-                <div className="border-t border-gray-500 pt-2">
-                  <p className="text-xs text-gray-600">Engenheiro Cliente</p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        <SignatureFooter
+          labName={ensaio.laboratorista_name}
+          labEmail={ensaio.created_by}
+          labCreatedDate={ensaio.created_date}
+          labPosition="Laboratorista"
+          approverName={ensaio.approver_details?.name}
+          approverEmail={ensaio.approved_by}
+          approverPosition={ensaio.approver_details?.position}
+          approverCREA={ensaio.approver_details?.crea_number}
+          approverDate={ensaio.approved_date}
+          clientName={ensaio.client_signature?.engineer_name}
+          clientEmail={ensaio.client_signature?.signed_by}
+          clientPosition={ensaio.client_signature?.position}
+          clientCREA={ensaio.client_signature?.crea_number}
+          clientDate={ensaio.client_signature?.signed_date}
+        />
         </footer>
         </div>
       </div>

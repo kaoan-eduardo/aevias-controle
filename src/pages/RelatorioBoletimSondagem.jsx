@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
+import SignatureFooter from '../components/relatorios/SignatureFooter';
 
 export default function RelatorioBoletimSondagem() {
   const [boletim, setBoletim] = useState(null);
@@ -419,52 +420,22 @@ export default function RelatorioBoletimSondagem() {
 
         {/* Footer — assinaturas ficam na mesma página do relatório */}
         <footer className="mt-auto pt-1" style={{ breakInside: 'avoid', breakBefore: 'avoid' }}>
-          <div className="grid grid-cols-3 gap-4 items-end text-center">
-            <div>
-              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
-                {boletim.laboratorista_name && (
-                  <>
-                    <p className="font-bold text-slate-600">{boletim.laboratorista_name}</p>
-                    <p>{boletim.created_by}</p>
-                    <p>em {formatDateTime(boletim.created_date)}</p>
-                  </>
-                )}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[9px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
-              </div>
-            </div>
-
-            <div>
-              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
-                {boletim.approver_details ? (
-                  <>
-                    <p className="font-bold text-slate-600">{boletim.approver_details.name}</p>
-                    {boletim.approver_details.crea_number && <p>CREA: {boletim.approver_details.crea_number}</p>}
-                    <p>em {formatDateTime(boletim.approved_date)}</p>
-                  </>
-                ) : null}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[9px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
-              </div>
-            </div>
-
-            <div>
-              <div className="min-h-[40px] flex flex-col justify-end items-center text-[9px] text-slate-500 mb-1">
-                {boletim.client_signature?.signed_by ? (
-                  <>
-                    <p className="font-bold text-slate-600">{boletim.client_signature.engineer_name}</p>
-                    {boletim.client_signature.crea_number && <p>CREA: {boletim.client_signature.crea_number}</p>}
-                    <p>em {formatDateTime(boletim.client_signature.signed_date)}</p>
-                  </>
-                ) : null}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto">
-                <p className="text-[9px] font-semibold">ENGENHEIRO CLIENTE</p>
-              </div>
-            </div>
-          </div>
+          <SignatureFooter
+            labName={boletim.laboratorista_name}
+            labEmail={boletim.created_by}
+            labCreatedDate={boletim.created_date}
+            labPosition="Laboratorista"
+            approverName={boletim.approver_details?.name}
+            approverEmail={boletim.approved_by}
+            approverPosition={boletim.approver_details?.position}
+            approverCREA={boletim.approver_details?.crea_number}
+            approverDate={boletim.approved_date}
+            clientName={boletim.client_signature?.engineer_name}
+            clientEmail={boletim.client_signature?.signed_by}
+            clientPosition={boletim.client_signature?.position}
+            clientCREA={boletim.client_signature?.crea_number}
+            clientDate={boletim.client_signature?.signed_date}
+          />
         </footer>
       </div>
 

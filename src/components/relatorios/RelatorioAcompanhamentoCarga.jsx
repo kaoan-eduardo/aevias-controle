@@ -52,6 +52,8 @@ const ReportPrintHeader = ({ acompanhamento, obra, regional }) => (
   </>
 );
 
+import SignatureFooter from './SignatureFooter';
+
 export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, regional, projeto, faixaGranulometrica }) {
   if (!acompanhamento) {
     return <div className="p-8">Dados do acompanhamento não encontrados.</div>;
@@ -176,55 +178,22 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
           </div>
 
           <div className="mt-auto pt-2 print:pt-3 break-inside-avoid">
-            <div className="grid grid-cols-3 gap-8 items-end print:gap-8">
-              <div className="text-center">
-                <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                  <p className="font-bold text-slate-600">{acompanhamento.laboratorista_name}</p>
-                  <p>{acompanhamento.created_by}</p>
-                  <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.created_date)}</p>
-                </div>
-                <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Laboratorista Responsável</p></div>
-              </div>
-              
-              <div className="text-center">
-                {acompanhamento.approved === true && acompanhamento.approver_details ? (
-                  <>
-                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                      <p className="font-bold text-slate-600">{acompanhamento.approver_details.name}</p>
-                      <p>{acompanhamento.approved_by}</p>
-                      {acompanhamento.approver_details.crea_number && <p>CREA: {acompanhamento.approver_details.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.approved_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Engenheiro Responsável</p></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-10 mb-1"></div>
-                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Engenheiro Responsável</p></div>
-                  </>
-                )}
-              </div>
-
-              <div className="text-center">
-                {acompanhamento.client_signature?.signed_by ? (
-                  <>
-                    <div className="text-slate-500 mb-1 h-10 flex flex-col justify-end items-center" style={{ fontSize: '8px' }}>
-                      <p>Assinado digitalmente por</p>
-                      <p className="font-bold text-slate-600">{acompanhamento.client_signature.engineer_name}</p>
-                      <p>{acompanhamento.client_signature.signed_by}</p>
-                      {acompanhamento.client_signature.crea_number && <p>CREA: {acompanhamento.client_signature.crea_number}</p>}
-                      <p className="text-[7px]">em {formatDateBrasilia(acompanhamento.client_signature.signed_date)}</p>
-                    </div>
-                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Cliente</p></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="h-10 mb-1"></div>
-                    <div className="border-t border-gray-600 pt-0.5"><p style={{ fontSize: '8px' }}>Cliente</p></div>
-                  </>
-                )}
-              </div>
-            </div>
+            <SignatureFooter
+              labName={acompanhamento.laboratorista_name}
+              labEmail={acompanhamento.created_by}
+              labCreatedDate={acompanhamento.created_date}
+              labPosition="Laboratorista"
+              approverName={acompanhamento.approver_details?.name}
+              approverEmail={acompanhamento.approved_by}
+              approverPosition={acompanhamento.approver_details?.position}
+              approverCREA={acompanhamento.approver_details?.crea_number}
+              approverDate={acompanhamento.approved_date}
+              clientName={acompanhamento.client_signature?.engineer_name}
+              clientEmail={acompanhamento.client_signature?.signed_by}
+              clientPosition={acompanhamento.client_signature?.position}
+              clientCREA={acompanhamento.client_signature?.crea_number}
+              clientDate={acompanhamento.client_signature?.signed_date}
+            />
           </div>
         </div>
       </div>

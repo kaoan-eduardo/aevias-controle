@@ -22,6 +22,8 @@ const PENEIRAS_CONFIG = [
   { label: 'Nº 200', abertura: '0,075', key: 'peneira_0_075mm' }
 ];
 
+import SignatureFooter from './SignatureFooter';
+
 export default function RelatorioMRAF({ ensaio, obra, project, user, regional, faixaGranulometrica }) {
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -533,68 +535,23 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
 
         {/* Footer com assinaturas */}
         <footer className="px-3 print:break-inside-avoid print:px-2 mt-4 print:mt-3">
-          <div className="grid grid-cols-3 gap-4 items-end print:gap-2">
-            <div className="text-center">
-              <div className="text-[8px] print:text-[7px] text-slate-500 mb-1 min-h-[32px] flex flex-col justify-end items-center print:min-h-[24px] print:mb-0">
-                {ensaio?.laboratorista_name && (
-                  <>
-                    <p className="font-bold text-slate-600">{ensaio.laboratorista_name}</p>
-                    <p className="text-[8px]">{ensaio.created_by}</p>
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.created_date)}</p>
-                  </>
-                )}
-              </div>
-              <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                <p className="text-[8px] print:text-[7px] font-semibold">LABORATORISTA RESPONSÁVEL</p>
-              </div>
-            </div>
-
-            <div className="text-center">
-              {ensaio?.approver_details ? (
-                <>
-                  <div className="text-[8px] print:text-[7px] text-slate-500 mb-1 min-h-[32px] flex flex-col justify-end items-center print:min-h-[24px] print:mb-0">
-                    <p className="font-bold text-slate-600">{ensaio.approver_details.name}</p>
-                    <p className="text-[8px]">{ensaio.approved_by}</p>
-                    {ensaio.approver_details.crea_number && <p className="text-[8px]">CREA: {ensaio.approver_details.crea_number}</p>}
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.approved_date)}</p>
-                  </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                    <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="min-h-[32px] mb-1 print:min-h-[24px] print:mb-0"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                    <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO RESPONSÁVEL</p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="text-center">
-              {ensaio?.client_signature?.signed_by ? (
-                <>
-                  <div className="text-[8px] print:text-[7px] text-slate-500 mb-1 min-h-[32px] flex flex-col justify-end items-center print:min-h-[24px] print:mb-0">
-                    <p className="font-bold text-slate-600">{ensaio.client_signature.engineer_name}</p>
-                    <p className="text-[8px]">{ensaio.client_signature.signed_by}</p>
-                    {ensaio.client_signature.crea_number && <p className="text-[8px]">CREA: {ensaio.client_signature.crea_number}</p>}
-                    <p className="text-[8px]">em {formatDateBrasilia(ensaio.client_signature.signed_date)}</p>
-                  </div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                    <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="min-h-[32px] mb-1 print:min-h-[24px] print:mb-0"></div>
-                  <div className="border-t-2 border-gray-500 pt-1 w-3/4 mx-auto print:pt-0 print:border-t-1">
-                    <p className="text-[8px] print:text-[7px] font-semibold">ENGENHEIRO CLIENTE</p>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          <SignatureFooter
+            labName={ensaio?.laboratorista_name}
+            labEmail={ensaio?.created_by}
+            labCreatedDate={ensaio?.created_date}
+            labPosition="Laboratorista"
+            approverName={ensaio?.approver_details?.name}
+            approverEmail={ensaio?.approved_by}
+            approverPosition={ensaio?.approver_details?.position}
+            approverCREA={ensaio?.approver_details?.crea_number}
+            approverDate={ensaio?.approved_date}
+            clientName={ensaio?.client_signature?.engineer_name}
+            clientEmail={ensaio?.client_signature?.signed_by}
+            clientPosition={ensaio?.client_signature?.position}
+            clientCREA={ensaio?.client_signature?.crea_number}
+            clientDate={ensaio?.client_signature?.signed_date}
+            sizePrint={true}
+          />
         </footer>
       </div>
 

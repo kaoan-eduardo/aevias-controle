@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from "@/components/relatorios/AprovacaoBar";
+import SignatureFooter from "@/components/relatorios/SignatureFooter";
 
 const fmtDate = (d) => d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('pt-BR') : '-';
 const fmtN = (v, d = 2) => (v !== null && v !== undefined && !isNaN(parseFloat(v))) ? parseFloat(v).toFixed(d) : '-';
@@ -217,33 +218,24 @@ export default function RelatorioRompimentoConcreto() {
         </div>
 
         {/* ASSINATURAS */}
-         <footer className="mt-auto pt-4 print:fixed print:bottom-0 print:left-0 print:right-0 print:px-10 print:pb-4 print:bg-white">
-           <div className="grid grid-cols-3 gap-6 text-center">
-             <AssinaturaCol
-               cargoFixo="Laboratorista"
-               nome={ensaio.laboratorista_name}
-               email={ensaio.created_by}
-               data={ensaio.created_date}
-               label="Assinado digitalmente por"
-             />
-             <AssinaturaCol
-               cargoFixo="Engenheiro"
-               nome={ensaio.approver_details?.name}
-               email={ensaio.approved_by}
-               data={ensaio.approved_date}
-               crea={ensaio.approver_details?.crea_number}
-               label="Aprovado digitalmente por"
-             />
-             <AssinaturaCol
-               cargoFixo="Engenheiro Cliente"
-               nome={ensaio.client_signature?.engineer_name}
-               email={ensaio.client_signature?.signed_by}
-               data={ensaio.client_signature?.signed_date}
-               crea={ensaio.client_signature?.crea_number}
-               label="Assinado digitalmente por"
-             />
-           </div>
-         </footer>
+        <footer className="mt-auto pt-4">
+          <SignatureFooter
+            labName={ensaio.laboratorista_name}
+            labEmail={ensaio.created_by}
+            labCreatedDate={ensaio.created_date}
+            labPosition="Laboratorista"
+            approverName={ensaio.approver_details?.name}
+            approverEmail={ensaio.approved_by}
+            approverPosition={ensaio.approver_details?.position}
+            approverCREA={ensaio.approver_details?.crea_number}
+            approverDate={ensaio.approved_date}
+            clientName={ensaio.client_signature?.engineer_name}
+            clientEmail={ensaio.client_signature?.signed_by}
+            clientPosition={ensaio.client_signature?.position}
+            clientCREA={ensaio.client_signature?.crea_number}
+            clientDate={ensaio.client_signature?.signed_date}
+          />
+        </footer>
       </div>
 
       <style>{`

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
+import SignatureFooter from './SignatureFooter';
 
 export default function RelatorioDensidade({ ensaio, obra, project, laboratorista, regional }) {
   
@@ -113,73 +114,22 @@ export default function RelatorioDensidade({ ensaio, obra, project, laboratorist
 
       {/* Assinatura */}
       <footer className="mt-24 pt-6">
-        <div className="grid grid-cols-3 gap-8 items-end">
-          {/* Coluna 1: Laboratorista */}
-          <div className="text-center">
-            <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-              <p>Assinado digitalmente por</p>
-              <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.laboratorista_name}</p>
-              <p className="truncate max-w-full">{ensaio.created_by}</p>
-              <p>em {ensaio.created_date ? new Date(ensaio.created_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'N/A'}</p>
-            </div>
-            <div className="border-t border-slate-500 pt-2">
-              <p className="text-xs text-slate-600">Laboratorista Responsável</p>
-            </div>
-          </div>
-
-          {/* Coluna 2: Aprovação */}
-          <div className="text-center">
-            {ensaio.approver_details ? (
-              <>
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Aprovado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.approver_details.name}</p>
-                  <p className="truncate max-w-full">{ensaio.approved_by}</p>
-                  {ensaio.approver_details.crea_number && <p>CREA: {ensaio.approver_details.crea_number}</p>}
-                  <p>em {ensaio.approved_date ? new Date(ensaio.approved_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'N/A'}</p>
-                </div>
-                <div className="border-t border-slate-500 pt-2">
-                  <p className="text-xs text-slate-600">{ensaio.approver_details.position}</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="h-24 mb-2"></div>
-                <div className="border-t border-slate-500 pt-2">
-                  <p className="text-xs text-slate-600">Aprovação</p>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Coluna 3: Cliente */}
-          <div className="text-center">
-            {ensaio.client_signature?.signed_by ? (
-              <>
-                <div className="text-xs text-slate-500 mb-2 h-24 flex flex-col justify-end items-center">
-                  <p>Assinado digitalmente por</p>
-                  <p className="font-bold text-slate-600 truncate max-w-full">{ensaio.client_signature.engineer_name}</p>
-                  <p className="truncate max-w-full">{ensaio.client_signature.signed_by}</p>
-                  {ensaio.client_signature.crea_number && <p>CREA: {ensaio.client_signature.crea_number}</p>}
-                  <p>em {ensaio.client_signature.signed_date ? new Date(ensaio.client_signature.signed_date).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'N/A'}</p>
-                </div>
-                <div className="border-t border-slate-500 pt-2">
-                  <p className="text-xs text-slate-600">Engenheiro Cliente</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="h-24 mb-2"></div>
-                <div className="border-t border-slate-500 pt-2">
-                  <p className="text-xs text-slate-600">Engenheiro Cliente</p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-        <p className="text-center text-xs text-slate-400 mt-8">
-          Relatório gerado em {new Date().toLocaleDateString('pt-BR')} via QualityPav.
-        </p>
+        <SignatureFooter
+          labName={ensaio.laboratorista_name}
+          labEmail={ensaio.created_by}
+          labCreatedDate={ensaio.created_date}
+          labPosition="Laboratorista"
+          approverName={ensaio.approver_details?.name}
+          approverEmail={ensaio.approved_by}
+          approverPosition={ensaio.approver_details?.position}
+          approverCREA={ensaio.approver_details?.crea_number}
+          approverDate={ensaio.approved_date}
+          clientName={ensaio.client_signature?.engineer_name}
+          clientEmail={ensaio.client_signature?.signed_by}
+          clientPosition={ensaio.client_signature?.position}
+          clientCREA={ensaio.client_signature?.crea_number}
+          clientDate={ensaio.client_signature?.signed_date}
+        />
       </footer>
     </div>
   );

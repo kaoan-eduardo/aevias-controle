@@ -1,5 +1,7 @@
 import React from "react";
 
+import SignatureFooter from './SignatureFooter';
+
 const Checkmark = ({ value }) => {
   if (value === true) return <span className="text-green-600 font-bold">✓</span>;
   if (value === false) return <span className="text-red-600 font-bold">✗</span>;
@@ -104,74 +106,24 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
   );
 };
 
-const ReportFooterWithSignatures = ({ checklist }) => {
-  const formatDateBrasilia = (dateString) => {
-    if (!dateString) return 'N/A';
-    let normalizedDate = dateString;
-    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
-      normalizedDate = dateString + 'Z';
-    }
-    return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
-  };
-
-  return (
-    <footer className="mt-2 px-0.5 print:break-inside-avoid">
-      <div className="grid grid-cols-3 gap-2 items-end">
-        <div className="text-center">
-          <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-            {checklist.laboratorista_name && (
-              <>
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.laboratorista_name}</p>
-                <p>{checklist.created_by}</p>
-                <p>em {formatDateBrasilia(checklist.created_date)}</p>
-              </>
-            )}
-          </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Fiscal</p></div>
-        </div>
-        <div className="text-center">
-          {checklist.approver_details ? (
-            <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Aprovado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.approver_details.name}</p>
-                <p>{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p>CREA: {checklist.approver_details.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.approved_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
-            </>
-          ) : (
-            <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Responsável</p></div>
-            </>
-          )}
-        </div>
-        <div className="text-center">
-          {checklist.client_signature?.signed_by ? (
-            <>
-              <div className="text-xs print:text-xs text-slate-500 mb-0.5 h-10 flex flex-col justify-end items-center">
-                <p>Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600">{checklist.client_signature.engineer_name}</p>
-                <p>{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p>CREA: {checklist.client_signature.crea_number}</p>}
-                <p>em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
-            </>
-          ) : (
-            <>
-              <div className="h-10 mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-xs print:text-xs">Engenheiro Cliente</p></div>
-            </>
-          )}
-        </div>
-      </div>
-    </footer>
-  );
-};
+const ReportFooterWithSignatures = ({ checklist }) => (
+  <SignatureFooter
+    labName={checklist.laboratorista_name}
+    labEmail={checklist.created_by}
+    labCreatedDate={checklist.created_date}
+    labPosition="Laboratorista"
+    approverName={checklist.approver_details?.name}
+    approverEmail={checklist.approved_by}
+    approverPosition={checklist.approver_details?.position}
+    approverCREA={checklist.approver_details?.crea_number}
+    approverDate={checklist.approved_date}
+    clientName={checklist.client_signature?.engineer_name}
+    clientEmail={checklist.client_signature?.signed_by}
+    clientPosition={checklist.client_signature?.position}
+    clientCREA={checklist.client_signature?.crea_number}
+    clientDate={checklist.client_signature?.signed_date}
+  />
+);
 
 export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project, creatorUser }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
@@ -279,61 +231,22 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
   };
 
   const ReportFooterWithSignatures = () => (
-    <footer className="mt-4 px-0.5 print:break-inside-avoid">
-      <div className="grid grid-cols-3 gap-2 items-end">
-        <div className="text-center">
-          <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
-            {checklist.laboratorista_name && (
-              <>
-                <p className="leading-tight">Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600 leading-tight">{checklist.laboratorista_name}</p>
-                <p className="leading-tight text-[7px]">{checklist.created_by}</p>
-                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.created_date)}</p>
-              </>
-            )}
-          </div>
-          <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">{creatorUser?.position || 'Laboratorista Responsável'}</p></div>
-        </div>
-        <div className="text-center">
-          {checklist.approver_details ? (
-            <>
-              <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
-                <p className="leading-tight">Aprovado digitalmente por</p>
-                <p className="font-bold text-slate-600 leading-tight">{checklist.approver_details.name}</p>
-                <p className="leading-tight text-[7px]">{checklist.approved_by}</p>
-                {checklist.approver_details.crea_number && <p className="leading-tight text-[7px]">CREA: {checklist.approver_details.crea_number}</p>}
-                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.approved_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">{checklist.approver_details.position || 'Engenheiro Responsável'}</p></div>
-            </>
-          ) : (
-            <>
-              <div className="min-h-[35px] mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Responsável</p></div>
-            </>
-          )}
-        </div>
-        <div className="text-center">
-          {checklist.client_signature?.signed_by ? (
-            <>
-              <div className="text-[8px] print:text-[8px] text-slate-500 mb-0.5 min-h-[35px] flex flex-col justify-end items-center">
-                <p className="leading-tight">Assinado digitalmente por</p>
-                <p className="font-bold text-slate-600 leading-tight">{checklist.client_signature.engineer_name}</p>
-                <p className="leading-tight text-[7px]">{checklist.client_signature.signed_by}</p>
-                {checklist.client_signature.crea_number && <p className="leading-tight text-[7px]">CREA: {checklist.client_signature.crea_number}</p>}
-                <p className="leading-tight text-[7px]">em {formatDateBrasilia(checklist.client_signature.signed_date)}</p>
-              </div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Cliente</p></div>
-            </>
-          ) : (
-            <>
-              <div className="min-h-[35px] mb-0.5"></div>
-              <div className="border-t border-gray-500 pt-0.5"><p className="text-[9px] print:text-[9px]">Engenheiro Cliente</p></div>
-            </>
-          )}
-        </div>
-      </div>
-    </footer>
+    <SignatureFooter
+      labName={checklist.laboratorista_name}
+      labEmail={checklist.created_by}
+      labCreatedDate={checklist.created_date}
+      labPosition={creatorUser?.position || 'Laboratorista'}
+      approverName={checklist.approver_details?.name}
+      approverEmail={checklist.approved_by}
+      approverPosition={checklist.approver_details?.position}
+      approverCREA={checklist.approver_details?.crea_number}
+      approverDate={checklist.approved_date}
+      clientName={checklist.client_signature?.engineer_name}
+      clientEmail={checklist.client_signature?.signed_by}
+      clientPosition={checklist.client_signature?.position}
+      clientCREA={checklist.client_signature?.crea_number}
+      clientDate={checklist.client_signature?.signed_date}
+    />
   );
 
   return (
