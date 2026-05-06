@@ -1034,7 +1034,7 @@ export default function RelatorioCAUQ() {
           </main>
 
           {/* Footer com assinaturas */}
-          <footer className={`px-1.5 print:break-inside-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-96'}`}>
+          <footer className={`px-1.5 print:break-inside-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-[350px]'}`}>
             <div className="grid grid-cols-3 gap-1.5 items-end print:gap-1">
               <div className="text-center">
                 <div className="text-[7px] print:text-[6px] text-slate-500 mb-0 min-h-[28px] flex flex-col justify-end items-center print:min-h-[20px] print:mb-0">
