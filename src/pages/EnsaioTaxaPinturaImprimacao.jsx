@@ -266,7 +266,8 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
     try {
       const dataToSave = {
         ...formData,
-        laboratorista_name: user?.laboratorista_name || user?.full_name
+        laboratorista_name: user?.laboratorista_name || user?.full_name,
+        status: 'finalizado'
       };
 
       if (editingEnsaio) {
