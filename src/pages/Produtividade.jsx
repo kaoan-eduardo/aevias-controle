@@ -31,7 +31,7 @@ export default function ProdutividadePage() {
       setUser(currentUser);
 
       const userAccessLevel = currentUser?.access_level || (currentUser?.role === 'admin' ? 'admin' : 'user');
-      const isAdminPuro = userAccessLevel === 'admin';
+      const isAdmin = userAccessLevel === 'admin';
 
       const [regionais, allUsers, obras] = await Promise.all([
         base44.entities.Regional.list(),
@@ -39,54 +39,32 @@ export default function ProdutividadePage() {
         base44.entities.Obra.list()
       ]);
 
-      // ── 1. Determinar quais regionais este usuário gerencia ──────────────────
-      let regionaisVisiveis;
-      if (isAdminPuro) {
-        regionaisVisiveis = regionais; // Admin vê tudo
+      // ── 1. Determinar obras visíveis conforme perfil ─────────────────────────
+      let obrasVisiveisIds;
+      if (isAdmin) {
+        obrasVisiveisIds = new Set(obras.map(o => o.id));
       } else {
-        // Gestor/Sala técnica: só as regionais onde está cadastrado
-        regionaisVisiveis = regionais.filter(r =>
+        const regionaisVisiveis = regionais.filter(r =>
           r.gestor_contrato_responsavel?.toLowerCase() === currentUser.email?.toLowerCase() ||
           (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === currentUser.email?.toLowerCase()) ||
           (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === currentUser.email?.toLowerCase())
         );
+        const regionaisVisiveisIds = new Set(regionaisVisiveis.map(r => r.id));
+        obrasVisiveisIds = new Set(obras.filter(o => regionaisVisiveisIds.has(o.regional_id)).map(o => o.id));
       }
 
-      const regionaisVisiveisIds = regionaisVisiveis.map(r => r.id);
-
-      // ── 2. Obras dessas regionais ────────────────────────────────────────────
-      const obrasVisiveis = obras.filter(o => regionaisVisiveisIds.includes(o.regional_id));
-      const obrasVisiveisIds = new Set(obrasVisiveis.map(o => o.id));
-
-      // ── 3. Laboratoristas cadastrados nessas regionais ───────────────────────
-      const labEmailsSet = new Set();
-      if (isAdminPuro) {
-        // Admin vê todos os usuários com role 'user' (sem access_level especial)
-        allUsers.forEach(u => {
-          if (!u.access_level && u.role !== 'admin') labEmailsSet.add(u.email.toLowerCase());
-        });
-      } else {
-        regionaisVisiveis.forEach(r => {
-          (r.laboratoristas_responsaveis || []).forEach(e => labEmailsSet.add(e.toLowerCase()));
-        });
-      }
-
-      const labUsers = allUsers.filter(u =>
-        labEmailsSet.has(u.email.toLowerCase()) &&
-        u.position?.toLowerCase() === 'laboratorista'
-      );
-
-      // ── 4. Empreiteiras e usinas das obras visíveis ──────────────────────────
+      // ── 2. Empreiteiras e usinas das obras visíveis ──────────────────────────
       const empresasSet = new Set();
       const usinasSet = new Set();
-      obrasVisiveis.forEach(obra => {
+      obras.forEach(obra => {
+        if (!obrasVisiveisIds.has(obra.id)) return;
         (obra.empreiteiras || []).forEach(e => empresasSet.add(e));
         (obra.usinas || []).forEach(u => usinasSet.add(u));
       });
       setEmpreiteiras(Array.from(empresasSet).sort());
       setUsinas(Array.from(usinasSet).sort());
 
-      // ── 5. Buscar todos os registros e marcadores ────────────────────────────
+      // ── 3. Buscar todos os registros e marcadores ────────────────────────────
       const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
       const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
 
@@ -112,36 +90,22 @@ export default function ProdutividadePage() {
         base44.entities.ProdutividadeDiaria.list()
       ]);
 
-      // ── 6. Montar estrutura de produtividade ─────────────────────────────────
+      // ── 4. Processar registros — acumular por email ──────────────────────────
+      // prodData: { email: { dia: [registros] } }
       const prodData = {};
-      labUsers.forEach(lab => { prodData[lab.email.toLowerCase()] = {}; });
 
-      // Marcadores manuais de dias
-      const marcadoresDia = {};
-      produtividadeDiaria.forEach(marc => {
-        if (!marc.data || !marc.laboratorista_email) return;
-        const [y, m, d] = marc.data.split('-').map(Number);
-        const marcDate = new Date(y, m - 1, d);
-        if (marcDate >= startDate && marcDate <= endDate) {
-          const key = `${marc.laboratorista_email.toLowerCase()}_${marcDate.getDate()}`;
-          marcadoresDia[key] = marc.status;
-        }
-      });
-
-      // Processar registros finalizados dentro do mês e das obras visíveis
       const processarRegistros = (registros, entityName) => {
         registros.forEach(reg => {
           if (reg.status !== 'finalizado') return;
           if (!obrasVisiveisIds.has(reg.obra_id)) return;
           if (!reg.data || !reg.created_by) return;
 
-          const email = reg.created_by.toLowerCase();
-          if (!prodData[email]) return; // email não está na lista de labs visíveis
-
           const [y, m, d] = reg.data.split('-').map(Number);
           const regDate = new Date(y, m - 1, d);
           if (regDate < startDate || regDate > endDate) return;
 
+          const email = reg.created_by.toLowerCase();
+          if (!prodData[email]) prodData[email] = {};
           const dia = regDate.getDate();
           if (!prodData[email][dia]) prodData[email][dia] = [];
           prodData[email][dia].push({
@@ -168,7 +132,33 @@ export default function ProdutividadePage() {
       processarRegistros(ensaiosTaxaPintura, 'EnsaioTaxaPinturaImprimacao');
       processarRegistros(acompanhamentoCarga, 'AcompanhamentoCarga');
 
-      setLaboratoristas(labUsers);
+      // ── 5. Marcadores manuais de dias ────────────────────────────────────────
+      const marcadoresDia = {};
+      produtividadeDiaria.forEach(marc => {
+        if (!marc.data || !marc.laboratorista_email) return;
+        const [y, m, d] = marc.data.split('-').map(Number);
+        const marcDate = new Date(y, m - 1, d);
+        if (marcDate >= startDate && marcDate <= endDate) {
+          const key = `${marc.laboratorista_email.toLowerCase()}_${marcDate.getDate()}`;
+          marcadoresDia[key] = marc.status;
+        }
+      });
+
+      // ── 6. Montar lista de laboratoristas que lançaram registros no mês ──────
+      // Para admin: todos que lançaram. Para gestor/sala: só os das obras visíveis (já filtrado no prodData).
+      // Filtrar para exibir apenas quem tem position === 'laboratorista'
+      const emailsComRegistros = new Set(Object.keys(prodData));
+      const labUsers = allUsers.filter(u =>
+        emailsComRegistros.has(u.email.toLowerCase()) &&
+        u.position?.toLowerCase() === 'laboratorista'
+      );
+
+      // Garantir que prodData tenha entrada para cada lab (mesmo sem registros não chegará aqui)
+      labUsers.forEach(lab => {
+        if (!prodData[lab.email.toLowerCase()]) prodData[lab.email.toLowerCase()] = {};
+      });
+
+      setLaboratoristas(labUsers.sort((a, b) => (a.laboratorista_name || a.full_name || '').localeCompare(b.laboratorista_name || b.full_name || '')));
       setProdutividade(prodData);
       window.marcadoresDia = marcadoresDia;
 
