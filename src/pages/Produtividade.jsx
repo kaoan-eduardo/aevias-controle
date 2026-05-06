@@ -185,6 +185,22 @@ export default function ProdutividadePage() {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
   };
 
+  const ENSAIO_LABELS = {
+    DiarioObra: 'Diário',
+    ChecklistUsina: 'CL Usina',
+    ChecklistAplicacao: 'CL Aplic.',
+    ChecklistMRAF: 'CL MRAF',
+    ChecklistConcretagem: 'CL Concr.',
+    ChecklistTerraplanagem: 'CL Terra.',
+    ChecklistReciclagem: 'CL Recicl.',
+    EnsaioCAUQ: 'CAUQ',
+    EnsaioDensidade: 'Densidade',
+    EnsaioDensidadeInSitu: 'Dens. InSitu',
+    EnsaioSondagem: 'Sondagem',
+    EnsaioTaxaPinturaImprimacao: 'Taxa Pintura',
+    AcompanhamentoCarga: 'Ac. Carga',
+  };
+
   const getDayOfWeek = (day) => {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     return date.toLocaleDateString('pt-BR', { weekday: 'short' });
@@ -372,18 +388,21 @@ export default function ProdutividadePage() {
                                    const info = reg.empreiteira || reg.usina;
                                    return (
                                      <div
-                                       key={idx}
-                                       className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
-                                       title={`${reg.tipo}${temInfo ? ' - ' + info : ' - Sem empreiteira/usina'}`}
-                                       onClick={() => userCanEdit && handleEditClick(reg)}
+                                      key={idx}
+                                      className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
+                                      title={`${reg.tipo}${temInfo ? ' - ' + info : ' - Sem empreiteira/usina'}`}
+                                      onClick={() => userCanEdit && handleEditClick(reg)}
                                      >
-                                       <div className="font-bold flex items-center justify-center gap-1">
-                                         OK
-                                         {userCanEdit && !temInfo && <Edit2 className="w-2 h-2" />}
-                                       </div>
-                                       <div className="truncate max-w-[60px]">
-                                         {info || 'Definir'}
-                                       </div>
+                                      <div className="text-[9px] font-semibold opacity-90 truncate max-w-[60px]">
+                                        {ENSAIO_LABELS[reg.entityName] || reg.entityName}
+                                      </div>
+                                      <div className="font-bold flex items-center justify-center gap-1">
+                                        OK
+                                        {userCanEdit && !temInfo && <Edit2 className="w-2 h-2" />}
+                                      </div>
+                                      <div className="truncate max-w-[60px]">
+                                        {info || 'Definir'}
+                                      </div>
                                      </div>
                                    );
                                  })}
