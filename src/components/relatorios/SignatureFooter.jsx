@@ -38,7 +38,7 @@ export default function SignatureFooter({
         <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
           {labName && (
             <>
-              <p className="font-bold text-slate-600" style={signatureStyle}>{labName}</p>
+              <p className="font-bold text-slate-600 text-[11px]" style={signatureStyle}>{labName}</p>
               {labEmail && <p className={textSize}>{labEmail}</p>}
               {labCreatedDate && <p className={textSize}>em {formatDateBrasilia(labCreatedDate)}</p>}
             </>
@@ -54,7 +54,7 @@ export default function SignatureFooter({
         {approverEmail ? (
           <>
             <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
-              {approverName && <p className="font-bold text-slate-600" style={signatureStyle}>{approverName}</p>}
+              {approverName && <p className="font-bold text-slate-600 text-[11px]" style={signatureStyle}>{approverName}</p>}
               <p className={textSize}>{approverEmail}</p>
               {approverCREA && <p className={textSize}>CREA: {approverCREA}</p>}
               {approverDate && <p className={textSize}>em {formatDateBrasilia(approverDate)}</p>}
@@ -78,7 +78,7 @@ export default function SignatureFooter({
         {clientEmail ? (
           <>
             <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
-              {clientName && <p className="font-bold text-slate-600" style={signatureStyle}>{clientName}</p>}
+              {clientName && <p className="font-bold text-slate-600 text-[11px]" style={signatureStyle}>{clientName}</p>}
               <p className={textSize}>{clientEmail}</p>
               {clientCREA && <p className={textSize}>CREA: {clientCREA}</p>}
               {clientDate && <p className={textSize}>em {formatDateBrasilia(clientDate)}</p>}
