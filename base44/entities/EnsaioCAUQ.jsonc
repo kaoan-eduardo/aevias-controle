@@ -1,0 +1,447 @@
+{
+  "name": "EnsaioCAUQ",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto vinculado"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "horario": {
+      "type": "string",
+      "description": "Hor\u00e1rio do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string",
+      "description": "Nome do laboratorista"
+    },
+    "placa_caminhao": {
+      "type": "string",
+      "description": "Placa do caminh\u00e3o"
+    },
+    "local_coleta": {
+      "type": "string",
+      "description": "Local de coleta da amostra"
+    },
+    "usina_fornecedora": {
+      "type": "string",
+      "description": "Nome da usina fornecedora"
+    },
+    "pedreira": {
+      "type": "string",
+      "description": "Nome da pedreira"
+    },
+    "rodovia": {
+      "type": "string",
+      "description": "Nome da rodovia"
+    },
+    "trecho": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do trecho"
+    },
+    "tipo_ligante": {
+      "type": "string",
+      "description": "Tipo de ligante asf\u00e1ltico"
+    },
+    "temperatura_cap": {
+      "type": "number",
+      "description": "Temperatura do CAP (\u00b0C)"
+    },
+    "faixa_especificada": {
+      "type": "string",
+      "description": "Faixa granulom\u00e9trica especificada"
+    },
+    "ensaio_realizado_por": {
+      "type": "string",
+      "enum": [
+        "Afirma Evias",
+        "Empreiteira"
+      ],
+      "default": "Afirma Evias",
+      "description": "Quem realizou o ensaio"
+    },
+    "realizar_ensaio_umidade": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se deve realizar ensaio de umidade"
+    },
+    "extracao_ligante": {
+      "type": "object",
+      "description": "Dados da extra\u00e7\u00e3o de ligante (Rotarex)",
+      "properties": {
+        "peso_amostra": {
+          "type": "number",
+          "description": "Peso da amostra (g)"
+        },
+        "amostra_umida": {
+          "type": "number",
+          "description": "Amostra \u00famida (g)"
+        },
+        "amostra_seca": {
+          "type": "number",
+          "description": "Amostra seca (g)"
+        },
+        "umidade": {
+          "type": "number",
+          "description": "Umidade calculada (%)"
+        },
+        "amostra_com_ligante": {
+          "type": "number",
+          "description": "Amostra com ligante (g)"
+        },
+        "amostra_sem_ligante": {
+          "type": "number",
+          "description": "Amostra sem ligante (g)"
+        },
+        "fator_correcao": {
+          "type": "number",
+          "description": "Fator de corre\u00e7\u00e3o",
+          "default": 1
+        },
+        "peso_ligante": {
+          "type": "number",
+          "description": "Peso do ligante calculado (g)"
+        },
+        "teor_ligante": {
+          "type": "number",
+          "description": "Teor de ligante calculado (%)"
+        },
+        "filler_betume": {
+          "type": "number",
+          "description": "Rela\u00e7\u00e3o Filler/Betume"
+        },
+        "teor_ligante_real": {
+          "type": "number",
+          "description": "Teor de ligante real (%)"
+        }
+      }
+    },
+    "granulometria": {
+      "type": "object",
+      "description": "Dados da granulometria",
+      "properties": {
+        "peso_retido_peneiras": {
+          "type": "object",
+          "description": "Peso retido em cada peneira",
+          "properties": {
+            "peneira_75_0mm": {
+              "type": "number"
+            },
+            "peneira_63_0mm": {
+              "type": "number"
+            },
+            "peneira_50_0mm": {
+              "type": "number"
+            },
+            "peneira_37_5mm": {
+              "type": "number"
+            },
+            "peneira_25_0mm": {
+              "type": "number"
+            },
+            "peneira_19_0mm": {
+              "type": "number"
+            },
+            "peneira_16_0mm": {
+              "type": "number"
+            },
+            "peneira_12_5mm": {
+              "type": "number"
+            },
+            "peneira_9_5mm": {
+              "type": "number"
+            },
+            "peneira_4_75mm": {
+              "type": "number"
+            },
+            "peneira_2_36mm": {
+              "type": "number"
+            },
+            "peneira_2_0mm": {
+              "type": "number"
+            },
+            "peneira_1_18mm": {
+              "type": "number"
+            },
+            "peneira_0_6mm": {
+              "type": "number"
+            },
+            "peneira_0_42mm": {
+              "type": "number"
+            },
+            "peneira_0_3mm": {
+              "type": "number"
+            },
+            "peneira_0_18mm": {
+              "type": "number"
+            },
+            "peneira_0_15mm": {
+              "type": "number"
+            },
+            "peneira_0_075mm": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "realizar_densidade_rice": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se deve realizar ensaio de densidade Rice"
+    },
+    "densidade_rice": {
+      "type": "object",
+      "description": "Ensaio de densidade Rice (DMT)",
+      "properties": {
+        "frasco_agua": {
+          "type": "number",
+          "description": "FR+\u00c1GUA (g)"
+        },
+        "amostra": {
+          "type": "number",
+          "description": "AMOSTRA (g)"
+        },
+        "frasco_agua_amostra": {
+          "type": "number",
+          "description": "FR+\u00c1GUA+AMOSTRA (g)"
+        },
+        "temperatura_agua": {
+          "type": "number",
+          "description": "Temperatura da \u00e1gua (\u00b0C)"
+        },
+        "densidade_agua": {
+          "type": "number",
+          "description": "Densidade da \u00e1gua (g/cm\u00b3)"
+        },
+        "densidade_rice": {
+          "type": "number",
+          "description": "Densidade Rice calculada (g/cm\u00b3)"
+        }
+      }
+    },
+    "realizar_marshall": {
+      "type": "boolean",
+      "default": false,
+      "description": "Se deve realizar ensaio Marshall"
+    },
+    "corpos_prova_marshall": {
+      "type": "array",
+      "description": "Corpos de prova Marshall (opcional, at\u00e9 6 CPs)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "number",
+            "description": "N\u00famero do CP"
+          },
+          "metodo_rompimento": {
+            "type": "string",
+            "enum": [
+              "diametral",
+              "estabilidade_fluencia"
+            ],
+            "description": "M\u00e9todo de rompimento escolhido"
+          },
+          "peso_ar": {
+            "type": "number",
+            "description": "Peso ao ar (g)"
+          },
+          "peso_imerso": {
+            "type": "number",
+            "description": "Peso imerso (g)"
+          },
+          "peso_sss": {
+            "type": "number",
+            "description": "Peso saturado superf\u00edcie seca (g)"
+          },
+          "volume": {
+            "type": "number",
+            "description": "Volume calculado (cm\u00b3)"
+          },
+          "densidade_aparente": {
+            "type": "number",
+            "description": "Densidade aparente calculada (g/cm\u00b3)"
+          },
+          "volume_vazios": {
+            "type": "number",
+            "description": "Volume de vazios calculado (%)"
+          },
+          "vcb": {
+            "type": "number",
+            "description": "V.C.B. calculado (%)"
+          },
+          "vam": {
+            "type": "number",
+            "description": "V.A.M. calculado (%)"
+          },
+          "rbv": {
+            "type": "number",
+            "description": "R.B.V. calculado (%)"
+          },
+          "altura": {
+            "type": "number",
+            "description": "Altura do CP (cm)"
+          },
+          "const_prensa": {
+            "type": "number",
+            "description": "Constante da prensa",
+            "default": 1
+          },
+          "rtcd_leitura": {
+            "type": "number",
+            "description": "Leitura RTCD (Kgf/cm\u00b2) - para diametral"
+          },
+          "rtcd_valor": {
+            "type": "number",
+            "description": "RTCD calculado (MPa) - para diametral"
+          },
+          "estabilidade_leitura": {
+            "type": "number",
+            "description": "Leitura estabilidade (Kgf/cm\u00b2) - para estabilidade/flu\u00eancia"
+          },
+          "estabilidade_corrigida": {
+            "type": "number",
+            "description": "Estabilidade corrigida (Kgf/cm\u00b2)"
+          },
+          "fluencia_leitura_inicial": {
+            "type": "number",
+            "description": "Flu\u00eancia leitura inicial (mm)"
+          },
+          "fluencia_leitura_final": {
+            "type": "number",
+            "description": "Flu\u00eancia leitura final (mm)"
+          },
+          "fluencia": {
+            "type": "number",
+            "description": "Flu\u00eancia calculada (mm)"
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho",
+      "description": "Status do registro: rascunho (em edi\u00e7\u00e3o) ou finalizado (pronto para revis\u00e3o)"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null,
+      "description": "Status de aprova\u00e7\u00e3o"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que aprovou/reprovou"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indica se o registro foi reprovado e editado novamente"
+    },
+    "client_signature": {
+      "type": "object",
+      "properties": {
+        "signed_by": {
+          "type": "string"
+        },
+        "signed_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engineer_name": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "obra_id"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "access_level": "gestor_contrato"
+          }
+        },
+        {
+          "user_condition": {
+            "access_level": "sala_tecnica_afirmaevias"
+          }
+        },
+        {
+          "user_condition": {
+            "access_level": "cliente"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
