@@ -72,7 +72,12 @@ export default function ProdutividadePage() {
         diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF,
         checklistsConcretagem, checklistsTerraplanagem, checklistsReciclagem,
         ensaiosCAUQ, ensaiosDensidade, ensaiosDensidadeInSitu,
-        ensaiosSondagem, ensaiosTaxaPintura, acompanhamentoCarga, produtividadeDiaria
+        ensaiosSondagem, ensaiosTaxaPintura, acompanhamentoCarga,
+        ensaiosMRAF, ensaiosManchaPendulo, ensaiosVigaBenkelman, ensaiosTaxaMRAF,
+        acompanhamentosUsinagem, ensaiosGranuIndividual, granuMisturas,
+        ensaiosProctor, ensaiosRompimentoConcreto,
+        boletinsSondagem, boletinsSondagemTrado,
+        produtividadeDiaria
       ] = await Promise.all([
         base44.entities.DiarioObra.list(),
         base44.entities.ChecklistUsina.list(),
@@ -87,6 +92,17 @@ export default function ProdutividadePage() {
         base44.entities.EnsaioSondagem.list(),
         base44.entities.EnsaioTaxaPinturaImprimacao.list(),
         base44.entities.AcompanhamentoCarga.list(),
+        base44.entities.EnsaioMRAF.list(),
+        base44.entities.EnsaioManchaPendulo.list(),
+        base44.entities.EnsaioVigaBenkelman.list(),
+        base44.entities.EnsaioTaxaMRAF.list(),
+        base44.entities.AcompanhamentoUsinagem.list(),
+        base44.entities.EnsaioGranulometriaIndividual.list(),
+        base44.entities.GranuMistura.list(),
+        base44.entities.EnsaioProctor.list(),
+        base44.entities.EnsaioRompimentoConcreto.list(),
+        base44.entities.BoletimSondagem.list(),
+        base44.entities.BoletimSondagemTrado.list(),
         base44.entities.ProdutividadeDiaria.list()
       ]);
 
@@ -106,6 +122,17 @@ export default function ProdutividadePage() {
         EnsaioSondagem: 'data',
         EnsaioTaxaPinturaImprimacao: 'data_ensaio',
         AcompanhamentoCarga: 'data',
+        EnsaioMRAF: 'data',
+        EnsaioManchaPendulo: 'data',
+        EnsaioVigaBenkelman: 'data',
+        EnsaioTaxaMRAF: 'data',
+        AcompanhamentoUsinagem: 'data',
+        EnsaioGranulometriaIndividual: 'data',
+        GranuMistura: 'data',
+        EnsaioProctor: 'data',
+        EnsaioRompimentoConcreto: 'data',
+        BoletimSondagem: 'data',
+        BoletimSondagemTrado: 'data',
       };
 
       // prodData: { email: { dia: [registros] } }
@@ -154,6 +181,17 @@ export default function ProdutividadePage() {
       processarRegistros(ensaiosSondagem, 'EnsaioSondagem');
       processarRegistros(ensaiosTaxaPintura, 'EnsaioTaxaPinturaImprimacao');
       processarRegistros(acompanhamentoCarga, 'AcompanhamentoCarga');
+      processarRegistros(ensaiosMRAF, 'EnsaioMRAF');
+      processarRegistros(ensaiosManchaPendulo, 'EnsaioManchaPendulo');
+      processarRegistros(ensaiosVigaBenkelman, 'EnsaioVigaBenkelman');
+      processarRegistros(ensaiosTaxaMRAF, 'EnsaioTaxaMRAF');
+      processarRegistros(acompanhamentosUsinagem, 'AcompanhamentoUsinagem');
+      processarRegistros(ensaiosGranuIndividual, 'EnsaioGranulometriaIndividual');
+      processarRegistros(granuMisturas, 'GranuMistura');
+      processarRegistros(ensaiosProctor, 'EnsaioProctor');
+      processarRegistros(ensaiosRompimentoConcreto, 'EnsaioRompimentoConcreto');
+      processarRegistros(boletinsSondagem, 'BoletimSondagem');
+      processarRegistros(boletinsSondagemTrado, 'BoletimSondagemTrado');
 
       // ── 5. Marcadores manuais de dias ────────────────────────────────────────
       const marcadoresDia = {};
