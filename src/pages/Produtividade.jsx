@@ -168,13 +168,14 @@ export default function ProdutividadePage() {
       });
 
       // ── 6. Montar lista de laboratoristas que lançaram registros no mês ──────
-      // Para admin: todos que lançaram. Para gestor/sala: só os das obras visíveis (já filtrado no prodData).
-      // Filtrar para exibir apenas quem tem position === 'laboratorista'
+      // Exibe todos os usuários que lançaram registros válidos no mês,
+      // sem filtrar por position (campo pode não estar preenchido).
       const emailsComRegistros = new Set(Object.keys(prodData));
-      const labUsers = allUsers.filter(u =>
-        emailsComRegistros.has(u.email.toLowerCase()) &&
-        u.position?.toLowerCase() === 'laboratorista'
-      );
+      const usersByEmail = Object.fromEntries(allUsers.map(u => [u.email.toLowerCase(), u]));
+      const labUsers = Array.from(emailsComRegistros).map(email => {
+        // Se não encontrar o usuário cadastrado, cria um objeto mínimo com o email
+        return usersByEmail[email] || { email, full_name: email, laboratorista_name: email };
+      });
 
       // Garantir que prodData tenha entrada para cada lab (mesmo sem registros não chegará aqui)
       labUsers.forEach(lab => {
