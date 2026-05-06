@@ -244,8 +244,8 @@ export default function RelatorioUnificado() {
       </div>
 
       {/* Capa do relatório — oculta na impressão */}
-      <div className="print:hidden max-w-5xl mx-auto px-6 pt-8 pb-4 print:px-4 print:pt-4">
-        <div className="border-b-2 border-slate-800 pb-4 mb-6 print:mb-4">
+      <div id="report-header" className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+        <div className="border-b-2 border-slate-800 pb-4 mb-6">
           <div className="flex items-start justify-between">
             {regional?.logo_url && (
               <img src={regional.logo_url} alt="Logo" className="h-14 object-contain print:h-10" />
@@ -324,6 +324,7 @@ export default function RelatorioUnificado() {
           @page { size: A4 portrait; margin: 8mm 10mm; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
           aside, nav, [data-sidebar] { display: none !important; }
+          #report-header { display: none !important; }
         }
       `}</style>
     </div>
