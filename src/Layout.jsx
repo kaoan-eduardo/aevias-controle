@@ -710,6 +710,19 @@ const AppLayout = ({ children }) => {
                                 </SidebarMenuButton>
                               </SidebarMenuItem>
                             )}
+                            {(isGestorContrato || isSalaTecnica || isAdmin) && (
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  asChild
+                                  className={`hover:bg-black/5 transition-all duration-200 rounded-lg mb-1 ${location.pathname === '/RelatoriosUnificados' ? 'bg-black/10' : ''}`}
+                                >
+                                  <NavLink to="/RelatoriosUnificados" className="flex items-center gap-3 pl-10 pr-3 py-2.5">
+                                    <FileText className="w-4 h-4 text-[#BFCF99]" />
+                                    <span className="font-medium text-[#00233B] text-sm">Relatórios Unificados</span>
+                                  </NavLink>
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                            )}
                           </>
                         )}
                       </>
@@ -995,7 +1008,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem", "RelatorioBoletimSondagemTrado", "RelatorioProctor", "RelatorioRompimentoConcreto", "RelatorioGranuMistura"], []);
+  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem", "RelatorioBoletimSondagemTrado", "RelatorioProctor", "RelatorioRompimentoConcreto", "RelatorioGranuMistura", "RelatorioUnificado"], []);
 
   if (reportPages.includes(currentPageName)) {
     return <>{children}</>;

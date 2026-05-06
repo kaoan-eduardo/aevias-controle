@@ -19,6 +19,8 @@ import EnsaioRompimentoConcreto from './pages/EnsaioRompimentoConcreto';
 import RelatorioRompimentoConcreto from './pages/RelatorioRompimentoConcreto';
 import GranuMistura from './pages/GranuMistura';
 import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
+import RelatoriosUnificados from './pages/RelatoriosUnificados';
+import RelatorioUnificado from './pages/RelatorioUnificado';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -163,6 +165,22 @@ function AuthenticatedApp() {
         element={
           <LayoutWrapper currentPageName="RelatorioGranuMistura">
             <RelatorioGranuMistura />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RelatoriosUnificados"
+        element={
+          <LayoutWrapper currentPageName="RelatoriosUnificados">
+            <RelatoriosUnificados />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/RelatorioUnificado"
+        element={
+          <LayoutWrapper currentPageName="RelatorioUnificado">
+            <RelatorioUnificado />
           </LayoutWrapper>
         }
       />
