@@ -819,7 +819,12 @@ export default function RelatorioCAUQ() {
                         {cpsValidos[idx]?.volume_vazios || '-'}
                       </td>
                     ))}
-                    <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('volume_vazios')}</td>
+                    <td className={`border border-slate-400 px-0 py-0 text-center font-bold text-[7px] ${
+                      project?.volume_vazios && calcularMedia('volume_vazios') !== '-' && (
+                        parseFloat(calcularMedia('volume_vazios')) < parseFloat(project.volume_vazios.min) || 
+                        parseFloat(calcularMedia('volume_vazios')) > parseFloat(project.volume_vazios.max)
+                      ) ? 'text-red-600' : ''
+                    }`}>{calcularMedia('volume_vazios')}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.volume_vazios?.min ? parseFloat(project.volume_vazios.min).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.volume_vazios?.max ? parseFloat(project.volume_vazios.max).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.volume_vazios?.otimo ? parseFloat(project.volume_vazios.otimo).toFixed(1) : '-'}</td>
@@ -847,11 +852,14 @@ export default function RelatorioCAUQ() {
                           {cpsValidos[idx]?.vam || '-'}
                         </td>
                       ))}
-                      <td className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">-</td>
+                      <td className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${
+                       project?.vam && calcularMedia('vam') !== '-' && 
+                       parseFloat(calcularMedia('vam')) < parseFloat(project.vam.min) ? 'text-red-600' : ''
+                      }`}>-</td>
                       <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.vam?.projeto ? parseFloat(project.vam.projeto).toFixed(1) : '-'}</td>
                       <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.vam?.min ? parseFloat(project.vam.min).toFixed(1) : '-'}</td>
                       <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">-</td>
-                    </tr>
+                      </tr>
 
                   <tr className="bg-white">
                     <td className="border border-slate-400 px-0 py-0 font-semibold text-[7px]">R.B.V.</td>
@@ -861,7 +869,12 @@ export default function RelatorioCAUQ() {
                         {cpsValidos[idx]?.rbv || '-'}
                       </td>
                     ))}
-                    <td className="border border-slate-400 px-0 py-0 text-center font-semibold text-[7px]">-</td>
+                    <td className={`border border-slate-400 px-0 py-0 text-center font-semibold text-[7px] ${
+                      project?.rbv && calcularMedia('rbv') !== '-' && (
+                        parseFloat(calcularMedia('rbv')) < parseFloat(project.rbv.min) || 
+                        parseFloat(calcularMedia('rbv')) > parseFloat(project.rbv.max)
+                      ) ? 'text-red-600' : ''
+                    }`}>-</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rbv?.projeto ? parseFloat(project.rbv.projeto).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rbv?.min ? parseFloat(project.rbv.min).toFixed(1) : '-'}</td>
                     <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rbv?.max ? parseFloat(project.rbv.max).toFixed(1) : '-'}</td>
@@ -925,7 +938,10 @@ export default function RelatorioCAUQ() {
                                   {cpsValidos[idx]?.rtcd_valor || '-'}
                                 </td>
                               ))}
-                              <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('rtcd_valor')}</td>
+                              <td className={`border border-slate-400 px-0 py-0 text-center font-bold text-[7px] ${
+                                project?.rtcd && calcularMedia('rtcd_valor') !== '-' && 
+                                parseFloat(calcularMedia('rtcd_valor')) < parseFloat(project.rtcd.min) ? 'text-red-600' : ''
+                              }`}>{calcularMedia('rtcd_valor')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">-</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.rtcd?.min ? parseFloat(project.rtcd.min).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">-</td>
@@ -972,7 +988,10 @@ export default function RelatorioCAUQ() {
                                   {cpsValidos[idx]?.estabilidade_corrigida || '-'}
                                 </td>
                               ))}
-                              <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('estabilidade_corrigida')}</td>
+                              <td className={`border border-slate-400 px-0 py-0 text-center font-bold text-[7px] ${
+                                project?.estabilidade && calcularMedia('estabilidade_corrigida') !== '-' && 
+                                parseFloat(calcularMedia('estabilidade_corrigida')) < parseFloat(project.estabilidade.min) ? 'text-red-600' : ''
+                              }`}>{calcularMedia('estabilidade_corrigida')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.estabilidade?.projeto ? parseFloat(project.estabilidade.projeto).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.estabilidade?.min ? parseFloat(project.estabilidade.min).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">-</td>
@@ -986,7 +1005,12 @@ export default function RelatorioCAUQ() {
                                   {cpsValidos[idx]?.fluencia || '-'}
                                 </td>
                               ))}
-                              <td className="border border-slate-400 px-0 py-0 text-center font-bold text-[7px]">{calcularMedia('fluencia')}</td>
+                              <td className={`border border-slate-400 px-0 py-0 text-center font-bold text-[7px] ${
+                                project?.fluencia && calcularMedia('fluencia') !== '-' && (
+                                  parseFloat(calcularMedia('fluencia')) < parseFloat(project.fluencia.min) || 
+                                  parseFloat(calcularMedia('fluencia')) > parseFloat(project.fluencia.max)
+                                ) ? 'text-red-600' : ''
+                              }`}>{calcularMedia('fluencia')}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.fluencia?.projeto ? parseFloat(project.fluencia.projeto).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.fluencia?.min ? parseFloat(project.fluencia.min).toFixed(1) : '-'}</td>
                               <td className="border border-slate-400 px-0 py-0 text-center text-[7px]">{project?.fluencia?.max ? parseFloat(project.fluencia.max).toFixed(1) : '-'}</td>
