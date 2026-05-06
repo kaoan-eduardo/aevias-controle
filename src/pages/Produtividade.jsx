@@ -150,18 +150,34 @@ export default function ProdutividadePage() {
       const processarRegistros = (registros, entityName) => {
         const dateField = DATE_FIELD[entityName] || 'data';
         registros.forEach(reg => {
-          if (!SEM_STATUS.has(entityName) && reg.status !== 'finalizado') return;
-          if (!obrasVisiveisIds.has(reg.obra_id)) return;
+          // Debug: log registros filtrados
+          if (!SEM_STATUS.has(entityName) && reg.status !== 'finalizado') {
+            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: status="${reg.status}" (não finalizado)`);
+            return;
+          }
+          if (!obrasVisiveisIds.has(reg.obra_id)) {
+            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: obra_id="${reg.obra_id}" (não visível)`);
+            return;
+          }
 
           const rawDate = reg[dateField];
-          if (!rawDate || !reg.created_by) return;
+          if (!rawDate || !reg.created_by) {
+            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: data="${rawDate}" ou created_by="${reg.created_by}"`);
+            return;
+          }
 
           // Suporta "YYYY-MM-DD" e "YYYY-MM-DDTHH:mm:ss..."
           const datePart = rawDate.substring(0, 10);
           const [y, m, d] = datePart.split('-').map(Number);
-          if (!y || !m || !d) return;
+          if (!y || !m || !d) {
+            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: data inválida "${rawDate}"`);
+            return;
+          }
           const regDate = new Date(y, m - 1, d);
-          if (regDate < startDate || regDate > endDate) return;
+          if (regDate < startDate || regDate > endDate) {
+            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: data ${regDate.toLocaleDateString()} fora do intervalo`);
+            return;
+          }
 
           const email = reg.created_by.toLowerCase();
           if (!prodData[email]) prodData[email] = {};
