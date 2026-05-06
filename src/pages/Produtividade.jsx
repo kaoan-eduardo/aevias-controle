@@ -151,10 +151,6 @@ export default function ProdutividadePage() {
         const dateField = DATE_FIELD[entityName] || 'data';
         registros.forEach(reg => {
           // Debug: log registros filtrados
-          if (!SEM_STATUS.has(entityName) && reg.status !== 'finalizado') {
-            console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: status="${reg.status}" (não finalizado)`);
-            return;
-          }
           if (!obrasVisiveisIds.has(reg.obra_id)) {
             console.debug(`[Produtividade] ${entityName} (${reg.id}) descartado: obra_id="${reg.obra_id}" (não visível)`);
             return;
