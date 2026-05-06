@@ -66,7 +66,13 @@ export default function ProdutividadePage() {
 
       // ── 3. Buscar todos os registros e marcadores ────────────────────────────
       const startDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-      const endDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+      // Para o mês atual, limitar ao dia de hoje; para meses anteriores, usar o último dia do mês
+      const todayLocal = new Date();
+      const isViewingCurrentMonth = currentMonth.getFullYear() === todayLocal.getFullYear() &&
+                                    currentMonth.getMonth() === todayLocal.getMonth();
+      const endDate = isViewingCurrentMonth
+        ? new Date(todayLocal.getFullYear(), todayLocal.getMonth(), todayLocal.getDate())
+        : new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
 
       const [
         diarios, checklistsUsina, checklistsAplicacao, checklistsMRAF,
@@ -369,6 +375,12 @@ export default function ProdutividadePage() {
   const daysInMonth = getDaysInMonth(currentMonth);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
+  // Hoje em hora local — para marcar dias futuros no mês atual
+  const today = new Date();
+  const isCurrentMonth = currentMonth.getFullYear() === today.getFullYear() &&
+                          currentMonth.getMonth() === today.getMonth();
+  const isFutureDay = (day) => isCurrentMonth && day > today.getDate();
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-[95vw] mx-auto">
@@ -446,18 +458,18 @@ export default function ProdutividadePage() {
                         </div>
                       </td>
                       {days.map(day => {
-                        const registros = produtividade[lab.email.toLowerCase()]?.[day] || [];
-                        const hasRegistros = registros.length > 0;
-                        const markerKey = `${lab.email.toLowerCase()}_${day}`;
+                       const registros = produtividade[lab.email.toLowerCase()]?.[day] || [];
+                       const hasRegistros = registros.length > 0;
+                       const markerKey = `${lab.email.toLowerCase()}_${day}`;
+                       const markedStatus = window.marcadoresDia?.[markerKey];
+                       const futureDay = isFutureDay(day);
 
-                        const markedStatus = window.marcadoresDia?.[markerKey];
-
-                        return (
-                          <td
-                            key={day}
-                            className="border border-border p-1 text-center align-middle"
-                          >
-                            {hasRegistros ? (
+                       return (
+                         <td
+                           key={day}
+                           className={`border border-border p-1 text-center align-middle ${futureDay ? 'bg-muted/20 opacity-40' : ''}`}
+                         >
+                           {futureDay ? null : hasRegistros ? (
                               <div className="flex flex-col gap-0.5">
                                 {registros.map((reg, idx) => {
                                    const temInfo = reg.empreiteira || reg.usina;
@@ -495,6 +507,7 @@ export default function ProdutividadePage() {
                           </td>
                         );
                       })}
+
                     </tr>
                   ))}
                 </tbody>
