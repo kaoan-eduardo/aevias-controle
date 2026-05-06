@@ -82,16 +82,22 @@ export default function RelatoriosUnificados() {
 
     try {
       const registros = [];
-      const dataInicioObj = new Date(dataInicio);
       const dataFimObj = new Date(dataFim);
       dataFimObj.setDate(dataFimObj.getDate() + 1);
 
       for (const [entityName] of Object.entries(REGISTRO_TYPES)) {
-        const data = await base44.entities[entityName].filter({
-          obra_id: obraId,
-          data: { $gte: dataInicio, $lt: dataFim }
-        });
-        registros.push(...(data || []));
+        try {
+          const data = await base44.entities[entityName].filter({
+            obra_id: obraId,
+            data: { $gte: dataInicio, $lt: dataFim.split('T')[0] }
+          });
+          registros.push(...(data || []));
+        } catch (err) {
+          // Continuar se falhar em um tipo de registro
+          console.warn(`Erro ao carregar ${entityName}:`, err);
+        }
+        // Delay pequeno para evitar rate limit
+        await new Promise(resolve => setTimeout(resolve, 50));
       }
 
       const labSet = new Set(registros.map(r => r.laboratorista_name).filter(Boolean));
@@ -111,18 +117,25 @@ export default function RelatoriosUnificados() {
       const selectedLabs = Object.keys(selectedLaboratoristas).filter(l => selectedLaboratoristas[l]);
 
       for (const [entityName] of Object.entries(REGISTRO_TYPES)) {
-        const data = await base44.entities[entityName].filter({
-          obra_id: obraId,
-          data: { $gte: dataInicio, $lt: dataFim }
-        });
+        try {
+          const data = await base44.entities[entityName].filter({
+            obra_id: obraId,
+            data: { $gte: dataInicio, $lt: dataFim.split('T')[0] }
+          });
 
-        const filtered = (data || []).filter(r => 
-          selectedLabs.length === 0 || selectedLabs.includes(r.laboratorista_name)
-        );
+          const filtered = (data || []).filter(r => 
+            selectedLabs.length === 0 || selectedLabs.includes(r.laboratorista_name)
+          );
 
-        if (filtered.length > 0) {
-          typesEncontrados.add(entityName);
+          if (filtered.length > 0) {
+            typesEncontrados.add(entityName);
+          }
+        } catch (err) {
+          // Continuar se falhar em um tipo de registro
+          console.warn(`Erro ao carregar ${entityName}:`, err);
         }
+        // Delay pequeno para evitar rate limit
+        await new Promise(resolve => setTimeout(resolve, 50));
       }
 
       setRegistroTypes(Array.from(typesEncontrados).sort());
@@ -162,20 +175,29 @@ export default function RelatoriosUnificados() {
     setGeneratingReport(true);
     try {
       const selectedLabs = Object.keys(selectedLaboratoristas).filter(l => selectedLaboratoristas[l]);
-      const obraData = obras.find(o => o.id === obraId);
       
       const registros = await base44.entities[registroType].filter({
         obra_id: obraId,
-        data: { $gte: dataInicio, $lt: dataFim }
+        data: { $gte: dataInicio, $lt: dataFim.split('T')[0] }
       });
 
       const filtered = registros.filter(r => selectedLabs.includes(r.laboratorista_name));
 
-      // Abre os relatórios em abas
-      filtered.forEach((registro, index) => {
+      if (filtered.length === 0) {
+        alert("Nenhum registro encontrado com os filtros selecionados");
+        setGeneratingReport(false);
+        return;
+      }
+
+      // Abre os relatórios em abas com delays para evitar rate limit
+      filtered.slice(0, 10).forEach((registro, index) => {
         const reportUrl = `/Relatorio${registroType}?id=${registro.id}`;
-        setTimeout(() => window.open(reportUrl, "_blank"), index * 100);
+        setTimeout(() => window.open(reportUrl, "_blank"), index * 200);
       });
+
+      if (filtered.length > 10) {
+        alert(`Apenas os primeiros 10 registros foram abertos para evitar problemas. Total encontrado: ${filtered.length}`);
+      }
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
       alert("Erro ao gerar relatório");
