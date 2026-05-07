@@ -66,6 +66,7 @@ export default function EnsaioGranulometriaIndividualPage() {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedFaixa, setSelectedFaixa] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editingEnsaio, setEditingEnsaio] = useState(null);
@@ -132,6 +133,14 @@ export default function EnsaioGranulometriaIndividualPage() {
           if (ensaioToEdit.project_id) {
             const proj = projectsData.find(p => p.id === ensaioToEdit.project_id);
             setSelectedProject(proj);
+            if (proj?.faixa_granulometrica_id) {
+              try {
+                const faixa = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
+                setSelectedFaixa(faixa);
+              } catch (error) {
+                console.error("Erro ao carregar faixa:", error);
+              }
+            }
           }
         } else {
           alert("Você não tem permissão para editar este registro.");
@@ -189,9 +198,13 @@ export default function EnsaioGranulometriaIndividualPage() {
             try {
               const faixa = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
               handleChange('faixa', faixa.nome);
+              setSelectedFaixa(faixa);
             } catch (error) {
               console.error("Erro ao carregar faixa:", error);
+              setSelectedFaixa(null);
             }
+          } else {
+            setSelectedFaixa(null);
           }
 
           // Preencher pedreira(s)
@@ -226,6 +239,7 @@ export default function EnsaioGranulometriaIndividualPage() {
         }
       } else {
         setSelectedProject(null);
+        setSelectedFaixa(null);
       }
     };
 
@@ -250,8 +264,14 @@ export default function EnsaioGranulometriaIndividualPage() {
 
       // Recalcular % passante quando peso seco mudar
       if (field === 'peso_seco' && pesoSeco > 0 && newAgregados[index].granulometria) {
-        const peneirasVisiveis = selectedProject?.faixa_trabalho 
-          ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
+        const peneirasVisiveis = selectedFaixa?.peneiras?.length > 0
+          ? Object.keys(PENEIRAS_MAP).filter(key => {
+              const mmKey = parseFloat(PENEIRAS_MAP[key].mm.replace(',', '.'));
+              return selectedFaixa.peneiras.some(p => {
+                const mmFaixa = parseFloat(p.abertura.toString().replace(/mm/gi, '').replace(',', '.').trim());
+                return Math.abs(mmKey - mmFaixa) < 0.01;
+              });
+            })
           : Object.keys(PENEIRAS_MAP);
 
         let retidoAcumulado = 0;
@@ -285,8 +305,14 @@ export default function EnsaioGranulometriaIndividualPage() {
     if (field === 'retido') {
       const pesoSeco = parseFloat(newAgregados[agregadoIndex].peso_seco) || 0;
       if (pesoSeco > 0) {
-        const peneirasVisiveis = selectedProject?.faixa_trabalho 
-          ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
+        const peneirasVisiveis = selectedFaixa?.peneiras?.length > 0
+          ? Object.keys(PENEIRAS_MAP).filter(key => {
+              const mmKey = parseFloat(PENEIRAS_MAP[key].mm.replace(',', '.'));
+              return selectedFaixa.peneiras.some(p => {
+                const mmFaixa = parseFloat(p.abertura.toString().replace(/mm/gi, '').replace(',', '.').trim());
+                return Math.abs(mmKey - mmFaixa) < 0.01;
+              });
+            })
           : Object.keys(PENEIRAS_MAP);
 
         let retidoAcumulado = 0;
@@ -403,9 +429,20 @@ export default function EnsaioGranulometriaIndividualPage() {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin" /></div>;
   }
 
-  const peneirasVisiveis = selectedProject?.faixa_trabalho 
-    ? Object.keys(selectedProject.faixa_trabalho).filter(key => selectedProject.faixa_trabalho[key] !== null && selectedProject.faixa_trabalho[key] !== undefined)
-    : Object.keys(PENEIRAS_MAP);
+  // Peneiras da faixa granulométrica do projeto selecionado
+  const peneirasVisiveis = (() => {
+    if (selectedFaixa?.peneiras && selectedFaixa.peneiras.length > 0) {
+      // Mapear aberturas da faixa para chaves do PENEIRAS_MAP
+      return Object.keys(PENEIRAS_MAP).filter(key => {
+        const mmKey = parseFloat(PENEIRAS_MAP[key].mm.replace(',', '.'));
+        return selectedFaixa.peneiras.some(p => {
+          const mmFaixa = parseFloat(p.abertura.toString().replace(/mm/gi, '').replace(',', '.').trim());
+          return Math.abs(mmKey - mmFaixa) < 0.01;
+        });
+      });
+    }
+    return Object.keys(PENEIRAS_MAP);
+  })();
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
