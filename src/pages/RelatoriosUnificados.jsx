@@ -68,6 +68,14 @@ export default function RelatoriosUnificados() {
   const [laboratoristasChecked, setLaboratoristasChecked] = useState([]);
   const [tipoRegistro, setTipoRegistro] = useState("");
   const [loadingLaboratoristas, setLoadingLaboratoristas] = useState(false);
+  
+  // Novos filtros: rodovias, empreiteiras, usinas
+  const [rodoviasDisponiveis, setRodoviasDisponiveis] = useState([]);
+  const [empreiteirasDisponiveis, setEmpreiteirasDisponiveis] = useState([]);
+  const [usinasDisponiveis, setUsinasDisponiveis] = useState([]);
+  const [rodoviaSelecionada, setRodoviaSelecionada] = useState("");
+  const [empreiteiraSelecionada, setEmpreiteiraSelecionada] = useState("");
+  const [usinaSelecionada, setUsinaSelecionada] = useState("");
 
   useEffect(() => {
     loadInitialData();
@@ -76,9 +84,13 @@ export default function RelatoriosUnificados() {
   useEffect(() => {
     if (obraSelecionada && dataInicio && dataFim) {
       loadLaboratoristas();
+      loadFiltrosObra();
     } else {
       setLaboratoristasDisponiveis([]);
       setLaboratoristasChecked([]);
+      setRodoviasDisponiveis([]);
+      setEmpreiteirasDisponiveis([]);
+      setUsinasDisponiveis([]);
     }
   }, [obraSelecionada, dataInicio, dataFim]);
 
@@ -162,6 +174,19 @@ export default function RelatoriosUnificados() {
     }
   };
 
+  const loadFiltrosObra = async () => {
+    try {
+      const obra = await Obra.get(obraSelecionada);
+      if (obra) {
+        setRodoviasDisponiveis(obra.rodovias || []);
+        setEmpreiteirasDisponiveis(obra.empreiteiras || []);
+        setUsinasDisponiveis(obra.usinas || []);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar filtros da obra:", err);
+    }
+  };
+
   const toggleLaboratorista = (lab) => {
     setLaboratoristasChecked(prev =>
       prev.includes(lab) ? prev.filter(l => l !== lab) : [...prev, lab]
@@ -175,6 +200,12 @@ export default function RelatoriosUnificados() {
     setLaboratoristasDisponiveis([]);
     setLaboratoristasChecked([]);
     setTipoRegistro("");
+    setRodoviasDisponiveis([]);
+    setEmpreiteirasDisponiveis([]);
+    setUsinasDisponiveis([]);
+    setRodoviaSelecionada("");
+    setEmpreiteiraSelecionada("");
+    setUsinaSelecionada("");
   };
 
   const isFormValid = dataInicio && dataFim && obraSelecionada && laboratoristasChecked.length > 0 && tipoRegistro;
@@ -186,6 +217,9 @@ export default function RelatoriosUnificados() {
       data_fim: dataFim,
       tipo: tipoRegistro,
       laboratoristas: laboratoristasChecked.join(","),
+      rodovia: rodoviaSelecionada || "",
+      empreiteira: empreiteiraSelecionada || "",
+      usina: usinaSelecionada || "",
     });
     navigate(`/RelatorioUnificado?${params.toString()}`);
   };
@@ -272,6 +306,69 @@ export default function RelatoriosUnificados() {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Filtros adicionais: Rodovia, Empreiteira, Usina */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Rodovia */}
+            <div className="space-y-2">
+              <Label>Rodovia</Label>
+              <Select value={rodoviaSelecionada} onValueChange={setRodoviaSelecionada}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  {rodoviasDisponiveis.map(rodovia => (
+                    <SelectItem key={rodovia} value={rodovia}>
+                      {rodovia}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {rodoviasDisponiveis.length === 0 && (
+                <p className="text-xs text-slate-400 italic">Nenhuma rodovia cadastrada</p>
+              )}
+            </div>
+
+            {/* Empreiteira */}
+            <div className="space-y-2">
+              <Label>Empreiteira</Label>
+              <Select value={empreiteiraSelecionada} onValueChange={setEmpreiteiraSelecionada}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  {empreiteirasDisponiveis.map(empreiteira => (
+                    <SelectItem key={empreiteira} value={empreiteira}>
+                      {empreiteira}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {empreiteirasDisponiveis.length === 0 && (
+                <p className="text-xs text-slate-400 italic">Nenhuma empreiteira cadastrada</p>
+              )}
+            </div>
+
+            {/* Usina */}
+            <div className="space-y-2">
+              <Label>Usina</Label>
+              <Select value={usinaSelecionada} onValueChange={setUsinaSelecionada}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  {usinasDisponiveis.map(usina => (
+                    <SelectItem key={usina} value={usina}>
+                      {usina}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {usinasDisponiveis.length === 0 && (
+                <p className="text-xs text-slate-400 italic">Nenhuma usina cadastrada</p>
+              )}
+            </div>
           </div>
 
           {/* Laboratoristas */}

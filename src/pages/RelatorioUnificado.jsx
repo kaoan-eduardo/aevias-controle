@@ -142,8 +142,11 @@ export default function RelatorioUnificado() {
       const data_fim = params.get('data_fim');
       const tipo = params.get('tipo');
       const laboratoristas = (params.get('laboratoristas') || '').split(',').filter(Boolean);
+      const rodovia = params.get('rodovia');
+      const empreiteira = params.get('empreiteira');
+      const usina = params.get('usina');
 
-      setFilters({ obra_id, data_inicio, data_fim, tipo, laboratoristas });
+      setFilters({ obra_id, data_inicio, data_fim, tipo, laboratoristas, rodovia, empreiteira, usina });
 
       if (!obra_id || !data_inicio || !data_fim || !tipo) {
         setError("Parâmetros insuficientes.");
@@ -190,6 +193,21 @@ export default function RelatorioUnificado() {
           if (!laboratoristas.length) return true;
           const lab = r.laboratorista_name || r.created_by;
           return laboratoristas.includes(lab);
+        })
+        .filter(r => {
+          if (!rodovia) return true;
+          const rodoviaRecord = r.rodovia || r.rodovia_selecionada;
+          return rodoviaRecord === rodovia;
+        })
+        .filter(r => {
+          if (!empreiteira) return true;
+          const empreiteiraRecord = r.empreiteira || r.empreiteira_selecionada;
+          return empreiteiraRecord === empreiteira;
+        })
+        .filter(r => {
+          if (!usina) return true;
+          const usinaRecord = r.usina || r.usina_selecionada || r.usina_fornecedora;
+          return usinaRecord === usina;
         })
         .sort((a, b) => {
           const da = new Date(getDataEnsaio(a) || 0);
@@ -285,6 +303,24 @@ export default function RelatorioUnificado() {
             <div className="mt-3 text-sm">
               <p className="text-slate-500 font-medium">Laboratoristas</p>
               <p className="text-slate-700">{filters.laboratoristas.join(', ')}</p>
+            </div>
+          )}
+          {filters.rodovia && (
+            <div className="mt-3 text-sm">
+              <p className="text-slate-500 font-medium">Rodovia</p>
+              <p className="text-slate-700">{filters.rodovia}</p>
+            </div>
+          )}
+          {filters.empreiteira && (
+            <div className="mt-3 text-sm">
+              <p className="text-slate-500 font-medium">Empreiteira</p>
+              <p className="text-slate-700">{filters.empreiteira}</p>
+            </div>
+          )}
+          {filters.usina && (
+            <div className="mt-3 text-sm">
+              <p className="text-slate-500 font-medium">Usina</p>
+              <p className="text-slate-700">{filters.usina}</p>
             </div>
           )}
         </div>
