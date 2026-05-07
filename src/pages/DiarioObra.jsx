@@ -254,39 +254,31 @@ const DiarioForm = ({
       {/* Campos ocultados para Escritório */}
       {formData.tipo_local !== 'escritorio' && (
         <>
-          {/* Campo Empreiteira / Cliente - depende do tipo de obra */}
-          <div className="space-y-2">
-            <Label htmlFor="empreiteira">{isObraClienteType ? "Cliente *" : "Empreiteira *"}</Label>
-            <Select
-              value={formData.empreiteira || ""}
-              onValueChange={(value) => handleChange('empreiteira', value)}
-              required
-              disabled={!isEditable || isApproved}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={isObraClienteType ? "Selecione o cliente" : "Selecione a empreiteira"} />
-              </SelectTrigger>
-              <SelectContent>
-                {isObraClienteType ? (
-                  obraSelecionada?.clientes && obraSelecionada.clientes.length > 0 ? (
-                    obraSelecionada.clientes.map(cliente => (
-                      <SelectItem key={cliente} value={cliente}>{cliente}</SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="__none__" disabled>Nenhum cliente cadastrado</SelectItem>
-                  )
-                ) : (
-                  obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
+          {/* Campo Empreiteira - apenas para obras de supervisão */}
+          {obraSelecionada?.tipo_obra === 'supervisao' && (
+            <div className="space-y-2">
+              <Label htmlFor="empreiteira">Empreiteira *</Label>
+              <Select
+                value={formData.empreiteira || ""}
+                onValueChange={(value) => handleChange('empreiteira', value)}
+                required
+                disabled={!isEditable || isApproved}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a empreiteira" />
+                </SelectTrigger>
+                <SelectContent>
+                  {obraSelecionada?.empreiteiras && obraSelecionada.empreiteiras.length > 0 ? (
                     obraSelecionada.empreiteiras.map(emp => (
                       <SelectItem key={emp} value={emp}>{emp}</SelectItem>
                     ))
                   ) : (
                     <SelectItem value="__none__" disabled>Nenhuma empreiteira cadastrada</SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
-          </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {formData.tipo_local === 'campo' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1106,7 +1098,8 @@ export default function DiarioObraPage() {
         alert("Por favor, preencha todos os campos de data e horários.");
         return;
       }
-      if (formData.tipo_local !== 'escritorio' && !formData.empreiteira) {
+      const obraAtual = obras?.find ? obras.find(o => o.id === formData.obra_id) : null;
+      if (formData.tipo_local !== 'escritorio' && obraAtual?.tipo_obra === 'supervisao' && !formData.empreiteira) {
         alert("Por favor, selecione uma empreiteira.");
         return;
       }
