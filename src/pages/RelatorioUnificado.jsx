@@ -5,7 +5,8 @@ import { Regional } from "@/entities/Regional";
 import { User } from "@/entities/User";
 import { Project } from "@/entities/Project";
 import { Button } from "@/components/ui/button";
-import { Loader2, Download, Printer } from "lucide-react";
+import { Loader2, Download, Printer, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { getDataEnsaio, getEnsaioTypeInfo } from "@/components/ensaios/ensaioMappers";
 import { useReportMode } from "@/hooks/useReportMode";
 
@@ -117,6 +118,7 @@ function RecordRenderer({ record, obra, regional, project, user, allUsers }) {
 
 export default function RelatorioUnificado() {
   useReportMode();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -236,10 +238,16 @@ export default function RelatorioUnificado() {
               {obra?.name} · {tipoNome} · {formatDate(filters.data_inicio)} a {formatDate(filters.data_fim)} · {records.length} registro(s)
             </p>
           </div>
-          <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
-            <Printer className="w-4 h-4 mr-2" />
-            Imprimir / PDF
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/RelatoriosUnificados')}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar
+            </Button>
+            <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Printer className="w-4 h-4 mr-2" />
+              Imprimir / PDF
+            </Button>
+          </div>
         </div>
       </div>
 
