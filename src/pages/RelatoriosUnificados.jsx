@@ -105,7 +105,9 @@ export default function RelatoriosUnificados() {
           (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === currentUser.email?.toLowerCase())
         );
         const regionaisIds = regionaisDoUsuario.map(r => r.id);
-        availableObras = obrasData.filter(o => regionaisIds.includes(o.regional_id));
+        const obrasVinculadas = obrasData.filter(o => regionaisIds.includes(o.regional_id));
+        // Se encontrou regionais vinculadas, mostrar apenas as obras delas; senão mostrar todas
+        availableObras = obrasVinculadas.length > 0 ? obrasVinculadas : obrasData;
       }
 
       setObras(availableObras);
