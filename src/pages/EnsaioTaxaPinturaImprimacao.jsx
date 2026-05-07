@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, AlertTriangle, Loader2, Plus, Trash2 } from "lucide-react";
+import { Save, AlertTriangle, Loader2, Plus, Trash2, Send, Clock } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
@@ -254,7 +254,7 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
     }
   }, [formData.ensaios.length]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
     
     if (!formData.obra_id || !formData.data_ensaio) {
@@ -267,7 +267,7 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
       const dataToSave = {
         ...formData,
         laboratorista_name: user?.laboratorista_name || user?.full_name,
-        status: 'finalizado'
+        status: saveStatus
       };
 
       if (editingEnsaio) {
@@ -737,23 +737,35 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
                   Cancelar
                 </Button>
                 {isEditable && (
-                  <Button
-                    type="submit"
-                    disabled={saving}
-                    className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
-                  >
-                    {saving ? (
-                      <>
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={saving}
+                      onClick={(e) => handleSubmit(e, 'rascunho')}
+                      className="border-[#BFCF99] text-[#00233B] hover:bg-[#BFCF99]/10"
+                    >
+                      {saving ? (
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Salvando...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Salvar Ensaio
-                      </>
-                    )}
-                  </Button>
+                      ) : (
+                        <Clock className="w-4 h-4 mr-2" />
+                      )}
+                      Salvar Progresso
+                    </Button>
+                    <Button
+                      type="button"
+                      disabled={saving}
+                      onClick={(e) => handleSubmit(e, 'finalizado')}
+                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
+                    >
+                      {saving ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4 mr-2" />
+                      )}
+                      Finalizar
+                    </Button>
+                  </>
                 )}
               </div>
             </form>

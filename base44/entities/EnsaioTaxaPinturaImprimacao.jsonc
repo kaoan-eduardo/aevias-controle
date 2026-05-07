@@ -1,0 +1,214 @@
+{
+  "name": "EnsaioTaxaPinturaImprimacao",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string",
+      "description": "Nome do laboratorista que criou o registro"
+    },
+    "engenheiro_responsavel": {
+      "type": "string",
+      "description": "Nome do engenheiro respons\u00e1vel"
+    },
+    "rodovia": {
+      "type": "string",
+      "description": "Nome da rodovia"
+    },
+    "trecho": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do trecho"
+    },
+    "material": {
+      "type": "string",
+      "description": "Material utilizado"
+    },
+    "placa_caminhao": {
+      "type": "string",
+      "description": "Placa do caminh\u00e3o"
+    },
+    "tipo_servico": {
+      "type": "string",
+      "enum": [
+        "imprimacao",
+        "ligacao"
+      ],
+      "description": "Tipo de servi\u00e7o: Imprima\u00e7\u00e3o ou Liga\u00e7\u00e3o"
+    },
+    "dimensoes_bandeja": {
+      "type": "object",
+      "description": "Dimens\u00f5es globais da bandeja (aplicadas a todos os ensaios)",
+      "properties": {
+        "lado_1": {
+          "type": "number",
+          "description": "Lado 1 da bandeja (cm)"
+        },
+        "lado_2": {
+          "type": "number",
+          "description": "Lado 2 da bandeja (cm)"
+        },
+        "area": {
+          "type": "number",
+          "description": "\u00c1rea calculada (m\u00b2)"
+        }
+      }
+    },
+    "ensaios": {
+      "type": "array",
+      "description": "Array de ensaios (at\u00e9 4)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "number",
+            "description": "N\u00famero do ensaio"
+          },
+          "hora": {
+            "type": "string",
+            "description": "Hora de realiza\u00e7\u00e3o do ensaio"
+          },
+          "camada": {
+            "type": "string",
+            "description": "Camada de aplica\u00e7\u00e3o"
+          },
+          "material_camada": {
+            "type": "string",
+            "description": "Material da camada"
+          },
+          "estaca": {
+            "type": "string",
+            "description": "Estaca do ensaio"
+          },
+          "temperatura_aplicacao": {
+            "type": "number",
+            "description": "Temperatura de aplica\u00e7\u00e3o do ligante (\u00b0C)"
+          },
+          "peso_bandeja_amostra": {
+            "type": "number",
+            "description": "Peso da bandeja + amostra (g)"
+          },
+          "peso_bandeja": {
+            "type": "number",
+            "description": "Peso da bandeja (g)"
+          },
+          "peso_emulsao": {
+            "type": "number",
+            "description": "Peso da emuls\u00e3o calculado (g)"
+          },
+          "taxa_aplicada": {
+            "type": "number",
+            "description": "Taxa aplicada calculada (l/m\u00b2)"
+          },
+          "taxa_emulsao_aplicada": {
+            "type": "number",
+            "description": "Taxa de emuls\u00e3o aplicada calculada (l/m\u00b2)"
+          },
+          "taxa_residual": {
+            "type": "number",
+            "description": "Taxa residual calculada (l/m\u00b2)"
+          },
+          "ensaio_residuo": {
+            "type": "object",
+            "description": "Dados do ensaio de res\u00edduo",
+            "properties": {
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data do ensaio de res\u00edduo"
+              },
+              "tara": {
+                "type": "number",
+                "description": "Tara (g)"
+              },
+              "peso_inicial": {
+                "type": "number",
+                "description": "Peso inicial (g)"
+              },
+              "peso_final": {
+                "type": "number",
+                "description": "Peso final (g)"
+              },
+              "residuo": {
+                "type": "number",
+                "description": "Res\u00edduo calculado (%)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho",
+      "description": "Status do registro: rascunho (em edi\u00e7\u00e3o) ou finalizado (pronto para revis\u00e3o)"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null,
+      "description": "Status de aprova\u00e7\u00e3o"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que aprovou/reprovou"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "client_signature": {
+      "type": "object",
+      "properties": {
+        "signed_by": {
+          "type": "string"
+        },
+        "signed_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engineer_name": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "obra_id",
+    "data_ensaio"
+  ]
+}
