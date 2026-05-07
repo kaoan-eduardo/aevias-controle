@@ -243,16 +243,16 @@ export default function RelatorioUnificado() {
         </div>
       </div>
 
-      {/* Capa do relatório — oculta na impressão */}
-      <div id="report-header" className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+      {/* Capa do relatório — apenas na tela, nunca impressa */}
+      <div className="print:hidden max-w-5xl mx-auto px-6 pt-8 pb-4">
         <div className="border-b-2 border-slate-800 pb-4 mb-6">
           <div className="flex items-start justify-between">
             {regional?.logo_url && (
-              <img src={regional.logo_url} alt="Logo" className="h-14 object-contain print:h-10" />
+              <img src={regional.logo_url} alt="Logo" className="h-14 object-contain" />
             )}
             <div className="text-right">
-              <h1 className="text-2xl font-bold text-slate-800 print:text-xl">RELATÓRIO UNIFICADO</h1>
-              <p className="text-base font-semibold text-slate-600 print:text-sm">{tipoNome}</p>
+              <h1 className="text-2xl font-bold text-slate-800">RELATÓRIO UNIFICADO</h1>
+              <p className="text-base font-semibold text-slate-600">{tipoNome}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm">
@@ -280,7 +280,10 @@ export default function RelatorioUnificado() {
             </div>
           )}
         </div>
+      </div>
 
+      {/* Registros — visíveis na tela e na impressão */}
+      <div className="max-w-5xl mx-auto px-6 print:px-0">
         {records.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-slate-400 text-lg">Nenhum registro encontrado com os filtros selecionados.</p>
@@ -324,7 +327,6 @@ export default function RelatorioUnificado() {
           @page { size: A4 portrait; margin: 8mm 10mm; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
           aside, nav, [data-sidebar] { display: none !important; }
-          #report-header { display: none !important; }
         }
       `}</style>
     </div>
