@@ -324,7 +324,7 @@ export default function RelatorioUnificado() {
 
       <style>{`
         @media print {
-          @page { size: A4 portrait; margin: 8mm 10mm; }
+          @page { size: A4 portrait; margin: 0; }
           body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
           aside, nav, [data-sidebar] { display: none !important; }
         }
