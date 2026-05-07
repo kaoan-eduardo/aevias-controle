@@ -29,7 +29,7 @@ const PENEIRAS_MAP = {
   "peneira_0_6mm": { astm: "#30", mm: "0,6" },
   "peneira_0_42mm": { astm: "#40", mm: "0,42" },
   "peneira_0_3mm": { astm: "#50", mm: "0,3" },
-  "peneira_0_18mm": { astm: "#100", mm: "0,18" },
+  "peneira_0_18mm": { astm: "#80", mm: "0,18" },
   "peneira_0_15mm": { astm: "#100", mm: "0,15" },
   "peneira_0_075mm": { astm: "#200", mm: "0,075" }
 };
