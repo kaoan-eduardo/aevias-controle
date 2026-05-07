@@ -89,7 +89,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
   );
 
   const ReportFooter = () => (
-    <footer className="mt-4 pt-3 print:break-inside-avoid">
+    <footer className="print:break-inside-avoid print:absolute print:bottom-0 print:left-0 print:right-0 print:mx-auto print:max-w-[210mm] print:px-6">
       {ensaio.observacoes && (
         <div className="mb-3">
           <div className="bg-slate-200 px-2 py-0.5 font-bold text-[10px]">OBSERVAÇÕES</div>
@@ -99,7 +99,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
         </div>
       )}
 
-      <div className="px-4">
+      <div className="px-4 print:px-0">
         <SignatureFooter 
           labName={ensaio.laboratorista_name}
           labEmail={ensaio.created_by}
@@ -121,8 +121,8 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
   );
 
   return (
-    <div className="bg-white font-sans">
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-6 print:p-6 print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
+    <div className="bg-white font-sans print:relative">
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-6 print:p-6 print:min-h-[297mm] print:pb-16" style={{ minHeight: '100vh' }}>
         <ReportHeader />
         <DadosObra />
         
