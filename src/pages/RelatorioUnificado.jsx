@@ -26,7 +26,6 @@ import RelatorioAcompanhamentoCarga from "@/components/relatorios/RelatorioAcomp
 import RelatorioManchaPendulo from "@/components/relatorios/RelatorioManchaPendulo";
 import RelatorioGranulometriaIndividual from "@/components/relatorios/RelatorioGranulometriaIndividual";
 import RelatorioGranuMistura from "@/components/relatorios/RelatorioGranuMistura";
-import RelatorioCAUQ from "@/components/relatorios/RelatorioCAUQ";
 
 const getEntityInstance = (key) => {
   const map = {
@@ -95,7 +94,16 @@ function RecordRenderer({ record, obra, regional, project, user, allUsers }) {
     case "GranuMistura":
       return <RelatorioGranuMistura ensaio={record} obra={obra} regional={regional} project={project} user={user} />;
     case "EnsaioCAUQ":
-      return <RelatorioCAUQ ensaio={record} obra={obra} regional={regional} project={project} user={user} />;
+      // Renderizar a página nativa de relatório
+      return (
+        <div className="bg-white min-h-screen">
+          <iframe
+            src={`/RelatorioCAUQ?id=${record.id}`}
+            className="w-full h-screen border-0"
+            title="Relatório de Ensaio CAUQ"
+          />
+        </div>
+      );
     default:
       // Para tipos sem componente embutido, mostrar card simples
       const typeInfo = getEnsaioTypeInfo(record);
