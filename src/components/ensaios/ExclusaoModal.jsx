@@ -12,7 +12,7 @@ import {
 
 export const ExclusaoModal = React.memo(({ ensaio, isOpen, onClose, onDelete }) => {
   const [confirmacao, setConfirmacao] = useState('');
-  const textoConfirmacao = 'EXCLUIR';
+  const textoConfirmacao = 'EXCLUIR REGISTRO';
 
   const handleDelete = useCallback(async () => {
     if (confirmacao !== textoConfirmacao) {
