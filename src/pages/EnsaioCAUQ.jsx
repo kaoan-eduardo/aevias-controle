@@ -149,9 +149,11 @@ export default function EnsaioCAUQPage() {
     setFormData(prev => {
       const newData = JSON.parse(JSON.stringify(prev));
       const keys = path.split('.');
+      const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+      if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
       let current = newData;
       for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) {
+        if (!current[keys[i]] || typeof current[keys[i]] !== 'object') {
           current[keys[i]] = {};
         }
         current = current[keys[i]];
