@@ -246,12 +246,16 @@ export default function EnsaioManchaPendulo() {
     };
   };
 
+  const CAMPOS_MANCHA_PERMITIDOS = ['estaca', 'faixa_pista', 'bordo', 'd1', 'd2', 'd3', 'd4', 'volume_areia'];
+  const CAMPOS_PENDULO_PERMITIDOS = ['estaca', 'faixa_pista', 'bordo', 'temp_pavimento', 'leitura_1', 'leitura_2', 'leitura_3', 'leitura_4', 'leitura_5'];
+
   const handleManchaChange = (index, field, value) => {
+    if (!CAMPOS_MANCHA_PERMITIDOS.includes(field)) return;
     const newEnsaios = [...formData.ensaios_mancha];
     if (!newEnsaios[index]) {
       newEnsaios[index] = { numero: index + 1, volume_areia: 25000 };
     }
-    newEnsaios[index][field] = value;
+    newEnsaios[index] = { ...newEnsaios[index], [field]: value };
     newEnsaios[index] = calcularManchaValores(newEnsaios[index]);
     
     const novaConformidade = avaliarConformidade(newEnsaios, formData.ensaios_pendulo, formData.orgao);
@@ -263,11 +267,12 @@ export default function EnsaioManchaPendulo() {
   };
 
   const handlePenduloChange = (index, field, value) => {
+    if (!CAMPOS_PENDULO_PERMITIDOS.includes(field)) return;
     const newEnsaios = [...formData.ensaios_pendulo];
     if (!newEnsaios[index]) {
       newEnsaios[index] = { numero: index + 1 };
     }
-    newEnsaios[index][field] = value;
+    newEnsaios[index] = { ...newEnsaios[index], [field]: value };
     newEnsaios[index] = calcularPenduloValores(newEnsaios[index]);
     
     const novaConformidade = avaliarConformidade(formData.ensaios_mancha, newEnsaios, formData.orgao);

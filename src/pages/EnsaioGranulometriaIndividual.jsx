@@ -250,7 +250,11 @@ export default function EnsaioGranulometriaIndividualPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const AGREGADO_CAMPOS_PERMITIDOS = ['nome', 'peso_umido', 'peso_seco'];
+
   const handleAgregadoChange = (index, field, value) => {
+    if (!AGREGADO_CAMPOS_PERMITIDOS.includes(field)) return;
+    
     const newAgregados = [...formData.agregados];
     newAgregados[index] = { ...newAgregados[index], [field]: value };
 
@@ -291,7 +295,12 @@ export default function EnsaioGranulometriaIndividualPage() {
     setFormData(prev => ({ ...prev, agregados: newAgregados }));
   };
 
+  const GRANULOMETRIA_CAMPOS_PERMITIDOS = ['retido', 'passante'];
+  const PENEIRAS_PERMITIDAS = Object.keys(PENEIRAS_MAP);
+
   const handleGranulometriaChange = (agregadoIndex, peneira, field, value) => {
+    if (!GRANULOMETRIA_CAMPOS_PERMITIDOS.includes(field) || !PENEIRAS_PERMITIDAS.includes(peneira)) return;
+    
     const newAgregados = [...formData.agregados];
     if (!newAgregados[agregadoIndex].granulometria) {
       newAgregados[agregadoIndex].granulometria = {};
@@ -350,7 +359,11 @@ export default function EnsaioGranulometriaIndividualPage() {
     }
   };
 
+  const EQUIVALENTE_CAMPOS_PERMITIDOS = ['topo_argila', 'topo_areia'];
+
   const handleEquivalenteChange = (index, field, value) => {
+    if (!EQUIVALENTE_CAMPOS_PERMITIDOS.includes(field)) return;
+    
     const newMedicoes = [...formData.equivalente_areia.medicoes];
     newMedicoes[index] = { ...newMedicoes[index], [field]: value };
 
