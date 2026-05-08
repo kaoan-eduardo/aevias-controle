@@ -511,7 +511,13 @@ export default function ProdutividadePage() {
                                  })}
                               </div>
                             ) : markedStatus ? (
-                              <div className={`text-white text-xs px-1 py-1 rounded font-bold ${markedStatus === 'N/A' ? 'bg-blue-400' : 'bg-green-500'} ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`} onClick={() => userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}>
+                              <div
+                                role="button"
+                                tabIndex={userCanEdit ? 0 : -1}
+                                className={`text-white text-xs px-1 py-1 rounded font-bold ${markedStatus === 'N/A' ? 'bg-blue-400' : 'bg-green-500'} ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
+                                onClick={() => userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}
+                                onKeyDown={(e) => e.key === 'Enter' && userCanEdit && setDiaDialog({ open: true, laborista: lab.email, dia: day })}
+                              >
                                 {markedStatus}
                               </div>
                             ) : (
