@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
 
         if (emailsSemUsuario.length > 0) {
             console.log(`\n📧 ${emailsSemUsuario.length} email(s) com convite pendente:`);
-            emailsSemUsuario.forEach(email => console.log(`  - ${String(email)}`));
+            emailsSemUsuario.forEach(email => { console.log(`  - ${String(email)}`); });
         }
 
         return Response.json({ 
