@@ -1,4 +1,7 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+
+const resolverData = (record) =>
+  record.data || record.data_ensaio || record.extraction_date || record.date || null;
 
 Deno.serve(async (req) => {
   try {
@@ -39,8 +42,7 @@ Deno.serve(async (req) => {
         
         let updated = 0;
         for (const record of allRecords) {
-          // Determinar qual campo de data usar
-          let dateStr = record.data || record.data_ensaio || record.extraction_date || record.date;
+          const dateStr = resolverData(record);
           
           if (!dateStr) {
             console.log(`[${entityName}] ID ${record.id}: Sem data (ignorado)`);
