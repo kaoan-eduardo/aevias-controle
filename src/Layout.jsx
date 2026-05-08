@@ -75,6 +75,8 @@ import { Regional } from "@/entities/Regional";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
+const SESSION_KEY_LAST_LOGIN = 'session_login_flag';
+
 const TAB_ZONES = {
   home: ['/'],
   regionais: ['/Regionais', '/Obra', '/Regional'],
@@ -450,9 +452,8 @@ const AppLayout = ({ children }) => {
 
   // Atualizar last_login apenas uma vez por sessão do browser
   React.useEffect(() => {
-    const sessionKey = 'lastLoginUpdated';
-    if (sessionStorage.getItem(sessionKey)) return;
-    sessionStorage.setItem(sessionKey, '1');
+    if (sessionStorage.getItem(SESSION_KEY_LAST_LOGIN)) return;
+    sessionStorage.setItem(SESSION_KEY_LAST_LOGIN, '1');
     base44.functions.invoke('updateLastLogin', {}).catch(() => {});
   }, []);
 
