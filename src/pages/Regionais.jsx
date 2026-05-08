@@ -402,17 +402,15 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
         regional_id: editingObra ? editingObra.regional_id : regional.id
       };
 
-      Object.keys(dataToSave).forEach(key => {
-        if (dataToSave[key] === "" || dataToSave[key] === null) {
-          delete dataToSave[key];
-        }
-      });
+      const cleanedData = Object.fromEntries(
+        Object.entries(dataToSave).filter(([, v]) => v !== "" && v !== null)
+      );
 
       if (editingObra) {
-        await Obra.update(editingObra.id, dataToSave);
+        await Obra.update(editingObra.id, cleanedData);
         alert("Obra atualizada com sucesso!");
       } else {
-        await Obra.create(dataToSave);
+        await Obra.create(cleanedData);
         alert("Obra criada com sucesso!");
       }
       
