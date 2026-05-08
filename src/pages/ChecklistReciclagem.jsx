@@ -84,7 +84,6 @@ export default function ChecklistReciclagem() {
     material: "",
     inspetor_fiscal: "",
     ensaio_realizado_por: "Afirma Evias",
-    status: "rascunho",
     periodos_clima: [
       { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
       { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" },
