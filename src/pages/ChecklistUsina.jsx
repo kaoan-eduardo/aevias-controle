@@ -250,6 +250,8 @@ export default function ChecklistUsinaPage() {
     setFormData(prev => {
       const newData = JSON.parse(JSON.stringify(prev));
       const keys = path.split('.');
+      const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+      if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
 
       if (keys[0] === 'controle_cauq') {
         const testKey = keys[1];
