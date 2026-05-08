@@ -243,28 +243,35 @@ export default function EnsaioVigaBenkelman() {
     }));
   };
 
+  // Allowlists para evitar Generic Object Injection Sink
+  const LADOS_PERMITIDOS = ['bordo_esquerdo', 'eixo', 'bordo_direito'];
+  const CAMPOS_LEITURA_PERMITIDOS = ['leitura_inicial', 'leitura_final'];
+
+  const calcularLado = (lado, field, numValue, cte_viga) => {
+    const atualizado = { ...lado, [field]: numValue };
+    if (CAMPOS_LEITURA_PERMITIDOS.includes(field)) {
+      atualizado.diferenca = (atualizado.leitura_inicial || 0) - (atualizado.leitura_final || 0);
+      atualizado.deflexao = atualizado.diferenca * (parseFloat(cte_viga) || 0.01);
+    }
+    return atualizado;
+  };
+
   const updateLevantamento = (faixaId, levIndex, lado, field, value) => {
-    setFormData(prev => {
-      const novo = { ...prev };
-      const faixa = novo.faixas.find(f => f.id === faixaId);
-      if (!faixa) return prev;
-
-      const lev = faixa.levantamentos[levIndex];
-
-      if (field === 'estaca_km') {
-        lev.estaca_km = value;
-      } else {
-        const numValue = parseFloat(value) || 0;
-        lev[lado][field] = numValue;
-
-        if (field === 'leitura_inicial' || field === 'leitura_final') {
-          lev[lado].diferenca = (lev[lado].leitura_inicial || 0) - (lev[lado].leitura_final || 0);
-          lev[lado].deflexao = (lev[lado].diferenca || 0) * (parseFloat(novo.cte_viga) || 0.01);
-        }
-      }
-
-      return novo;
-    });
+    setFormData(prev => ({
+      ...prev,
+      faixas: prev.faixas.map(faixa => {
+        if (faixa.id !== faixaId) return faixa;
+        return {
+          ...faixa,
+          levantamentos: faixa.levantamentos.map((lev, idx) => {
+            if (idx !== levIndex) return lev;
+            if (field === 'estaca_km') return { ...lev, estaca_km: value };
+            if (!LADOS_PERMITIDOS.includes(lado)) return lev;
+            return { ...lev, [lado]: calcularLado(lev[lado], field, parseFloat(value) || 0, prev.cte_viga) };
+          })
+        };
+      })
+    }));
   };
 
   const handleLeituraInicialChange = (value) => {
