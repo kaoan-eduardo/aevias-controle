@@ -25,7 +25,7 @@ const migrarObjeto = (obj, prefixoLog = '') => {
   for (const [chave, valor] of Object.entries(obj)) {
     if (MAPEAMENTO_MIGRACAO[chave]) {
       const novaChave = MAPEAMENTO_MIGRACAO[chave];
-      console.log(`  ${prefixoLog}Migrando: ${chave} -> ${novaChave} (valor: ${valor})`);
+      console.log(`  ${prefixoLog}Migrando: ${chave} -> ${novaChave} (valor: ${String(valor)})`);
       novoObj[novaChave] = valor;
       modificado = true;
     } else {
