@@ -379,15 +379,13 @@ export default function UsersPage() {
         };
 
         // Remover campos vazios
-        Object.keys(newUserData).forEach(key => {
-          if (newUserData[key] === '' || newUserData[key] === null || newUserData[key] === undefined) {
-            delete newUserData[key];
-          }
-        });
+        const finalUserData = Object.fromEntries(
+          Object.entries(newUserData).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+        );
 
-        console.log('Criando novo usuário com dados:', newUserData);
+        console.log('Criando novo usuário com dados:', finalUserData);
         
-        await User.create(newUserData);
+        await User.create(finalUserData);
         
         // Se for gestor ou sala técnica criando um laboratorista, alocar na regional
         if (isGestorOrSalaTecnica && userData.access_level === 'user') {
