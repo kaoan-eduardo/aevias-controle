@@ -34,10 +34,12 @@ export default function ChecklistReciclagem() {
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const getInitialFormData = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return {
     obra_id: "",
     project_id: "",
-    data: new Date().toISOString().split('T')[0],
+    data: today,
     jornada: {
       horario_inicio: "",
       horario_fim: ""
@@ -151,7 +153,10 @@ export default function ChecklistReciclagem() {
     nao_conformidades: [],
     fotos: [],
     status: "rascunho"
-  });
+    };
+  };
+
+  const [formData, setFormData] = useState(getInitialFormData);
 
   const { clearSavedData } = useFormPersistence('checklist_reciclagem', formData, setFormData, !!editingChecklist);
 
