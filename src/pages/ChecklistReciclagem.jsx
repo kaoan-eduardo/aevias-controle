@@ -20,7 +20,7 @@ const SectionTitle = ({ children }) => (
 );
 
 const CheckboxGroup = ({ value, onChange }) => (
-  <div className="flex gap-4 justify-center" onClick={(e) => e.stopPropagation()}>
+  <div className="flex gap-4 justify-center">
     <label className="flex items-center gap-1 cursor-pointer">
       <input
         type="checkbox"
