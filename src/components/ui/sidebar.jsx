@@ -379,7 +379,7 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
-function SidebarMenuButtonInner(allProps, ref) {
+const SidebarMenuButton = React.forwardRef(function SidebarMenuButton(allProps, ref) {
   const asChild = allProps.asChild
   const isActive = allProps.isActive
   const variant = allProps.variant
@@ -420,9 +420,7 @@ function SidebarMenuButtonInner(allProps, ref) {
       <TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile} {...tooltipProps} />
     </Tooltip>
   )
-}
-
-const SidebarMenuButton = React.forwardRef(SidebarMenuButtonInner)
+})
 SidebarMenuButton.displayName = "SidebarMenuButton"
 
 const SidebarMenuAction = React.forwardRef(function SidebarMenuAction(
