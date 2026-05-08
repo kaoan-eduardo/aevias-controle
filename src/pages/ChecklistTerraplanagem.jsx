@@ -13,11 +13,42 @@ import { Project } from "@/entities/Project";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
-// Helper component for section titles
 const SectionTitle = ({ children }) => (
   <CardHeader>
     <CardTitle className="text-lg">{children}</CardTitle>
   </CardHeader>
+);
+
+const CheckboxGroup = ({ value, onChange }) => (
+  <div className="flex gap-4 justify-center">
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.sim || false}
+        onChange={() => onChange('sim')}
+        className="w-4 h-4 accent-green-500"
+      />
+      <span className="text-xs">Sim</span>
+    </label>
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.nao || false}
+        onChange={() => onChange('nao')}
+        className="w-4 h-4 accent-red-500"
+      />
+      <span className="text-xs">Não</span>
+    </label>
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.na || false}
+        onChange={() => onChange('na')}
+        className="w-4 h-4 accent-gray-500"
+      />
+      <span className="text-xs">N/A</span>
+    </label>
+  </div>
 );
 
 export default function ChecklistTerraplanagem() {
@@ -34,10 +65,12 @@ export default function ChecklistTerraplanagem() {
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [editingChecklist, setEditingChecklist] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const getInitialFormData = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return {
     obra_id: "",
     project_id: "",
-    data: new Date().toISOString().split('T')[0],
+    data: today,
     jornada: {
       horario_inicio: "",
       horario_fim: ""
@@ -117,7 +150,10 @@ export default function ChecklistTerraplanagem() {
     nao_conformidades: [],
     fotos: [],
     status: "rascunho"
-  });
+    };
+  };
+
+  const [formData, setFormData] = useState(getInitialFormData);
 
   const { clearSavedData } = useFormPersistence('checklist_terraplanagem', formData, setFormData, !!editingChecklist);
 
@@ -580,38 +616,6 @@ export default function ChecklistTerraplanagem() {
       </div>
     );
   }
-
-  const CheckboxGroup = ({ value, onChange }) => (
-    <div className="flex gap-4 justify-center">
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.sim || false}
-          onChange={() => onChange('sim')}
-          className="w-4 h-4 accent-green-500"
-        />
-        <span className="text-xs">Sim</span>
-      </label>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.nao || false}
-          onChange={() => onChange('nao')}
-          className="w-4 h-4 accent-red-500"
-        />
-        <span className="text-xs">Não</span>
-      </label>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.na || false}
-          onChange={() => onChange('na')}
-          className="w-4 h-4 accent-gray-500"
-        />
-        <span className="text-xs">N/A</span>
-      </label>
-    </div>
-  );
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
