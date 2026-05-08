@@ -119,8 +119,7 @@ Deno.serve(async (req) => {
                 const fileName = `${sanitizedName}.html`;
                 
                 console.log('  💾 Adicionando ao ZIP como:', fileName);
-                const encodedContent = new TextEncoder().encode(htmlContent);
-                zip.file(fileName, encodedContent);
+                zip.file(fileName, htmlContent);
                 
                 successCount++;
                 console.log('  ✅ Arquivo adicionado com sucesso!');
