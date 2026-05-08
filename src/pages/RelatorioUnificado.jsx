@@ -104,7 +104,7 @@ function RecordRenderer({ record, obra, regional, project, user, allUsers }) {
           />
         </div>
       );
-    default:
+    default: {
       // Para tipos sem componente embutido, mostrar card simples
       const typeInfo = getEnsaioTypeInfo(record);
       const dataFormatted = getDataEnsaio(record)
@@ -124,6 +124,7 @@ function RecordRenderer({ record, obra, regional, project, user, allUsers }) {
           )}
         </div>
       );
+    }
   }
 }
 
