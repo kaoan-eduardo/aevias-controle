@@ -348,20 +348,18 @@ export default function UsersPage() {
         };
 
         // Remover campos vazios/null/undefined para não sobrescrever com valores inválidos
-        Object.keys(customFields).forEach(key => {
-          if (customFields[key] === '' || customFields[key] === null || customFields[key] === undefined) {
-            delete customFields[key];
-          }
-        });
+        const cleanedFields = Object.fromEntries(
+          Object.entries(customFields).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+        );
 
         // Atualizar role baseado no access_level
-        if (customFields.access_level) {
-          customFields.role = ['admin', 'sala_tecnica_afirmaevias', 'gestor_contrato'].includes(customFields.access_level) ? 'admin' : 'user';
+        if (cleanedFields.access_level) {
+          cleanedFields.role = ['admin', 'sala_tecnica_afirmaevias', 'gestor_contrato'].includes(cleanedFields.access_level) ? 'admin' : 'user';
         }
 
-        console.log('Atualizando usuário:', editingUser.id, 'com dados:', customFields);
+        console.log('Atualizando usuário:', editingUser.id, 'com dados:', cleanedFields);
         
-        await User.update(editingUser.id, customFields);
+        await User.update(editingUser.id, cleanedFields);
         
         alert("Usuário atualizado com sucesso!");
       } else {
