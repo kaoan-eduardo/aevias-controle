@@ -1,5 +1,5 @@
 {
-  "name": "ChecklistTerraplanagem",
+  "name": "ChecklistReciclagem",
   "type": "object",
   "properties": {
     "obra_id": {
@@ -38,31 +38,16 @@
     "estaca": {
       "type": "string"
     },
-    "camada": {
+    "trecho": {
       "type": "string"
     },
-    "inspetor_fiscal": {
+    "faixa": {
       "type": "string"
     },
     "material": {
       "type": "string"
     },
-    "umidade_otima_proctor": {
-      "type": "number"
-    },
-    "umidade_otima_quantidade": {
-      "type": "number"
-    },
-    "umidade_otima_resultados": {
-      "type": "string"
-    },
-    "umidade_in_situ": {
-      "type": "number"
-    },
-    "umidade_in_situ_quantidade": {
-      "type": "number"
-    },
-    "umidade_in_situ_resultados": {
+    "inspetor_fiscal": {
       "type": "string"
     },
     "ensaio_realizado_por": {
@@ -71,8 +56,7 @@
         "Afirma Evias",
         "Empreiteira"
       ],
-      "default": "Afirma Evias",
-      "description": "Quem realizou o ensaio"
+      "default": "Afirma Evias"
     },
     "periodos_clima": {
       "type": "array",
@@ -83,7 +67,8 @@
             "type": "string",
             "enum": [
               "manha",
-              "tarde"
+              "tarde",
+              "noite"
             ]
           },
           "temperatura_ambiente": {
@@ -93,8 +78,8 @@
             "type": "string",
             "enum": [
               "bom",
-              "chuva",
-              "instavel"
+              "instavel",
+              "chuva"
             ]
           }
         }
@@ -114,6 +99,9 @@
             },
             "na": {
               "type": "boolean"
+            },
+            "km_bota_fora": {
+              "type": "string"
             }
           }
         },
@@ -128,6 +116,9 @@
             },
             "na": {
               "type": "boolean"
+            },
+            "tipo_material": {
+              "type": "string"
             }
           }
         },
@@ -167,6 +158,9 @@
               "type": "boolean"
             }
           }
+        },
+        "espessura_reciclada": {
+          "type": "string"
         },
         "teste_carga": {
           "type": "object",
@@ -224,7 +218,27 @@
             }
           }
         },
-        "isc": {
+        "taxa_agregado": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
+        },
+        "taxa_cimento": {
           "type": "object",
           "properties": {
             "realizado": {
@@ -304,23 +318,85 @@
             }
           }
         },
-        "variacao_umidade_quantidade": {
-          "type": "number"
+        "moldagem_resistencia": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
         },
-        "variacao_umidade_resultados": {
-          "type": "string"
+        "viga_benkelman": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
         },
-        "variacao_umidade_conforme": {
-          "type": "boolean"
+        "taxa_pintura_ligacao": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
         },
-        "grau_compactacao_quantidade": {
-          "type": "number"
-        },
-        "grau_compactacao_resultados": {
-          "type": "string"
-        },
-        "grau_compactacao_conforme": {
-          "type": "boolean"
+        "finura_cimento": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "quantidade": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            },
+            "resultados": {
+              "type": "string"
+            },
+            "observacoes": {
+              "type": "string"
+            }
+          }
         }
       }
     },

@@ -1,0 +1,311 @@
+{
+  "name": "ChecklistMRAF",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "string",
+      "format": "date"
+    },
+    "jornada": {
+      "type": "object",
+      "properties": {
+        "horario_inicio": {
+          "type": "string"
+        },
+        "horario_fim": {
+          "type": "string"
+        }
+      }
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "empreiteira": {
+      "type": "string"
+    },
+    "usina": {
+      "type": "string"
+    },
+    "projeto_utilizado": {
+      "type": "string"
+    },
+    "faixa_especificada": {
+      "type": "string"
+    },
+    "ligante": {
+      "type": "string"
+    },
+    "pedreira": {
+      "type": "string"
+    },
+    "inspetor_campo": {
+      "type": "string"
+    },
+    "engenheiro_responsavel": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "trecho": {
+      "type": "string"
+    },
+    "ensaio_realizado_por": {
+      "type": "string"
+    },
+    "periodos_clima": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "periodo": {
+            "type": "string",
+            "enum": [
+              "manha",
+              "tarde"
+            ]
+          },
+          "temperatura_ambiente": {
+            "type": "number"
+          },
+          "condicoes_climaticas": {
+            "type": "string",
+            "enum": [
+              "bom",
+              "nublado",
+              "chuva"
+            ]
+          }
+        }
+      }
+    },
+    "condicionamento_insumos": {
+      "type": "object",
+      "properties": {
+        "agregados_separados": {
+          "type": "boolean"
+        },
+        "agregados_cobertos": {
+          "type": "boolean"
+        },
+        "filler_utilizado": {
+          "type": "string"
+        },
+        "utilizacao_aditivos": {
+          "type": "boolean"
+        },
+        "agua_contaminada": {
+          "type": "boolean"
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "preparacao_superficie": {
+      "type": "object",
+      "properties": {
+        "superficie_umida": {
+          "type": "boolean"
+        },
+        "temperatura_pavimento": {
+          "type": "number"
+        },
+        "pavimento_patologias": {
+          "type": "boolean"
+        },
+        "superficie_fresada": {
+          "type": "boolean"
+        },
+        "superficie_limpa": {
+          "type": "boolean"
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "acompanhamento_aplicacao": {
+      "type": "object",
+      "properties": {
+        "tempo_rompimento_cura": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "string"
+            }
+          }
+        },
+        "taxa_aplicacao": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            }
+          }
+        },
+        "residuo_emulsao": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            }
+          }
+        },
+        "espessura_camada": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            }
+          }
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "controle_aplicacao": {
+      "type": "object",
+      "properties": {
+        "km_estaca_inicial": {
+          "type": "string"
+        },
+        "lado_inicial": {
+          "type": "string",
+          "enum": [
+            "direito",
+            "esquerdo",
+            "ambos"
+          ]
+        },
+        "km_estaca_final": {
+          "type": "string"
+        },
+        "lado_final": {
+          "type": "string",
+          "enum": [
+            "direito",
+            "esquerdo",
+            "ambos"
+          ]
+        },
+        "quantidade_aplicada_m2": {
+          "type": "number"
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "observacoes_gerais": {
+      "type": "string"
+    },
+    "acoes_corretivas_realizado": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "acoes_corretivas_descricao": {
+      "type": "string"
+    },
+    "nao_conformidades": {
+      "type": "array",
+      "description": "Lista de n\u00e3o conformidades identificadas",
+      "items": {
+        "type": "object",
+        "properties": {
+          "local_nc": {
+            "type": "string"
+          },
+          "categoria_nc": {
+            "type": "string"
+          },
+          "parametro_nc": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}

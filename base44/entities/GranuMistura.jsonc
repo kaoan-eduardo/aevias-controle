@@ -136,7 +136,10 @@
       "default": "rascunho"
     },
     "approved": {
-      "type": "boolean",
+      "type": [
+        "boolean",
+        "null"
+      ],
       "default": null
     },
     "approved_by": {

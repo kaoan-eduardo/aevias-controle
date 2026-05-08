@@ -1,0 +1,267 @@
+{
+  "name": "ChecklistConcretagem",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "string",
+      "format": "date"
+    },
+    "jornada": {
+      "type": "object",
+      "properties": {
+        "horario_inicio": {
+          "type": "string"
+        },
+        "horario_fim": {
+          "type": "string"
+        }
+      }
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "concreteira": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "trecho": {
+      "type": "string"
+    },
+    "fck": {
+      "type": "number"
+    },
+    "volume": {
+      "type": "number"
+    },
+    "inspetor_campo": {
+      "type": "string"
+    },
+    "empreiteira": {
+      "type": "string"
+    },
+    "estrutura": {
+      "type": "string"
+    },
+    "ensaio_realizado_por": {
+      "type": "string",
+      "enum": [
+        "Afirma Evias",
+        "Empreiteira"
+      ],
+      "default": "Afirma Evias",
+      "description": "Quem realizou o ensaio"
+    },
+    "periodos_clima": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "periodo": {
+            "type": "string",
+            "enum": [
+              "manha",
+              "tarde",
+              "noite"
+            ]
+          },
+          "temperatura_ambiente": {
+            "type": "number"
+          },
+          "condicoes_climaticas": {
+            "type": "string",
+            "enum": [
+              "bom",
+              "instavel",
+              "chuva"
+            ]
+          }
+        }
+      }
+    },
+    "cargas_concreto": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero_carga": {
+            "type": "number"
+          },
+          "nota_fiscal": {
+            "type": "string"
+          },
+          "placa_betoneira": {
+            "type": "string"
+          },
+          "slump_test": {
+            "type": "object",
+            "properties": {
+              "realizado": {
+                "type": "boolean"
+              },
+              "resultado": {
+                "type": "number"
+              },
+              "limite": {
+                "type": "string"
+              },
+              "conforme": {
+                "type": "boolean"
+              }
+            }
+          },
+          "espessura_camada": {
+            "type": "object",
+            "properties": {
+              "realizado": {
+                "type": "boolean"
+              },
+              "resultado": {
+                "type": "number"
+              },
+              "limite": {
+                "type": "string"
+              },
+              "conforme": {
+                "type": "boolean"
+              }
+            }
+          },
+          "equipamento_lancamento": {
+            "type": "string",
+            "enum": [
+              "convencional",
+              "bombeado"
+            ]
+          },
+          "superficie_tratada_limpa": {
+            "type": "boolean"
+          },
+          "adensamento_realizado": {
+            "type": "boolean"
+          },
+          "observacoes_lancamento": {
+            "type": "string"
+          },
+          "moldado_fiscalizacao": {
+            "type": "boolean"
+          },
+          "corpos_prova": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "dias_ruptura": {
+                  "type": "number",
+                  "enum": [
+                    3,
+                    7,
+                    28
+                  ]
+                },
+                "tipo_ruptura": {
+                  "type": "string",
+                  "enum": [
+                    "compressao_axial",
+                    "comp_diametral",
+                    "tracao_flexao"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "observacoes_gerais": {
+      "type": "string"
+    },
+    "acoes_corretivas_realizado": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "acoes_corretivas_descricao": {
+      "type": "string"
+    },
+    "nao_conformidades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "local_nc": {
+            "type": "string"
+          },
+          "categoria_nc": {
+            "type": "string"
+          },
+          "parametro_nc": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id",
+    "data",
+    "concreteira"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}

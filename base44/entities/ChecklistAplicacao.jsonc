@@ -1,0 +1,278 @@
+{
+  "name": "ChecklistAplicacao",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "string",
+      "format": "date"
+    },
+    "jornada": {
+      "type": "object",
+      "properties": {
+        "horario_inicio": {
+          "type": "string"
+        },
+        "horario_fim": {
+          "type": "string"
+        }
+      }
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "engenheiro_responsavel": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "trecho": {
+      "type": "string"
+    },
+    "empreiteira": {
+      "type": "string"
+    },
+    "usina": {
+      "type": "string"
+    },
+    "projeto_utilizado": {
+      "type": "string"
+    },
+    "faixa_especificada": {
+      "type": "string"
+    },
+    "ligante": {
+      "type": "string"
+    },
+    "pedreira": {
+      "type": "string"
+    },
+    "inspetor_campo": {
+      "type": "string"
+    },
+    "ensaio_realizado_por": {
+      "type": "string"
+    },
+    "periodos_clima": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "fresagem_preparacao": {
+      "type": "object"
+    },
+    "pintura_ligacao": {
+      "type": "object",
+      "properties": {
+        "pintura_barra_espargidora": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "string"
+            }
+          }
+        },
+        "tempo_rompimento_cura": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "string"
+            }
+          }
+        },
+        "taxa_pintura": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            }
+          }
+        },
+        "residuo_emulsao": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            }
+          }
+        },
+        "taxa_pintura_residual": {
+          "type": "object",
+          "properties": {
+            "realizado": {
+              "type": "boolean"
+            },
+            "resultado": {
+              "type": "number"
+            },
+            "conforme": {
+              "type": "boolean"
+            }
+          }
+        },
+        "observacoes": {
+          "type": "string"
+        }
+      }
+    },
+    "controle_aplicacao": {
+      "type": "object"
+    },
+    "observacoes_gerais": {
+      "type": "string"
+    },
+    "acoes_corretivas_realizado": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "acoes_corretivas_descricao": {
+      "type": "string"
+    },
+    "nao_conformidades": {
+      "type": "array",
+      "description": "Lista de n\u00e3o conformidades identificadas",
+      "items": {
+        "type": "object",
+        "properties": {
+          "local_nc": {
+            "type": "string"
+          },
+          "categoria_nc": {
+            "type": "string"
+          },
+          "parametro_nc": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "medicoes_geometricas": {
+      "type": "object",
+      "properties": {
+        "subtrecho": {
+          "type": "string"
+        },
+        "servico": {
+          "type": "string"
+        },
+        "medicoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "estaca_inicial": {
+                "type": "string"
+              },
+              "estaca_final": {
+                "type": "string"
+              },
+              "lado": {
+                "type": "string"
+              },
+              "faixa": {
+                "type": "string"
+              },
+              "comprimento": {
+                "type": "number"
+              },
+              "largura": {
+                "type": "number"
+              },
+              "altura": {
+                "type": "number"
+              },
+              "placa": {
+                "type": "string"
+              },
+              "quantidade": {
+                "type": "number"
+              },
+              "temperatura": {
+                "type": "number"
+              },
+              "observacoes": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "obra_id"
+  ],
+  "rls": {
+    "read": {},
+    "write": {}
+  }
+}
