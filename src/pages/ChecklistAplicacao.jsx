@@ -15,10 +15,12 @@ import { uploadMultipleFiles } from "@/utils/imageUpload";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
-const getInitialFormData = () => ({
+const getInitialFormData = () => {
+  const today = new Date().toISOString().split('T')[0];
+  return {
   obra_id: "",
   project_id: "",
-  data: new Date().toISOString().split('T')[0],
+  data: today,
   jornada: {
     horario_inicio: "",
     horario_fim: ""
@@ -75,7 +77,8 @@ const getInitialFormData = () => ({
     medicoes: []
   },
   status: "rascunho"
-});
+  };
+};
 
 export default function ChecklistAplicacaoPage() {
   const [formData, setFormData] = useState(getInitialFormData());
