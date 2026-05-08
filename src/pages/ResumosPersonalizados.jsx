@@ -362,13 +362,54 @@ const CAMPOS_POR_TIPO = {
   ]
 };
 
+// ─── Helpers de módulo ────────────────────────────────────────────────────────
+
+const getLabelTipo = (tipo) =>
+  getLabelTipo(tipo);
+
+const obrasDeRegionais = (regionais, obras) => {
+  const ids = new Set(
+    regionais.flatMap(r => obras.filter(o => o.regional_id === r.id).map(o => o.id))
+  );
+  return obras.filter(o => ids.has(o.id));
+};
+
+const filtrarObrasPorAcesso = (obras, regionais, accessLevel, email) => {
+  const emailLow = email.toLowerCase();
+
+  if (accessLevel === 'cliente') {
+    const regionaisDoUsuario = regionais.filter(r =>
+      (r.clientes_responsaveis || []).some(e => e.toLowerCase() === emailLow)
+    );
+    return obrasDeRegionais(regionaisDoUsuario, obras);
+  }
+
+  if (accessLevel === 'sala_tecnica_afirmaevias') {
+    const regionaisDoUsuario = regionais.filter(r =>
+      (r.salas_tecnicas_responsaveis || []).some(e => e.toLowerCase() === emailLow)
+    );
+    return obrasDeRegionais(regionaisDoUsuario, obras);
+  }
+
+  if (accessLevel === 'gestor_contrato') {
+    const regionaisDoUsuario = regionais.filter(r =>
+      r.gestor_contrato_responsavel?.toLowerCase() === emailLow ||
+      (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === emailLow)
+    );
+    return obrasDeRegionais(regionaisDoUsuario, obras);
+  }
+
+  return obras; // admin / sala_tecnica sem restrição adicional
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function ResumosPersonalizadosPage() {
   const [user, setUser] = useState(null);
   const [obras, setObras] = useState([]);
   const [regionais, setRegionais] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingData, setLoadingData] = useState(false);
-  const [loadingFilters, setLoadingFilters] = useState(false);
   
   // Filtros
   const [obraId, setObraId] = useState("");
@@ -402,52 +443,7 @@ export default function ResumosPersonalizadosPage() {
       setRegionais(regionaisData);
 
       // Filtrar obras por permissão
-      let availableObras = obrasData;
-
-      if (userAccessLevel === 'cliente') {
-        const regionaisDoCliente = regionaisData.filter(regional => {
-          const clientes = regional.clientes_responsaveis || [];
-          return clientes.some(email => email.toLowerCase() === userData.email.toLowerCase());
-        });
-
-        const obraIds = new Set();
-        regionaisDoCliente.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
-      } else if (userAccessLevel === 'sala_tecnica_afirmaevias') {
-        const regionaisDaSala = regionaisData.filter(regional => {
-          const salas = regional.salas_tecnicas_responsaveis || [];
-          return salas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-        });
-
-        const obraIds = new Set();
-        regionaisDaSala.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
-      } else if (userAccessLevel === 'gestor_contrato') {
-        const regionaisDoGestor = regionaisData.filter(regional => {
-          // Verificar campo único (legado) e array de gestores
-          const isGestorUnico = regional.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase();
-          const isGestorArray = (regional.gestores_contrato_responsaveis || []).some(
-            email => email.toLowerCase() === userData.email.toLowerCase()
-          );
-          return isGestorUnico || isGestorArray;
-        });
-
-        const obraIds = new Set();
-        regionaisDoGestor.forEach(regional => {
-          const obrasRegional = obrasData.filter(obra => obra.regional_id === regional.id);
-          obrasRegional.forEach(obra => obraIds.add(obra.id));
-        });
-
-        availableObras = obrasData.filter(obra => obraIds.has(obra.id));
-      }
+      const availableObras = filtrarObrasPorAcesso(obrasData, regionaisData, userAccessLevel, userData.email);
 
       setObras(availableObras);
 
@@ -721,7 +717,7 @@ export default function ResumosPersonalizadosPage() {
           
           cps.forEach((cp, idx) => {
             const linha = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              tipo: getLabelTipo(tipo),
               id: `${ensaio.id}_CP${idx + 1}`,
               data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
             };
@@ -751,7 +747,7 @@ export default function ResumosPersonalizadosPage() {
           
           furos.forEach((furo, idx) => {
             const linha = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              tipo: getLabelTipo(tipo),
               id: `${ensaio.id}_Furo${idx + 1}`,
               data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
             };
@@ -781,7 +777,7 @@ export default function ResumosPersonalizadosPage() {
           
           ensaiosArray.forEach((ens, idx) => {
             const linha = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              tipo: getLabelTipo(tipo),
               id: `${ensaio.id}_Ensaio${idx + 1}`,
               data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
             };
@@ -812,7 +808,7 @@ export default function ResumosPersonalizadosPage() {
           if (cargas.length > 0) {
             cargas.forEach((carga, idx) => {
               const linha = {
-                tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+                tipo: getLabelTipo(tipo),
                 id: `${ensaio.id}_Carga${idx + 1}`,
                 data: formatValue(ensaio.data, 'data')
               };
@@ -859,7 +855,7 @@ export default function ResumosPersonalizadosPage() {
           } else {
             // Se não houver cargas, criar uma linha única
             const linha = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              tipo: getLabelTipo(tipo),
               id: ensaio.id,
               data: formatValue(ensaio.data, 'data')
             };
@@ -885,7 +881,7 @@ export default function ResumosPersonalizadosPage() {
           if (rodadas.length > 0) {
             rodadas.forEach((rodada, idx) => {
               const linha = {
-                tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+                tipo: getLabelTipo(tipo),
                 id: `${ensaio.id}_Rodada${idx + 1}`,
                 data: formatValue(ensaio.data, 'data')
               };
@@ -923,7 +919,7 @@ export default function ResumosPersonalizadosPage() {
           } else {
             // Se não houver rodadas, criar uma linha única
             const linha = {
-              tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+              tipo: getLabelTipo(tipo),
               id: ensaio.id,
               data: formatValue(ensaio.data, 'data')
             };
@@ -960,7 +956,7 @@ export default function ResumosPersonalizadosPage() {
         } else if (tipo === 'ChecklistTerraplanagem' || tipo === 'ChecklistReciclagem') {
           // Para ChecklistTerraplanagem e ChecklistReciclagem
           const linha = {
-            tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+            tipo: getLabelTipo(tipo),
             id: ensaio.id,
             data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
           };
@@ -1043,7 +1039,7 @@ export default function ResumosPersonalizadosPage() {
           }
 
           const linha = {
-            tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
+            tipo: getLabelTipo(tipo),
             id: ensaio.id,
             data: ensaio.data_ensaio || ensaio.data || ensaio.extraction_date || '-'
           };

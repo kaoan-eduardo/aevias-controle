@@ -1,19 +1,12 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.7.1';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-// Mapeamento FIXO de chaves antigas para novas (padronizadas DNIT/ASTM)
+// Apenas mapeamentos que realmente transformam a chave (antigas -> novas)
 const MAPEAMENTO_MIGRACAO = {
-  // Chaves erradas -> Chaves corretas
-  'peneira_4_8mm': 'peneira_4_75mm',
-  'peneira_2_4mm': 'peneira_2_36mm',
-  'peneira_1_2mm': 'peneira_1_18mm',
-  'peneira_0_6mm': 'peneira_0_6mm',    // já está correta
-  'peneira_0_3mm': 'peneira_0_3mm',    // já está correta
-  'peneira_0_15mm': 'peneira_0_15mm',  // já está correta
-  'peneira_0_075mm': 'peneira_0_075mm', // já está correta
-  'peneira_9_5mm': 'peneira_9_5mm',    // já está correta
-  'peneira_12_5mm': 'peneira_12_5mm',  // já está correta
-  'peneira_19mm': 'peneira_19_0mm',    // normalizar para 19.0
-  'peneira_25mm': 'peneira_25_0mm',    // normalizar para 25.0
+  'peneira_4_8mm':  'peneira_4_75mm',
+  'peneira_2_4mm':  'peneira_2_36mm',
+  'peneira_1_2mm':  'peneira_1_18mm',
+  'peneira_19mm':   'peneira_19_0mm',
+  'peneira_25mm':   'peneira_25_0mm',
 };
 
 const migrarObjeto = (obj, prefixoLog = '') => {
