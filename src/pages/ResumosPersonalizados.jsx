@@ -503,6 +503,41 @@ export default function ResumosPersonalizadosPage() {
     return media.toFixed(2);
   };
 
+  const processarSubfieldControleCauq = (subfield, controleCauq) => {
+    const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
+    const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
+
+    if (subfield.key.startsWith('teor_ligante.rotarex_')) {
+      const idx = parseInt(subfield.key.split('_').pop()) - 1;
+      return extracaoRotarex?.resultados?.[idx] ?? undefined;
+    }
+    if (subfield.key.startsWith('teor_ligante.soxhlet_')) {
+      const idx = parseInt(subfield.key.split('_').pop()) - 1;
+      return extracaoSoxhlet?.resultados?.[idx] ?? undefined;
+    }
+    if (subfield.key === 'teor_ligante.quantidade') {
+      return (extracaoRotarex?.quantidade || 0) + (extracaoSoxhlet?.quantidade || 0);
+    }
+    if (subfield.key === 'teor_ligante.conforme') {
+      const cr = extracaoRotarex?.conforme;
+      const cs = extracaoSoxhlet?.conforme;
+      if (cr === null && cs === null) return null;
+      if (cr === false || cs === false) return false;
+      if (cr === true || cs === true) return true;
+      return undefined;
+    }
+    if (subfield.key.startsWith('vam.')) {
+      const vam = controleCauq.vam_marshall;
+      if (subfield.key === 'vam.resultados') return vam?.resultados?.join(', ');
+      if (subfield.key === 'vam.quantidade') return vam?.quantidade;
+      if (subfield.key === 'vam.conforme') return vam?.conforme;
+    }
+    if (subfield.key === 'rtcd_25c.resultados') return controleCauq.rtcd_25c?.resultados?.join(', ');
+    if (subfield.key === 'rtcd_25c.quantidade') return controleCauq.rtcd_25c?.quantidade;
+    if (subfield.key === 'rtcd_25c.conforme') return controleCauq.rtcd_25c?.conforme;
+    return getNestedValue(controleCauq, subfield.key);
+  };
+
   const calcularGranulometriaPassante = (ensaio, peneira) => {
     if (!ensaio?.granulometria?.peso_retido_peneiras) return null;
     
@@ -844,14 +879,6 @@ export default function ResumosPersonalizadosPage() {
             resultados.push(linha);
           }
         } else if (tipo === 'ChecklistUsina') {
-          console.log('=== DEBUG ChecklistUsina ===');
-          console.log('Ensaio ID:', ensaio.id);
-          console.log('Ensaio completo:', JSON.stringify(ensaio, null, 2));
-          console.log('Controle CAUQ:', ensaio.controle_cauq);
-          console.log('Teor Ligante:', ensaio.controle_cauq?.teor_ligante);
-          console.log('Rodadas Produção:', ensaio.rodadas_producao);
-          console.log('Keys do ensaio:', Object.keys(ensaio));
-
           // Para ChecklistUsina, criar uma linha por rodada de produção se houver
           const rodadas = ensaio.rodadas_producao || [];
 
@@ -879,98 +906,10 @@ export default function ResumosPersonalizadosPage() {
                     linha[subfield.label] = formatValue(value, subfield.key);
                   });
                 } else if (campoKey === 'controle_cauq') {
-                  // Tratar controle CAUQ - pegar valores médios ou específicos da rodada
                   const controleCauq = ensaio.controle_cauq || {};
-                  console.log('=== Processando controle_cauq para rodada', idx + 1, '===');
-                  console.log('controleCauq keys:', Object.keys(controleCauq));
-                  console.log('controleCauq completo:', JSON.stringify(controleCauq, null, 2));
-
                   campo.subfields.forEach(subfield => {
-                    let value;
-
-                    console.log('>>> Processando subfield:', subfield.key, '|', subfield.label);
-
-                    // Para teor_ligante
-                    if (subfield.key.includes('teor_ligante')) {
-                      const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
-                      const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
-                      
-                      console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
-                      console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
-                      
-                      // Rotarex 1, 2, 3
-                      if (subfield.key.startsWith('teor_ligante.rotarex_')) {
-                        const numResultado = parseInt(subfield.key.split('_').pop());
-                        const idx = numResultado - 1;
-                        
-                        if (extracaoRotarex?.resultados && Array.isArray(extracaoRotarex.resultados)) {
-                          value = extracaoRotarex.resultados[idx];
-                        }
-                        
-                        console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
-                      }
-                      // Soxhlet 1, 2, 3
-                      else if (subfield.key.startsWith('teor_ligante.soxhlet_')) {
-                        const numResultado = parseInt(subfield.key.split('_').pop());
-                        const idx = numResultado - 1;
-                        
-                        if (extracaoSoxhlet?.resultados && Array.isArray(extracaoSoxhlet.resultados)) {
-                          value = extracaoSoxhlet.resultados[idx];
-                        }
-                        
-                        console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
-                      }
-                      // Quantidade e conforme
-                      else if (subfield.key === 'teor_ligante.quantidade') {
-                        // Somar quantidade de rotarex e soxhlet
-                        const qtdRotarex = extracaoRotarex?.quantidade || 0;
-                        const qtdSoxhlet = extracaoSoxhlet?.quantidade || 0;
-                        value = qtdRotarex + qtdSoxhlet;
-                      } else if (subfield.key === 'teor_ligante.conforme') {
-                        // Conforme se ambos forem conformes (ou null se nenhum foi realizado)
-                        const conformeRotarex = extracaoRotarex?.conforme;
-                        const conformeSoxhlet = extracaoSoxhlet?.conforme;
-                        
-                        if (conformeRotarex === null && conformeSoxhlet === null) {
-                          value = null;
-                        } else if (conformeRotarex === false || conformeSoxhlet === false) {
-                          value = false;
-                        } else if (conformeRotarex === true || conformeSoxhlet === true) {
-                          value = true;
-                        }
-                      }
-                    } 
-                     // Campos específicos de VAM
-                     else if (subfield.key.startsWith('vam.')) {
-                       const vamMarshall = controleCauq.vam_marshall;
-                       if (subfield.key === 'vam.resultados') {
-                         if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
-                           value = vamMarshall.resultados.join(', ');
-                         }
-                       } else if (subfield.key === 'vam.quantidade') {
-                         value = vamMarshall?.quantidade;
-                       } else if (subfield.key === 'vam.conforme') {
-                         value = vamMarshall?.conforme;
-                       }
-                     } 
-                     // Campos específicos de RTCD
-                     else if (subfield.key === 'rtcd_25c.resultados') {
-                       const rtcd = controleCauq.rtcd_25c;
-                       if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
-                         value = rtcd.resultados.join(', ');
-                       }
-                     } else if (subfield.key === 'rtcd_25c.quantidade') {
-                       value = controleCauq.rtcd_25c?.quantidade;
-                     } else if (subfield.key === 'rtcd_25c.conforme') {
-                       value = controleCauq.rtcd_25c?.conforme;
-                     } else {
-                     // Outros campos do controle CAUQ
-                     value = getNestedValue(controleCauq, subfield.key);
-                     console.log('>>> Valor via getNestedValue:', value);
-                    }
-
+                    const value = processarSubfieldControleCauq(subfield, controleCauq);
                     linha[subfield.label] = formatValue(value, subfield.key);
-                    console.log('>>> Linha[' + subfield.label + ']:', linha[subfield.label]);
                   });
                 } else {
                   // Campos do ensaio principal
@@ -982,7 +921,6 @@ export default function ResumosPersonalizadosPage() {
               resultados.push(linha);
             });
           } else {
-            console.log('Sem rodadas - criando linha única');
             // Se não houver rodadas, criar uma linha única
             const linha = {
               tipo: TIPOS_ENSAIO.find(t => t.value === tipo)?.label || tipo,
@@ -1000,94 +938,9 @@ export default function ResumosPersonalizadosPage() {
                 });
               } else if (campoKey === 'controle_cauq') {
                 const controleCauq = ensaio.controle_cauq || {};
-                console.log('Processando controle_cauq (sem rodadas)');
-                console.log('controleCauq:', controleCauq);
-
                 campo.subfields.forEach(subfield => {
-                  let value;
-
-                  console.log('>>> Processando subfield (sem rodadas):', subfield.key, '|', subfield.label);
-
-                  // Para teor_ligante
-                  if (subfield.key.includes('teor_ligante')) {
-                    const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
-                    const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
-                    
-                    console.log('>>> extracao_ligante_rotarex:', extracaoRotarex);
-                    console.log('>>> extracao_ligante_soxhlet:', extracaoSoxhlet);
-                    
-                    // Rotarex 1, 2, 3
-                    if (subfield.key.startsWith('teor_ligante.rotarex_')) {
-                      const numResultado = parseInt(subfield.key.split('_').pop());
-                      const idx = numResultado - 1;
-                      
-                      if (extracaoRotarex?.resultados && Array.isArray(extracaoRotarex.resultados)) {
-                        value = extracaoRotarex.resultados[idx];
-                      }
-                      
-                      console.log('>>> Teor ligante rotarex_' + numResultado + ':', value);
-                    }
-                    // Soxhlet 1, 2, 3
-                    else if (subfield.key.startsWith('teor_ligante.soxhlet_')) {
-                      const numResultado = parseInt(subfield.key.split('_').pop());
-                      const idx = numResultado - 1;
-                      
-                      if (extracaoSoxhlet?.resultados && Array.isArray(extracaoSoxhlet.resultados)) {
-                        value = extracaoSoxhlet.resultados[idx];
-                      }
-                      
-                      console.log('>>> Teor ligante soxhlet_' + numResultado + ':', value);
-                    }
-                    // Quantidade e conforme
-                    else if (subfield.key === 'teor_ligante.quantidade') {
-                      // Somar quantidade de rotarex e soxhlet
-                      const qtdRotarex = extracaoRotarex?.quantidade || 0;
-                      const qtdSoxhlet = extracaoSoxhlet?.quantidade || 0;
-                      value = qtdRotarex + qtdSoxhlet;
-                    } else if (subfield.key === 'teor_ligante.conforme') {
-                      // Conforme se ambos forem conformes (ou null se nenhum foi realizado)
-                      const conformeRotarex = extracaoRotarex?.conforme;
-                      const conformeSoxhlet = extracaoSoxhlet?.conforme;
-                      
-                      if (conformeRotarex === null && conformeSoxhlet === null) {
-                        value = null;
-                      } else if (conformeRotarex === false || conformeSoxhlet === false) {
-                        value = false;
-                      } else if (conformeRotarex === true || conformeSoxhlet === true) {
-                        value = true;
-                      }
-                    }
-                  } 
-                   // Campos específicos de VAM (sem rodadas)
-                   else if (subfield.key.startsWith('vam.')) {
-                     const vamMarshall = controleCauq.vam_marshall;
-                     if (subfield.key === 'vam.resultados') {
-                       if (vamMarshall?.resultados && Array.isArray(vamMarshall.resultados)) {
-                         value = vamMarshall.resultados.join(', ');
-                       }
-                     } else if (subfield.key === 'vam.quantidade') {
-                       value = vamMarshall?.quantidade;
-                     } else if (subfield.key === 'vam.conforme') {
-                       value = vamMarshall?.conforme;
-                     }
-                   } 
-                   // Campos específicos de RTCD (sem rodadas)
-                   else if (subfield.key === 'rtcd_25c.resultados') {
-                     const rtcd = controleCauq.rtcd_25c;
-                     if (rtcd?.resultados && Array.isArray(rtcd.resultados)) {
-                       value = rtcd.resultados.join(', ');
-                     }
-                   } else if (subfield.key === 'rtcd_25c.quantidade') {
-                     value = controleCauq.rtcd_25c?.quantidade;
-                   } else if (subfield.key === 'rtcd_25c.conforme') {
-                     value = controleCauq.rtcd_25c?.conforme;
-                   } else {
-                   value = getNestedValue(controleCauq, subfield.key);
-                   console.log('>>> Valor via getNestedValue:', value);
-                  }
-
+                  const value = processarSubfieldControleCauq(subfield, controleCauq);
                   linha[subfield.label] = formatValue(value, subfield.key);
-                  console.log('>>> Linha[' + subfield.label + ']:', linha[subfield.label]);
                 });
               } else if (campo?.subfields) {
                 // Outros campos com subfields
@@ -1104,7 +957,6 @@ export default function ResumosPersonalizadosPage() {
 
             resultados.push(linha);
           }
-          console.log('=== FIM DEBUG ChecklistUsina ===');
         } else if (tipo === 'ChecklistTerraplanagem' || tipo === 'ChecklistReciclagem') {
           // Para ChecklistTerraplanagem e ChecklistReciclagem
           const linha = {
