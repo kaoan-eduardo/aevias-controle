@@ -434,12 +434,10 @@ const AppLayout = ({ children }) => {
 
   useEffect(() => {
     // Desabilitar tradução automática
-    const htmlEl = document.documentElement;
-    htmlEl.setAttribute('translate', 'no');
-    htmlEl.setAttribute('lang', 'pt-BR');
+    document.querySelector('html')?.setAttribute('translate', 'no');
+    document.querySelector('html')?.setAttribute('lang', 'pt-BR');
     
-    const metaTag = document.querySelector('meta[name="google"]');
-    if (!metaTag) {
+    if (!document.querySelector('meta[name="google"]')) {
       const meta = document.createElement('meta');
       meta.name = 'google';
       meta.content = 'notranslate';
