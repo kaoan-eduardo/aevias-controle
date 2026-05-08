@@ -475,7 +475,11 @@ const SidebarMenuSkeleton = React.forwardRef(function SidebarMenuSkeleton(
   { className, showIcon = false, ...props },
   ref
 ) {
-  const width = React.useMemo(function() { return `${Math.floor(Math.random() * 40) + 50}%` }, [])
+  const id = React.useId()
+  const width = React.useMemo(function() {
+    const seed = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+    return `${(seed % 40) + 50}%`
+  }, [id])
   return (
     <div ref={ref} data-sidebar="menu-skeleton" className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)} {...props}>
       {showIcon && <Skeleton className="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />}
