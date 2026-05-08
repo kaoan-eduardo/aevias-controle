@@ -114,7 +114,6 @@ Deno.serve(async (req) => {
 
                 const htmlContent = await response.text();
                 console.log('  ✅ HTML obtido -', htmlContent.length, 'bytes');
-                console.log('  📝 Primeiros 100 caracteres:', htmlContent.substring(0, 100));
 
                 const sanitizedName = nome.replace(/[^a-zA-Z0-9_\-\s]/g, '_').substring(0, 200);
                 const fileName = `${sanitizedName}.html`;
