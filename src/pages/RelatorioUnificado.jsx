@@ -104,28 +104,30 @@ function RecordRenderer({ record, obra, regional, project, user, allUsers }) {
           />
         </div>
       );
-    default: {
-      // Para tipos sem componente embutido, mostrar card simples
-      const typeInfo = getEnsaioTypeInfo(record);
-      const dataFormatted = getDataEnsaio(record)
-        ? new Date(getDataEnsaio(record)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
-        : '-';
-      return (
-        <div className="border-2 border-slate-300 rounded-lg p-6 bg-white">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-lg font-bold text-slate-700">{typeInfo.name}</span>
-            <span className="text-sm text-slate-500">— {dataFormatted}</span>
-          </div>
-          <p className="text-sm text-slate-500">
-            Laboratorista: {record.laboratorista_name || record.created_by || 'N/A'}
-          </p>
-          {record.observacoes && (
-            <p className="text-sm text-slate-600 mt-2">{record.observacoes}</p>
-          )}
-        </div>
-      );
-    }
+    default:
+      return <DefaultRecordCard record={record} />;
   }
+}
+
+function DefaultRecordCard({ record }) {
+  const typeInfo = getEnsaioTypeInfo(record);
+  const dataFormatted = getDataEnsaio(record)
+    ? new Date(getDataEnsaio(record)).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+    : '-';
+  return (
+    <div className="border-2 border-slate-300 rounded-lg p-6 bg-white">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-lg font-bold text-slate-700">{typeInfo.name}</span>
+        <span className="text-sm text-slate-500">— {dataFormatted}</span>
+      </div>
+      <p className="text-sm text-slate-500">
+        Laboratorista: {record.laboratorista_name || record.created_by || 'N/A'}
+      </p>
+      {record.observacoes && (
+        <p className="text-sm text-slate-600 mt-2">{record.observacoes}</p>
+      )}
+    </div>
+  );
 }
 
 export default function RelatorioUnificado() {
