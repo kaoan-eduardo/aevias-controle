@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
                     throw new Error('Dados do ensaio incompletos');
                 }
                 
-                let reportUrl;
+                let reportUrl = '';
                 const baseUrl = Deno.env.get('BASE44_APP_URL') || 'https://quaevias.base44.app';
                 
                 if (tipo === 'DiarioObra') {
