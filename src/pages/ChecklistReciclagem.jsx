@@ -19,6 +19,38 @@ const SectionTitle = ({ children }) => (
   </CardHeader>
 );
 
+const CheckboxGroup = ({ value, onChange }) => (
+  <div className="flex gap-4 justify-center" onClick={(e) => e.stopPropagation()}>
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.sim || false}
+        onChange={(e) => { e.stopPropagation(); onChange('sim'); }}
+        className="w-4 h-4 accent-green-500"
+      />
+      <span className="text-xs">Sim</span>
+    </label>
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.nao || false}
+        onChange={(e) => { e.stopPropagation(); onChange('nao'); }}
+        className="w-4 h-4 accent-red-500"
+      />
+      <span className="text-xs">Não</span>
+    </label>
+    <label className="flex items-center gap-1 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={value?.na || false}
+        onChange={(e) => { e.stopPropagation(); onChange('na'); }}
+        className="w-4 h-4 accent-gray-500"
+      />
+      <span className="text-xs">N/A</span>
+    </label>
+  </div>
+);
+
 export default function ChecklistReciclagem() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -498,38 +530,6 @@ export default function ChecklistReciclagem() {
       </div>
     );
   }
-
-  const CheckboxGroup = ({ value, onChange }) => (
-    <div className="flex gap-4 justify-center" onClick={(e) => e.stopPropagation()}>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.sim || false}
-          onChange={(e) => { e.stopPropagation(); onChange('sim'); }}
-          className="w-4 h-4 accent-green-500"
-        />
-        <span className="text-xs">Sim</span>
-      </label>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.nao || false}
-          onChange={(e) => { e.stopPropagation(); onChange('nao'); }}
-          className="w-4 h-4 accent-red-500"
-        />
-        <span className="text-xs">Não</span>
-      </label>
-      <label className="flex items-center gap-1 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={value?.na || false}
-          onChange={(e) => { e.stopPropagation(); onChange('na'); }}
-          className="w-4 h-4 accent-gray-500"
-        />
-        <span className="text-xs">N/A</span>
-      </label>
-    </div>
-  );
 
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
