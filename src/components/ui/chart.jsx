@@ -46,35 +46,36 @@ const ChartContainer = React.forwardRef(({ id, className, children, config, ...p
 })
 ChartContainer.displayName = "Chart"
 
-const ChartStyle = ({
-  id,
-  config
-}) => {
+const ChartStyle = ({ id, config }) => {
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
 
-  if (!colorConfig.length) {
-    return null
-  }
+  React.useEffect(() => {
+    if (!colorConfig.length) return
 
-  return (
-    (<style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(([theme, prefix]) => `
+    const css = Object.entries(THEMES)
+      .map(([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-.map(([key, itemConfig]) => {
-const color =
-  itemConfig.theme?.[theme] ||
-  itemConfig.color
-return color ? `  --color-${key}: ${color};` : null
-})
-.join("\n")}
-}
-`)
-          .join("\n"),
-      }} />)
-  );
+  .map(([key, itemConfig]) => {
+    const color = itemConfig.theme?.[theme] || itemConfig.color
+    return color ? `  --color-${key}: ${color};` : null
+  })
+  .filter(Boolean)
+  .join("\n")}
+}`)
+      .join("\n")
+
+    const styleEl = document.createElement("style")
+    styleEl.setAttribute("data-chart-style", id)
+    styleEl.textContent = css
+    document.head.appendChild(styleEl)
+
+    return () => {
+      document.head.removeChild(styleEl)
+    }
+  }, [id, colorConfig.length])
+
+  return null
 }
 
 const ChartTooltip = RechartsPrimitive.Tooltip
