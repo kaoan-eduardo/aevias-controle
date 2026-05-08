@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  */
 export function useReportMode() {
   useEffect(() => {
-    const htmlEl = document.documentElement;
+    const htmlEl = /** @type {HTMLElement} */ (document.documentElement);
     const wasDark = htmlEl.classList.contains('dark');
     
     // Remove dark mode
