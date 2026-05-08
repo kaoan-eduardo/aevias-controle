@@ -74,24 +74,14 @@ import { Obra } from "@/entities/Obra";
 import { Regional } from "@/entities/Regional";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-
-const SESSION_KEY_LAST_LOGIN = 'session_login_flag';
-
-const TAB_ZONES = {
-  home: ['/'],
-  regionais: ['/Regionais', '/Obra', '/Regional'],
-  projects: ['/Projects', '/Project'],
-  registros: ['/MeusEnsaios', '/Ensaio', '/Checklist', '/Diario', '/Acompanhamento', '/Boletim'],
-};
-
-function getTabZone(pathname) {
-  for (const [zone, prefixes] of Object.entries(TAB_ZONES)) {
-    if (prefixes.some(p => pathname === p || pathname.startsWith(p + '/') || pathname.startsWith(p + '?'))) {
-      return zone;
-    }
-  }
-  return null;
-}
+import {
+  SESSION_KEYS,
+  ACCESS_LEVELS,
+  REPORT_PAGES,
+  ALL_OBRA_TYPE_STUBS,
+  getTabZone,
+  getUserAccessLevel,
+} from "@/lib/layoutConstants";
 
 // Bottom Navigation Bar para mobile
 const BottomNav = () => {
@@ -107,7 +97,7 @@ const BottomNav = () => {
 
   useEffect(() => {
     const zone = getTabZone(location.pathname);
-    if (zone) sessionStorage.setItem(`tab_stack_${zone}`, location.pathname + location.search);
+    if (zone) sessionStorage.setItem(`${SESSION_KEYS.TAB_STACK_PREFIX}${zone}`, location.pathname + location.search);
   }, [location]);
 
   const handleTabPress = useCallback((item) => {
@@ -115,7 +105,7 @@ const BottomNav = () => {
     if (currentZone === item.zone) {
       navigate(item.path);
     } else {
-      const saved = sessionStorage.getItem(`tab_stack_${item.zone}`);
+      const saved = sessionStorage.getItem(`${SESSION_KEYS.TAB_STACK_PREFIX}${item.zone}`);
       navigate(saved || item.path);
     }
   }, [location.pathname, navigate]);
@@ -294,7 +284,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
     onSelect();
   }, [navigate, onSelect]);
 
-  if (user && user.access_level === 'user' && obrasDoUsuario && obrasDoUsuario.length === 0) {
+  if (user && user.access_level === ACCESS_LEVELS.USER && obrasDoUsuario && obrasDoUsuario.length === 0) {
     return (
       <div className="text-center py-12 px-4">
         <AlertTriangle className="w-16 h-16 text-[#BFCF99] mx-auto mb-4" />
@@ -451,8 +441,8 @@ const AppLayout = ({ children }) => {
 
   // Atualizar last_login apenas uma vez por sessão do browser
   React.useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY_LAST_LOGIN)) return;
-    sessionStorage.setItem(SESSION_KEY_LAST_LOGIN, '1');
+    if (sessionStorage.getItem(SESSION_KEYS.LAST_LOGIN)) return;
+    sessionStorage.setItem(SESSION_KEYS.LAST_LOGIN, '1');
     base44.functions.invoke('updateLastLogin', {}).catch(() => {});
   }, []);
 
@@ -469,9 +459,9 @@ const AppLayout = ({ children }) => {
       
       setUser(userData);
 
-      const userAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
+      const userAccessLevel = getUserAccessLevel(userData);
 
-      if (userAccessLevel === 'user') {
+      if (userAccessLevel === ACCESS_LEVELS.USER) {
         const [obrasData, regionaisData] = await Promise.all([
           Obra.list(),
           Regional.list()
@@ -494,11 +484,11 @@ const AppLayout = ({ children }) => {
         }
       } else {
         // For admin, gestor, and sala_tecnica, show all types for creation
-        setObrasDoUsuario([{ tipo_obra: 'supervisao' }, { tipo_obra: 'implantacao' }, { tipo_obra: 'conservacao' }, { tipo_obra: 'sondagem' }, { tipo_obra: 'levantamentos' }]);
+        setObrasDoUsuario(ALL_OBRA_TYPE_STUBS);
       }
 
       // Carregar transferências pendentes para gestores
-      if (userAccessLevel === 'gestor_contrato' || userAccessLevel === 'sala_tecnica_afirmaevias') {
+      if (userAccessLevel === ACCESS_LEVELS.GESTOR_CONTRATO || userAccessLevel === ACCESS_LEVELS.SALA_TECNICA) {
         const [regionaisData, transferenciaObra, transferenciaRegional] = await Promise.all([
           Regional.list(),
           base44.entities.SolicitacaoTransferenciaObra.list(),
@@ -540,11 +530,11 @@ const AppLayout = ({ children }) => {
     await User.logout();
   }, []);
 
-  const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-  const isAdmin = userAccessLevel === 'admin' || user?.role === 'admin';
-  const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
-  const isGestorContrato = userAccessLevel === 'gestor_contrato';
-  const isCliente = userAccessLevel === 'cliente';
+  const userAccessLevel = getUserAccessLevel(user);
+  const isAdmin = userAccessLevel === ACCESS_LEVELS.ADMIN || user?.role === ACCESS_LEVELS.ADMIN;
+  const isSalaTecnica = userAccessLevel === ACCESS_LEVELS.SALA_TECNICA;
+  const isGestorContrato = userAccessLevel === ACCESS_LEVELS.GESTOR_CONTRATO;
+  const isCliente = userAccessLevel === ACCESS_LEVELS.CLIENTE;
   const canManageSystem = isAdmin;
   const canCreateRecords = !loadingUser && (isAdmin || (!isSalaTecnica && !isGestorContrato && !isCliente));
 
@@ -629,7 +619,7 @@ const AppLayout = ({ children }) => {
                     })}
 
                     {/* Minhas Obras - menu expansível */}
-                    {(['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente', 'user'].includes(userAccessLevel)) && (
+                    {(Object.values(ACCESS_LEVELS).includes(userAccessLevel)) && (
                       <>
                         <SidebarMenuItem>
                           <SidebarMenuButton
@@ -729,7 +719,7 @@ const AppLayout = ({ children }) => {
                     )}
 
                     {/* Não Conformidades - menu expansível */}
-                    {(['admin', 'gestor_contrato', 'sala_tecnica_afirmaevias', 'cliente'].includes(userAccessLevel)) && (
+                    {([ACCESS_LEVELS.ADMIN, ACCESS_LEVELS.GESTOR_CONTRATO, ACCESS_LEVELS.SALA_TECNICA, ACCESS_LEVELS.CLIENTE].includes(userAccessLevel)) && (
                       <>
                         <SidebarMenuItem>
                           <SidebarMenuButton
@@ -1008,9 +998,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default function Layout({ children, currentPageName }) {
-  const reportPages = useMemo(() => ["RelatorioEnsaio", "RelatorioDiario", "RelatorioChecklist", "RelatorioChecklistAplicacao", "RelatorioChecklistMRAF", "RelatorioChecklistConcretagem", "RelatorioChecklistTerraplanagem", "RelatorioChecklistReciclagem", "RelatorioSondagem", "RelatorioDensidadeInSitu", "RelatorioTaxaPinturaImprimacao", "RelatorioConsolidado", "RelatorioCAUQ", "RelatorioGranulometriaIndividual", "RelatorioAcompanhamentoUsinagem", "RelatorioAcompanhamentoCarga", "RelatorioManchaPendulo", "RelatorioVigaBenkelman", "RelatorioTaxaMRAF", "RelatorioNC", "RelatorioBoletimSondagem", "RelatorioBoletimSondagemTrado", "RelatorioProctor", "RelatorioRompimentoConcreto", "RelatorioGranuMistura", "RelatorioUnificado"], []);
-
-  if (reportPages.includes(currentPageName)) {
+  if (REPORT_PAGES.has(currentPageName)) {
     return <>{children}</>;
   }
 
