@@ -193,7 +193,7 @@
   }
 
   /* Inputs and selects */
-  .dark input:not([type="radio"]):not([type="checkbox"]),
+  .dark input:not([type="radio"], [type="checkbox"]),
   .dark textarea,
   .dark select {
     color: hsl(210 20% 88%) !important;
