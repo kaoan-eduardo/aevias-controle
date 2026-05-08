@@ -84,7 +84,6 @@ export default function ChecklistTerraplanagem() {
     umidade_otima_proctor: "",
     umidade_in_situ: "",
     ensaio_realizado_por: "Afirma Evias",
-    status: "rascunho",
     periodos_clima: [
       { periodo: "manha", temperatura_ambiente: "", condicoes_climaticas: "bom" },
       { periodo: "tarde", temperatura_ambiente: "", condicoes_climaticas: "bom" }
