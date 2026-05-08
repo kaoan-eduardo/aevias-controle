@@ -489,9 +489,12 @@ export default function ProdutividadePage() {
                                    return (
                                      <div
                                       key={idx}
+                                      role="button"
+                                      tabIndex={userCanEdit ? 0 : -1}
                                       className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''}`}
                                       title={`${reg.tipo}${temInfo ? ' - ' + info : ' - Sem empreiteira/usina'}`}
                                       onClick={() => userCanEdit && handleEditClick(reg)}
+                                      onKeyDown={(e) => e.key === 'Enter' && userCanEdit && handleEditClick(reg)}
                                      >
                                       <div className="text-[9px] font-semibold opacity-90 truncate max-w-[60px]">
                                         {ENSAIO_LABELS[reg.entityName] || reg.entityName}
