@@ -356,7 +356,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                   <div className="text-blue-600 font-semibold">% Passante (Ensaio): {hoveredPoint.percentualPassante}%</div>
                 </div>
               )}
-              <svg width="100%" height="100%" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet">
+              <svg width="100%" height="100%" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" aria-label="Gráfico de Granulometria da Mistura MRAF" role="img">
                 {/* Eixos */}
                 <line x1="30" y1="5" x2="30" y2="240" stroke="#333" strokeWidth="1" />
                 <line x1="30" y1="240" x2="620" y2="240" stroke="#333" strokeWidth="1" />

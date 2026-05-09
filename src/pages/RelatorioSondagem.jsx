@@ -338,7 +338,7 @@ export default function RelatorioSondagem() {
                 <div className="border border-slate-300 p-0.5">
                   <h3 className="text-[10px] font-bold text-center mb-0.5">G.C. (%)</h3>
                   <div className="relative h-20">
-                    <svg width="100%" height="100%" viewBox="0 0 600 100">
+                    <svg width="100%" height="100%" viewBox="0 0 600 100" aria-label="Gráfico de Grau de Compactação" role="img">
                       {/* Eixos */}
                       <line x1="30" y1="5" x2="30" y2="75" stroke="#333" strokeWidth="1" />
                       <line x1="30" y1="75" x2="580" y2="75" stroke="#333" strokeWidth="1" />

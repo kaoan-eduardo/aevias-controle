@@ -515,7 +515,7 @@ export default function RelatorioCAUQ() {
                     <div className="text-blue-600 font-semibold">% Passante (Ensaio): {hoveredPoint.percentualPassante}%</div>
                   </div>
                 )}
-                <svg width="100%" height="100%" viewBox={ensaio.realizar_marshall ? "0 0 640 250" : "0 0 640 450"} preserveAspectRatio="xMidYMid meet">
+                <svg width="100%" height="100%" viewBox={ensaio.realizar_marshall ? "0 0 640 250" : "0 0 640 450"} preserveAspectRatio="xMidYMid meet" aria-label="Gráfico de Granulometria da Mistura" role="img">
                   {/* Eixos */}
                   {(() => {
                     const altura = ensaio.realizar_marshall ? 190 : 390;
