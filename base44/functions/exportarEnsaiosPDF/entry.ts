@@ -127,9 +127,11 @@ async function buildZip(ensaioIds, authHeader) {
       const url = resolveReportUrl(safeTipo, safeId);
       const html = await fetchReportHtml(url, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      zip.file(fileName, encoder.encode(html));
+      // Garantir string primitiva antes de codificar — evita taint de HTML externo
+      const safeHtml = String(html);
+      zip.file(fileName, encoder.encode(safeHtml));
       successCount++;
-      console.log(`  ✅ Adicionado: ${fileName} (${html.length} chars)`);
+      console.log(`  ✅ Adicionado: ${fileName} (${safeHtml.length} chars)`);
     } catch (err) {
       const msg = `Erro em "${nome}": ${err instanceof Error ? err.message : String(err)}`;
       console.error(`  ❌ ${msg}`);
