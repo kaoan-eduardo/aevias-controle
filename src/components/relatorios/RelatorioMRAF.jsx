@@ -470,36 +470,50 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                         strokeWidth="2"
                       />
 
-                      {/* Pontos com hover */}
+                      {/* Pontos com hover — interatividade no <g> para não violar "Static Elements should not be interactive" */}
                       {dadosGranulometria.map((d, i) => {
                         const x = getX(parseFloat(d.abertura.replace(',', '.')));
                         const y = getY(d.percentualPassante);
                         return (
-                          <g key={i}>
-                            <circle 
-                              cx={x} 
-                              cy={y} 
-                              r="6" 
-                              fill="transparent"
-                              style={{ cursor: 'pointer' }}
-                              onMouseEnter={(e) => {
-                                const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-                                setHoveredPoint({
-                                  astm: d.astm,
-                                  percentualPassante: d.percentualPassante,
-                                  faixaEspecMin: d.limiteMin,
-                                  faixaEspecMax: d.limiteMax,
-                                  faixaTrabalhoMin: d.faixaTrabalhoMin,
-                                  faixaTrabalhoMax: d.faixaTrabalhoMax
-                                });
-                                setTooltipPos({ 
-                                  x: e.clientX - svgRect.left, 
-                                  y: e.clientY - svgRect.top 
-                                });
-                              }}
-                              onMouseLeave={() => setHoveredPoint(null)}
-                            />
-                            <circle cx={x} cy={y} r="2" fill="#3b82f6" style={{ pointerEvents: 'none' }} />
+                          <g
+                            key={i}
+                            role="button"
+                            tabIndex={0}
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={(e) => {
+                              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
+                              setHoveredPoint({
+                                astm: d.astm,
+                                percentualPassante: d.percentualPassante,
+                                faixaEspecMin: d.limiteMin,
+                                faixaEspecMax: d.limiteMax,
+                                faixaTrabalhoMin: d.faixaTrabalhoMin,
+                                faixaTrabalhoMax: d.faixaTrabalhoMax
+                              });
+                              setTooltipPos({
+                                x: e.clientX - svgRect.left,
+                                y: e.clientY - svgRect.top
+                              });
+                            }}
+                            onMouseLeave={() => setHoveredPoint(null)}
+                            onFocus={(e) => {
+                              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
+                              setHoveredPoint({
+                                astm: d.astm,
+                                percentualPassante: d.percentualPassante,
+                                faixaEspecMin: d.limiteMin,
+                                faixaEspecMax: d.limiteMax,
+                                faixaTrabalhoMin: d.faixaTrabalhoMin,
+                                faixaTrabalhoMax: d.faixaTrabalhoMax
+                              });
+                              setTooltipPos({ x: x + 30, y });
+                            }}
+                            onBlur={() => setHoveredPoint(null)}
+                            aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
+                          >
+                            {/* Hit area invisível sobre o ponto — ainda é elemento estático, mas a interação está no <g> */}
+                            <circle cx={x} cy={y} r="6" fill="transparent" />
+                            <circle cx={x} cy={y} r="2" fill="#3b82f6" />
                           </g>
                         );
                       })}
