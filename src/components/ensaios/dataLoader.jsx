@@ -84,20 +84,6 @@ export const loadAllData = async () => {
     base44.entities.GranuMistura.list("-created_date", 5000)
   ]);
 
-  console.log("📊 [DEBUG] ChecklistAplicacao carregados:", checklistsAplicacaoData.length);
-  console.log("📊 [DEBUG] ✨ EnsaioManchaPendulo carregados:", manchaPenduloData?.length || 0);
-  if (manchaPenduloData && manchaPenduloData.length > 0) {
-    console.log("  - Detalhes Mancha+Pêndulo:", manchaPenduloData.map(mp => ({ id: mp.id, status: mp.status, obra_id: mp.obra_id })));
-  }
-
-  console.log("📊 [DEBUG] ChecklistConcretagem carregados:", checklistsConcretagemData.length);
-  checklistsConcretagemData.forEach(cc => {
-    console.log("  - ChecklistConcretagem ID:", cc.id, "Status:", cc.status, "Approved:", cc.approved, "Data:", cc.data);
-  });
-  console.log("📊 [DEBUG] Obras carregadas:", obrasData.length);
-  obrasData.forEach(o => console.log("  - Obra:", o.id, o.name, "Regional:", o.regional_id));
-  console.log("📊 [DEBUG] Current user:", currentUser.email, "Access:", currentUserAccessLevel);
-
   const combinedEnsaios = [
     ...diariosData.map((d) => ({ ...d, entityType: "DiarioObra" })),
     ...ensaiosCAUQData.map((d) => ({ ...d, entityType: "EnsaioCAUQ" })),
@@ -147,9 +133,6 @@ export const loadAllData = async () => {
     
     return 0;
   });
-
-  console.log("📊 [DEBUG] Total combinado:", combinedEnsaios.length);
-  console.log("📊 [DEBUG] ✨ Mancha+Pêndulo no combinado:", combinedEnsaios.filter(e => e.entityType === 'EnsaioManchaPendulo').length);
 
   return {
     currentUser,
