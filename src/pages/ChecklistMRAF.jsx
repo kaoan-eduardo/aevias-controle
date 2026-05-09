@@ -1506,7 +1506,10 @@ export default function ChecklistMRAFPage() {
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mt-4">
                   {formData.fotos && formData.fotos.map((url, index) => (
                     <div key={index} className="relative group">
-                      <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-slate-200" />
+                      <picture>
+                        <source srcSet={url} />
+                        <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-slate-200" loading="lazy" />
+                      </picture>
                       {isEditable && !isApproved && (
                         <Button
                           type="button"
