@@ -120,6 +120,7 @@ const BottomNav = () => {
         return (
           <button
             key={item.label}
+            type="button"
             onClick={() => handleTabPress(item)}
             className={`flex flex-col items-center gap-1 py-3 px-6 transition-colors select-none ${
               isActive ? 'text-[#00233B]' : 'text-[#00233B]/50'
@@ -306,6 +307,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
           Registro Geral
         </h3>
         <button
+          type="button"
           onClick={() => handleSelect(diarioObra.url)}
           className="w-full flex items-center gap-4 p-4 border-2 rounded-lg hover:bg-white/10 transition-colors duration-200 text-left border-white/20 hover:border-[#BFCF99]/50"
         >
@@ -345,6 +347,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
                           {setor.ensaios.map((ensaio) => (
                             <button
                               key={ensaio.title}
+                              type="button"
                               onClick={() => handleSelect(ensaio.url)}
                               className="flex items-center gap-3 p-3 bg-[#F2F1EF]/30 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-200 text-left"
                             >
@@ -361,6 +364,7 @@ const CreateEnsaioDialog = React.memo(({ onSelect, user, obrasDoUsuario }) => {
                     {categoria.ensaios.map((ensaio) => (
                       <button
                         key={ensaio.title}
+                        type="button"
                         onClick={() => handleSelect(ensaio.url)}
                         className="flex items-center gap-3 p-3 bg-[#F2F1EF]/30 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-200 text-left"
                       >
@@ -917,6 +921,7 @@ const AppLayout = ({ children }) => {
               {/* Left: back button or logo + profile on home */}
               {location.pathname !== '/' && (
                 <button
+                  type="button"
                   onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
                   className="flex items-center gap-1 text-[#00233B] font-medium select-none py-2 pr-6 pl-1 min-h-[44px] min-w-[80px] active:opacity-70"
                 >

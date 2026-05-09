@@ -488,9 +488,10 @@ export default function ProdutividadePage() {
                                    const info = reg.empreiteira || reg.usina;
                                    return (
                                      <button
-                                      key={idx}
-                                      disabled={!userCanEdit}
-                                      className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''} text-left w-full`}
+                                       key={idx}
+                                       type="button"
+                                       disabled={!userCanEdit}
+                                       className={`${temInfo ? 'bg-green-500' : 'bg-orange-500'} text-white text-[10px] px-1 py-0.5 rounded font-medium ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''} text-left w-full`}
                                       title={`${reg.tipo}${temInfo ? ' - ' + info : ' - Sem empreiteira/usina'}`}
                                       onClick={() => handleEditClick(reg)}
                                      >
@@ -510,6 +511,7 @@ export default function ProdutividadePage() {
                               </div>
                             ) : markedStatus ? (
                               <button
+                                type="button"
                                 disabled={!userCanEdit}
                                 className={`text-white text-xs px-1 py-1 rounded font-bold ${markedStatus === 'N/A' ? 'bg-blue-400' : 'bg-green-500'} ${userCanEdit ? 'cursor-pointer hover:opacity-80' : ''} w-full`}
                                 onClick={() => setDiaDialog({ open: true, laborista: lab.email, dia: day })}
@@ -518,6 +520,7 @@ export default function ProdutividadePage() {
                               </button>
                             ) : (
                               <button
+                                type="button"
                                 disabled={!userCanEdit}
                                 className="bg-yellow-400 text-[#00233B] text-xs px-1 py-1 rounded font-bold cursor-pointer hover:bg-yellow-500 transition-colors w-full"
                                 onClick={() => setDiaDialog({ open: true, laborista: lab.email, dia: day })}

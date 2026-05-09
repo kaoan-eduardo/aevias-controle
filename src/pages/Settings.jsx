@@ -99,6 +99,7 @@ export default function Settings() {
             {options.map(({ value, label, icon: Icon, desc }) => (
               <button
                 key={value}
+                type="button"
                 onClick={() => setTheme(value)}
                 className={`flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all select-none ${
                   theme === value

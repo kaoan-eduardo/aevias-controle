@@ -645,7 +645,7 @@ export default function NaoConformidadesPage() {
                 <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Inicial</label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
+                    <button type="button" className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
                       {filtroDataInicial ? format(filtroDataInicial, 'dd/MM/yyyy') : 'Selecionar'}
                       <CalendarIcon className="w-4 h-4 text-[#00233B]/50" />
                     </button>
@@ -659,7 +659,7 @@ export default function NaoConformidadesPage() {
                 <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Final</label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
+                    <button type="button" className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
                       {filtroDataFinal ? format(filtroDataFinal, 'dd/MM/yyyy') : 'Selecionar'}
                       <CalendarIcon className="w-4 h-4 text-[#00233B]/50" />
                     </button>

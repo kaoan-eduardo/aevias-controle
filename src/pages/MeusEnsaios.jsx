@@ -52,6 +52,7 @@ const CopyIdButton = React.memo(({ id }) => {
   };
   return (
     <button
+      type="button"
       onClick={handleCopy}
       title={`Copiar ID: ${id}`}
       className="inline-flex items-center gap-1 text-[9px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors text-[#00233B]/70 hover:text-[#00233B]">
@@ -573,6 +574,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
+                        type="button"
                         onClick={toggleSortOrder}
                         className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors">
                         
@@ -1396,6 +1398,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
                   <th className="text-left px-2 py-2 font-medium text-[#00233B] text-xs" style={{ width: '100px' }}>
                     <div className="flex items-center gap-1">
                       <button
+                        type="button"
                         onClick={toggleSortOrder}
                         className="flex items-center gap-1 hover:text-[#BFCF99] transition-colors">
                         

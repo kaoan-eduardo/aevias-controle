@@ -347,6 +347,7 @@ export default function EditarNCPage() {
                     <div key={i} className="relative group">
                       <img src={url} alt={`Foto ${i + 1}`} className="w-full h-28 object-cover rounded-md border border-white/20" />
                       <button
+                        type="button"
                         onClick={() => setFotos(prev => prev.filter((_, idx) => idx !== i))}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
@@ -375,7 +376,7 @@ export default function EditarNCPage() {
                     <li key={i} className="flex items-center gap-2 text-sm text-[#00233B] bg-white/30 rounded px-3 py-2">
                       <FileUp className="w-4 h-4 text-[#BFCF99] shrink-0" />
                       <span className="flex-1 truncate">{pdf.nome}</span>
-                      <button onClick={() => setPdfs(prev => prev.filter((_, idx) => idx !== i))} className="text-red-500 hover:text-red-700">
+                      <button type="button" onClick={() => setPdfs(prev => prev.filter((_, idx) => idx !== i))} className="text-red-500 hover:text-red-700">
                         <X className="w-4 h-4" />
                       </button>
                     </li>
