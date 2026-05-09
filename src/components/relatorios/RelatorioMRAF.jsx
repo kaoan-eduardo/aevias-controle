@@ -477,9 +477,9 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                         return (
                           <g
                             key={i}
-                            role="button"
                             tabIndex={0}
                             style={{ cursor: 'pointer' }}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.currentTarget.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true })); }}
                             onMouseEnter={(e) => {
                               const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
                               setHoveredPoint({

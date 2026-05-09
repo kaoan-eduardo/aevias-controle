@@ -83,16 +83,15 @@ const Carousel = React.forwardRef((
       canScrollPrev,
       canScrollNext,
     }}>
-      <div
+      <section
         ref={ref}
-        role="region"
         aria-roledescription="carousel"
         onKeyDownCapture={handleKeyDown}
         className={cn("relative", className)}
         {...props}
       >
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   )
 })
@@ -105,10 +104,10 @@ const CarouselContent = React.forwardRef(({ className, ...props }, ref) => {
 
   return (
     <div ref={carouselRef} className="overflow-hidden">
-      <div
+      <ol
         ref={ref}
         className={cn(
-          "flex",
+          "flex list-none p-0 m-0",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className
         )}
@@ -125,9 +124,8 @@ const CarouselItem = React.forwardRef(({ className, ...props }, ref) => {
   const { orientation } = useCarousel()
 
   return (
-    <div
+    <li
       ref={ref}
-      role="group"
       aria-roledescription="slide"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
@@ -135,10 +133,12 @@ const CarouselItem = React.forwardRef(({ className, ...props }, ref) => {
         className
       )}
       {...props}
-    />
-  )
-})
-CarouselItem.displayName = "CarouselItem"
+      />
+      )
+      })
+      CarouselItem.displayName = "CarouselItem"
+
+      // Note: CarouselContent wraps items in an <ol> to pair with <li> CarouselItem
 
 // ─── CarouselNavButton (DRY: shared by Previous & Next) ──────────────────────
 
