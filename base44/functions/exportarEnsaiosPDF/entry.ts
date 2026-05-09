@@ -15,6 +15,38 @@ const TIPO_RELATORIO_MAP = {
   EnsaioDensidade: 'densidade',
 };
 
+/** Allowlist completa de tipos válidos de ensaio */
+const ALLOWED_TIPOS = new Set([
+  'DiarioObra',
+  'EnsaioExtracaoGranMarshall',
+  'EnsaioDensidade',
+  'ChecklistUsina',
+  'ChecklistAplicacao',
+  'ChecklistMRAF',
+  'ChecklistConcretagem',
+  'ChecklistTerraplanagem',
+  'ChecklistReciclagem',
+  'EnsaioCAUQ',
+  'AcompanhamentoUsinagem',
+  'AcompanhamentoCarga',
+  'EnsaioTaxaPinturaImprimacao',
+  'EnsaioRompimentoConcreto',
+  'EnsaioManchaPendulo',
+  'EnsaioSondagem',
+  'EnsaioVigaBenkelman',
+  'EnsaioTaxaMRAF',
+  'EnsaioMRAF',
+  'EnsaioGranulometriaIndividual',
+  'GranuMistura',
+  'EnsaioDensidadeInSitu',
+  'EnsaioProctor',
+  'BoletimSondagem',
+  'BoletimSondagemTrado',
+]);
+
+/** Regex para IDs válidos — apenas UUID ou alfanumérico simples */
+const VALID_ID_REGEX = /^[a-zA-Z0-9\-_]{1,128}$/;
+
 const BASE_URL = Deno.env.get('BASE44_APP_URL') || 'https://quaevias.base44.app';
 
 // ─── Pure helpers (SRP) ───────────────────────────────────────────────────────
@@ -38,9 +70,16 @@ function validatePayload(ensaioIds) {
   if (!Array.isArray(ensaioIds) || ensaioIds.length === 0) {
     return 'Lista de IDs de ensaios é obrigatória';
   }
-  const invalid = ensaioIds.filter(e => !e.id || !String(e.id).trim() || e.id === '-');
-  if (invalid.length > 0) {
-    return 'IDs inválidos detectados';
+  for (const e of ensaioIds) {
+    const id = String(e.id ?? '').trim();
+    const tipo = String(e.tipo ?? '').trim();
+
+    if (!id || id === '-' || !VALID_ID_REGEX.test(id)) {
+      return `ID inválido detectado: "${e.id}"`;
+    }
+    if (!tipo || !ALLOWED_TIPOS.has(tipo)) {
+      return `Tipo de ensaio não permitido: "${e.tipo}"`;
+    }
   }
   return null;
 }
@@ -82,7 +121,10 @@ async function buildZip(ensaioIds, authHeader) {
 
     try {
       console.log(`[${i + 1}/${ensaioIds.length}] Processando: ${nome}`);
-      const url = resolveReportUrl(String(tipo), String(id));
+      // tipo e id já foram validados contra allowlist e regex em validatePayload
+      const safeId = String(id).trim();
+      const safeTipo = String(tipo).trim();
+      const url = resolveReportUrl(safeTipo, safeId);
       const html = await fetchReportHtml(url, authHeader);
       const fileName = sanitizeFileName(String(nome));
       zip.file(fileName, encoder.encode(html));
