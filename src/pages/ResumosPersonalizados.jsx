@@ -365,7 +365,7 @@ const CAMPOS_POR_TIPO = {
 // ─── Helpers de módulo ────────────────────────────────────────────────────────
 
 const getLabelTipo = (tipo) =>
-  getLabelTipo(tipo);
+  TIPOS_ENSAIO.find(t => t.value === tipo)?.label ?? tipo;
 
 const obrasDeRegionais = (regionais, obras) => {
   const ids = new Set(
@@ -1132,7 +1132,7 @@ export default function ResumosPersonalizadosPage() {
     return texto
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^\u0000-\u007F]/g, '');
+      .replace(/[^\x20-\x7E]/g, '');
   };
 
   const exportarParaCSV = () => {
