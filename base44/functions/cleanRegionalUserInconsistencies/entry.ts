@@ -92,7 +92,7 @@ function processarRegional(regional, userAccessMap) {
       const campoStr = String(campo);
       const esperado = permitidos.filter(p => p !== 'admin').join(' ou ');
       for (const { email, accessLevel } of removidos) {
-        const levelStr = String(accessLevel ?? 'desconhecido');
+        const levelStr = String(accessLevel);
         console.log(`  ❌ Removendo ${String(email)} de ${campoStr} (access_level: ${levelStr})`);
         corrections.push({
           email,
