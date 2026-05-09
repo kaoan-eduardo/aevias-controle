@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -36,6 +37,7 @@ const STATUS_LABELS = {
 };
 
 export default function GestaoNCPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [obras, setObras] = useState([]);
   const [regionais, setRegionais] = useState([]);
@@ -201,7 +203,7 @@ export default function GestaoNCPage() {
           </div>
           {(isGestor || isAdmin) && (
             <Button
-              onClick={() => window.location.href = createPageUrl("NovaNC")}
+              onClick={() => navigate(createPageUrl("NovaNC"))}
               className="bg-[#00233B] text-white hover:bg-[#00233B]/90"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -366,7 +368,7 @@ export default function GestaoNCPage() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => window.location.href = createPageUrl(`EditarNC?id=${nc.id}`)}
+                                onClick={() => navigate(createPageUrl(`EditarNC?id=${nc.id}`))}
                                 className="h-7 text-xs border-white/30 text-[#00233B] hover:bg-white/20"
                               >
                                 Editar NC

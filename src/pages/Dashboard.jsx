@@ -24,7 +24,7 @@ import {
 import { base44 } from "@/api/base44Client";
 import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, formatDistanceToNow, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 const StatCard = React.memo(({ title, value, icon: Icon, note, onClick, className }) => (
@@ -69,6 +69,7 @@ const getEntityTypeDescription = (type) => {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [allData, setAllData] = useState({
@@ -790,7 +791,7 @@ export default function Dashboard() {
                 value={stats.aguardando_assinatura} 
                 icon={FileSignature}
                 note="Clique para visualizar"
-                onClick={() => window.location.href = createPageUrl('MeusEnsaios')}
+                onClick={() => navigate(createPageUrl('MeusEnsaios'))}
                 className="cursor-pointer hover:shadow-md transition-shadow"
               />
             )}

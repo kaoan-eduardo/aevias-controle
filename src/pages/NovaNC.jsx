@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -43,6 +44,7 @@ const TIPOS_CHECKLIST = [
 ];
 
 export default function NovaNcPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [obras, setObras] = useState([]);
   const [regionais, setRegionais] = useState([]);
@@ -197,7 +199,7 @@ export default function NovaNcPage() {
       }
     });
     setSaving(false);
-    window.location.href = createPageUrl("GestaoNC");
+    navigate(createPageUrl("GestaoNC"));
   };
 
   if (loading) {

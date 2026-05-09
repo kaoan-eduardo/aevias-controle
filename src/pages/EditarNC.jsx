@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -13,6 +14,7 @@ import { createPageUrl } from "@/utils";
 import { LOCAIS, getCategoriasByLocal, getParametrosByLocalCategoria } from "@/components/nc/ncData";
 
 export default function EditarNCPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [obras, setObras] = useState([]);
   const [regionais, setRegionais] = useState([]);
@@ -53,7 +55,7 @@ export default function EditarNCPage() {
 
     if (!ncId) {
       alert("ID da NC não encontrado");
-      window.location.href = createPageUrl("GestaoNC");
+      navigate(createPageUrl("GestaoNC"));
       return;
     }
 
@@ -68,7 +70,7 @@ export default function EditarNCPage() {
 
     if (!ncData || ncData.length === 0) {
       alert("NC não encontrada");
-      window.location.href = createPageUrl("GestaoNC");
+      navigate(createPageUrl("GestaoNC"));
       return;
     }
 
@@ -138,7 +140,7 @@ export default function EditarNCPage() {
       cliente_reprovacao_motivo: null
     });
     setSaving(false);
-    window.location.href = createPageUrl("GestaoNC");
+    navigate(createPageUrl("GestaoNC"));
   };
 
   if (loading) {
