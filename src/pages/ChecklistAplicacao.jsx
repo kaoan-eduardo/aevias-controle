@@ -453,22 +453,23 @@ export default function ChecklistAplicacaoPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, [obras, projects, faixas, editingChecklist, formData.project_id, allUsers]); // Add allUsers to dependencies
 
-  const handleNestedChange = useCallback((path, value) => {
-    setFormData(prev => {
-      const newData = JSON.parse(JSON.stringify(prev));
-      const keys = path.split('.');
-      let current = newData;
-      
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (current[keys[i]] === undefined) {
-          current[keys[i]] = {};
-        }
-        current = current[keys[i]];
+  // Atualiza campo em objeto aninhado de 2 níveis: formData[s1][field]
+  const handleNestedChange = useCallback((s1, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [s1]: { ...prev[s1], [field]: value }
+    }));
+  }, []);
+
+  // Atualiza campo em objeto aninhado de 3 níveis: formData[s1][s2][field]
+  const handleDeepChange = useCallback((s1, s2, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [s1]: {
+        ...prev[s1],
+        [s2]: { ...(prev[s1]?.[s2] ?? {}), [field]: value }
       }
-      
-      current[keys[keys.length - 1]] = value;
-      return newData;
-    });
+    }));
   }, []);
 
   const handlePhotoUpload = useCallback(async (e) => {
@@ -668,7 +669,7 @@ export default function ChecklistAplicacaoPage() {
                       id="horario_inicio"
                       type="time"
                       value={formData.jornada?.horario_inicio || ""}
-                      onChange={(e) => handleNestedChange('jornada.horario_inicio', e.target.value)}
+                      onChange={(e) => handleNestedChange('jornada', 'horario_inicio', e.target.value)}
                       disabled={!isEditable}
                       required
                     />
@@ -680,7 +681,7 @@ export default function ChecklistAplicacaoPage() {
                       id="horario_fim"
                       type="time"
                       value={formData.jornada?.horario_fim || ""}
-                      onChange={(e) => handleNestedChange('jornada.horario_fim', e.target.value)}
+                      onChange={(e) => handleNestedChange('jornada', 'horario_fim', e.target.value)}
                       disabled={!isEditable}
                       required
                     />
@@ -879,7 +880,7 @@ export default function ChecklistAplicacaoPage() {
                       <Switch
                         id="superficie_limpa"
                         checked={formData.fresagem_preparacao.superficie_limpa}
-                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao.superficie_limpa', checked)}
+                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao', 'superficie_limpa', checked)}
                         disabled={!isEditable}
                       />
                     </div>
@@ -891,7 +892,7 @@ export default function ChecklistAplicacaoPage() {
                       <Switch
                         id="destinacao_material_fresado"
                         checked={formData.fresagem_preparacao.destinacao_material_fresado}
-                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao.destinacao_material_fresado', checked)}
+                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao', 'destinacao_material_fresado', checked)}
                         disabled={!isEditable}
                       />
                     </div>
@@ -903,7 +904,7 @@ export default function ChecklistAplicacaoPage() {
                       <Switch
                         id="material_solto_removido"
                         checked={formData.fresagem_preparacao.material_solto_removido}
-                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao.material_solto_removido', checked)}
+                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao', 'material_solto_removido', checked)}
                         disabled={!isEditable}
                       />
                     </div>
@@ -915,7 +916,7 @@ export default function ChecklistAplicacaoPage() {
                       <Switch
                         id="pavimento_pronto_pintura"
                         checked={formData.fresagem_preparacao.pavimento_pronto_pintura}
-                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao.pavimento_pronto_pintura', checked)}
+                        onCheckedChange={(checked) => handleNestedChange('fresagem_preparacao', 'pavimento_pronto_pintura', checked)}
                         disabled={!isEditable}
                       />
                     </div>
@@ -926,7 +927,7 @@ export default function ChecklistAplicacaoPage() {
                     <Textarea
                       id="fresagem_observacoes"
                       value={formData.fresagem_preparacao.observacoes || ''}
-                      onChange={(e) => handleNestedChange('fresagem_preparacao.observacoes', e.target.value)}
+                      onChange={(e) => handleNestedChange('fresagem_preparacao', 'observacoes', e.target.value)}
                       disabled={!isEditable}
                       rows={2}
                       maxLength={500}
@@ -961,7 +962,7 @@ export default function ChecklistAplicacaoPage() {
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.pintura_barra_espargidora.realizado === true ? "sim" : formData.pintura_ligacao.pintura_barra_espargidora.realizado === false ? "nao" : ""}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.pintura_barra_espargidora.realizado', value === "sim" ? true : value === "nao" ? false : null)}
+                            onValueChange={(value) => handleDeepChange('pintura_ligacao', 'pintura_barra_espargidora', 'realizado', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable}
                           >
                             <SelectTrigger className="h-8">
@@ -984,7 +985,7 @@ export default function ChecklistAplicacaoPage() {
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.tempo_rompimento_cura.realizado === true ? "sim" : formData.pintura_ligacao.tempo_rompimento_cura.realizado === false ? "nao" : ""}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.tempo_rompimento_cura.realizado', value === "sim" ? true : value === "nao" ? false : null)}
+                            onValueChange={(value) => handleDeepChange('pintura_ligacao', 'tempo_rompimento_cura', 'realizado', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable}
                           >
                             <SelectTrigger className="h-8">
@@ -1008,7 +1009,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.pintura_ligacao.taxa_pintura.realizado}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.taxa_pintura.realizado', e.target.checked)}
+                            onChange={(e) => handleDeepChange('pintura_ligacao', 'taxa_pintura', 'realizado', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1021,7 +1022,7 @@ export default function ChecklistAplicacaoPage() {
                             onChange={(e) => {
                               const value = e.target.value.replace(',', '.');
                               if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
-                                handleNestedChange('pintura_ligacao.taxa_pintura.resultado', value === '' ? null : parseFloat(value) || value);
+                                handleDeepChange('pintura_ligacao', 'taxa_pintura', 'resultado', value === '' ? null : parseFloat(value) || value);
                               }
                             }}
                             disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
@@ -1032,7 +1033,7 @@ export default function ChecklistAplicacaoPage() {
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.taxa_pintura.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura.conforme === false ? "nao" : ""}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura.conforme', value === "sim" ? true : value === "nao" ? false : null)}
+                            onValueChange={(value) => handleDeepChange('pintura_ligacao', 'taxa_pintura', 'conforme', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura.realizado}
                           >
                             <SelectTrigger className="h-8">
@@ -1052,7 +1053,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.pintura_ligacao.residuo_emulsao.realizado}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.residuo_emulsao.realizado', e.target.checked)}
+                            onChange={(e) => handleDeepChange('pintura_ligacao', 'residuo_emulsao', 'realizado', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1062,7 +1063,7 @@ export default function ChecklistAplicacaoPage() {
                             type="number"
                             step="0.1"
                             value={formData.pintura_ligacao.residuo_emulsao.resultado || ''}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.residuo_emulsao.resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                            onChange={(e) => handleDeepChange('pintura_ligacao', 'residuo_emulsao', 'resultado', e.target.value ? parseFloat(e.target.value) : null)}
                             disabled={!isEditable}
                             placeholder="Ex: 60"
                             className="h-8"
@@ -1077,7 +1078,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.pintura_ligacao.taxa_pintura_residual.realizado}
-                            onChange={(e) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.realizado', e.target.checked)}
+                            onChange={(e) => handleDeepChange('pintura_ligacao', 'taxa_pintura_residual', 'realizado', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1090,7 +1091,7 @@ export default function ChecklistAplicacaoPage() {
                             onChange={(e) => {
                               const value = e.target.value.replace(',', '.');
                               if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
-                                handleNestedChange('pintura_ligacao.taxa_pintura_residual.resultado', value === '' ? null : parseFloat(value) || value);
+                                handleDeepChange('pintura_ligacao', 'taxa_pintura_residual', 'resultado', value === '' ? null : parseFloat(value) || value);
                               }
                             }}
                             disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
@@ -1101,7 +1102,7 @@ export default function ChecklistAplicacaoPage() {
                         <td className="border border-slate-300 px-2 py-1">
                           <Select
                             value={formData.pintura_ligacao.taxa_pintura_residual.conforme === true ? "sim" : formData.pintura_ligacao.taxa_pintura_residual.conforme === false ? "nao" : ""}
-                            onValueChange={(value) => handleNestedChange('pintura_ligacao.taxa_pintura_residual.conforme', value === "sim" ? true : value === "nao" ? false : null)}
+                            onValueChange={(value) => handleDeepChange('pintura_ligacao', 'taxa_pintura_residual', 'conforme', value === "sim" ? true : value === "nao" ? false : null)}
                             disabled={!isEditable || !formData.pintura_ligacao.taxa_pintura_residual.realizado}
                           >
                             <SelectTrigger className="h-8">
@@ -1123,7 +1124,7 @@ export default function ChecklistAplicacaoPage() {
                     <Textarea
                       id="pintura_observacoes"
                       value={formData.pintura_ligacao.observacoes || ''}
-                      onChange={(e) => handleNestedChange('pintura_ligacao.observacoes', e.target.value)}
+                      onChange={(e) => handleNestedChange('pintura_ligacao', 'observacoes', e.target.value)}
                       disabled={!isEditable}
                       rows={2}
                       maxLength={500}
@@ -1148,7 +1149,7 @@ export default function ChecklistAplicacaoPage() {
                       <Input
                         id="km_estaca_inicial"
                         value={formData.controle_aplicacao.km_estaca_inicial}
-                        onChange={(e) => handleNestedChange('controle_aplicacao.km_estaca_inicial', e.target.value)}
+                        onChange={(e) => handleNestedChange('controle_aplicacao', 'km_estaca_inicial', e.target.value)}
                         disabled={!isEditable}
                         placeholder="Ex: km 10+500"
                       />
@@ -1158,7 +1159,7 @@ export default function ChecklistAplicacaoPage() {
                       <Label htmlFor="lado_inicial">Lado Inicial</Label>
                       <Select
                         value={formData.controle_aplicacao.lado_inicial}
-                        onValueChange={(value) => handleNestedChange('controle_aplicacao.lado_inicial', value)}
+                        onValueChange={(value) => handleNestedChange('controle_aplicacao', 'lado_inicial', value)}
                         disabled={!isEditable}
                       >
                         <SelectTrigger>
@@ -1177,7 +1178,7 @@ export default function ChecklistAplicacaoPage() {
                       <Input
                         id="km_estaca_final"
                         value={formData.controle_aplicacao.km_estaca_final}
-                        onChange={(e) => handleNestedChange('controle_aplicacao.km_estaca_final', e.target.value)}
+                        onChange={(e) => handleNestedChange('controle_aplicacao', 'km_estaca_final', e.target.value)}
                         disabled={!isEditable}
                         placeholder="Ex: km 12+300"
                       />
@@ -1187,7 +1188,7 @@ export default function ChecklistAplicacaoPage() {
                       <Label htmlFor="lado_final">Lado Final</Label>
                       <Select
                         value={formData.controle_aplicacao.lado_final}
-                        onValueChange={(value) => handleNestedChange('controle_aplicacao.lado_final', value)}
+                        onValueChange={(value) => handleNestedChange('controle_aplicacao', 'lado_final', value)}
                         disabled={!isEditable}
                       >
                         <SelectTrigger>
@@ -1207,7 +1208,7 @@ export default function ChecklistAplicacaoPage() {
                         id="quantidade_aplicada_cargas"
                         type="number"
                         value={formData.controle_aplicacao.quantidade_aplicada_cargas || ''}
-                        onChange={(e) => handleNestedChange('controle_aplicacao.quantidade_aplicada_cargas', e.target.value ? parseInt(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('controle_aplicacao', 'quantidade_aplicada_cargas', e.target.value ? parseInt(e.target.value) : null)}
                         disabled={!isEditable}
                         placeholder="Ex: 15"
                       />
@@ -1220,7 +1221,7 @@ export default function ChecklistAplicacaoPage() {
                         type="number"
                         step="0.01"
                         value={formData.controle_aplicacao.quantidade_aplicada_toneladas || ''}
-                        onChange={(e) => handleNestedChange('controle_aplicacao.quantidade_aplicada_toneladas', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('controle_aplicacao', 'quantidade_aplicada_toneladas', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable}
                         placeholder="Ex: 150.5"
                       />
@@ -1246,7 +1247,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.controle_aplicacao.temp_aplicacao_cargas.realizado}
-                            onChange={(e) => handleNestedChange('controle_aplicacao.temp_aplicacao_cargas.realizado', e.target.checked)}
+                            onChange={(e) => handleDeepChange('controle_aplicacao', 'temp_aplicacao_cargas', 'realizado', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1258,7 +1259,7 @@ export default function ChecklistAplicacaoPage() {
                             value={formData.controle_aplicacao.temp_aplicacao_cargas.quantidade || ''}
                             onChange={(e) => {
                               const qtde = e.target.value ? parseInt(e.target.value) : 0;
-                              handleNestedChange('controle_aplicacao.temp_aplicacao_cargas.quantidade', qtde);
+                              handleDeepChange('controle_aplicacao', 'temp_aplicacao_cargas', 'quantidade', qtde);
                             }}
                             disabled={!isEditable}
                             className="h-8 text-sm"
@@ -1270,7 +1271,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.controle_aplicacao.temp_aplicacao_cargas.conforme || false}
-                            onChange={(e) => handleNestedChange('controle_aplicacao.temp_aplicacao_cargas.conforme', e.target.checked)}
+                            onChange={(e) => handleDeepChange('controle_aplicacao', 'temp_aplicacao_cargas', 'conforme', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1283,7 +1284,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.controle_aplicacao.espessura_camada.realizado}
-                            onChange={(e) => handleNestedChange('controle_aplicacao.espessura_camada.realizado', e.target.checked)}
+                            onChange={(e) => handleDeepChange('controle_aplicacao', 'espessura_camada', 'realizado', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1295,7 +1296,7 @@ export default function ChecklistAplicacaoPage() {
                             value={formData.controle_aplicacao.espessura_camada.quantidade || ''}
                             onChange={(e) => {
                               const qtde = e.target.value ? parseInt(e.target.value) : 0;
-                              handleNestedChange('controle_aplicacao.espessura_camada.quantidade', qtde);
+                              handleDeepChange('controle_aplicacao', 'espessura_camada', 'quantidade', qtde);
                             }}
                             disabled={!isEditable}
                             className="h-8 text-sm"
@@ -1307,7 +1308,7 @@ export default function ChecklistAplicacaoPage() {
                           <input
                             type="checkbox"
                             checked={formData.controle_aplicacao.espessura_camada.conforme || false}
-                            onChange={(e) => handleNestedChange('controle_aplicacao.espessura_camada.conforme', e.target.checked)}
+                            onChange={(e) => handleDeepChange('controle_aplicacao', 'espessura_camada', 'conforme', e.target.checked)}
                             disabled={!isEditable}
                             className="w-4 h-4"
                           />
@@ -1322,7 +1323,7 @@ export default function ChecklistAplicacaoPage() {
                     <Textarea
                       id="controle_observacoes"
                       value={formData.controle_aplicacao.observacoes || ''}
-                      onChange={(e) => handleNestedChange('controle_aplicacao.observacoes', e.target.value)}
+                      onChange={(e) => handleNestedChange('controle_aplicacao', 'observacoes', e.target.value)}
                       disabled={!isEditable}
                       rows={2}
                       maxLength={500}

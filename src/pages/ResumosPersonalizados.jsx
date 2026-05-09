@@ -480,15 +480,10 @@ export default function ResumosPersonalizadosPage() {
 
   const getNestedValue = (obj, path) => {
     const keys = path.split('.');
-    let value = obj;
-    for (const key of keys) {
-      if (value && typeof value === 'object') {
-        value = value[key];
-      } else {
-        return null;
-      }
-    }
-    return value;
+    return keys.reduce((current, key) => {
+      if (current === null || current === undefined || typeof current !== 'object') return null;
+      return Object.prototype.hasOwnProperty.call(current, key) ? current[key] : null;
+    }, obj);
   };
 
   const calcularMediaArray = (array, campo) => {

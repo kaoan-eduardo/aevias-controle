@@ -246,12 +246,27 @@ export default function ChecklistUsinaPage() {
     return regex.test(value);
   }, []);
 
-  const handleNestedChange = useCallback((path, value, maxDecimals = null) => {
+  // For controle_cauq paths (3+ levels), pass path string + value + maxDecimals.
+  // For controle_ligante (2 levels), pass (section, field, value) — no path strings.
+  const handleNestedChange = useCallback((sectionOrPath, fieldOrValue, valueOrDecimals = null, maxDecimals = null) => {
+    // Detect call style: if fieldOrValue is a string key (not an object/array), it's (section, field, value)
+    if (typeof fieldOrValue === 'string' && !fieldOrValue.includes('.')) {
+      // 2-level call: handleNestedChange(section, field, value)
+      setFormData(prev => ({
+        ...prev,
+        [sectionOrPath]: { ...prev[sectionOrPath], [fieldOrValue]: valueOrDecimals }
+      }));
+      return;
+    }
+
+    // Legacy path-string call for controle_cauq: handleNestedChange('controle_cauq.x.y', value, decimals)
+    const path = sectionOrPath;
+    const value = fieldOrValue;
+    const decimals = valueOrDecimals;
+
     setFormData(prev => {
       const newData = JSON.parse(JSON.stringify(prev));
       const keys = path.split('.');
-      const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-      if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
 
       if (keys[0] === 'controle_cauq') {
         const testKey = keys[1];
@@ -280,7 +295,7 @@ export default function ChecklistUsinaPage() {
             parsedValue = value !== '' ? String(value) : null;
           } else {
             // Para outros campos numéricos, validar casas decimais
-            if (value !== '' && maxDecimals !== null && !validateDecimalInput(value, maxDecimals)) {
+            if (value !== '' && decimals !== null && !validateDecimalInput(value, decimals)) {
               return prev; // Não atualizar se inválido
             }
             parsedValue = value !== '' ? parseFloat(value) : null;
@@ -353,16 +368,6 @@ export default function ChecklistUsinaPage() {
           }
         }
       } else {
-        const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-        if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
-        let current = newData;
-        for (let i = 0; i < keys.length - 1; i++) {
-          if (!current[keys[i]] || typeof current[keys[i]] !== 'object') {
-            current[keys[i]] = {};
-          }
-          current = current[keys[i]];
-        }
-        current[keys[keys.length - 1]] = value;
       }
 
       return newData;
@@ -1484,7 +1489,7 @@ export default function ChecklistUsinaPage() {
                         <Input
                           id="fornecedor"
                           value={formData.controle_ligante?.fornecedor || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.fornecedor', e.target.value)}
+                          onChange={(e) => handleNestedChange('controle_ligante', 'fornecedor', e.target.value)}
                           disabled={true}
                           placeholder="Preenchido automaticamente pelo projeto"
                           className="bg-slate-100"
@@ -1496,7 +1501,7 @@ export default function ChecklistUsinaPage() {
                         <Input
                           id="nota_fiscal"
                           value={formData.controle_ligante?.nota_fiscal || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.nota_fiscal', e.target.value)}
+                          onChange={(e) => handleNestedChange('controle_ligante', 'nota_fiscal', e.target.value)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1506,7 +1511,7 @@ export default function ChecklistUsinaPage() {
                         <Input
                           id="placa_carreta"
                           value={formData.controle_ligante?.placa_carreta || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.placa_carreta', e.target.value)}
+                          onChange={(e) => handleNestedChange('controle_ligante', 'placa_carreta', e.target.value)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1518,7 +1523,7 @@ export default function ChecklistUsinaPage() {
                           type="number"
                           step="0.1"
                           value={formData.controle_ligante?.quantidade_toneladas || ''}
-                          onChange={(e) => handleNestedChange('controle_ligante.quantidade_toneladas', e.target.value ? parseFloat(e.target.value) : null)}
+                          onChange={(e) => handleNestedChange('controle_ligante', 'quantidade_toneladas', e.target.value ? parseFloat(e.target.value) : null)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1547,7 +1552,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_1_temp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_temp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_temp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1556,7 +1561,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_1_sp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_sp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_sp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1565,7 +1570,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_1_rpm || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_rpm', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_rpm', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1579,7 +1584,7 @@ export default function ChecklistUsinaPage() {
                                   type="number"
                                   step="0.1"
                                   value={formData.controle_ligante?.viscosidade_1_resultado || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_resultado', e.target.value ? parseFloat(e.target.value) : null)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm"
                                 />
@@ -1588,7 +1593,7 @@ export default function ChecklistUsinaPage() {
                                 <Input
                                   type="text"
                                   value={formData.controle_ligante?.viscosidade_1_limite || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_limite', e.target.value)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_limite', e.target.value)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm text-center"
                                 />
@@ -1598,7 +1603,7 @@ export default function ChecklistUsinaPage() {
                                 <input
                                   type="checkbox"
                                   checked={formData.controle_ligante?.viscosidade_1_conforme || false}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_1_conforme', e.target.checked)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_1_conforme', e.target.checked)}
                                   disabled={!isEditable || isApproved}
                                   className="w-5 h-5"
                                 />
@@ -1613,7 +1618,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_2_temp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_temp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_temp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1622,7 +1627,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_2_sp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_sp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_sp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1631,7 +1636,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_2_rpm || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_rpm', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_rpm', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1645,7 +1650,7 @@ export default function ChecklistUsinaPage() {
                                   type="number"
                                   step="0.1"
                                   value={formData.controle_ligante?.viscosidade_2_resultado || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_resultado', e.target.value ? parseFloat(e.target.value) : null)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm"
                                 />
@@ -1654,7 +1659,7 @@ export default function ChecklistUsinaPage() {
                                 <Input
                                   type="text"
                                   value={formData.controle_ligante?.viscosidade_2_limite || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_limite', e.target.value)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_limite', e.target.value)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm text-center"
                                 />
@@ -1664,7 +1669,7 @@ export default function ChecklistUsinaPage() {
                                 <input
                                   type="checkbox"
                                   checked={formData.controle_ligante?.viscosidade_2_conforme || false}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_2_conforme', e.target.checked)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_2_conforme', e.target.checked)}
                                   disabled={!isEditable || isApproved}
                                   className="w-5 h-5"
                                 />
@@ -1679,7 +1684,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_3_temp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_temp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_temp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1688,7 +1693,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_3_sp || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_sp', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_sp', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1697,7 +1702,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.viscosidade_3_rpm || ''}
-                                    onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_rpm', e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_rpm', e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-7 w-14 text-xs px-1"
                                     placeholder="__"
@@ -1711,7 +1716,7 @@ export default function ChecklistUsinaPage() {
                                   type="number"
                                   step="0.1"
                                   value={formData.controle_ligante?.viscosidade_3_resultado || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_resultado', e.target.value ? parseFloat(e.target.value) : null)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_resultado', e.target.value ? parseFloat(e.target.value) : null)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm"
                                 />
@@ -1720,7 +1725,7 @@ export default function ChecklistUsinaPage() {
                                 <Input
                                   type="text"
                                   value={formData.controle_ligante?.viscosidade_3_limite || ''}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_limite', e.target.value)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_limite', e.target.value)}
                                   disabled={!isEditable || isApproved}
                                   className="h-8 text-sm text-center"
                                 />
@@ -1730,7 +1735,7 @@ export default function ChecklistUsinaPage() {
                                 <input
                                   type="checkbox"
                                   checked={formData.controle_ligante?.viscosidade_3_conforme || false}
-                                  onChange={(e) => handleNestedChange('controle_ligante.viscosidade_3_conforme', e.target.checked)}
+                                  onChange={(e) => handleNestedChange('controle_ligante', 'viscosidade_3_conforme', e.target.checked)}
                                   disabled={!isEditable || isApproved}
                                   className="w-5 h-5"
                                 />
@@ -1752,7 +1757,7 @@ export default function ChecklistUsinaPage() {
                                     type="number"
                                     step="0.1"
                                     value={formData.controle_ligante?.[`${ensaio.key}_resultado`] || ''}
-                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_resultado`, e.target.value ? parseFloat(e.target.value) : null)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', `${ensaio.key}_resultado`, e.target.value ? parseFloat(e.target.value) : null)}
                                     disabled={!isEditable || isApproved}
                                     className="h-8 text-sm"
                                   />
@@ -1761,7 +1766,7 @@ export default function ChecklistUsinaPage() {
                                   <Input
                                     type="text"
                                     value={formData.controle_ligante?.[`${ensaio.key}_limite`] || ''}
-                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_limite`, e.target.value)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', `${ensaio.key}_limite`, e.target.value)}
                                     disabled={!isEditable || isApproved}
                                     className="h-8 text-sm text-center"
                                   />
@@ -1771,7 +1776,7 @@ export default function ChecklistUsinaPage() {
                                   <input
                                     type="checkbox"
                                     checked={formData.controle_ligante?.[`${ensaio.key}_conforme`] || false}
-                                    onChange={(e) => handleNestedChange(`controle_ligante.${ensaio.key}_conforme`, e.target.checked)}
+                                    onChange={(e) => handleNestedChange('controle_ligante', `${ensaio.key}_conforme`, e.target.checked)}
                                     disabled={!isEditable || isApproved}
                                     className="w-5 h-5"
                                   />

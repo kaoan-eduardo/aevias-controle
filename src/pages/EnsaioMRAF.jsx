@@ -125,22 +125,13 @@ export default function EnsaioMRAFPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleNestedChange = useCallback((path, value) => {
-    setFormData(prev => {
-      const newData = JSON.parse(JSON.stringify(prev));
-      const keys = path.split('.');
-      const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-      if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
-      let current = newData;
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]] || typeof current[keys[i]] !== 'object') {
-          current[keys[i]] = {};
-        }
-        current = current[keys[i]];
-      }
-      current[keys[keys.length - 1]] = value;
-      return newData;
-    });
+  // Atualiza um campo dentro de uma seção aninhada (ex: extracao_ligante, granulometria)
+  // Evita path strings dinâmicos que disparam avisos de prototype pollution
+  const handleNestedChange = useCallback((section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: { ...prev[section], [field]: value }
+    }));
   }, []);
 
   // Cálculo automático da extração de ligante
@@ -149,20 +140,20 @@ export default function EnsaioMRAFPage() {
     
     if (ext.amostra_umida && ext.amostra_seca) {
       const umidade = ((ext.amostra_umida - ext.amostra_seca) / ext.amostra_seca) * 100;
-      handleNestedChange('extracao_ligante.umidade', parseFloat(umidade.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'umidade', parseFloat(umidade.toFixed(2)));
     }
 
     if (ext.amostra_com_ligante && ext.amostra_sem_ligante && ext.fator_correcao) {
       const pesoLigante = (ext.amostra_com_ligante - ext.amostra_sem_ligante) * ext.fator_correcao;
       const teorLigante = (pesoLigante / ext.amostra_sem_ligante) * 100;
-      handleNestedChange('extracao_ligante.peso_ligante', parseFloat(pesoLigante.toFixed(2)));
-      handleNestedChange('extracao_ligante.teor_ligante', parseFloat(teorLigante.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'peso_ligante', parseFloat(pesoLigante.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'teor_ligante', parseFloat(teorLigante.toFixed(2)));
     }
 
     // Cálculo do % de emulsão
     if (ext.teor_ligante && ext.residuo_emulsao) {
       const percentualEmulsao = (ext.teor_ligante / ext.residuo_emulsao) * 100;
-      handleNestedChange('extracao_ligante.percentual_emulsao', parseFloat(percentualEmulsao.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'percentual_emulsao', parseFloat(percentualEmulsao.toFixed(2)));
     }
   }, [
     formData.extracao_ligante.amostra_umida,
@@ -641,7 +632,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_umida || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -653,7 +644,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_seca || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -676,7 +667,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_com_ligante || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_com_ligante', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_com_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -688,7 +679,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_sem_ligante || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_sem_ligante', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_sem_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -700,7 +691,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.fator_correcao || 1.0}
-                        onChange={(e) => handleNestedChange('extracao_ligante.fator_correcao', e.target.value ? parseFloat(e.target.value) : 1.0)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'fator_correcao', e.target.value ? parseFloat(e.target.value) : 1.0)}
                         disabled={!isEditable || isApproved}
                       />
                     </div>
@@ -733,7 +724,7 @@ export default function EnsaioMRAFPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.residuo_emulsao || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.residuo_emulsao', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'residuo_emulsao', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                       />
                     </div>
@@ -809,7 +800,10 @@ export default function EnsaioMRAFPage() {
                                     type="number"
                                     step="0.01"
                                     value={formData.granulometria.peso_retido_peneiras?.[peneira.key] || ''}
-                                    onChange={(e) => handleNestedChange(`granulometria.peso_retido_peneiras.${peneira.key}`, e.target.value ? parseFloat(e.target.value) : null)}
+                                    onChange={(e) => {
+                                     const newPesos = { ...formData.granulometria.peso_retido_peneiras, [peneira.key]: e.target.value ? parseFloat(e.target.value) : null };
+                                     handleNestedChange('granulometria', 'peso_retido_peneiras', newPesos);
+                                    }}
                                     disabled={!isEditable || isApproved}
                                     className="h-8 text-sm"
                                   />
