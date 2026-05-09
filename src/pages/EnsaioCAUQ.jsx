@@ -114,53 +114,29 @@ export default function EnsaioCAUQPage() {
 
   const peneirasDoProjecto = useMemo(() => {
     if (!selectedFaixa || !selectedFaixa.peneiras || selectedFaixa.peneiras.length === 0) {
-      console.log('⚠️ Usando todas as peneiras (faixa não definida ou vazia)');
       return peneirasConfig;
     }
-    
-    console.log('🔍 Filtrando peneiras baseado na faixa:', selectedFaixa.nome);
-    console.log('📋 Peneiras da faixa:', selectedFaixa.peneiras.map(p => p.abertura));
-    
-    // Filtrar apenas as peneiras que estão na faixa
-    const filtradas = peneirasConfig.filter(peneira => {
-      // Normalizar abertura: remover vírgulas, pontos e "mm"
-      const aberturaConfig = peneira.abertura.replace(',', '.').trim();
-      const match = selectedFaixa.peneiras.some(p => {
-        // Remover "mm" e espaços, depois normalizar
-        const aberturaFaixa = p.abertura.toString()
-          .replace(/mm/gi, '')
-          .replace(',', '.')
-          .trim();
-        const isMatch = parseFloat(aberturaConfig) === parseFloat(aberturaFaixa);
-        return isMatch;
+
+    return peneirasConfig.filter(peneira => {
+      const aberturaConfig = parseFloat(peneira.abertura.replace(',', '.'));
+      return selectedFaixa.peneiras.some(p => {
+        const aberturaFaixa = parseFloat(p.abertura.toString().replace(/mm/gi, '').replace(',', '.'));
+        return aberturaConfig === aberturaFaixa;
       });
-      return match;
     });
-    
-    console.log('✅ Peneiras filtradas:', filtradas.length, filtradas.map(p => p.label));
-    return filtradas;
   }, [selectedFaixa]);
 
   const handleChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const handleNestedChange = useCallback((path, value) => {
-    setFormData(prev => {
-      const newData = JSON.parse(JSON.stringify(prev));
-      const keys = path.split('.');
-      const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-      if (keys.some(k => UNSAFE_KEYS.has(k))) return newData;
-      let current = newData;
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]] || typeof current[keys[i]] !== 'object') {
-          current[keys[i]] = {};
-        }
-        current = current[keys[i]];
-      }
-      current[keys[keys.length - 1]] = value;
-      return newData;
-    });
+  // Atualiza um campo dentro de uma seção aninhada (ex: extracao_ligante, densidade_rice)
+  // Evita path strings dinâmicos que disparam avisos de prototype pollution
+  const handleNestedChange = useCallback((section, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: { ...prev[section], [field]: value }
+    }));
   }, []);
 
   // Cálculo automático da extração de ligante
@@ -170,22 +146,20 @@ export default function EnsaioCAUQPage() {
     // Calcular umidade apenas se o ensaio de umidade estiver habilitado
     if (formData.realizar_ensaio_umidade && ext.amostra_umida && ext.amostra_seca) {
       const umidade = ((ext.amostra_umida - ext.amostra_seca) / ext.amostra_seca) * 100;
-      handleNestedChange('extracao_ligante.umidade', parseFloat(umidade.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'umidade', parseFloat(umidade.toFixed(2)));
     }
 
     if (ext.amostra_com_ligante && ext.amostra_sem_ligante && ext.fator_correcao) {
       const pesoLigante = (ext.amostra_com_ligante - ext.amostra_sem_ligante) * ext.fator_correcao;
       const teorLigante = (pesoLigante / ext.amostra_com_ligante) * 100;
-      handleNestedChange('extracao_ligante.peso_ligante', parseFloat(pesoLigante.toFixed(2)));
-      handleNestedChange('extracao_ligante.teor_ligante', parseFloat(teorLigante.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'peso_ligante', parseFloat(pesoLigante.toFixed(2)));
+      handleNestedChange('extracao_ligante', 'teor_ligante', parseFloat(teorLigante.toFixed(2)));
       
-      // Calcular teor de ligante real (se tiver ensaio de umidade)
       if (formData.realizar_ensaio_umidade && ext.umidade) {
         const teorReal = teorLigante - ext.umidade;
-        handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorReal.toFixed(2)));
+        handleNestedChange('extracao_ligante', 'teor_ligante_real', parseFloat(teorReal.toFixed(2)));
       } else {
-        // Se não tiver umidade, teor real = teor de ligante
-        handleNestedChange('extracao_ligante.teor_ligante_real', parseFloat(teorLigante.toFixed(2)));
+        handleNestedChange('extracao_ligante', 'teor_ligante_real', parseFloat(teorLigante.toFixed(2)));
       }
     }
   }, [
@@ -206,7 +180,7 @@ export default function EnsaioCAUQPage() {
     const rice = formData.densidade_rice;
     if (rice.frasco_agua && rice.amostra && rice.frasco_agua_amostra && rice.densidade_agua) {
       const densRice = (rice.amostra * rice.densidade_agua) / (rice.frasco_agua + rice.amostra - rice.frasco_agua_amostra);
-      handleNestedChange('densidade_rice.densidade_rice', parseFloat(densRice.toFixed(3)));
+      handleNestedChange('densidade_rice', 'densidade_rice', parseFloat(densRice.toFixed(3)));
     }
   }, [
     formData.realizar_densidade_rice,
@@ -230,7 +204,7 @@ export default function EnsaioCAUQPage() {
       if (pesoTotal > 0) {
         const percentualPassante200 = (pesoRetido200 / pesoTotal) * 100;
         const fillerBetume = (percentualPassante200 * (100 - teorReal)) / (100 * teorReal);
-        handleNestedChange('extracao_ligante.filler_betume', parseFloat(fillerBetume.toFixed(2)));
+        handleNestedChange('extracao_ligante', 'filler_betume', parseFloat(fillerBetume.toFixed(2)));
       }
     }
   }, [
@@ -909,7 +883,7 @@ export default function EnsaioCAUQPage() {
                             type="number"
                             step="0.01"
                             value={formData.extracao_ligante.amostra_umida || ''}
-                            onChange={(e) => handleNestedChange('extracao_ligante.amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
+                            onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_umida', e.target.value ? parseFloat(e.target.value) : null)}
                             disabled={!isEditable || isApproved}
                           />
                         </div>
@@ -920,7 +894,7 @@ export default function EnsaioCAUQPage() {
                             type="number"
                             step="0.01"
                             value={formData.extracao_ligante.amostra_seca || ''}
-                            onChange={(e) => handleNestedChange('extracao_ligante.amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
+                            onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_seca', e.target.value ? parseFloat(e.target.value) : null)}
                             disabled={!isEditable || isApproved}
                           />
                         </div>
@@ -944,7 +918,7 @@ export default function EnsaioCAUQPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_com_ligante || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_com_ligante', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_com_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -956,7 +930,7 @@ export default function EnsaioCAUQPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.amostra_sem_ligante || ''}
-                        onChange={(e) => handleNestedChange('extracao_ligante.amostra_sem_ligante', e.target.value ? parseFloat(e.target.value) : null)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'amostra_sem_ligante', e.target.value ? parseFloat(e.target.value) : null)}
                         disabled={!isEditable || isApproved}
                         required={formData.status === 'finalizado'}
                       />
@@ -968,7 +942,7 @@ export default function EnsaioCAUQPage() {
                         type="number"
                         step="0.01"
                         value={formData.extracao_ligante.fator_correcao || 1.0}
-                        onChange={(e) => handleNestedChange('extracao_ligante.fator_correcao', e.target.value ? parseFloat(e.target.value) : 1.0)}
+                        onChange={(e) => handleNestedChange('extracao_ligante', 'fator_correcao', e.target.value ? parseFloat(e.target.value) : 1.0)}
                         disabled={!isEditable || isApproved}
                       />
                     </div>
@@ -1078,7 +1052,10 @@ export default function EnsaioCAUQPage() {
                                     type="number"
                                     step="0.01"
                                     value={formData.granulometria.peso_retido_peneiras?.[peneira.key] || ''}
-                                    onChange={(e) => handleNestedChange(`granulometria.peso_retido_peneiras.${peneira.key}`, e.target.value ? parseFloat(e.target.value) : null)}
+                                    onChange={(e) => {
+                                      const newPesos = { ...formData.granulometria.peso_retido_peneiras, [peneira.key]: e.target.value ? parseFloat(e.target.value) : null };
+                                      handleNestedChange('granulometria', 'peso_retido_peneiras', newPesos);
+                                    }}
                                     disabled={!isEditable || isApproved}
                                     className="h-8 text-sm"
                                   />
@@ -1127,7 +1104,7 @@ export default function EnsaioCAUQPage() {
                           type="number"
                           step="0.1"
                           value={formData.densidade_rice.frasco_agua || ''}
-                          onChange={(e) => handleNestedChange('densidade_rice.frasco_agua', e.target.value ? parseFloat(e.target.value) : null)}
+                          onChange={(e) => handleNestedChange('densidade_rice', 'frasco_agua', e.target.value ? parseFloat(e.target.value) : null)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1138,7 +1115,7 @@ export default function EnsaioCAUQPage() {
                           type="number"
                           step="0.1"
                           value={formData.densidade_rice.amostra || ''}
-                          onChange={(e) => handleNestedChange('densidade_rice.amostra', e.target.value ? parseFloat(e.target.value) : null)}
+                          onChange={(e) => handleNestedChange('densidade_rice', 'amostra', e.target.value ? parseFloat(e.target.value) : null)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1149,7 +1126,7 @@ export default function EnsaioCAUQPage() {
                           type="number"
                           step="0.1"
                           value={formData.densidade_rice.frasco_agua_amostra || ''}
-                          onChange={(e) => handleNestedChange('densidade_rice.frasco_agua_amostra', e.target.value ? parseFloat(e.target.value) : null)}
+                          onChange={(e) => handleNestedChange('densidade_rice', 'frasco_agua_amostra', e.target.value ? parseFloat(e.target.value) : null)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1160,7 +1137,7 @@ export default function EnsaioCAUQPage() {
                           type="number"
                           step="0.1"
                           value={formData.densidade_rice.temperatura_agua || ''}
-                          onChange={(e) => handleNestedChange('densidade_rice.temperatura_agua', e.target.value ? parseFloat(e.target.value) : null)}
+                          onChange={(e) => handleNestedChange('densidade_rice', 'temperatura_agua', e.target.value ? parseFloat(e.target.value) : null)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
@@ -1171,7 +1148,7 @@ export default function EnsaioCAUQPage() {
                           type="number"
                           step="0.0001"
                           value={formData.densidade_rice.densidade_agua || 0.9971}
-                          onChange={(e) => handleNestedChange('densidade_rice.densidade_agua', e.target.value ? parseFloat(e.target.value) : 0.9971)}
+                          onChange={(e) => handleNestedChange('densidade_rice', 'densidade_agua', e.target.value ? parseFloat(e.target.value) : 0.9971)}
                           disabled={!isEditable || isApproved}
                         />
                       </div>
