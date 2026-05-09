@@ -69,12 +69,13 @@ function processarRegional(regional, userAccessMap) {
   // 1. Campo singular — gestor_contrato_responsavel
   const gestorResult = validarGestorSingular(regional.gestor_contrato_responsavel, userAccessMap);
   if (gestorResult?.remover) {
-    const email = regional.gestor_contrato_responsavel;
-    console.log(`  ❌ Removendo ${email} de gestor_contrato_responsavel (access_level: ${gestorResult.accessLevel})`);
+    const email = String(regional.gestor_contrato_responsavel ?? '');
+    const levelStr = String(gestorResult.accessLevel ?? 'desconhecido');
+    console.log(`  ❌ Removendo ${email} de gestor_contrato_responsavel (access_level: ${levelStr})`);
     corrections.push({
       email,
       removed_from: 'gestor_contrato_responsavel',
-      reason: `access_level é "${gestorResult.accessLevel}", esperado: "gestor_contrato"`,
+      reason: `access_level é "${levelStr}", esperado: "gestor_contrato"`,
     });
     updates.gestor_contrato_responsavel = null;
     modificado = true;
@@ -82,18 +83,21 @@ function processarRegional(regional, userAccessMap) {
 
   // 2. Campos de lista
   for (const { campo, permitidos } of LISTA_VALIDACOES) {
-    const lista = regional[campo];
-    if (!lista || lista.length === 0) continue;
+    const lista = (regional[campo] ?? []);
+    if (!Array.isArray(lista) || lista.length === 0) continue;
 
     const { validos, removidos } = filtrarEmails(lista, userAccessMap, permitidos);
 
     if (removidos.length > 0) {
+      const campoStr = String(campo);
+      const esperado = permitidos.filter(p => p !== 'admin').join(' ou ');
       for (const { email, accessLevel } of removidos) {
-        console.log(`  ❌ Removendo ${email} de ${campo} (access_level: ${String(accessLevel)})`);
+        const levelStr = String(accessLevel ?? 'desconhecido');
+        console.log(`  ❌ Removendo ${String(email)} de ${campoStr} (access_level: ${levelStr})`);
         corrections.push({
           email,
-          removed_from: campo,
-          reason: `access_level é "${String(accessLevel)}", esperado: ${permitidos.filter(p => p !== 'admin').join(' ou ')}`,
+          removed_from: campoStr,
+          reason: `access_level é "${levelStr}", esperado: ${esperado}`,
         });
       }
       updates[campo] = validos;
