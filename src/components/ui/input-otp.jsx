@@ -44,7 +44,9 @@ const InputOTPSlot = React.forwardRef(({ index, className, ...props }, ref) => {
 InputOTPSlot.displayName = "InputOTPSlot"
 
 const InputOTPSeparator = React.forwardRef(({ ...props }, ref) => (
-  <hr ref={ref} aria-hidden="true" {...props} style={{ border: 'none' }} />
+  <div ref={ref} role="separator" aria-hidden="true" {...props}>
+    <Minus />
+  </div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
