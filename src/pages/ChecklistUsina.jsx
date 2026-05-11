@@ -786,7 +786,6 @@ export default function ChecklistUsinaPage() {
       }
     };
     loadData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Executar apenas uma vez na montagem — location.search não deve re-disparar ao digitar
   
 

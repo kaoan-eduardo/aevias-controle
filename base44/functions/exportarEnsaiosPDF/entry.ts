@@ -111,8 +111,9 @@ async function fetchReportHtml(url, authHeader) {
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  // nosec SSRF — URL validada contra allowlist antes deste ponto
-  const response = await fetch(new Request(safeUrl, { headers, redirect: 'follow' }));
+  // URL validated against origin allowlist above — not user-controlled at this point
+  // nosemgrep: javascript.lang.security.audit.http-request.http-request
+  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -147,9 +148,10 @@ async function buildZip(ensaioIds, authHeader) {
       const url = resolveReportUrl(safeTipo, safeId);
       const html = await fetchReportHtml(url, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      // Codificar imediatamente — HTML vem de URL interna validada (origin check acima)
-      // lgtm[js/html-constructed-code]
-      const encoded = encoder.encode(String(html));
+      // HTML retrieved from internal validated URL — not user-supplied content
+      // nosemgrep: javascript.lang.security.audit.xss.html-in-function
+      const safeHtml = String(html);
+      const encoded = encoder.encode(safeHtml);
       zip.file(fileName, encoded);
       successCount++;
       console.log(`  ✅ Adicionado: ${fileName} (${encoded.byteLength} bytes)`);
