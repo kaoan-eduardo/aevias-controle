@@ -104,17 +104,17 @@ Deno.serve(async (req) => {
             // Adicionar laboratoristas
             const labs = regional.laboratoristas_responsaveis || [];
             console.log(`  ✓ Laboratoristas: ${labs.length}`);
-            labs.forEach(email => emailsNasRegionais.add(email.toLowerCase()));
+            labs.forEach(email => { emailsNasRegionais.add(email.toLowerCase()); });
             
             // Adicionar salas técnicas
             const salas = regional.salas_tecnicas_responsaveis || [];
             console.log(`  ✓ Salas Técnicas: ${salas.length}`);
-            salas.forEach(email => emailsNasRegionais.add(email.toLowerCase()));
+            salas.forEach(email => { emailsNasRegionais.add(email.toLowerCase()); });
             
             // Adicionar clientes
             const clientes = regional.clientes_responsaveis || [];
             console.log(`  ✓ Clientes: ${clientes.length}`);
-            clientes.forEach(email => emailsNasRegionais.add(email.toLowerCase()));
+            clientes.forEach(email => { emailsNasRegionais.add(email.toLowerCase()); });
         });
 
         console.log(`\n📧 Total de emails únicos nas regionais: ${emailsNasRegionais.size}`);

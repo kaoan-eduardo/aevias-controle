@@ -305,7 +305,7 @@ export default function NaoConformidadesPage() {
         OUTROS_TIPOS_REGISTRO.map(t => fetchOutro(t.value, t.label, t.page))
       );
 
-      outrosResults.flat().forEach(reg => allCNCs.push(reg));
+      outrosResults.flat().forEach(reg => { allCNCs.push(reg); });
 
       // Buscar NCs explícitas (campo nao_conformidades) em checklists e diário
       const registrosComNcExplicita = await Promise.all(

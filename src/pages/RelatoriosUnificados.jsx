@@ -140,7 +140,7 @@ export default function RelatoriosUnificados() {
           try {
             const entity = getEntityInstance(key);
             const records = await entity.filter({ obra_id: obraSelecionada }, "-created_date", 2000);
-            records.forEach(r => allRecords.push({ ...r, entityType: key }));
+            records.forEach(r => { allRecords.push({ ...r, entityType: key }); });
           } catch (e) { /* ignore */ }
         })
       );

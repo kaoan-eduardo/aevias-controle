@@ -297,7 +297,7 @@ export default function UsersPage() {
         regionaisDoUsuario.forEach(regional => {
           // Adicionar laboratoristas
           if (regional.laboratoristas_responsaveis) {
-            regional.laboratoristas_responsaveis.forEach(email => emailsPermitidos.add(email.toLowerCase()));
+            regional.laboratoristas_responsaveis.forEach(email => { emailsPermitidos.add(email.toLowerCase()); });
           }
           // Adicionar gestor
           if (regional.gestor_contrato_responsavel) {
@@ -305,11 +305,11 @@ export default function UsersPage() {
           }
           // Adicionar salas técnicas
           if (regional.salas_tecnicas_responsaveis) {
-            regional.salas_tecnicas_responsaveis.forEach(email => emailsPermitidos.add(email.toLowerCase()));
+            regional.salas_tecnicas_responsaveis.forEach(email => { emailsPermitidos.add(email.toLowerCase()); });
           }
           // Adicionar clientes
           if (regional.clientes_responsaveis) {
-            regional.clientes_responsaveis.forEach(email => emailsPermitidos.add(email.toLowerCase()));
+            regional.clientes_responsaveis.forEach(email => { emailsPermitidos.add(email.toLowerCase()); });
           }
         });
 

@@ -68,7 +68,7 @@ export default function Projects() {
         const projectIdsPermitidos = new Set();
         regionaisDoUsuario.forEach(regional => {
           if (regional.project_ids) {
-            regional.project_ids.forEach(id => projectIdsPermitidos.add(id));
+            regional.project_ids.forEach(id => { projectIdsPermitidos.add(id); });
           }
         });
 

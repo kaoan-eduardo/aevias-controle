@@ -340,7 +340,7 @@ export default function ChecklistReciclagem() {
     }
 
     try {
-      files.forEach(file => validateFile(file));
+      files.forEach(file => { validateFile(file); });
     } catch (error) {
       alert(error.message);
       e.target.value = '';

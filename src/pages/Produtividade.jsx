@@ -58,8 +58,8 @@ export default function ProdutividadePage() {
       const usinasSet = new Set();
       obras.forEach(obra => {
         if (!obrasVisiveisIds.has(obra.id)) return;
-        (obra.empreiteiras || []).forEach(e => empresasSet.add(e));
-        (obra.usinas || []).forEach(u => usinasSet.add(u));
+        (obra.empreiteiras || []).forEach(e => { empresasSet.add(e); });
+        (obra.usinas || []).forEach(u => { usinasSet.add(u); });
       });
       setEmpreiteiras(Array.from(empresasSet).sort());
       setUsinas(Array.from(usinasSet).sort());
