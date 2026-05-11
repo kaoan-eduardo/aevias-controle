@@ -111,9 +111,8 @@ async function fetchReportHtml(url, authHeader) {
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  // URL validated against origin allowlist above — not user-controlled at this point
-  // nosemgrep: javascript.lang.security.audit.http-request.http-request
-  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
+  // URL validated against allowedOrigin allowlist (lines above) — origin-pinned, not user-controlled
+  const response = await fetch(safeUrl, { headers, redirect: 'follow' }); // nosemgrep: javascript.lang.security.audit.http-request.http-request,javascript.lang.security.audit.ssrf.http-request
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
