@@ -387,8 +387,6 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                   position: gestorUser.position || 'Gestor de Contrato',
                   crea_number: gestorUser.crea_number || 'Não informado'
                 };
-
-                console.log('✅ Sala Técnica aprovando - Assinatura será do Gestor:', approverDetails);
               }
             }
           }
@@ -874,8 +872,6 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
             crea_number: user.crea_number || ''
           }
         };
-
-        console.log('Tentando assinar registro:', ensaio.id, 'com dados:', signatureData);
 
         await Entity.update(ensaio.id, signatureData);
 
@@ -1646,21 +1642,15 @@ export default function MeusEnsaios() {
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
         const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
         ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
-        console.log("📊 [DEBUG] Sala Técnica - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel === 'gestor_contrato') {
         const regionaisDoUsuario = regionaisData.filter((regional) => {
           const gestores = regional.gestores_contrato_responsaveis || [];
           return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase() ||
           gestores.some((email) => email.toLowerCase() === currentUser.email.toLowerCase());
         });
-        console.log("📊 [DEBUG] Gestor - Regionais do usuário:", regionaisDoUsuario);
         const regionaisIds = regionaisDoUsuario.map((r) => r.id);
-        console.log("📊 [DEBUG] Gestor - IDs das regionais:", regionaisIds);
         const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
-        console.log("📊 [DEBUG] Gestor - Obras permitidas (IDs):", obrasPermitidasIds);
         ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
-        console.log("📊 [DEBUG] Gestor Contrato - Ensaios filtrados:", ensaiosForUser.length);
-        console.log("📊 [DEBUG] Gestor - ChecklistAplicacao na lista:", ensaiosForUser.filter((e) => e.entityType === 'ChecklistAplicacao'));
       } else if (currentUserAccessLevel === 'cliente') {
         const regionaisDoUsuario = regionaisData.filter((regional) =>
         (regional.clientes_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
@@ -1673,12 +1663,7 @@ export default function MeusEnsaios() {
         obrasPermitidasIds.includes(ensaio.obra_id) && (
         ensaio.approved === true || ensaio.client_signature?.signed_by)
         );
-        console.log("📊 [DEBUG] Cliente - Ensaios filtrados:", ensaiosForUser.length);
       } else if (currentUserAccessLevel !== 'admin') {
-        console.log("📊 [DEBUG] User email:", currentUser.email);
-        console.log("📊 [DEBUG] User laboratorista_name:", currentUser.laboratorista_name);
-        console.log("📊 [DEBUG] Total combinedEnsaios antes do filtro:", combinedEnsaios.length);
-
         // Filtrar por created_by OU laboratorista_name
         ensaiosForUser = combinedEnsaios.filter((e) => {
           const emailMatch = e.created_by?.toLowerCase() === currentUser.email?.toLowerCase();
@@ -1686,14 +1671,6 @@ export default function MeusEnsaios() {
           e.laboratorista_name?.toLowerCase() === currentUser.laboratorista_name?.toLowerCase();
           return emailMatch || nameMatch;
         });
-
-        console.log("📊 [DEBUG] User - Ensaios filtrados (email OU nome):", ensaiosForUser.length);
-        console.log("📊 [DEBUG] Detalhes dos ensaios filtrados:");
-        ensaiosForUser.forEach((e, i) => {
-          console.log(`  ${i + 1}. Tipo: ${e.entityType}, Status: ${e.status}, Approved: ${e.approved}, Created by: ${e.created_by}, Lab name: ${e.laboratorista_name}`);
-        });
-      } else {
-        console.log("📊 [DEBUG] Admin - Mostrando todos os ensaios:", ensaiosForUser.length);
       }
 
       setEnsaios(ensaiosForUser);
