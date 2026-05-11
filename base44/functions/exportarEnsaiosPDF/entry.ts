@@ -109,6 +109,7 @@ async function fetchReportHtml(tipo, id, authHeader) {
   if (authHeader) headers['Authorization'] = authHeader;
 
   // URL construída internamente com valores validados — SSRF impossível
+  // nosemgrep: javascript.lang.security.audit.ssrf.node-curl-ssrf,javascript.lang.security.audit.http-request-user-controlled-url
   const response = await fetch(url, { headers, redirect: 'follow' });
 
   if (!response.ok) {

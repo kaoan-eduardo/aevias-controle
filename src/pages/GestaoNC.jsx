@@ -58,7 +58,6 @@ export default function GestaoNCPage() {
     loadData();
   }, [loadData]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadData = useCallback(async () => {
     setLoading(true);
     const userData = await User.me();
