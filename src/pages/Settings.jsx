@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { base44 } from "@/api/base44Client";
 
-const THEME_STORAGE_KEY = "aevias_theme";
+// Storage key for persisting user theme preference
+const THEME_STORAGE_KEY = "aevias_theme_pref";
 
 function applyTheme(theme) {
   const root = document.documentElement;
@@ -42,7 +43,7 @@ export default function Settings() {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (!saved) {
       localStorage.setItem(THEME_STORAGE_KEY, "system");
-      return "system";
+      return /** @type {string} */ ("system");
     }
     return saved;
   });

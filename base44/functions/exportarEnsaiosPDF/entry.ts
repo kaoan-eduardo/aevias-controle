@@ -91,10 +91,11 @@ const ALLOWED_BASE_URL = BASE_URL;
 
 async function fetchReportHtml(url, authHeader) {
   // Validar que a URL pertence ao domínio permitido (previne SSRF)
+  /** @type {URL} */
   let parsed;
   try {
-    parsed = new URL(url);
-  } catch {
+    parsed = new URL(String(url));
+  } catch (_e) {
     throw new Error(`URL inválida: ${url}`);
   }
   const allowedOrigin = new URL(ALLOWED_BASE_URL).origin;

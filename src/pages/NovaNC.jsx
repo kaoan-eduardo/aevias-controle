@@ -23,6 +23,7 @@ function CopyIdButton({ id }) {
   };
   return (
     <button
+      type="button"
       onClick={handleCopy}
       title="Copiar ID"
       className="inline-flex items-center gap-1 text-[10px] font-mono bg-black/10 hover:bg-[#BFCF99]/40 px-1.5 py-0.5 rounded transition-colors"
