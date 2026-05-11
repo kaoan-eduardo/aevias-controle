@@ -6,12 +6,14 @@ import { Download, Loader2 } from "lucide-react";
 import AprovacaoBar from "@/components/relatorios/AprovacaoBar";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const fmtDate = (d) => d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('pt-BR') : '-';
-const fmtDateTime = (d) => {
+function fmtDate(d) {
+  return d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('pt-BR') : '-';
+}
+function fmtDateTime(d) {
   if (!d) return '-';
   const n = (!d.endsWith('Z') && !d.includes('+')) ? d + 'Z' : d;
   return new Date(n).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' });
-};
+}
 
 function SectionHeader({ label }) {
   return (

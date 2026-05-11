@@ -579,10 +579,12 @@ export default function BoletimSondagemPage() {
               {/* SONDAGEM - CAMADAS */}
               {(() => {
                 const temColuna2 = formData.camadas.some(c => c.classificacao_2 !== null);
-                const addColuna2 = () => setFormData(prev => ({
-                  ...prev,
-                  camadas: prev.camadas.map(c => ({ ...c, classificacao_2: c.classificacao_2 ?? "" })),
-                }));
+                function addColuna2() {
+                  setFormData(prev => ({
+                    ...prev,
+                    camadas: prev.camadas.map(c => ({ ...c, classificacao_2: c.classificacao_2 ?? "" })),
+                  }));
+                }
                 const removeColuna2 = () => setFormData(prev => ({
                   ...prev,
                   camadas: prev.camadas.map(c => ({ ...c, classificacao_2: null })),

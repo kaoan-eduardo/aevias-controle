@@ -327,7 +327,7 @@ export default function ChecklistMRAFPage() {
   }, [regionalSelecionada, projects]);
 
   useEffect(() => {
-    const loadData = async () => {
+    async function loadData() {
       setLoading(true);
       try {
         const userData = await User.me();

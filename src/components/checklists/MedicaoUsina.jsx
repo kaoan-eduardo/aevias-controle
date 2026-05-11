@@ -6,16 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 
-const novaCarga = () => ({
-  numero_ticket: '',
-  placa: '',
-  quantidade_toneladas: null,
-  volume_m3: null,
-  temperatura: null,
-  rodovia_destino: '',
-  equipe: '',
-  observacoes: ''
-});
+function novaCarga() {
+  return {
+    numero_ticket: '',
+    placa: '',
+    quantidade_toneladas: null,
+    volume_m3: null,
+    temperatura: null,
+    rodovia_destino: '',
+    equipe: '',
+    observacoes: ''
+  };
+}
 
 export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empreiteiras }) {
   const data = medicoes_usina || { sub_trecho: '', servico: '', cargas: [] };

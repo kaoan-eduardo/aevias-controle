@@ -1130,7 +1130,7 @@ export default function ResumosPersonalizadosPage() {
       .replace(/[^\x20-\x7E]/g, '');
   };
 
-  const exportarParaCSV = () => {
+  function exportarParaCSV() {
     if (dadosConsolidados.length === 0) {
       alert("Nenhum dado para exportar.");
       return;
@@ -1139,7 +1139,7 @@ export default function ResumosPersonalizadosPage() {
     const headers = Object.keys(dadosConsolidados[0]);
     const csvContent = [
       headers.map(h => normalizarTexto(h)).join(';'),
-      ...dadosConsolidados.map(row => 
+      ...dadosConsolidados.map(row =>
         headers.map(h => normalizarTexto(String(row[h] || ''))).join(';')
       )
     ].join('\n');
@@ -1149,7 +1149,7 @@ export default function ResumosPersonalizadosPage() {
     link.href = URL.createObjectURL(blob);
     link.download = `resumo_personalizado_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
-  };
+  }
 
   const obraSelecionada = useMemo(() => obras.find(o => o.id === obraId), [obras, obraId]);
 
