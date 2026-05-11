@@ -308,7 +308,7 @@ export default function ChecklistUsinaPage() {
           testObject.resultados = novosResultados;
 
           // Conformidade automática apenas se quantidade = 1 e não é granulometria
-          if (testObject.quantidade === 1 && testObject.hasOwnProperty('conforme') && testKey !== 'granulometria') {
+          if (testObject.quantidade === 1 && Object.prototype.hasOwnProperty.call(testObject, 'conforme') && testKey !== 'granulometria') {
             const conformidade = checkConformidadeAutomatica(testKey, parsedValue, selectedProject);
             if (conformidade !== null) {
               testObject.conforme = conformidade;
@@ -322,7 +322,7 @@ export default function ChecklistUsinaPage() {
           if (!value) {
             testObject.quantidade = 0;
             testObject.resultados = [];
-            if (testObject.hasOwnProperty('conforme')) {
+            if (Object.prototype.hasOwnProperty.call(testObject, 'conforme')) {
               testObject.conforme = null;
             }
           }
@@ -343,16 +343,16 @@ export default function ChecklistUsinaPage() {
           }
 
           // Se mudar de 1 para mais de 1, resetar conformidade para manual
-          if (oldQuantity === 1 && newQuantity > 1 && testObject.hasOwnProperty('conforme')) {
+          if (oldQuantity === 1 && newQuantity > 1 && Object.prototype.hasOwnProperty.call(testObject, 'conforme')) {
             testObject.conforme = null;
           }
 
-          if (newQuantity === 0 && testObject.hasOwnProperty('conforme')) {
+          if (newQuantity === 0 && Object.prototype.hasOwnProperty.call(testObject, 'conforme')) {
             testObject.conforme = null;
           }
 
           // Se quantidade é 1 e já existe resultado, re-avaliar conformidade
-          if (newQuantity === 1 && testObject.hasOwnProperty('conforme') && testObject.resultados.length > 0 && testKey !== 'granulometria') {
+          if (newQuantity === 1 && Object.prototype.hasOwnProperty.call(testObject, 'conforme') && testObject.resultados.length > 0 && testKey !== 'granulometria') {
             const conformidade = checkConformidadeAutomatica(testKey, testObject.resultados[0], selectedProject);
             if (conformidade !== null) {
               testObject.conforme = conformidade;
@@ -702,7 +702,7 @@ export default function ChecklistUsinaPage() {
                   Object.assign(loadedFormData.controle_cauq[testKey], existingTest);
 
                   // CRÍTICO: Garantir que resultados seja SEMPRE um array
-                  if (existingTest.hasOwnProperty('resultado') && !Array.isArray(existingTest.resultados)) {
+                  if (Object.prototype.hasOwnProperty.call(existingTest, 'resultado') && !Array.isArray(existingTest.resultados)) {
                     // Converter resultado único legado para array
                     const resultadoLegado = existingTest.resultado;
                     if (resultadoLegado !== null && resultadoLegado !== undefined && resultadoLegado !== '') {
@@ -745,10 +745,10 @@ export default function ChecklistUsinaPage() {
             let equivalenteAreiaStatus = checklistToEdit.equivalente_areia_status || null;
             let equivalenteAreiaResultados = Array.isArray(checklistToEdit.equivalente_areia_resultados) ? checklistToEdit.equivalente_areia_resultados : [];
 
-            if (checklistToEdit.hasOwnProperty('equivalente_areia_realizado') && equivalenteAreiaStatus === null) {
+            if (Object.prototype.hasOwnProperty.call(checklistToEdit, 'equivalente_areia_realizado') && equivalenteAreiaStatus === null) {
                 equivalenteAreiaStatus = checklistToEdit.equivalente_areia_realizado ? 'realizado' : 'nao_realizado';
                 if (equivalenteAreiaStatus === 'realizado' && equivalenteAreiaResultados.length === 0) {
-                    if (checklistToEdit.hasOwnProperty('equivalente_areia_quantidade') && checklistToEdit.equivalente_areia_quantidade > 0) {
+                    if (Object.prototype.hasOwnProperty.call(checklistToEdit, 'equivalente_areia_quantidade') && checklistToEdit.equivalente_areia_quantidade > 0) {
                         equivalenteAreiaResultados = Array(checklistToEdit.equivalente_areia_quantidade).fill(null);
                     }
                 }
@@ -1356,7 +1356,7 @@ export default function ChecklistUsinaPage() {
                           const quantidade = formData.controle_cauq[ensaio.key]?.quantidade || 0;
                           const resultados = formData.controle_cauq[ensaio.key]?.resultados || [];
                           const conforme = formData.controle_cauq[ensaio.key]?.conforme;
-                          const isAutoConformity = quantidade === 1 && formData.controle_cauq[ensaio.key]?.hasOwnProperty('conforme') && ensaio.key !== 'granulometria' && !ensaio.noConformity;
+                          const isAutoConformity = quantidade === 1 && Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'conforme') && ensaio.key !== 'granulometria' && !ensaio.noConformity;
                           
                           // Definir step baseado em decimals
                           let stepValue;
@@ -1372,7 +1372,7 @@ export default function ChecklistUsinaPage() {
                             <tr key={ensaio.key}>
                               <td className="border border-slate-300 px-2 py-2 font-medium">{ensaio.label}</td>
                               <td className="border border-slate-300 px-2 py-1 text-center">
-                                {formData.controle_cauq[ensaio.key]?.hasOwnProperty('realizado') && (
+                                {Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'realizado') && (
                                   <input
                                     type="checkbox"
                                     checked={formData.controle_cauq[ensaio.key]?.realizado || false}
@@ -1383,7 +1383,7 @@ export default function ChecklistUsinaPage() {
                                 )}
                               </td>
                               <td className="border border-slate-300 px-1 py-1">
-                                {formData.controle_cauq[ensaio.key]?.hasOwnProperty('quantidade') && (
+                                {Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'quantidade') && (
                                   <Input
                                     type="number"
                                     min="0"
@@ -1397,7 +1397,7 @@ export default function ChecklistUsinaPage() {
                                 )}
                               </td>
                               <td className="border border-slate-300 px-1 py-1">
-                                {!ensaio.noResult && formData.controle_cauq[ensaio.key]?.hasOwnProperty('resultados') && quantidade > 0 ? (
+                                {!ensaio.noResult && Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'resultados') && quantidade > 0 ? (
                                   <div className="flex flex-wrap gap-1">
                                     {Array.from({ length: quantidade }).map((_, resultIndex) => (
                                       <Input
@@ -1424,7 +1424,7 @@ export default function ChecklistUsinaPage() {
                                 {ensaio.padrao}
                               </td>
                               <td className="border border-slate-300 px-2 py-1 text-center">
-                                {formData.controle_cauq[ensaio.key]?.hasOwnProperty('conforme') && !ensaio.noConformity ? (
+                                {Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'conforme') && !ensaio.noConformity ? (
                                   <input
                                     type="checkbox"
                                     checked={conforme === true}
@@ -1439,7 +1439,7 @@ export default function ChecklistUsinaPage() {
                                 ) : null}
                               </td>
                               <td className="border border-slate-300 px-2 py-1 text-center">
-                                {formData.controle_cauq[ensaio.key]?.hasOwnProperty('conforme') && !ensaio.noConformity ? (
+                                {Object.prototype.hasOwnProperty.call(formData.controle_cauq[ensaio.key] ?? {}, 'conforme') && !ensaio.noConformity ? (
                                   <input
                                     type="checkbox"
                                     checked={conforme === false}

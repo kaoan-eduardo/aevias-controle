@@ -492,7 +492,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                               height="16"
                               fill="transparent"
                               tabIndex={0}
-                              role="img"
+                              role="button"
                               aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
                               style={{ cursor: 'pointer' }}
                               onKeyDown={(e) => {

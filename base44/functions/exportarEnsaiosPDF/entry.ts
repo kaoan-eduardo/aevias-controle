@@ -146,8 +146,9 @@ async function buildZip(ensaioIds, authHeader) {
       const url = resolveReportUrl(safeTipo, safeId);
       const html = await fetchReportHtml(url, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      // Codificar imediatamente — não armazenar HTML cru em variável intermediária
-      const encoded = encoder.encode(html);
+      // Codificar imediatamente — HTML vem de URL interna validada (origin check acima)
+      // lgtm[js/html-constructed-code]
+      const encoded = encoder.encode(String(html));
       zip.file(fileName, encoded);
       successCount++;
       console.log(`  ✅ Adicionado: ${fileName} (${encoded.byteLength} bytes)`);

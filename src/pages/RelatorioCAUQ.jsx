@@ -673,7 +673,7 @@ export default function RelatorioCAUQ() {
                                 height="16"
                                 fill="transparent"
                                 tabIndex={0}
-                                role="img"
+                                role="button"
                                 aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
                                 style={{ cursor: 'pointer' }}
                                 onKeyDown={(e) => {
