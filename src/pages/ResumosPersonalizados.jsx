@@ -482,7 +482,7 @@ export default function ResumosPersonalizadosPage() {
     const keys = path.split('.');
     return keys.reduce((current, key) => {
       if (current === null || current === undefined || typeof current !== 'object') return null;
-      return Object.prototype.hasOwnProperty.call(current, key) ? current[key] : null;
+      return key in current ? current[key] : null;
     }, obj);
   };
 
