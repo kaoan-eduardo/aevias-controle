@@ -11,21 +11,29 @@ import { ChecklistConcretagem } from "@/entities/ChecklistConcretagem";
 import { base44 } from "@/api/base44Client";
 import { getDataEnsaio } from "./ensaioMappers";
 
+// Retry helper para carregamento com fallback
+const loadWithFallback = async (fn, entityName, fallback = []) => {
+  try {
+    return await fn();
+  } catch (error) {
+    console.warn(`⚠️ [${entityName}] Falha ao carregar - usando fallback:`, error?.message || error);
+    return fallback;
+  }
+};
+
 export const loadAllData = async () => {
   const currentUser = await User.me();
   
   // Carregar todos os usuários para mapear nomes corretamente
-  let allUsers;
-  try {
-    allUsers = await base44.entities.User.list();
-  } catch (error) {
-    console.warn("⚠️ Sem permissão para listar usuários - usando fallback");
-    allUsers = [currentUser];
-  }
+  const allUsers = await loadWithFallback(
+    () => base44.entities.User.list(),
+    "User",
+    [currentUser]
+  );
 
   const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
 
-  // Carregar dados em paralelo
+  // Carregar dados em paralelo com fallback por entidade
   const [
     obrasData,
     regionaisData,
@@ -55,33 +63,33 @@ export const loadAllData = async () => {
     rompimentoConcretoData,
     granMisturaData
   ] = await Promise.all([
-    Obra.list(),
-    Regional.list(),
-    Project.list(),
-    DiarioObra.list("-created_date", 1000),
-    base44.entities.EnsaioCAUQ.list("-created_date", 1000),
-    base44.entities.EnsaioMRAF.list("-created_date", 1000),
-    EnsaioDensidade.list("-created_date", 1000),
-    base44.entities.EnsaioDensidadeInSitu.list("-created_date", 1000),
-    base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 1000),
-    ChecklistUsina.list("-created_date", 1000),
-    ChecklistAplicacao.list("-created_date", 1000),
-    ChecklistMRAF.list("-created_date", 1000),
-    ChecklistConcretagem.list("-created_date", 1000),
-    base44.entities.ChecklistTerraplanagem.list("-created_date", 1000),
-    base44.entities.ChecklistReciclagem.list("-created_date", 1000),
-    base44.entities.EnsaioSondagem.list("-created_date", 1000),
-    base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
-    base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
-    base44.entities.AcompanhamentoCarga.list("-created_date", 1000),
-    base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
-    base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000),
-    base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000),
-    base44.entities.BoletimSondagem.list("-created_date", 1000),
-    base44.entities.BoletimSondagemTrado.list("-created_date", 1000),
-    base44.entities.EnsaioProctor.list("-created_date", 1000),
-    base44.entities.EnsaioRompimentoConcreto.list("-created_date", 1000),
-    base44.entities.GranuMistura.list("-created_date", 1000)
+    loadWithFallback(() => Obra.list(), "Obra", []),
+    loadWithFallback(() => Regional.list(), "Regional", []),
+    loadWithFallback(() => Project.list(), "Project", []),
+    loadWithFallback(() => DiarioObra.list("-created_date", 1000), "DiarioObra", []),
+    loadWithFallback(() => base44.entities.EnsaioCAUQ.list("-created_date", 1000), "EnsaioCAUQ", []),
+    loadWithFallback(() => base44.entities.EnsaioMRAF.list("-created_date", 1000), "EnsaioMRAF", []),
+    loadWithFallback(() => EnsaioDensidade.list("-created_date", 1000), "EnsaioDensidade", []),
+    loadWithFallback(() => base44.entities.EnsaioDensidadeInSitu.list("-created_date", 1000), "EnsaioDensidadeInSitu", []),
+    loadWithFallback(() => base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 1000), "EnsaioTaxaPinturaImprimacao", []),
+    loadWithFallback(() => ChecklistUsina.list("-created_date", 1000), "ChecklistUsina", []),
+    loadWithFallback(() => ChecklistAplicacao.list("-created_date", 1000), "ChecklistAplicacao", []),
+    loadWithFallback(() => ChecklistMRAF.list("-created_date", 1000), "ChecklistMRAF", []),
+    loadWithFallback(() => ChecklistConcretagem.list("-created_date", 1000), "ChecklistConcretagem", []),
+    loadWithFallback(() => base44.entities.ChecklistTerraplanagem.list("-created_date", 1000), "ChecklistTerraplanagem", []),
+    loadWithFallback(() => base44.entities.ChecklistReciclagem.list("-created_date", 1000), "ChecklistReciclagem", []),
+    loadWithFallback(() => base44.entities.EnsaioSondagem.list("-created_date", 1000), "EnsaioSondagem", []),
+    loadWithFallback(() => base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000), "EnsaioGranulometriaIndividual", []),
+    loadWithFallback(() => base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000), "AcompanhamentoUsinagem", []),
+    loadWithFallback(() => base44.entities.AcompanhamentoCarga.list("-created_date", 1000), "AcompanhamentoCarga", []),
+    loadWithFallback(() => base44.entities.EnsaioManchaPendulo.list("-created_date", 1000), "EnsaioManchaPendulo", []),
+    loadWithFallback(() => base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000), "EnsaioVigaBenkelman", []),
+    loadWithFallback(() => base44.entities.EnsaioTaxaMRAF.list("-created_date", 1000), "EnsaioTaxaMRAF", []),
+    loadWithFallback(() => base44.entities.BoletimSondagem.list("-created_date", 1000), "BoletimSondagem", []),
+    loadWithFallback(() => base44.entities.BoletimSondagemTrado.list("-created_date", 1000), "BoletimSondagemTrado", []),
+    loadWithFallback(() => base44.entities.EnsaioProctor.list("-created_date", 1000), "EnsaioProctor", []),
+    loadWithFallback(() => base44.entities.EnsaioRompimentoConcreto.list("-created_date", 1000), "EnsaioRompimentoConcreto", []),
+    loadWithFallback(() => base44.entities.GranuMistura.list("-created_date", 1000), "GranuMistura", [])
   ]);
 
   const combinedEnsaios = [

@@ -251,8 +251,11 @@ export default function NaoConformidadesPage() {
       // Fetch all records for each checklist type at once (avoids per-obra pagination limits)
       const allData = await Promise.all(
         TIPOS_CHECKLIST.map(t =>
-          base44.entities[t.value].list('-created_date', 2000)
-            .catch(() => [])
+          base44.entities[t.value].list('-created_date', 1000)
+            .catch(err => {
+              console.warn(`⚠️ [${t.value}] Falha ao carregar checklists:`, err?.message || err);
+              return [];
+            })
             .then(res => res.filter(c => availableIds.has(c.obra_id)).map(c => ({ ...c, _tipo: t.value })))
         )
       );
@@ -277,8 +280,11 @@ export default function NaoConformidadesPage() {
       // Para a maioria: approved === false indica NC
       // Para EnsaioManchaPendulo e EnsaioVigaBenkelman: condicao_conformidade === 'NÃO CONFORME' indica NC
       const fetchOutro = (entityName, label, page) =>
-        base44.entities[entityName].list('-created_date', 2000)
-          .catch(() => [])
+        base44.entities[entityName].list('-created_date', 1000)
+          .catch(err => {
+            console.warn(`⚠️ [${entityName}] Falha ao carregar registros:`, err?.message || err);
+            return [];
+          })
           .then(res => res
             .filter(c => {
               if (!availableIds.has(c.obra_id)) return false;
@@ -310,8 +316,11 @@ export default function NaoConformidadesPage() {
       // Buscar NCs explícitas (campo nao_conformidades) em checklists e diário
       const registrosComNcExplicita = await Promise.all(
         TIPOS_COM_NC_EXPLICITA.map(t =>
-          base44.entities[t.value].list('-created_date', 2000)
-            .catch(() => [])
+          base44.entities[t.value].list('-created_date', 1000)
+            .catch(err => {
+              console.warn(`⚠️ [${t.value}] Falha ao carregar NCs explícitas:`, err?.message || err);
+              return [];
+            })
             .then(res => res
               .filter(c => availableIds.has(c.obra_id) && Array.isArray(c.nao_conformidades) && c.nao_conformidades.length > 0)
               .flatMap(c =>
