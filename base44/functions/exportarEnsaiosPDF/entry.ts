@@ -89,36 +89,32 @@ function validatePayload(ensaioIds) {
 /** URL base esperada — usada para validar antes do fetch */
 const ALLOWED_BASE_URL = BASE_URL;
 
-async function fetchReportHtml(url, authHeader) {
-  // Validar que a URL pertence ao domínio permitido (previne SSRF)
-  let parsed: URL;
-  try {
-    parsed = new URL(String(url));
-  } catch (_e) {
-    throw new Error(`URL inválida: ${url}`);
+async function fetchReportHtml(tipo, id, authHeader) {
+  // Construir URL INTERNAMENTE — nunca recebe URL do usuário, elimina completamente SSRF
+  if (!tipo || !id) {
+    throw new Error('Tipo ou ID ausente');
   }
+
+  const url = resolveReportUrl(tipo, id);
+  const parsed = new URL(url);
   const allowedOrigin = new URL(ALLOWED_BASE_URL).origin;
+  
   if (parsed.origin !== allowedOrigin) {
     throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
   }
-
-  // URL foi validada contra allowlist de origem (origin check acima) — seguro passar ao fetch
-  // lgtm[js/ssrf]
-  const safeUrl = parsed.toString();
 
   const headers: Record<string, string> = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  // URL validated against allowedOrigin allowlist (lines above) — origin-pinned, not user-controlled
-  const response = await fetch(safeUrl, { headers, redirect: 'follow' }); // nosemgrep: javascript.lang.security.audit.http-request.http-request,javascript.lang.security.audit.ssrf.http-request
+  // URL construída internamente com valores validados — SSRF impossível
+  const response = await fetch(url, { headers, redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
-  // Garantir string antes de qualquer operação — evita "HTML passed in to String()"
   const text = await response.text();
   return text;
 }
