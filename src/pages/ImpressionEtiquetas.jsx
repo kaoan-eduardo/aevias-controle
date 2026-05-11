@@ -78,7 +78,7 @@ export default function ImpressionEtiquetas() {
           <h1 className="text-3xl font-bold text-[#00233B] mb-8">Impressão de Etiquetas - Sondagem</h1>
 
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <label className="block text-sm font-semibold text-[#00233B] mb-2">Tipo de Etiqueta</label>
+            <span className="block text-sm font-semibold text-[#00233B] mb-2">Tipo de Etiqueta</span>
             <select
               value={tipoEtiqueta}
               onChange={(e) => { setTipoEtiqueta(e.target.value); setEtiquetas([]); setErro(''); setShowRender(false); }}

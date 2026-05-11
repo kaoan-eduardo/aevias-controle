@@ -675,7 +675,7 @@ export default function Dashboard() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Obra</label>
+                  <span className="text-sm font-medium text-[#00233B]/80 mb-2 block">Obra</span>
                   <Select value={filters.obraId || 'todas'} onValueChange={(value) => setFilters(prev => ({ ...prev, obraId: value === 'todas' ? null : value }))}>
                     <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B]">
                       <SelectValue />
@@ -690,7 +690,7 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Status</label>
+                  <span className="text-sm font-medium text-[#00233B]/80 mb-2 block">Status</span>
                   <Select value={filters.status || 'todos'} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value === 'todos' ? null : value }))}>
                     <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B]">
                       <SelectValue />
@@ -705,7 +705,7 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Tipo de Registro</label>
+                  <span className="text-sm font-medium text-[#00233B]/80 mb-2 block">Tipo de Registro</span>
                   <Select value={filters.tipoRegistro || 'todos'} onValueChange={(value) => setFilters(prev => ({ ...prev, tipoRegistro: value === 'todos' ? null : value }))}>
                     <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B]">
                       <SelectValue />
@@ -725,7 +725,7 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#00233B]/80 mb-2 block">Período</label>
+                  <span className="text-sm font-medium text-[#00233B]/80 mb-2 block">Período</span>
                   <Select value={filters.periodo} onValueChange={(value) => setFilters(prev => ({ ...prev, periodo: value }))}>
                     <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B]">
                       <SelectValue />

@@ -414,7 +414,7 @@ export default function EnsaioVigaBenkelman() {
             <CardContent className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Obra*</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Obra*</span>
                   <select
                     value={formData.obra_id}
                     onChange={(e) => handleObraChange(e.target.value)}
@@ -428,7 +428,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Rodovia</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Rodovia</span>
                   <select
                     value={formData.rodovia}
                     onChange={(e) => handleInputChange('rodovia', e.target.value)}
@@ -443,7 +443,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Trecho</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Trecho</span>
                   <Input
                     value={formData.trecho}
                     onChange={(e) => handleInputChange('trecho', e.target.value)}
@@ -453,7 +453,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Material</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Material</span>
                   <Input
                     value={formData.material}
                     onChange={(e) => handleInputChange('material', e.target.value)}
@@ -463,7 +463,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Procedência</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Procedência</span>
                   <Input
                     value={formData.procedencia}
                     onChange={(e) => handleInputChange('procedencia', e.target.value)}
@@ -473,7 +473,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div className="hidden">
-                   <label className="block text-sm font-medium text-[#00233B] mb-2">Pista/Faixa</label>
+                   <span className="block text-sm font-medium text-[#00233B] mb-2">Pista/Faixa</span>
                    <Input
                      value={formData.pista_faixa}
                      onChange={(e) => handleInputChange('pista_faixa', e.target.value)}
@@ -483,7 +483,7 @@ export default function EnsaioVigaBenkelman() {
                  </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Camada</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Camada</span>
                   <Input
                     value={formData.camada}
                     onChange={(e) => handleInputChange('camada', e.target.value)}
@@ -493,7 +493,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Data de Aplicação da Camada</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Data de Aplicação da Camada</span>
                   <Input
                     type="date"
                     value={formData.data_ensaio}
@@ -503,7 +503,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Data de Realização do Ensaio</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Data de Realização do Ensaio</span>
                   <Input
                     type="date"
                     value={formData.data_realizacao}
@@ -523,7 +523,7 @@ export default function EnsaioVigaBenkelman() {
             <CardContent className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">Laboratorista</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">Laboratorista</span>
                   <Input
                     value={formData.laboratorista_name}
                     disabled
@@ -532,7 +532,7 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">CTE. VIGA</label>
+                  <span className="block text-sm font-medium text-[#00233B] mb-2">CTE. VIGA</span>
                   <Input
                     value={formData.cte_viga}
                     onChange={(e) => handleInputChange('cte_viga', e.target.value)}
@@ -607,7 +607,7 @@ export default function EnsaioVigaBenkelman() {
                 {formData.faixas.map((faixa) => (
                   <TabsContent key={faixa.id} value={String(faixa.id)} className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
-                      <label className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</label>
+                      <span className="text-sm font-medium text-[#00233B] whitespace-nowrap">Faixa:</span>
                       <Input
                         value={faixa.nome}
                         onChange={(e) => updateFaixaNome(faixa.id, e.target.value)}
@@ -698,7 +698,7 @@ export default function EnsaioVigaBenkelman() {
                       {faixa.levantamentos.map((lev, idx) => (
                         <div key={idx} className={`border border-[#00233B]/20 rounded-lg p-3 ${idx % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}`}>
                           <div className="mb-3">
-                            <label className="block text-xs font-bold text-[#00233B] mb-1">Estaca / km</label>
+                            <span className="block text-xs font-bold text-[#00233B] mb-1">Estaca / km</span>
                             <Input value={lev.estaca_km} onChange={(e) => updateLevantamento(faixa.id, idx, null, 'estaca_km', e.target.value)} placeholder="Estaca" className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                           </div>
                           <div className="grid grid-cols-3 gap-2">
@@ -706,11 +706,11 @@ export default function EnsaioVigaBenkelman() {
                               <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">BORDO ESQUERDO</p>
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</span>
                                   <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</span>
                                   <Input type="number" step="0.01" value={lev.bordo_esquerdo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_esquerdo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                               </div>
@@ -719,11 +719,11 @@ export default function EnsaioVigaBenkelman() {
                               <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">EIXO</p>
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</span>
                                   <Input type="number" step="0.01" value={lev.eixo.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</span>
                                   <Input type="number" step="0.01" value={lev.eixo.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'eixo', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                               </div>
@@ -732,11 +732,11 @@ export default function EnsaioVigaBenkelman() {
                               <p className="text-xs font-bold text-[#00233B] text-center bg-[#00233B]/10 rounded px-2 py-1 mb-2">BORDO DIREITO</p>
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Inicial (A)</span>
                                   <Input type="number" step="0.01" value={lev.bordo_direito.leitura_inicial} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_inicial', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                                 <div>
-                                  <label className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</label>
+                                  <span className="block text-xs text-[#00233B]/70 mb-1">L. Final (B)</span>
                                   <Input type="number" step="0.01" value={lev.bordo_direito.leitura_final} onChange={(e) => updateLevantamento(faixa.id, idx, 'bordo_direito', 'leitura_final', e.target.value)} className="bg-white/20 border-white/30 text-[#00233B] h-9 text-sm" />
                                 </div>
                               </div>

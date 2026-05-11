@@ -88,7 +88,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
         <CardContent className="space-y-6">
           {/* Fator do Anel Global */}
           <div className="flex items-center gap-4 bg-[#BFCF99]/10 border border-[#BFCF99]/30 rounded-lg p-3">
-            <label className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Constante do Anel (kgf/div):</label>
+            <span className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Constante do Anel (kgf/div):</span>
             <input
               type="number"
               step="0.0001"
@@ -197,7 +197,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
         <CardContent>
           {/* Altura Inicial Global */}
           <div className="flex items-center gap-4 bg-[#BFCF99]/10 border border-[#BFCF99]/30 rounded-lg p-3 mb-4">
-            <label className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Altura Inicial (mm):</label>
+            <span className="text-sm font-semibold text-[#00233B] whitespace-nowrap">Altura Inicial (mm):</span>
             <input
               type="number"
               step="0.01"

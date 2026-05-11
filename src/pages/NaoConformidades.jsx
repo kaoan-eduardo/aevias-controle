@@ -618,7 +618,7 @@ export default function NaoConformidadesPage() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><MapPin className="w-3 h-3" /> Rodovia</label>
+                <span className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><MapPin className="w-3 h-3" /> Rodovia</span>
                 <Select value={filtroRodovia || '_all'} onValueChange={v => setFiltroRodovia(v === '_all' ? null : v)}>
                   <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
                     <SelectValue placeholder="Todas" />
@@ -630,7 +630,7 @@ export default function NaoConformidadesPage() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><Building2 className="w-3 h-3" /> Usina</label>
+                <span className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><Building2 className="w-3 h-3" /> Usina</span>
                 <Select value={filtroUsina || '_all'} onValueChange={v => setFiltroUsina(v === '_all' ? null : v)}>
                   <SelectTrigger className="bg-white/50 border-white/30 text-[#00233B] h-9 text-sm">
                     <SelectValue placeholder="Todas" />
@@ -642,7 +642,7 @@ export default function NaoConformidadesPage() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Inicial</label>
+                <span className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Inicial</span>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button type="button" className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
@@ -656,7 +656,7 @@ export default function NaoConformidadesPage() {
                 </Popover>
               </div>
               <div>
-                <label className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Final</label>
+                <span className="text-xs text-[#00233B]/70 font-medium mb-1 block flex items-center gap-1"><CalendarIcon className="w-3 h-3" /> Data Final</span>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button type="button" className="w-full h-9 px-3 text-sm bg-white/50 border border-white/30 rounded-md text-[#00233B] text-left flex items-center justify-between hover:bg-white/60 transition-colors">
