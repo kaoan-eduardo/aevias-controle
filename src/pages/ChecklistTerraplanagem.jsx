@@ -173,12 +173,6 @@ export default function ChecklistTerraplanagem() {
     return ((densInSitu / densProctor) * 100).toFixed(2);
   })();
 
-  useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]);
-
-
-
   const loadInitialData = async () => {
     setLoading(true);
     try {
@@ -263,6 +257,10 @@ export default function ChecklistTerraplanagem() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
 
   const handleCheckboxChange = (section, field, option) => {
     setFormData(prev => ({

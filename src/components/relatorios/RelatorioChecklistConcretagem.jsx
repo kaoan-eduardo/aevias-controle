@@ -11,7 +11,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
   useEffect(() => {
     if (!obraProp) loadRelatedData();
-  }, [checklist, obraProp, loadRelatedData]);
+  }, [checklist, obraProp]);
 
   useEffect(() => {
     const compressImages = async () => {

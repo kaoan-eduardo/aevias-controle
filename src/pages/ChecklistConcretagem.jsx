@@ -88,7 +88,7 @@ export default function ChecklistConcretagem() {
 
   useEffect(() => {
     loadInitialData();
-  }, [loadInitialData]);
+  }, []);
 
   const projectsRef = useRef(projects);
   useEffect(() => { projectsRef.current = projects; }, [projects]);

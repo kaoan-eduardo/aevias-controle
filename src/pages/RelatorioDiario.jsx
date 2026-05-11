@@ -19,10 +19,6 @@ export default function RelatorioDiarioPage() {
 
   useReportMode();
 
-  useEffect(() => {
-    loadReportData();
-  }, [loadReportData]);
-
   const loadReportData = async () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -89,6 +85,10 @@ export default function RelatorioDiarioPage() {
       setState({ loading: false, error: error.message, data: null });
     }
   };
+
+  useEffect(() => {
+    loadReportData();
+  }, []);
 
   const handlePrint = () => {
     window.print();

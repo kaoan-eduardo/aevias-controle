@@ -16,10 +16,6 @@ export default function ControleLaboratoristas() {
   const [filtroNome, setFiltroNome] = useState('');
   const [filtroObra, setFiltroObra] = useState('todas');
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const loadData = async () => {
     setLoading(true);
     try {
@@ -98,6 +94,10 @@ export default function ControleLaboratoristas() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const estatisticasLaboratoristas = useMemo(() => {
     const stats = {};

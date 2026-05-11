@@ -54,10 +54,6 @@ export default function GestaoNCPage() {
   const [approvalAction, setApprovalAction] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const loadData = useCallback(async () => {
     setLoading(true);
     const userData = await User.me();
@@ -74,6 +70,10 @@ export default function GestaoNCPage() {
     setNcs(ncsData);
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const filtradas = useMemo(() => {
     return ncs.filter(nc => {

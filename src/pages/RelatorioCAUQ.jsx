@@ -40,10 +40,6 @@ export default function RelatorioCAUQ() {
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const loadData = async () => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -83,6 +79,10 @@ export default function RelatorioCAUQ() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handlePrint = () => {
     window.print();

@@ -143,10 +143,6 @@ export default function RelatorioUnificado() {
   const [user, setUser] = useState(null);
   const [filters, setFilters] = useState({});
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const loadData = async () => {
     setLoading(true);
     try {
@@ -237,6 +233,10 @@ export default function RelatorioUnificado() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
 

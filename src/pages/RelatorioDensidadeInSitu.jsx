@@ -14,10 +14,6 @@ export default function RelatorioDensidadeInSituPage() {
     data: null
   });
 
-  useEffect(() => {
-    loadReportData();
-  }, [loadReportData]);
-
   const loadReportData = async () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -52,6 +48,10 @@ export default function RelatorioDensidadeInSituPage() {
       setState({ loading: false, error: error.message, data: null });
     }
   };
+
+  useEffect(() => {
+    loadReportData();
+  }, []);
 
   const handlePrint = () => {
     window.print();

@@ -17,12 +17,6 @@ export default function RelatorioManchaPenduloPage() {
   const [regional, setRegional] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      loadData();
-    }
-  }, [id, loadData]);
-
   const loadData = async () => {
     try {
       const ensaioData = await base44.entities.EnsaioManchaPendulo.get(id);
@@ -43,6 +37,10 @@ export default function RelatorioManchaPenduloPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (id) loadData();
+  }, [id]);
 
   const handlePrint = () => {
     window.print();

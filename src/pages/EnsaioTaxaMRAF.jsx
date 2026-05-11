@@ -98,8 +98,6 @@ export default function EnsaioTaxaMRAFPage() {
   const isApproved = editingEnsaio?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => { loadInitialData(); }, [loadInitialData]);
-
   const loadInitialData = async () => {
     setLoading(true);
     try {
@@ -153,6 +151,8 @@ export default function EnsaioTaxaMRAFPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => { loadInitialData(); }, []);
 
   const handleDimensoesChange = useCallback((field, value) => {
     setFormData(prev => {

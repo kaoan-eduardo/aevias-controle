@@ -74,10 +74,6 @@ export default function EnsaioGranulometriaIndividualPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadData();
-  }, [location.search, loadData]);
-
   const loadData = async () => {
     try {
       const currentUser = await base44.auth.me();
@@ -161,6 +157,10 @@ export default function EnsaioGranulometriaIndividualPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, [location.search]);
 
   useEffect(() => {
     if (formData.obra_id) {

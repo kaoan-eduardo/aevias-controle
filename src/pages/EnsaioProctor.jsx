@@ -162,10 +162,6 @@ export default function EnsaioProctorPage() {
     status: "rascunho",
   });
 
-  useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]);
-
   const loadInitialData = async () => {
     try {
       const userData = await User.me();
@@ -205,6 +201,10 @@ export default function EnsaioProctorPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
 
   const handleObraChange = async (id) => {
     const obra = obras.find(o => o.id === id);

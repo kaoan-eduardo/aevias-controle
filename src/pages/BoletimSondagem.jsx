@@ -131,8 +131,6 @@ export default function BoletimSondagemPage() {
   const isApproved = editingBoletim?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => { loadInitialData(); }, [loadInitialData]);
-
   const loadInitialData = async () => {
     setLoading(true);
     try {
@@ -217,6 +215,8 @@ export default function BoletimSondagemPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => { loadInitialData(); }, []);
 
   const handleObraChange = useCallback((obraId) => {
     const obra = obras.find(o => o.id === obraId);

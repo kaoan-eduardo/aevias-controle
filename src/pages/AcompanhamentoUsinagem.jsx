@@ -46,7 +46,7 @@ export default function AcompanhamentoUsinagemPage() {
 
   useEffect(() => {
     loadInitialData();
-  }, [loadInitialData]);
+  }, []);
 
   useEffect(() => {
     if (formData.obra_id && projects.length > 0 && obras.length > 0) {

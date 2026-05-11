@@ -221,10 +221,6 @@ export default function RelatorioNCPage() {
   const [compressedFotos, setCompressedFotos] = useState([]);
   const [compressingFotos, setCompressingFotos] = useState(false);
 
-  useEffect(() => {
-    load();
-  }, [load]);
-
   const load = async () => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -278,6 +274,10 @@ export default function RelatorioNCPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   if (loading) {
     return (

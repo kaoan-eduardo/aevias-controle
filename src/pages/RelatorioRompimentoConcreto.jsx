@@ -71,8 +71,6 @@ export default function RelatorioRompimentoConcreto() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, [loadData]);
-
   const loadData = async () => {
     try {
       const id = new URLSearchParams(window.location.search).get('id');
@@ -97,6 +95,8 @@ export default function RelatorioRompimentoConcreto() {
       setLoading(false);
     }
   };
+
+  useEffect(() => { loadData(); }, []);
 
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro ao carregar"}</div>;

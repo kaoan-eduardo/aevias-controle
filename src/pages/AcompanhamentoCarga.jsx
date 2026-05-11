@@ -49,10 +49,6 @@ export default function AcompanhamentoCarga() {
 
   const { clearSavedData } = useFormPersistence('acompanhamento_carga_form', formData, setFormData, editMode);
 
-  useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]);
-
   const loadInitialData = async () => {
     setLoading(true);
     try {
@@ -102,6 +98,10 @@ export default function AcompanhamentoCarga() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
 
   const handleObraChange = (obraId) => {
     const obra = obras.find(o => o.id === obraId);
