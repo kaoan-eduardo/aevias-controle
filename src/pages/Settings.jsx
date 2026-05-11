@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { base44 } from "@/api/base44Client";
 
-const THEME_KEY = "aevias_theme";
+const THEME_STORAGE_KEY = "aevias_theme";
 
 function applyTheme(theme) {
   const root = document.documentElement;
@@ -39,9 +39,9 @@ function applyTheme(theme) {
 
 export default function Settings() {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem(THEME_KEY);
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (!saved) {
-      localStorage.setItem(THEME_KEY, "system");
+      localStorage.setItem(THEME_STORAGE_KEY, "system");
       return "system";
     }
     return saved;
@@ -50,7 +50,7 @@ export default function Settings() {
 
   useEffect(() => {
     applyTheme(theme);
-    localStorage.setItem(THEME_KEY, theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
   // Listen to OS dark mode changes when theme is 'system'

@@ -314,6 +314,7 @@ export default function NovaNcPage() {
                           <div className="flex items-center gap-2 ml-2">
                             <CopyIdButton id={c.id} />
                             <button
+                              type="button"
                               onClick={() => handleChecklistChange(c.id)}
                               className="text-[10px] bg-[#00233B]/10 hover:bg-[#00233B]/20 text-[#00233B] px-2 py-0.5 rounded transition-colors"
                             >

@@ -86,7 +86,22 @@ function validatePayload(ensaioIds) {
 
 // ─── Report fetcher (SRP: responsável apenas por buscar o HTML) ───────────────
 
+/** URL base esperada — usada para validar antes do fetch */
+const ALLOWED_BASE_URL = BASE_URL;
+
 async function fetchReportHtml(url, authHeader) {
+  // Validar que a URL pertence ao domínio permitido (previne SSRF)
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`URL inválida: ${url}`);
+  }
+  const allowedOrigin = new URL(ALLOWED_BASE_URL).origin;
+  if (parsed.origin !== allowedOrigin) {
+    throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
+  }
+
   const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
