@@ -454,9 +454,9 @@ const GraficoGranulometriaProject = ({ project, faixaEspecificacao }) => {
   };
 
   const extrairAberturaNumero = (aberturaString) => {
-    const match = aberturaString.match(/[\d.]+/);
-    return match ? parseFloat(match[0]) : null;
-  };
+  const match = aberturaString.match(/[\d.]+/);
+  return match ? parseFloat(match[0]) : null;
+};
 
   const chartData = [];
   const peneirasUsadas = new Set();

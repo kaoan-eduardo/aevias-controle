@@ -57,7 +57,7 @@ export default function RelatorioGranuMistura() {
 
   useEffect(() => { loadData(); }, []);
 
-  const loadData = async () => {
+  const loadData = async () => { // Async arrow function
     try {
       const id = new URLSearchParams(window.location.search).get('id');
       if (!id) { setError("ID não fornecido"); setLoading(false); return; }

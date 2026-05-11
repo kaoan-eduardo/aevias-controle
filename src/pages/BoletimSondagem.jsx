@@ -9,15 +9,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 
-const getCamadaInicial = (numero) => ({
-  numero,
-  prof_de: numero === 1 ? 0 : null,
-  prof_ate: null,
-  espessura: null,
-  na: null,
-  classificacao_1: "",
-  classificacao_2: null // null = coluna 2 não existe ainda
-});
+const getCamadaInicial = (numero) => {
+  return {
+    numero,
+    prof_de: numero === 1 ? 0 : null,
+    prof_ate: null,
+    espessura: null,
+    na: null,
+    classificacao_1: "",
+    classificacao_2: null
+  };
+};
 
 const CAMADAS_PADRAO = [1, 2, 3, 4, 5].map(getCamadaInicial);
 
