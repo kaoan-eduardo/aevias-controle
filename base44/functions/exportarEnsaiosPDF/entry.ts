@@ -140,12 +140,11 @@ async function buildZip(ensaioIds, authHeader) {
     }
 
     try {
-      console.log(`[${i + 1}/${ensaioIds.length}] Processando: ${nome}`);
-      // tipo e id já foram validados contra allowlist e regex em validatePayload
-      const safeId = String(id).trim();
-      const safeTipo = String(tipo).trim();
-      const url = resolveReportUrl(safeTipo, safeId);
-      const html = await fetchReportHtml(url, authHeader);
+       console.log(`[${i + 1}/${ensaioIds.length}] Processando: ${nome}`);
+       // tipo e id já foram validados contra allowlist e regex em validatePayload
+       const safeId = String(id).trim();
+       const safeTipo = String(tipo).trim();
+       const html = await fetchReportHtml(safeTipo, safeId, authHeader);
       const fileName = sanitizeFileName(String(nome));
       // HTML retrieved from internal validated URL — not user-supplied content
       // nosemgrep: javascript.lang.security.audit.xss.html-in-function

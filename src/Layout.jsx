@@ -439,17 +439,6 @@ const AppLayout = ({ children }) => {
     }
   }, []);
 
-  React.useEffect(() => {
-    loadUserAndObras();
-  }, [loadUserAndObras]);
-
-  // Atualizar last_login apenas uma vez por sessão do browser
-  React.useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEYS.LAST_LOGIN)) return;
-    sessionStorage.setItem(SESSION_KEYS.LAST_LOGIN, '1');
-    base44.functions.invoke('updateLastLogin', {}).catch(() => {});
-  }, []);
-
   const loadUserAndObras = useCallback(async () => {
     setLoadingUser(true);
     try {
@@ -524,6 +513,17 @@ const AppLayout = ({ children }) => {
     } finally {
       setLoadingUser(false);
     }
+  }, []);
+
+  React.useEffect(() => {
+    loadUserAndObras();
+  }, [loadUserAndObras]);
+
+  // Atualizar last_login apenas uma vez por sessão do browser
+  React.useEffect(() => {
+    if (sessionStorage.getItem(SESSION_KEYS.LAST_LOGIN)) return;
+    sessionStorage.setItem(SESSION_KEYS.LAST_LOGIN, '1');
+    base44.functions.invoke('updateLastLogin', {}).catch(() => {});
   }, []);
 
   const handleLogout = useCallback(async () => {
