@@ -223,6 +223,7 @@ export default function ImpressionEtiquetas() {
                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
                         alt="AfirmaEvias"
                         className="h-9 print:h-8 w-auto object-contain"
+                       width="auto" height="36"
                       />
                     </div>
                     <div className="flex items-center justify-center px-2">

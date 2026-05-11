@@ -236,6 +236,7 @@ export default function RelatorioCAUQ() {
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                   alt="Logo Regional" 
                   className="h-10 print:h-7 object-contain"
+                  width="auto" height="40"
                   loading="lazy"
                 />
               </picture>

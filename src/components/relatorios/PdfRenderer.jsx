@@ -56,6 +56,7 @@ export default function PdfRenderer({ url }) {
           src={dataUrl}
           alt={`Página ${i + 1}`}
           className="w-full block"
+          width="auto" height="auto"
           style={{ pageBreakAfter: i < pages.length - 1 ? "always" : "auto" }}
         />
       ))}

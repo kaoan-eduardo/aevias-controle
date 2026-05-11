@@ -1180,7 +1180,7 @@ export default function BoletimSondagemPage() {
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {formData.fotos.map((url, index) => (
                       <div key={index} className="relative group">
-                        <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-[#00233B]/20" />
+                        <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-[#00233B]/20" width="auto" height="128" />
                         {isEditable && (
                           <Button type="button" variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleRemovePhoto(index)}>
                             <XCircle className="h-4 w-4" />

@@ -505,7 +505,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             {chunk.map((fotoUrl, fotoIndex) => (
               <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
                 <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '220px' }}>
-                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" /></picture>
+                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
                 </div>
                 <p className="text-center text-sm mt-1 font-semibold">
                   Foto {(pageIndex * 6) + fotoIndex + 1}

@@ -31,7 +31,8 @@ export default function RelatorioDensidade({ ensaio, obra, project, laboratorist
             src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png"} 
             alt="Logo Regional" 
             className="h-16 object-contain"
-          />
+            width="auto" height="64"
+            />
         </div>
         <div className="w-2/3 text-center">
           <h1 className="text-2xl font-bold text-slate-900">Relatório de Ensaio</h1>

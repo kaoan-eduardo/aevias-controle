@@ -38,9 +38,10 @@ const ReportPrintHeader = ({ checklist, obra, regional }) => (
       <div className="flex justify-start">
         <img 
           src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-          alt="Logo Regional" 
-          className="h-10 object-contain" 
-        />
+            alt="Logo Regional" 
+            className="h-10 object-contain" 
+            width="auto" height="40"
+          />
       </div>
       <div className="text-center">
         <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Controle Tecnológico de Aplicação</h1>
@@ -643,9 +644,10 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <div className="flex justify-start">
                 <img 
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-16 object-contain" 
-                />
+                    alt="Logo Regional" 
+                    className="h-16 object-contain" 
+                    width="auto" height="64"
+                  />
               </div>
               <div className="text-center">
                 <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico Aplicação</h1>
@@ -661,7 +663,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               {chunk.map((fotoUrl, fotoIndex) => (
                 <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
-                    <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                    <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" />
                   </div>
                   <p className="text-center text-base print:text-sm mt-2 font-medium">
                     Foto {(pageIndex * 6) + fotoIndex + 1}

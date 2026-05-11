@@ -86,6 +86,7 @@ export default function RelatorioBoletimSondagem() {
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
               alt="Logo"
               className="h-12 object-contain"
+              width="auto" height="48"
             />
           </div>
           <div className="text-center">
@@ -454,8 +455,9 @@ export default function RelatorioBoletimSondagem() {
                 <div className="flex justify-start">
                   <img
                     src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
-                    alt="Logo"
-                    className="h-16 object-contain"
+                      alt="Logo"
+                      className="h-16 object-contain"
+                      width="auto" height="64"
                   />
                 </div>
                 <div className="text-center">
@@ -474,8 +476,9 @@ export default function RelatorioBoletimSondagem() {
                     <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
                       <img
                         src={fotoUrl}
-                        alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`}
-                        className="max-h-full max-w-full object-contain"
+                          alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`}
+                          className="max-h-full max-w-full object-contain"
+                          width="auto" height="auto"
                       />
                     </div>
                     <p className="text-center text-sm mt-2 font-medium">Foto {pageIndex * 6 + fotoIndex + 1}</p>

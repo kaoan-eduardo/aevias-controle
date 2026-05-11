@@ -170,9 +170,10 @@ export default function RelatorioSondagem() {
             <div className="flex justify-start">
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-12 object-contain" 
-              />
+                  alt="Logo Regional" 
+                  className="h-12 object-contain" 
+                  width="auto" height="48"
+                />
             </div>
             <div className="text-center">
               <h1 className="text-sm font-bold text-gray-800 leading-tight">
@@ -461,9 +462,10 @@ export default function RelatorioSondagem() {
               <div className="flex justify-start">
                 <img 
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-12 object-contain" 
-                />
+                    alt="Logo Regional" 
+                    className="h-12 object-contain" 
+                    width="auto" height="48"
+                  />
               </div>
               <div className="text-center">
                 <h1 className="text-base font-bold text-gray-800">Ensaio de Sondagem - Continuação</h1>

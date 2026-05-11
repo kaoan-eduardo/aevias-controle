@@ -139,7 +139,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
       <div className="flex justify-start">
         <picture>
           <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
-          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" />
+          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" />
         </picture>
       </div>
       <div className="text-center">
@@ -609,7 +609,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                 <div className="flex justify-between items-center">
                   <picture>
                     <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
-                    <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-14 object-contain" />
+                    <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-14 object-contain" width="auto" height="56" />
                   </picture>
                   <h1 className="text-xl font-bold text-center text-gray-800 flex-1 mx-4">MEDIÇÃO DE CARGAS DA USINA</h1>
                   <div className="border border-gray-400 p-2 rounded-md text-sm">
@@ -687,6 +687,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                     alt="Logo Regional" 
                     className="h-16 object-contain" 
+                    width="auto" height="64"
                   />
                 </div>
                 <div className="text-center">
@@ -705,7 +706,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
                     <picture>
                       <source srcSet={fotoUrl} />
-                      <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                      <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" />
                     </picture>
                   </div>
                   <p className="text-center text-base print:text-sm mt-2 font-medium">

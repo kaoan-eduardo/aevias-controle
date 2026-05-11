@@ -1508,7 +1508,7 @@ export default function ChecklistMRAFPage() {
                     <div key={index} className="relative group">
                       <picture>
                         <source srcSet={url} />
-                        <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-slate-200" loading="lazy" />
+                        <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border border-slate-200" loading="lazy" width="auto" height="128" />
                       </picture>
                       {isEditable && !isApproved && (
                         <Button

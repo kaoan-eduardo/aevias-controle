@@ -202,7 +202,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
           alt="Logo Regional" 
           className="h-12 object-contain" 
-        />
+          width="auto" height="48"
+          />
       </div>
       <div className="text-center">
         <h1 className="text-base font-bold text-gray-800">Controle Tecnológico de Concreto</h1>
@@ -667,9 +668,10 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                 <div className="flex justify-start">
                   <img 
                     src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                    alt="Logo Regional" 
-                    className="h-16 object-contain" 
-                  />
+                      alt="Logo Regional" 
+                      className="h-16 object-contain" 
+                      width="auto" height="64"
+                    />
                 </div>
                 <div className="text-center">
                   <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico</h1>
@@ -685,7 +687,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                 {chunk.map((fotoUrl, fotoIndex) => (
                   <div key={fotoIndex} className="border p-2 rounded-lg flex flex-col h-60 print:h-56">
                     <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1">
-                      <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                      <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" />
                     </div>
                     <p className="text-center text-base print:text-sm mt-2 font-medium">
                       Foto {(pageIndex * 6) + fotoIndex + 1}

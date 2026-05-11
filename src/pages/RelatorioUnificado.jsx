@@ -288,7 +288,7 @@ export default function RelatorioUnificado() {
         <div className="border-b-2 border-slate-800 pb-4 mb-6">
           <div className="flex items-start justify-between">
             {regional?.logo_url && (
-              <img src={regional.logo_url} alt="Logo" className="h-14 object-contain" />
+              <img src={regional.logo_url} alt="Logo" className="h-14 object-contain" width="auto" height="56" />
             )}
             <div className="text-right">
               <h1 className="text-2xl font-bold text-slate-800">RELATÓRIO UNIFICADO</h1>

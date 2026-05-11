@@ -26,7 +26,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
       <div className="flex justify-start">
         <picture>
           <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
-          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-8 object-contain" />
+          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-8 object-contain" width="auto" height="32" />
         </picture>
       </div>
       <div className="text-center">
@@ -588,6 +588,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                   alt="Logo Regional" 
                   className="h-10 object-contain"
+                  width="auto" height="40"
                   loading="lazy"
                 />
               </picture>

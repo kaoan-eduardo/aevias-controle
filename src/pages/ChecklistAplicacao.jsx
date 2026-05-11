@@ -1396,7 +1396,7 @@ export default function ChecklistAplicacaoPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                       {formData.fotos.map((foto, index) => (
                         <div key={index} className="relative group">
-                          <img src={foto} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-white/20" />
+                          <img src={foto} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-white/20" width="auto" height="128" />
                           {isEditable && (
                             <button
                               type="button"

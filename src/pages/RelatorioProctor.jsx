@@ -640,6 +640,7 @@ export default function RelatorioProctor() {
             <img
               src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
               alt="Logo" className="h-8 object-contain"
+              width="auto" height="32"
             />
           </div>
           <h1 className="text-xs font-bold text-gray-800 text-center">{title}</h1>

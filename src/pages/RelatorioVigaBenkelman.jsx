@@ -197,9 +197,10 @@ export default function RelatorioVigaBenkelman() {
                 <div className="flex justify-start">
                   <img 
                     src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                    alt="Logo" 
-                    className="h-9 object-contain" 
-                  />
+                      alt="Logo" 
+                      className="h-9 object-contain" 
+                      width="auto" height="36"
+                    />
                 </div>
                 <div className="text-center">
                   <h1 className="text-xs font-bold text-gray-800 leading-tight">

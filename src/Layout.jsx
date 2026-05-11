@@ -569,6 +569,7 @@ const AppLayout = ({ children }) => {
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/b2878d2bd_image.png"
                   alt="Afirmaevias Logo"
                   className="h-16 w-auto dark:hidden"
+                  width="auto" height="64"
                   loading="lazy"
                 />
                 {/* Dark mode logo */}
@@ -576,6 +577,7 @@ const AppLayout = ({ children }) => {
                   src="https://media.base44.com/images/public/68a7599ee3fb9205cfb852ec/7d9853579_LogoDarkmode.jpg"
                   alt="Afirmaevias Logo"
                   className="h-16 w-auto hidden dark:block"
+                  width="auto" height="64"
                   loading="lazy"
                 />
               </div>

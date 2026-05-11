@@ -1192,7 +1192,7 @@ export default function ChecklistReciclagem() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                   {formData.fotos && formData.fotos.map((url, index) => (
                     <div key={index} className="relative group">
-                      <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border" />
+                      <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border" width="auto" height="128" />
                       <Button
                         type="button"
                         variant="destructive"
