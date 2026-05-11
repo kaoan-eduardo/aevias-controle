@@ -76,7 +76,7 @@ export default function EnsaioGranulometriaIndividualPage() {
 
   useEffect(() => {
     loadData();
-  }, [location.search]);
+  }, [location.search, loadData]);
 
   const loadData = async () => {
     try {

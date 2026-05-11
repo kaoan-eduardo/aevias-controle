@@ -145,7 +145,7 @@ export default function RelatorioUnificado() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const loadData = async () => {
     setLoading(true);

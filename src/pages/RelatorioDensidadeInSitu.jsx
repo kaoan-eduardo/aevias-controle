@@ -16,7 +16,7 @@ export default function RelatorioDensidadeInSituPage() {
 
   useEffect(() => {
     loadReportData();
-  }, []);
+  }, [loadReportData]);
 
   const loadReportData = async () => {
     try {

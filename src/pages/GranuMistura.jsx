@@ -128,6 +128,7 @@ export default function GranuMistura() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!formData.obra_id) { setFilteredProjects([]); return; }
     const obra = obras.find(o => o.id === formData.obra_id);

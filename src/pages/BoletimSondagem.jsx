@@ -131,7 +131,7 @@ export default function BoletimSondagemPage() {
   const isApproved = editingBoletim?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => { loadInitialData(); }, []);
+  useEffect(() => { loadInitialData(); }, [loadInitialData]);
 
   const loadInitialData = async () => {
     setLoading(true);

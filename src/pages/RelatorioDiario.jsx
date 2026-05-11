@@ -21,7 +21,7 @@ export default function RelatorioDiarioPage() {
 
   useEffect(() => {
     loadReportData();
-  }, []);
+  }, [loadReportData]);
 
   const loadReportData = async () => {
     try {

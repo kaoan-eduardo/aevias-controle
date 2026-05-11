@@ -69,6 +69,7 @@ export default function EnsaioDensidadeInSituPage() {
   const isApproved = editingEnsaio?.approved === true;
   const isEditable = !isApproved;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadInitialData();
   }, []);

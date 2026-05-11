@@ -71,7 +71,7 @@ export default function RelatorioRompimentoConcreto() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [loadData]);
 
   const loadData = async () => {
     try {

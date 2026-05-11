@@ -175,7 +175,7 @@ export default function ChecklistTerraplanagem() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
 
 

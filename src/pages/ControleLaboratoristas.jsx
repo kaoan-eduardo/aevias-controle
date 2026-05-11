@@ -18,7 +18,7 @@ export default function ControleLaboratoristas() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const loadData = async () => {
     setLoading(true);

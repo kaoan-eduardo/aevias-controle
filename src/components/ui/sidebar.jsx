@@ -75,7 +75,7 @@ const SidebarProvider = React.forwardRef(function SidebarProvider(
 
   const contextValue = React.useMemo(
     function() { return { state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar } },
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, setOpen, isMobile, openMobile, toggleSidebar] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   return (

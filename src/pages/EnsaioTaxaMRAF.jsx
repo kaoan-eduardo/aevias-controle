@@ -98,7 +98,7 @@ export default function EnsaioTaxaMRAFPage() {
   const isApproved = editingEnsaio?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => { loadInitialData(); }, []);
+  useEffect(() => { loadInitialData(); }, [loadInitialData]);
 
   const loadInitialData = async () => {
     setLoading(true);

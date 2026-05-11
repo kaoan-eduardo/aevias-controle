@@ -51,7 +51,7 @@ export default function AcompanhamentoCarga() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
   const loadInitialData = async () => {
     setLoading(true);

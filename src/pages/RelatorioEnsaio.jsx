@@ -22,7 +22,7 @@ export default function RelatorioEnsaio() {
 
   useEffect(() => {
     loadReportData();
-  }, []);
+  }, [loadReportData]);
 
   const loadReportData = async () => {
     try {

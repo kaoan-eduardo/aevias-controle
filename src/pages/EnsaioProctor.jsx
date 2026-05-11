@@ -164,7 +164,7 @@ export default function EnsaioProctorPage() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
   const loadInitialData = async () => {
     try {

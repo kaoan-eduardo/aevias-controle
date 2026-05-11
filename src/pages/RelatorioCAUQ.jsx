@@ -42,7 +42,7 @@ export default function RelatorioCAUQ() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const loadData = async () => {
     try {

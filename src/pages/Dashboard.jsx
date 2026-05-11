@@ -466,7 +466,8 @@ export default function Dashboard() {
 
     // Recalcular gráficos
     calculateCharts(filteredData.ensaios, userAccessLevel, isCliente);
-  }, [filteredData, user, allData.projects.length]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredData, user]);
 
   const calculateCharts = useCallback((ensaios, userAccessLevel, isCliente) => {
     const now = new Date();

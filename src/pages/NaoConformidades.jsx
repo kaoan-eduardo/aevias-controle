@@ -418,7 +418,7 @@ export default function NaoConformidadesPage() {
     filteredR.forEach(r => { if (r.rodovia) count[r.rodovia] = (count[r.rodovia] || 0) + 1; });
     return Object.entries(count).sort((a,b) => b[1]-a[1])
       .map(([name, value], i) => ({ name, value, color: CHART_COLORS[i % CHART_COLORS.length] }));
-  }, [checklistNCs, rncs, obras, f]);
+  }, [checklistNCs, rncs, f]);
 
   const dadosPorUsina = useMemo(() => {
     const filtered = applyCncFilters(checklistNCs, rncs, f, 'usina');
@@ -426,7 +426,7 @@ export default function NaoConformidadesPage() {
     filtered.forEach(nc => { if (nc.usina) count[nc.usina] = (count[nc.usina] || 0) + 1; });
     return Object.entries(count).sort((a,b) => b[1]-a[1])
       .map(([name, value], i) => ({ name, value, color: CHART_COLORS[i % CHART_COLORS.length] }));
-  }, [checklistNCs, rncs, obras, f]);
+  }, [checklistNCs, rncs, f]);
 
   // ---- KPIs (all filters applied) ----
   const rncsVisiveis = useMemo(() => applyRncFilters(rncs, checklistNCs, f), [rncs, checklistNCs, f]);

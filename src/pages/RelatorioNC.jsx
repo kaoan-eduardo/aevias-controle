@@ -223,7 +223,7 @@ export default function RelatorioNCPage() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   const load = async () => {
     try {

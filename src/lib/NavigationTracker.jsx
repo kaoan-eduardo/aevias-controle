@@ -36,7 +36,8 @@ export default function NavigationTracker() {
                 // Silently fail - logging shouldn't break the app
             });
         }
-    }, [location, isAuthenticated, Pages, mainPageKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location, isAuthenticated]);
 
     return null;
 }
