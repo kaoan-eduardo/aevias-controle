@@ -474,46 +474,45 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                       {dadosGranulometria.map((d, i) => {
                         const x = getX(parseFloat(d.abertura.replace(',', '.')));
                         const y = getY(d.percentualPassante);
+                        const pointData = {
+                            astm: d.astm,
+                            percentualPassante: d.percentualPassante,
+                            faixaEspecMin: d.limiteMin,
+                            faixaEspecMax: d.limiteMax,
+                            faixaTrabalhoMin: d.faixaTrabalhoMin,
+                            faixaTrabalhoMax: d.faixaTrabalhoMax
+                          };
                         return (
-                          <g
-                            key={i}
-                            tabIndex={0}
-                            style={{ cursor: 'pointer' }}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.currentTarget.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true })); }}
-                            onMouseEnter={(e) => {
-                              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-                              setHoveredPoint({
-                                astm: d.astm,
-                                percentualPassante: d.percentualPassante,
-                                faixaEspecMin: d.limiteMin,
-                                faixaEspecMax: d.limiteMax,
-                                faixaTrabalhoMin: d.faixaTrabalhoMin,
-                                faixaTrabalhoMax: d.faixaTrabalhoMax
-                              });
-                              setTooltipPos({
-                                x: e.clientX - svgRect.left,
-                                y: e.clientY - svgRect.top
-                              });
-                            }}
-                            onMouseLeave={() => setHoveredPoint(null)}
-                            onFocus={(e) => {
-                              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-                              setHoveredPoint({
-                                astm: d.astm,
-                                percentualPassante: d.percentualPassante,
-                                faixaEspecMin: d.limiteMin,
-                                faixaEspecMax: d.limiteMax,
-                                faixaTrabalhoMin: d.faixaTrabalhoMin,
-                                faixaTrabalhoMax: d.faixaTrabalhoMax
-                              });
-                              setTooltipPos({ x: x + 30, y });
-                            }}
-                            onBlur={() => setHoveredPoint(null)}
-                            aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
-                          >
-                            {/* Hit area invisível sobre o ponto — ainda é elemento estático, mas a interação está no <g> */}
-                            <circle cx={x} cy={y} r="6" fill="transparent" />
+                          <g key={i}>
                             <circle cx={x} cy={y} r="2" fill="#3b82f6" />
+                            <rect
+                              x={x - 8}
+                              y={y - 8}
+                              width="16"
+                              height="16"
+                              fill="transparent"
+                              tabIndex={0}
+                              role="img"
+                              aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
+                              style={{ cursor: 'pointer' }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  setHoveredPoint(pointData);
+                                  setTooltipPos({ x: x + 30, y });
+                                }
+                              }}
+                              onMouseEnter={(e) => {
+                                const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
+                                setHoveredPoint(pointData);
+                                setTooltipPos({ x: e.clientX - svgRect.left, y: e.clientY - svgRect.top });
+                              }}
+                              onMouseLeave={() => setHoveredPoint(null)}
+                              onFocus={() => {
+                                setHoveredPoint(pointData);
+                                setTooltipPos({ x: x + 30, y });
+                              }}
+                              onBlur={() => setHoveredPoint(null)}
+                            />
                           </g>
                         );
                       })}
