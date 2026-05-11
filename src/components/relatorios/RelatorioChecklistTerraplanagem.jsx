@@ -283,7 +283,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                 <thead className="bg-white">
                   <tr>
                     {checklist.periodos_clima?.map((periodo, index) => (
-                      <th key={index} className="border border-slate-300 px-1 py-1 text-center font-bold uppercase text-xs">
+                      <th key={`periodo-${index}`} className="border border-slate-300 px-1 py-1 text-center font-bold uppercase text-xs">
                         {periodo.periodo === 'manha' ? 'MANHÃ' : 'TARDE'}
                       </th>
                     ))}

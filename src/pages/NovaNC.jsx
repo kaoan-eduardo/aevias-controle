@@ -480,7 +480,7 @@ export default function NovaNcPage() {
               {fotos.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mt-3">
                   {fotos.map((url, i) => (
-                    <div key={i} className="relative group">
+                    <div key={`foto-nc-${i}`} className="relative group">
                       <img src={url} alt={`Foto ${i + 1}`} className="w-full h-28 object-cover rounded-md border border-white/20" width="auto" height="112" />
                       <button
                         type="button"

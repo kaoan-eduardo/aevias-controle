@@ -791,7 +791,7 @@ export default function EnsaioSondagem() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {formData.corpos_prova.map((cp, index) => (
-                    <Card key={index} className="border-2 border-slate-200">
+                    <Card key={`cp-${index}`} className="border-2 border-slate-200">
                       <CardHeader className="pb-3 flex flex-row items-center justify-between">
                         <CardTitle className="text-base">Corpo de Prova #{cp.numero}</CardTitle>
                         <Button

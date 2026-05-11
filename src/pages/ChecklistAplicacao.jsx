@@ -700,7 +700,7 @@ export default function ChecklistAplicacaoPage() {
                       </SelectTrigger>
                       <SelectContent>
                         {(obraSelecionada?.rodovias || []).map((rodovia, idx) => (
-                          <SelectItem key={idx} value={rodovia}>
+                          <SelectItem key={`rod-${rodovia}`} value={rodovia}>
                             {rodovia}
                           </SelectItem>
                         ))}
@@ -754,7 +754,7 @@ export default function ChecklistAplicacaoPage() {
                       </SelectTrigger>
                       <SelectContent>
                         {(obraSelecionada?.usinas || []).map((usina, idx) => (
-                          <SelectItem key={idx} value={usina}>
+                          <SelectItem key={`usina-${usina}`} value={usina}>
                             {usina}
                           </SelectItem>
                         ))}

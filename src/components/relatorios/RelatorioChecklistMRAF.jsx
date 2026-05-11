@@ -228,7 +228,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
               <tbody>
                 <tr>
                   {checklist.periodos_clima?.map((periodo, index) => (
-                    <td key={index} className="border border-slate-300 p-0.5 text-center">
+                    <td key={`clima-${index}`} className="border border-slate-300 p-0.5 text-center">
                       <p className="font-medium">Temp. Ambiente (°C): {periodo.temperatura_ambiente || '-'}</p>
                       <div className="mt-0.5">
                         {periodo.condicoes_climaticas === 'bom' && <p className="font-bold text-slate-800 text-sm">☀️ Bom</p>}

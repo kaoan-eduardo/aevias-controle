@@ -654,7 +654,7 @@ export default function ChecklistReciclagem() {
                         </SelectTrigger>
                         <SelectContent>
                           {(obras.find(o => o.id === formData.obra_id)?.rodovias || []).map((rodovia, idx) => (
-                            <SelectItem key={idx} value={rodovia}>
+                            <SelectItem key={`rod-rec-${rodovia}`} value={rodovia}>
                               {rodovia}
                             </SelectItem>
                           ))}
@@ -675,7 +675,7 @@ export default function ChecklistReciclagem() {
                         </SelectTrigger>
                         <SelectContent>
                           {(obras.find(o => o.id === formData.obra_id)?.empreiteiras || []).map((empreiteira, idx) => (
-                            <SelectItem key={idx} value={empreiteira}>
+                            <SelectItem key={`emp-rec-${empreiteira}`} value={empreiteira}>
                               {empreiteira}
                             </SelectItem>
                           ))}
@@ -802,7 +802,7 @@ export default function ChecklistReciclagem() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {formData.periodos_clima.map((periodo, index) => (
-                      <Card key={index}>
+                      <Card key={`clima-rec-${index}`}>
                         <CardHeader className="pb-3">
                           <CardTitle className="text-base capitalize">{periodo.periodo}</CardTitle>
                         </CardHeader>

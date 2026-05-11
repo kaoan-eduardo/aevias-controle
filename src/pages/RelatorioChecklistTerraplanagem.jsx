@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,7 @@ export default function RelatorioChecklistTerraplanamemPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    loadReportData();
-  }, []);
-
-  const loadReportData = async () => {
+  const loadReportData = useCallback(async () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const checklistId = urlParams.get('id');
@@ -46,7 +42,9 @@ export default function RelatorioChecklistTerraplanamemPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { loadReportData(); }, [loadReportData]);
 
   const handlePrint = () => {
     window.print();

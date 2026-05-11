@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
@@ -14,11 +14,7 @@ export default function RelatorioChecklistConcretagemPage() {
   const [creatorUser, setCreatorUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadChecklist();
-  }, [location]);
-
-  const loadChecklist = async () => {
+  const loadChecklist = useCallback(async () => {
     try {
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
@@ -41,7 +37,9 @@ export default function RelatorioChecklistConcretagemPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [location]);
+
+  useEffect(() => { loadChecklist(); }, [loadChecklist]);
 
   const handlePrint = () => {
     window.print();

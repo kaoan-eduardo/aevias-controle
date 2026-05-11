@@ -638,7 +638,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
       )}
 
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
+        <div key={`page-foto-${pageIndex}`} className="p-8 print:p-8 flex flex-col page-container min-h-screen break-before-page">
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2">
               <div className="flex justify-start">
@@ -684,7 +684,8 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               <img 
                 src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                 alt="Logo Regional" 
-                className="h-10 object-contain" 
+                className="h-10 object-contain"
+                width="auto" height="40"
               />
             </div>
             <div className="text-center">
@@ -750,7 +751,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               </thead>
               <tbody>
                 {checklist.medicoes_geometricas.medicoes.map((medicao, index) => (
-                  <tr key={index} className="even:bg-slate-50">
+                  <tr key={`medicao-geom-${index}`} className="even:bg-slate-50">
                     <td className="border border-slate-400 p-1 text-center">{medicao.estaca_inicial || '-'}</td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.estaca_final || '-'}</td>
                     <td className="border border-slate-400 p-1 text-center">{medicao.lado || '-'}</td>

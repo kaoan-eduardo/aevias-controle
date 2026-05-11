@@ -435,7 +435,7 @@ export default function EnsaioRompimentoConcretoPage() {
                     className="w-full px-3 py-2 border border-white/20 rounded-lg bg-white/10 text-[#00233B] disabled:opacity-50"
                   >
                     <option value="">Selecionar...</option>
-                    {rodoviasDaObra.map((rod, idx) => <option key={idx} value={rod}>{rod}</option>)}
+                    {rodoviasDaObra.map((rod) => <option key={rod} value={rod}>{rod}</option>)}
                   </select>
                 </LabeledField>
 

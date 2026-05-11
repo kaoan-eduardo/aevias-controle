@@ -268,7 +268,7 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
             {formData.usinas.map((usina, index) => (
-              <Badge key={index} variant="secondary" className="bg-green-100 text-green-800 flex items-center gap-1">
+              <Badge key={`usina-${usina}`} variant="secondary" className="bg-green-100 text-green-800 flex items-center gap-1">
                 {usina}
                 <button
                   type="button"
@@ -317,7 +317,7 @@ const ObraForm = React.memo(({ obra, regional, onSave, onCancel }) => {
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {formData.rodovias.map((rodovia, index) => (
-            <Badge key={index} variant="secondary" className="bg-purple-100 text-purple-800 flex items-center gap-1">
+            <Badge key={`rodovia-${rodovia}`} variant="secondary" className="bg-purple-100 text-purple-800 flex items-center gap-1">
               {rodovia}
               <button
                 type="button"

@@ -559,7 +559,7 @@ export default function EnsaioLimites({ data, onChange }) {
               <thead>
                 <tr className="bg-[#00233B]/8">
                   <th className={thCls}>Campo</th>
-                  {(data.ll_rows || []).map((_, i) => <th key={i} className={thCls + " text-center"}>#{i+1}</th>)}
+                  {(data.ll_rows || []).map((_, i) => <th key={`ll-col-${i}`} className={thCls + " text-center"}>#{i+1}</th>)}
                 </tr>
               </thead>
               <tbody>
@@ -610,7 +610,7 @@ export default function EnsaioLimites({ data, onChange }) {
               <thead>
                 <tr className="bg-[#00233B]/8">
                   <th className={thCls}>Campo</th>
-                  {(data.lp_rows || []).map((_, i) => <th key={i} className={thCls + " text-center"}>#{i+1}</th>)}
+                  {(data.lp_rows || []).map((_, i) => <th key={`lp-col-${i}`} className={thCls + " text-center"}>#{i+1}</th>)}
                 </tr>
               </thead>
               <tbody>

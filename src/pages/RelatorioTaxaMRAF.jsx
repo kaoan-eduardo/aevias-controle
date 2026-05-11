@@ -156,7 +156,7 @@ export default function RelatorioTaxaMRAF() {
                 <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((_, i) => (
-                  <th key={i} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
+                  <th key={`bandeja-exec2-${i}`} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
               </tr>
             </thead>
@@ -172,7 +172,7 @@ export default function RelatorioTaxaMRAF() {
                 <td className="border border-slate-300 px-2 py-2 bg-white">Lado 2</td>
                 <td className="border border-slate-300 px-2 py-2 text-center">cm</td>
                 {ensaio.ensaios?.map((_, i) => (
-                  <td key={i} className="border border-slate-300 px-2 py-2 text-center">{ensaio.dimensoes_bandeja?.lado_2 ?? '-'}</td>
+                  <td key={`lado2-${i}`} className="border border-slate-300 px-2 py-2 text-center">{ensaio.dimensoes_bandeja?.lado_2 ?? '-'}</td>
                 ))}
               </tr>
               <tr>
@@ -193,7 +193,7 @@ export default function RelatorioTaxaMRAF() {
                 <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((e, i) => (
-                  <th key={i} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
+                  <th key={`bandeja-dim-${i}`} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
               </tr>
             </thead>

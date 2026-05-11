@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,7 @@ export default function RelatorioBoletimSondagemTrado() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
@@ -37,7 +35,9 @@ export default function RelatorioBoletimSondagemTrado() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
   const formatDateTime = (d) => {
@@ -274,7 +274,7 @@ export default function RelatorioBoletimSondagemTrado() {
                       {rows.map((row, ri) => {
                         if (row.section) {
                           return (
-                            <tr key={ri} className="bg-slate-300">
+                            <tr key={`section-${ri}`} className="bg-slate-300">
                               <td colSpan={densidades.length + 1} className="border border-slate-400 px-2 py-0.5 font-bold text-[8px] uppercase tracking-wider text-slate-600">{row.label}</td>
                             </tr>
                           );

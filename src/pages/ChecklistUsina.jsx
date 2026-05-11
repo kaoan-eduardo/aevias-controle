@@ -1401,7 +1401,7 @@ export default function ChecklistUsinaPage() {
                                   <div className="flex flex-wrap gap-1">
                                     {Array.from({ length: quantidade }).map((_, resultIndex) => (
                                       <Input
-                                        key={resultIndex}
+                                        key={`result-${resultIndex}`}
                                         type={ensaio.key === 'fluencia' ? 'text' : 'number'}
                                         min={ensaio.key === 'fluencia' ? undefined : "0"}
                                         step={ensaio.key === 'fluencia' ? undefined : stepValue}

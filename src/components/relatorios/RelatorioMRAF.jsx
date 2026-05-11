@@ -245,7 +245,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                                           numPeneiras <= 13 ? 'h-6' : 'h-5';
 
                       return (
-                        <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                        <tr key={dado.astm} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                           <td className={`border-r border-slate-300 px-2 py-1 text-center font-semibold ${heightClass} print:px-1 print:py-0.5`}>{dado.astm}</td>
                           <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.retido}</td>
                           <td className={`border-r border-slate-300 px-2 py-1 text-center ${heightClass} print:px-1 print:py-0.5`}>{dado.passante}</td>

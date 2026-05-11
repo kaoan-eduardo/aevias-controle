@@ -24,7 +24,7 @@ export default function AgregadosForm({ agregados, peneirasDisponiveis, onAdd, o
       <CardContent className="space-y-6">
         {agregados.length > 0 ? (
           agregados.map((agregado, index) => (
-            <div key={index} className="p-4 border rounded-lg bg-slate-50 space-y-4">
+            <div key={`agregado-${index}`} className="p-4 border rounded-lg bg-slate-50 space-y-4">
               <div className="flex justify-between items-center">
                 <h4 className="font-semibold">Agregado {index + 1}</h4>
                 <Button

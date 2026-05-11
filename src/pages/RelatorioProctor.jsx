@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -527,9 +527,7 @@ export default function RelatorioProctor() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const id = new URLSearchParams(window.location.search).get('id');
       if (!id) { setError("ID não fornecido"); return; }
@@ -548,7 +546,9 @@ export default function RelatorioProctor() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const isHigro = ensaio?.correcao_densidade === 'higroscopica';
 

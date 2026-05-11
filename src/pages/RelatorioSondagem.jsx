@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,7 @@ export default function RelatorioSondagem() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const params = new URLSearchParams(window.location.search);
       const ensaioId = params.get('id');
@@ -58,7 +54,9 @@ export default function RelatorioSondagem() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const handlePrint = () => {
     window.print();
@@ -386,7 +384,7 @@ export default function RelatorioSondagem() {
                         const barHeight = ((gc - minGCChart) / (maxGCChart - minGCChart)) * 70;
                         const y = 75 - barHeight;
                         return (
-                          <g key={idx}>
+                          <g key={`bar-${idx}`}>
                             <rect x={x} y={y} width="18" height={barHeight} fill="#3498db" opacity="0.7" />
                             <text x={x + 20} y="83" fontSize="8" textAnchor="middle" fill="#333">{idx + 1}</text>
                           </g>

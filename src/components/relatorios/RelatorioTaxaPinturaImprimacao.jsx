@@ -175,7 +175,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
                 <td className="border px-1 py-1 text-center italic" style={{ borderColor: 'rgb(148, 163, 184)' }}>L₁</td>
                 <td className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>cm</td>
                 {ensaios.map((_, i) => (
-                  <td key={i} className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{dimensoes.lado_1 || ''}</td>
+                  <td key={`lado1-${i}`} className="border px-1 py-1 text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{dimensoes.lado_1 || ''}</td>
                 ))}
               </tr>
               <tr>
@@ -312,7 +312,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
                     <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '20%' }}>CÁLCULOS</th>
                     <th className="border px-1 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '12.5%' }}>UNIDADE</th>
                     {ensaiosComResiduo.map((e, i) => (
-                      <th key={i} className="border px-1 py-1 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.numero || i + 1}</th>
+                      <th key={`ensaio-num-${i}`} className="border px-1 py-1 font-semibold text-center" style={{ borderColor: 'rgb(148, 163, 184)' }}>{e.numero || i + 1}</th>
                     ))}
                   </tr>
                 </thead>
