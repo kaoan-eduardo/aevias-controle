@@ -570,8 +570,8 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                       </tr>
                     </thead>
                     <tbody>
-                      {checklist.nao_conformidades.map((nc, index) => (
-                        <tr key={index} className="bg-white">
+                      {checklist.nao_conformidades.map((nc, ncIdx) => (
+                        <tr key={ncIdx} className="bg-white">
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
@@ -702,7 +702,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
             </header>
             <main className="flex-grow grid grid-cols-2 gap-4 mt-4" style={{ gridAutoRows: 'minmax(0, 1fr)' }}>
               {chunk.map((fotoUrl, fotoIndex) => (
-                <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
+                <div key={`foto-${fotoIndex}`} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
                     <picture>
                       <source srcSet={fotoUrl} />

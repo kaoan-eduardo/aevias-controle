@@ -22,7 +22,7 @@ export const ExclusaoModal = React.memo(({ ensaio, isOpen, onClose, onDelete }) 
 
     await onDelete(ensaio);
     setConfirmacao('');
-  }, [ensaio, confirmacao, onDelete, textoConfirmacao]);
+  }, [ensaio, confirmacao, onDelete]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

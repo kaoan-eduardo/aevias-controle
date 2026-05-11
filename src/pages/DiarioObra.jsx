@@ -128,6 +128,7 @@ const DiarioForm = ({
     }
     // Limpar rodovia ao trocar de obra
     handleChange('rodovia', "");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obraSelecionada?.id]);
 
   return (

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -55,9 +56,10 @@ export default function GestaoNCPage() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
-  const loadData = async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const loadData = useCallback(async () => {
     setLoading(true);
     const userData = await User.me();
     setUser(userData);
@@ -72,7 +74,7 @@ export default function GestaoNCPage() {
     setObras(obrasData);
     setNcs(ncsData);
     setLoading(false);
-  };
+  }, []);
 
   const filtradas = useMemo(() => {
     return ncs.filter(nc => {

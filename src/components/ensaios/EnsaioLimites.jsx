@@ -633,7 +633,7 @@ export default function EnsaioLimites({ data, onChange }) {
                 ))}
                 <tr className="bg-gray-100/40 font-bold">
                   <td className={tdCls + " font-bold text-[#00233B]"}>Teor de Umidade (%)</td>
-                  {(data.lp_rows || []).map((_, i) => <td key={i} className={tdCalcCls + " font-bold text-blue-700"}>{lpTeors[i] != null ? lpTeors[i].toFixed(2) : "-"}</td>)}
+                  {(data.lp_rows || []).map((_, i) => <td key={`lp-calc-${i}`} className={tdCalcCls + " font-bold text-blue-700"}>{lpTeors[i] != null ? lpTeors[i].toFixed(2) : "-"}</td>)}
                 </tr>
               </tbody>
             </table>

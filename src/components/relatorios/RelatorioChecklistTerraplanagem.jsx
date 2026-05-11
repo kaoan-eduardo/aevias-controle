@@ -644,8 +644,8 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                        </tr>
                      </thead>
                      <tbody>
-                       {checklist.nao_conformidades.map((nc, index) => (
-                         <tr key={index} className="bg-white">
+                       {checklist.nao_conformidades.map((nc, ncIdx) => (
+                                         <tr key={ncIdx} className="bg-white">
                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
@@ -667,7 +667,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="print:pt-2 print:pb-3 break-before-page">
+        <div key={`page-${pageIndex}`} className="print:pt-2 print:pb-3 break-before-page">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3 flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
               <div className="flex justify-start">
@@ -693,7 +693,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
             </header>
             <main className="grid grid-cols-2 gap-3">
               {chunk.map((fotoUrl, fotoIndex) => (
-                <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col">
+                <div key={`foto-${fotoIndex}`} className="border p-2 rounded-lg break-inside-avoid flex flex-col">
                   <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '280px' }}>
                     <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
                   </div>

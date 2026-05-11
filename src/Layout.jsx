@@ -441,7 +441,7 @@ const AppLayout = ({ children }) => {
 
   React.useEffect(() => {
     loadUserAndObras();
-  }, []);
+  }, [loadUserAndObras]);
 
   // Atualizar last_login apenas uma vez por sessão do browser
   React.useEffect(() => {

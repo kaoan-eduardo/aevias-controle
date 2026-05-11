@@ -384,7 +384,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
             <thead>
               <tr>
                 <th className={th}>Campo</th>
-                {llRows.map((_, i) => <th key={i} className={th + " text-center"}>#{i+1}</th>)}
+                {llRows.map((_, i) => <th key={`ll-h-${i}`} className={th + " text-center"}>#{i+1}</th>)}
               </tr>
             </thead>
             <tbody>
@@ -396,16 +396,16 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
               ].map(row => (
                 <tr key={row.field}>
                   <td className={td}>{row.label}</td>
-                  {llRows.map((r, i) => <td key={i} className={tdC}>{r[row.field] || '-'}</td>)}
+                  {llRows.map((r, i) => <td key={`ll-r-${i}`} className={tdC}>{r[row.field] || '-'}</td>)}
                 </tr>
               ))}
               <tr className="bg-slate-100 font-bold">
                 <td className={td}>Teor (%)</td>
-                {llCalc.map((c, i) => <td key={i} className={tdCalc + " text-blue-800 font-bold"}>{c.teor != null ? fmtN(c.teor) : '-'}</td>)}
+                {llCalc.map((c, i) => <td key={`ll-t-${i}`} className={tdCalc + " text-blue-800 font-bold"}>{c.teor != null ? fmtN(c.teor) : '-'}</td>)}
               </tr>
               <tr>
                 <td className={td}>Nº Golpes</td>
-                {llRows.map((r, i) => <td key={i} className={tdC}>{r.num_golpes || '-'}</td>)}
+                {llRows.map((r, i) => <td key={`ll-g-${i}`} className={tdC}>{r.num_golpes || '-'}</td>)}
               </tr>
             </tbody>
           </table>
@@ -423,7 +423,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
             <thead>
               <tr>
                 <th className={th}>Campo</th>
-                {lpRows.map((_, i) => <th key={i} className={th + " text-center"}>#{i+1}</th>)}
+                {lpRows.map((_, i) => <th key={`lp-h-${i}`} className={th + " text-center"}>#{i+1}</th>)}
               </tr>
             </thead>
             <tbody>
@@ -435,12 +435,12 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
               ].map(row => (
                 <tr key={row.field}>
                   <td className={td}>{row.label}</td>
-                  {lpRows.map((r, i) => <td key={i} className={tdC}>{r[row.field] || '-'}</td>)}
+                  {lpRows.map((r, i) => <td key={`lp-r-${i}`} className={tdC}>{r[row.field] || '-'}</td>)}
                 </tr>
               ))}
               <tr className="bg-slate-100 font-bold">
                 <td className={td}>Teor (%)</td>
-                {lpTeors.map((t, i) => <td key={i} className={tdCalc + " text-blue-800 font-bold"}>{t != null ? fmtN(t) : '-'}</td>)}
+                {lpTeors.map((t, i) => <td key={`lp-t-${i}`} className={tdCalc + " text-blue-800 font-bold"}>{t != null ? fmtN(t) : '-'}</td>)}
               </tr>
             </tbody>
           </table>

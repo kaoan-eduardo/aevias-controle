@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ export default function AcompanhamentoUsinagemPage() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]);
 
   useEffect(() => {
     if (formData.obra_id && projects.length > 0 && obras.length > 0) {
@@ -63,7 +63,8 @@ export default function AcompanhamentoUsinagemPage() {
     }
   }, [formData.obra_id, projects, obras, regionais]);
 
-  const loadInitialData = async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const loadInitialData = useCallback(async () => {
     try {
       const userData = await User.me();
       setUser(userData);
@@ -107,7 +108,7 @@ export default function AcompanhamentoUsinagemPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleObraChange = (obraId) => {
     const obra = obras.find(o => o.id === obraId);
@@ -478,7 +479,7 @@ export default function AcompanhamentoUsinagemPage() {
                   </thead>
                   <tbody>
                     {formData.agregados.map((agregado, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={`agregado-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="border border-gray-300 p-2">
                           <Input
                             value={agregado.nome}
@@ -579,7 +580,7 @@ export default function AcompanhamentoUsinagemPage() {
                   </thead>
                   <tbody>
                     {formData.cargas.map((carga, index) => (
-                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={`carga-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                         <td className="border border-gray-300 p-2">
                           <Input
                             value={carga.placa_caminhao}

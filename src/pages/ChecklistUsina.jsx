@@ -922,7 +922,7 @@ export default function ChecklistUsinaPage() {
                       <Select value={formData.usina || ""} onValueChange={(v) => handleChange('usina', v)} disabled={!isEditable || isApproved || !obraSelecionada}>
                         <SelectTrigger><SelectValue placeholder="Selecione a usina" /></SelectTrigger>
                         <SelectContent>
-                          {(obraSelecionada?.usinas || []).map((usina, idx) => (<SelectItem key={idx} value={usina}>{usina}</SelectItem>))}
+                          {(obraSelecionada?.usinas || []).map((usina) => (<SelectItem key={usina} value={usina}>{usina}</SelectItem>))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -1125,7 +1125,7 @@ export default function ChecklistUsinaPage() {
                           {formData.equivalente_areia_resultados && formData.equivalente_areia_resultados.length > 0 ? (
                             <div className="space-y-2">
                               {formData.equivalente_areia_resultados.map((resultado, index) => (
-                                <div key={index} className="flex items-center gap-2">
+                                <div key={`ea-${index}`} className="flex items-center gap-2">
                                   <Label className="text-xs text-slate-600 w-20 shrink-0">
                                     Ensaio {index + 1}:
                                   </Label>
@@ -1196,7 +1196,7 @@ export default function ChecklistUsinaPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {formData.rodadas_producao.map((rodada, index) => (
-                    <Card key={index} className="relative">
+                    <Card key={`rodada-${index}`} className="relative">
                       <CardHeader className="pb-3">
                         <div className="flex justify-between items-center">
                           <CardTitle className="text-base">Rodada {rodada.numero_rodada}</CardTitle>
@@ -1869,7 +1869,7 @@ export default function ChecklistUsinaPage() {
 
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                     {formData.fotos && formData.fotos.map((url, index) => (
-                      <div key={index} className="relative group">
+                      <div key={`foto-${index}`} className="relative group">
                         <img src={url} alt={`Foto ${index + 1}`} className="w-full h-32 object-cover rounded-md border" width="auto" height="128" />
                         {isEditable && !isApproved && (
                           <Button
