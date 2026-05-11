@@ -195,12 +195,10 @@ export default function RelatorioVigaBenkelman() {
               {/* Cabeçalho replicado para cada faixa */}
               <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0 mt-4 print:mt-0">
                 <div className="flex justify-start">
-                  <img 
-                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                      alt="Logo" 
-                      className="h-9 object-contain" 
-                      width="auto" height="36"
-                    />
+                  <picture>
+                    <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                    <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-9 object-contain" width="auto" height="36" />
+                  </picture>
                 </div>
                 <div className="text-center">
                   <h1 className="text-xs font-bold text-gray-800 leading-tight">
