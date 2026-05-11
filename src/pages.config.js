@@ -106,8 +106,17 @@ import ResumosPersonalizados from './pages/ResumosPersonalizados';
 import SolicitacoesTransferencia from './pages/SolicitacoesTransferencia';
 import Users from './pages/Users';
 import RelatorioBoletimSondagem from './pages/RelatorioBoletimSondagem';
+import BoletimSondagemTrado from './pages/BoletimSondagemTrado';
+import RelatorioBoletimSondagemTrado from './pages/RelatorioBoletimSondagemTrado';
+import EnsaioProctor from './pages/EnsaioProctor';
+import RelatorioProctor from './pages/RelatorioProctor';
+import EnsaioRompimentoConcreto from './pages/EnsaioRompimentoConcreto';
+import RelatorioRompimentoConcreto from './pages/RelatorioRompimentoConcreto';
 import GranuMistura from './pages/GranuMistura';
 import RelatorioGranuMistura from './pages/RelatorioGranuMistura';
+import RelatoriosUnificados from './pages/RelatoriosUnificados';
+import RelatorioUnificado from './pages/RelatorioUnificado';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -171,8 +180,17 @@ export const PAGES = {
     "SolicitacoesTransferencia": SolicitacoesTransferencia,
     "Users": Users,
     "RelatorioBoletimSondagem": RelatorioBoletimSondagem,
+    "BoletimSondagemTrado": BoletimSondagemTrado,
+    "RelatorioBoletimSondagemTrado": RelatorioBoletimSondagemTrado,
+    "EnsaioProctor": EnsaioProctor,
+    "RelatorioProctor": RelatorioProctor,
+    "EnsaioRompimentoConcreto": EnsaioRompimentoConcreto,
+    "RelatorioRompimentoConcreto": RelatorioRompimentoConcreto,
     "GranuMistura": GranuMistura,
     "RelatorioGranuMistura": RelatorioGranuMistura,
+    "RelatoriosUnificados": RelatoriosUnificados,
+    "RelatorioUnificado": RelatorioUnificado,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {
