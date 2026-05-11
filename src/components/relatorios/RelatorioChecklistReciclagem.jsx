@@ -29,11 +29,10 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
     <div>
       <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-0.5">
         <div className="flex justify-start">
-          <img 
-            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-            alt="Logo Regional" 
-            className="h-12 object-contain" 
-          />
+          <picture>
+            <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+            <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" />
+          </picture>
         </div>
         <div className="text-center">
           <h1 className="text-sm font-bold text-gray-800">CHECKLIST DE RECICLAGEM</h1>
@@ -506,7 +505,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             {chunk.map((fotoUrl, fotoIndex) => (
               <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
                 <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '220px' }}>
-                  <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" /></picture>
                 </div>
                 <p className="text-center text-sm mt-1 font-semibold">
                   Foto {(pageIndex * 6) + fotoIndex + 1}

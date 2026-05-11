@@ -137,11 +137,10 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
   <div>
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-2">
       <div className="flex justify-start">
-        <img 
-          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-          alt="Logo Regional" 
-          className="h-16 object-contain" 
-        />
+        <picture>
+          <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" />
+        </picture>
       </div>
       <div className="text-center">
         <h1 className="text-xl font-bold text-gray-800">Controle Tecnológico de Usinagem</h1>
@@ -608,10 +607,10 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               {/* Cabeçalho próprio igual ao do PDF */}
               <header className="border-b-2 border-slate-900 pb-2 mb-3">
                 <div className="flex justify-between items-center">
-                  <img
-                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"}
-                    alt="Logo" className="h-14 object-contain"
-                  />
+                  <picture>
+                    <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                    <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-14 object-contain" />
+                  </picture>
                   <h1 className="text-xl font-bold text-center text-gray-800 flex-1 mx-4">MEDIÇÃO DE CARGAS DA USINA</h1>
                   <div className="border border-gray-400 p-2 rounded-md text-sm">
                     <p className="font-semibold">{new Date(checklist.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
@@ -704,11 +703,10 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
               {chunk.map((fotoUrl, fotoIndex) => (
                 <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
-                    <img 
-                      src={fotoUrl} 
-                      alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} 
-                      className="max-h-full max-w-full object-contain"
-                    />
+                    <picture>
+                      <source srcSet={fotoUrl} />
+                      <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" />
+                    </picture>
                   </div>
                   <p className="text-center text-base print:text-sm mt-2 font-medium">
                     Foto {(pageIndex * 6) + fotoIndex + 1}

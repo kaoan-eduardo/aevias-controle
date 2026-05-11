@@ -24,11 +24,10 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => (
   <div>
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0.5 mb-1">
       <div className="flex justify-start">
-        <img 
-          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-          alt="Logo Regional" 
-          className="h-8 object-contain" 
-        />
+        <picture>
+          <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+          <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-8 object-contain" />
+        </picture>
       </div>
       <div className="text-center">
         <h1 className="text-xs font-bold text-gray-800">Controle Tecnológico - Aplicação de Microrrevestimento</h1>
@@ -607,12 +606,10 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
               {photos.map((foto, index) => (
                 <div key={index} className="break-inside-avoid flex flex-col">
                   <div className="flex-1 border-2 border-slate-300 rounded overflow-hidden bg-slate-50 flex items-center justify-center" style={{ minHeight: '240px', maxHeight: '240px' }}>
-                    <img 
-                      src={foto} 
-                      alt={`Foto ${pageIndex * photosPerPage + index + 1}`} 
-                      className="w-full h-full object-cover"
-                      style={{ maxHeight: '240px' }}
-                    />
+                    <picture>
+                      <source srcSet={foto} />
+                      <img src={foto} alt={`Foto ${pageIndex * photosPerPage + index + 1}`} className="w-full h-full object-cover" style={{ maxHeight: '240px' }} />
+                    </picture>
                   </div>
                   <p className="text-center text-sm text-slate-600 mt-2 font-medium">
                     Foto {pageIndex * photosPerPage + index + 1}

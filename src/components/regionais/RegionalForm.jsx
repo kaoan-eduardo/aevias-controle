@@ -147,7 +147,7 @@ export default function RegionalForm({ regional, users, projects, onSave, onCanc
                     </div>
                     {formData.logo_url && (
                         <div className="border rounded-lg p-2 bg-gray-50">
-                            <img src={formData.logo_url} alt="Logo da Regional" className="h-16 object-contain" />
+                            <picture><source srcSet={formData.logo_url} /><img src={formData.logo_url} alt="Logo da Regional" className="h-16 object-contain" /></picture>
                         </div>
                     )}
                 </div>
