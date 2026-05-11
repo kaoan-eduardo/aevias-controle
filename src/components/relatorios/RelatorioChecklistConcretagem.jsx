@@ -2,6 +2,241 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import SignatureFooter from './SignatureFooter';
 
+// ── Helper functions ──────────────────────────────────────────────────────────
+function getClimaEmoji(condicao) {
+  switch(condicao) {
+    case 'bom': return '☀️';
+    case 'instavel': return '⛅';
+    case 'chuva': return '🌧️';
+    default: return '';
+  }
+}
+
+function getClimaTexto(condicao) {
+  switch(condicao) {
+    case 'bom': return 'Bom';
+    case 'instavel': return 'Instável';
+    case 'chuva': return 'Chuva';
+    default: return '-';
+  }
+}
+
+function getPeriodoNome(periodo) {
+  switch(periodo) {
+    case 'manha': return 'MANHÃ';
+    case 'tarde': return 'TARDE';
+    case 'noite': return 'NOITE';
+    default: return periodo.toUpperCase();
+  }
+}
+
+function formatDateStatic(dateString) {
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+}
+
+// ── Sub-components (defined outside to avoid "non-serializable" lint error) ───
+const SectionTitle = ({ children }) => (
+  <h2 className="text-sm print:text-xs font-bold text-center bg-slate-100 p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
+);
+
+const Checkmark = ({ checked }) => {
+  if (checked === null || typeof checked === 'undefined') {
+    return <span className="text-slate-500">-</span>;
+  }
+  return (
+    <span className={`font-bold ${checked ? 'text-green-600' : 'text-red-600'}`}>
+      {checked ? '✓' : '✗'}
+    </span>
+  );
+};
+
+const ReportHeader = ({ regional, checklist, showDate = true }) => (
+  <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
+    <div className="flex justify-start">
+      <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="auto" height="48" /></picture>
+    </div>
+    <div className="text-center">
+      <h1 className="text-base font-bold text-gray-800">Controle Tecnológico de Concreto</h1>
+    </div>
+    <div className="flex justify-end">
+      {showDate && (
+        <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
+          <p className="font-semibold text-gray-800">
+            {formatDateStatic(checklist.data)}
+          </p>
+        </div>
+      )}
+    </div>
+  </header>
+);
+
+const ReportFooterSimple = () => (
+  <footer className="pt-0.5">
+    {/* Footer sem paginação */}
+  </footer>
+);
+
+const DadosObra = ({ checklist, regional, obra }) => (
+  <>
+    <SectionTitle>Dados da Obra</SectionTitle>
+    <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-1 p-1.5 rounded text-xs">
+      <div><p className="font-bold">CLIENTE:</p><p>{regional?.cliente || obra?.name || 'N/A'}</p></div>
+      <div><p className="font-bold">CONCRETEIRA:</p><p>{checklist.concreteira}</p></div>
+      <div><p className="font-bold">EMPREITEIRA:</p><p>{checklist.empreiteira || 'N/A'}</p></div>
+      <div><p className="font-bold">OBRA:</p><p>{obra?.code || 'N/A'}</p></div>
+      <div><p className="font-bold">RODOVIA:</p><p>{checklist.rodovia || 'N/A'}</p></div>
+      <div><p className="font-bold">TRECHO:</p><p>{checklist.trecho || 'N/A'}</p></div>
+      <div><p className="font-bold">VOLUME (m³):</p><p>{checklist.volume || 'N/A'}</p></div>
+      <div><p className="font-bold">Fck (MPa):</p><p>{checklist.fck || 'N/A'}</p></div>
+      <div><p className="font-bold">ESTRUTURA:</p><p>{checklist.estrutura || 'N/A'}</p></div>
+      <div><p className="font-bold">INSPETOR CAMPO:</p><p>{checklist.inspetor_campo || 'N/A'}</p></div>
+      <div><p className="font-bold">JORNADA:</p><p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p></div>
+      <div><p className="font-bold">ENSAIO REALIZADO POR:</p><p>{checklist.ensaio_realizado_por || 'N/A'}</p></div>
+    </div>
+  </>
+);
+
+const CondicoesClimaticas = ({ checklist }) => (
+  <>
+    <SectionTitle>Condições Climáticas</SectionTitle>
+    <div className="mb-1">
+      <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '9px' }}>
+        <thead className="bg-slate-100">
+          <tr>
+            {checklist.periodos_clima?.map((periodo, index) => (
+              <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
+                {getPeriodoNome(periodo.periodo)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {checklist.periodos_clima?.map((periodo, index) => (
+              <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
+                <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
+                <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </>
+);
+
+const CargaContent = ({ carga }) => (
+  <>
+    <div className="mb-1">
+      <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Identificação da Carga</h3>
+      <div className="grid grid-cols-2 gap-1 text-xs">
+        <p><strong>Nota Fiscal Nº:</strong> {carga.nota_fiscal || 'N/A'}</p>
+        <p><strong>Placa da Betoneira:</strong> {carga.placa_betoneira || 'N/A'}</p>
+        <p><strong>Horário Início:</strong> {carga.horario_inicio || 'N/A'}</p>
+        <p><strong>Horário Término:</strong> {carga.horario_termino || 'N/A'}</p>
+      </div>
+    </div>
+    <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Ensaios de Qualidade</h3>
+    <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
+      <thead className="bg-slate-100">
+        <tr>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Ensaio</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Realizado</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Resultado (cm)</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Padrão do Projeto</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-20">Conformidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">Slump Test</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center"><Checkmark checked={carga.slump_test?.realizado} /></td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.slump_test?.realizado && carga.slump_test?.resultado !== null ? carga.slump_test.resultado : '-'}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">{carga.slump_test?.limite || 'N/A'}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">
+            {carga.slump_test?.realizado ? (carga.slump_test.conforme === true ? <span className="text-green-600 font-bold text-lg">✓</span> : carga.slump_test.conforme === false ? <span className="text-red-600 font-bold text-lg">✗</span> : <span className="text-slate-500">-</span>) : <span className="text-slate-500">-</span>}
+          </td>
+        </tr>
+        <tr>
+          <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">Espessura da Camada</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center"><Checkmark checked={carga.espessura_camada?.realizado} /></td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.espessura_camada?.realizado && carga.espessura_camada?.resultado !== null ? carga.espessura_camada.resultado : '-'}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">{carga.espessura_camada?.limite || 'N/A'}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">
+            {carga.espessura_camada?.realizado ? (carga.espessura_camada.conforme === true ? <span className="text-green-600 font-bold text-lg">✓</span> : carga.espessura_camada.conforme === false ? <span className="text-red-600 font-bold text-lg">✗</span> : <span className="text-slate-500">-</span>) : <span className="text-slate-500">-</span>}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p className="text-xs mb-1"><strong>Equipamento de Lançamento:</strong> {carga.equipamento_lancamento === 'convencional' ? 'Convencional' : carga.equipamento_lancamento === 'bombeado' ? 'Bombeado' : 'N/A'}</p>
+    <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Acompanhamento Lançamento Concreto</h3>
+    <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
+      <thead className="bg-slate-100">
+        <tr>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Serviço</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Sim</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Não</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">A superfície foi tratada e limpa?</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.superficie_tratada_limpa === true && <span className="text-green-600 font-bold text-lg">✓</span>}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.superficie_tratada_limpa === false && <span className="text-red-600 font-bold text-lg">✗</span>}</td>
+        </tr>
+        <tr>
+          <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">Foi realizado adensamento do concreto?</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.adensamento_realizado === true && <span className="text-green-600 font-bold text-lg">✓</span>}</td>
+          <td className="border border-slate-300 px-1 py-0.5 text-center">{carga.adensamento_realizado === false && <span className="text-red-600 font-bold text-lg">✗</span>}</td>
+        </tr>
+      </tbody>
+    </table>
+    {carga.observacoes_lancamento && (<div className="text-xs mb-1"><strong>Observações:</strong> {carga.observacoes_lancamento}</div>)}
+    <div className="mb-0">
+      <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Moldes para Fiscalização</h3>
+      {carga.moldado_fiscalizacao ? (
+        <>
+          {carga.corpos_prova && carga.corpos_prova.length > 0 ? (
+            <>
+              <table className="w-full border-collapse border border-slate-300 text-xs mt-0.5">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Dias para Ruptura</th>
+                    <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Quantidade de CPs</th>
+                    <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Tipo de Ruptura</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[3, 7, 28].map((dias) => {
+                    const cpsDestaDia = carga.corpos_prova.filter(cp => cp.dias_ruptura === dias);
+                    if (cpsDestaDia.length === 0) return null;
+                    const tipoRuptura = cpsDestaDia[0].tipo_ruptura;
+                    const tipoTexto = tipoRuptura === 'compressao_axial' ? 'Compressão Axial' : tipoRuptura === 'comp_diametral' ? 'Compressão Diametral' : tipoRuptura === 'tracao_flexao' ? 'Tração na Flexão' : 'N/A';
+                    return (
+                      <tr key={dias}>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center font-medium bg-slate-50">{dias} dias</td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">{cpsDestaDia.length}</td>
+                        <td className="border border-slate-300 px-1 py-0.5 text-center">{tipoTexto}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <p className="text-xs mt-0.5 text-slate-600 mb-0"><strong>Total de CPs moldados:</strong> {carga.corpos_prova.length}</p>
+            </>
+          ) : (
+            <div className="text-xs"><p><strong>Moldado:</strong> ✓ Sim</p><p className="text-slate-500 italic">Detalhes dos corpos de prova não registrados</p></div>
+          )}
+        </>
+      ) : (
+        <div className="text-xs"><p><strong>Moldado para Fiscalização:</strong> ✗ Não</p></div>
+      )}
+    </div>
+  </>
+);
+
+// ── Main component ─────────────────────────────────────────────────────────────
 export default function RelatorioChecklistConcretagem({ checklist, creatorUser, obra: obraProp, regional: regionalProp, project: projectProp }) {
   const [obra, setObra] = useState(obraProp || null);
   const [project, setProject] = useState(projectProp || null);
@@ -134,403 +369,25 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
   };
 
-  const getClimaEmoji = (condicao) => {
-    switch(condicao) {
-      case 'bom': return '☀️';
-      case 'instavel': return '⛅';
-      case 'chuva': return '🌧️';
-      default: return '';
-    }
-  };
-
-  const getClimaTexto = (condicao) => {
-    switch(condicao) {
-      case 'bom': return 'Bom';
-      case 'instavel': return 'Instável';
-      case 'chuva': return 'Chuva';
-      default: return '-';
-    }
-  };
-
-  const getPeriodoNome = (periodo) => {
-    switch(periodo) {
-      case 'manha': return 'MANHÃ';
-      case 'tarde': return 'TARDE';
-      case 'noite': return 'NOITE';
-      default: return periodo.toUpperCase();
-    }
-  };
-
-  const SectionTitle = ({ children }) => (
-    <h2 className="text-sm print:text-xs font-bold text-center bg-slate-100 p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
-  );
-
-  const Checkmark = ({ checked }) => {
-    if (checked === null || typeof checked === 'undefined') {
-      return <span className="text-slate-500">-</span>;
-    }
-    return (
-      <span className={`font-bold ${checked ? 'text-green-600' : 'text-red-600'}`}>
-        {checked ? '✓' : '✗'}
-      </span>
-    );
-  };
-
   if (isCompressing) {
     return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
   }
 
-  const chunkArray = (array, chunkSize) => {
-    const chunks = [];
-    if (!array) return chunks;
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
-    }
-    return chunks;
-  };
-
+  const chunkArray = (arr, size) => { const chunks = []; if (!arr) return chunks; for (let i = 0; i < arr.length; i += size) { chunks.push(arr.slice(i, i + size)); } return chunks; };
   const photoChunks = chunkArray(compressedPhotos, 6);
   const cargas = checklist.cargas_concreto || [];
   const temMultiplasCargas = cargas.length > 1;
-  const totalPages = (temMultiplasCargas ? cargas.length : 1) + photoChunks.length;
-
-  // Componente do Header para reutilização
-  const ReportHeader = ({ showDate = true }) => (
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
-      <div className="flex justify-start">
-        <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="auto" height="48" /></picture>
-      </div>
-      <div className="text-center">
-        <h1 className="text-base font-bold text-gray-800">Controle Tecnológico de Concreto</h1>
-      </div>
-      <div className="flex justify-end">
-        {showDate && (
-          <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
-            <p className="font-semibold text-gray-800">
-              {formatDate(checklist.data)}
-            </p>
-          </div>
-        )}
-      </div>
-    </header>
-  );
-
-  // Componente do Footer COM assinaturas (apenas última página)
-  const ReportFooterWithSignatures = () => (
-    <SignatureFooter
-      labName={checklist.laboratorista_name}
-      labEmail={checklist.created_by}
-      labCreatedDate={checklist.created_date}
-      labPosition={creatorUser?.position || 'Laboratorista'}
-      approverName={checklist.approver_details?.name}
-      approverEmail={checklist.approved_by}
-      approverPosition={checklist.approver_details?.position}
-      approverCREA={checklist.approver_details?.crea_number}
-      approverDate={checklist.approved_date}
-      clientName={checklist.client_signature?.engineer_name}
-      clientEmail={checklist.client_signature?.signed_by}
-      clientPosition={checklist.client_signature?.position}
-      clientCREA={checklist.client_signature?.crea_number}
-      clientDate={checklist.client_signature?.signed_date}
-    />
-  );
-
-  // Componente do Footer SEM assinaturas (páginas intermediárias)
-  const ReportFooterSimple = () => (
-    <footer className="pt-0.5">
-      {/* Footer sem paginação */}
-    </footer>
-  );
-
   const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
 
-  // Componente de Dados da Obra (reutilizável)
-  const DadosObra = () => (
-    <>
-      <SectionTitle>Dados da Obra</SectionTitle>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-1 p-1.5 rounded text-xs">
-        <div>
-          <p className="font-bold">CLIENTE:</p>
-          <p>{regional?.cliente || obra?.name || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">CONCRETEIRA:</p>
-          <p>{checklist.concreteira}</p>
-        </div>
-        <div>
-          <p className="font-bold">EMPREITEIRA:</p>
-          <p>{checklist.empreiteira || 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">OBRA:</p>
-          <p>{obra?.code || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">RODOVIA:</p>
-          <p>{checklist.rodovia || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">TRECHO:</p>
-          <p>{checklist.trecho || 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">VOLUME (m³):</p>
-          <p>{checklist.volume || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">Fck (MPa):</p>
-          <p>{checklist.fck || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">ESTRUTURA:</p>
-          <p>{checklist.estrutura || 'N/A'}</p>
-        </div>
-
-        <div>
-          <p className="font-bold">INSPETOR CAMPO:</p>
-          <p>{checklist.inspetor_campo || 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">JORNADA:</p>
-          <p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p>
-        </div>
-        <div>
-          <p className="font-bold">ENSAIO REALIZADO POR:</p>
-          <p>{checklist.ensaio_realizado_por || 'N/A'}</p>
-        </div>
-      </div>
-    </>
-  );
-
-  // Componente de Condições Climáticas (reutilizável)
-  const CondicoesClimaticas = () => (
-    <>
-      <SectionTitle>Condições Climáticas</SectionTitle>
-      <div className="mb-1">
-        <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '9px' }}>
-          <thead className="bg-slate-100">
-            <tr>
-              {checklist.periodos_clima?.map((periodo, index) => (
-                <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
-                  {getPeriodoNome(periodo.periodo)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {checklist.periodos_clima?.map((periodo, index) => (
-                <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
-                  <p className="font-medium mb-0.5">
-                    Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
-                  </p>
-                  <p className="font-bold">
-                    {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}
-                  </p>
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-
-  // Componente de Carga Individual
-  const CargaContent = ({ carga }) => (
-    <>
-      {/* Identificação da Carga */}
-      <div className="mb-1">
-        <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Identificação da Carga</h3>
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          <p><strong>Nota Fiscal Nº:</strong> {carga.nota_fiscal || 'N/A'}</p>
-          <p><strong>Placa da Betoneira:</strong> {carga.placa_betoneira || 'N/A'}</p>
-          <p><strong>Horário Início:</strong> {carga.horario_inicio || 'N/A'}</p>
-          <p><strong>Horário Término:</strong> {carga.horario_termino || 'N/A'}</p>
-        </div>
-      </div>
-
-      {/* Tabela de Ensaios de Qualidade */}
-      <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Ensaios de Qualidade</h3>
-      <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
-        <thead className="bg-slate-100">
-          <tr>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Ensaio</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Realizado</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Resultado (cm)</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Padrão do Projeto</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-20">Conformidade</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">Slump Test</td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              <Checkmark checked={carga.slump_test?.realizado} />
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.slump_test?.realizado && carga.slump_test?.resultado !== null 
-                ? carga.slump_test.resultado 
-                : '-'}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
-              {carga.slump_test?.limite || 'N/A'}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.slump_test?.realizado ? (
-                carga.slump_test.conforme === true ? (
-                  <span className="text-green-600 font-bold text-lg">✓</span>
-                ) : carga.slump_test.conforme === false ? (
-                  <span className="text-red-600 font-bold text-lg">✗</span>
-                ) : (
-                  <span className="text-slate-500">-</span>
-                )
-              ) : (
-                <span className="text-slate-500">-</span>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">Espessura da Camada</td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              <Checkmark checked={carga.espessura_camada?.realizado} />
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.espessura_camada?.realizado && carga.espessura_camada?.resultado !== null 
-                ? carga.espessura_camada.resultado 
-                : '-'}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center text-xs">
-              {carga.espessura_camada?.limite || 'N/A'}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.espessura_camada?.realizado ? (
-                carga.espessura_camada.conforme === true ? (
-                  <span className="text-green-600 font-bold text-lg">✓</span>
-                ) : carga.espessura_camada.conforme === false ? (
-                  <span className="text-red-600 font-bold text-lg">✗</span>
-                ) : (
-                  <span className="text-slate-500">-</span>
-                )
-              ) : (
-                <span className="text-slate-500">-</span>
-              )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p className="text-xs mb-1">
-        <strong>Equipamento de Lançamento:</strong> {
-          carga.equipamento_lancamento === 'convencional' ? 'Convencional' :
-          carga.equipamento_lancamento === 'bombeado' ? 'Bombeado' : 'N/A'
-        }
-      </p>
-
-      {/* Tabela de Acompanhamento de Lançamento */}
-      <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Acompanhamento Lançamento Concreto</h3>
-      <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
-        <thead className="bg-slate-100">
-          <tr>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Serviço</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Sim</th>
-            <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Não</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">
-              A superfície foi tratada e limpa?
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.superficie_tratada_limpa === true && <span className="text-green-600 font-bold text-lg">✓</span>}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.superficie_tratada_limpa === false && <span className="text-red-600 font-bold text-lg">✗</span>}
-            </td>
-          </tr>
-          <tr>
-            <td className="border border-slate-300 px-1 py-0.5 font-medium bg-slate-50">
-              Foi realizado adensamento do concreto?
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.adensamento_realizado === true && <span className="text-green-600 font-bold text-lg">✓</span>}
-            </td>
-            <td className="border border-slate-300 px-1 py-0.5 text-center">
-              {carga.adensamento_realizado === false && <span className="text-red-600 font-bold text-lg">✗</span>}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      {carga.observacoes_lancamento && (
-        <div className="text-xs mb-1">
-          <strong>Observações:</strong> {carga.observacoes_lancamento}
-        </div>
-      )}
-
-      {/* Moldes para Fiscalização */}
-      <div className="mb-0">
-        <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Moldes para Fiscalização</h3>
-        {carga.moldado_fiscalizacao ? (
-          <>
-            {carga.corpos_prova && carga.corpos_prova.length > 0 ? (
-              <>
-                <table className="w-full border-collapse border border-slate-300 text-xs mt-0.5">
-                  <thead className="bg-slate-100">
-                    <tr>
-                      <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Dias para Ruptura</th>
-                      <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Quantidade de CPs</th>
-                      <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Tipo de Ruptura</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[3, 7, 28].map((dias) => {
-                      const cpsDestaDia = carga.corpos_prova.filter(cp => cp.dias_ruptura === dias);
-                      if (cpsDestaDia.length === 0) return null;
-                      
-                      const tipoRuptura = cpsDestaDia[0].tipo_ruptura;
-                      const tipoTexto = tipoRuptura === 'compressao_axial' ? 'Compressão Axial' :
-                                        tipoRuptura === 'comp_diametral' ? 'Compressão Diametral' :
-                                        tipoRuptura === 'tracao_flexao' ? 'Tração na Flexão' : 'N/A';
-                      
-                      return (
-                        <tr key={dias}>
-                          <td className="border border-slate-300 px-1 py-0.5 text-center font-medium bg-slate-50">
-                            {dias} dias
-                          </td>
-                          <td className="border border-slate-300 px-1 py-0.5 text-center">
-                            {cpsDestaDia.length}
-                          </td>
-                          <td className="border border-slate-300 px-1 py-0.5 text-center">
-                            {tipoTexto}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <p className="text-xs mt-0.5 text-slate-600 mb-0">
-                  <strong>Total de CPs moldados:</strong> {carga.corpos_prova.length}
-                </p>
-              </>
-            ) : (
-              <div className="text-xs">
-                <p><strong>Moldado:</strong> ✓ Sim</p>
-                <p className="text-slate-500 italic">Detalhes dos corpos de prova não registrados</p>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-xs">
-            <p><strong>Moldado para Fiscalização:</strong> ✗ Não</p>
-          </div>
-        )}
-      </div>
-    </>
-  );
+  const footerProps = {
+    labName: checklist.laboratorista_name, labEmail: checklist.created_by, labCreatedDate: checklist.created_date,
+    labPosition: creatorUser?.position || 'Laboratorista', approverName: checklist.approver_details?.name,
+    approverEmail: checklist.approved_by, approverPosition: checklist.approver_details?.position,
+    approverCREA: checklist.approver_details?.crea_number, approverDate: checklist.approved_date,
+    clientName: checklist.client_signature?.engineer_name, clientEmail: checklist.client_signature?.signed_by,
+    clientPosition: checklist.client_signature?.position, clientCREA: checklist.client_signature?.crea_number,
+    clientDate: checklist.client_signature?.signed_date,
+  };
 
   return (
     <div className="bg-white font-sans min-h-screen print:bg-white">
@@ -538,11 +395,11 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
       {!temMultiplasCargas && cargas.length === 1 && (
         <div className="break-inside-avoid">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
-            <ReportHeader />
+            <ReportHeader regional={regional} checklist={checklist} />
             <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
-              <DadosObra />
-              <CondicoesClimaticas />
-              
+              <DadosObra checklist={checklist} regional={regional} obra={obra} />
+              <CondicoesClimaticas checklist={checklist} />
+
               {checklist.observacoes_gerais && (
                 <>
                   <SectionTitle>Observações Gerais</SectionTitle>
@@ -555,7 +412,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
               <SectionTitle>Carga de Concreto 1</SectionTitle>
               <CargaContent carga={cargas[0]} />
             </main>
-            <ReportFooterWithSignatures />
+            <SignatureFooter {...footerProps} />
           </div>
         </div>
       )}
@@ -568,13 +425,13 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         return (
           <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
             <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
-              <ReportHeader />
+              <ReportHeader regional={regional} checklist={checklist} />
               <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
                 {isPrimeiraCarga && (
                   <>
-                    <DadosObra />
-                    <CondicoesClimaticas />
-                    
+                    <DadosObra checklist={checklist} regional={regional} obra={obra} />
+                    <CondicoesClimaticas checklist={checklist} />
+
                     {checklist.observacoes_gerais && (
                       <>
                         <SectionTitle>Observações Gerais</SectionTitle>
@@ -585,13 +442,13 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                     )}
                   </>
                 )}
-                
+
                 <SectionTitle>Carga de Concreto {carga.numero_carga}</SectionTitle>
                 <CargaContent carga={carga} />
               </main>
-              
+
               {isUltimaCarga && !temAcoesCorretivas ? (
-                <ReportFooterWithSignatures />
+                <SignatureFooter {...footerProps} />
               ) : (
                 <ReportFooterSimple />
               )}
@@ -605,8 +462,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         <div className="break-before-page">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
-              <ReportHeader showDate={true} />
-              <DadosObra />
+              <ReportHeader regional={regional} checklist={checklist} showDate={true} />
+              <DadosObra checklist={checklist} regional={regional} obra={obra} />
 
               <main className="mt-2" style={{ flex: '1' }}>
                 {temAcoesCorretivas && (
@@ -647,7 +504,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
               </main>
 
               <div style={{ marginTop: 'auto' }}>
-                <ReportFooterWithSignatures />
+                <SignatureFooter {...footerProps} />
               </div>
             </div>
           </div>
