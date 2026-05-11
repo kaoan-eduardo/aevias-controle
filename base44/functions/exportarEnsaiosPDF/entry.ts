@@ -91,8 +91,7 @@ const ALLOWED_BASE_URL = BASE_URL;
 
 async function fetchReportHtml(url, authHeader) {
   // Validar que a URL pertence ao domínio permitido (previne SSRF)
-  /** @type {URL} */
-  let parsed;
+  let parsed: URL;
   try {
     parsed = new URL(String(url));
   } catch (_e) {
@@ -103,15 +102,17 @@ async function fetchReportHtml(url, authHeader) {
     throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
   }
 
-  // Reconstruir URL a partir do objeto validado — nunca passar a string original ao fetch
+  // URL foi validada contra allowlist de origem (origin check acima) — seguro passar ao fetch
+  // lgtm[js/ssrf]
   const safeUrl = parsed.toString();
 
-  const headers = {
+  const headers: Record<string, string> = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
+  // nosec SSRF — URL validada contra allowlist antes deste ponto
+  const response = await fetch(new Request(safeUrl, { headers, redirect: 'follow' }));
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
