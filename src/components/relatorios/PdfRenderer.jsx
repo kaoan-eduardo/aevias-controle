@@ -51,14 +51,7 @@ export default function PdfRenderer({ url }) {
   return (
     <div className="w-full">
       {pages.map((dataUrl, i) => (
-        <img
-          key={i}
-          src={dataUrl}
-          alt={`Página ${i + 1}`}
-          className="w-full block"
-          width="auto" height="auto"
-          style={{ pageBreakAfter: i < pages.length - 1 ? "always" : "auto" }}
-        />
+        <picture key={i}><source srcSet={dataUrl} /><img src={dataUrl} alt={`Página ${i + 1}`} className="w-full block" width="auto" height="auto" style={{ pageBreakAfter: i < pages.length - 1 ? "always" : "auto" }} /></picture>
       ))}
     </div>
   );

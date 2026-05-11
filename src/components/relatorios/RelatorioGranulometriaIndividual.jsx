@@ -118,12 +118,7 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       {/* Cabeçalho com Logo e Data */}
       <header className="flex items-center justify-between border-b-4 border-slate-700 pb-4 mb-6">
         <div className="w-1/4">
-          <img 
-            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-             alt="Logo Regional" 
-             className="h-16 object-contain" 
-             width="auto" height="64"
-            />
+          <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
         </div>
         <div className="w-1/2 text-center">
           <h1 className="text-lg font-bold text-gray-800 uppercase">Granulometria Individual</h1>

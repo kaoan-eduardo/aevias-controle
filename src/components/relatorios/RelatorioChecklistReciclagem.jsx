@@ -481,12 +481,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
         <div key={pageIndex} className={pageIndex < photoChunks.length - 1 ? "break-after-page" : ""}>
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-4 mt-2">
             <div className="flex justify-start">
-              <img 
-                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-12 object-contain"
-                width="48" height="48"
-              />
+              <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="48" height="48" /></picture>
             </div>
             <div className="text-center">
               <h1 className="text-base font-bold text-gray-800">Relatório Fotográfico</h1>

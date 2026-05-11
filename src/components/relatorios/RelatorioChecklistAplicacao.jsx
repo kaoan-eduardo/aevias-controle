@@ -36,12 +36,7 @@ const ReportPrintHeader = ({ checklist, obra, regional }) => (
   <div>
     <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
       <div className="flex justify-start">
-        <img 
-          src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-            alt="Logo Regional" 
-            className="h-10 object-contain" 
-            width="auto" height="40"
-          />
+        <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-10 object-contain" width="auto" height="40" /></picture>
       </div>
       <div className="text-center">
         <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Controle Tecnológico de Aplicação</h1>
@@ -642,12 +637,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
           <div className="w-full max-w-[190mm] mx-auto flex-grow flex flex-col">
             <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2">
               <div className="flex justify-start">
-                <img 
-                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                    alt="Logo Regional" 
-                    className="h-16 object-contain" 
-                    width="auto" height="64"
-                  />
+                <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
               </div>
               <div className="text-center">
                 <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico Aplicação</h1>
@@ -663,7 +653,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
               {chunk.map((fotoUrl, fotoIndex) => (
                 <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                   <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
-                    <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" />
+                    <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
                   </div>
                   <p className="text-center text-base print:text-sm mt-2 font-medium">
                     Foto {(pageIndex * 6) + fotoIndex + 1}
@@ -681,12 +671,7 @@ export default function RelatorioChecklistAplicacao({ checklist, obra, regional,
         <div className="break-before-page p-3 print:p-3 min-h-screen flex flex-col">
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
             <div className="flex justify-start">
-              <img 
-                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-10 object-contain"
-                width="auto" height="40"
-              />
+              <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-10 object-contain" width="auto" height="40" /></picture>
             </div>
             <div className="text-center">
               <h1 className="text-sm font-bold text-gray-800 whitespace-nowrap">Medição Geométrica de Campo</h1>

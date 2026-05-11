@@ -136,12 +136,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
       <div className="p-8 print:p-8 min-h-[29.7cm] flex flex-col">
         <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4">
           <div className="flex justify-start">
-            <img 
-              src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-16 object-contain" 
-                width="auto" height="64"
-              />
+            <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-800">Diário de Obra</h1>
@@ -302,12 +297,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
         <div className="break-before-page p-8 print:p-8 min-h-[29.7cm] flex flex-col">
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
             <div className="flex justify-start">
-              <img 
-                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                alt="Logo Regional" 
-                className="h-16 object-contain"
-                width="auto" height="64"
-              />
+              <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
             </div>
             <div className="text-center">
               <h1 className="text-2xl font-bold text-gray-800">Efetivo de Obra</h1>
@@ -437,12 +427,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
         <div className="break-before-page p-3 print:p-3">
           <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1.5 mb-2">
             <div className="flex justify-start">
-              <img 
-                src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-12 object-contain" 
-                  width="auto" height="48"
-                />
+              <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="auto" height="48" /></picture>
             </div>
             <div className="text-center">
               <h1 className="text-base font-bold text-gray-800">Checklist de {tituloVeiculo}</h1>
@@ -715,12 +700,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
         <div key={pageIndex} className="break-before-page p-8 print:p-8 min-h-[29.7cm] flex flex-col">
           <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-4">
              <div className="flex justify-start">
-                <img 
-                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
-                  alt="Logo Regional" 
-                  className="h-16 object-contain"
-                  width="auto" height="64"
-                />
+                <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
               </div>
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-800">Relatório Fotográfico</h1>
@@ -739,12 +719,7 @@ export default function RelatorioDiario({ diario, obra, project, user, regional,
             {chunk.map((fotoUrl, fotoIndex) => (
               <div key={fotoIndex} className="border p-2 rounded-lg break-inside-avoid flex flex-col" style={{ height: 'calc((29.7cm - 16rem) / 3 - 1rem)' }}>
                 <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden" style={{ height: 'calc(100% - 2rem)' }}>
-                  <img 
-                    src={fotoUrl} 
-                      alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} 
-                      className="max-h-full max-w-full object-contain" 
-                      width="auto" height="auto"
-                    />
+                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
                 </div>
                 <p className="text-center text-sm mt-2 font-medium" style={{ height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   Foto {pageIndex * 6 + fotoIndex + 1}

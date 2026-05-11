@@ -327,7 +327,7 @@ export default function RelatorioNCPage() {
           <div className="break-before-page p-8 bg-white font-sans">
             <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
               <div className="flex justify-start">
-                <img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-16 object-contain" width="auto" height="64" />
+                <picture><source srcSet={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={data.regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo" className="h-16 object-contain" width="auto" height="64" /></picture>
               </div>
               <div className="text-center">
                 <h1 className="text-xl font-bold text-gray-800 uppercase">Relatório Fotográfico</h1>
@@ -344,7 +344,7 @@ export default function RelatorioNCPage() {
               <div className="grid grid-cols-2 gap-4">
                 {(compressedFotos.length > 0 ? compressedFotos : data.nc.fotos).map((url, i) => (
                   <div key={i} className="border border-slate-200 rounded p-2 flex flex-col items-center break-inside-avoid">
-                    <img src={url} alt={`Foto ${i + 1}`} className="max-h-64 object-contain w-full" width="auto" height="auto" />
+                    <picture><source srcSet={url} /><img src={url} alt={`Foto ${i + 1}`} className="max-h-64 object-contain w-full" width="auto" height="auto" /></picture>
                     <p className="text-xs text-center text-gray-500 mt-1">Foto {i + 1}</p>
                   </div>
                 ))}

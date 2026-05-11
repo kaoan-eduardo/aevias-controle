@@ -219,12 +219,7 @@ export default function ImpressionEtiquetas() {
                   {/* Header */}
                   <div className="grid grid-cols-[120px_1fr] gap-0 mb-2 print:mb-2 pb-2 print:pb-1.5" style={{ borderBottom: '0.5mm solid #000', alignItems: 'stretch' }}>
                     <div className="flex items-center justify-center pr-2" style={{ borderRight: '0.5mm solid #000' }}>
-                      <img
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png"
-                        alt="AfirmaEvias"
-                        className="h-9 print:h-8 w-auto object-contain"
-                       width="auto" height="36"
-                      />
+                      <picture><source srcSet="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png" /><img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68a7599ee3fb9205cfb852ec/47ee9630a_AE-LogoVerPrincipal_1.png" alt="AfirmaEvias" className="h-9 print:h-8 w-auto object-contain" width="auto" height="36" /></picture>
                     </div>
                     <div className="flex items-center justify-center px-2">
                       <h2 className="text-sm print:text-xs font-bold text-[#00233B] text-center leading-tight">
