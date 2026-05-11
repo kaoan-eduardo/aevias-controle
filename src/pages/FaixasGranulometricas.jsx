@@ -58,11 +58,11 @@ const FaixaForm = React.memo(({ faixa: editingFaixa, onSave, onCancel }) => {
     };
   });
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = useCallback((field, value) => {
     setFaixa(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
-  const handlePeneiraChange = (index, field, value) => {
+  const handlePeneiraChange = useCallback((index, field, value) => {
     const updatedPeneiras = [...faixa.peneiras];
 
     if (field === 'astm') {
@@ -83,25 +83,26 @@ const FaixaForm = React.memo(({ faixa: editingFaixa, onSave, onCancel }) => {
     }
 
     setFaixa(prev => ({ ...prev, peneiras: updatedPeneiras }));
-  };
+  }, [faixa.peneiras]);
 
-  const addPeneira = () => {
+  const addPeneira = useCallback(() => {
     setFaixa(prev => ({
       ...prev,
       peneiras: [...prev.peneiras, { astm: "", min: "", max: "" }]
     }));
-  };
+  }, []);
 
-  const removePeneira = (index) => {
-    if (faixa.peneiras.length > 1) { // Ensure at least one peneira remains
-      setFaixa(prev => ({
+  const removePeneira = useCallback((index) => {
+    setFaixa(prev => {
+      if (prev.peneiras.length <= 1) return prev;
+      return {
         ...prev,
         peneiras: prev.peneiras.filter((_, i) => i !== index)
-      }));
-    }
-  };
+      };
+    });
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
     const peneirasValidas = faixa.peneiras
@@ -124,7 +125,7 @@ const FaixaForm = React.memo(({ faixa: editingFaixa, onSave, onCancel }) => {
       ...faixa,
       peneiras: peneirasValidas
     });
-  };
+  }, [faixa, onSave]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 text-[#00233B]">

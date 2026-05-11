@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +27,7 @@ export default function SolicitarTransferenciaModal({
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     
     if (!formData.regional_destino_id || !formData.motivo) {
@@ -43,7 +44,7 @@ export default function SolicitarTransferenciaModal({
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [formData, onSubmit]);
 
   const regionaisDisponiveis = todasRegionais.filter(r => 
     r.id !== regionalAtual?.id && r.status === 'ativa'

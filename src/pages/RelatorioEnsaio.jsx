@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCallback } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
@@ -20,11 +21,7 @@ export default function RelatorioEnsaio() {
     data: null
   });
 
-  useEffect(() => {
-    loadReportData();
-  }, [loadReportData]);
-
-  const loadReportData = async () => {
+  const loadReportData = useCallback(async () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get('id');
@@ -81,7 +78,11 @@ export default function RelatorioEnsaio() {
       console.error('Erro ao carregar relatório:', error);
       setState({ loading: false, error: error.message, data: null });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadReportData();
+  }, [loadReportData]);
 
   const handlePrint = () => {
     window.print();

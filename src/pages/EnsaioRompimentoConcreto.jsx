@@ -108,24 +108,28 @@ const filtrarObras = (obras, user, regionais) => {
 
 // ─── Serie factory helpers ────────────────────────────────────────────────────
 
-const novaCpAxial = () => ({ numero_cp: '', carga_ruptura: '', resistencia: '' });
-const novaSerie = () => ({
-  idade: '',
-  dimensao: '5x10',
-  data_ruptura: '',
-  area_cp: calcularAreaCP('5x10'),
-  cps: [novaCpAxial(), novaCpAxial()],
-});
+function novaCpAxial() { return { numero_cp: '', carga_ruptura: '', resistencia: '' }; }
+function novaSerie() {
+  return {
+    idade: '',
+    dimensao: '5x10',
+    data_ruptura: '',
+    area_cp: calcularAreaCP('5x10'),
+    cps: [novaCpAxial(), novaCpAxial()],
+  };
+}
 
-const novaCpFlexao = () => ({ numero_cp: '', ponto_ruptura: '', carga_ruptura: '', resistencia: '' });
-const novaSerieFlexao = () => ({
-  idade: '',
-  data_ruptura: '',
-  vao_central: '',
-  altura_cp: '',
-  largura_cp: '',
-  cps: [novaCpFlexao(), novaCpFlexao()],
-});
+function novaCpFlexao() { return { numero_cp: '', ponto_ruptura: '', carga_ruptura: '', resistencia: '' }; }
+function novaSerieFlexao() {
+  return {
+    idade: '',
+    data_ruptura: '',
+    vao_central: '',
+    altura_cp: '',
+    largura_cp: '',
+    cps: [novaCpFlexao(), novaCpFlexao()],
+  };
+}
 
 // ─── Sync helpers ─────────────────────────────────────────────────────────────
 
