@@ -2,6 +2,29 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import SignatureFooter from './SignatureFooter';
 
+function formatDateTerra(dateString) {
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+}
+
+function getClimaEmojiTerra(condicao) {
+  switch(condicao) {
+    case 'bom': return '☀️';
+    case 'instavel': return '⛅';
+    case 'chuva': return '🌧️';
+    default: return '';
+  }
+}
+
+function getClimaTextoTerra(condicao) {
+  switch(condicao) {
+    case 'bom': return 'Bom';
+    case 'instável': return 'Instável';
+    case 'chuva': return 'Chuva';
+    default: return '-';
+  }
+}
+
 // ── Sub-components (outside main component to avoid "non-serializable" lint error) ──
 const SectionTitleTerra = ({ children }) => (
   <h2 className="text-sm print:text-xs font-bold text-center bg-slate-100 p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
@@ -15,7 +38,7 @@ const CheckboxDisplay = ({ value, column }) => {
   return null;
 };
 
-const ReportHeaderTerra = ({ regional, checklist, formatDate }) => (
+const ReportHeaderTerra = ({ regional, checklist }) => (
   <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
     <div className="flex justify-start">
       <picture>
@@ -28,7 +51,7 @@ const ReportHeaderTerra = ({ regional, checklist, formatDate }) => (
     </div>
     <div className="flex justify-end">
       <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
-        <p className="font-semibold text-gray-800">{formatDate(checklist.data)}</p>
+        <p className="font-semibold text-gray-800">{formatDateTerra(checklist.data)}</p>
       </div>
     </div>
   </header>
@@ -133,41 +156,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-  };
-
-  const formatDateBrasilia = (dateString) => {
-    if (!dateString) return 'N/A';
-    let normalizedDate = dateString;
-    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
-      normalizedDate = dateString + 'Z';
-    }
-    return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
-  };
-
-  const getClimaEmoji = (condicao) => {
-    switch(condicao) {
-      case 'bom': return '☀️';
-      case 'instavel': return '⛅';
-      case 'chuva': return '🌧️';
-      default: return '';
-    }
-  };
-
-  const getClimaTexto = (condicao) => {
-    switch(condicao) {
-      case 'bom': return 'Bom';
-      case 'instável': return 'Instável';
-      case 'chuva': return 'Chuva';
-      default: return '-';
-    }
-  };
+  const handlePrint = () => { window.print(); };
 
   // Cálculos automáticos
   const variacaoUmidade = (() => {
@@ -193,14 +182,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
   return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
   }
 
-  const chunkArray = (array, chunkSize) => {
-  const chunks = [];
-  if (!array) return chunks;
-  for (let i = 0; i < array.length; i += chunkSize) {
-  chunks.push(array.slice(i, i + chunkSize));
-  }
-  return chunks;
-  };
+  const chunkArray = (arr, size) => { const chunks = []; if (!arr) return chunks; for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size)); return chunks; };
 
   const photoChunks = chunkArray(compressedPhotos, 6);
   const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
@@ -220,7 +202,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
       {/* PÁGINA PRINCIPAL */}
       <div className="print:pt-2 print:pb-3">
         <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-2 px-3 pb-3 print:pt-2 print:px-3 print:pb-3">
-          <ReportHeaderTerra regional={regional} checklist={checklist} formatDate={formatDate} />
+          <ReportHeaderTerra regional={regional} checklist={checklist} />
 
           <main className="text-xs print:text-xs mt-0.5 mb-3">
             <DadosObraTerra regional={regional} obra={obra} checklist={checklist} />
@@ -245,7 +227,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
                           Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}
                         </p>
                         <p className="font-bold text-sm">
-                          {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}
+                          {getClimaEmojiTerra(periodo.condicoes_climaticas)} {getClimaTextoTerra(periodo.condicoes_climaticas)}
                         </p>
                       </td>
                     ))}
@@ -564,8 +546,8 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
         <div className="break-before-page">
           <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
-              <ReportHeaderTerra regional={regional} checklist={checklist} formatDate={formatDate} />
-              <DadosObraTerra regional={regional} obra={obra} checklist={checklist} />
+              <ReportHeaderTerra regional={regional} checklist={checklist} />
+               <DadosObraTerra regional={regional} obra={obra} checklist={checklist} />
 
               <main className="mt-2" style={{ flex: '1' }}>
                {temAcoesCorretivas && (
@@ -629,7 +611,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
               <div className="flex justify-end">
                 <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
                   <p className="font-semibold text-gray-800">
-                    {formatDate(checklist.data)}
+                    {formatDateTerra(checklist.data)}
                   </p>
                 </div>
               </div>

@@ -30,7 +30,7 @@ function getPeriodoNome(periodo) {
   }
 }
 
-function formatDateStatic(dateString) {
+function formatDateConcr(dateString) {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
 }
@@ -63,7 +63,7 @@ const ReportHeader = ({ regional, checklist, showDate = true }) => (
       {showDate && (
         <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
           <p className="font-semibold text-gray-800">
-            {formatDateStatic(checklist.data)}
+            {formatDateConcr(checklist.data)}
           </p>
         </div>
       )}
@@ -331,7 +331,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     compressImages();
   }, [checklist?.fotos]);
 
-  const loadRelatedData = async () => {
+  const loadRelatedData = async () => { // eslint-disable-line
     try {
       if (checklist.obra_id) {
         const obraData = await base44.entities.Obra.get(checklist.obra_id);
@@ -351,23 +351,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-  };
-
-  const formatDateBrasilia = (dateString) => {
-    if (!dateString) return 'N/A';
-    let normalizedDate = dateString;
-    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
-      normalizedDate = dateString + 'Z';
-    }
-    return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
-  };
+  const handlePrint = () => { window.print(); };
 
   if (isCompressing) {
     return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
@@ -526,7 +510,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                 </div>
                 <div className="flex justify-end text-sm print:text-xs">
                   <div className="border border-gray-400 p-2 rounded-md">
-                    <p>{formatDate(checklist.data)}</p>
+                    <p>{formatDateConcr(checklist.data)}</p>
                   </div>
                 </div>
               </header>

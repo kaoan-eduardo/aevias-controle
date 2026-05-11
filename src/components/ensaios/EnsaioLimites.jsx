@@ -60,20 +60,24 @@ const PENEIRAS_FINAS = [
   { label: '200', mm: 0.075 },
 ];
 
-const defaultLLRow = () => ({
-  numero_capsula: "",
-  solo_umido_capsula: "",
-  solo_seco_capsula: "",
-  peso_capsula: "",
-  num_golpes: "",
-});
+function defaultLLRow() {
+  return {
+    numero_capsula: "",
+    solo_umido_capsula: "",
+    solo_seco_capsula: "",
+    peso_capsula: "",
+    num_golpes: "",
+  };
+}
 
-const defaultLPRow = () => ({
-  numero_capsula: "",
-  solo_umido_capsula: "",
-  solo_seco_capsula: "",
-  peso_capsula: "",
-});
+function defaultLPRow() {
+  return {
+    numero_capsula: "",
+    solo_umido_capsula: "",
+    solo_seco_capsula: "",
+    peso_capsula: "",
+  };
+}
 
 export function defaultLimites() {
   return {

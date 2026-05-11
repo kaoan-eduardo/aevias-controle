@@ -2,6 +2,24 @@ import React from "react";
 
 import SignatureFooter from './SignatureFooter';
 
+function getClimaEmojiRecic(clima) {
+  switch (clima) {
+    case 'bom': return '☀️';
+    case 'instavel': return '⛅';
+    case 'chuva': return '🌧️';
+    default: return '';
+  }
+}
+
+function getClimaTextRecic(clima) {
+  switch (clima) {
+    case 'bom': return 'Bom';
+    case 'instavel': return 'Instável';
+    case 'chuva': return 'Chuva';
+    default: return '';
+  }
+}
+
 const Checkmark = ({ value }) => {
   if (value === true) return <span className="text-green-600 font-bold">✓</span>;
   if (value === false) return <span className="text-red-600 font-bold">✗</span>;
@@ -105,7 +123,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
   );
 };
 
-const ReportFooterWithSignatures = ({ checklist }) => (
+const ReportFooterWithSignaturesBase = ({ checklist }) => (
   <SignatureFooter
     labName={checklist.laboratorista_name}
     labEmail={checklist.created_by}
@@ -124,7 +142,7 @@ const ReportFooterWithSignatures = ({ checklist }) => (
   />
 );
 
-export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project, creatorUser }) {
+export default function RelatorioChecklistReciclagem({ checklist, obra, regional, project }) {
   const [compressedPhotos, setCompressedPhotos] = React.useState([]);
   const [isCompressing, setIsCompressing] = React.useState(true);
 
@@ -190,63 +208,10 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
     return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
   }
 
-  const getClimaEmoji = (clima) => {
-    switch (clima) {
-      case 'bom': return '☀️';
-      case 'instavel': return '⛅';
-      case 'chuva': return '🌧️';
-      default: return '';
-    }
-  };
-
-  const getClimaText = (clima) => {
-    switch (clima) {
-      case 'bom': return 'Bom';
-      case 'instavel': return 'Instável';
-      case 'chuva': return 'Chuva';
-      default: return '';
-    }
-  };
-
-  const chunkArray = (array, size) => {
-    const chunks = [];
-    for (let i = 0; i < array.length; i += size) {
-      chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
-  };
+  const chunkArray = (arr, size) => { const chunks = []; for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size)); return chunks; };
 
   const photoChunks = compressedPhotos.length > 0 ? chunkArray(compressedPhotos, 6) : [];
   const temAcoesCorretivas = checklist.acoes_corretivas_realizado === true && checklist.acoes_corretivas_descricao;
-  const totalPages = 1 + photoChunks.length + (temAcoesCorretivas ? 1 : 0);
-
-  const formatDateBrasilia = (dateString) => {
-    if (!dateString) return 'N/A';
-    let normalizedDate = dateString;
-    if (!dateString.endsWith('Z') && !dateString.includes('+') && !dateString.includes('-', 10)) {
-      normalizedDate = dateString + 'Z';
-    }
-    return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
-  };
-
-  const ReportFooterWithSignatures = () => (
-    <SignatureFooter
-      labName={checklist.laboratorista_name}
-      labEmail={checklist.created_by}
-      labCreatedDate={checklist.created_date}
-      labPosition={creatorUser?.position || 'Laboratorista'}
-      approverName={checklist.approver_details?.name}
-      approverEmail={checklist.approved_by}
-      approverPosition={checklist.approver_details?.position}
-      approverCREA={checklist.approver_details?.crea_number}
-      approverDate={checklist.approved_date}
-      clientName={checklist.client_signature?.engineer_name}
-      clientEmail={checklist.client_signature?.signed_by}
-      clientPosition={checklist.client_signature?.position}
-      clientCREA={checklist.client_signature?.crea_number}
-      clientDate={checklist.client_signature?.signed_date}
-    />
-  );
 
   return (
     <>
@@ -275,7 +240,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
                       Temp: {periodo.temperatura_ambiente || 'N/A'}°C
                     </p>
                     <p className="font-bold text-[10px]">
-                      {getClimaEmoji(periodo.condicoes_climaticas)} {getClimaText(periodo.condicoes_climaticas)}
+                      {getClimaEmojiRecic(periodo.condicoes_climaticas)} {getClimaTextRecic(periodo.condicoes_climaticas)}
                     </p>
                   </td>
                 ))}
@@ -420,7 +385,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
           </>
         )}
 
-        <ReportFooterWithSignatures />
+        <ReportFooterWithSignaturesBase checklist={checklist} />
       </div>
 
       {/* PÁGINA DE AÇÕES CORRETIVAS E/OU NÃO CONFORMIDADES */}
@@ -469,7 +434,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
               </main>
 
               <div style={{ marginTop: 'auto' }}>
-                <ReportFooterWithSignatures />
+                <ReportFooterWithSignaturesBase checklist={checklist} />
               </div>
             </div>
           </div>
