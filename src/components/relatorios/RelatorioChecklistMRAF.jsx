@@ -588,7 +588,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
                   alt="Logo Regional" 
                   className="h-10 object-contain"
-                  width="auto" height="40"
+                  width="40" height="40"
                   loading="lazy"
                 />
               </picture>
@@ -609,7 +609,7 @@ export default function RelatorioChecklistMRAF({ checklist, obra, regional, proj
                   <div className="flex-1 border-2 border-slate-300 rounded overflow-hidden bg-slate-50 flex items-center justify-center" style={{ minHeight: '240px', maxHeight: '240px' }}>
                     <picture>
                       <source srcSet={foto} />
-                      <img src={foto} alt={`Foto ${pageIndex * photosPerPage + index + 1}`} className="w-full h-full object-cover" style={{ maxHeight: '240px' }} />
+                      <img src={foto} alt={`Foto ${pageIndex * photosPerPage + index + 1}`} className="w-full h-full object-cover" width="500" height="240" loading="lazy" style={{ maxHeight: '240px' }} />
                     </picture>
                   </div>
                   <p className="text-center text-sm text-slate-600 mt-2 font-medium">

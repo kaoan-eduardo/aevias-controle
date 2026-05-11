@@ -31,7 +31,7 @@ const ReportPrintHeader = ({ checklist, obra, regional, project }) => {
         <div className="flex justify-start">
           <picture>
             <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
-            <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" />
+            <img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="48" height="48" />
           </picture>
         </div>
         <div className="text-center">
@@ -505,7 +505,7 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             {chunk.map((fotoUrl, fotoIndex) => (
               <div key={fotoIndex} className="border border-slate-300 p-1.5 rounded break-inside-avoid flex flex-col">
                 <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden" style={{ height: '220px' }}>
-                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
+                  <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="500" height="220" loading="lazy" /></picture>
                 </div>
                 <p className="text-center text-sm mt-1 font-semibold">
                   Foto {(pageIndex * 6) + fotoIndex + 1}

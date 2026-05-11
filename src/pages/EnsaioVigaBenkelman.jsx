@@ -542,8 +542,9 @@ export default function EnsaioVigaBenkelman() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#00233B] mb-2">DEF. ADMISSÍVEL</label>
+                  <label htmlFor="def_admissivel" className="block text-sm font-medium text-[#00233B] mb-2">DEF. ADMISSÍVEL</label>
                   <Input
+                    id="def_admissivel"
                     value={formData.def_admissivel}
                     onChange={(e) => handleInputChange('def_admissivel', e.target.value.replace(/[^\d]/g, ''))}
                     placeholder="Digitar"
@@ -564,8 +565,9 @@ export default function EnsaioVigaBenkelman() {
                 Informe a leitura inicial uma única vez. Ela será automaticamente preenchida em todos os registros.
               </p>
               <div className="flex-1">
-                <label className="block text-sm font-medium text-[#00233B] mb-2">Leitura Inicial (A)</label>
+                <label htmlFor="leitura_inicial_global" className="block text-sm font-medium text-[#00233B] mb-2">Leitura Inicial (A)</label>
                 <Input
+                  id="leitura_inicial_global"
                   type="number"
                   step="0.01"
                   value={formData.leitura_inicial_global}

@@ -436,10 +436,11 @@ export default function GestaoNCPage() {
 
             {approvalAction === 'reject' && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#00233B]">
+                <label htmlFor="rejection_reason" className="text-sm font-medium text-[#00233B]">
                   Motivo da reprovação *
                 </label>
                 <Textarea
+                  id="rejection_reason"
                   value={rejectionReason}
                   onChange={e => setRejectionReason(e.target.value)}
                   placeholder="Descreva o motivo da reprovação..."
