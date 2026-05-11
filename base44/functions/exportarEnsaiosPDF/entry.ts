@@ -103,12 +103,15 @@ async function fetchReportHtml(url, authHeader) {
     throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
   }
 
+  // Reconstruir URL a partir do objeto validado — nunca passar a string original ao fetch
+  const safeUrl = parsed.toString();
+
   const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  const response = await fetch(url, { headers, redirect: 'follow' });
+  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
