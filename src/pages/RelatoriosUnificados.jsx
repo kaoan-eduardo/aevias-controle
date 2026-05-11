@@ -118,13 +118,12 @@ export default function RelatoriosUnificados() {
         );
         const regionaisIds = regionaisDoUsuario.map(r => r.id);
         const obrasVinculadas = obrasData.filter(o => regionaisIds.includes(o.regional_id));
-        // Se encontrou regionais vinculadas, mostrar apenas as obras delas; senão mostrar todas
         availableObras = obrasVinculadas.length > 0 ? obrasVinculadas : obrasData;
       }
 
       setObras(availableObras);
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao carregar dados iniciais:", err);
     } finally {
       setLoading(false);
     }
@@ -139,9 +138,11 @@ export default function RelatoriosUnificados() {
         ENTITY_KEYS.map(async (key) => {
           try {
             const entity = getEntityInstance(key);
-            const records = await entity.filter({ obra_id: obraSelecionada }, "-created_date", 2000);
+            const records = await entity.filter({ obra_id: obraSelecionada }, "-created_date", 1000);
             records.forEach(r => { allRecords.push({ ...r, entityType: key }); });
-          } catch (e) { /* ignore */ }
+          } catch (e) {
+            console.warn(`Falha ao carregar ${key}:`, e?.message || e);
+          }
         })
       );
 
@@ -168,7 +169,7 @@ export default function RelatoriosUnificados() {
       setLaboratoristasDisponiveis(labs);
       setLaboratoristasChecked(labs); // Todos selecionados por padrão
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao carregar laboratoristas:", err);
     } finally {
       setLoadingLaboratoristas(false);
     }
@@ -184,6 +185,7 @@ export default function RelatoriosUnificados() {
       }
     } catch (err) {
       console.error("Erro ao carregar filtros da obra:", err);
+      // Manter listas vazias caso falhe — não interrompe o fluxo
     }
   };
 

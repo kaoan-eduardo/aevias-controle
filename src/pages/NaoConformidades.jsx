@@ -341,7 +341,7 @@ export default function NaoConformidadesPage() {
 
       setChecklistNCs(allCNCs);
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("Erro ao carregar dados de NCs:", error);
     } finally {
       setLoading(false);
     }
