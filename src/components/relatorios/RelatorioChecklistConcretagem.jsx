@@ -290,22 +290,31 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     <div className="bg-white font-sans">
       <style>{`
         @media print {
-          body, html { 
-            margin: 0; 
+          * {
+            margin: 0;
             padding: 0;
+          }
+
+          body, html { 
             background: white !important;
             color-adjust: exact;
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact; 
           }
 
+          @page {
+            size: A4;
+            margin: 0;
+          }
+
           .print-page { 
             width: 210mm; 
-            height: auto;
+            height: 297mm;
             margin: 0;
             padding: 10mm;
             box-sizing: border-box;
             page-break-after: always;
+            overflow: hidden;
           }
 
           img {
@@ -315,11 +324,6 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           table {
             width: 100%;
-            page-break-inside: avoid;
-          }
-
-          .CargaContent {
-            page-break-inside: avoid;
           }
         }
       `}</style>
