@@ -125,6 +125,9 @@ export default function RelatorioAcompanhamentoCargaPage() {
             padding: 0;
             background: white !important;
             overflow-x: hidden !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important;
           }
           
           @page {
