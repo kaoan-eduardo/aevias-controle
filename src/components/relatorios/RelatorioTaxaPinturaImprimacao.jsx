@@ -12,7 +12,13 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
 
   return (
     <div className="bg-white font-sans">
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-4 print:p-4">
+      <style>{`
+        @media print {
+          body, html { margin: 0; padding: 0; }
+          .print-page { width: 210mm; height: 297mm; margin: 0; padding: 10mm; box-sizing: border-box; page-break-after: always; }
+        }
+      `}</style>
+      <div className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
         {/* Header */}
         <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
           <div className="w-16">
