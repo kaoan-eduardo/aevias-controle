@@ -291,7 +291,16 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
       <style>{`
         @media print {
           body, html { margin: 0; padding: 0; }
-          .print-page { width: 210mm; height: 297mm; margin: 0; padding: 10mm; box-sizing: border-box; page-break-after: always; }
+          .print-page { 
+            width: 210mm; 
+            height: 297mm; 
+            margin: 0; 
+            padding: 10mm; 
+            box-sizing: border-box; 
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+          }
         }
       `}</style>
 
