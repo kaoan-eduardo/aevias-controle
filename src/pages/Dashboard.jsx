@@ -429,50 +429,6 @@ export default function Dashboard() {
     return { ensaios: filtered, obras: allData.obras };
   }, [allData, filters]);
 
-  // Recalcular stats baseado nos dados filtrados
-  useEffect(() => {
-    if (!filteredData.ensaios.length && allData.ensaios.length) {
-      return;
-    }
-
-    const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-    const isCliente = userAccessLevel === 'cliente';
-    const isEngenheiro = isCliente && user?.position?.toLowerCase().includes('engenheiro');
-
-    let approvedCount, pendingCount, rejectedCount, assinadosCount, aguardandoAssinaturaCount;
-
-    if (isCliente) {
-      assinadosCount = filteredData.ensaios.filter(e => e.client_signature?.signed_by).length;
-      aguardandoAssinaturaCount = isEngenheiro ? 
-        filteredData.ensaios.filter(e => e.approved === true && !e.client_signature?.signed_by).length : 
-        0;
-      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
-      pendingCount = 0;
-      rejectedCount = 0;
-    } else {
-      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
-      pendingCount = filteredData.ensaios.filter(e => e.approved === null).length;
-      rejectedCount = filteredData.ensaios.filter(e => e.approved === false).length;
-      assinadosCount = 0;
-      aguardandoAssinaturaCount = 0;
-    }
-
-    setStats({
-      obras: filteredData.obras.length,
-      projects: allData.projects.length,
-      ensaios: filteredData.ensaios.length,
-      approved: approvedCount,
-      pending: pendingCount,
-      rejected: rejectedCount,
-      assinados: assinadosCount,
-      aguardando_assinatura: aguardandoAssinaturaCount,
-    });
-
-    // Recalcular gráficos
-    calculateCharts(filteredData.ensaios, userAccessLevel, isCliente);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredData, user]);
-
   const calculateCharts = useCallback((ensaios, userAccessLevel, isCliente) => {
     const now = new Date();
     const monthsToShow = filters.periodo === '1mes' ? 1 : filters.periodo === '3meses' ? 3 : 6;
@@ -582,6 +538,46 @@ export default function Dashboard() {
 
     setRecordsByTypeChartData(typeChartData);
   }, [filters.periodo, allData.obras]);
+
+  // Recalcular stats e gráficos baseado nos dados filtrados
+  useEffect(() => {
+    if (!filteredData.ensaios.length && allData.ensaios.length) return;
+
+    const currentAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
+    const currentIsCliente = currentAccessLevel === 'cliente';
+    const currentIsEngenheiro = currentIsCliente && user?.position?.toLowerCase().includes('engenheiro');
+
+    let approvedCount, pendingCount, rejectedCount, assinadosCount, aguardandoAssinaturaCount;
+
+    if (currentIsCliente) {
+      assinadosCount = filteredData.ensaios.filter(e => e.client_signature?.signed_by).length;
+      aguardandoAssinaturaCount = currentIsEngenheiro
+        ? filteredData.ensaios.filter(e => e.approved === true && !e.client_signature?.signed_by).length
+        : 0;
+      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
+      pendingCount = 0;
+      rejectedCount = 0;
+    } else {
+      approvedCount = filteredData.ensaios.filter(e => e.approved === true).length;
+      pendingCount = filteredData.ensaios.filter(e => e.approved === null).length;
+      rejectedCount = filteredData.ensaios.filter(e => e.approved === false).length;
+      assinadosCount = 0;
+      aguardandoAssinaturaCount = 0;
+    }
+
+    setStats({
+      obras: filteredData.obras.length,
+      projects: allData.projects.length,
+      ensaios: filteredData.ensaios.length,
+      approved: approvedCount,
+      pending: pendingCount,
+      rejected: rejectedCount,
+      assinados: assinadosCount,
+      aguardando_assinatura: aguardandoAssinaturaCount,
+    });
+
+    calculateCharts(filteredData.ensaios, currentAccessLevel, currentIsCliente);
+  }, [filteredData, allData.projects.length, user, calculateCharts]);
 
   const handlePieClick = useCallback((data, chartType) => {
     if (chartType === 'status') {

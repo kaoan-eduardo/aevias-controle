@@ -118,11 +118,9 @@ export const loadAllData = async () => {
     ...rompimentoConcretoData.map((d) => ({ ...d, entityType: "EnsaioRompimentoConcreto" })),
     ...granMisturaData.map((d) => ({ ...d, entityType: "GranuMistura" }))
   ].sort((a, b) => {
-    const getRelevantDate = (ensaio) => getDataEnsaio(ensaio);
-    
     // Ordenar por data do ensaio (decrescente - mais recente primeiro)
-    const dateA = new Date(getRelevantDate(a));
-    const dateB = new Date(getRelevantDate(b));
+    const dateA = new Date(getDataEnsaio(a));
+    const dateB = new Date(getDataEnsaio(b));
     
     // Se ambas as datas são válidas, ordenar por data
     if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
