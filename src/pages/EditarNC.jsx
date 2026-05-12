@@ -45,7 +45,7 @@ export default function EditarNCPage() {
   const [uploadingPdfs, setUploadingPdfs] = useState(false);
 
   useEffect(() => {
-    loadData();
+    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 
   const loadData = async () => {

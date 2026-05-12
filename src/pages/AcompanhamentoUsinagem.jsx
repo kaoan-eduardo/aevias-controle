@@ -45,7 +45,7 @@ export default function AcompanhamentoUsinagemPage() {
   });
 
   useEffect(() => {
-    loadInitialData();
+    loadInitialData(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

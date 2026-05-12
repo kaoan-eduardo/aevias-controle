@@ -18,12 +18,12 @@ export default function AprovacaoBar({ entityName, recordId }) {
   const [rejectionReason, setRejectionReason] = useState('');
 
   useEffect(() => {
-    loadUser();
+    loadUser(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (entityName && recordId) {
-      loadRecord();
+      loadRecord(); // eslint-disable-line react-hooks/exhaustive-deps
     }
   }, [entityName, recordId]);
 

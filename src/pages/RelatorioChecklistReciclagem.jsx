@@ -17,7 +17,7 @@ export default function RelatorioChecklistReciclagemPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadData();
+    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 
   const loadData = async () => {

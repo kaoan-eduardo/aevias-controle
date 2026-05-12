@@ -23,13 +23,13 @@ export default function PullToRefresh({ children }) {
     }
   }, [isInputFocused]);
 
-  const handleTouchMove = useCallback((e) => { // eslint-disable-line react-hooks/exhaustive-deps
+  const handleTouchMove = useCallback((e) => {
     if (startYRef.current === null || refreshing || isInputFocused()) return;
     const delta = e.touches[0].clientY - startYRef.current;
     if (delta > 0) {
       setPullDistance(Math.min(delta * 0.5, THRESHOLD + 20));
     }
-  }, [refreshing]);
+  }, [refreshing, isInputFocused]);
 
   const handleTouchEnd = useCallback(async () => {
     if (pullDistance >= THRESHOLD && !isInputFocused()) {

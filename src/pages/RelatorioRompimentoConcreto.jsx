@@ -96,7 +96,9 @@ export default function RelatorioRompimentoConcreto() {
     }
   };
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !ensaio) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro ao carregar"}</div>;

@@ -159,8 +159,8 @@ export default function EnsaioGranulometriaIndividualPage() {
   };
 
   useEffect(() => {
-    loadData();
-  }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
+    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   useEffect(() => {
     if (formData.obra_id) {
