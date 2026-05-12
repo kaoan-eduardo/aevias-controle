@@ -303,6 +303,5 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
           </footer>
         </div>
       </>
-    </>
   );
 }
