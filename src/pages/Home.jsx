@@ -21,6 +21,7 @@ export default function HomePage() {
           }
         }
       } catch (error) {
+        // Erro esperado quando usuário não está autenticado — sem log desnecessário
         setLoading(false);
       }
     };

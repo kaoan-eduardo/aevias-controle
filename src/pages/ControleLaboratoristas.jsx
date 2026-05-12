@@ -49,22 +49,22 @@ export default function ControleLaboratoristas() {
         ensaiosGranIndividual,
         acompanhamentosUsinagem
       ] = await Promise.all([
-        base44.entities.DiarioObra.list(),
-        base44.entities.ChecklistUsina.list(),
-        base44.entities.ChecklistAplicacao.list(),
-        base44.entities.ChecklistMRAF.list(),
-        base44.entities.ChecklistConcretagem.list(),
-        base44.entities.ChecklistTerraplanagem.list(),
-        base44.entities.ChecklistReciclagem.list(),
-        base44.entities.EnsaioSondagem.list(),
-        base44.entities.EnsaioDensidadeInSitu.list(),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list(),
-        base44.entities.EnsaioCAUQ.list(),
-        base44.entities.EnsaioMRAF.list(),
-        base44.entities.EnsaioDensidade.list(),
-        base44.entities.EnsaioGranAreia.list(),
-        base44.entities.EnsaioGranulometriaIndividual.list(),
-        base44.entities.AcompanhamentoUsinagem.list()
+        base44.entities.DiarioObra.list("-created_date", 500),
+        base44.entities.ChecklistUsina.list("-created_date", 500),
+        base44.entities.ChecklistAplicacao.list("-created_date", 500),
+        base44.entities.ChecklistMRAF.list("-created_date", 500),
+        base44.entities.ChecklistConcretagem.list("-created_date", 500),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 500),
+        base44.entities.ChecklistReciclagem.list("-created_date", 500),
+        base44.entities.EnsaioSondagem.list("-created_date", 500),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 500),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 500),
+        base44.entities.EnsaioCAUQ.list("-created_date", 500),
+        base44.entities.EnsaioMRAF.list("-created_date", 500),
+        base44.entities.EnsaioDensidade.list("-created_date", 500),
+        base44.entities.EnsaioGranAreia.list("-created_date", 500),
+        base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 500),
+        base44.entities.AcompanhamentoUsinagem.list("-created_date", 500)
       ]);
 
       // Combinar todos os registros
@@ -89,7 +89,7 @@ export default function ControleLaboratoristas() {
 
       setRegistros(todosRegistros);
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('[ControleLaboratoristas] Erro ao carregar dados:', error?.message || error);
     } finally {
       setLoading(false);
     }

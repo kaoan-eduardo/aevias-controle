@@ -55,17 +55,17 @@ export default function MonitorProdutividade() {
         checklistsTerraplanamemData,
         sondagemData
       ] = await Promise.all([
-        DiarioObra.list("-created_date"),
-        base44.entities.EnsaioCAUQ.list("-created_date"),
-        EnsaioDensidade.list("-created_date"),
-        base44.entities.EnsaioDensidadeInSitu.list("-created_date"),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date"),
-        ChecklistUsina.list("-created_date"),
-        ChecklistAplicacao.list("-created_date"),
-        ChecklistMRAF.list("-created_date"),
-        ChecklistConcretagem.list("-created_date"),
-        base44.entities.ChecklistTerraplanagem.list("-created_date"),
-        base44.entities.EnsaioSondagem.list("-created_date")
+        DiarioObra.list("-created_date", 500),
+        base44.entities.EnsaioCAUQ.list("-created_date", 500),
+        EnsaioDensidade.list("-created_date", 500),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 500),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 500),
+        ChecklistUsina.list("-created_date", 500),
+        ChecklistAplicacao.list("-created_date", 500),
+        ChecklistMRAF.list("-created_date", 500),
+        ChecklistConcretagem.list("-created_date", 500),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 500),
+        base44.entities.EnsaioSondagem.list("-created_date", 500)
       ]);
 
       const todosRegistros = [
@@ -134,7 +134,7 @@ export default function MonitorProdutividade() {
 
       setGestoresData(gestoresComMetricas);
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[MonitorProdutividade] Erro ao carregar dados:", error?.message || error);
       alert('Erro ao carregar dados do monitor.');
     } finally {
       setLoading(false);
