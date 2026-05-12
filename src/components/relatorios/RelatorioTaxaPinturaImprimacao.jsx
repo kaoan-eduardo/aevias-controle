@@ -12,7 +12,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
 
   return (
     <div className="bg-white font-sans">
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-6 print:p-6">
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-4 print:p-4">
         {/* Header */}
         <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
           <div className="w-16">
