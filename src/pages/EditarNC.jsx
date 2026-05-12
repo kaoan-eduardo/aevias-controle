@@ -50,55 +50,62 @@ export default function EditarNCPage() {
 
   const loadData = async () => {
     setLoading(true);
-    const params = new URLSearchParams(window.location.search);
-    const ncId = params.get("id");
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ncId = params.get("id");
 
-    if (!ncId) {
-      alert("ID da NC não encontrado");
+      if (!ncId) {
+        alert("ID da NC não encontrado");
+        navigate(createPageUrl("GestaoNC"));
+        return;
+      }
+
+      const userData = await User.me();
+      setUser(userData);
+
+      const [obrasData, regionaisData, ncData] = await Promise.all([
+        Obra.list(),
+        Regional.list(),
+        base44.entities.RelatorioNC.filter({ id: ncId })
+      ]);
+
+      if (!ncData || ncData.length === 0) {
+        alert("NC não encontrada");
+        navigate(createPageUrl("GestaoNC"));
+        return;
+      }
+
+      const ncItem = ncData[0];
+      setNc(ncItem);
+      setRegionais(regionaisData);
+      setObras(obrasData);
+
+      setForm({
+        numero_rnc: ncItem.numero_rnc || "",
+        cliente: ncItem.cliente || "",
+        rodovia: ncItem.rodovia || "",
+        trecho: ncItem.trecho || "",
+        fiscal: ncItem.fiscal || "",
+        data_nc: ncItem.data_nc || "",
+        campo: ncItem.campo || "",
+        executora: ncItem.executora || "",
+        contrato: ncItem.contrato || "",
+        descricao_nc: ncItem.descricao_nc || "",
+        acoes: ncItem.acoes || "",
+        local_nc: ncItem.local_nc || "",
+        categoria_nc: ncItem.categoria_nc || "",
+        parametro_nc: ncItem.parametro_nc || ""
+      });
+
+      setFotos(ncItem.fotos || []);
+      setPdfs(ncItem.pdfs || []);
+    } catch (error) {
+      console.error("[EditarNC] Erro ao carregar dados:", error?.message || error);
+      alert("Erro ao carregar a NC. Tente novamente.");
       navigate(createPageUrl("GestaoNC"));
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    const userData = await User.me();
-    setUser(userData);
-
-    const [obrasData, regionaisData, ncData] = await Promise.all([
-      Obra.list(),
-      Regional.list(),
-      base44.entities.RelatorioNC.filter({ id: ncId })
-    ]);
-
-    if (!ncData || ncData.length === 0) {
-      alert("NC não encontrada");
-      navigate(createPageUrl("GestaoNC"));
-      return;
-    }
-
-    const ncItem = ncData[0];
-    setNc(ncItem);
-    setRegionais(regionaisData);
-    setObras(obrasData);
-
-    setForm({
-      numero_rnc: ncItem.numero_rnc || "",
-      cliente: ncItem.cliente || "",
-      rodovia: ncItem.rodovia || "",
-      trecho: ncItem.trecho || "",
-      fiscal: ncItem.fiscal || "",
-      data_nc: ncItem.data_nc || "",
-      campo: ncItem.campo || "",
-      executora: ncItem.executora || "",
-      contrato: ncItem.contrato || "",
-      descricao_nc: ncItem.descricao_nc || "",
-      acoes: ncItem.acoes || "",
-      local_nc: ncItem.local_nc || "",
-      categoria_nc: ncItem.categoria_nc || "",
-      parametro_nc: ncItem.parametro_nc || ""
-    });
-
-    setFotos(ncItem.fotos || []);
-    setPdfs(ncItem.pdfs || []);
-    setLoading(false);
   };
 
   const handleUploadFotos = async (e) => {
@@ -131,16 +138,22 @@ export default function EditarNCPage() {
       return;
     }
     setSaving(true);
-    await base44.entities.RelatorioNC.update(nc.id, {
-      ...form,
-      fotos,
-      pdfs,
-      pendente_aprovacao_cliente: true,
-      cliente_aprovacao: null,
-      cliente_reprovacao_motivo: null
-    });
-    setSaving(false);
-    navigate(createPageUrl("GestaoNC"));
+    try {
+      await base44.entities.RelatorioNC.update(nc.id, {
+        ...form,
+        fotos,
+        pdfs,
+        pendente_aprovacao_cliente: true,
+        cliente_aprovacao: null,
+        cliente_reprovacao_motivo: null
+      });
+      navigate(createPageUrl("GestaoNC"));
+    } catch (error) {
+      console.error("[EditarNC] Erro ao salvar NC:", error?.message || error);
+      alert("Erro ao salvar a NC. Tente novamente.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {

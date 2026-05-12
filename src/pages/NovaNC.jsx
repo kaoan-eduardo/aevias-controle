@@ -86,27 +86,32 @@ export default function NovaNcPage() {
 
   const loadInitialData = async () => {
     setLoading(true);
-    const userData = await User.me();
-    setUser(userData);
+    try {
+      const userData = await User.me();
+      setUser(userData);
 
-    const [obrasData, regionaisData] = await Promise.all([Obra.list(), Regional.list()]);
-    setRegionais(regionaisData);
+      const [obrasData, regionaisData] = await Promise.all([Obra.list(), Regional.list()]);
+      setRegionais(regionaisData);
 
-    const userAccessLevel = userData?.access_level || (userData?.role === "admin" ? "admin" : "user");
+      const userAccessLevel = userData?.access_level || (userData?.role === "admin" ? "admin" : "user");
 
-    let availableObras = obrasData;
-    if (userAccessLevel === "gestor_contrato") {
-      const regionaisDoGestor = regionaisData.filter(r =>
-        r.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
-        (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase())
-      );
-      const ids = new Set(regionaisDoGestor.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
-      availableObras = obrasData.filter(o => ids.has(o.id));
+      let availableObras = obrasData;
+      if (userAccessLevel === "gestor_contrato") {
+        const regionaisDoGestor = regionaisData.filter(r =>
+          r.gestor_contrato_responsavel?.toLowerCase() === userData.email.toLowerCase() ||
+          (r.gestores_contrato_responsaveis || []).some(e => e.toLowerCase() === userData.email.toLowerCase())
+        );
+        const ids = new Set(regionaisDoGestor.flatMap(r => obrasData.filter(o => o.regional_id === r.id).map(o => o.id)));
+        availableObras = obrasData.filter(o => ids.has(o.id));
+      }
+
+      setObras(availableObras);
+      setForm(f => ({ ...f, relatorio_criador: userData.laboratorista_name || userData.full_name }));
+    } catch (error) {
+      console.error("[NovaNC] Erro ao carregar dados iniciais:", error?.message || error);
+    } finally {
+      setLoading(false);
     }
-
-    setObras(availableObras);
-    setForm(f => ({ ...f, relatorio_criador: userData.laboratorista_name || userData.full_name }));
-    setLoading(false);
   };
 
   const handleObraChange = async (id) => {
@@ -180,27 +185,33 @@ export default function NovaNcPage() {
       return;
     }
     setSaving(true);
-    const managerName = user?.laboratorista_name || user?.full_name || "";
-    await base44.entities.RelatorioNC.create({
-      ...form,
-      obra_id: obraId,
-      obra_nome: obras.find(o => o.id === obraId)?.name || "",
-      relatorio_criador: managerName,
-      checklist_ref_tipo: tipoChecklist,
-      checklist_ref_id: checklistId,
-      fotos,
-      pdfs,
-      status: "aberta",
-      pendente_aprovacao_cliente: true,
-      manager_signature: {
-        signed_by: user?.email || "",
-        signed_date: new Date().toISOString(),
-        manager_name: managerName,
-        crea_number: user?.crea_number || ""
-      }
-    });
-    setSaving(false);
-    navigate(createPageUrl("GestaoNC"));
+    try {
+      const managerName = user?.laboratorista_name || user?.full_name || "";
+      await base44.entities.RelatorioNC.create({
+        ...form,
+        obra_id: obraId,
+        obra_nome: obras.find(o => o.id === obraId)?.name || "",
+        relatorio_criador: managerName,
+        checklist_ref_tipo: tipoChecklist,
+        checklist_ref_id: checklistId,
+        fotos,
+        pdfs,
+        status: "aberta",
+        pendente_aprovacao_cliente: true,
+        manager_signature: {
+          signed_by: user?.email || "",
+          signed_date: new Date().toISOString(),
+          manager_name: managerName,
+          crea_number: user?.crea_number || ""
+        }
+      });
+      navigate(createPageUrl("GestaoNC"));
+    } catch (error) {
+      console.error("[NovaNC] Erro ao salvar NC:", error?.message || error);
+      alert("Erro ao salvar a NC. Tente novamente.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {

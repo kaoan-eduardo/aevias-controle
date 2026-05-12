@@ -326,7 +326,7 @@ export default function SolicitacoesTransferenciaPage() {
         setSolicitacoes([]);
       }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[SolicitacoesTransferencia] Erro ao carregar dados:", error?.message || error);
       alert("Erro ao carregar solicitações.");
     } finally {
       setLoading(false);
