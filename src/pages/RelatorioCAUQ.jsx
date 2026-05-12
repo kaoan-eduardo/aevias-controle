@@ -40,49 +40,48 @@ export default function RelatorioCAUQ() {
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
-  const loadData = async () => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const ensaioId = params.get('id');
-
-      if (!ensaioId) {
-        setError("ID do ensaio não fornecido");
-        return;
-      }
-
-      const ensaioData = await base44.entities.EnsaioCAUQ.get(ensaioId);
-      setEnsaio(ensaioData);
-
-      if (ensaioData.obra_id) {
-        const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
-        setObra(obraData);
-
-        if (obraData.regional_id) {
-          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-          setRegional(regionalData);
-        }
-      }
-
-      if (ensaioData.project_id) {
-        const projectData = await base44.entities.Project.get(ensaioData.project_id);
-        setProject(projectData);
-
-        if (projectData.faixa_granulometrica_id) {
-          const faixaData = await base44.entities.FaixaGranulometrica.get(projectData.faixa_granulometrica_id);
-          setFaixa(faixaData);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      setError("Erro ao carregar dados do relatório");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const ensaioId = params.get('id');
+
+        if (!ensaioId) {
+          setError("ID do ensaio não fornecido");
+          return;
+        }
+
+        const ensaioData = await base44.entities.EnsaioCAUQ.get(ensaioId);
+        setEnsaio(ensaioData);
+
+        if (ensaioData.obra_id) {
+          const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
+          setObra(obraData);
+
+          if (obraData.regional_id) {
+            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(regionalData);
+          }
+        }
+
+        if (ensaioData.project_id) {
+          const projectData = await base44.entities.Project.get(ensaioData.project_id);
+          setProject(projectData);
+
+          if (projectData.faixa_granulometrica_id) {
+            const faixaData = await base44.entities.FaixaGranulometrica.get(projectData.faixa_granulometrica_id);
+            setFaixa(faixaData);
+          }
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+        setError("Erro ao carregar dados do relatório");
+      } finally {
+        setLoading(false);
+      }
+    };
     loadData();
-  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const handlePrint = () => {
     window.print();
