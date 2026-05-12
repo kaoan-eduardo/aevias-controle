@@ -668,7 +668,6 @@ export default function RelatorioCAUQ() {
                             <g
                               key={i}
                               tabIndex={0}
-                              role="button"
                               aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
                               style={{ cursor: 'pointer' }}
                               onKeyDown={(e) => {
