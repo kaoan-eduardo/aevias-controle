@@ -165,6 +165,15 @@ export default function RelatorioAcompanhamentoCargaPage() {
             overflow-x: visible !important;
           }
           
+          table, thead, tbody, tr, td, th {
+          border: 1px solid #000 !important;
+          border-collapse: collapse !important;
+          }
+
+          tbody tr:last-child td {
+          border-bottom: 2px solid #000 !important;
+          }
+
           .print\\:hidden {
             display: none !important;
             visibility: hidden !important;
