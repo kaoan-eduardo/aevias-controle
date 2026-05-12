@@ -21,73 +21,74 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
   const dimensoes = ensaio.dimensoes_bandeja || {};
 
   const ReportHeader = () => (
-    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1 mb-2">
+    <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-0 mb-0">
       <div className="flex justify-start">
-        <div
-          role="img"
-          aria-label="Logo Regional"
-          className="h-12 w-32"
-          style={{
-            backgroundImage: `url(${regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"})`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'left center'
-          }}
-        />
+        <picture>
+          <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+          <img 
+            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+            alt="Logo Regional" 
+            className="h-10 print:h-7 object-contain"
+            width="auto" height="40"
+            loading="lazy"
+          />
+        </picture>
       </div>
       <div className="text-center">
-        <h1 className="text-sm font-bold text-gray-800 leading-tight">
+        <h1 className="text-xs font-bold text-gray-800 leading-tight print:text-[9px] print:leading-tight">
           ENSAIO DE TAXA DE PINTURAS ASFÁLTICAS<br/>E RESÍDUO DA EMULSÃO
         </h1>
-        <p className="text-xs text-gray-500 mt-0.5">(DNIT 145/2012 - ES)</p>
+        <p className="text-[10px] text-gray-500 mt-0.5 print:text-[7px] print:mt-0">(DNIT 145/2012 - ES)</p>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end items-start">
+        <div className="text-right">
+        </div>
       </div>
     </header>
   );
 
   const DadosObra = () => (
-    <div className="mb-2">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-0 text-xs">
+    <div className="mb-0 print:mb-0">
+      <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 text-[8px] leading-tight print:text-[8px]">
         DADOS DA OBRA
       </div>
-      <div className="grid grid-cols-3 gap-x-4 gap-y-0 mb-0 text-[10px]">
-        <div>
-          <p className="font-bold text-gray-700">CLIENTE:</p>
+      <div className="grid grid-cols-3 gap-x-1 gap-y-0 mb-0 text-[9px] leading-tight print:text-[9px]">
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">CLIENTE:</p>
           <p className="text-gray-900">{regional?.cliente || 'N/A'}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">MATERIAL:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">MATERIAL:</p>
           <p className="text-gray-900">{ensaio.material || ''}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">PLACA CAMINHÃO:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">PLACA CAMINHÃO:</p>
           <p className="text-gray-900">{ensaio.placa_caminhao || ''}</p>
         </div>
 
-        <div>
-          <p className="font-bold text-gray-700">OBRA:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">OBRA:</p>
           <p className="text-gray-900">{obra?.name || 'N/A'}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">RODOVIA:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">RODOVIA:</p>
           <p className="text-gray-900">{ensaio.rodovia || ''}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">DATA:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">DATA:</p>
           <p className="text-gray-900">{formatDate(ensaio.data_ensaio)}</p>
         </div>
 
-        <div>
-          <p className="font-bold text-gray-700">TRECHO:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">TRECHO:</p>
           <p className="text-gray-900">{ensaio.trecho || ''}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">ENSAIO REALIZADO POR:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">ENSAIO REALIZADO POR:</p>
           <p className="text-gray-900">{ensaio.ensaio_realizado_por || 'N/A'}</p>
         </div>
-        <div>
-          <p className="font-bold text-gray-700">LABORATORISTA:</p>
+        <div className="mb-0.5">
+          <p className="font-bold text-gray-700 mb-0">LABORATORISTA:</p>
           <p className="text-gray-900">{ensaio.laboratorista_name || 'N/A'}</p>
         </div>
       </div>
@@ -132,13 +133,13 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
         <ReportHeader />
         <DadosObra />
         
-        <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white px-2 py-0.5 font-bold text-center mb-1 text-xs">
+        <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-white px-1 py-0 font-bold text-center mb-0 text-[8px] leading-tight print:text-[8px]">
           DADOS DO ENSAIO
         </div>
 
         {/* Serviço */}
-        <div className="mb-2">
-          <table className="w-full border-collapse text-[9px]">
+        <div className="mb-0 print:mb-0">
+          <table className="w-full border-collapse text-[9px] print:text-[9px]">
             <tbody>
               <tr>
                 <td className="border px-2 py-1 font-semibold" style={{ borderColor: 'rgb(148, 163, 184)', width: '40%' }}>SERVIÇO</td>
@@ -156,8 +157,8 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
         </div>
 
         {/* Área da Bandeja */}
-        <div className="mb-1">
-          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">ÁREA DA BANDEJA</div>
+        <div className="mb-0 print:mb-0">
+          <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[8px] leading-tight print:text-[8px]">ÁREA DA BANDEJA</div>
           <table className="w-full border-collapse text-[9px]">
             <thead>
               <tr>
@@ -199,8 +200,8 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
         </div>
 
         {/* Execução do Ensaio */}
-        <div className="mb-1">
-          <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">EXECUÇÃO DO ENSAIO</div>
+        <div className="mb-0 print:mb-0">
+          <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[8px] leading-tight print:text-[8px]">EXECUÇÃO DO ENSAIO</div>
           <table className="w-full border-collapse text-[9px]">
             <tbody>
               <tr>
@@ -303,8 +304,8 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
           if (ensaiosComResiduo.length === 0) return null;
           
           return (
-            <div className="mb-1">
-              <div className="bg-slate-200 px-2 py-0.5 font-bold text-center text-[9px]">ENSAIO DE RESÍDUO</div>
+            <div className="mb-0 print:mb-0">
+              <div className="bg-slate-200 px-1 py-0 font-bold text-center text-[8px] leading-tight print:text-[8px]">ENSAIO DE RESÍDUO</div>
               <table className="w-full border-collapse text-[9px]">
                 <thead>
                   <tr>
