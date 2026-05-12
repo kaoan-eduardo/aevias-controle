@@ -120,7 +120,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
       <style>{`
         @media print {
           html, body {
-            height: 80%;
+            height: 100%;
             margin: 0;
             padding: 0;
             background: white !important;
