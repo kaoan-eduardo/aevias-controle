@@ -173,39 +173,54 @@ TextColumnFilter.displayName = 'TextColumnFilter';
 // Componente de filtro por select
 const SelectColumnFilter = React.memo(({ value, onChange, options, placeholder }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [searchText, setSearchText] = React.useState(''); // ← NOVO
+
+  // NOVO: filtrar opções
+  const filteredOptions = options.filter(opt => 
+    opt.label.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 text-xs font-normal hover:bg-black/10">
-          
+        <Button variant="ghost" size="sm" className="h-8 text-xs font-normal hover:bg-black/10">
           <Filter className={`w-3 h-3 ${value !== 'all' ? 'text-[#BFCF99]' : ''}`} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-48 p-2 bg-[#F2F1EF]/95 backdrop-blur-lg border-white/20" align="start">
-        <div className="space-y-1">
+        <div className="space-y-2">
           <Label className="text-xs text-[#00233B]/80 px-2">{placeholder}</Label>
-          {options.map((option) =>
-          <Button
-            key={option.value}
-            variant="ghost"
-            size="sm"
-            className={`w-full justify-start text-xs h-8 ${value === option.value ? 'bg-black/10' : ''}`}
-            onClick={() => {
-              onChange(option.value);
-              setIsOpen(false);
-            }}>
-            
-              {option.label}
-            </Button>
-          )}
+          
+          {/* ← NOVO: Textbox de busca */}
+          <Input
+            type="text"
+            placeholder="Pesquisar..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="bg-white/50 border-white/20 text-[#00233B] text-xs h-8"
+          />
+          
+          {/* ← NOVO: Container com scrollbar */}
+          <div className="max-h-48 overflow-y-auto space-y-1">
+            {filteredOptions.map((option) =>
+              <Button
+                key={option.value}
+                variant="ghost"
+                size="sm"
+                className={`w-full justify-start text-xs h-8 ${value === option.value ? 'bg-black/10' : ''}`}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                  setSearchText(''); // Limpar busca ao selecionar
+                }}>
+                {option.label}
+              </Button>
+            )}
+          </div>
         </div>
       </PopoverContent>
-    </Popover>);
-
+    </Popover>
+  );
 });
 
 SelectColumnFilter.displayName = 'SelectColumnFilter';
