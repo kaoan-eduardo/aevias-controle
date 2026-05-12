@@ -137,7 +137,10 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           .max-w-\\[297mm\\], .max-w-\\[297mm\\] * {
-            visibility: visible;
+            visibility: visible !important;
+            color: inherit !important;
+            background-color: inherit !important;
+            border-color: inherit !important;
           }
           
           .max-w-\\[297mm\\] {
@@ -156,6 +159,14 @@ export default function RelatorioAcompanhamentoCargaPage() {
             width: 100% !important;
             max-width: 100% !important;
             table-layout: fixed !important;
+            border-collapse: collapse !important;
+          }
+          
+          table td, table th {
+            background-color: inherit !important;
+            color: inherit !important;
+            border: inherit !important;
+            padding: inherit !important;
           }
           
           .overflow-x-auto {
@@ -165,6 +176,12 @@ export default function RelatorioAcompanhamentoCargaPage() {
           .print\\:hidden {
             display: none !important;
             visibility: hidden !important;
+          }
+          
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
           }
         }
       `}</style>
