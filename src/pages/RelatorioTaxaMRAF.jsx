@@ -76,9 +76,43 @@ export default function RelatorioTaxaMRAF() {
 
       <style>{`
         @media print {
-          body { margin: 0; }
-          .print\\:hidden { display: none !important; }
-          @page { size: A4; margin: 10mm 12mm; }
+          html, body {
+            height: auto;
+            margin: 0;
+            padding: 0;
+            background: white !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important;
+          }
+          @page { 
+            size: A4 portrait;
+            margin: 10mm 12mm;
+            orphans: 0;
+            widows: 0;
+          }
+          .max-w-\\[210mm\\] {
+            width: 100%;
+            max-width: 100% !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+            page-break-inside: avoid !important;
+          }
+          table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+            page-break-inside: avoid !important;
+          }
+          table, thead, tbody, tr, td, th {
+            border: 0.5px solid #cbd5e1 !important;
+            border-collapse: collapse !important;
+          }
+          tbody tr:last-child td {
+            border-bottom: 0.5px solid #cbd5e1 !important;
+          }
+          .print\\:hidden { display: none !important; visibility: hidden !important; }
         }
       `}</style>
 
