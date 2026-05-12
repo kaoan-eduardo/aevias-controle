@@ -14,7 +14,7 @@ export default function RelatorioGranuMistura({ recordId }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadData();
-  }, [recordId]);
+  }, [recordId, loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {

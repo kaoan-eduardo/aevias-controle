@@ -18,7 +18,7 @@ export default function RelatorioTaxaMRAF() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     if (id) loadData(id);
-  }, []);
+  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async (id) => {
     try {

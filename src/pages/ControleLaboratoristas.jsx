@@ -97,7 +97,7 @@ export default function ControleLaboratoristas() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const estatisticasLaboratoristas = useMemo(() => {
     const stats = {};

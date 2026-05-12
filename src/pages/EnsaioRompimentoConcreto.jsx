@@ -256,11 +256,11 @@ export default function EnsaioRompimentoConcretoPage() {
   }, [editId]);
 
   // ── Reconstruct series from formData when editing ──
-  useEffect(() => {
+  useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     if (formData.compressao_axial?.length > 0 && series.length === 0) {
       setSeries(compressaoAxialToSeries(formData.compressao_axial));
     }
-  }, [formData.compressao_axial]);
+  }, [formData.compressao_axial.length]);
 
   useEffect(() => {
     if (formData.tracao_flexao?.length > 0 && seriesFlexao.length === 0) {

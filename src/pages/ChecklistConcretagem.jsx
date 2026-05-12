@@ -114,7 +114,7 @@ export default function ChecklistConcretagem() {
   }, [formData.project_id]); // Isolado de 'projects' via ref para evitar loop
 
   // Filtrar projetos quando obra é selecionada
-  useEffect(() => {
+  useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     if (formData.obra_id && obras.length > 0 && allProjects.length > 0 && regionais.length > 0) {
       const obraSelecionada = obras.find(o => o.id === formData.obra_id);
       

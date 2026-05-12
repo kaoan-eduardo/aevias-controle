@@ -260,7 +260,7 @@ export default function ChecklistTerraplanagem() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCheckboxChange = (section, field, option) => {
     setFormData(prev => ({

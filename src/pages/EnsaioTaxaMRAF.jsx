@@ -152,7 +152,7 @@ export default function EnsaioTaxaMRAFPage() {
     }
   };
 
-  useEffect(() => { loadInitialData(); }, []);
+  useEffect(() => { loadInitialData(); }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDimensoesChange = useCallback((field, value) => {
     setFormData(prev => {

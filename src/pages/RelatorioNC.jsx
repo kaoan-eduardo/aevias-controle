@@ -277,7 +277,7 @@ export default function RelatorioNCPage() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (

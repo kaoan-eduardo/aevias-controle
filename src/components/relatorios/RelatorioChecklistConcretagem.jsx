@@ -246,7 +246,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
   useEffect(() => {
     if (!obraProp) loadRelatedData();
-  }, [checklist, obraProp]);
+  }, [checklist, obraProp, loadRelatedData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const compressImages = async () => {

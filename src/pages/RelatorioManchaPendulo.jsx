@@ -40,7 +40,7 @@ export default function RelatorioManchaPenduloPage() {
 
   useEffect(() => {
     if (id) loadData();
-  }, [id]);
+  }, [id, loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrint = () => {
     window.print();

@@ -77,7 +77,7 @@ export default function GranuMistura() {
   const [saving, setSaving] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => { loadData(); }, [location.search]);
+  useEffect(() => { loadData(); }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => {
     try {

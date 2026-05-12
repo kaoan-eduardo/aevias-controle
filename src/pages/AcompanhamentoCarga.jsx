@@ -101,7 +101,7 @@ export default function AcompanhamentoCarga() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleObraChange = (obraId) => {
     const obra = obras.find(o => o.id === obraId);

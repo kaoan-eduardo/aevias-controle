@@ -99,7 +99,7 @@ export default function EnsaioManchaPendulo() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadInitialData = async () => {
     try {

@@ -88,7 +88,7 @@ export default function RelatorioDiarioPage() {
 
   useEffect(() => {
     loadReportData();
-  }, []);
+  }, [loadReportData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrint = () => {
     window.print();

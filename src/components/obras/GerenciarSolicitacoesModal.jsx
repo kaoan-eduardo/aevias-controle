@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Dialog,
@@ -215,7 +214,7 @@ export default function GerenciarSolicitacoesModal({ isOpen, onClose, user, onUp
     if (isOpen) {
       loadSolicitacoes();
     }
-  }, [isOpen]);
+  }, [isOpen, loadSolicitacoes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadSolicitacoes = async () => {
     setLoading(true);

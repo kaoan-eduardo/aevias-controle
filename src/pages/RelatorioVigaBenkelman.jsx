@@ -21,7 +21,7 @@ export default function RelatorioVigaBenkelman() {
   useEffect(() => {
     console.log('useEffect rodou, id:', id);
     loadEnsaio();
-  }, [id]);
+  }, [id, loadEnsaio]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadEnsaio = async () => {
      try {

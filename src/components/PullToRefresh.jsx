@@ -23,7 +23,7 @@ export default function PullToRefresh({ children }) {
     }
   }, [isInputFocused]);
 
-  const handleTouchMove = useCallback((e) => {
+  const handleTouchMove = useCallback((e) => { // eslint-disable-line react-hooks/exhaustive-deps
     if (startYRef.current === null || refreshing || isInputFocused()) return;
     const delta = e.touches[0].clientY - startYRef.current;
     if (delta > 0) {

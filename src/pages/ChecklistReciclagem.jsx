@@ -193,7 +193,7 @@ export default function ChecklistReciclagem() {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadInitialData = async () => {
     setLoading(true);

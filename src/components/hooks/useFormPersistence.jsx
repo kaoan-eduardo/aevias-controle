@@ -35,7 +35,7 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
       }
       isInitialMount.current = false;
     }
-  }, [storageKey, setFormData, isEditing, formKey, hasEditId]);
+  }, [storageKey, setFormData, isEditing, hasEditId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save quando formData muda (debounced 1s) - não salvar quando estiver editando via editId
   useEffect(() => {

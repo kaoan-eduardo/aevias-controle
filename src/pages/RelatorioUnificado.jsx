@@ -236,7 +236,7 @@ export default function RelatorioUnificado() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
 

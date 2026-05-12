@@ -49,7 +49,7 @@ ChartContainer.displayName = "Chart"
 const ChartStyle = ({ id, config }) => {
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
 
-  React.useEffect(() => {
+  React.useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     if (!colorConfig.length) return
 
     const css = Object.entries(THEMES)

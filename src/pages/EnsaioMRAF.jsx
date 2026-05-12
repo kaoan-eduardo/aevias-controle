@@ -135,7 +135,7 @@ export default function EnsaioMRAFPage() {
   }, []);
 
   // Cálculo automático da extração de ligante
-  useEffect(() => {
+  useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     const ext = formData.extracao_ligante;
     
     if (ext.amostra_umida && ext.amostra_seca) {

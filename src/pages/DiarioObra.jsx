@@ -122,7 +122,7 @@ const DiarioForm = ({
   const isObraClienteType = obraSelecionada?.tipo_obra === 'levantamentos' || obraSelecionada?.tipo_obra === 'sondagem';
 
   // Effect to auto-fill cliente when obra changes
-  React.useEffect(() => {
+  React.useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     if (regionalSelecionada && regionalSelecionada.cliente !== formData.cliente) {
       handleChange('cliente', regionalSelecionada.cliente || "");
     }

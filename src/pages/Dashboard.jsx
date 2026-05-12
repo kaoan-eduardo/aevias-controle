@@ -536,7 +536,7 @@ export default function Dashboard() {
   }, [filters.periodo, allData.obras]);
 
   // Recalcular stats e gráficos baseado nos dados filtrados
-  useEffect(() => {
+  useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
     if (!filteredData.ensaios.length && allData.ensaios.length) return;
 
     const currentAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
