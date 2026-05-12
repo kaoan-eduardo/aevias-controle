@@ -145,7 +145,6 @@ export default function RelatorioAcompanhamentoCargaPage() {
             margin: 0 !important;
             box-shadow: none !important;
             background: white !important;
-            overflow-x: hidden !important;
           }
           
           table {
