@@ -166,12 +166,12 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           table, thead, tbody, tr, td, th {
-          border: 1px solid #000 !important;
+          border: 1px solid #cbd5e1 !important;
           border-collapse: collapse !important;
           }
 
           tbody tr:last-child td {
-          border-bottom: 2px solid #000 !important;
+          border-bottom: 1px solid #cbd5e1 !important;
           }
 
           .print\\:hidden {
