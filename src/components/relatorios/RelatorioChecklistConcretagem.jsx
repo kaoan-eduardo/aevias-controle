@@ -290,9 +290,38 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     <div className="bg-white font-sans">
       <style>{`
         @media print {
-          body, html { margin: 0; padding: 0; }
-          .print-page { width: 210mm; height: 297mm; margin: 0; padding: 10mm; box-sizing: border-box; page-break-after: always; }
+          body, html { 
+          margin: 0; 
+          padding: 0;
+          background: white; !important;
+          color-adjust: exact;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact; 
+          }
+
+          .print-page { 
+          width: 210mm; 
+          height: 297mm;
+          margin: 0;
+          padding: 10mm;
+          box-sizing: border-box;
+          page-break-after: always;
+          page-break-inside: avoid;
+          }
+
+          img{
+          max-width: 100%;
+          height: auto;
+          page-break-inside: avoid;
+          }
+
+          table{
+          page-break-inside: avoid;
+          }
+
+
         }
+
       `}</style>
 
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
