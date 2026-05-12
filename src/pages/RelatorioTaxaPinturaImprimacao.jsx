@@ -1,111 +1,78 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from 'react';
 import { useReportMode } from "@/hooks/useReportMode";
-import { useLocation } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2 } from "lucide-react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import RelatorioTaxaPinturaImprimacao from "@/components/relatorios/RelatorioTaxaPinturaImprimacao";
+import { Download } from "lucide-react";
 import AprovacaoBar from '../components/relatorios/AprovacaoBar';
+import { base44 } from '@/api/base44Client';
+import RelatorioTaxaPinturaImprimacaoComponent from '../components/relatorios/RelatorioTaxaPinturaImprimacao';
 
 export default function RelatorioTaxaPinturaImprimacaoPage() {
+  const [state, setState] = useState({
+    loading: true,
+    error: null,
+    data: null
+  });
+
   useReportMode();
-  const [ensaio, setEnsaio] = useState(null);
-  const [obra, setObra] = useState(null);
-  const [regional, setRegional] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [generatingPDF, setGeneratingPDF] = useState(false);
-  const location = useLocation();
-  const reportRef = useRef(null);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams(location.search);
-        const ensaioId = params.get('id');
+  const loadReportData = async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
 
-        if (!ensaioId) {
-          alert("ID do ensaio não fornecido.");
-          return;
+      if (!id) throw new Error('ID do ensaio é obrigatório na URL');
+
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        throw new Error('Você precisa estar autenticado para visualizar este relatório');
+      }
+
+      const ensaio = await base44.entities.EnsaioTaxaPinturaImprimacao.get(id);
+      if (!ensaio) throw new Error(`Ensaio com ID ${id} não encontrado`);
+
+      let obra = null;
+      let regional = null;
+      if (ensaio.obra_id) {
+        try {
+          obra = await base44.entities.Obra.get(ensaio.obra_id);
+        } catch (err) {
+          console.warn("Obra não encontrada:", ensaio.obra_id);
         }
-
-        const ensaioData = await base44.entities.EnsaioTaxaPinturaImprimacao.get(ensaioId);
-        setEnsaio(ensaioData);
-
-        if (ensaioData.obra_id) {
-          const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
-          setObra(obraData);
-
-          if (obraData.regional_id) {
-            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-            setRegional(regionalData);
+        
+        if (obra && obra.regional_id) {
+          try {
+            regional = await base44.entities.Regional.get(obra.regional_id);
+          } catch (err) {
+            console.warn("Regional não encontrada:", obra.regional_id);
           }
         }
-      } catch (error) {
-        console.error("Erro ao carregar dados do relatório:", error);
-        alert("Erro ao carregar dados do relatório.");
-      } finally {
-        setLoading(false);
       }
-    };
 
-    loadData();
-  }, [location.search]);
-
-  const handleGeneratePDF = async () => {
-    if (!reportRef.current) return;
-    
-    setGeneratingPDF(true);
-    try {
-      const canvas = await html2canvas(reportRef.current, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
+      setState({
+        loading: false,
+        error: null,
+        data: { ensaio, obra, regional }
       });
-
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      while (heightLeft >= 0) {
-        const imgData = canvas.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= 297;
-        position -= 297;
-        if (heightLeft > 0) {
-          pdf.addPage();
-        }
-      }
-
-      pdf.save(`taxa-pintura-${ensaio.id}.pdf`);
     } catch (error) {
-      console.error("Erro ao gerar PDF:", error);
-      alert("Erro ao gerar PDF.");
-    } finally {
-      setGeneratingPDF(false);
+      console.error('Erro ao carregar relatório:', error);
+      setState({ loading: false, error: error.message, data: null });
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-white">
-        <Loader2 className="w-8 h-8 animate-spin text-slate-500" />
-      </div>
-    );
+  useEffect(() => {
+    loadReportData();
+  }, []);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  if (state.loading) {
+    return <div className="p-8 text-center">Carregando relatório...</div>;
   }
 
-  if (!ensaio) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-white">
-        <p className="text-slate-700">Ensaio não encontrado.</p>
-      </div>
-    );
+  if (state.error) {
+    return <div className="p-8 text-center text-red-600">Erro: {state.error}</div>;
   }
 
   return (
@@ -116,26 +83,68 @@ export default function RelatorioTaxaPinturaImprimacaoPage() {
             Relatório de Taxa de Pintura/Imprimação
           </h2>
           <div className="flex items-center gap-2">
-            {ensaio && <AprovacaoBar entityName="EnsaioTaxaPinturaImprimacao" recordId={ensaio.id} />}
-            <Button 
-              onClick={handleGeneratePDF} 
-              disabled={generatingPDF}
-              className="bg-slate-800 text-white hover:bg-slate-700"
-            >
-              {generatingPDF ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Download className="w-4 h-4 mr-2" />
-              )}
-              {generatingPDF ? 'Gerando...' : 'Gerar PDF'}
+            {state.data && <AprovacaoBar entityName="EnsaioTaxaPinturaImprimacao" recordId={state.data.ensaio?.id} />}
+            <Button onClick={handlePrint} className="bg-slate-800 text-white hover:bg-slate-700">
+              <Download className="w-4 h-4 mr-2" />
+              Gerar PDF
             </Button>
           </div>
         </div>
       </div>
-
-      <div ref={reportRef} className="bg-white">
-        <RelatorioTaxaPinturaImprimacao ensaio={ensaio} obra={obra} regional={regional} />
+      
+      <div className="report-content-container w-full bg-white print:bg-white">
+        {state.data && (
+          <RelatorioTaxaPinturaImprimacaoComponent 
+            ensaio={state.data.ensaio} 
+            obra={state.data.obra} 
+            regional={state.data.regional}
+          />
+        )}
       </div>
+
+      <style>{`
+        @media screen {
+          .report-content-container {
+            max-width: 210mm;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          }
+        }
+        
+        @media print {
+          * { box-sizing: border-box; }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto !important;
+            overflow: visible !important;
+            background: white !important;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+          .no-print, .no-print * { display: none !important; visibility: hidden !important; }
+          .report-content-container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: white !important;
+          }
+          .break-before-page { page-break-before: always; break-before: page; }
+          .break-inside-avoid { page-break-inside: avoid; break-inside: avoid; }
+          @page {
+            size: A4;
+            margin: 0;
+            padding: 0;
+          }
+          body > * {
+            max-width: 100vw !important;
+            overflow: visible !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
