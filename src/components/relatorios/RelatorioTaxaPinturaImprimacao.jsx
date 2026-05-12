@@ -129,7 +129,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
 
   return (
     <div className="bg-white font-sans print:relative">
-      <div className="w-full max-w-[210mm] mx-auto bg-white p-8 print:p-8 print:min-h-[297mm] print:pb-16" style={{ minHeight: '100vh' }}>
+      <div className="w-full max-w-[210mm] mx-auto bg-white p-6 print:p-6 print:min-h-[297mm] print:pb-16" style={{ minHeight: '100vh' }}>
         <ReportHeader />
         <DadosObra />
         
