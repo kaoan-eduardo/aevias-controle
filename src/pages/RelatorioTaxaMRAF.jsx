@@ -42,7 +42,7 @@ export default function RelatorioTaxaMRAF() {
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error("[RelatorioTaxaMRAF] Erro ao carregar dados:", err?.message || err);
     } finally {
       setLoading(false);
     }

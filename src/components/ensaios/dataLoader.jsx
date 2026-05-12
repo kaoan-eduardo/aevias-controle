@@ -12,10 +12,11 @@ import { base44 } from "@/api/base44Client";
 import { getDataEnsaio } from "./ensaioMappers";
 
 // Retry helper para carregamento com fallback
-const loadWithFallback = async (fn, _entityName, fallback = []) => {
+const loadWithFallback = async (fn, entityName, fallback = []) => {
   try {
     return await fn();
-  } catch {
+  } catch (e) {
+    console.error(`[dataLoader] Falha ao carregar ${entityName}:`, e?.message || e);
     return fallback;
   }
 };
