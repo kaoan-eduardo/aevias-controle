@@ -301,8 +301,8 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
               sizePrint={true}
             />
           </footer>
-          </div>
-      </div>
+        </div>
+      </>
     </>
   );
 }
