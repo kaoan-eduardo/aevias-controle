@@ -307,17 +307,16 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           @page {
-            size: 210mm 297mm;
-            margin: 0 !important;
-            padding: 0 !important;
+            size: A4;
+            margin: 20mm !important;
           }
 
           .print-page { 
-            width: calc(210mm - 40mm) !important;
+            width: 100%;
             min-height: 297mm;
-            margin: 0 auto !important;
-            padding: 20mm !important;
-            box-sizing: content-box;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box;
             page-break-after: always;
           }
 
