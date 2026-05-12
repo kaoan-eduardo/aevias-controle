@@ -128,26 +128,25 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           @page {
-            size: A4 portrait;
-            margin: 0;
+            size: A4 landscape;
+            margin: 8mm 10mm;
           }
           
           body * {
             visibility: hidden;
           }
           
-          .max-w-\\[210mm\\], .max-w-\\[210mm\\] * {
+          .max-w-\\[297mm\\], .max-w-\\[297mm\\] * {
             visibility: visible;
           }
           
-          .max-w-\\[210mm\\] {
+          .max-w-\\[297mm\\] {
             position: absolute;
             left: 0;
             top: 0;
             width: 100%;
             max-width: 100% !important;
             margin: 0 !important;
-            padding: 0 !important;
             box-shadow: none !important;
             background: white !important;
             overflow-x: hidden !important;
