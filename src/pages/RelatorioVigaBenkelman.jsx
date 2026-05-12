@@ -159,6 +159,8 @@ export default function RelatorioVigaBenkelman() {
             color-adjust: exact !important;
             print-color-adjust: exact !important;
             -webkit-print-color-adjust: exact !important;
+            .recharts-surface;
+            .recharts-wrapper;
           }
           @page { 
             size: A4 portrait;
@@ -166,6 +168,19 @@ export default function RelatorioVigaBenkelman() {
             orphans: 0;
             widows: 0;
           }
+          svg {
+          display: block !important;
+          visibility: visible !important;
+          page-break-inside: avoid !important;
+          print-color-adjust: exact !important
+          -webkit-print-color-adjust: exact !important;
+          }
+
+            /* Container do gráfico */
+            div[class*="p-3"] svg {
+              max-width: 100% !important;
+              height: auto !important;
+            }
           .max-w-\\[210mm\\] {
             width: 100%;
             max-width: 100% !important;
