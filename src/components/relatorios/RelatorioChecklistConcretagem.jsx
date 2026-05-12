@@ -35,11 +35,7 @@ function formatDateConcr(dateString) {
   return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
 }
 
-// ── Sub-components (defined outside to avoid "non-serializable" lint error) ───
-const SectionTitle = ({ children }) => (
-  <h2 className="text-sm print:text-xs font-bold text-center bg-slate-100 p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
-);
-
+// ── Sub-components ─────────────────────────────────────────────────────────────
 const Checkmark = ({ checked }) => {
   if (checked === null || typeof checked === 'undefined') {
     return <span className="text-slate-500">-</span>;
@@ -50,81 +46,6 @@ const Checkmark = ({ checked }) => {
     </span>
   );
 };
-
-const ReportHeader = ({ regional, checklist, showDate = true }) => (
-  <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-1">
-    <div className="flex justify-start">
-      <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-12 object-contain" width="auto" height="48" /></picture>
-    </div>
-    <div className="text-center">
-      <h1 className="text-base font-bold text-gray-800">Controle Tecnológico de Concreto</h1>
-    </div>
-    <div className="flex justify-end">
-      {showDate && (
-        <div className="border border-gray-400 p-1 rounded-md text-sm print:text-xs bg-white">
-          <p className="font-semibold text-gray-800">
-            {formatDateConcr(checklist.data)}
-          </p>
-        </div>
-      )}
-    </div>
-  </header>
-);
-
-const ReportFooterSimple = () => (
-  <footer className="pt-0.5">
-    {/* Footer sem paginação */}
-  </footer>
-);
-
-const DadosObra = ({ checklist, regional, obra }) => (
-  <>
-    <SectionTitle>Dados da Obra</SectionTitle>
-    <div className="grid grid-cols-3 gap-x-2 gap-y-0.5 mb-1 p-1.5 rounded text-xs">
-      <div><p className="font-bold">CLIENTE:</p><p>{regional?.cliente || obra?.name || 'N/A'}</p></div>
-      <div><p className="font-bold">CONCRETEIRA:</p><p>{checklist.concreteira}</p></div>
-      <div><p className="font-bold">EMPREITEIRA:</p><p>{checklist.empreiteira || 'N/A'}</p></div>
-      <div><p className="font-bold">OBRA:</p><p>{obra?.code || 'N/A'}</p></div>
-      <div><p className="font-bold">RODOVIA:</p><p>{checklist.rodovia || 'N/A'}</p></div>
-      <div><p className="font-bold">TRECHO:</p><p>{checklist.trecho || 'N/A'}</p></div>
-      <div><p className="font-bold">VOLUME (m³):</p><p>{checklist.volume || 'N/A'}</p></div>
-      <div><p className="font-bold">Fck (MPa):</p><p>{checklist.fck || 'N/A'}</p></div>
-      <div><p className="font-bold">ESTRUTURA:</p><p>{checklist.estrutura || 'N/A'}</p></div>
-      <div><p className="font-bold">INSPETOR CAMPO:</p><p>{checklist.inspetor_campo || 'N/A'}</p></div>
-      <div><p className="font-bold">JORNADA:</p><p>{checklist.jornada?.horario_inicio && checklist.jornada?.horario_fim ? `${checklist.jornada.horario_inicio} - ${checklist.jornada.horario_fim}` : 'N/A'}</p></div>
-      <div><p className="font-bold">ENSAIO REALIZADO POR:</p><p>{checklist.ensaio_realizado_por || 'N/A'}</p></div>
-    </div>
-  </>
-);
-
-const CondicoesClimaticas = ({ checklist }) => (
-  <>
-    <SectionTitle>Condições Climáticas</SectionTitle>
-    <div className="mb-1">
-      <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '9px' }}>
-        <thead className="bg-slate-100">
-          <tr>
-            {checklist.periodos_clima?.map((periodo, index) => (
-              <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
-                {getPeriodoNome(periodo.periodo)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {checklist.periodos_clima?.map((periodo, index) => (
-              <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
-                <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
-                <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </>
-);
 
 const CargaContent = ({ carga }) => (
   <>
@@ -258,7 +179,6 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
       const validPhotos = checklist.fotos.filter(photo => photo && photo.trim() !== '');
       const compressed = [];
       
-      // Processar uma imagem por vez com retry logic
       for (let i = 0; i < validPhotos.length; i++) {
         const photoUrl = validPhotos[i];
         let attempts = 0;
@@ -285,7 +205,6 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Reduzir dimensões
             const maxWidth = 800;
             const maxHeight = 600;
             let width = img.width;
@@ -301,24 +220,20 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
             
-            // Comprimir com qualidade de 50%
             compressed.push(canvas.toDataURL('image/jpeg', 0.5));
-            break; // Sucesso, sair do loop de tentativas
+            break;
           } catch (error) {
             attempts++;
             console.error(`Tentativa ${attempts} falhou para imagem ${i + 1}:`, error);
             
             if (attempts >= maxAttempts) {
-              // Usar URL original após todas as tentativas falharem
               compressed.push(photoUrl);
             } else {
-              // Aguardar antes de tentar novamente (exponential backoff)
               await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
             }
           }
         }
         
-        // Aguardar 600ms entre cada imagem para evitar rate limiting
         if (i < validPhotos.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 600));
         }
@@ -351,8 +266,6 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     }
   };
 
-  const handlePrint = () => { window.print(); };
-
   if (isCompressing) {
     return <div className="p-8 text-center">Otimizando imagens para impressão...</div>;
   }
@@ -374,28 +287,135 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
   };
 
   return (
-    <div className="bg-white font-sans min-h-screen print:bg-white">
+    <div className="bg-white font-sans">
+      <style>{`
+        @media print {
+          body, html { margin: 0; padding: 0; }
+          .print-page { width: 210mm; height: 297mm; margin: 0; padding: 10mm; box-sizing: border-box; page-break-after: always; }
+        }
+      `}</style>
+
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
-        <div className="break-inside-avoid">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
-            <ReportHeader regional={regional} checklist={checklist} />
-            <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
-              <DadosObra checklist={checklist} regional={regional} obra={obra} />
-              <CondicoesClimaticas checklist={checklist} />
+        <div className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
+            <div className="w-16">
+              <picture>
+                <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                <img 
+                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                  alt="Logo" 
+                  className="h-12 object-contain"
+                  width="auto" height="48"
+                />
+              </picture>
+            </div>
+            
+            <div className="text-center flex-1">
+              <h1 className="text-sm font-bold text-gray-800 leading-tight">
+                CONTROLE TECNOLÓGICO<br/>DE CONCRETO
+              </h1>
+            </div>
+            
+            <div className="text-right w-16">
+              <div className="border border-gray-400 p-1 rounded inline-block">
+                <p className="text-[9px] font-semibold text-gray-800">{formatDateConcr(checklist.data)}</p>
+              </div>
+            </div>
+          </div>
 
-              {checklist.observacoes_gerais && (
-                <>
-                  <SectionTitle>Observações Gerais</SectionTitle>
-                  <div className="text-xs mb-1 p-1 bg-slate-50 rounded">
-                    {checklist.observacoes_gerais}
-                  </div>
-                </>
-              )}
+          {/* DADOS DA OBRA */}
+          <div className="mb-3">
+            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+            <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
+              <div>
+                <p className="font-bold text-gray-700">CLIENTE:</p>
+                <p className="text-gray-900">{regional?.cliente || obra?.name || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">CONCRETEIRA:</p>
+                <p className="text-gray-900">{checklist.concreteira}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">EMPREITEIRA:</p>
+                <p className="text-gray-900">{checklist.empreiteira || 'N/A'}</p>
+              </div>
 
-              <SectionTitle>Carga de Concreto 1</SectionTitle>
+              <div>
+                <p className="font-bold text-gray-700">OBRA:</p>
+                <p className="text-gray-900">{obra?.code || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">RODOVIA:</p>
+                <p className="text-gray-900">{checklist.rodovia || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">TRECHO:</p>
+                <p className="text-gray-900">{checklist.trecho || 'N/A'}</p>
+              </div>
+
+              <div>
+                <p className="font-bold text-gray-700">VOLUME (m³):</p>
+                <p className="text-gray-900">{checklist.volume || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">Fck (MPa):</p>
+                <p className="text-gray-900">{checklist.fck || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">ESTRUTURA:</p>
+                <p className="text-gray-900">{checklist.estrutura || 'N/A'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Condições Climáticas */}
+          <div className="mb-2">
+            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
+            <table className="w-full border-collapse text-[9px]">
+              <thead>
+                <tr className="bg-slate-100">
+                  {checklist.periodos_clima?.map((periodo, index) => (
+                    <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
+                      {getPeriodoNome(periodo.periodo)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {checklist.periodos_clima?.map((periodo, index) => (
+                    <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
+                      <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
+                      <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Observações Gerais */}
+          {checklist.observacoes_gerais && (
+            <div className="mb-2">
+              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
+              <div className="text-[9px] p-1 bg-slate-50 border border-slate-300 rounded">
+                {checklist.observacoes_gerais}
+              </div>
+            </div>
+          )}
+
+          {/* Carga de Concreto */}
+          <div className="mb-2">
+            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO 1</div>
+            <div className="text-[9px]">
               <CargaContent carga={cargas[0]} />
-            </main>
+            </div>
+          </div>
+
+          {/* Signature Footer */}
+          <div className="mt-4">
             <SignatureFooter {...footerProps} />
           </div>
         </div>
@@ -407,126 +427,267 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         const isPrimeiraCarga = cargaIndex === 0;
         
         return (
-          <div key={cargaIndex} className={`${cargaIndex > 0 ? 'break-before-page' : ''}`}>
-            <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3" style={{ marginBottom: '20mm' }}>
-              <ReportHeader regional={regional} checklist={checklist} />
-              <main className="text-sm print:text-xs mt-0.5" style={{ marginBottom: '15mm' }}>
-                {isPrimeiraCarga && (
-                  <>
-                    <DadosObra checklist={checklist} regional={regional} obra={obra} />
-                    <CondicoesClimaticas checklist={checklist} />
-
-                    {checklist.observacoes_gerais && (
-                      <>
-                        <SectionTitle>Observações Gerais</SectionTitle>
-                        <div className="text-xs mb-1 p-1 bg-slate-50 rounded">
-                          {checklist.observacoes_gerais}
-                        </div>
-                      </>
-                    )}
-                  </>
-                )}
-
-                <SectionTitle>Carga de Concreto {carga.numero_carga}</SectionTitle>
-                <CargaContent carga={carga} />
-              </main>
-
-              {isUltimaCarga && !temAcoesCorretivas ? (
-                <SignatureFooter {...footerProps} />
-              ) : (
-                <ReportFooterSimple />
-              )}
+          <div key={cargaIndex} className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
+              <div className="w-16">
+                <picture>
+                  <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                  <img 
+                    src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                    alt="Logo" 
+                    className="h-12 object-contain"
+                    width="auto" height="48"
+                  />
+                </picture>
+              </div>
+              
+              <div className="text-center flex-1">
+                <h1 className="text-sm font-bold text-gray-800 leading-tight">
+                  CONTROLE TECNOLÓGICO<br/>DE CONCRETO
+                </h1>
+              </div>
+              
+              <div className="text-right w-16">
+                <div className="border border-gray-400 p-1 rounded inline-block">
+                  <p className="text-[9px] font-semibold text-gray-800">{formatDateConcr(checklist.data)}</p>
+                </div>
+              </div>
             </div>
+
+            {isPrimeiraCarga && (
+              <>
+                {/* DADOS DA OBRA */}
+                <div className="mb-3">
+                  <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+                  <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
+                    <div>
+                      <p className="font-bold text-gray-700">CLIENTE:</p>
+                      <p className="text-gray-900">{regional?.cliente || obra?.name || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">CONCRETEIRA:</p>
+                      <p className="text-gray-900">{checklist.concreteira}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">EMPREITEIRA:</p>
+                      <p className="text-gray-900">{checklist.empreiteira || 'N/A'}</p>
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-gray-700">OBRA:</p>
+                      <p className="text-gray-900">{obra?.code || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">RODOVIA:</p>
+                      <p className="text-gray-900">{checklist.rodovia || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">TRECHO:</p>
+                      <p className="text-gray-900">{checklist.trecho || 'N/A'}</p>
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-gray-700">VOLUME (m³):</p>
+                      <p className="text-gray-900">{checklist.volume || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">Fck (MPa):</p>
+                      <p className="text-gray-900">{checklist.fck || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-700">ESTRUTURA:</p>
+                      <p className="text-gray-900">{checklist.estrutura || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Condições Climáticas */}
+                <div className="mb-2">
+                  <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
+                  <table className="w-full border-collapse text-[9px]">
+                    <thead>
+                      <tr className="bg-slate-100">
+                        {checklist.periodos_clima?.map((periodo, index) => (
+                          <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
+                            {getPeriodoNome(periodo.periodo)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        {checklist.periodos_clima?.map((periodo, index) => (
+                          <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
+                            <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
+                            <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Observações Gerais */}
+                {checklist.observacoes_gerais && (
+                  <div className="mb-2">
+                    <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
+                    <div className="text-[9px] p-1 bg-slate-50 border border-slate-300 rounded">
+                      {checklist.observacoes_gerais}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Carga de Concreto */}
+            <div className="mb-2">
+              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO {carga.numero_carga}</div>
+              <div className="text-[9px]">
+                <CargaContent carga={carga} />
+              </div>
+            </div>
+
+            {isUltimaCarga && !temAcoesCorretivas && (
+              <div className="mt-4">
+                <SignatureFooter {...footerProps} />
+              </div>
+            )}
           </div>
         );
       })}
 
-      {/* PÁGINA DE AÇÕES CORRETIVAS E/OU NÃO CONFORMIDADES - Inserida ANTES das fotos */}
+      {/* PÁGINA DE AÇÕES CORRETIVAS E/OU NÃO CONFORMIDADES */}
       {(temAcoesCorretivas || (checklist.nao_conformidades && checklist.nao_conformidades.length > 0)) && (
-        <div className="break-before-page">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none py-2 px-3 print:py-2 print:px-3">
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '270mm' }}>
-              <ReportHeader regional={regional} checklist={checklist} showDate={true} />
-              <DadosObra checklist={checklist} regional={regional} obra={obra} />
-
-              <main className="mt-2" style={{ flex: '1' }}>
-                {temAcoesCorretivas && (
-                  <>
-                    <SectionTitle>Ações Corretivas</SectionTitle>
-                    <div className="border-2 border-slate-400 rounded p-6 bg-white" style={{ minHeight: '450px' }}>
-                      <p className="font-bold text-base mb-4 text-slate-800">AÇÕES CORRETIVAS APONTADAS:</p>
-                      <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                        {checklist.acoes_corretivas_descricao}
-                      </p>
-                    </div>
-                  </>
-                )}
-
-                {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
-                  <div className="mt-4">
-                    <SectionTitle>Não Conformidades</SectionTitle>
-                    <table className="w-full border-collapse border border-slate-300 text-sm">
-                      <thead>
-                        <tr className="bg-slate-100">
-                          <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">LOCAL</th>
-                          <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">CATEGORIA</th>
-                          <th className="border border-slate-300 px-3 py-2 text-left font-semibold text-slate-700">PARÂMETRO</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {checklist.nao_conformidades.map((nc, index) => (
-                          <tr key={index} className="bg-white">
-                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
-                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
-                            <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </main>
-
-              <div style={{ marginTop: 'auto' }}>
-                <SignatureFooter {...footerProps} />
+        <div className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
+            <div className="w-16">
+              <picture>
+                <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                <img 
+                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                  alt="Logo" 
+                  className="h-12 object-contain"
+                  width="auto" height="48"
+                />
+              </picture>
+            </div>
+            
+            <div className="text-center flex-1">
+              <h1 className="text-sm font-bold text-gray-800 leading-tight">
+                CONTROLE TECNOLÓGICO<br/>DE CONCRETO
+              </h1>
+            </div>
+            
+            <div className="text-right w-16">
+              <div className="border border-gray-400 p-1 rounded inline-block">
+                <p className="text-[9px] font-semibold text-gray-800">{formatDateConcr(checklist.data)}</p>
               </div>
             </div>
+          </div>
+
+          {/* DADOS DA OBRA */}
+          <div className="mb-2">
+            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+            <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
+              <div>
+                <p className="font-bold text-gray-700">CLIENTE:</p>
+                <p className="text-gray-900">{regional?.cliente || obra?.name || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">CONCRETEIRA:</p>
+                <p className="text-gray-900">{checklist.concreteira}</p>
+              </div>
+              <div>
+                <p className="font-bold text-gray-700">EMPREITEIRA:</p>
+                <p className="text-gray-900">{checklist.empreiteira || 'N/A'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Ações Corretivas */}
+          {temAcoesCorretivas && (
+            <div className="mb-2">
+              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">AÇÕES CORRETIVAS</div>
+              <div className="border border-slate-300 p-2 text-[9px] bg-slate-50 min-h-[60px]">
+                {checklist.acoes_corretivas_descricao}
+              </div>
+            </div>
+          )}
+
+          {/* Não Conformidades */}
+          {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
+            <div className="mb-2">
+              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">NÃO CONFORMIDADES</div>
+              <table className="w-full border-collapse border border-slate-300 text-[9px]">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="border border-slate-300 px-1 py-0.5 font-bold text-left">LOCAL</th>
+                    <th className="border border-slate-300 px-1 py-0.5 font-bold text-left">CATEGORIA</th>
+                    <th className="border border-slate-300 px-1 py-0.5 font-bold text-left">PARÂMETRO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {checklist.nao_conformidades.map((nc, index) => (
+                    <tr key={index}>
+                      <td className="border border-slate-300 px-1 py-0.5">{nc.local_nc || 'N/A'}</td>
+                      <td className="border border-slate-300 px-1 py-0.5">{nc.categoria_nc || 'N/A'}</td>
+                      <td className="border border-slate-300 px-1 py-0.5">{nc.parametro_nc || 'N/A'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <div className="mt-4">
+            <SignatureFooter {...footerProps} />
           </div>
         </div>
       )}
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="break-before-page">
-          <div className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none p-8 print:p-8 print:min-h-[297mm]" style={{ minHeight: '100vh' }}>
-            <div className="w-full max-w-[190mm] mx-auto">
-              <header className="grid grid-cols-3 items-center border-b-2 border-gray-800 pb-2 mb-4">
-                <div className="flex justify-start">
-                  <picture><source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} /><img src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} alt="Logo Regional" className="h-16 object-contain" width="auto" height="64" /></picture>
-                </div>
-                <div className="text-center">
-                  <h1 className="text-2xl print:text-xl font-bold text-gray-800">Relatório Fotográfico</h1>
-                  <p className="text-base print:text-sm text-gray-600">Checklist de Concretagem</p>
-                </div>
-                <div className="flex justify-end text-sm print:text-xs">
-                  <div className="border border-gray-400 p-2 rounded-md">
-                    <p>{formatDateConcr(checklist.data)}</p>
-                  </div>
-                </div>
-              </header>
-              <main className="grid grid-cols-2 gap-4 grid-rows-3">
-                {chunk.map((fotoUrl, fotoIndex) => (
-                  <div key={fotoIndex} className="border p-2 rounded-lg flex flex-col h-60 print:h-56">
-                    <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1">
-                      <picture><source srcSet={fotoUrl} /><img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" /></picture>
-                    </div>
-                    <p className="text-center text-base print:text-sm mt-2 font-medium">
-                      Foto {(pageIndex * 6) + fotoIndex + 1}
-                    </p>
-                  </div>
-                ))}
-              </main>
+        <div key={pageIndex} className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-2 pb-2 border-b-2 border-slate-900">
+            <div className="w-12">
+              <picture>
+                <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} />
+                <img 
+                  src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328b_AE-LogoVerPrincipal_1.png"} 
+                  alt="Logo" 
+                  className="h-10 object-contain"
+                  width="auto" height="40"
+                />
+              </picture>
             </div>
+            
+            <div className="text-center flex-1">
+              <h1 className="text-sm font-bold text-gray-800">Relatório Fotográfico</h1>
+              <p className="text-[8px] text-gray-600">Checklist de Concretagem</p>
+            </div>
+            
+            <div className="text-right w-12">
+              <p className="text-[8px] font-semibold text-gray-800">{formatDateConcr(checklist.data)}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {chunk.map((fotoUrl, fotoIndex) => (
+              <div key={fotoIndex} className="border border-slate-300 p-1 rounded flex flex-col h-56">
+                <div className="bg-gray-100 flex items-center justify-center rounded overflow-hidden flex-1">
+                  <picture>
+                    <source srcSet={fotoUrl} />
+                    <img src={fotoUrl} alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`} className="max-h-full max-w-full object-contain" width="auto" height="auto" />
+                  </picture>
+                </div>
+                <p className="text-center text-[8px] mt-1 font-medium">
+                  Foto {(pageIndex * 6) + fotoIndex + 1}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       ))}
