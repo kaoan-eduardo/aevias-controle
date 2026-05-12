@@ -212,9 +212,7 @@ export default function NaoConformidadesPage() {
   const [tabelaPage, setTabelaPage] = useState(1);
   const tabelaItemsPerPage = 20;
 
-  useEffect(() => { loadAll(); }, []);
-
-  const loadAll = async () => {
+  const loadAll = useCallback(async () => {
     setLoading(true);
     try {
       const userData = await User.me();
@@ -222,7 +220,7 @@ export default function NaoConformidadesPage() {
 
       const [obrasData, regionaisData, rncsData] = await Promise.all([
         Obra.list(), Regional.list(),
-        base44.entities.RelatorioNC.list("-created_date", 500)
+        base44.entities.RelatorioNC.list("-created_date", 1000)
       ]);
 
       let availableObras = obrasData;
@@ -248,113 +246,107 @@ export default function NaoConformidadesPage() {
       setRncs(rncsData.filter(r => availableIds.has(r.obra_id)));
 
       const allCNCs = [];
-      // Fetch all records for each checklist type at once (avoids per-obra pagination limits)
-      const allData = await Promise.all(
-        TIPOS_CHECKLIST.map(t =>
-          base44.entities[t.value].list('-created_date', 1000)
-            .catch(err => {
-              console.warn(`⚠️ [${t.value}] Falha ao carregar checklists:`, err?.message || err);
-              return [];
-            })
-            .then(res => res.filter(c => availableIds.has(c.obra_id)).map(c => ({ ...c, _tipo: t.value })))
-        )
-      );
 
-      allData.flat().forEach(cl => {
+      // Buscar checklists e DiarioObra de uma só vez (sem repetição para NCs explícitas)
+      // TIPOS_COM_NC_EXPLICITA inclui os mesmos 6 checklists + DiarioObra
+      // Fazemos uma única requisição por tipo e aproveitamos para ambas as extrações
+      const [checklistResults, diarioData] = await Promise.all([
+        Promise.all(
+          TIPOS_CHECKLIST.map(t =>
+            base44.entities[t.value].list('-created_date', 1000)
+              .catch(() => [])
+              .then(res => res.filter(c => availableIds.has(c.obra_id)).map(c => ({ ...c, _tipo: t.value, _page: t.page })))
+          )
+        ),
+        base44.entities.DiarioObra.list('-created_date', 1000)
+          .catch(() => [])
+          .then(res => res.filter(c => availableIds.has(c.obra_id)))
+      ]);
+
+      // Extrair NCs automáticas dos checklists
+      checklistResults.flat().forEach(cl => {
         extrairNaoConformidadesChecklist(cl, cl._tipo).forEach(param => {
           allCNCs.push({
-            id: cl.id,
-            obra_id: cl.obra_id,
+            id: cl.id, obra_id: cl.obra_id,
             parametro: param.charAt(0).toUpperCase() + param.slice(1),
-            tipo: cl._tipo,
-            laboratorista_name: cl.laboratorista_name || '',
-            data: cl.data || '',
-            empreiteira: cl.empreiteira || '',
-            rodovia: cl.rodovia || '',
-            usina: cl.usina || cl.usina_selecionada || '',
+            tipo: cl._tipo, laboratorista_name: cl.laboratorista_name || '',
+            data: cl.data || '', empreiteira: cl.empreiteira || '',
+            rodovia: cl.rodovia || '', usina: cl.usina || cl.usina_selecionada || '',
+            _page: cl._page,
           });
         });
+
+        // NCs explícitas dos checklists
+        if (Array.isArray(cl.nao_conformidades) && cl.nao_conformidades.length > 0) {
+          const tipoInfo = TIPOS_CHECKLIST.find(t => t.value === cl._tipo);
+          cl.nao_conformidades.forEach(nc => {
+            const parametro = [nc.categoria_nc, nc.parametro_nc].filter(Boolean).join(' / ') || nc.descricao || 'NC';
+            const jaExiste = allCNCs.some(e => e.id === cl.id && e.parametro === parametro);
+            if (!jaExiste) {
+              allCNCs.push({
+                id: cl.id, obra_id: cl.obra_id, parametro,
+                tipo: cl._tipo, laboratorista_name: cl.laboratorista_name || '',
+                data: cl.data || '', empreiteira: cl.empreiteira || '',
+                rodovia: cl.rodovia || '', usina: cl.usina || cl.usina_selecionada || '',
+                _page: tipoInfo?.page || '', _ncLocal: nc.local_nc || '',
+              });
+            }
+          });
+        }
       });
 
-      // Fetch todos os outros tipos de registro
-      // Para a maioria: approved === false indica NC
-      // Para EnsaioManchaPendulo e EnsaioVigaBenkelman: condicao_conformidade === 'NÃO CONFORME' indica NC
-      const fetchOutro = (entityName, label, page) =>
-        base44.entities[entityName].list('-created_date', 1000)
-          .catch(err => {
-            console.warn(`⚠️ [${entityName}] Falha ao carregar registros:`, err?.message || err);
-            return [];
-          })
-          .then(res => res
-            .filter(c => {
-              if (!availableIds.has(c.obra_id)) return false;
-              // Mancha+Pêndulo e Viga Benkelman usam campo específico
-              if (entityName === 'EnsaioManchaPendulo' || entityName === 'EnsaioVigaBenkelman') {
-                return c.condicao_conformidade === 'NÃO CONFORME';
-              }
-              // Outros ensaios usam approved
-              return c.approved === false;
-            })
-            .map(c => ({
-              id: c.id, obra_id: c.obra_id,
-              parametro: label, tipo: entityName,
-              laboratorista_name: c.laboratorista_name || '',
-              data: c.data || c.data_ensaio || c.extraction_date || c.collection_date || '',
-              empreiteira: c.empreiteira || '',
-              rodovia: c.rodovia || '',
-              usina: c.usina || c.usina_fornecedora || c.usina_selecionada || '',
-              _page: page,
-            }))
-          );
+      // NCs explícitas do Diário de Obra
+      diarioData.forEach(c => {
+        if (Array.isArray(c.nao_conformidades) && c.nao_conformidades.length > 0) {
+          c.nao_conformidades.forEach(nc => {
+            const parametro = [nc.categoria_nc, nc.parametro_nc].filter(Boolean).join(' / ') || nc.descricao || 'NC';
+            allCNCs.push({
+              id: c.id, obra_id: c.obra_id, parametro,
+              tipo: 'DiarioObra', laboratorista_name: c.laboratorista_name || '',
+              data: c.data || '', empreiteira: c.empreiteira || '',
+              rodovia: c.rodovia || '', usina: '',
+              _page: 'RelatorioDiario', _ncLocal: nc.local_nc || '',
+            });
+          });
+        }
+      });
 
+      // Outros tipos de registro (approved === false ou campo específico)
       const outrosResults = await Promise.all(
-        OUTROS_TIPOS_REGISTRO.map(t => fetchOutro(t.value, t.label, t.page))
-      );
-
-      outrosResults.flat().forEach(reg => { allCNCs.push(reg); });
-
-      // Buscar NCs explícitas (campo nao_conformidades) em checklists e diário
-      const registrosComNcExplicita = await Promise.all(
-        TIPOS_COM_NC_EXPLICITA.map(t =>
+        OUTROS_TIPOS_REGISTRO.map(t =>
           base44.entities[t.value].list('-created_date', 1000)
-            .catch(err => {
-              console.warn(`⚠️ [${t.value}] Falha ao carregar NCs explícitas:`, err?.message || err);
-              return [];
-            })
+            .catch(() => [])
             .then(res => res
-              .filter(c => availableIds.has(c.obra_id) && Array.isArray(c.nao_conformidades) && c.nao_conformidades.length > 0)
-              .flatMap(c =>
-                c.nao_conformidades.map(nc => ({
-                  id: c.id,
-                  obra_id: c.obra_id,
-                  parametro: [nc.categoria_nc, nc.parametro_nc].filter(Boolean).join(' / ') || nc.descricao || 'NC',
-                  tipo: t.value,
-                  laboratorista_name: c.laboratorista_name || '',
-                  data: c.data || c.data_ensaio || '',
-                  empreiteira: c.empreiteira || '',
-                  rodovia: c.rodovia || '',
-                  usina: c.usina || c.usina_selecionada || '',
-                  _page: t.page,
-                  _ncLocal: nc.local_nc || '',
-                }))
-              )
+              .filter(c => {
+                if (!availableIds.has(c.obra_id)) return false;
+                if (t.value === 'EnsaioManchaPendulo' || t.value === 'EnsaioVigaBenkelman') {
+                  return c.condicao_conformidade === 'NÃO CONFORME';
+                }
+                return c.approved === false;
+              })
+              .map(c => ({
+                id: c.id, obra_id: c.obra_id,
+                parametro: t.label, tipo: t.value,
+                laboratorista_name: c.laboratorista_name || '',
+                data: c.data || c.data_ensaio || c.extraction_date || c.collection_date || '',
+                empreiteira: c.empreiteira || '', rodovia: c.rodovia || '',
+                usina: c.usina || c.usina_fornecedora || c.usina_selecionada || '',
+                _page: t.page,
+              }))
             )
         )
       );
 
-      registrosComNcExplicita.flat().forEach(nc => {
-        // Evitar duplicatas com NCs já extraídas automaticamente (mesmo id + mesmo parametro)
-        const jaExiste = allCNCs.some(existing => existing.id === nc.id && existing.parametro === nc.parametro);
-        if (!jaExiste) allCNCs.push(nc);
-      });
-
+      outrosResults.flat().forEach(reg => { allCNCs.push(reg); });
       setChecklistNCs(allCNCs);
     } catch (error) {
-      console.error("Erro ao carregar dados de NCs:", error);
+      console.error("[NaoConformidades] Erro ao carregar dados:", error?.message || error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
 
   const supervisaoIds = useMemo(() => new Set(obras.filter(o => o.tipo_obra === 'supervisao').map(o => o.id)), [obras]);
 
