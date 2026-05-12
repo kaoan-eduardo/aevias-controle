@@ -37,7 +37,9 @@ export default function RelatorioTaxaMRAF() {
           const users = await base44.entities.User.list();
           const u = users.find(u => u.email === data.created_by);
           setCreatorUser(u || null);
-        } catch (_) {}
+        } catch (e) {
+          console.error("Erro ao carregar usuário criador do ensaio", e);
+        }
       }
     } catch (err) {
       console.error(err);

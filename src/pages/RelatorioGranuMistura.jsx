@@ -76,7 +76,9 @@ export default function RelatorioGranuMistura() {
         try {
           const fxGran = await base44.entities.FaixaGranulometrica.get(rec.faixa);
           setFaixa(fxGran);
-        } catch (_) {}
+        } catch (e) {
+          console.error("Erro ao carregar faixa granulométrica pelo ID", e);
+        }
       }
 
       if (rec.obra_id) {

@@ -298,7 +298,9 @@ export default function EnsaioRompimentoConcretoPage() {
       try {
         const reg = await base44.entities.Regional.get(obra.regional_id);
         clienteNome = reg?.cliente || '';
-      } catch (_) {}
+      } catch (e) {
+        console.error("Erro ao carregar cliente da regional", e);
+      }
     }
     setFormData(prev => ({
       ...prev,
