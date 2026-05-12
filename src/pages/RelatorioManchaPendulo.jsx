@@ -64,6 +64,37 @@ export default function RelatorioManchaPenduloPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <style>{`
+        @media print {
+          html, body {
+            height: auto;
+            margin: 0;
+            padding: 0;
+            background: white !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important;
+          }
+          @page { 
+            size: A4 portrait;
+            margin: 10mm 12mm;
+            orphans: 0;
+            widows: 0;
+          }
+          table {
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+            page-break-inside: avoid !important;
+          }
+          table, thead, tbody, tr, td, th {
+            border: 0.5px solid #1e293b !important;
+            border-collapse: collapse !important;
+          }
+          .print\:hidden { display: none !important; visibility: hidden !important; }
+        }
+      `}</style>
+
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <h2 className="text-lg font-semibold text-slate-800">
