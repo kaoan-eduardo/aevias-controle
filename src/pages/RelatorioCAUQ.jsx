@@ -82,7 +82,7 @@ export default function RelatorioCAUQ() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrint = () => {
     window.print();

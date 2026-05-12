@@ -55,7 +55,7 @@ export default function RelatorioGranuMistura() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadData = async () => { // Async arrow function
     try {

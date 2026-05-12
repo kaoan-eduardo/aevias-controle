@@ -51,7 +51,7 @@ export default function RelatorioDensidadeInSituPage() {
 
   useEffect(() => {
     loadReportData();
-  }, []);
+  }, [loadReportData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePrint = () => {
     window.print();

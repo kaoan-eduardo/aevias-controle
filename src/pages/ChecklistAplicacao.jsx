@@ -380,7 +380,7 @@ export default function ChecklistAplicacaoPage() {
     }
     
     setFormData(prev => ({ ...prev, [field]: value }));
-  }, [obras, projects, faixas, editingChecklist, formData.project_id, allUsers]);
+  }, [obras, projects, faixas, editingChecklist, formData.project_id]);
 
   // Atualiza campo em objeto aninhado de 2 níveis: formData[s1][field]
   const handleNestedChange = useCallback((s1, field, value) => {
