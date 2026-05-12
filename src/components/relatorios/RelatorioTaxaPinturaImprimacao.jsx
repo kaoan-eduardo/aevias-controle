@@ -49,7 +49,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
 
         {/* DADOS DA OBRA Section */}
         <div className="mb-3">
-          <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1">DADOS DA OBRA</div>
+          <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
           <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
             <div>
               <p className="font-bold text-gray-700">CLIENTE:</p>
@@ -94,7 +94,7 @@ export default function RelatorioTaxaPinturaImprimacao({ ensaio, obra, regional 
 
         {/* DADOS DO ENSAIO Section */}
         <div className="mb-2">
-          <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1">DADOS DO ENSAIO</div>
+          <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DO ENSAIO</div>
           
           {/* Serviço */}
           <table className="w-full border-collapse text-[9px] mb-2">
