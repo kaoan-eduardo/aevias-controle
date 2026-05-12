@@ -52,7 +52,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
   const accessLevel = user.access_level || (user.role === 'admin' ? 'admin' : 'user');
   const canApprove = accessLevel !== 'user';
 
-  console.log('[AprovacaoBar] user:', user.email, 'role:', user.role, 'access_level:', user.access_level, 'accessLevel computed:', accessLevel, 'canApprove:', canApprove);
+
 
   const isPending = (record.approved === null || record.approved === undefined) && record.status !== 'rascunho';
   const isApproved = record.approved === true;
@@ -76,6 +76,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
       setRecord(prev => ({ ...prev, approved: true, approver_details: approverDetails }));
       alert('Registro aprovado com sucesso!');
     } catch (err) {
+      console.error('[AprovacaoBar] Erro ao aprovar registro:', err?.message || err);
       alert('Erro ao aprovar registro.');
     } finally {
       setSaving(false);
@@ -100,6 +101,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
       setRejectionReason('');
       alert('Registro reprovado.');
     } catch (err) {
+      console.error('[AprovacaoBar] Erro ao reprovar registro:', err?.message || err);
       alert('Erro ao reprovar registro.');
     } finally {
       setSaving(false);

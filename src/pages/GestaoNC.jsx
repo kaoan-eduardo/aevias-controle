@@ -56,19 +56,24 @@ export default function GestaoNCPage() {
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    const userData = await User.me();
-    setUser(userData);
+    try {
+      const userData = await User.me();
+      setUser(userData);
 
-    const [obrasData, regionaisData, ncsData] = await Promise.all([
-      Obra.list(),
-      Regional.list(),
-      base44.entities.RelatorioNC.list("-created_date", 200)
-    ]);
+      const [obrasData, regionaisData, ncsData] = await Promise.all([
+        Obra.list(),
+        Regional.list(),
+        base44.entities.RelatorioNC.list("-created_date", 200)
+      ]);
 
-    setRegionais(regionaisData);
-    setObras(obrasData);
-    setNcs(ncsData);
-    setLoading(false);
+      setRegionais(regionaisData);
+      setObras(obrasData);
+      setNcs(ncsData);
+    } catch (error) {
+      console.error("[GestaoNC] Erro ao carregar dados:", error?.message || error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
