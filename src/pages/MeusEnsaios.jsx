@@ -368,7 +368,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
             }
           }
         } catch (e) {
-          console.error("Erro ao buscar dados do gestor para aprovação", e);
+          console.error("[MeusEnsaios] Erro ao buscar dados do gestor para aprovação:", e?.message || e);
           // Se falhar, usar os dados do aprovador
         }
       }
@@ -1672,7 +1672,7 @@ export default function MeusEnsaios() {
       alert("Registro aprovado com sucesso!");
       loadData();
     } catch (e) {
-      console.error("Erro ao aprovar ensaio", e);
+      console.error("[MeusEnsaios] Erro ao aprovar ensaio:", e?.message || e);
       alert("Erro ao aprovar ensaio. Tente novamente.");
     }
   }, [user, loadData]);
@@ -1695,7 +1695,7 @@ export default function MeusEnsaios() {
       loadData();
       alert('Registro reprovado com sucesso!');
     } catch (e) {
-      console.error("Erro ao reprovar registro", e);
+      console.error("[MeusEnsaios] Erro ao reprovar registro:", e?.message || e);
       alert('Erro ao reprovar registro. Tente novamente.');
     }
   }, [canApprove, user, loadData]);
@@ -1713,7 +1713,7 @@ export default function MeusEnsaios() {
       loadData();
       alert('Registro excluído com sucesso!');
     } catch (e) {
-      console.error("Erro ao excluir registro", e);
+      console.error("[MeusEnsaios] Erro ao excluir registro:", e?.message || e);
       alert('Erro ao excluir registro. Tente novamente.');
     }
   }, [canApprove, loadData]);

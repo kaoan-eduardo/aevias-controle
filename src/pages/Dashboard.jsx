@@ -112,29 +112,28 @@ export default function Dashboard() {
       const isCliente = userAccessLevel === 'cliente';
       const isEngenheiro = isCliente && userData?.position?.toLowerCase().includes('engenheiro');
 
-      // Carregar dados em paralelo para maior velocidade
-      // Reduzido para 1000 registros (evita carregar dados em excesso)
+      // Dashboard exibe dados dos últimos 6 meses — 200 registros por entidade é suficiente
       const loadPromises = [
-        base44.entities.Obra.list("-created_date", 1000),
-        base44.entities.Project.list("-created_date", 1000),
-        base44.entities.EnsaioCAUQ.list("-created_date", 1000),
-        base44.entities.EnsaioDensidade.list("-created_date", 1000),
-        base44.entities.DiarioObra.list("-created_date", 1000),
-        base44.entities.ChecklistUsina.list("-created_date", 1000),
-        base44.entities.ChecklistAplicacao.list("-created_date", 1000),
-        base44.entities.ChecklistMRAF.list("-created_date", 1000),
-        base44.entities.ChecklistConcretagem.list("-created_date", 1000),
-        base44.entities.ChecklistTerraplanagem.list("-created_date", 1000),
-        base44.entities.ChecklistReciclagem.list("-created_date", 1000),
-        base44.entities.EnsaioMRAF.list("-created_date", 1000),
-        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 1000),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 1000),
-        base44.entities.EnsaioSondagem.list("-created_date", 1000),
-        base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 1000),
-        base44.entities.AcompanhamentoUsinagem.list("-created_date", 1000),
-        base44.entities.AcompanhamentoCarga.list("-created_date", 1000),
-        base44.entities.EnsaioManchaPendulo.list("-created_date", 1000),
-        base44.entities.EnsaioVigaBenkelman.list("-created_date", 1000),
+        base44.entities.Obra.list("-created_date", 200),
+        base44.entities.Project.list("-created_date", 200),
+        base44.entities.EnsaioCAUQ.list("-created_date", 200),
+        base44.entities.EnsaioDensidade.list("-created_date", 200),
+        base44.entities.DiarioObra.list("-created_date", 200),
+        base44.entities.ChecklistUsina.list("-created_date", 200),
+        base44.entities.ChecklistAplicacao.list("-created_date", 200),
+        base44.entities.ChecklistMRAF.list("-created_date", 200),
+        base44.entities.ChecklistConcretagem.list("-created_date", 200),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 200),
+        base44.entities.ChecklistReciclagem.list("-created_date", 200),
+        base44.entities.EnsaioMRAF.list("-created_date", 200),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 200),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 200),
+        base44.entities.EnsaioSondagem.list("-created_date", 200),
+        base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 200),
+        base44.entities.AcompanhamentoUsinagem.list("-created_date", 200),
+        base44.entities.AcompanhamentoCarga.list("-created_date", 200),
+        base44.entities.EnsaioManchaPendulo.list("-created_date", 200),
+        base44.entities.EnsaioVigaBenkelman.list("-created_date", 200),
       ];
 
       // Adicionar regionais e transferências apenas para clientes, gestores e salas técnicas
