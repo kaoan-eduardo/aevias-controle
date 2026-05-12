@@ -132,7 +132,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
           
           @page {
             size: A4 landscape;
-            margin: 8mm 8mm;
+            margin: 5mm 5mm;
           }
                     
           .max-w-\\[297mm\\], .max-w-\\[297mm\\] * {
