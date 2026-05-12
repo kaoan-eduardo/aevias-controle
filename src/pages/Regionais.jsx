@@ -418,7 +418,7 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
       setEditingObra(null);
       onObraAdded();
     } catch (error) {
-      console.error("Erro ao salvar obra:", error);
+      console.error("[Regionais] Erro ao salvar obra:", error?.message || error);
       alert(`Erro ao salvar obra: ${error.message}`);
     }
   }, [editingObra, regional.id, onObraAdded]);
@@ -429,7 +429,7 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
         await Obra.delete(obraId);
         onObraAdded();
       } catch (error) {
-        console.error("Erro ao excluir obra:", error);
+        console.error("[Regionais] Erro ao excluir obra:", error?.message || error);
         alert("Erro ao excluir obra.");
       }
     }
@@ -727,7 +727,7 @@ export default function RegionaisPage() {
         try {
           usersData = await User.list();
         } catch (e) {
-          console.error('Sem permissão para listar usuários', e);
+          console.error('[Regionais] Sem permissão para listar usuários:', e?.message || e);
         }
       }
 
@@ -759,7 +759,7 @@ export default function RegionaisPage() {
       setUsers(usersData);
       setProjects(projectsData);
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[Regionais] Erro ao carregar dados:", error?.message || error);
     } finally {
       setLoading(false);
     }
@@ -780,7 +780,7 @@ export default function RegionaisPage() {
       setEditingRegional(null);
       loadData();
     } catch (error) {
-      console.error("Erro ao salvar regional:", error);
+      console.error("[Regionais] Erro ao salvar regional:", error?.message || error);
       alert("Erro ao salvar regional.");
     }
   }, [editingRegional, loadData]);
@@ -796,7 +796,7 @@ export default function RegionaisPage() {
         await Regional.delete(id);
         loadData();
       } catch (error) {
-        console.error("Erro ao excluir regional:", error);
+        console.error("[Regionais] Erro ao excluir regional:", error?.message || error);
         alert("Erro ao excluir regional.");
       }
     }

@@ -81,30 +81,30 @@ export default function ProdutividadePage() {
         boletinsSondagem, boletinsSondagemTrado,
         produtividadeDiaria
       ] = await Promise.all([
-        base44.entities.DiarioObra.list(),
-        base44.entities.ChecklistUsina.list(),
-        base44.entities.ChecklistAplicacao.list(),
-        base44.entities.ChecklistMRAF.list(),
-        base44.entities.ChecklistConcretagem.list(),
-        base44.entities.ChecklistTerraplanagem.list(),
-        base44.entities.ChecklistReciclagem.list(),
-        base44.entities.EnsaioCAUQ.list(),
-        base44.entities.EnsaioDensidade.list(),
-        base44.entities.EnsaioDensidadeInSitu.list(),
-        base44.entities.EnsaioSondagem.list(),
-        base44.entities.EnsaioTaxaPinturaImprimacao.list(),
-        base44.entities.AcompanhamentoCarga.list(),
-        base44.entities.EnsaioMRAF.list(),
-        base44.entities.EnsaioManchaPendulo.list(),
-        base44.entities.EnsaioVigaBenkelman.list(),
-        base44.entities.EnsaioTaxaMRAF.list(),
-        base44.entities.AcompanhamentoUsinagem.list(),
-        base44.entities.EnsaioGranulometriaIndividual.list(),
-        base44.entities.GranuMistura.list(),
-        base44.entities.EnsaioProctor.list(),
-        base44.entities.EnsaioRompimentoConcreto.list(),
-        base44.entities.BoletimSondagem.list(),
-        base44.entities.BoletimSondagemTrado.list(),
+        base44.entities.DiarioObra.list("-created_date", 500),
+        base44.entities.ChecklistUsina.list("-created_date", 500),
+        base44.entities.ChecklistAplicacao.list("-created_date", 500),
+        base44.entities.ChecklistMRAF.list("-created_date", 500),
+        base44.entities.ChecklistConcretagem.list("-created_date", 500),
+        base44.entities.ChecklistTerraplanagem.list("-created_date", 500),
+        base44.entities.ChecklistReciclagem.list("-created_date", 500),
+        base44.entities.EnsaioCAUQ.list("-created_date", 500),
+        base44.entities.EnsaioDensidade.list("-created_date", 500),
+        base44.entities.EnsaioDensidadeInSitu.list("-created_date", 500),
+        base44.entities.EnsaioSondagem.list("-created_date", 500),
+        base44.entities.EnsaioTaxaPinturaImprimacao.list("-created_date", 500),
+        base44.entities.AcompanhamentoCarga.list("-created_date", 500),
+        base44.entities.EnsaioMRAF.list("-created_date", 500),
+        base44.entities.EnsaioManchaPendulo.list("-created_date", 500),
+        base44.entities.EnsaioVigaBenkelman.list("-created_date", 500),
+        base44.entities.EnsaioTaxaMRAF.list("-created_date", 500),
+        base44.entities.AcompanhamentoUsinagem.list("-created_date", 500),
+        base44.entities.EnsaioGranulometriaIndividual.list("-created_date", 500),
+        base44.entities.GranuMistura.list("-created_date", 500),
+        base44.entities.EnsaioProctor.list("-created_date", 500),
+        base44.entities.EnsaioRompimentoConcreto.list("-created_date", 500),
+        base44.entities.BoletimSondagem.list("-created_date", 500),
+        base44.entities.BoletimSondagemTrado.list("-created_date", 500),
         base44.entities.ProdutividadeDiaria.list()
       ]);
 
@@ -362,7 +362,7 @@ export default function ProdutividadePage() {
       setCacheDias({});
       alert("Dados salvos com sucesso!");
     } catch (error) {
-      console.error("Erro ao salvar cache:", error);
+      console.error("[Produtividade] Erro ao salvar marcadores:", error?.message || error);
       alert("Erro ao salvar dados");
     }
   };
