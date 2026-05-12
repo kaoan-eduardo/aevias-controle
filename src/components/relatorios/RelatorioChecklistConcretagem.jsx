@@ -220,7 +220,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             canvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
             
-            compressed.push(canvas.toDataURL('image/jpeg', 0.5));
+            compressed.push(canvas.toDataURL('image/jpeg', 0.75));
             break;
           } catch (error) {
             attempts++;
@@ -291,35 +291,37 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
       <style>{`
         @media print {
           body, html { 
-          margin: 0; 
-          padding: 0;
-          background: white; !important;
-          color-adjust: exact;
-          print-color-adjust: exact;
-          -webkit-print-color-adjust: exact; 
+            margin: 0; 
+            padding: 0;
+            background: white !important;
+            color-adjust: exact;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact; 
           }
 
           .print-page { 
-          width: 210mm; 
-          height: 297mm;
-          margin: 0;
-          padding: 10mm;
-          box-sizing: border-box;
-          page-break-after: always;
-          page-break-inside: avoid;
+            width: 210mm; 
+            height: auto;
+            margin: 0;
+            padding: 10mm;
+            box-sizing: border-box;
+            page-break-after: always;
           }
 
-          img{
-          max-width: 100%;
-          height: auto;
-          page-break-inside: avoid;
+          img {
+            max-width: 100%;
+            height: auto;
           }
 
-          table{
-          page-break-inside: avoid;
+          table {
+            width: 100%;
+            page-break-inside: avoid;
+          }
+
+          .CargaContent {
+            page-break-inside: avoid;
           }
         }
-
       `}</style>
 
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
