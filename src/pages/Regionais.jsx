@@ -726,8 +726,8 @@ export default function RegionaisPage() {
       if (currentUserAccessLevel !== 'user') {
         try {
           usersData = await User.list();
-        } catch (error) {
-          console.warn('Sem permissão para listar usuários:', error);
+        } catch (e) {
+          console.error('Sem permissão para listar usuários', e);
         }
       }
 
