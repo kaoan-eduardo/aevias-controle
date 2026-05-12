@@ -19,11 +19,8 @@ export default function MonitorProdutividade() {
   const [gestoresData, setGestoresData] = useState([]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadData = async () => {
-    setLoading(true);
+    const loadData = async () => {
+      setLoading(true);
     try {
       const user = await User.me();
       setCurrentUser(user);
@@ -139,7 +136,10 @@ export default function MonitorProdutividade() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+
+    loadData();
+  }, []);
 
   if (loading) {
     return (

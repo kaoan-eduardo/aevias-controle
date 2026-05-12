@@ -16,43 +16,43 @@ export default function RelatorioAcompanhamentoUsinagemPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadData = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const ensaioId = params.get('id');
 
-  const loadData = async () => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const ensaioId = params.get('id');
-
-      if (!ensaioId) {
-        setError("ID do ensaio não fornecido");
-        return;
-      }
-
-      const ensaioData = await base44.entities.AcompanhamentoUsinagem.get(ensaioId);
-      setEnsaio(ensaioData);
-
-      if (ensaioData.obra_id) {
-        const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
-        setObra(obraData);
-
-        if (obraData.regional_id) {
-          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-          setRegional(regionalData);
+        if (!ensaioId) {
+          setError("ID do ensaio não fornecido");
+          return;
         }
-      }
 
-      if (ensaioData.project_id) {
-        const projectData = await base44.entities.Project.get(ensaioData.project_id);
-        setProject(projectData);
+        const ensaioData = await base44.entities.AcompanhamentoUsinagem.get(ensaioId);
+        setEnsaio(ensaioData);
+
+        if (ensaioData.obra_id) {
+          const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
+          setObra(obraData);
+
+          if (obraData.regional_id) {
+            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(regionalData);
+          }
+        }
+
+        if (ensaioData.project_id) {
+          const projectData = await base44.entities.Project.get(ensaioData.project_id);
+          setProject(projectData);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        setError("Erro ao carregar dados do relatório");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      setError("Erro ao carregar dados do relatório");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadData();
+  }, []);
 
   if (loading) {
     return (

@@ -7,19 +7,18 @@ import { useEffect } from 'react';
  */
 export function useReportMode() {
   useEffect(() => {
-    // classList read/write only — values are hardcoded string 'dark', never user-supplied or injected into HTML
-    const htmlClassList = document.documentElement.classList; // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context,javascript.browser.dom.xss.dom-text-query-selector,javascript.browser.dom.xss.dom-text-query-selector-in-sink
-    const bodyClassList = document.body.classList;
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
 
-    const wasHtmlDark = htmlClassList.contains('dark'); // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context,javascript.browser.dom.xss.dom-text-query-selector
-    const wasBodyDark = bodyClassList.contains('dark');
+    const wasHtmlDark = htmlEl.classList.contains('dark');
+    const wasBodyDark = bodyEl.classList.contains('dark');
 
-    htmlClassList.remove('dark');
-    bodyClassList.remove('dark');
+    htmlEl.classList.remove('dark');
+    bodyEl.classList.remove('dark');
 
     return () => {
-      if (wasHtmlDark) htmlClassList.add('dark');
-      if (wasBodyDark) bodyClassList.add('dark');
+      if (wasHtmlDark) htmlEl.classList.add('dark');
+      if (wasBodyDark) bodyEl.classList.add('dark');
     };
   }, []);
 }

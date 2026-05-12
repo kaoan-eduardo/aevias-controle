@@ -19,45 +19,36 @@ export default function RelatorioVigaBenkelman() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('useEffect rodou, id:', id);
-    loadEnsaio();
-  }, [id, loadEnsaio]); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadEnsaio = async () => {
+      try {
+        if (id) {
+          const data = await base44.entities.EnsaioVigaBenkelman.get(id);
 
-  const loadEnsaio = async () => {
-     try {
-       if (id) {
-         console.log('Carregando ID:', id);
-         const data = await base44.entities.EnsaioVigaBenkelman.get(id);
-         console.log('Dados completos recebidos:', JSON.stringify(data, null, 2));
-         console.log('Levantamentos:', data.levantamentos);
-         console.log('Tipo:', typeof data.levantamentos);
-         console.log('É array?', Array.isArray(data.levantamentos));
-         console.log('Comprimento:', data.levantamentos?.length || 0);
+          if (!data.levantamentos || !Array.isArray(data.levantamentos)) {
+            data.levantamentos = [];
+          }
 
-         // Se levantamentos não existir, inicializar como array
-         if (!data.levantamentos || !Array.isArray(data.levantamentos)) {
-           data.levantamentos = [];
-         }
+          setEnsaio(data);
 
-         setEnsaio(data);
+          if (data.obra_id) {
+            const obraData = await base44.entities.Obra.get(data.obra_id);
+            setObra(obraData);
 
-        // Carregar obra e regional
-        if (data.obra_id) {
-          const obraData = await base44.entities.Obra.get(data.obra_id);
-          setObra(obraData);
-
-          if (obraData.regional_id) {
-            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-            setRegional(regionalData);
+            if (obraData.regional_id) {
+              const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+              setRegional(regionalData);
+            }
           }
         }
+      } catch (error) {
+        console.error('Erro ao carregar ensaio:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Erro ao carregar ensaio:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadEnsaio();
+  }, [id]);
 
   if (loading) {
     return (

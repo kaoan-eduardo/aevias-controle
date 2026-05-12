@@ -16,39 +16,39 @@ export default function RelatorioTaxaPinturaImprimacaoPage() {
   const location = useLocation();
 
   useEffect(() => {
-    loadData();
-  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams(location.search);
+        const ensaioId = params.get('id');
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams(location.search);
-      const ensaioId = params.get('id');
-
-      if (!ensaioId) {
-        alert("ID do ensaio não fornecido.");
-        return;
-      }
-
-      const ensaioData = await base44.entities.EnsaioTaxaPinturaImprimacao.get(ensaioId);
-      setEnsaio(ensaioData);
-
-      if (ensaioData.obra_id) {
-        const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
-        setObra(obraData);
-
-        if (obraData.regional_id) {
-          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-          setRegional(regionalData);
+        if (!ensaioId) {
+          alert("ID do ensaio não fornecido.");
+          return;
         }
+
+        const ensaioData = await base44.entities.EnsaioTaxaPinturaImprimacao.get(ensaioId);
+        setEnsaio(ensaioData);
+
+        if (ensaioData.obra_id) {
+          const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
+          setObra(obraData);
+
+          if (obraData.regional_id) {
+            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(regionalData);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do relatório:", error);
+        alert("Erro ao carregar dados do relatório.");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Erro ao carregar dados do relatório:", error);
-      alert("Erro ao carregar dados do relatório.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadData();
+  }, [location.search]);
 
   const handlePrint = () => {
     window.print();

@@ -19,7 +19,7 @@ export default function AprovacaoBar({ entityName, recordId }) {
 
   useEffect(() => {
     loadUser();
-  }, [loadUser]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (entityName && recordId) {

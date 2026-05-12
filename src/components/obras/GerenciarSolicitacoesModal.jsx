@@ -210,12 +210,6 @@ export default function GerenciarSolicitacoesModal({ isOpen, onClose, user, onUp
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState("pendente");
 
-  useEffect(() => {
-    if (isOpen) {
-      loadSolicitacoes();
-    }
-  }, [isOpen, loadSolicitacoes]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const loadSolicitacoes = async () => {
     setLoading(true);
     try {
@@ -227,6 +221,10 @@ export default function GerenciarSolicitacoesModal({ isOpen, onClose, user, onUp
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isOpen) loadSolicitacoes();
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAprovar = async (solicitacao) => {
     try {

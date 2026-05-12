@@ -70,11 +70,8 @@ export default function EnsaioDensidadeInSituPage() {
   const isEditable = !isApproved;
 
   useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadInitialData = async () => {
-    setLoading(true);
+    const loadInitialData = async () => {
+      setLoading(true);
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
@@ -160,7 +157,10 @@ export default function EnsaioDensidadeInSituPage() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+
+    loadInitialData();
+  }, []);
 
   const calcularFuro = useCallback((furo, densidadeAreia, pesoAreiaFunil, substituicao_retido_3_4, densidade_real_retida_3_4) => {
     const novoFuro = { ...furo };

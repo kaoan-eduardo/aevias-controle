@@ -98,36 +98,36 @@ export default function EnsaioManchaPendulo() {
   const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadInitialData = async () => {
+      try {
+        const [userData, obrasData, regionaisData] = await Promise.all([
+          base44.auth.me(),
+          base44.entities.Obra.list(),
+          base44.entities.Regional.list()
+        ]);
 
-  const loadInitialData = async () => {
-    try {
-      const [userData, obrasData, regionaisData] = await Promise.all([
-        base44.auth.me(),
-        base44.entities.Obra.list(),
-        base44.entities.Regional.list()
-      ]);
+        setUser(userData);
+        setObras(obrasData);
+        setRegionais(regionaisData);
 
-      setUser(userData);
-      setObras(obrasData);
-      setRegionais(regionaisData);
-
-      if (isEditMode) {
-        const ensaio = await base44.entities.EnsaioManchaPendulo.get(editId);
-        setFormData(ensaio);
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          laboratorista_name: userData.laboratorista_name || userData.full_name
-        }));
+        if (isEditMode) {
+          const ensaio = await base44.entities.EnsaioManchaPendulo.get(editId);
+          setFormData(ensaio);
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            laboratorista_name: userData.laboratorista_name || userData.full_name
+          }));
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadInitialData();
+  }, [isEditMode, editId]);
 
   const handleInputChange = (field, value) => {
     if (field === 'orgao') {

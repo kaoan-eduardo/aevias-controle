@@ -246,7 +246,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
   useEffect(() => {
     if (!obraProp) loadRelatedData();
-  }, [checklist, obraProp, loadRelatedData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [checklist, obraProp]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const compressImages = async () => {
@@ -331,7 +331,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
     compressImages();
   }, [checklist?.fotos]);
 
-  const loadRelatedData = async () => { // eslint-disable-line
+  const loadRelatedData = async () => {
     try {
       if (checklist.obra_id) {
         const obraData = await base44.entities.Obra.get(checklist.obra_id);

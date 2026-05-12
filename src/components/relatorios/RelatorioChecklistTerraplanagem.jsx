@@ -84,7 +84,7 @@ export default function RelatorioChecklistTerraplanagem({ checklist, creatorUser
 
   useEffect(() => {
     if (!obraProp) loadRelatedData();
-  }, [checklist, loadRelatedData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [checklist, obraProp]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const compressImages = async () => {

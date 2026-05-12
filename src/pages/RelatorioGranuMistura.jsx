@@ -55,46 +55,48 @@ export default function RelatorioGranuMistura() {
 
   useReportMode();
 
-  useEffect(() => { loadData(); }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const id = new URLSearchParams(window.location.search).get('id');
+        if (!id) { setError("ID não fornecido"); setLoading(false); return; }
 
-  const loadData = async () => { // Async arrow function
-    try {
-      const id = new URLSearchParams(window.location.search).get('id');
-      if (!id) { setError("ID não fornecido"); setLoading(false); return; }
+        const rec = await base44.entities.GranuMistura.get(id);
+        setRecord(rec);
 
-      const rec = await base44.entities.GranuMistura.get(id);
-      setRecord(rec);
-
-      if (rec.numero_projeto) {
-        const proj = await base44.entities.Project.get(rec.numero_projeto);
-        setProject(proj);
-        if (proj.faixa_granulometrica_id) {
-          const fxGran = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
-          setFaixa(fxGran);
+        if (rec.numero_projeto) {
+          const proj = await base44.entities.Project.get(rec.numero_projeto);
+          setProject(proj);
+          if (proj.faixa_granulometrica_id) {
+            const fxGran = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
+            setFaixa(fxGran);
+          }
+        } else if (rec.faixa) {
+          try {
+            const fxGran = await base44.entities.FaixaGranulometrica.get(rec.faixa);
+            setFaixa(fxGran);
+          } catch (e) {
+            console.error("Erro ao carregar faixa granulométrica pelo ID", e);
+          }
         }
-      } else if (rec.faixa) {
-        try {
-          const fxGran = await base44.entities.FaixaGranulometrica.get(rec.faixa);
-          setFaixa(fxGran);
-        } catch (e) {
-          console.error("Erro ao carregar faixa granulométrica pelo ID", e);
+
+        if (rec.obra_id) {
+          const obraData = await base44.entities.Obra.get(rec.obra_id);
+          setObra(obraData);
+          if (obraData.regional_id) {
+            const reg = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(reg);
+          }
         }
+      } catch (err) {
+        setError("Erro ao carregar: " + err.message);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      if (rec.obra_id) {
-        const obraData = await base44.entities.Obra.get(rec.obra_id);
-        setObra(obraData);
-        if (obraData.regional_id) {
-          const reg = await base44.entities.Regional.get(obraData.regional_id);
-          setRegional(reg);
-        }
-      }
-    } catch (err) {
-      setError("Erro ao carregar: " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    loadData();
+  }, []);
 
   if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin text-slate-500" /></div>;
   if (error || !record) return <div className="flex justify-center items-center h-screen text-red-600">{error || "Erro ao carregar"}</div>;

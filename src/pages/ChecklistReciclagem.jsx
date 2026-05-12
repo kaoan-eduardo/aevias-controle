@@ -192,11 +192,8 @@ export default function ChecklistReciclagem() {
   const { clearSavedData } = useFormPersistence('checklist_reciclagem', formData, setFormData, !!editingChecklist);
 
   useEffect(() => {
-    loadInitialData();
-  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadInitialData = async () => {
-    setLoading(true);
+    const loadInitialData = async () => {
+      setLoading(true);
     try {
       const [userData, obrasData, projectsData, regionaisData, faixasData] = await Promise.all([
         base44.auth.me(),
@@ -277,7 +274,10 @@ export default function ChecklistReciclagem() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+
+    loadInitialData();
+  }, []);
 
   const handleCheckboxChange = (section, field, option) => {
     setFormData(prev => ({

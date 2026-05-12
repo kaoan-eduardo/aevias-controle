@@ -11,38 +11,37 @@ export default function RelatorioGranuMistura({ recordId }) {
   const [obra, setObra] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    loadData();
-  }, [recordId, loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadData = async () => {
+      try {
+        const rec = await base44.entities.GranuMistura.get(recordId);
+        setRecord(rec);
 
-  const loadData = async () => {
-    try {
-      const rec = await base44.entities.GranuMistura.get(recordId);
-      setRecord(rec);
-
-      if (rec.numero_projeto) {
-        const proj = await base44.entities.Project.get(rec.numero_projeto);
-        setProject(proj);
-        if (proj.faixa_granulometrica_id) {
-          const fxGran = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
+        if (rec.numero_projeto) {
+          const proj = await base44.entities.Project.get(rec.numero_projeto);
+          setProject(proj);
+          if (proj.faixa_granulometrica_id) {
+            const fxGran = await base44.entities.FaixaGranulometrica.get(proj.faixa_granulometrica_id);
+            setFaixa(fxGran);
+          }
+        } else if (rec.faixa) {
+          const fxGran = await base44.entities.FaixaGranulometrica.get(rec.faixa);
           setFaixa(fxGran);
         }
-      } else if (rec.faixa) {
-        const fxGran = await base44.entities.FaixaGranulometrica.get(rec.faixa);
-        setFaixa(fxGran);
-      }
 
-      if (rec.obra_id) {
-        const obraData = await base44.entities.Obra.get(rec.obra_id);
-        setObra(obraData);
+        if (rec.obra_id) {
+          const obraData = await base44.entities.Obra.get(rec.obra_id);
+          setObra(obraData);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    loadData();
+  }, [recordId]);
 
   if (loading || !record) return <div className="p-6">Carregando...</div>;
 
