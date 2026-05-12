@@ -318,8 +318,6 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           table{
           page-break-inside: avoid;
           }
-
-
         }
 
       `}</style>
