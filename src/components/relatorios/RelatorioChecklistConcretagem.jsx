@@ -296,6 +296,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           body, html { 
+            width: 210mm;
+            height: 297mm;
             background: white !important;
             color-adjust: exact;
             print-color-adjust: exact;
@@ -303,18 +305,17 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           @page {
-            size: A4;
+            size: 210mm 297mm;
             margin: 0;
           }
 
           .print-page { 
-            width: 210mm; 
-            height: 297mm;
+            width: 100%;
+            min-height: 297mm;
             margin: 0;
-            padding: 10mm;
+            padding: 8mm;
             box-sizing: border-box;
             page-break-after: always;
-            overflow: hidden;
           }
 
           img {
