@@ -162,49 +162,49 @@ export default function EnsaioProctorPage() {
     status: "rascunho",
   });
 
-  const loadInitialData = async () => {
-    try {
-      const userData = await User.me();
-      setForm(prev => ({ ...prev, laboratorista_name: userData.laboratorista_name || userData.full_name }));
-
-      // Busca paralela para reduzir chamadas e evitar rate limit
-      const [obrasData, regionaisData, recordData] = await Promise.all([
-        Obra.list(),
-        base44.entities.Regional.list(),
-        recordId ? base44.entities.EnsaioProctor.get(recordId) : Promise.resolve(null),
-      ]);
-
-      // Filtra obras pela regional onde o laboratorista está cadastrado
-      const regionaisDoLab = regionaisData.filter(r =>
-        (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
-      );
-      const regionalIds = regionaisDoLab.map(r => r.id);
-
-      // Admin/sala técnica/gestor veem todas as obras; laboratorista só vê as da sua regional
-      const isLabUser = !userData.role || userData.role === 'user';
-      const filteredObras = isLabUser
-        ? obrasData.filter(o => regionalIds.includes(o.regional_id))
-        : obrasData;
-
-      setObras(filteredObras);
-
-      if (recordData) {
-        setForm(recordData);
-        if (recordData.project_id) {
-          const projectData = await base44.entities.Project.get(recordData.project_id);
-          setProjetos([projectData]);
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao carregar dados:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const userData = await User.me();
+        setForm(prev => ({ ...prev, laboratorista_name: userData.laboratorista_name || userData.full_name }));
+
+        // Busca paralela para reduzir chamadas e evitar rate limit
+        const [obrasData, regionaisData, recordData] = await Promise.all([
+          Obra.list(),
+          base44.entities.Regional.list(),
+          recordId ? base44.entities.EnsaioProctor.get(recordId) : Promise.resolve(null),
+        ]);
+
+        // Filtra obras pela regional onde o laboratorista está cadastrado
+        const regionaisDoLab = regionaisData.filter(r =>
+          (r.laboratoristas_responsaveis || []).some(email => email.toLowerCase() === userData.email.toLowerCase())
+        );
+        const regionalIds = regionaisDoLab.map(r => r.id);
+
+        // Admin/sala técnica/gestor veem todas as obras; laboratorista só vê as da sua regional
+        const isLabUser = !userData.role || userData.role === 'user';
+        const filteredObras = isLabUser
+          ? obrasData.filter(o => regionalIds.includes(o.regional_id))
+          : obrasData;
+
+        setObras(filteredObras);
+
+        if (recordData) {
+          setForm(recordData);
+          if (recordData.project_id) {
+            const projectData = await base44.entities.Project.get(recordData.project_id);
+            setProjetos([projectData]);
+          }
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadInitialData();
-  }, []);
+  }, [recordId]);
 
   const handleObraChange = async (id) => {
     const obra = obras.find(o => o.id === id);

@@ -49,59 +49,59 @@ export default function AcompanhamentoCarga() {
 
   const { clearSavedData } = useFormPersistence('acompanhamento_carga_form', formData, setFormData, editMode);
 
-  const loadInitialData = async () => {
-    setLoading(true);
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const editIdParam = urlParams.get('editId');
-
-      const [userData, obrasData, regionaisData, projectsData] = await Promise.all([
-        User.me(),
-        Obra.list(),
-        Regional.list(),
-        Project.list()
-      ]);
-
-      setUser(userData);
-      setObras(obrasData.filter(o => 
-        o.tipo_obra === 'conservacao' || o.tipo_obra === 'implantacao'
-      ));
-      setRegionais(regionaisData);
-      setProjects(projectsData);
-
-      if (editIdParam) {
-        const ensaioData = await base44.entities.AcompanhamentoCarga.get(editIdParam);
-        setFormData(ensaioData);
-        setEditMode(true);
-        setEditId(editIdParam);
-        
-        const obraRelacionada = obrasData.find(o => o.id === ensaioData.obra_id);
-        if (obraRelacionada) {
-          const regionalRelacionada = regionaisData.find(r => r.id === obraRelacionada.regional_id);
-          if (regionalRelacionada) {
-            const projectsFiltered = projectsData.filter(p => 
-              regionalRelacionada.project_ids?.includes(p.id)
-            );
-            setAvailableProjects(projectsFiltered);
-          }
-        }
-      } else {
-        setFormData({
-          ...getInitialFormData(),
-          laboratorista_name: userData.laboratorista_name || userData.full_name || ""
-        });
-      }
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      alert("Erro ao carregar dados iniciais.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadInitialData = async () => {
+      setLoading(true);
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const editIdParam = urlParams.get('editId');
+
+        const [userData, obrasData, regionaisData, projectsData] = await Promise.all([
+          User.me(),
+          Obra.list(),
+          Regional.list(),
+          Project.list()
+        ]);
+
+        setUser(userData);
+        setObras(obrasData.filter(o => 
+          o.tipo_obra === 'conservacao' || o.tipo_obra === 'implantacao'
+        ));
+        setRegionais(regionaisData);
+        setProjects(projectsData);
+
+        if (editIdParam) {
+          const ensaioData = await base44.entities.AcompanhamentoCarga.get(editIdParam);
+          setFormData(ensaioData);
+          setEditMode(true);
+          setEditId(editIdParam);
+          
+          const obraRelacionada = obrasData.find(o => o.id === ensaioData.obra_id);
+          if (obraRelacionada) {
+            const regionalRelacionada = regionaisData.find(r => r.id === obraRelacionada.regional_id);
+            if (regionalRelacionada) {
+              const projectsFiltered = projectsData.filter(p => 
+                regionalRelacionada.project_ids?.includes(p.id)
+              );
+              setAvailableProjects(projectsFiltered);
+            }
+          }
+        } else {
+          setFormData({
+            ...getInitialFormData(),
+            laboratorista_name: userData.laboratorista_name || userData.full_name || ""
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        alert("Erro ao carregar dados iniciais.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadInitialData();
-  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleObraChange = (obraId) => {
     const obra = obras.find(o => o.id === obraId);
