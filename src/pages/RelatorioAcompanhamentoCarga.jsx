@@ -120,11 +120,10 @@ export default function RelatorioAcompanhamentoCargaPage() {
       <style>{`
         @media print {
           html, body {
-            height: auto%;
+            height: auto;
             margin: 0;
             padding: 0;
             background: white !important;
-            overflow-x: hidden !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
             -webkit-print-color-adjust: exact !important;
@@ -132,7 +131,9 @@ export default function RelatorioAcompanhamentoCargaPage() {
           
           @page {
             size: A4 landscape;
-            margin 6mm 6mm;
+            margin: 6mm 6mm;
+            orphans: 0;
+            widows: 0;
           }
                     
           .max-w-\\[297mm\\], .max-w-\\[297mm\\] * {
@@ -145,12 +146,14 @@ export default function RelatorioAcompanhamentoCargaPage() {
             margin: 0 !important;
             box-shadow: none !important;
             background: white !important;
+            page-break-inside: avoid !important;
           }
           
           table {
             width: 100% !important;
             max-width: 100% !important;
             table-layout: fixed !important;
+            page-break-inside: avoid !important;
           }
           
           .overflow-x-auto {
@@ -158,12 +161,12 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           table, thead, tbody, tr, td, th {
-          border: 0.5px solid #cbd5e1 !important;
-          border-collapse: collapse !important;
+            border: 0.5px solid #cbd5e1 !important;
+            border-collapse: collapse !important;
           }
 
           tbody tr:last-child td {
-          border-bottom: 0.5px solid #cbd5e1 !important;
+            border-bottom: 0.5px solid #cbd5e1 !important;
           }
 
           .print\\:hidden {
