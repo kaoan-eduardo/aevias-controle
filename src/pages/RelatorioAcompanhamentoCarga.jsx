@@ -140,9 +140,6 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           .max-w-\\[297mm\\] {
-            position: absolute;
-            left: 0;
-            top: 0;
             width: 100%;
             max-width: 100% !important;
             margin: 0 !important;
