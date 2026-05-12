@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +20,7 @@ export default function ProdutividadePage() {
   const [diaDialog, setDiaDialog] = useState({ open: false, laborista: null, dia: null });
   const [cacheDias, setCacheDias] = useState({});
 
-  useEffect(() => {
-    loadData();
-  }, [currentMonth]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const currentUser = await base44.auth.me();
@@ -240,11 +236,15 @@ export default function ProdutividadePage() {
       window.marcadoresDia = marcadoresDia;
 
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[Produtividade] Erro ao carregar dados:", error?.message || error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentMonth]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   function getDaysInMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -298,24 +298,21 @@ export default function ProdutividadePage() {
     setEditDialog({ open: true, registro });
   };
 
-  const handleSaveEmpreiteiraOuUsina = async (novoValor, tipo) => {
+  const handleSaveEmpreiteiraOuUsina = useCallback(async (novoValor, tipo) => {
     if (!editDialog.registro) return;
-    
     try {
       const entityName = editDialog.registro.entityName;
-      const updateData = tipo === 'empreiteira' 
+      const updateData = tipo === 'empreiteira'
         ? { empreiteira: novoValor }
         : { usina_selecionada: novoValor, usina: novoValor };
-      
       await base44.entities[entityName].update(editDialog.registro.id, updateData);
-      
       setEditDialog({ open: false, registro: null });
       await loadData();
     } catch (error) {
-      console.error("Erro ao salvar:", error);
+      console.error("[Produtividade] Erro ao salvar:", error?.message || error);
       alert("Erro ao salvar");
     }
-  };
+  }, [editDialog.registro, loadData]);
 
   const handleSaveDiaStatus = (status) => {
     if (!diaDialog.laborista || !diaDialog.dia) return;

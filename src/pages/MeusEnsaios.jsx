@@ -228,17 +228,10 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
-  const [filteredEnsaios, setFilteredEnsaios] = useState([]);
-  const [selectedEnsaio, setSelectedEnsaio] = useState(null);
-  const [isRejectModalOpen, setIsRejectModalOpen] = useState(null);
-
-
   const isAdminView = user?.access_level === 'admin' || user?.access_level === 'sala_tecnica_afirmaevias' || user?.access_level === 'gestor_contrato';
   const isSalaTecnica = user?.access_level === 'sala_tecnica_afirmaevias';
   const isGestorContrato = user?.access_level === 'gestor_contrato';
   const isCliente = user?.access_level === 'cliente';
-
-
 
   const toggleSortOrder = useCallback(() => {
     setSortOrder((prev) => {
@@ -248,7 +241,7 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
     });
   }, []);
 
-  useEffect(() => {
+  const filteredEnsaios = useMemo(() => {
     let filtered = ensaios;
 
     if (nomeFilter) {
@@ -257,63 +250,55 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         return laboratorista.toLowerCase().includes(nomeFilter.toLowerCase());
       });
     }
-
     if (obraFilter) {
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
         return obra?.name?.toLowerCase().includes(obraFilter.toLowerCase()) ||
-        obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
+          obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
       });
     }
-
-    if (projetoFilter) {// New filter logic for project
+    if (projetoFilter) {
       filtered = filtered.filter((ensaio) => {
         if (!ensaio.project_id) return false;
         const projeto = projects.find((p) => p.id === ensaio.project_id);
         return projeto?.name?.toLowerCase().includes(projetoFilter.toLowerCase());
       });
     }
-
     if (localFilter) {
       filtered = filtered.filter((ensaio) => {
         const localInfo = getLocalInfo(ensaio);
         return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
-        localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
       });
     }
-
     if (empreiteiraFilter) {
       filtered = filtered.filter((ensaio) => {
         const empreiteira = getEmpireiteiraInfo(ensaio);
-        if (!empreiteira) return false;
-        return empreiteira.toLowerCase().includes(empreiteiraFilter.toLowerCase());
+        return empreiteira?.toLowerCase().includes(empreiteiraFilter.toLowerCase()) ?? false;
       });
     }
-
     if (dataInicioFilter) {
+      const startFilterDate = new Date(dataInicioFilter);
+      startFilterDate.setHours(0, 0, 0, 0);
       filtered = filtered.filter((ensaio) => {
         const dataEnsaio = getDataEnsaio(ensaio);
         if (!dataEnsaio) return false;
         const ensaioDate = new Date(dataEnsaio);
         ensaioDate.setHours(0, 0, 0, 0);
-        const startFilterDate = new Date(dataInicioFilter);
-        startFilterDate.setHours(0, 0, 0, 0);
         return ensaioDate >= startFilterDate;
       });
     }
-
     if (dataFimFilter) {
+      const endFilterDate = new Date(dataFimFilter);
+      endFilterDate.setHours(23, 59, 59, 999);
       filtered = filtered.filter((ensaio) => {
         const dataEnsaio = getDataEnsaio(ensaio);
         if (!dataEnsaio) return false;
         const ensaioDate = new Date(dataEnsaio);
         ensaioDate.setHours(0, 0, 0, 0);
-        const endFilterDate = new Date(dataFimFilter);
-        endFilterDate.setHours(23, 59, 59, 999);
         return ensaioDate <= endFilterDate;
       });
     }
-
     if (statusFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
         if (statusFilter === 'approved') return ensaio.approved === true && !ensaio.client_signature?.signed_by;
@@ -323,32 +308,24 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
         return true;
       });
     }
-
     if (typeFilter && typeFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => {
-        return ensaio.entityType === typeFilter;
-      });
+      filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
     }
-
     if (statusObraFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
         return obra?.status === statusObraFilter;
       });
     }
-
-    // Aplicar ordenação por data
     if (sortOrder) {
       filtered = [...filtered].sort((a, b) => {
         const dateA = new Date(getDataEnsaio(a));
         const dateB = new Date(getDataEnsaio(b));
-        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0; // Handle invalid dates
+        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return 0;
         return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
       });
     }
-
-    setFilteredEnsaios(filtered);
-    setCurrentPage(1);
+    return filtered;
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
 
   const handleApprove = useCallback(async (ensaio) => {
@@ -1178,7 +1155,6 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('desc');
-  const [filteredEnsaios, setFilteredEnsaios] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
@@ -1190,24 +1166,21 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
     });
   }, []);
 
-  useEffect(() => {
+  const filteredEnsaios = useMemo(() => {
     let filtered = ensaios;
-
     if (nomeFilter) {
       filtered = filtered.filter((ensaio) => {
         const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
         return laboratorista.toLowerCase().includes(nomeFilter.toLowerCase());
       });
     }
-
     if (obraFilter) {
       filtered = filtered.filter((ensaio) => {
         const obra = obras.find((o) => o.id === ensaio.obra_id);
         return obra?.name?.toLowerCase().includes(obraFilter.toLowerCase()) ||
-        obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
+          obra?.code?.toLowerCase().includes(obraFilter.toLowerCase());
       });
     }
-
     if (projetoFilter) {
       filtered = filtered.filter((ensaio) => {
         if (!ensaio.project_id) return false;
@@ -1215,47 +1188,41 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         return projeto?.name?.toLowerCase().includes(projetoFilter.toLowerCase());
       });
     }
-
     if (localFilter) {
       filtered = filtered.filter((ensaio) => {
         const localInfo = getLocalInfo(ensaio);
         return localInfo.tipo?.toLowerCase().includes(localFilter.toLowerCase()) ||
-        localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
+          localInfo.detalhes?.toLowerCase().includes(localFilter.toLowerCase());
       });
     }
-
     if (empreiteiraFilter) {
       filtered = filtered.filter((ensaio) => {
         const empreiteira = getEmpireiteiraInfo(ensaio);
-        if (!empreiteira) return false;
-        return empreiteira.toLowerCase().includes(empreiteiraFilter.toLowerCase());
+        return empreiteira?.toLowerCase().includes(empreiteiraFilter.toLowerCase()) ?? false;
       });
     }
-
     if (dataInicioFilter) {
+      const startFilterDate = new Date(dataInicioFilter);
+      startFilterDate.setHours(0, 0, 0, 0);
       filtered = filtered.filter((ensaio) => {
         const dataEnsaio = getDataEnsaio(ensaio);
         if (!dataEnsaio) return false;
         const ensaioDate = new Date(dataEnsaio);
         ensaioDate.setHours(0, 0, 0, 0);
-        const startFilterDate = new Date(dataInicioFilter);
-        startFilterDate.setHours(0, 0, 0, 0);
         return ensaioDate >= startFilterDate;
       });
     }
-
     if (dataFimFilter) {
+      const endFilterDate = new Date(dataFimFilter);
+      endFilterDate.setHours(23, 59, 59, 999);
       filtered = filtered.filter((ensaio) => {
         const dataEnsaio = getDataEnsaio(ensaio);
         if (!dataEnsaio) return false;
         const ensaioDate = new Date(dataEnsaio);
         ensaioDate.setHours(0, 0, 0, 0);
-        const endFilterDate = new Date(dataFimFilter);
-        endFilterDate.setHours(23, 59, 59, 999);
         return ensaioDate <= endFilterDate;
       });
     }
-
     if (statusFilter !== 'all') {
       filtered = filtered.filter((ensaio) => {
         if (statusFilter === 'approved') return ensaio.approved === true && !ensaio.client_signature?.signed_by;
@@ -1263,13 +1230,9 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         return true;
       });
     }
-
     if (typeFilter && typeFilter !== 'all') {
-      filtered = filtered.filter((ensaio) => {
-        return ensaio.entityType === typeFilter;
-      });
+      filtered = filtered.filter((ensaio) => ensaio.entityType === typeFilter);
     }
-
     if (sortOrder) {
       filtered = [...filtered].sort((a, b) => {
         const dateA = new Date(getDataEnsaio(a));
@@ -1278,9 +1241,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
       });
     }
-
-    setFilteredEnsaios(filtered);
-    setCurrentPage(1);
+    return filtered;
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, obras, projects, sortOrder, allUsers]);
 
   const clearFilters = useCallback(() => {
