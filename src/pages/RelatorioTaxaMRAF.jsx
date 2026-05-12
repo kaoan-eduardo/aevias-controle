@@ -82,7 +82,7 @@ export default function RelatorioTaxaMRAF() {
             padding: 0;
             background: white !important;
             color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            border: 0.5px solid #cbd5e1 !important;
             -webkit-print-color-adjust: exact !important;
           }
           @page { 
