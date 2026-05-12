@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SectionTitle = ({ children }) => (
-  <h2 className="text-sm print:text-xs font-bold text-center bg-slate-100 p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
+  <h2 className="text-sm print:text-xs font-bold text-center bg-[#BFCF99] text-[#00233B] p-0.5 my-0.5 uppercase tracking-wider">{children}</h2>
 );
 
 const ReportPrintHeader = ({ acompanhamento, obra, regional }) => (
@@ -118,7 +118,7 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
           <div className="mt-3">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-slate-300" style={{ fontSize: '7px', tableLayout: 'fixed' }}>
-                <thead className="bg-slate-100">
+                <thead className="bg-[#BFCF99] text-[#00233B]">
                   <tr>
                     <th className="border border-slate-300 px-0.5 py-1 text-center font-bold" colSpan="4">DADOS DA USINA</th>
                     <th className="border border-slate-300 px-0.5 py-1 text-center font-bold" colSpan="10">DADOS DA PISTA</th>
@@ -144,7 +144,7 @@ export default function RelatorioAcompanhamentoCarga({ acompanhamento, obra, reg
                   {Array.from({ length: 20 }).map((_, index) => {
                     const carga = acompanhamento.cargas?.[index];
                     return (
-                      <tr key={index} className="even:bg-slate-50" style={{ fontSize: '7px', height: '20px' }}>
+                      <tr key={index} className="even:bg-white" style={{ fontSize: '7px', height: '20px' }}>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga ? index + 1 : ''}</td>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga?.placa || ''}</td>
                         <td className="border border-slate-300 px-0.5 py-1 text-center">{carga?.hora_saida || ''}</td>
