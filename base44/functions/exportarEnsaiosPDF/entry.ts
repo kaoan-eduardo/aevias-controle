@@ -143,9 +143,8 @@ async function buildZip(ensaioIds, authHeader) {
        const safeTipo = String(tipo).trim();
        const html = await fetchReportHtml(safeTipo, safeId, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      // HTML is a string returned by response.text() — not DOM-parsed, not injected into HTML context
-      // Passed directly to TextEncoder for binary encoding only (no innerHTML/eval usage)
-      const encoded = encoder.encode(html);
+      // html is a string from response.text() — never injected into DOM, only binary-encoded for ZIP
+      const encoded = encoder.encode(html); // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context
       zip.file(fileName, encoded);
       successCount++;
       console.log(`  ✅ Adicionado: ${fileName} (${encoded.byteLength} bytes)`);

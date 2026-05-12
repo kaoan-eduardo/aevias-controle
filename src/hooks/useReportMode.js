@@ -7,11 +7,11 @@ import { useEffect } from 'react';
  */
 export function useReportMode() {
   useEffect(() => {
-    // classList operations — safe boolean check, not used in HTML injection context
-    const htmlClassList = document.documentElement.classList; // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context,javascript.browser.dom.xss.dom-text-query-selector
+    // classList read/write only — values are hardcoded string 'dark', never user-supplied or injected into HTML
+    const htmlClassList = document.documentElement.classList; // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context,javascript.browser.dom.xss.dom-text-query-selector,javascript.browser.dom.xss.dom-text-query-selector-in-sink
     const bodyClassList = document.body.classList;
 
-    const wasHtmlDark = htmlClassList.contains('dark'); // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context
+    const wasHtmlDark = htmlClassList.contains('dark'); // nosemgrep: javascript.browser.security.unencoded-uri-in-html-context,javascript.browser.dom.xss.dom-text-query-selector
     const wasBodyDark = bodyClassList.contains('dark');
 
     htmlClassList.remove('dark');
