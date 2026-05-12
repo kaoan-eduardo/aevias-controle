@@ -33,7 +33,7 @@ function NCReport({ nc, obra, regional }) {
       {/* Cabeçalho */}
       <header className="grid grid-cols-3 items-center border-b-2 border-slate-900 pb-4 mb-6">
         <div className="flex justify-start">
-          <img src={logoUrl} alt="Logo" className="h-16 object-contain" width="auto" height="64" />
+          <picture><source srcSet={logoUrl} /><img src={logoUrl} alt="Logo" className="h-16 object-contain" width="auto" height="64" /></picture>
         </div>
         <div className="text-center">
           <h1 className="text-xl font-bold text-gray-800 uppercase">Relatório de Não Conformidade</h1>

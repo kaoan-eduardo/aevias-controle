@@ -27,12 +27,15 @@ export default function RelatorioDensidade({ ensaio, obra, project, laboratorist
       {/* Cabeçalho */}
       <header className="flex justify-between items-center pb-4 border-b-2 border-slate-900">
         <div className="w-1/3">
-          <img 
-            src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png"} 
-            alt="Logo Regional" 
-            className="h-16 object-contain"
-            width="auto" height="64"
+          <picture>
+            <source srcSet={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png"} />
+            <img
+              src={regional?.logo_url || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/a58d6328c_AE-LogoVerPrincipal_1.png"}
+              alt="Logo Regional"
+              className="h-16 object-contain"
+              width="auto" height="64"
             />
+          </picture>
         </div>
         <div className="w-2/3 text-center">
           <h1 className="text-2xl font-bold text-slate-900">Relatório de Ensaio</h1>
