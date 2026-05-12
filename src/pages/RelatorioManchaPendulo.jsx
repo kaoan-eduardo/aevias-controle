@@ -17,30 +17,30 @@ export default function RelatorioManchaPenduloPage() {
   const [regional, setRegional] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const loadData = async () => {
-    try {
-      const ensaioData = await base44.entities.EnsaioManchaPendulo.get(id);
-      setEnsaio(ensaioData);
-
-      if (ensaioData.obra_id) {
-        const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
-        setObra(obraData);
-
-        if (obraData.regional_id) {
-          const regionalData = await base44.entities.Regional.get(obraData.regional_id);
-          setRegional(regionalData);
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (id) loadData();
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!id) return;
+    const loadData = async () => {
+      try {
+        const ensaioData = await base44.entities.EnsaioManchaPendulo.get(id);
+        setEnsaio(ensaioData);
+
+        if (ensaioData.obra_id) {
+          const obraData = await base44.entities.Obra.get(ensaioData.obra_id);
+          setObra(obraData);
+
+          if (obraData.regional_id) {
+            const regionalData = await base44.entities.Regional.get(obraData.regional_id);
+            setRegional(regionalData);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [id]);
 
   const handlePrint = () => {
     window.print();

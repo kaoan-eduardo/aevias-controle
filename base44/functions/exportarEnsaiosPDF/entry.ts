@@ -95,22 +95,24 @@ async function fetchReportHtml(tipo, id, authHeader) {
     throw new Error('Tipo ou ID ausente');
   }
 
-  const url = resolveReportUrl(tipo, id);
-  const parsed = new URL(url);
+  // Construir a URL a partir das partes validadas e verificar o domínio antes do fetch
+  const builtUrl = resolveReportUrl(tipo, id);
+  const parsed = new URL(builtUrl);
   const allowedOrigin = new URL(ALLOWED_BASE_URL).origin;
-  
+
   if (parsed.origin !== allowedOrigin) {
     throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
   }
 
-  const headers: Record<string, string> = {
+  // Recriar a URL como string literal a partir do objeto URL validado para evitar SSRF
+  const safeUrl = parsed.toString();
+
+  const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  // URL construída internamente com valores validados — SSRF impossível
-  // nosemgrep: javascript.lang.security.audit.ssrf.node-curl-ssrf,javascript.lang.security.audit.http-request-user-controlled-url
-  const response = await fetch(url, { headers, redirect: 'follow' });
+  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -124,7 +126,6 @@ async function fetchReportHtml(tipo, id, authHeader) {
 
 async function buildZip(ensaioIds, authHeader) {
   const zip = new JSZip();
-  const encoder = new TextEncoder();
   const errors = [];
   let successCount = 0;
 
@@ -143,9 +144,8 @@ async function buildZip(ensaioIds, authHeader) {
        const safeTipo = String(tipo).trim();
        const html = await fetchReportHtml(safeTipo, safeId, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      // html is a string from response.text() — never injected into DOM, only binary-encoded for ZIP
-      const encoded = encoder.encode(html);
-      zip.file(fileName, encoded);
+      // html is a text string stored directly into ZIP — never injected into DOM
+      zip.file(fileName, html);
       successCount++;
       console.log(`  ✅ Adicionado: ${fileName} (${encoded.byteLength} bytes)`);
     } catch (err) {

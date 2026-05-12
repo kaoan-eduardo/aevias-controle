@@ -63,7 +63,6 @@ export default function AcompanhamentoUsinagemPage() {
     }
   }, [formData.obra_id, projects, obras, regionais]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadInitialData = useCallback(async () => {
     try {
       const userData = await User.me();

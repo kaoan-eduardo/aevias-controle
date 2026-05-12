@@ -208,7 +208,7 @@ export default function Dashboard() {
         const projectIdsPermitidos = new Set();
         regionaisDoUsuario.forEach(regional => {
           if (regional.project_ids) {
-            regional.project_ids.forEach(id => projectIdsPermitidos.add(id));
+            for (const id of regional.project_ids) { projectIdsPermitidos.add(id); }
           }
         });
         projectsFiltrados = projects.filter(p => projectIdsPermitidos.has(p.id));

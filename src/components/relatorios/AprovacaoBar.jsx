@@ -18,32 +18,29 @@ export default function AprovacaoBar({ entityName, recordId }) {
   const [rejectionReason, setRejectionReason] = useState('');
 
   useEffect(() => {
-    loadUser(); // eslint-disable-line react-hooks/exhaustive-deps
+    const loadUser = async () => {
+      try {
+        const userData = await User.me();
+        setUser(userData);
+      } catch (err) {
+        console.error('AprovacaoBar: erro ao carregar usuário', err);
+      }
+    };
+    loadUser();
   }, []);
 
   useEffect(() => {
-    if (entityName && recordId) {
-      loadRecord(); // eslint-disable-line react-hooks/exhaustive-deps
-    }
+    if (!entityName || !recordId) return;
+    const loadRecord = async () => {
+      try {
+        const data = await base44.entities[entityName].get(recordId);
+        setRecord(data);
+      } catch (err) {
+        console.error('AprovacaoBar: erro ao carregar registro', err);
+      }
+    };
+    loadRecord();
   }, [entityName, recordId]);
-
-  const loadUser = async () => {
-    try {
-      const userData = await User.me();
-      setUser(userData);
-    } catch (err) {
-      console.error('AprovacaoBar: erro ao carregar usuário', err);
-    }
-  };
-
-  const loadRecord = async () => {
-    try {
-      const data = await base44.entities[entityName].get(recordId);
-      setRecord(data);
-    } catch (err) {
-      console.error('AprovacaoBar: erro ao carregar registro', err);
-    }
-  };
 
   if (!user || !record) return null;
 

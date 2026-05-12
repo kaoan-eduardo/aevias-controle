@@ -16,10 +16,7 @@ export default function RelatorioBoletimSondagem() {
   useReportMode();
 
   useEffect(() => {
-    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadData = async () => {
+    const loadData = async () => {
     try {
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
@@ -42,7 +39,9 @@ export default function RelatorioBoletimSondagem() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+    loadData();
+  }, []);
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
   const formatDateTime = (d) => {
@@ -479,12 +478,15 @@ export default function RelatorioBoletimSondagem() {
                 {chunk.map((fotoUrl, fotoIndex) => (
                   <div key={fotoIndex} className="border p-2 rounded-lg flex flex-col" style={{ height: 'calc((100vh - 300px) / 3)' }}>
                     <div className="bg-gray-100 flex-grow flex items-center justify-center rounded overflow-hidden">
-                      <img
-                        src={fotoUrl}
+                      <picture>
+                        <source srcSet={fotoUrl} />
+                        <img
+                          src={fotoUrl}
                           alt={`Foto ${pageIndex * 6 + fotoIndex + 1}`}
                           className="max-h-full max-w-full object-contain"
                           width="auto" height="auto"
-                      />
+                        />
+                      </picture>
                     </div>
                     <p className="text-center text-sm mt-2 font-medium">Foto {pageIndex * 6 + fotoIndex + 1}</p>
                   </div>

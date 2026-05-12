@@ -49,7 +49,7 @@ export default function EnsaioSondagem() {
   });
 
   useEffect(() => {
-    loadInitialData(); // eslint-disable-line react-hooks/exhaustive-deps
+    loadInitialData();
   }, []);
 
   useEffect(() => {

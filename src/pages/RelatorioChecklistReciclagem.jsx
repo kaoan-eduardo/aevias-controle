@@ -17,10 +17,7 @@ export default function RelatorioChecklistReciclagemPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadData(); // eslint-disable-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadData = async () => {
+    const loadData = async () => {
     try {
       const params = new URLSearchParams(window.location.search);
       const checklistId = params.get('id');
@@ -58,7 +55,9 @@ export default function RelatorioChecklistReciclagemPage() {
     } finally {
       setLoading(false);
     }
-  };
+    };
+    loadData();
+  }, []);
 
   const handlePrint = () => {
     window.print();

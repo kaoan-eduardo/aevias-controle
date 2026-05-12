@@ -7,18 +7,27 @@ import { useEffect } from 'react';
  */
 export function useReportMode() {
   useEffect(() => {
-    const htmlEl = document.documentElement;
-    const bodyEl = document.body;
+    const root = document.documentElement;
+    const body = document.body;
 
-    const wasHtmlDark = htmlEl.classList.contains('dark');
-    const wasBodyDark = bodyEl.classList.contains('dark');
+    const rootHadDark = root.getAttribute('class')?.split(' ').includes('dark') ?? false;
+    const bodyHadDark = body.getAttribute('class')?.split(' ').includes('dark') ?? false;
 
-    htmlEl.classList.remove('dark');
-    bodyEl.classList.remove('dark');
+    const rootClasses = (root.getAttribute('class') || '').split(' ').filter(c => c !== 'dark');
+    const bodyClasses = (body.getAttribute('class') || '').split(' ').filter(c => c !== 'dark');
+
+    root.setAttribute('class', rootClasses.join(' '));
+    body.setAttribute('class', bodyClasses.join(' '));
 
     return () => {
-      if (wasHtmlDark) htmlEl.classList.add('dark');
-      if (wasBodyDark) bodyEl.classList.add('dark');
+      if (rootHadDark) {
+        const cur = (root.getAttribute('class') || '').split(' ');
+        if (!cur.includes('dark')) root.setAttribute('class', [...cur, 'dark'].join(' ').trim());
+      }
+      if (bodyHadDark) {
+        const cur = (body.getAttribute('class') || '').split(' ');
+        if (!cur.includes('dark')) body.setAttribute('class', [...cur, 'dark'].join(' ').trim());
+      }
     };
   }, []);
 }

@@ -81,7 +81,7 @@ export default function NovaNcPage() {
   const [uploadingPdfs, setUploadingPdfs] = useState(false);
 
   useEffect(() => {
-    loadInitialData(); // eslint-disable-line react-hooks/exhaustive-deps
+    loadInitialData();
   }, []);
 
   const loadInitialData = async () => {
