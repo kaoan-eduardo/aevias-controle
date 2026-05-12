@@ -140,7 +140,7 @@ export default function EnsaioSondagem() {
         }
       }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[EnsaioSondagem] Erro ao carregar dados:", error?.message || error);
       alert("Erro ao carregar dados iniciais.");
     } finally {
       setLoading(false);
@@ -344,7 +344,7 @@ export default function EnsaioSondagem() {
         fotos: [...prev.fotos, ...newPhotoUrls]
       }));
     } catch (error) {
-      console.error("Erro ao fazer upload das fotos:", error);
+      console.error("[EnsaioSondagem] Erro ao fazer upload das fotos:", error?.message || error);
       alert("Erro ao fazer upload das fotos.");
     } finally {
       setUploadingPhotos(false);
@@ -404,7 +404,7 @@ export default function EnsaioSondagem() {
         alert("Progresso salvo com sucesso!");
       }
     } catch (error) {
-      console.error("Erro ao salvar progresso:", error);
+      console.error("[EnsaioSondagem] Erro ao salvar progresso:", error?.message || error);
       alert("Erro ao salvar progresso.");
     } finally {
       setSaving(false);
@@ -507,7 +507,7 @@ export default function EnsaioSondagem() {
 
       navigate(createPageUrl("MeusEnsaios"));
     } catch (error) {
-      console.error("Erro ao salvar ensaio:", error);
+      console.error("[EnsaioSondagem] Erro ao salvar ensaio:", error?.message || error);
       alert(`Erro ao salvar ensaio: ${error.message}`);
     } finally {
       setSaving(false);

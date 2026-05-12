@@ -27,12 +27,11 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
         const savedData = sessionStorage.getItem(storageKey);
         if (savedData) {
           const parsed = JSON.parse(savedData);
-          console.log('📥 Recuperando dados salvos do formulário:', formKey);
           setFormData(parsed);
           hasRestoredRef.current = true;
         }
       } catch (error) {
-        console.error('Erro ao recuperar dados do formulário:', error);
+        console.error('[useFormPersistence] Erro ao recuperar dados do formulário:', error?.message || error);
       }
       isInitialMount.current = false;
     }
@@ -47,7 +46,7 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
       try {
         sessionStorage.setItem(storageKey, JSON.stringify(formData));
       } catch (error) {
-        // silently ignore storage errors
+        console.error('[useFormPersistence] Erro ao persistir formulário:', error?.message || error);
       }
     }, 1000); // Aumentado para 1s para reduzir frequência de writes
 
@@ -58,9 +57,8 @@ export function useFormPersistence(formKey, formData, setFormData, isEditing = f
   const clearSavedData = () => {
     try {
       sessionStorage.removeItem(storageKey);
-      console.log('🗑️ Dados do formulário removidos:', formKey);
     } catch (error) {
-      console.error('Erro ao limpar dados:', error);
+      console.error('[useFormPersistence] Erro ao limpar dados do formulário:', error?.message || error);
     }
   };
 

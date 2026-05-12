@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ export default function ProdutividadePage() {
   const [usinas, setUsinas] = useState([]);
   const [diaDialog, setDiaDialog] = useState({ open: false, laborista: null, dia: null });
   const [cacheDias, setCacheDias] = useState({});
+  const marcadoresDiaRef = useRef({});
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -233,7 +235,7 @@ export default function ProdutividadePage() {
 
       setLaboratoristas(labUsers.sort((a, b) => (a.laboratorista_name || a.full_name || '').localeCompare(b.laboratorista_name || b.full_name || '')));
       setProdutividade(prodData);
-      window.marcadoresDia = marcadoresDia;
+      marcadoresDiaRef.current = marcadoresDia;
 
     } catch (error) {
       console.error("[Produtividade] Erro ao carregar dados:", error?.message || error);
@@ -325,7 +327,7 @@ export default function ProdutividadePage() {
       [key]: { status, data: dataStr, laborista: diaDialog.laborista }
     };
     setCacheDias(newCache);
-    window.marcadoresDia[key] = status;
+    marcadoresDiaRef.current[key] = status;
     
     setDiaDialog({ open: false, laborista: null, dia: null });
   };
@@ -464,7 +466,7 @@ export default function ProdutividadePage() {
                        const registros = produtividade[lab.email.toLowerCase()]?.[day] || [];
                        const hasRegistros = registros.length > 0;
                        const markerKey = `${lab.email.toLowerCase()}_${day}`;
-                       const markedStatus = window.marcadoresDia?.[markerKey];
+                       const markedStatus = marcadoresDiaRef.current?.[markerKey];
                        const futureDay = isFutureDay(day);
 
                        return (

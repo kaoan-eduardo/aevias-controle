@@ -49,7 +49,7 @@ export default function RelatorioSondagem() {
         }
       }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[RelatorioSondagem] Erro ao carregar dados:", error?.message || error);
       setError("Erro ao carregar dados do relatório");
     } finally {
       setLoading(false);
