@@ -357,8 +357,6 @@ export default function UsersPage() {
           cleanedFields.role = ['admin', 'sala_tecnica_afirmaevias', 'gestor_contrato'].includes(cleanedFields.access_level) ? 'admin' : 'user';
         }
 
-        console.log('Atualizando usuário:', editingUser.id, 'com dados:', cleanedFields);
-        
         await User.update(editingUser.id, cleanedFields);
         
         alert("Usuário atualizado com sucesso!");
@@ -381,8 +379,6 @@ export default function UsersPage() {
           Object.entries(newUserData).filter(([, v]) => v !== '' && v !== null && v !== undefined)
         );
 
-        console.log('Criando novo usuário com dados:', finalUserData);
-        
         await User.create(finalUserData);
         
         // Se for gestor ou sala técnica criando um laboratorista, alocar na regional
