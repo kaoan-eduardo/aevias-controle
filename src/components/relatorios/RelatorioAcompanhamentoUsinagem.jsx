@@ -78,23 +78,6 @@ export default function RelatorioAcompanhamentoUsinagem({ ensaio, obra, project,
           }
         }
       `}</style>
-      <div className="bg-white min-h-screen p-6 font-sans">
-        {/* Header com Título e Botão de Download */}
-        <div className="no-print flex justify-between items-center mb-6 px-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Relatório - Acompanhamento de Usinagem
-          </h1>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Gerar PDF
-          </button>
-        </div>
 
         {/* Conteúdo Principal */}
         <div id="report-content" className="w-full max-w-[210mm] mx-auto bg-white shadow-xl print:shadow-none pt-0.5 px-3 pb-0.5 print:pt-0 print:px-0.5 print:pb-0">
