@@ -588,7 +588,7 @@ export default function ChecklistUsinaPage() {
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao salvar checklist:", error);
+      console.error("[ChecklistUsina] Erro ao salvar checklist:", error?.message || error);
       alert("Erro ao salvar checklist.");
     }
   };
@@ -627,7 +627,7 @@ export default function ChecklistUsinaPage() {
         try {
           faixasData = await FaixaGranulometrica.list();
         } catch (faixasError) {
-          console.warn("Erro ao carregar faixas granulométricas, continuando sem elas:", faixasError);
+          console.warn("[ChecklistUsina] Faixas granulométricas indisponíveis, continuando sem elas:", faixasError?.message || faixasError);
           // Continuar sem as faixas - não é crítico para o funcionamento
         }
 
@@ -778,7 +778,7 @@ export default function ChecklistUsinaPage() {
           setEditingChecklist(null);
         }
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.error("[ChecklistUsina] Erro ao carregar dados:", error?.message || error);
         alert("Não foi possível carregar os dados. Erro: " + (error.message || error));
         navigate(createPageUrl('MeusEnsaios'));
       } finally {

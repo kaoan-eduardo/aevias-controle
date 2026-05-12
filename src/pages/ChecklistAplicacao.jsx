@@ -105,14 +105,12 @@ export default function ChecklistAplicacaoPage() {
   const obraSelecionada = useMemo(() => obras.find(o => o.id === formData.obra_id), [obras, formData.obra_id]);
 
   useEffect(() => {
-    console.log("🔍 [DEBUG] obraSelecionada mudou:", obraSelecionada);
     if (obraSelecionada) {
       base44.entities.Regional.list().then(regionaisData => {
         const reg = regionaisData.find(r => r.id === obraSelecionada.regional_id);
-        console.log("🔍 [DEBUG] Regional encontrada:", reg);
         setRegional(reg);
       }).catch(error => {
-        console.error("❌ [DEBUG] Erro ao carregar regional:", error);
+        console.error("[ChecklistAplicacao] Erro ao carregar regional:", error?.message || error);
         setRegional(null);
       });
     } else {
@@ -121,16 +119,13 @@ export default function ChecklistAplicacaoPage() {
   }, [obraSelecionada]);
 
   const projetosDisponiveis = useMemo(() => {
-    console.log("🔍 [DEBUG] Calculando projetos disponíveis. Regional:", regional, "Projects:", projects);
     if (!regional || !projects) return [];
     const regionalProjectIds = regional.project_ids || [];
-    const disponiveis = projects.filter(p => 
+    return projects.filter(p => 
       regionalProjectIds.includes(p.id) && 
       p.status === 'ativo' && 
       p.tipo_projeto === 'CAUQ'
     );
-    console.log("🔍 [DEBUG] Projetos disponíveis:", disponiveis);
-    return disponiveis;
   }, [regional, projects]);
 
   useEffect(() => {
@@ -149,7 +144,7 @@ export default function ChecklistAplicacaoPage() {
           allUsersData = await base44.entities.User.list();
           setAllUsers(allUsersData);
         } catch (userError) {
-          console.warn("⚠️ Sem permissão para listar usuários, campo engenheiro não será preenchido automaticamente");
+          console.warn("[ChecklistAplicacao] Sem permissão para listar usuários:", userError?.message || userError);
           setAllUsers([]);
         }
 
@@ -157,7 +152,7 @@ export default function ChecklistAplicacaoPage() {
         try {
           faixasData = await base44.entities.FaixaGranulometrica.list();
         } catch (faixasError) {
-          console.warn("⚠️ Erro ao carregar faixas:", faixasError);
+          console.warn("[ChecklistAplicacao] Faixas granulométricas indisponíveis:", faixasError?.message || faixasError);
         }
         
         const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
@@ -197,7 +192,6 @@ export default function ChecklistAplicacaoPage() {
             
             if (checklistToEdit.project_id) {
               const proj = projectsData.find(p => p.id === checklistToEdit.project_id);
-              console.log("🔍 [DEBUG] Projeto do checklist editado:", proj);
               setSelectedProject(proj);
             }
           } else {
@@ -252,7 +246,7 @@ export default function ChecklistAplicacaoPage() {
           }
         }
       } catch (error) {
-        console.error("❌ Erro ao carregar dados:", error);
+        console.error("[ChecklistAplicacao] Erro ao carregar dados:", error?.message || error);
         const errorMessage = error.message || "Erro desconhecido";
         alert(`Erro ao carregar dados: ${errorMessage}. Verifique sua conexão e tente novamente.`);
         navigate(createPageUrl('MeusEnsaios'));
@@ -264,47 +258,28 @@ export default function ChecklistAplicacaoPage() {
   }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
 
   const handleInputChange = useCallback((field, value) => {
-    console.log("🔍 [DEBUG] handleInputChange chamado. Field:", field, "Value:", value);
-    
     if (field === 'obra_id') {
-      console.log("🔍 [DEBUG] Mudança de obra detectada. Obras disponíveis:", obras);
       const obra = obras.find(o => o.id === value);
-      console.log("🔍 [DEBUG] Obra encontrada:", obra);
       
       if (obra) {
         base44.entities.Regional.list().then(regionaisData => {
-          console.log("🔍 [DEBUG] Regionais carregadas:", regionaisData);
           const currentRegional = regionaisData.find(r => r.id === obra.regional_id);
-          console.log("🔍 [DEBUG] Regional da obra:", currentRegional);
-          
-          // Buscar gestor de contrato usando a lista de usuários carregada globalmente
-          const gestorEmail = currentRegional?.gestor_contrato_responsavel;
-          let gestorName = "";
-          if (gestorEmail && allUsers.length > 0) {
-            const gestor = allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-            gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
-          }
-          console.log("🔍 [DEBUG] Gestor do contrato:", gestorName);
             
           if (currentRegional) {
             const projectsFromCurrentRegional = projects.filter(p => currentRegional.project_ids?.includes(p.id));
-            console.log("🔍 [DEBUG] Projetos da regional:", projectsFromCurrentRegional);
             
             let chosenProject = null;
 
-            if (formData.project_id) { // Use formData from closure for current project_id
+            if (formData.project_id) {
               chosenProject = projectsFromCurrentRegional.find(p => p.id === formData.project_id);
-              console.log("🔍 [DEBUG] Projeto já selecionado (via project_id no formData):", chosenProject);
             }
             
             if (!chosenProject && editingChecklist?.project_id) {
               chosenProject = projectsFromCurrentRegional.find(p => p.id === editingChecklist.project_id);
-              console.log("🔍 [DEBUG] Projeto do checklist editado (via editingChecklist):", chosenProject);
             }
 
             if (!chosenProject && projectsFromCurrentRegional.length > 0) {
               chosenProject = projectsFromCurrentRegional[0];
-              console.log("🔍 [DEBUG] Primeiro projeto da regional selecionado:", chosenProject);
             }
 
             let faixaName = "";
@@ -312,53 +287,30 @@ export default function ChecklistAplicacaoPage() {
             let liganteTipo = "";
 
             if (chosenProject) {
-              console.log("🔍 [DEBUG] Projeto escolhido:", chosenProject);
-              console.log("🔍 [DEBUG] Faixas disponíveis:", faixas);
-              console.log("🔍 [DEBUG] ID da faixa do projeto:", chosenProject.faixa_granulometrica_id);
-              
               const faixa = faixas.find(f => f.id === chosenProject.faixa_granulometrica_id);
               faixaName = faixa ? faixa.nome : "Não definida";
               
-              console.log("🔍 [DEBUG] Agregados do projeto (RAW):", JSON.stringify(chosenProject.agregados, null, 2));
-              
               if (chosenProject.agregados && Array.isArray(chosenProject.agregados) && chosenProject.agregados.length > 0) {
                 const pedreirasList = chosenProject.agregados
-                  .map(ag => {
-                    console.log("🔍 [DEBUG] Processando agregado:", ag);
-                    return ag.pedreira;
-                  })
+                  .map(ag => ag.pedreira)
                   .filter(p => p && p.trim() !== '');
-                
-                console.log("🔍 [DEBUG] Pedreiras extraídas:", pedreirasList);
                 pedreiras = [...new Set(pedreirasList)].join(' + ');
-              } else {
-                console.log("⚠️ [DEBUG] Agregados não encontrados ou vazios");
               }
               
-              console.log("🔍 [DEBUG] Pedreiras concatenadas (FINAL):", pedreiras);
-              
               liganteTipo = chosenProject.ligante?.tipo || "";
-              console.log("🔍 [DEBUG] Ligante tipo (FINAL):", liganteTipo);
-            } else {
-              console.log("⚠️ [DEBUG] Nenhum projeto encontrado ou selecionado para esta regional/obra.");
             }
               
-            setFormData(current => {
-              const newData = {
-                ...current,
-                obra_id: value,
-                project_id: chosenProject?.id || "",
-                projeto_utilizado: chosenProject?.name || "",
-                faixa_especificada: faixaName,
-                ligante: liganteTipo,
-                pedreira: pedreiras,
-              };
-              console.log("✅ [DEBUG] Novo formData após seleção de obra:", newData);
-              return newData;
-            });
+            setFormData(current => ({
+              ...current,
+              obra_id: value,
+              project_id: chosenProject?.id || "",
+              projeto_utilizado: chosenProject?.name || "",
+              faixa_especificada: faixaName,
+              ligante: liganteTipo,
+              pedreira: pedreiras,
+            }));
             setSelectedProject(chosenProject);
           } else {
-            console.log("⚠️ [DEBUG] Regional não encontrada para a obra selecionada.");
             setFormData(current => ({
               ...current,
               obra_id: value,
@@ -367,13 +319,12 @@ export default function ChecklistAplicacaoPage() {
               faixa_especificada: "",
               ligante: "",
               pedreira: "",
-              engenheiro_responsavel: "" // Reset engineer field
+              engenheiro_responsavel: ""
             }));
             setSelectedProject(null);
           }
-        }).catch(error => console.error("❌ [DEBUG] Erro ao carregar regional para obra:", error));
+        }).catch(error => console.error("[ChecklistAplicacao] Erro ao carregar regional para obra:", error?.message || error));
       } else {
-        console.log("⚠️ [DEBUG] Obra não encontrada para o ID fornecido.");
         setFormData(current => ({
           ...current,
           obra_id: value,
@@ -382,7 +333,7 @@ export default function ChecklistAplicacaoPage() {
           faixa_especificada: "",
           ligante: "",
           pedreira: "",
-          engenheiro_responsavel: "" // Reset engineer field
+          engenheiro_responsavel: ""
         }));
         setSelectedProject(null);
       }
@@ -390,52 +341,31 @@ export default function ChecklistAplicacaoPage() {
     }
     
     if (field === 'project_id') {
-      console.log("🔍 [DEBUG] Mudança de projeto detectada. Projects:", projects);
       const proj = projects.find(p => p.id === value);
-      console.log("🔍 [DEBUG] Projeto encontrado:", proj);
       
       if (proj) {
-        console.log("🔍 [DEBUG] Faixa ID do projeto:", proj.faixa_granulometrica_id);
         const faixa = faixas.find(f => f.id === proj.faixa_granulometrica_id);
-        console.log("🔍 [DEBUG] Faixa encontrada:", faixa);
-        
-        console.log("🔍 [DEBUG] Agregados do projeto (RAW):", JSON.stringify(proj.agregados, null, 2));
         
         let pedreiras = "";
         if (proj.agregados && Array.isArray(proj.agregados) && proj.agregados.length > 0) {
           const pedreirasList = proj.agregados
-            .map(ag => {
-              console.log("🔍 [DEBUG] Processando agregado:", ag);
-              return ag.pedreira;
-            })
+            .map(ag => ag.pedreira)
             .filter(p => p && p.trim() !== '');
-          
-          console.log("🔍 [DEBUG] Pedreiras extraídas:", pedreirasList);
           pedreiras = [...new Set(pedreirasList)].join(' + ');
-        } else {
-          console.log("⚠️ [DEBUG] Agregados não encontrados ou vazios");
         }
         
-        console.log("🔍 [DEBUG] Pedreiras concatenadas (FINAL):", pedreiras);
-        
         const liganteTipo = proj.ligante?.tipo || "";
-        console.log("🔍 [DEBUG] Ligante tipo (FINAL):", liganteTipo);
         
         setSelectedProject(proj);
-        setFormData(current => {
-          const newData = {
-            ...current,
-            project_id: value,
-            projeto_utilizado: proj.name,
-            faixa_especificada: faixa ? faixa.nome : "Não definida",
-            ligante: liganteTipo,
-            pedreira: pedreiras
-          };
-          console.log("✅ [DEBUG] Novo formData após seleção de projeto:", newData);
-          return newData;
-        });
+        setFormData(current => ({
+          ...current,
+          project_id: value,
+          projeto_utilizado: proj.name,
+          faixa_especificada: faixa ? faixa.nome : "Não definida",
+          ligante: liganteTipo,
+          pedreira: pedreiras
+        }));
       } else {
-        console.log("⚠️ [DEBUG] Projeto não encontrado para o ID fornecido.");
         setFormData(current => ({
           ...current,
           project_id: "",
@@ -449,9 +379,8 @@ export default function ChecklistAplicacaoPage() {
       return;
     }
     
-    // Para outros campos, apenas atualiza normalmente
     setFormData(prev => ({ ...prev, [field]: value }));
-  }, [obras, projects, faixas, editingChecklist, formData.project_id, allUsers]); // Add allUsers to dependencies
+  }, [obras, projects, faixas, editingChecklist, formData.project_id, allUsers]);
 
   // Atualiza campo em objeto aninhado de 2 níveis: formData[s1][field]
   const handleNestedChange = useCallback((s1, field, value) => {
@@ -545,7 +474,7 @@ export default function ChecklistAplicacaoPage() {
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao salvar checklist:", error);
+      console.error("[ChecklistAplicacao] Erro ao salvar checklist:", error?.message || error);
       alert("Erro ao salvar checklist.");
     } finally {
       setSaving(false);

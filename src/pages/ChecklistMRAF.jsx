@@ -309,7 +309,7 @@ export default function ChecklistMRAFPage() {
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao salvar checklist:", error);
+      console.error("[ChecklistMRAF] Erro ao salvar checklist:", error?.message || error);
       alert("Erro ao salvar checklist.");
     }
   };
@@ -346,7 +346,7 @@ export default function ChecklistMRAFPage() {
         try {
           faixasData = await FaixaGranulometrica.list();
         } catch (faixasError) {
-          console.warn("Erro ao carregar faixas granulométricas, continuando sem elas:", faixasError);
+          console.warn("[ChecklistMRAF] Faixas granulométricas indisponíveis, continuando sem elas:", faixasError?.message || faixasError);
         }
 
         if (isAdmin) {
@@ -430,7 +430,7 @@ export default function ChecklistMRAFPage() {
           setEditingChecklist(null);
         }
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.error("[ChecklistMRAF] Erro ao carregar dados:", error?.message || error);
         alert("Não foi possível carregar os dados. Erro: " + (error.message || error));
         navigate(createPageUrl('MeusEnsaios'));
       } finally {

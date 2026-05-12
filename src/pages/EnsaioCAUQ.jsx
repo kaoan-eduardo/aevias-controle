@@ -402,7 +402,7 @@ export default function EnsaioCAUQPage() {
       }
       clearSavedData();
     } catch (error) {
-      console.error("Erro ao salvar progresso:", error);
+      console.error("[EnsaioCAUQ] Erro ao salvar progresso:", error?.message || error);
       alert("Erro ao salvar progresso.");
     } finally {
       setSaving(false);
@@ -450,7 +450,7 @@ export default function EnsaioCAUQPage() {
       clearSavedData();
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
-      console.error("Erro ao finalizar ensaio:", error);
+      console.error("[EnsaioCAUQ] Erro ao finalizar ensaio:", error?.message || error);
       alert("Erro ao finalizar ensaio.");
     } finally {
       setSaving(false);
@@ -492,7 +492,7 @@ export default function EnsaioCAUQPage() {
         try {
           faixasData = await FaixaGranulometrica.list();
         } catch (faixasError) {
-          console.warn("Erro ao carregar faixas, continuando sem elas:", faixasError);
+          console.warn("[EnsaioCAUQ] Faixas granulométricas indisponíveis, continuando sem elas:", faixasError?.message || faixasError);
         }
 
         const [obrasData, regionaisData, projectsData] = await Promise.all([
@@ -561,7 +561,7 @@ export default function EnsaioCAUQPage() {
           setEditingEnsaio(null);
         }
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.error("[EnsaioCAUQ] Erro ao carregar dados:", error?.message || error);
         alert("Não foi possível carregar os dados.");
         navigate(createPageUrl('MeusEnsaios'));
       } finally {

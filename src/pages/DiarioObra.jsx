@@ -1138,13 +1138,6 @@ export default function DiarioObraPage() {
       temperatura: formData.temperatura === "" ? null : Number(formData.temperatura)
     };
     
-    console.log("📋 Dados a salvar (DiarioObra):", {
-      acoes_corretivas_realizado: dataToSave.acoes_corretivas_realizado,
-      acoes_corretivas_descricao: dataToSave.acoes_corretivas_descricao,
-      nao_conformidades: dataToSave.nao_conformidades,
-      total_ncs: dataToSave.nao_conformidades?.length
-    });
-    
     try {
       if (editingDiarioOriginal?.id) {
         const updateData = { ...dataToSave };
@@ -1167,6 +1160,7 @@ export default function DiarioObraPage() {
       }
       navigate(createPageUrl('MeusEnsaios'));
     } catch (error) {
+      console.error("[DiarioObra] Erro ao salvar diário:", error?.message || error);
       alert("Ocorreu um erro ao salvar o diário.");
     }
   };
@@ -1238,6 +1232,7 @@ export default function DiarioObraPage() {
           setEditingDiarioOriginal(null);
         }
       } catch (error) {
+        console.error("[DiarioObra] Erro ao carregar dados:", error?.message || error);
         alert("Não foi possível carregar os dados. Verifique sua conexão e tente novamente.");
         navigate(createPageUrl('MeusEnsaios'));
       } finally {
