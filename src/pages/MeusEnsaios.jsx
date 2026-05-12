@@ -390,15 +390,13 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
               }
             }
           }
-        } catch (error) {
-          console.error('Erro ao buscar dados do gestor para assinatura:', error);
-          // Se falhar, usar os dados do aprovador mesmo
+        } catch {
+          // Se falhar, usar os dados do aprovador
         }
       }
 
       await onApprove(ensaio, approverDetails);
-    } catch (error) {
-      console.error("Erro ao aprovar ensaio:", error);
+    } catch {
       alert('Erro ao aprovar ensaio. Tente novamente.');
     }
   }, [user, obras, onApprove]);
@@ -879,8 +877,7 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
         window.location.reload();
       }
     } catch (error) {
-      console.error("Erro ao assinar registro:", error);
-      alert(`Erro ao assinar registro: ${error.message || 'Erro desconhecido'}. Por favor, tente novamente ou contate o administrador.`);
+      alert(`Erro ao assinar registro: ${error?.message || 'Erro desconhecido'}. Por favor, tente novamente.`);
     }
   }, [user, ensaio]);
 
@@ -1341,8 +1338,7 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
         window.location.reload();
       }
     } catch (error) {
-      console.error("Erro ao assinar registro:", error);
-      alert(`Erro ao assinar registro: ${error.message || 'Erro desconhecido'}. Por favor, tente novamente ou contate o administrador.`);
+      alert(`Erro ao assinar registro: ${error?.message || 'Erro desconhecido'}. Por favor, tente novamente.`);
     }
   }, [user]);
 
@@ -1624,10 +1620,10 @@ export default function MeusEnsaios() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const { currentUser, allUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
+      const { currentUser, allUsers: loadedUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
 
       setUser(currentUser);
-      setAllUsers(allUsers);
+      setAllUsers(loadedUsers);
       setObras(obrasData);
       setRegionais(regionaisData);
       setProjects(projectsData);
@@ -1675,7 +1671,7 @@ export default function MeusEnsaios() {
 
       setEnsaios(ensaiosForUser);
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[MeusEnsaios] Erro ao carregar dados:", error?.message || error);
     } finally {
       setLoading(false);
     }
@@ -1713,9 +1709,8 @@ export default function MeusEnsaios() {
 
       alert("Registro aprovado com sucesso!");
       loadData();
-    } catch (error) {
-      console.error("Erro ao aprovar ensaio:", error);
-      alert("Erro ao aprovar ensaio.");
+    } catch {
+      alert("Erro ao aprovar ensaio. Tente novamente.");
     }
   }, [user, loadData]);
 
@@ -1736,9 +1731,8 @@ export default function MeusEnsaios() {
 
       loadData();
       alert('Registro reprovado com sucesso!');
-    } catch (error) {
-      console.error("Erro ao reprovar:", error);
-      alert('Erro ao reprovar registro.');
+    } catch {
+      alert('Erro ao reprovar registro. Tente novamente.');
     }
   }, [canApprove, user, loadData]);
 
@@ -1754,9 +1748,8 @@ export default function MeusEnsaios() {
 
       loadData();
       alert('Registro excluído com sucesso!');
-    } catch (error) {
-      console.error("Erro ao excluir:", error);
-      alert('Erro ao excluir registro.');
+    } catch {
+      alert('Erro ao excluir registro. Tente novamente.');
     }
   }, [canApprove, loadData]);
 

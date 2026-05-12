@@ -79,6 +79,7 @@ export default function RelatoriosUnificados() {
 
   useEffect(() => {
     loadInitialData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ export default function RelatoriosUnificados() {
       setEmpreiteirasDisponiveis([]);
       setUsinasDisponiveis([]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obraSelecionada, dataInicio, dataFim]);
 
   const loadInitialData = async () => {
@@ -123,7 +125,7 @@ export default function RelatoriosUnificados() {
 
       setObras(availableObras);
     } catch (err) {
-      console.error("Erro ao carregar dados iniciais:", err);
+      console.error("[RelatoriosUnificados] Erro ao carregar dados iniciais:", err?.message || err);
     } finally {
       setLoading(false);
     }
@@ -169,7 +171,7 @@ export default function RelatoriosUnificados() {
       setLaboratoristasDisponiveis(labs);
       setLaboratoristasChecked(labs); // Todos selecionados por padrão
     } catch (err) {
-      console.error("Erro ao carregar laboratoristas:", err);
+      console.error("[RelatoriosUnificados] Erro ao carregar laboratoristas:", err?.message || err);
     } finally {
       setLoadingLaboratoristas(false);
     }
@@ -183,8 +185,7 @@ export default function RelatoriosUnificados() {
         setEmpreiteirasDisponiveis(obra.empreiteiras || []);
         setUsinasDisponiveis(obra.usinas || []);
       }
-    } catch (err) {
-      console.error("Erro ao carregar filtros da obra:", err);
+    } catch {
       // Manter listas vazias caso falhe — não interrompe o fluxo
     }
   };
