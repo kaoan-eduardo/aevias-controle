@@ -374,10 +374,7 @@ export default function Dashboard() {
 
 
     } catch (error) {
-      // Log apenas de falhas críticas para não poluir console em produção
-      if (error?.message?.includes('permission') || error?.status?.toString().startsWith('4')) {
-        console.error("Erro de permissão ao carregar dashboard");
-      }
+      console.error("[Dashboard] Erro ao carregar dados:", error?.message || error);
     } finally {
       setLoading(false);
     }
