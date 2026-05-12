@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { Obra } from "@/entities/Obra";
@@ -77,26 +77,7 @@ export default function RelatoriosUnificados() {
   const [empreiteiraSelecionada, setEmpreiteiraSelecionada] = useState("");
   const [usinaSelecionada, setUsinaSelecionada] = useState("");
 
-  useEffect(() => {
-    loadInitialData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (obraSelecionada && dataInicio && dataFim) {
-      loadLaboratoristas();
-      loadFiltrosObra();
-    } else {
-      setLaboratoristasDisponiveis([]);
-      setLaboratoristasChecked([]);
-      setRodoviasDisponiveis([]);
-      setEmpreiteirasDisponiveis([]);
-      setUsinasDisponiveis([]);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [obraSelecionada, dataInicio, dataFim]);
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setLoading(true);
     try {
       const currentUser = await User.me();
@@ -129,57 +110,11 @@ export default function RelatoriosUnificados() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadLaboratoristas = async () => {
-    setLoadingLaboratoristas(true);
+  const loadFiltrosObra = useCallback(async (obraId) => {
     try {
-      // Carregar todos os registros de todos os tipos da obra no período
-      const allRecords = [];
-      await Promise.all(
-        ENTITY_KEYS.map(async (key) => {
-          try {
-            const entity = getEntityInstance(key);
-            const records = await entity.filter({ obra_id: obraSelecionada }, "-created_date", 1000);
-            records.forEach(r => { allRecords.push({ ...r, entityType: key }); });
-          } catch (e) {
-            console.warn(`Falha ao carregar ${key}:`, e?.message || e);
-          }
-        })
-      );
-
-      // Filtrar por período
-      const inicio = new Date(dataInicio);
-      const fim = new Date(dataFim);
-      fim.setHours(23, 59, 59);
-
-      const filtered = allRecords.filter(r => {
-        const d = getDataEnsaio(r);
-        if (!d) return false;
-        const date = new Date(d);
-        return date >= inicio && date <= fim;
-      });
-
-      // Extrair laboratoristas únicos
-      const labSet = new Set();
-      filtered.forEach(r => {
-        const name = r.laboratorista_name || r.created_by;
-        if (name) labSet.add(name);
-      });
-
-      const labs = Array.from(labSet).sort();
-      setLaboratoristasDisponiveis(labs);
-      setLaboratoristasChecked(labs); // Todos selecionados por padrão
-    } catch (err) {
-      console.error("[RelatoriosUnificados] Erro ao carregar laboratoristas:", err?.message || err);
-    } finally {
-      setLoadingLaboratoristas(false);
-    }
-  };
-
-  const loadFiltrosObra = async () => {
-    try {
-      const obra = await Obra.get(obraSelecionada);
+      const obra = await Obra.get(obraId);
       if (obra) {
         setRodoviasDisponiveis(obra.rodovias || []);
         setEmpreiteirasDisponiveis(obra.empreiteiras || []);
@@ -188,7 +123,67 @@ export default function RelatoriosUnificados() {
     } catch {
       // Manter listas vazias caso falhe — não interrompe o fluxo
     }
-  };
+  }, []);
+
+  const loadLaboratoristas = useCallback(async (obraId, inicio, fim) => {
+    setLoadingLaboratoristas(true);
+    try {
+      const allRecords = [];
+      await Promise.all(
+        ENTITY_KEYS.map(async (key) => {
+          try {
+            const entity = getEntityInstance(key);
+            const records = await entity.filter({ obra_id: obraId }, "-created_date", 1000);
+            records.forEach(r => { allRecords.push({ ...r, entityType: key }); });
+          } catch (e) {
+            console.warn(`Falha ao carregar ${key}:`, e?.message || e);
+          }
+        })
+      );
+
+      const startDate = new Date(inicio);
+      const endDate = new Date(fim);
+      endDate.setHours(23, 59, 59);
+
+      const filtered = allRecords.filter(r => {
+        const d = getDataEnsaio(r);
+        if (!d) return false;
+        const date = new Date(d);
+        return date >= startDate && date <= endDate;
+      });
+
+      const labSet = new Set();
+      filtered.forEach(r => {
+        const name = r.laboratorista_name || r.created_by;
+        if (name) labSet.add(name);
+      });
+
+      const labs = Array.from(labSet).sort();
+      setLaboratoristasDisponiveis(labs);
+      setLaboratoristasChecked(labs);
+    } catch (err) {
+      console.error("[RelatoriosUnificados] Erro ao carregar laboratoristas:", err?.message || err);
+    } finally {
+      setLoadingLaboratoristas(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
+
+  useEffect(() => {
+    if (obraSelecionada && dataInicio && dataFim) {
+      loadLaboratoristas(obraSelecionada, dataInicio, dataFim);
+      loadFiltrosObra(obraSelecionada);
+    } else {
+      setLaboratoristasDisponiveis([]);
+      setLaboratoristasChecked([]);
+      setRodoviasDisponiveis([]);
+      setEmpreiteirasDisponiveis([]);
+      setUsinasDisponiveis([]);
+    }
+  }, [obraSelecionada, dataInicio, dataFim, loadLaboratoristas, loadFiltrosObra]);
 
   const toggleLaboratorista = (lab) => {
     setLaboratoristasChecked(prev =>
