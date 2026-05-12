@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Printer } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import RelatorioAcompanhamentoUsinagem from "../components/relatorios/RelatorioAcompanhamentoUsinagem";
-import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 
 export default function RelatorioAcompanhamentoUsinagemPage() {
   useReportMode();
@@ -72,17 +70,6 @@ export default function RelatorioAcompanhamentoUsinagemPage() {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
-        <div className="max-w-[210mm] mx-auto flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-slate-800">Relatório de Acompanhamento de Usinagem</h2>
-          <div className="flex items-center gap-2">
-            {ensaio && <AprovacaoBar entityName="AcompanhamentoUsinagem" recordId={ensaio.id} />}
-            <Button onClick={() => window.print()} className="bg-slate-800 text-white hover:bg-slate-700">
-              <Printer className="w-4 h-4 mr-2" /> Gerar PDF
-            </Button>
-          </div>
-        </div>
-      </div>
       <RelatorioAcompanhamentoUsinagem ensaio={ensaio} obra={obra} regional={regional} project={project} />
     </div>
   );
