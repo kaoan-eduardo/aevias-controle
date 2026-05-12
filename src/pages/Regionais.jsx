@@ -712,9 +712,6 @@ export default function RegionaisPage() {
 
       const currentUserAccessLevel = userData.access_level || (userData.role === 'admin' ? 'admin' : 'user');
       
-      console.log('🔍 [DEBUG] User access level:', currentUserAccessLevel);
-      console.log('🔍 [DEBUG] User email:', userData.email);
-
       // Carregar dados básicos (regionais, obras, projects)
       const [regionaisData, obrasData, projectsData] = await Promise.all([
         Regional.list("-created_date", 100),
@@ -723,11 +720,6 @@ export default function RegionaisPage() {
       ]);
 
       setTodasRegionais(regionaisData);
-
-      console.log('🔍 [DEBUG] Total regionais carregadas:', regionaisData.length);
-      regionaisData.forEach(r => {
-        console.log(`🔍 [DEBUG] Regional: ${r.nome}, Laboratoristas:`, r.laboratoristas_responsaveis || []);
-      });
 
       // Carregar users apenas se não for laboratorista (eles não têm permissão)
       let usersData = [];
@@ -756,17 +748,11 @@ export default function RegionaisPage() {
         });
       } else if (currentUserAccessLevel === 'user') {
         // Laboratorista vê apenas a regional onde está alocado
-        console.log('🔍 [DEBUG] Filtrando regionais para laboratorista...');
         regionaisFiltradas = regionaisData.filter(regional => {
           const laboratoristas = regional.laboratoristas_responsaveis || [];
-          const match = laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-          console.log(`🔍 [DEBUG] Regional: ${regional.nome}, Match:`, match);
-          return match;
+          return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
         });
-        console.log('🔍 [DEBUG] Regionais filtradas para laboratorista:', regionaisFiltradas.length);
       }
-      
-      console.log('🔍 [DEBUG] Regionais finais:', regionaisFiltradas.length);
       
       setRegionais(regionaisFiltradas);
       setObras(obrasData);
