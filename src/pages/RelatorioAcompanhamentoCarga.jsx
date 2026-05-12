@@ -149,7 +149,7 @@ export default function RelatorioAcompanhamentoCargaPage() {
           }
           
           table {
-            width: 100% !important;
+            width: 90% !important;
             max-width: 100% !important;
             table-layout: fixed !important;
           }
