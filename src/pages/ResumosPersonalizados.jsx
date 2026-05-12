@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -423,11 +423,7 @@ export default function ResumosPersonalizadosPage() {
   const [laboratoristas, setLaboratoristas] = useState([]);
   const [rawEnsaios, setRawEnsaios] = useState([]);
 
-  useEffect(() => {
-    loadInitialData();
-  }, []);
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setLoading(true);
     try {
       const userData = await User.me();
@@ -442,21 +438,22 @@ export default function ResumosPersonalizadosPage() {
 
       setRegionais(regionaisData);
 
-      // Filtrar obras por permissão
       const availableObras = filtrarObrasPorAcesso(obrasData, regionaisData, userAccessLevel, userData.email);
-
       setObras(availableObras);
 
-      // Auto-selecionar primeira obra se houver apenas uma
       if (availableObras.length === 1) {
         setObraId(availableObras[0].id);
       }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("[ResumosPersonalizados] Erro ao carregar dados iniciais:", error?.message || error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
 
 
 
@@ -478,23 +475,23 @@ export default function ResumosPersonalizadosPage() {
 
 
 
-  const getNestedValue = (obj, path) => {
+  const getNestedValue = useCallback((obj, path) => {
     const keys = path.split('.');
     return keys.reduce((current, key) => {
       if (current === null || current === undefined || typeof current !== 'object') return null;
       return key in current ? current[key] : null;
     }, obj);
-  };
+  }, []);
 
-  const calcularMediaArray = (array, campo) => {
+  const calcularMediaArray = useCallback((array, campo) => {
     if (!array || array.length === 0) return null;
     const valores = array.map(item => parseFloat(getNestedValue(item, campo))).filter(v => !isNaN(v));
     if (valores.length === 0) return null;
     const media = valores.reduce((a, b) => a + b, 0) / valores.length;
     return media.toFixed(2);
-  };
+  }, [getNestedValue]);
 
-  const processarSubfieldControleCauq = (subfield, controleCauq) => {
+  const processarSubfieldControleCauq = useCallback((subfield, controleCauq) => {
     const extracaoRotarex = controleCauq.extracao_ligante_rotarex;
     const extracaoSoxhlet = controleCauq.extracao_ligante_soxhlet;
 
@@ -527,9 +524,9 @@ export default function ResumosPersonalizadosPage() {
     if (subfield.key === 'rtcd_25c.quantidade') return controleCauq.rtcd_25c?.quantidade;
     if (subfield.key === 'rtcd_25c.conforme') return controleCauq.rtcd_25c?.conforme;
     return getNestedValue(controleCauq, subfield.key);
-  };
+  }, [getNestedValue]);
 
-  const calcularGranulometriaPassante = (ensaio, peneira) => {
+  const calcularGranulometriaPassante = useCallback((ensaio, peneira) => {
     if (!ensaio?.granulometria?.peso_retido_peneiras) return null;
     
     const PENEIRAS = [
@@ -567,9 +564,9 @@ export default function ResumosPersonalizadosPage() {
     
     const percentualPassante = ((pesoInicial - pesoRetidoAcumulado) / pesoInicial) * 100;
     return percentualPassante.toFixed(2);
-  };
+  }, []);
 
-  const formatValue = (value, campo) => {
+  const formatValue = useCallback((value, campo) => {
     // Se o valor é um objeto com estrutura {sim, nao, na}, retornar a resposta
     if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
       if ('sim' in value && 'nao' in value && 'na' in value) {
@@ -621,26 +618,21 @@ export default function ResumosPersonalizadosPage() {
     }
     
     return value;
-  };
+  }, []);
 
-  const carregarDados = async () => {
+  const carregarDados = useCallback(async () => {
     if (!obraId || !tipoEnsaioSelecionado) {
       alert("Selecione uma obra e um tipo de ensaio.");
       return;
     }
 
-    console.log('Carregando dados:', { obraId, tipoEnsaioSelecionado });
     setLoadingData(true);
     try {
       const resultados = [];
       const tipo = tipoEnsaioSelecionado;
       const campos = CAMPOS_POR_TIPO[tipo].map(c => c.key);
-      console.log('Campos:', campos);
 
-      // Usar base44.entities para todas as entidades
       const ensaios = await base44.entities[tipo].filter({ obra_id: obraId });
-      
-      console.log('Ensaios carregados:', ensaios.length);
 
       // Filtrar por período
       let ensaiosFiltrados = ensaios;
@@ -1072,16 +1064,15 @@ export default function ResumosPersonalizadosPage() {
         }
       });
 
-      console.log('Resultados processados:', resultados.length);
       setDadosConsolidados(resultados);
       setRawEnsaios(ensaiosFiltrados);
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      alert("Erro ao carregar dados dos ensaios: " + error.message);
+      console.error("[ResumosPersonalizados] Erro ao carregar ensaios:", error?.message || error);
+      alert("Erro ao carregar dados dos ensaios: " + (error?.message || error));
     } finally {
       setLoadingData(false);
     }
-  };
+  }, [obraId, tipoEnsaioSelecionado, dataInicio, dataFim, laboratoristaFiltro, processarSubfieldControleCauq, calcularGranulometriaPassante, calcularMediaArray, formatValue, getNestedValue]);
 
   const exportarMedicaoGeometrica = (linhaId) => {
     const ensaio = rawEnsaios.find(e => e.id === linhaId || linhaId?.startsWith(e.id));
