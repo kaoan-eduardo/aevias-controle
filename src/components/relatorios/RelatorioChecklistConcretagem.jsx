@@ -451,7 +451,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           </div>
 
           {/* Signature Footer */}
-          <div className="mt-4">
+          <div className="mt-4 w-full">
             <SignatureFooter {...footerProps} />
           </div>
         </div>
@@ -585,7 +585,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             </div>
 
             {isUltimaCarga && !temAcoesCorretivas && (
-              <div className="mt-4">
+              <div className="mt-4 w-full">
                 <SignatureFooter {...footerProps} />
               </div>
             )}
@@ -677,7 +677,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             </div>
           )}
 
-          <div className="mt-4">
+          <div className="mt-4 w-full">
             <SignatureFooter {...footerProps} />
           </div>
         </div>

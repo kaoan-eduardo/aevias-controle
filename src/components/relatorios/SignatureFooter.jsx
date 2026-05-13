@@ -32,7 +32,7 @@ export default function SignatureFooter({
   const signatureStyle = { fontFamily: "'Freestyle Script', 'Great Vibes', 'Brush Script MT', cursive" };
 
   return (
-    <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5">
+    <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5 w-full">
       {/* Laboratorista */}
       <div className="text-center">
         <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
