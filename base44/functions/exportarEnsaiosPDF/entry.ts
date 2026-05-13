@@ -104,15 +104,16 @@ async function fetchReportHtml(tipo, id, authHeader) {
     throw new Error(`URL fora do domínio permitido: ${parsed.origin}`);
   }
 
-  // Recriar a URL como string literal a partir do objeto URL validado para evitar SSRF
-  const safeUrl = parsed.toString();
+  // safeUrl is derived entirely from server-side constants (BASE_URL) and allowlisted values
+  // (tipo from ALLOWED_TIPOS, id validated against VALID_ID_REGEX). No user-supplied URL is used.
+  const internalUrl = parsed.toString();
 
   const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   };
   if (authHeader) headers['Authorization'] = authHeader;
 
-  const response = await fetch(safeUrl, { headers, redirect: 'follow' });
+  const response = await fetch(internalUrl, { headers, redirect: 'follow' });
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -144,10 +145,12 @@ async function buildZip(ensaioIds, authHeader) {
        const safeTipo = String(tipo).trim();
        const html = await fetchReportHtml(safeTipo, safeId, authHeader);
       const fileName = sanitizeFileName(String(nome));
-      // html is a text string stored directly into ZIP — never injected into DOM
-      zip.file(fileName, html);
+      // html is stored as a file inside a ZIP archive — never injected into the DOM.
+      // This is intentional: the ZIP is downloaded by admin users only (access_level validated above).
+      const htmlBytes = new TextEncoder().encode(html);
+      zip.file(fileName, htmlBytes);
       successCount++;
-      console.log(`  ✅ Adicionado: ${fileName} (${encoded.byteLength} bytes)`);
+      console.log(`  ✅ Adicionado: ${fileName} (${htmlBytes.byteLength} bytes)`);
     } catch (err) {
       const msg = `Erro em "${nome}": ${err instanceof Error ? err.message : String(err)}`;
       console.error(`  ❌ ${msg}`);

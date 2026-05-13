@@ -140,7 +140,7 @@ export default function EnsaioCAUQPage() {
   }, []);
 
   // Cálculo automático da extração de ligante
-  useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
     const ext = formData.extracao_ligante;
     
     // Calcular umidade apenas se o ensaio de umidade estiver habilitado
@@ -169,7 +169,6 @@ export default function EnsaioCAUQPage() {
     formData.extracao_ligante.amostra_com_ligante,
     formData.extracao_ligante.amostra_sem_ligante,
     formData.extracao_ligante.fator_correcao,
-    formData.extracao_ligante.umidade,
     handleNestedChange
   ]);
 

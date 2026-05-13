@@ -120,7 +120,7 @@ export default function BoletimSondagemTradoPage() {
   const isApproved = editingBoletim?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => { loadInitialData(); }, []);
+  useEffect(() => { loadInitialData(); }, [location.search]);
 
   const loadInitialData = async () => {
     setLoading(true);

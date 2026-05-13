@@ -479,31 +479,32 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
                             faixaTrabalhoMax: d.faixaTrabalhoMax
                           };
                         return (
-                          <g
-                            key={i}
-                            tabIndex={0}
-                            aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
-                            style={{ cursor: 'pointer' }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
+                          <g key={i}>
+                            <circle cx={x} cy={y} r="2" fill="#3b82f6" />
+                            <rect
+                              x={x - 8} y={y - 8} width="16" height="16" fill="transparent"
+                              tabIndex={0}
+                              role="button"
+                              aria-label={`${d.astm}: ${d.percentualPassante}% passante`}
+                              style={{ cursor: 'pointer' }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  setHoveredPoint(pointData);
+                                  setTooltipPos({ x: x + 30, y });
+                                }
+                              }}
+                              onMouseEnter={(e) => {
+                                const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
+                                setHoveredPoint(pointData);
+                                setTooltipPos({ x: e.clientX - svgRect.left, y: e.clientY - svgRect.top });
+                              }}
+                              onMouseLeave={() => setHoveredPoint(null)}
+                              onFocus={() => {
                                 setHoveredPoint(pointData);
                                 setTooltipPos({ x: x + 30, y });
-                              }
-                            }}
-                            onMouseEnter={(e) => {
-                              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-                              setHoveredPoint(pointData);
-                              setTooltipPos({ x: e.clientX - svgRect.left, y: e.clientY - svgRect.top });
-                            }}
-                            onMouseLeave={() => setHoveredPoint(null)}
-                            onFocus={() => {
-                              setHoveredPoint(pointData);
-                              setTooltipPos({ x: x + 30, y });
-                            }}
-                            onBlur={() => setHoveredPoint(null)}
-                          >
-                            <circle cx={x} cy={y} r="2" fill="#3b82f6" />
-                            <rect x={x - 8} y={y - 8} width="16" height="16" fill="transparent" />
+                              }}
+                              onBlur={() => setHoveredPoint(null)}
+                            />
                           </g>
                         );
                       })}

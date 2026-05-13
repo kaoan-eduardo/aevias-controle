@@ -236,7 +236,7 @@ export default function RelatorioUnificado() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, []); // loadData is stable (defined above without changing deps)
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-';
 

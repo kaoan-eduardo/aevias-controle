@@ -160,7 +160,7 @@ export default function EnsaioDensidadeInSituPage() {
     };
 
     loadInitialData();
-  }, []);
+  }, [location.search]);
 
   const calcularFuro = useCallback((furo, densidadeAreia, pesoAreiaFunil, substituicao_retido_3_4, densidade_real_retida_3_4) => {
     const novoFuro = { ...furo };
