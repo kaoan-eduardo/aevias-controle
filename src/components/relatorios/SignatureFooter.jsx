@@ -35,7 +35,7 @@ export default function SignatureFooter({
     <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5 w-full" style={{ textAlign: 'center' }}>
       {/* Laboratorista */}
       <div className="text-center" style={{ textAlign: 'center' }}>
-        <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center' }}>
+        <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
           {labName && (
             <>
               <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{labName}</p>
@@ -53,7 +53,7 @@ export default function SignatureFooter({
       <div className="text-center" style={{ textAlign: 'center' }}>
         {approverEmail ? (
           <>
-            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center' }}>
+            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
               {approverName && <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{approverName}</p>}
               <p className={textSize}>{approverEmail}</p>
               {approverCREA && <p className={textSize}>CREA: {approverCREA}</p>}
@@ -77,7 +77,7 @@ export default function SignatureFooter({
       <div className="text-center" style={{ textAlign: 'center' }}>
         {clientEmail ? (
           <>
-            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center' }}>
+            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
               {clientName && <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{clientName}</p>}
               <p className={textSize}>{clientEmail}</p>
               {clientCREA && <p className={textSize}>CREA: {clientCREA}</p>}
