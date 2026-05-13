@@ -363,7 +363,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           {/* DADOS DA OBRA */}
           <div className="mb-3">
-            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+            <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
             <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
               <div>
                 <p className="font-bold text-gray-700">CLIENTE:</p>
@@ -408,7 +408,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           {/* Condições Climáticas */}
           <div className="mb-2">
-            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
+            <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
             <table className="w-full border-collapse text-[9px]">
               <thead>
                 <tr className="bg-slate-100">
@@ -435,7 +435,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           {/* Observações Gerais */}
           {checklist.observacoes_gerais && (
             <div className="mb-2">
-              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
+              <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
               <div className="text-[9px] p-1 bg-slate-50 border border-slate-300 rounded">
                 {checklist.observacoes_gerais}
               </div>
@@ -444,7 +444,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           {/* Carga de Concreto */}
           <div className="mb-2">
-            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO 1</div>
+            <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO 1</div>
             <div className="text-[9px]">
               <CargaContent carga={cargas[0]} />
             </div>
@@ -495,7 +495,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
               <>
                 {/* DADOS DA OBRA */}
                 <div className="mb-3">
-                  <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+                  <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
                     <div>
                       <p className="font-bold text-gray-700">CLIENTE:</p>
@@ -540,7 +540,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
                 {/* Condições Climáticas */}
                 <div className="mb-2">
-                  <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
+                  <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">CONDIÇÕES CLIMÁTICAS</div>
                   <table className="w-full border-collapse text-[9px]">
                     <thead>
                       <tr className="bg-slate-100">
@@ -567,7 +567,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                 {/* Observações Gerais */}
                 {checklist.observacoes_gerais && (
                   <div className="mb-2">
-                    <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
+                    <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">OBSERVAÇÕES GERAIS</div>
                     <div className="text-[9px] p-1 bg-slate-50 border border-slate-300 rounded">
                       {checklist.observacoes_gerais}
                     </div>
@@ -578,7 +578,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
             {/* Carga de Concreto */}
             <div className="mb-2">
-              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO {carga.numero_carga}</div>
+              <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">CARGA DE CONCRETO {carga.numero_carga}</div>
               <div className="text-[9px]">
                 <CargaContent carga={carga} />
               </div>
@@ -625,7 +625,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           {/* DADOS DA OBRA */}
           <div className="mb-2">
-            <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
+            <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">DADOS DA OBRA</div>
             <div className="grid grid-cols-3 gap-x-3 gap-y-1 text-[9px]">
               <div>
                 <p className="font-bold text-gray-700">CLIENTE:</p>
@@ -645,7 +645,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           {/* Ações Corretivas */}
           {temAcoesCorretivas && (
             <div className="mb-2">
-              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">AÇÕES CORRETIVAS</div>
+              <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">AÇÕES CORRETIVAS</div>
               <div className="border border-slate-300 p-2 text-[9px] bg-slate-50 min-h-[60px]">
                 {checklist.acoes_corretivas_descricao}
               </div>
@@ -655,7 +655,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           {/* Não Conformidades */}
           {checklist.nao_conformidades && checklist.nao_conformidades.length > 0 && (
             <div className="mb-2">
-              <div className="bg-slate-800 text-white px-2 py-1 font-bold text-[9px] mb-1 text-center">NÃO CONFORMIDADES</div>
+              <div className="bg-[#f1f5f9] text-gray-800 px-2 py-1 font-bold text-[9px] mb-1 text-center">NÃO CONFORMIDADES</div>
               <table className="w-full border-collapse border border-slate-300 text-[9px]">
                 <thead className="bg-slate-100">
                   <tr>
