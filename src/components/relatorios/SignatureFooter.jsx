@@ -32,9 +32,9 @@ export default function SignatureFooter({
   const signatureStyle = { fontFamily: "'Freestyle Script', 'Great Vibes', 'Brush Script MT', cursive" };
 
   return (
-    <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5 w-full">
+    <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5 w-full" style={{ textAlign: 'center' }}>
       {/* Laboratorista */}
-      <div className="text-center">
+      <div className="text-center" style={{ textAlign: 'center' }}>
         <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
           {labName && (
             <>
@@ -50,7 +50,7 @@ export default function SignatureFooter({
       </div>
 
       {/* Aprovador */}
-      <div className="text-center">
+      <div className="text-center" style={{ textAlign: 'center' }}>
         {approverEmail ? (
           <>
             <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
@@ -74,7 +74,7 @@ export default function SignatureFooter({
       </div>
 
       {/* Cliente */}
-      <div className="text-center">
+      <div className="text-center" style={{ textAlign: 'center' }}>
         {clientEmail ? (
           <>
             <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`}>
