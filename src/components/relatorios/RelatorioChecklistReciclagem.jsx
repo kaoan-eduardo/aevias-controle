@@ -234,8 +234,8 @@ export default function RelatorioChecklistReciclagem({ checklist, obra, regional
             </thead>
             <tbody>
               <tr>
-                {checklist.periodos_clima?.map((periodo, idx) => (
-                  <td key={idx} className="border border-slate-300 px-1 py-1.5 text-center">
+                {checklist.periodos_clima?.map((periodo) => (
+                  <td key={periodo.periodo} className="border border-slate-300 px-1 py-1.5 text-center">
                     <p className="font-medium mb-0.5 text-[9px]">
                       Temp: {periodo.temperatura_ambiente || 'N/A'}°C
                     </p>

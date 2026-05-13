@@ -571,7 +571,7 @@ export default function RelatorioChecklist({ checklist, obra, regional, project,
                     </thead>
                     <tbody>
                       {checklist.nao_conformidades.map((nc, ncIdx) => (
-                        <tr key={ncIdx} className="bg-white">
+                        <tr key={`nc-${nc.parametro_nc ?? ncIdx}`} className="bg-white">
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.local_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.categoria_nc || 'N/A'}</td>
                           <td className="border border-slate-300 px-3 py-2 text-slate-800">{nc.parametro_nc || 'N/A'}</td>

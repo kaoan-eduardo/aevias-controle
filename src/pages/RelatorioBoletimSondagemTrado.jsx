@@ -271,16 +271,16 @@ export default function RelatorioBoletimSondagemTrado() {
                       </tr>
                     </thead>
                     <tbody>
-                      {rows.map((row, ri) => {
+                      {rows.map((row) => {
                         if (row.section) {
                           return (
-                            <tr key={`section-${ri}`} className="bg-slate-300">
+                            <tr key={`section-${row.label}`} className="bg-slate-300">
                               <td colSpan={densidades.length + 1} className="border border-slate-400 px-2 py-0.5 font-bold text-[8px] uppercase tracking-wider text-slate-600">{row.label}</td>
                             </tr>
                           );
                         }
                         return (
-                          <tr key={ri} className={row.result ? 'bg-slate-200 font-bold' : ri % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                          <tr key={row.field} className={row.result ? 'bg-slate-200 font-bold' : row.isNum ? 'bg-white' : 'bg-slate-50'}>
                             <td className="border border-slate-400 px-2 py-0.5 text-gray-700">{row.label}</td>
                             {densidades.map((d, di) => (
                               <td key={di} className={`border border-slate-400 px-2 py-0.5 text-center font-semibold ${row.result ? 'text-blue-700' : ''}`}>

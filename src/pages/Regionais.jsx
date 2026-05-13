@@ -557,8 +557,8 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Empreiteiras:</p>
                             <div className="flex flex-wrap gap-1">
-                              {obra.empreiteiras.map((emp, idx) => (
-                                <Badge key={idx} variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                              {obra.empreiteiras.map((emp) => (
+                                <Badge key={emp} variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
                                   {emp}
                                 </Badge>
                               ))}
@@ -569,8 +569,8 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Clientes:</p>
                             <div className="flex flex-wrap gap-1">
-                              {obra.clientes.map((cliente, idx) => (
-                                <Badge key={idx} variant="secondary" className="bg-teal-100 text-teal-800 text-xs">
+                              {obra.clientes.map((cliente) => (
+                                <Badge key={cliente} variant="secondary" className="bg-teal-100 text-teal-800 text-xs">
                                   {cliente}
                                 </Badge>
                               ))}
@@ -581,8 +581,8 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Usinas:</p>
                             <div className="flex flex-wrap gap-1">
-                              {obra.usinas.map((usina, idx) => (
-                                <Badge key={idx} variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                              {obra.usinas.map((usina) => (
+                                <Badge key={usina} variant="secondary" className="bg-green-100 text-green-800 text-xs">
                                   {usina}
                                 </Badge>
                               ))}
@@ -593,8 +593,8 @@ const RegionalCard = React.memo(({ regional, obras, users, projects, onEdit, onD
                           <div className="mt-2">
                             <p className="text-xs text-[#00233B]/60 mb-1">Rodovias:</p>
                             <div className="flex flex-wrap gap-1">
-                              {obra.rodovias.map((rodovia, idx) => (
-                                <Badge key={idx} variant="secondary" className="bg-purple-100 text-purple-800 text-xs">
+                              {obra.rodovias.map((rodovia) => (
+                                <Badge key={rodovia} variant="secondary" className="bg-purple-100 text-purple-800 text-xs">
                                   {rodovia}
                                 </Badge>
                               ))}

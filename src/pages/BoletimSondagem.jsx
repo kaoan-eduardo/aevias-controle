@@ -1128,7 +1128,7 @@ export default function BoletimSondagemPage() {
                                   <tr key={ri} className={isResult ? 'bg-[#BFCF99]/30' : isCalc ? 'bg-[#BFCF99]/10' : (ri % 2 === 0 ? 'bg-white/20' : 'bg-white/5')}>
                                     <td className={`border border-[#00233B]/20 px-3 py-1.5 font-medium text-[#00233B]/80 text-xs ${isCalc ? 'italic' : ''} ${isResult ? 'font-bold text-[#00233B]' : ''}`}>{row.label}</td>
                                     {densidades.map((d, di) => (
-                                      <td key={di} className={`border border-[#00233B]/20 px-2 py-1 text-center ${isCalc ? 'font-semibold text-[#00233B]' : ''}`}>
+                                      <td key={`densidade-${di}`} className={`border border-[#00233B]/20 px-2 py-1 text-center ${isCalc ? 'font-semibold text-[#00233B]' : ''}`}>
                                         {isCalc ? (
                                           <span className={isResult ? 'text-base font-bold text-[#00233B]' : ''}>{calc(d[row.field], row.dec ?? 2)}</span>
                                         ) : row.type === 'text' ? (

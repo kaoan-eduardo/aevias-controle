@@ -383,10 +383,10 @@ function CompressaoAxialTable({ series, ensaio }) {
           <td className="border border-slate-400 px-2 py-1 font-semibold">RESISTÊNCIA</td>
           <td className="border border-slate-400 px-2 py-1 text-center">MPa</td>
           {series.map((s, si) =>
-            s.map((cp, ci) => (
-              <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-blue-800 font-semibold">{fmtN(cp.resistencia, 2)}</td>
-            ))
-          )}
+             s.map((cp, ci) => (
+               <td key={`res-${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center text-blue-800 font-semibold">{fmtN(cp.resistencia, 2)}</td>
+             ))
+           )}
           {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
           </tr>
           {/* RESIST. DO EXEMPLAR — média por série (colspan 2) */}
@@ -488,10 +488,10 @@ function TracaoFlexaoTable({ series, ensaio }) {
            <td className="border border-slate-400 px-2 py-1 font-semibold">VÃO CENTRAL DO CP</td>
            <td className="border border-slate-400 px-2 py-1 text-center">mm</td>
            {series.map((s, si) =>
-             s.map((cp, ci) => (
-               <td key={`${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.vao_central, 2)}</td>
-             ))
-           )}
+              s.map((cp, ci) => (
+                <td key={`vao-${si}-${ci}`} className="border border-slate-400 px-2 py-1 text-center">{fmtN(cp.vao_central, 2)}</td>
+              ))
+            )}
            {series.length === 0 && [0,1,2,3].map(i => <td key={i} className="border border-slate-400 px-2 py-1"></td>)}
          </tr>
          {/* RESISTÊNCIA */}

@@ -419,7 +419,7 @@ export default function RelatorioLimites({ limites, ensaio, obra, regional }) {
             <thead>
               <tr>
                 <th className={th}>Campo</th>
-                {lpRows.map((_, i) => <th key={`lp-h-${i}`} className={th + " text-center"}>#{i+1}</th>)}
+                {lpRows.map((_, i) => <th key={`lp-h-${i + 1}`} className={th + " text-center"}>#{i+1}</th>)}
               </tr>
             </thead>
             <tbody>

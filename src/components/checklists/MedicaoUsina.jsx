@@ -118,7 +118,7 @@ export default function MedicaoUsina({ medicoes_usina, onChange, disabled, empre
               </thead>
               <tbody>
                 {data.cargas.map((carga, index) => (
-                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                  <tr key={carga.numero_ticket ? `ticket-${carga.numero_ticket}` : `carga-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                     <td className="border border-slate-300 px-1 py-1">
                       <Input value={carga.numero_ticket || ''} onChange={(e) => updateCarga(index, 'numero_ticket', e.target.value)} disabled={disabled} className="h-8 text-sm" placeholder="Ex: 32352" />
                     </td>

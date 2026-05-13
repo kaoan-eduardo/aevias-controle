@@ -194,7 +194,7 @@ export default function RelatorioTaxaMRAF() {
                 <th className="border border-slate-300 px-2 py-1.5 text-left font-medium">Parâmetro</th>
                 <th className="border border-slate-300 px-2 py-1.5 text-center font-medium">Unidade</th>
                 {ensaio.ensaios?.map((_, i) => (
-                  <th key={`bandeja-exec2-${i}`} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
+                 <th key={`bandeja-exec2-${i + 1}`} className="border border-slate-300 px-2 py-1.5 text-center font-medium">Bandeja {i + 1}</th>
                 ))}
               </tr>
             </thead>

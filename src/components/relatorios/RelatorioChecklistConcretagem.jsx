@@ -421,8 +421,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
               </thead>
               <tbody>
                 <tr>
-                  {checklist.periodos_clima?.map((periodo, index) => (
-                    <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
+                  {checklist.periodos_clima?.map((periodo) => (
+                    <td key={periodo.periodo} className="border border-slate-300 px-1 py-0.5 text-center">
                       <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
                       <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
                     </td>
@@ -544,8 +544,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                   <table className="w-full border-collapse text-[9px]">
                     <thead>
                       <tr className="bg-slate-100">
-                        {checklist.periodos_clima?.map((periodo, index) => (
-                          <th key={index} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
+                        {checklist.periodos_clima?.map((periodo) => (
+                          <th key={periodo.periodo} className="border border-slate-300 px-1 py-0.5 text-center font-bold uppercase">
                             {getPeriodoNome(periodo.periodo)}
                           </th>
                         ))}
@@ -553,8 +553,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                     </thead>
                     <tbody>
                       <tr>
-                        {checklist.periodos_clima?.map((periodo, index) => (
-                          <td key={index} className="border border-slate-300 px-1 py-0.5 text-center">
+                        {checklist.periodos_clima?.map((periodo) => (
+                          <td key={periodo.periodo} className="border border-slate-300 px-1 py-0.5 text-center">
                             <p className="font-medium mb-0.5">Temp. Ambiente (°C): {periodo.temperatura_ambiente || 'N/A'}</p>
                             <p className="font-bold">{getClimaEmoji(periodo.condicoes_climaticas)} {getClimaTexto(periodo.condicoes_climaticas)}</p>
                           </td>
@@ -666,7 +666,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
                 </thead>
                 <tbody>
                   {checklist.nao_conformidades.map((nc, index) => (
-                    <tr key={index}>
+                    <tr key={`nc-${nc.parametro_nc ?? index}`}>
                       <td className="border border-slate-300 px-1 py-0.5">{nc.local_nc || 'N/A'}</td>
                       <td className="border border-slate-300 px-1 py-0.5">{nc.categoria_nc || 'N/A'}</td>
                       <td className="border border-slate-300 px-1 py-0.5">{nc.parametro_nc || 'N/A'}</td>

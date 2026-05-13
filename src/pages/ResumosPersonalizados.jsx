@@ -1317,7 +1317,7 @@ export default function ResumosPersonalizadosPage() {
                   </thead>
                   <tbody>
                     {dadosConsolidados.map((linha, idx) => (
-                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
+                      <tr key={linha.id ?? `linha-${idx}`} className={idx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
                        <td className="border border-white/20 px-2 py-2 font-medium text-[#00233B]">
                          {linha.tipo}
                        </td>

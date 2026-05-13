@@ -132,15 +132,15 @@ function ISCSection({ ensaio }) {
           <tr className="bg-slate-100">
             <td className="border border-slate-400 px-1 py-0.5 font-bold" rowSpan={2}>Nº Cilindro</td>
             <td className="border border-slate-400 px-1 py-0.5 font-bold">Penetração (mm)</td>
-            {PENETRACOES.map((p, i) => (
-              <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{p}</td>
+            {PENETRACOES.map((p) => (
+              <td key={p} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{p}</td>
             ))}
           </tr>
           {/* Tempos */}
           <tr className="bg-slate-100">
             <td className="border border-slate-400 px-1 py-0.5 font-bold">Tempo (min)</td>
-            {TEMPOS.map((t, i) => (
-              <td key={i} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{t}</td>
+            {TEMPOS.map((t) => (
+              <td key={t} className="border border-slate-400 px-1 py-0.5 text-center font-bold">{t}</td>
             ))}
           </tr>
           {/* Header: Pressão Padrão */}
@@ -155,7 +155,7 @@ function ISCSection({ ensaio }) {
           {cbr.map((cil, cidx) => {
             const { pressoes, isc254, isc508 } = calcISC(cil, fator);
             return (
-              <React.Fragment key={cidx}>
+              <React.Fragment key={cil.cilindro_numero ?? cidx}>
                 {/* Leitura do anel */}
                 <tr className="bg-white">
                   <td className="border border-slate-400 px-1 py-0.5 font-semibold" rowSpan={2}>{cil.cilindro_numero || cidx + 1}</td>

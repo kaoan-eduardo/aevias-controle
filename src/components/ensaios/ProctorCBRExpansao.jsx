@@ -102,7 +102,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
           {(form.cbr_cilindros || []).map((cil, cidx) => {
             const { pressoes, isc254, isc508, isc } = calcCBR(cil, form.cbr_fator_anel);
             return (
-              <div key={cidx} className="border border-[#00233B]/20 rounded-lg overflow-hidden">
+              <div key={cil.cilindro_numero ?? cidx} className="border border-[#00233B]/20 rounded-lg overflow-hidden">
                 {/* Header */}
                 <div className="bg-[#00233B]/10 px-3 py-2 flex items-center gap-4">
                   <span className="font-semibold text-[#00233B] text-sm">
@@ -164,7 +164,7 @@ export default function ProctorCBRExpansao({ form, setForm }) {
                           <div className="text-[10px] text-[#00233B]/60">Corrigida (kgf/cm²)</div>
                         </td>
                         {pressoes.map((p, pidx) => (
-                          <td key={pidx} className={`border border-[#00233B]/20 px-2 py-1 text-center text-xs font-semibold text-gray-600 ${pidx === 3 || pidx === 5 ? 'bg-[#BFCF99]/20' : ''}`}>
+                          <td key={`pressao-${pidx}`} className={`border border-[#00233B]/20 px-2 py-1 text-center text-xs font-semibold text-gray-600 ${pidx === 3 || pidx === 5 ? 'bg-[#BFCF99]/20' : ''}`}>
                             {p != null ? p.toFixed(2) : '—'}
                           </td>
                         ))}
