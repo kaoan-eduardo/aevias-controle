@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
@@ -80,11 +80,7 @@ export default function NovaNcPage() {
   const [uploadingFotos, setUploadingFotos] = useState(false);
   const [uploadingPdfs, setUploadingPdfs] = useState(false);
 
-  useEffect(() => {
-    loadInitialData();
-  }, []);
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setLoading(true);
     try {
       const userData = await User.me();
@@ -112,7 +108,11 @@ export default function NovaNcPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
 
   const handleObraChange = async (id) => {
     setObraId(id);

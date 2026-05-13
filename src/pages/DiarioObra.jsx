@@ -121,15 +121,18 @@ const DiarioForm = ({
   const regionalSelecionada = obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null;
   const isObraClienteType = obraSelecionada?.tipo_obra === 'levantamentos' || obraSelecionada?.tipo_obra === 'sondagem';
 
-  // Effect to auto-fill cliente when obra changes
-  React.useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
+  // Effect to auto-fill cliente when obra changes.
+  // Intentionally depends only on obraSelecionada?.id to avoid loops caused by handleChange.
+  const obraSelecionadaId = obraSelecionada?.id;
+  React.useEffect(() => {
     if (regionalSelecionada && regionalSelecionada.cliente !== formData.cliente) {
       handleChange('cliente', regionalSelecionada.cliente || "");
     }
-    // Limpar rodovia ao trocar de obra
     handleChange('rodovia', "");
+  // handleChange is stable (defined with plain arrow function in parent scope).
+  // formData.cliente intentionally omitted to prevent a feedback loop.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [obraSelecionada?.id]);
+  }, [obraSelecionadaId]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

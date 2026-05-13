@@ -49,7 +49,7 @@ ChartContainer.displayName = "Chart"
 const ChartStyle = ({ id, config }) => {
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color)
 
-  React.useEffect(() => { // eslint-disable-line react-hooks/exhaustive-deps
+  React.useEffect(() => {
     if (!colorConfig.length) return
 
     const css = Object.entries(THEMES)
@@ -73,6 +73,9 @@ ${colorConfig
     return () => {
       document.head.removeChild(styleEl)
     }
+  // colorConfig is derived from `config` prop via Object.entries filter — use colorConfig.length
+  // as a stable proxy to avoid re-running on every render while still reacting to actual changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, colorConfig.length])
 
   return null

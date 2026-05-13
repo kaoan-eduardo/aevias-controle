@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -222,9 +222,15 @@ export default function GerenciarSolicitacoesModal({ isOpen, onClose, user, onUp
     }
   };
 
-  useEffect(() => {
+  const loadSolicitacoesCallback = useCallback(() => {
     if (isOpen) loadSolicitacoes();
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+  // loadSolicitacoes is defined in this component without changing deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  useEffect(() => {
+    loadSolicitacoesCallback();
+  }, [loadSolicitacoesCallback]);
 
   const handleAprovar = async (solicitacao) => {
     try {

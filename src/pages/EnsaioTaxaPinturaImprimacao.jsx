@@ -63,11 +63,7 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
   const isApproved = editingEnsaio?.approved === true;
   const isEditable = !isApproved;
 
-  useEffect(() => {
-    loadInitialData();
-  }, []); // loadInitialData is stable (defined outside, no changing deps)
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setLoading(true);
     try {
       const currentUser = await base44.auth.me();
@@ -151,7 +147,11 @@ export default function EnsaioTaxaPinturaImprimacaoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [location.search, navigate]);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
 
   const calcularDimensoesBandeja = useCallback((lado1, lado2) => {
     if (lado1 && lado2) {

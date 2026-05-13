@@ -260,7 +260,7 @@ export default function ChecklistTerraplanagem() {
 
   useEffect(() => {
     loadInitialData();
-  }, [loadInitialData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.search]); // re-run when URL changes (e.g. editId param)
 
   const handleCheckboxChange = (section, field, option) => {
     setFormData(prev => ({
