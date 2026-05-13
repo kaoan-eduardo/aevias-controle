@@ -35,24 +35,20 @@ const AlertDialogContent = React.forwardRef(({ className, ...props }, ref) => (
 ))
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
-const AlertDialogHeader = ({
-  className,
-  ...props
-}) => (
+const AlertDialogHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
+    ref={ref}
     className={cn("flex flex-col space-y-2 text-center sm:text-left", className)}
     {...props} />
-)
+))
 AlertDialogHeader.displayName = "AlertDialogHeader"
 
-const AlertDialogFooter = ({
-  className,
-  ...props
-}) => (
+const AlertDialogFooter = React.forwardRef(({ className, ...props }, ref) => (
   <div
+    ref={ref}
     className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
     {...props} />
-)
+))
 AlertDialogFooter.displayName = "AlertDialogFooter"
 
 const AlertDialogTitle = React.forwardRef(({ className, ...props }, ref) => (

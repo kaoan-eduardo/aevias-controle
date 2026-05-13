@@ -8,6 +8,31 @@ import AprovacaoBar from '../components/relatorios/AprovacaoBar';
 import SignatureFooter from '../components/relatorios/SignatureFooter';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+function calcularEstatisticas(deflexoes) {
+  const qt = deflexoes.length;
+  const media = qt > 0 ? deflexoes.reduce((a, b) => a + b) / qt : 0;
+  const desvPad = qt > 0
+    ? Math.sqrt(deflexoes.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / qt)
+    : 0;
+  return { qt, media, desvPad };
+}
+
+function calcularEstatisticasPorFaixa(levantamentos) {
+  const bordoEsquerdo = levantamentos.map(lev => lev.bordo_esquerdo?.deflexao || 0).filter(v => v > 0);
+  const eixo = levantamentos.map(lev => lev.eixo?.deflexao || 0).filter(v => v > 0);
+  const bordoDireito = levantamentos.map(lev => lev.bordo_direito?.deflexao || 0).filter(v => v > 0);
+  return {
+    bordoEsquerdo: calcularEstatisticas(bordoEsquerdo),
+    eixo: calcularEstatisticas(eixo),
+    bordoDireito: calcularEstatisticas(bordoDireito)
+  };
+}
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+}
+
 export default function RelatorioVigaBenkelman() {
   useReportMode();
   const [searchParams] = useSearchParams();
@@ -118,33 +143,8 @@ export default function RelatorioVigaBenkelman() {
     .map(lev => lev.bordo_direito?.deflexao || 0)
     .filter(v => v > 0);
 
-  const calcularEstatisticas = (deflexoes) => {
-    const qt = deflexoes.length;
-    const media = qt > 0 ? deflexoes.reduce((a, b) => a + b) / qt : 0;
-    const desvPad = qt > 0 
-      ? Math.sqrt(deflexoes.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / qt)
-      : 0;
-    return { qt, media, desvPad };
-  };
-
-  const calcularEstatisticasPorFaixa = (levantamentos) => {
-    const bordoEsquerdo = levantamentos.map(lev => lev.bordo_esquerdo?.deflexao || 0).filter(v => v > 0);
-    const eixo = levantamentos.map(lev => lev.eixo?.deflexao || 0).filter(v => v > 0);
-    const bordoDireito = levantamentos.map(lev => lev.bordo_direito?.deflexao || 0).filter(v => v > 0);
-    return {
-      bordoEsquerdo: calcularEstatisticas(bordoEsquerdo),
-      eixo: calcularEstatisticas(eixo),
-      bordoDireito: calcularEstatisticas(bordoDireito)
-    };
-  };
-
   const handlePrint = () => {
     window.print();
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   };
 
   return (

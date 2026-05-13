@@ -15,7 +15,7 @@ import { uploadMultipleFiles } from "@/utils/imageUpload";
 import { useFormPersistence } from "@/components/hooks/useFormPersistence";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 
-const getInitialFormData = () => {
+function getInitialFormData() {
   const today = new Date().toISOString().split('T')[0];
   return {
   obra_id: "",
@@ -78,7 +78,7 @@ const getInitialFormData = () => {
   },
   status: "rascunho"
   };
-};
+}
 
 export default function ChecklistAplicacaoPage() {
   const [formData, setFormData] = useState(getInitialFormData());

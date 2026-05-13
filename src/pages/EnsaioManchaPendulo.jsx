@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -148,7 +148,7 @@ export default function EnsaioManchaPendulo() {
     }
   };
 
-  const handleObraChange = (obraId) => {
+  const handleObraChange = useCallback((obraId) => {
     const obra = obras.find(o => o.id === obraId);
     if (obra) {
       setFormData(prev => ({
@@ -159,7 +159,7 @@ export default function EnsaioManchaPendulo() {
         pista: ''
       }));
     }
-  };
+  }, [obras]);
 
   const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
   const isAdmin = userAccessLevel === 'admin' || user?.role === 'admin';

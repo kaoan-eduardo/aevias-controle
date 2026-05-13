@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, Loader } from 'lucide-react';
 
@@ -66,9 +66,9 @@ export default function ImpressionEtiquetas() {
     }
   };
 
-  const handlePrint = () => {
+  const handlePrint = useCallback(() => {
     window.print();
-  };
+  }, []);
 
   // Upload screen
   if (!showRender) {
