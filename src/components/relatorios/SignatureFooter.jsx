@@ -9,93 +9,123 @@ const formatDateBrasilia = (dateString) => {
   return new Date(normalizedDate).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'medium' });
 };
 
-export default function SignatureFooter({ 
-  labName, 
-  labEmail, 
+const colStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  textAlign: 'center',
+  width: '100%',
+};
+
+const signatureAreaStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  textAlign: 'center',
+  width: '100%',
+  minHeight: '36px',
+};
+
+const lineStyle = {
+  borderTop: '2px solid #6b7280',
+  width: '75%',
+  margin: '0 auto',
+  paddingTop: '2px',
+  textAlign: 'center',
+};
+
+const labelStyle = {
+  fontWeight: '600',
+  fontSize: '10px',
+  textTransform: 'uppercase',
+  textAlign: 'center',
+  width: '100%',
+  display: 'block',
+};
+
+const infoStyle = {
+  fontSize: '10px',
+  color: '#64748b',
+  textAlign: 'center',
+  width: '100%',
+  display: 'block',
+};
+
+const signatureStyle = {
+  fontFamily: "'Freestyle Script', 'Great Vibes', 'Brush Script MT', cursive",
+  fontSize: '20px',
+  fontWeight: 'bold',
+  color: '#475569',
+  textAlign: 'center',
+};
+
+export default function SignatureFooter({
+  labName,
+  labEmail,
   labPosition,
   labCreatedDate,
-  approverName, 
-  approverEmail, 
+  approverName,
+  approverEmail,
   approverPosition,
   approverCREA,
   approverDate,
-  clientName, 
-  clientEmail, 
+  clientName,
+  clientEmail,
   clientPosition,
   clientCREA,
   clientDate,
-  sizePrint = false 
 }) {
-  const textSize = sizePrint ? 'text-[7px] print:text-[6px]' : 'text-xs print:text-[9px]';
-  const headerSize = sizePrint ? 'text-[6px] print:text-[5px]' : 'text-[10px] print:text-[9px]';
-  const minHeight = sizePrint ? 'min-h-[28px] print:min-h-[20px]' : 'min-h-[36px] print:min-h-[28px]';
-  const signatureStyle = { fontFamily: "'Freestyle Script', 'Great Vibes', 'Brush Script MT', cursive" };
-
   return (
-    <div className="grid grid-cols-3 gap-0.5 items-end print:gap-0.5 w-full" style={{ textAlign: 'center' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '4px', width: '100%', alignItems: 'end' }}>
+      
       {/* Laboratorista */}
-      <div className="text-center" style={{ textAlign: 'center' }}>
-        <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
-          {labName && (
-            <>
-              <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{labName}</p>
-              {labEmail && <p className={textSize}>{labEmail}</p>}
-              {labCreatedDate && <p className={textSize}>em {formatDateBrasilia(labCreatedDate)}</p>}
-            </>
-          )}
+      <div style={colStyle}>
+        <div style={signatureAreaStyle}>
+          {labName && <span style={signatureStyle}>{labName}</span>}
+          {labEmail && <span style={infoStyle}>{labEmail}</span>}
+          {labCreatedDate && <span style={infoStyle}>em {formatDateBrasilia(labCreatedDate)}</span>}
         </div>
-        <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1" style={{ width: '75%', margin: '0 auto', textAlign: 'center' }}>
-          <p className={`${headerSize} font-semibold uppercase`}>{labPosition || 'Laboratorista'}</p>
+        <div style={lineStyle}>
+          <span style={labelStyle}>{labPosition || 'Laboratorista'}</span>
         </div>
       </div>
 
       {/* Aprovador */}
-      <div className="text-center" style={{ textAlign: 'center' }}>
-        {approverEmail ? (
-          <>
-            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
-              {approverName && <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{approverName}</p>}
-              <p className={textSize}>{approverEmail}</p>
-              {approverCREA && <p className={textSize}>CREA: {approverCREA}</p>}
-              {approverDate && <p className={textSize}>em {formatDateBrasilia(approverDate)}</p>}
-            </div>
-            <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1" style={{ width: '75%', margin: '0 auto', textAlign: 'center' }}>
-              <p className={`${headerSize} font-semibold uppercase`}>{approverPosition || 'Responsável'}</p>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={`${minHeight} mb-0 print:mb-0`}></div>
-            <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1" style={{ width: '75%', margin: '0 auto', textAlign: 'center' }}>
-              <p className={`${headerSize} font-semibold`}>Responsável</p>
-            </div>
-          </>
-        )}
+      <div style={colStyle}>
+        <div style={signatureAreaStyle}>
+          {approverEmail ? (
+            <>
+              {approverName && <span style={signatureStyle}>{approverName}</span>}
+              <span style={infoStyle}>{approverEmail}</span>
+              {approverCREA && <span style={infoStyle}>CREA: {approverCREA}</span>}
+              {approverDate && <span style={infoStyle}>em {formatDateBrasilia(approverDate)}</span>}
+            </>
+          ) : null}
+        </div>
+        <div style={lineStyle}>
+          <span style={labelStyle}>Responsável</span>
+        </div>
       </div>
 
       {/* Cliente */}
-      <div className="text-center" style={{ textAlign: 'center' }}>
-        {clientEmail ? (
-          <>
-            <div className={`${textSize} text-slate-500 mb-0 ${minHeight} flex flex-col justify-end items-center print:mb-0`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'center', width: '100%' }}>
-              {clientName && <p className="font-bold text-slate-600 text-[20px]" style={signatureStyle}>{clientName}</p>}
-              <p className={textSize}>{clientEmail}</p>
-              {clientCREA && <p className={textSize}>CREA: {clientCREA}</p>}
-              {clientDate && <p className={textSize}>em {formatDateBrasilia(clientDate)}</p>}
-            </div>
-            <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1" style={{ width: '75%', margin: '0 auto', textAlign: 'center' }}>
-              <p className={`${headerSize} font-semibold uppercase`}>{clientPosition || 'Cliente'}</p>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={`${minHeight} mb-0 print:mb-0`}></div>
-            <div className="border-t-2 border-gray-500 pt-0 w-3/4 mx-auto print:pt-0 print:border-t-1" style={{ width: '75%', margin: '0 auto', textAlign: 'center' }}>
-              <p className={`${headerSize} font-semibold`}>Cliente</p>
-            </div>
-          </>
-        )}
+      <div style={colStyle}>
+        <div style={signatureAreaStyle}>
+          {clientEmail ? (
+            <>
+              {clientName && <span style={signatureStyle}>{clientName}</span>}
+              <span style={infoStyle}>{clientEmail}</span>
+              {clientCREA && <span style={infoStyle}>CREA: {clientCREA}</span>}
+              {clientDate && <span style={infoStyle}>em {formatDateBrasilia(clientDate)}</span>}
+            </>
+          ) : null}
+        </div>
+        <div style={lineStyle}>
+          <span style={labelStyle}>Cliente</span>
+        </div>
       </div>
+
     </div>
   );
 }
