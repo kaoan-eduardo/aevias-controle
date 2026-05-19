@@ -299,7 +299,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         @media print {
           @page {
             size: A4 portrait;
-            margin: 10;
+            margin: 0;
           }
 
           html, body { 
@@ -327,14 +327,14 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           img {
-            max-width: 100% !important;
+            max-width: 80% !important;
             height: auto !important;
             display: block !important;
           }
 
           table {
-            width: 100% !important;
-            max-width: 100% !important;
+            width: 80% !important;
+            max-width: 80% !important;
             table-layout: fixed !important;
           }
 
