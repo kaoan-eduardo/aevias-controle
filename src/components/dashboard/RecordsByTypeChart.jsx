@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const TOOLTIP_STYLE = {
@@ -20,17 +20,18 @@ export default function RecordsByTypeChart({ data, activeTipoRegistro, onSliceCl
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              dataKey="value"
-              onClick={onSliceClick}
-              style={{ cursor: 'pointer' }}
-            >
+        <ResponsiveContainer width="100%" height={Math.max(300, data.length * 40)}>
+          <BarChart
+            data={data}
+            layout="vertical"
+            onClick={e => e?.activePayload && onSliceClick(e.activePayload[0].payload)}
+            margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" horizontal={false} />
+            <XAxis type="number" stroke="#00233B" allowDecimals={false} />
+            <YAxis type="category" dataKey="name" stroke="#00233B" width={140} tick={{ fontSize: 12 }} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} />
+            <Bar dataKey="value" name="Registros" radius={[0, 4, 4, 0]} style={{ cursor: 'pointer' }}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
@@ -38,10 +39,8 @@ export default function RecordsByTypeChart({ data, activeTipoRegistro, onSliceCl
                   opacity={activeTipoRegistro && entry.entityType !== activeTipoRegistro ? 0.3 : 1}
                 />
               ))}
-            </Pie>
-            <Tooltip contentStyle={TOOLTIP_STYLE} />
-            <Legend wrapperStyle={{ color: '#00233B' }} />
-          </PieChart>
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
