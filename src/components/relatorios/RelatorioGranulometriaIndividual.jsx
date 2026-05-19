@@ -203,6 +203,38 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
 
       </section>
 
+      {/* Gráfico de Granulometria */}
+      <div className="border border-gray-400 p-4 mb-4 bg-white" style={{ pageBreakBefore: 'always' }}>
+        <h3 className="text-xs font-bold text-center mb-2">GRANULOMETRIA DA AMOSTRA</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis 
+              dataKey="astm" 
+              tick={{ fontSize: 10 }} 
+              label={{ value: 'Peneiras', position: 'insideBottomRight', offset: -5 }}
+            />
+            <YAxis 
+              tick={{ fontSize: 10 }} 
+              label={{ value: '% Passante', angle: -90, position: 'insideLeft' }}
+            />
+            <Tooltip formatter={(value) => value.toFixed(2)} />
+            <Legend wrapperStyle={{ fontSize: '11px' }} />
+            {ensaio.agregados?.map((agg, idx) => (
+              <Line 
+                key={idx}
+                type="linear" 
+                dataKey={`Agregado ${idx + 1}`}
+                name={agg.nome || `Agregado ${idx + 1}`}
+                stroke={colors[idx % colors.length]}
+                dot={{ r: 3 }}
+                isAnimationActive={false}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
       {/* Equivalente de Areia */}
       <section className="mb-4">
         <p className="text-xs text-center font-bold mb-2">MÉTODO DE ENSAIO DE EQUIVALENTE DE AREIA - DNIT 450/2024</p>
@@ -269,38 +301,6 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
           </div>
         </section>
       )}
-
-      {/* Gráfico de Granulometria */}
-      <div className="border border-gray-400 p-4 mb-4 bg-white print:break-before-page">
-        <h3 className="text-xs font-bold text-center mb-2">GRANULOMETRIA DA AMOSTRA</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis 
-              dataKey="astm" 
-              tick={{ fontSize: 10 }} 
-              label={{ value: 'Peneiras', position: 'insideBottomRight', offset: -5 }}
-            />
-            <YAxis 
-              tick={{ fontSize: 10 }} 
-              label={{ value: '% Passante', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip formatter={(value) => value.toFixed(2)} />
-            <Legend wrapperStyle={{ fontSize: '11px' }} />
-            {ensaio.agregados?.map((agg, idx) => (
-              <Line 
-                key={idx}
-                type="linear" 
-                dataKey={`Agregado ${idx + 1}`}
-                name={agg.nome || `Agregado ${idx + 1}`}
-                stroke={colors[idx % colors.length]}
-                dot={{ r: 3 }}
-                isAnimationActive={false}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
 
       {/* Assinaturas */}
       <footer className="mt-6 pt-6 print:break-inside-avoid">
