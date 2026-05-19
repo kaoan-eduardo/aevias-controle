@@ -26,7 +26,7 @@ export default function StatusPieChart({ data, activeStatus, isClienteUser, onSl
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data} onClick={e => e?.activePayload && onSliceClick(e.activePayload[0].payload)}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" />
+            <CartesianGrid stroke="none" />
             <XAxis dataKey="name" stroke="#00233B" />
             <YAxis stroke="#00233B" />
             <Tooltip contentStyle={TOOLTIP_STYLE} />
