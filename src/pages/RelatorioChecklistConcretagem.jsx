@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
@@ -13,6 +13,35 @@ export default function RelatorioChecklistConcretagemPage() {
   const [checklist, setChecklist] = useState(null);
   const [creatorUser, setCreatorUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const reportRef = useRef(null);
+
+  // Scale the report to fit A4 width before printing, restore after
+  useEffect(() => {
+    const beforePrint = () => {
+      const el = reportRef.current;
+      if (!el) return;
+      const a4Px = 794; // 210mm at 96dpi
+      const scale = a4Px / el.scrollWidth;
+      if (scale < 1) {
+        el.style.transformOrigin = 'top left';
+        el.style.transform = `scale(${scale})`;
+        el.style.width = `${100 / scale}%`;
+      }
+    };
+    const afterPrint = () => {
+      const el = reportRef.current;
+      if (!el) return;
+      el.style.transform = '';
+      el.style.transformOrigin = '';
+      el.style.width = '';
+    };
+    window.addEventListener('beforeprint', beforePrint);
+    window.addEventListener('afterprint', afterPrint);
+    return () => {
+      window.removeEventListener('beforeprint', beforePrint);
+      window.removeEventListener('afterprint', afterPrint);
+    };
+  }, []);
 
   const loadChecklist = useCallback(async () => {
     try {
@@ -42,14 +71,7 @@ export default function RelatorioChecklistConcretagemPage() {
   useEffect(() => { loadChecklist(); }, [loadChecklist]);
 
   const handlePrint = () => {
-    // Force the body to A4 width before printing so browser scales correctly
-    const originalWidth = document.body.style.width;
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.width = '210mm';
-    document.body.style.overflow = 'visible';
     window.print();
-    document.body.style.width = originalWidth;
-    document.body.style.overflow = originalOverflow;
   };
 
   if (loading) {
@@ -76,13 +98,9 @@ export default function RelatorioChecklistConcretagemPage() {
             size: A4 portrait;
             margin: 0;
           }
-          html {
-            width: 210mm !important;
-          }
           html, body {
             margin: 0 !important;
             padding: 0 !important;
-            width: 210mm !important;
             background: white !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -107,7 +125,7 @@ export default function RelatorioChecklistConcretagemPage() {
         </div>
       </div>
 
-      <div style={{width:'210mm', margin:'0 auto'}}>
+      <div ref={reportRef} style={{width:'210mm', margin:'0 auto', overflowX:'hidden'}}>
         <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
       </div>
     </div>
