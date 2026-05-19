@@ -1,45 +1,23 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { FileText, Edit, Clock, CheckCircle, XCircle, MessageSquare, Loader2, MapPin, User as UserIconSmall, Building, Filter, PlusCircle, FlaskConical, Gauge, ClipboardList, Book, ArrowUpDown, ArrowUp, ArrowDown, Download, Trash2, Copy, Check } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger } from
-"@/components/ui/popover";
+import { FileText, Edit, Clock, CheckCircle, XCircle, MessageSquare, Loader2, MapPin, User as UserIconSmall, Building, Filter, PlusCircle, FlaskConical, Gauge, ClipboardList, Book, ArrowUpDown, ArrowUp, ArrowDown, Trash2, Copy, Check } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { User } from "@/entities/User";
-import { DiarioObra } from "@/entities/DiarioObra";
-import { EnsaioDensidade } from "@/entities/EnsaioDensidade";
-import { ChecklistUsina } from "@/entities/ChecklistUsina";
-import { ChecklistAplicacao } from "@/entities/ChecklistAplicacao";
-import { ChecklistMRAF } from "@/entities/ChecklistMRAF";
-import { ChecklistConcretagem } from "@/entities/ChecklistConcretagem";
-import { base44 } from "@/api/base44Client";
-import { Obra } from "@/entities/Obra";
-import { Regional } from "@/entities/Regional";
-import { Project } from "@/entities/Project";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter } from
-"@/components/ui/dialog";
 import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
-import { getEntityMap } from "@/components/ensaios/entityMaps";
 import { getLocalInfo, getLaboratoristaInfo, getResponsavelInfo, getEmpireiteiraInfo, getRodoviaInfo, getTrechoInfo, getNaoConformidades, getStatusInfo } from "@/components/ensaios/utils";
-import { loadAllData } from "@/components/ensaios/dataLoader";
 import { Pagination } from "@/components/ensaios/Pagination";
 import { ReprovacaoModal } from "@/components/ensaios/ReprovacaoModal";
 import { ExclusaoModal } from "@/components/ensaios/ExclusaoModal";
+import { useEnsaiosList } from "@/hooks/useEnsaiosList";
+import { aprovarEnsaio, reprovarEnsaio, excluirEnsaio, assinarEnsaio } from "@/services/ensaiosService";
+import { isAdmin, isCliente as isClienteUser, isGestorContrato, isSalaTecnica, isLaboratorista } from "@/utils/accessControl";
 
 // Botão copiar ID
 const CopyIdButton = React.memo(({ id }) => {
@@ -344,55 +322,8 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
   }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
 
   const handleApprove = useCallback(async (ensaio) => {
-    if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
-
-    try {
-      // Determinar quem será o assinante
-      let approverDetails = {
-        name: user.laboratorista_name || user.full_name,
-        position: user.position || 'Não informado',
-        crea_number: user.crea_number || 'Não informado'
-      };
-
-      // Se quem está aprovando é Sala Técnica, buscar o Gestor da regional para assinatura
-      if (user.access_level === 'sala_tecnica_afirmaevias') {
-        try {
-          const regionaisData = await Regional.list();
-
-          // Encontrar a obra do ensaio
-          const obraDoEnsaio = obras.find((o) => o.id === ensaio.obra_id);
-
-          if (obraDoEnsaio) {
-            // Encontrar a regional da obra
-            const regionalDaObra = regionaisData.find((r) => r.id === obraDoEnsaio.regional_id);
-
-            if (regionalDaObra && regionalDaObra.gestor_contrato_responsavel) {
-              // Buscar os dados do gestor
-              const allUsers = await User.list();
-              const gestorUser = allUsers.find((u) =>
-              u.email.toLowerCase() === regionalDaObra.gestor_contrato_responsavel.toLowerCase()
-              );
-
-              if (gestorUser) {
-                approverDetails = {
-                  name: gestorUser.laboratorista_name || gestorUser.full_name || regionalDaObra.gestor_contrato_responsavel,
-                  position: gestorUser.position || 'Gestor de Contrato',
-                  crea_number: gestorUser.crea_number || 'Não informado'
-                };
-              }
-            }
-          }
-        } catch (e) {
-          console.error("[MeusEnsaios] Erro ao buscar dados do gestor para aprovação:", e?.message || e);
-          // Se falhar, usar os dados do aprovador
-        }
-      }
-
-      await onApprove(ensaio, approverDetails);
-    } catch {
-      alert('Erro ao aprovar ensaio. Tente novamente.');
-    }
-  }, [user, obras, onApprove]);
+    await onApprove(ensaio);
+  }, [onApprove]);
 
   const handleReject = useCallback(async (ensaio, motivo) => {
     if (!canApprove) {
@@ -850,25 +781,11 @@ const EnsaioCard = React.memo(({ ensaio, obra, user, allUsers }) => {
   const jaAssinado = ensaio.client_signature?.signed_by === user?.email;
 
   const handleAssinar = useCallback(async () => {
+    if (!window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) return;
     try {
-      if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const entityMap = getEntityMap();
-        const Entity = entityMap[ensaio.entityType];
-
-        const signatureData = {
-          client_signature: {
-            signed_by: user.email,
-            signed_date: new Date().toISOString(),
-            engineer_name: user.laboratorista_name || user.full_name,
-            crea_number: user.crea_number || ''
-          }
-        };
-
-        await Entity.update(ensaio.id, signatureData);
-
-        alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
-        window.location.reload();
-      }
+      await assinarEnsaio(ensaio, user);
+      alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
+      window.location.reload();
     } catch (error) {
       alert(`Erro ao assinar registro: ${error?.message || 'Erro desconhecido'}. Por favor, tente novamente.`);
     }
@@ -1295,25 +1212,11 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
   }, [filteredEnsaios, currentPage]);
 
   const handleAssinar = useCallback(async (ensaio) => {
+    if (!window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) return;
     try {
-      if (window.confirm(`Confirma a assinatura digital do registro "${ensaio.sample_id || ensaio.id}"? Esta ação registrará que você teve ciência do conteúdo.`)) {
-        const entityMap = getEntityMap();
-        const Entity = entityMap[ensaio.entityType];
-
-        const signatureData = {
-          client_signature: {
-            signed_by: user.email,
-            signed_date: new Date().toISOString(),
-            engineer_name: user.laboratorista_name || user.full_name,
-            crea_number: user.crea_number || ''
-          }
-        };
-
-        await Entity.update(ensaio.id, signatureData);
-
-        alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
-        window.location.reload();
-      }
+      await assinarEnsaio(ensaio, user);
+      alert('Registro assinado com sucesso! Sua assinatura digital foi registrada.');
+      window.location.reload();
     } catch (error) {
       alert(`Erro ao assinar registro: ${error?.message || 'Erro desconhecido'}. Por favor, tente novamente.`);
     }
@@ -1577,161 +1480,49 @@ const ClienteInterface = React.memo(({ ensaios, obras, projects, user, allUsers 
 ClienteInterface.displayName = 'ClienteInterface';
 
 export default function MeusEnsaios() {
-  const [ensaios, setEnsaios] = useState([]);
-  const [obras, setObras] = useState([]);
-  const [regionais, setRegionais] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState([]);
+  const { ensaios, obras, projects, allUsers, user, loading, reload } = useEnsaiosList();
 
-  const userAccessLevel = user?.access_level || (user?.role === 'admin' ? 'admin' : 'user');
-  const isAdmin = userAccessLevel === 'admin';
-  const isSalaTecnica = userAccessLevel === 'sala_tecnica_afirmaevias';
-  const isGestorContrato = userAccessLevel === 'gestor_contrato';
-  const isCliente = userAccessLevel === 'cliente';
-  const canApprove = isAdmin || isSalaTecnica || isGestorContrato;
-  const canCreate = isAdmin || !isSalaTecnica && !isGestorContrato && !isCliente;
-  const canEdit = isAdmin || !isSalaTecnica && !isGestorContrato && !isCliente;
+  const _isAdmin = isAdmin(user);
+  const _isSalaTecnica = isSalaTecnica(user);
+  const _isGestorContrato = isGestorContrato(user);
+  const _isCliente = isClienteUser(user);
+  const canApprove = _isAdmin || _isSalaTecnica || _isGestorContrato;
+  const canCreate = _isAdmin || (!_isSalaTecnica && !_isGestorContrato && !_isCliente);
+  const canEdit = _isAdmin || (!_isSalaTecnica && !_isGestorContrato && !_isCliente);
 
-  const loadData = useCallback(async () => {
-    setLoading(true);
+  const handleApprove = useCallback(async (ensaio) => {
+    if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
     try {
-      const { currentUser, allUsers: loadedUsers, currentUserAccessLevel, obrasData, regionaisData, projectsData, combinedEnsaios } = await loadAllData();
-
-      setUser(currentUser);
-      setAllUsers(loadedUsers);
-      setObras(obrasData);
-      setRegionais(regionaisData);
-      setProjects(projectsData);
-
-      let ensaiosForUser = combinedEnsaios;
-
-      // Apply access level filtering logic
-      if (currentUserAccessLevel === 'sala_tecnica_afirmaevias') {
-        const regionaisDoUsuario = regionaisData.filter((regional) =>
-        (regional.salas_tecnicas_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
-        );
-        const regionaisIds = regionaisDoUsuario.map((r) => r.id);
-        const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
-        ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
-      } else if (currentUserAccessLevel === 'gestor_contrato') {
-        const regionaisDoUsuario = regionaisData.filter((regional) => {
-          const gestores = regional.gestores_contrato_responsaveis || [];
-          return regional.gestor_contrato_responsavel?.toLowerCase() === currentUser.email.toLowerCase() ||
-          gestores.some((email) => email.toLowerCase() === currentUser.email.toLowerCase());
-        });
-        const regionaisIds = regionaisDoUsuario.map((r) => r.id);
-        const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
-        ensaiosForUser = combinedEnsaios.filter((ensaio) => obrasPermitidasIds.includes(ensaio.obra_id));
-      } else if (currentUserAccessLevel === 'cliente') {
-        const regionaisDoUsuario = regionaisData.filter((regional) =>
-        (regional.clientes_responsaveis || []).some((email) => email.toLowerCase() === currentUser.email.toLowerCase())
-        );
-        const regionaisIds = regionaisDoUsuario.map((r) => r.id);
-        const obrasPermitidasIds = obrasData.filter((obra) => regionaisIds.includes(obra.regional_id)).map((o) => o.id);
-
-        // IMPORTANTE: Cliente vê APENAS ensaios APROVADOS (approved === true) OU ASSINADOS
-        ensaiosForUser = combinedEnsaios.filter((ensaio) =>
-        obrasPermitidasIds.includes(ensaio.obra_id) && (
-        ensaio.approved === true || ensaio.client_signature?.signed_by)
-        );
-      } else if (currentUserAccessLevel !== 'admin') {
-        // Filtrar por created_by OU laboratorista_name
-        ensaiosForUser = combinedEnsaios.filter((e) => {
-          const emailMatch = e.created_by?.toLowerCase() === currentUser.email?.toLowerCase();
-          const nameMatch = currentUser.laboratorista_name &&
-          e.laboratorista_name?.toLowerCase() === currentUser.laboratorista_name?.toLowerCase();
-          return emailMatch || nameMatch;
-        });
-      }
-
-      setEnsaios(ensaiosForUser);
-    } catch (error) {
-      console.error("[MeusEnsaios] Erro ao carregar dados:", error?.message || error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const handleApprove = useCallback(async (ensaio, approverDetails) => {
-    const entityMap = getEntityMap();
-    const Entity = entityMap[ensaio.entityType];
-
-    try {
-      const updateData = {
-        approved: true,
-        approved_by: user.email,
-        approved_date: new Date().toISOString(),
-        approver_details: approverDetails,
-        rejection_reason: null
-      };
-
-      // Corrigir medicoes_geometricas se estiver em formato incorreto (ChecklistAplicacao)
-      if (ensaio.entityType === 'ChecklistAplicacao') {
-        if (!ensaio.medicoes_geometricas || Array.isArray(ensaio.medicoes_geometricas)) {
-          updateData.medicoes_geometricas = {
-            subtrecho: "",
-            servico: "",
-            medicoes: []
-          };
-        }
-      }
-
-      await Entity.update(ensaio.id, updateData);
-
-      alert("Registro aprovado com sucesso!");
-      loadData();
+      await aprovarEnsaio(ensaio, user, obras);
+      alert('Registro aprovado com sucesso!');
+      reload();
     } catch (e) {
-      console.error("[MeusEnsaios] Erro ao aprovar ensaio:", e?.message || e);
-      alert("Erro ao aprovar ensaio. Tente novamente.");
+      console.error('[MeusEnsaios] Erro ao aprovar ensaio:', e?.message || e);
+      alert('Erro ao aprovar ensaio. Tente novamente.');
     }
-  }, [user, loadData]);
+  }, [user, obras, reload]);
 
   const handleReject = useCallback(async (ensaio, motivo) => {
-    if (!canApprove) {
-      alert('Você não tem permissão para reprovar registros.');
-      return;
-    }
     try {
-      const entityMap = getEntityMap();
-      const Entity = entityMap[ensaio.entityType];
-      await Entity.update(ensaio.id, {
-        approved: false,
-        approved_by: user.email,
-        approved_date: new Date().toISOString(),
-        rejection_reason: motivo
-      });
-
-      loadData();
+      await reprovarEnsaio(ensaio, user, motivo);
+      reload();
       alert('Registro reprovado com sucesso!');
     } catch (e) {
-      console.error("[MeusEnsaios] Erro ao reprovar registro:", e?.message || e);
+      console.error('[MeusEnsaios] Erro ao reprovar registro:', e?.message || e);
       alert('Erro ao reprovar registro. Tente novamente.');
     }
-  }, [canApprove, user, loadData]);
+  }, [user, reload]);
 
   const handleDeleteEnsaio = useCallback(async (ensaio) => {
-    if (!canApprove) {
-      alert('Você não tem permissão para excluir registros.');
-      return;
-    }
     try {
-      const entityMap = getEntityMap();
-      const Entity = entityMap[ensaio.entityType];
-      await Entity.delete(ensaio.id);
-
-      loadData();
+      await excluirEnsaio(ensaio);
+      reload();
       alert('Registro excluído com sucesso!');
     } catch (e) {
-      console.error("[MeusEnsaios] Erro ao excluir registro:", e?.message || e);
+      console.error('[MeusEnsaios] Erro ao excluir registro:', e?.message || e);
       alert('Erro ao excluir registro. Tente novamente.');
     }
-  }, [canApprove, loadData]);
+  }, [reload]);
 
   return (
     <div className="p-6 space-y-6 bg-transparent min-h-screen">
@@ -1739,11 +1530,9 @@ export default function MeusEnsaios() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#00233B]">Ensaios Realizados</h1>
           <p className="text-[#00233B]/80 mt-1">
-            {isAdmin ?
+            {_isAdmin || _isSalaTecnica || _isGestorContrato ?
             "Gerencie e aprove todos os registros de suas obras." :
-            isSalaTecnica || isGestorContrato ?
-            "Gerencie e aprove todos os registros de suas obras." :
-            isCliente ?
+            _isCliente ?
             "Visualize os ensaios e diários aprovados das suas obras." :
             "Visualize e gerencie todos os ensaios e diários registrados."}
           </p>
@@ -1768,7 +1557,7 @@ export default function MeusEnsaios() {
           canEdit={canEdit}
           allUsers={allUsers} /> :
 
-        isCliente ?
+        _isCliente ?
         <ClienteInterface
           ensaios={ensaios}
           obras={obras}
