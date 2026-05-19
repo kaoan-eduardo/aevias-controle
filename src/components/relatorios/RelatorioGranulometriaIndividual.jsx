@@ -317,7 +317,6 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
         />
         </footer>
         </div>
-      </div>
     </>
   );
 }
