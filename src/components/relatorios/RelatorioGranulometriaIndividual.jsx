@@ -98,19 +98,6 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       <div className="bg-white min-h-screen p-6 font-sans">
         {/* Header com Título e Botão de Download */}
         <div className="no-print flex justify-between items-center mb-6 px-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Relatório - Granulometria Individual dos Agregados
-          </h1>
-          <button
-            type="button"
-            onClick={handleDownloadPDF}
-            className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Gerar PDF
-          </button>
         </div>
 
         {/* Conteúdo Principal */}
