@@ -300,6 +300,12 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           @page {
             size: A4 portrait;
             margin: 12mm 14mm;
+            marks: none;
+          }
+
+          /* Remove browser header/footer (URL, title, date) */
+          html {
+            -webkit-print-color-adjust: exact;
           }
 
           html, body { 
