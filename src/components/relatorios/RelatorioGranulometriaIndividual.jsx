@@ -96,9 +96,6 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
       <div className="bg-white min-h-screen p-6 font-sans">
         {/* Header com Título e Botão de Download */}
         <div className="no-print flex justify-between items-center mb-6 px-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Relatório - Granulometria Individual dos Agregados
-          </h1>
           <button
             type="button"
             onClick={handleDownloadPDF}
