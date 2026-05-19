@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,19 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Save, AlertTriangle, Loader2, XCircle, CheckCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChecklistMRAF as ChecklistMRAFEntity } from "@/entities/ChecklistMRAF";
-import { Obra } from "@/entities/Obra";
-import { Regional } from "@/entities/Regional";
-import { User } from "@/entities/User";
-import { Project } from "@/entities/Project";
-import { FaixaGranulometrica } from "@/entities/FaixaGranulometrica";
-import { UploadFile } from "@/integrations/Core";
-import { useLocation, useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
-import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import { useChecklistForm } from "@/hooks/useChecklistForm";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
-
-// The original global SectionTitle component is replaced by a local one and CardTitle for some sections.
+import ChecklistFooter from "@/components/checklists/ChecklistFooter";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -85,366 +77,115 @@ const getInitialFormData = () => ({
 });
 
 export default function ChecklistMRAFPage() {
-  const [obras, setObras] = useState([]);
-  const [regionais, setRegionais] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [faixas, setFaixas] = useState([]);
-  const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState([]);
-  const [editingChecklist, setEditingChecklist] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState(getInitialFormData());
+  const {
+    obras, regionais, projects, faixas, user, editingChecklist,
+    loading, formData, setFormData, obraSelecionada, regionalSelecionada,
+    isApproved, isEditable, clearSavedData, navigate,
+  } = useChecklistForm(getInitialFormData, 'ChecklistMRAF', 'checklist_mraf');
+
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [uploadProgress, setUploadProgress] = useState([]);
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { clearSavedData } = useFormPersistence('checklist_mraf', formData, setFormData, !!editingChecklist);
-
-  const selectedProject = useMemo(() => 
-    projects.find(p => p.id === formData.project_id),
-    [projects, formData.project_id]
-  );
-
-  const handleChange = useCallback((field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleObraChange = useCallback((obraId) => {
-    const obra = obras.find(o => o.id === obraId);
-    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-    const gestorEmail = regional?.gestor_contrato_responsavel;
-    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
-
-    setFormData(prev => ({
-      ...prev,
-      obra_id: obraId,
-      project_id: "",
-    }));
-  }, [obras, regionais, allUsers]);
-
-  const handleProjectChange = useCallback((projectId) => {
-    const project = projects.find(p => p.id === projectId);
-    if (!project) {
-      setFormData(prev => ({...prev, project_id: ""}));
-      return;
-    }
-
-    const faixa = faixas.find(f => f.id === project.faixa_granulometrica_id);
-    const pedreiras = project.agregados && Array.isArray(project.agregados)
-      ? [...new Set(project.agregados.map(ag => ag.pedreira).filter(Boolean))].join(' + ')
-      : "";
-
-    setFormData(prev => ({
-      ...prev,
-      project_id: projectId,
-      faixa_especificada: faixa ? faixa.nome : "Não definida",
-      ligante: project.emulsao_utilizada || "", // Changed from project.ligante?.tipo to project.emulsao_utilizada
-      pedreira: pedreiras,
-    }));
-  }, [projects, faixas]);
-
-  const handleNestedChange = useCallback((section, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
-      }
-    }));
-  }, []);
-
-  const validateFile = (file) => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      throw new Error(`Tipo de arquivo não suportado: ${file.type}`);
-    }
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error(`Arquivo muito grande: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
-    }
-    return true;
-  };
-
-  const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) {
-      setSelectedFileNames("Nenhum ficheiro selecionado");
-      return;
-    }
-
-    try {
-      files.forEach(file => { validateFile(file); });
-    } catch (error) {
-      alert(error.message);
-      e.target.value = '';
-      return;
-    }
-
-    setLoadingUpload(true);
-    setSelectedFileNames(files.length === 1 ? files[0].name : `${files.length} ficheiros selecionados`);
-    setUploadProgress(files.map((file, index) => ({ id: `${file.name}-${index}`, fileName: file.name, status: 'pending', error: null })));
-
-    try {
-      const uploadedUrls = [];
-      const errors = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const currentFileId = `${file.name}-${i}`;
-
-        try {
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'uploading' } : p)
-          );
-
-          const result = await UploadFile({ file });
-          uploadedUrls.push(result.file_url);
-          
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'success' } : p)
-          );
-        } catch (error) {
-          errors.push({ fileName: file.name, error: error.message });
-          setUploadProgress(prev => 
-            prev.map(p => p.id === currentFileId ? { ...p, status: 'error', error: error.message } : p)
-          );
-        }
-      }
-
-      if (uploadedUrls.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          fotos: [...(prev.fotos || []), ...uploadedUrls],
-        }));
-      }
-
-      if (errors.length > 0) {
-        alert(`${uploadedUrls.length} de ${files.length} arquivos enviados.\n\nErros:\n` +
-          errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
-      }
-    } catch (error) {
-      alert(`Erro geral no upload: ${error.message}`);
-    } finally {
-      setLoadingUpload(false);
-      setUploadProgress([]);
-      e.target.value = '';
-    }
-  };
-
-  const handleRemovePhoto = useCallback((indexToRemove) => {
-    setFormData(prev => ({
-      ...prev,
-      fotos: prev.fotos.filter((_, index) => index !== indexToRemove),
-    }));
-  }, []);
-
-  const handleSubmit = async (e, saveStatus = 'finalizado') => {
-    e.preventDefault();
-    
-    // Validações obrigatórias apenas quando finalizando
-    if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.project_id || !formData.rodovia || !formData.trecho || !formData.empreiteira || !formData.pedreira || !formData.ligante || !formData.ensaio_realizado_por) {
-        alert("Por favor, preencha todos os campos obrigatórios: Obra, Projeto Vinculado, Rodovia, Trecho, Empreiteira, Pedreira, Ligante e Ensaio realizado por.");
-        return;
-      }
-    } else {
-      // Para salvar progresso, apenas obra é obrigatória
-      if (!formData.obra_id) {
-        alert("Por favor, selecione uma obra.");
-        return;
-      }
-    }
-
-    try {
-      // Calcular conformidade antes de salvar
-      const acompanhamentoAtualizado = { ...formData.acompanhamento_aplicacao };
-      
-      // Taxa de Aplicação: 8 a 16 kg/m²
-      if (acompanhamentoAtualizado.taxa_aplicacao.realizado && acompanhamentoAtualizado.taxa_aplicacao.resultado !== null) {
-        const resultado = acompanhamentoAtualizado.taxa_aplicacao.resultado;
-        acompanhamentoAtualizado.taxa_aplicacao.conforme = resultado >= 8 && resultado <= 16;
-      }
-
-      // Resíduo da Emulsão: 6.5% a 12.0%
-      if (acompanhamentoAtualizado.residuo_emulsao.realizado && acompanhamentoAtualizado.residuo_emulsao.resultado !== null) {
-        const resultado = acompanhamentoAtualizado.residuo_emulsao.resultado;
-        acompanhamentoAtualizado.residuo_emulsao.conforme = resultado >= 6.5 && resultado <= 12.0;
-      }
-
-      // Espessura da Camada: 6 a 20 mm
-      if (acompanhamentoAtualizado.espessura_camada.realizado && acompanhamentoAtualizado.espessura_camada.resultado !== null) {
-        const resultado = acompanhamentoAtualizado.espessura_camada.resultado;
-        acompanhamentoAtualizado.espessura_camada.conforme = resultado >= 6 && resultado <= 20;
-      }
-
-      const dataToSave = {
-        ...formData,
-        acompanhamento_aplicacao: acompanhamentoAtualizado,
-        status: saveStatus,
-        laboratorista_name: user?.laboratorista_name || user?.full_name
-      };
-
-      if (editingChecklist?.id) {
-        const updateData = { ...dataToSave };
-        let successMessage = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
-
-        if (editingChecklist.approved === false && saveStatus === 'finalizado') {
-          updateData.approved = null;
-          updateData.rejection_reason = null;
-          updateData.approved_by = null;
-          updateData.approved_date = null;
-          updateData.was_rejected = true;
-          successMessage = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
-        }
-        
-        await ChecklistMRAFEntity.update(editingChecklist.id, updateData);
-        alert(successMessage);
-      } else {
-        await ChecklistMRAFEntity.create(dataToSave);
-        alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
-      }
-      clearSavedData();
-      navigate(createPageUrl('MeusEnsaios'));
-    } catch (error) {
-      console.error("[ChecklistMRAF] Erro ao salvar checklist:", error?.message || error);
-      alert("Erro ao salvar checklist.");
-    }
-  };
-
-  const obraSelecionada = useMemo(() => obras.find(o => o.id === formData.obra_id), [obras, formData.obra_id]);
-  const regionalSelecionada = useMemo(() => obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null, [obraSelecionada, regionais]);
   const projetosDisponiveis = useMemo(() => {
     if (!regionalSelecionada || !projects) return [];
-    const regionalProjectIds = regionalSelecionada.project_ids || [];
-    return projects.filter(p => 
-      regionalProjectIds.includes(p.id) && 
+    return projects.filter(p =>
+      (regionalSelecionada.project_ids || []).includes(p.id) &&
       p.status === 'ativo' &&
       p.tipo_projeto === 'MRAF'
     );
   }, [regionalSelecionada, projects]);
 
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
+  const selectedProject = useMemo(() => projects.find(p => p.id === formData.project_id), [projects, formData.project_id]);
+
+  const handleChange = useCallback((field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  }, [setFormData]);
+
+  const handleObraChange = useCallback((obraId) => {
+    setFormData(prev => ({ ...prev, obra_id: obraId, project_id: "" }));
+  }, [setFormData]);
+
+  const handleProjectChange = useCallback((projectId) => {
+    const project = projects.find(p => p.id === projectId);
+    if (!project) { setFormData(prev => ({ ...prev, project_id: "" })); return; }
+    const faixa = faixas.find(f => f.id === project.faixa_granulometrica_id);
+    const pedreiras = [...new Set((project.agregados || []).map(ag => ag.pedreira).filter(Boolean))].join(' + ');
+    setFormData(prev => ({ ...prev, project_id: projectId, faixa_especificada: faixa ? faixa.nome : "Não definida", ligante: project.emulsao_utilizada || "", pedreira: pedreiras }));
+  }, [projects, faixas, setFormData]);
+
+  const handleNestedChange = useCallback((section, field, value) => {
+    setFormData(prev => ({ ...prev, [section]: { ...prev[section], [field]: value } }));
+  }, [setFormData]);
+
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) { setSelectedFileNames("Nenhum ficheiro selecionado"); return; }
+    setLoadingUpload(true);
+    setSelectedFileNames(files.length === 1 ? files[0].name : `${files.length} ficheiros selecionados`);
+    setUploadProgress(files.map((file, i) => ({ id: `${file.name}-${i}`, fileName: file.name, status: 'pending', error: null })));
+    const uploadedUrls = [];
+    const errors = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const id = `${file.name}-${i}`;
       try {
-        const userData = await User.me();
-        setUser(userData);
-
-        const currentUserAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
-        const isAdmin = currentUserAccessLevel === 'admin';
-
-        const dataPromises = [
-          Obra.list(),
-          Regional.list(),
-          Project.list()
-        ];
-
-        let faixasData = [];
-        try {
-          faixasData = await FaixaGranulometrica.list();
-        } catch (faixasError) {
-          console.warn("[ChecklistMRAF] Faixas granulométricas indisponíveis, continuando sem elas:", faixasError?.message || faixasError);
-        }
-
-        if (isAdmin) {
-          dataPromises.push(User.list());
-        }
-
-        const loadedData = await Promise.all(dataPromises);
-        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
-        
-        setRegionais(regionaisData);
-        setProjects(projectsData);
-        setFaixas(faixasData);
-        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
-
-        let availableObras = obrasData;
-        
-        if (currentUserAccessLevel === 'user') {
-          const regionalDoLaboratorista = regionaisData.find(regional => {
-            const laboratoristas = regional.laboratoristas_responsaveis || [];
-            return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-          });
-          
-          if (regionalDoLaboratorista) {
-            availableObras = obrasData.filter(obra => 
-              obra.regional_id === regionalDoLaboratorista.id &&
-              obra.status === 'em_andamento'
-            );
-          } else {
-            availableObras = [];
-          }
-        }
-        setObras(availableObras);
-
-        const params = new URLSearchParams(location.search);
-        const editId = params.get('editId');
-        
-        if (editId) {
-          const checklistToEdit = await ChecklistMRAFEntity.get(editId);
-          setEditingChecklist(checklistToEdit);
-
-          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
-            const initialForm = getInitialFormData();
-            const loadedFormData = {
-              ...initialForm,
-              ...checklistToEdit,
-              data: checklistToEdit.data ? new Date(checklistToEdit.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-              fotos: Array.isArray(checklistToEdit.fotos) ? checklistToEdit.fotos : [],
-              periodos_clima: checklistToEdit.periodos_clima || initialForm.periodos_clima,
-              condicionamento_insumos: checklistToEdit.condicionamento_insumos || initialForm.condicionamento_insumos,
-              preparacao_superficie: checklistToEdit.preparacao_superficie || initialForm.preparacao_superficie,
-              acompanhamento_aplicacao: checklistToEdit.acompanhamento_aplicacao || initialForm.acompanhamento_aplicacao,
-              controle_aplicacao: checklistToEdit.controle_aplicacao || initialForm.controle_aplicacao,
-            };
-
-            setFormData(loadedFormData);
-          } else {
-            alert("Você não tem permissão para editar este registro.");
-            navigate(createPageUrl('MeusEnsaios'));
-            return;
-          }
-        } else {
-          const initialNewFormData = getInitialFormData();
-          // Preencher automaticamente inspetor_campo e engenheiro_responsavel (mas não exibir os campos)
-          initialNewFormData.inspetor_campo = userData.laboratorista_name || userData.full_name;
-          
-          if (availableObras.length > 0) {
-            initialNewFormData.obra_id = availableObras[0].id;
-            
-            // Tentar buscar o engenheiro responsável da regional
-            const primeiraObra = availableObras[0];
-            const regionalDaObra = regionaisData.find(r => r.id === primeiraObra.regional_id);
-            if (regionalDaObra && regionalDaObra.gestor_contrato_responsavel && allUsersDataFetchedIfAdmin?.length > 0) {
-              const gestor = allUsersDataFetchedIfAdmin.find(u => u.email.toLowerCase() === regionalDaObra.gestor_contrato_responsavel.toLowerCase());
-              if (gestor) {
-                initialNewFormData.engenheiro_responsavel = gestor.laboratorista_name || gestor.full_name;
-              }
-            }
-          }
-          
-          setFormData(initialNewFormData);
-          setEditingChecklist(null);
-        }
+        setUploadProgress(prev => prev.map(p => p.id === id ? { ...p, status: 'uploading' } : p));
+        const result = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(result.file_url);
+        setUploadProgress(prev => prev.map(p => p.id === id ? { ...p, status: 'success' } : p));
       } catch (error) {
-        console.error("[ChecklistMRAF] Erro ao carregar dados:", error?.message || error);
-        alert("Não foi possível carregar os dados. Erro: " + (error.message || error));
-        navigate(createPageUrl('MeusEnsaios'));
-      } finally {
-        setLoading(false);
+        errors.push({ fileName: file.name, error: error.message });
+        setUploadProgress(prev => prev.map(p => p.id === id ? { ...p, status: 'error', error: error.message } : p));
       }
-    };
-    loadData();
-  }, [location.search, navigate]);
+    }
+    if (uploadedUrls.length > 0) setFormData(prev => ({ ...prev, fotos: [...(prev.fotos || []), ...uploadedUrls] }));
+    if (errors.length > 0) alert(`${uploadedUrls.length} de ${files.length} arquivos enviados.\n\nErros:\n` + errors.map(e => `• ${e.fileName}: ${e.error}`).join('\n'));
+    setLoadingUpload(false);
+    setUploadProgress([]);
+    e.target.value = '';
+  };
 
-  const isApproved = formData.approved === true;
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false));
-  const isEditable = !editingChecklist?.id || userCanEdit;
+  const handleRemovePhoto = useCallback((indexToRemove) => {
+    setFormData(prev => ({ ...prev, fotos: prev.fotos.filter((_, i) => i !== indexToRemove) }));
+  }, [setFormData]);
 
-  // Local SectionTitle component for sections not wrapped in a Card with CardTitle
+  const handleSubmit = async (e, saveStatus = 'finalizado') => {
+    e.preventDefault();
+    if (saveStatus === 'finalizado') {
+      if (!formData.obra_id || !formData.project_id || !formData.rodovia || !formData.trecho || !formData.empreiteira || !formData.pedreira || !formData.ligante || !formData.ensaio_realizado_por) {
+        alert("Por favor, preencha todos os campos obrigatórios: Obra, Projeto Vinculado, Rodovia, Trecho, Empreiteira, Pedreira, Ligante e Ensaio realizado por.");
+        return;
+      }
+    } else if (!formData.obra_id) {
+      alert("Por favor, selecione uma obra.");
+      return;
+    }
+    const acomp = { ...formData.acompanhamento_aplicacao };
+    if (acomp.taxa_aplicacao.realizado && acomp.taxa_aplicacao.resultado !== null)
+      acomp.taxa_aplicacao.conforme = acomp.taxa_aplicacao.resultado >= 8 && acomp.taxa_aplicacao.resultado <= 16;
+    if (acomp.residuo_emulsao.realizado && acomp.residuo_emulsao.resultado !== null)
+      acomp.residuo_emulsao.conforme = acomp.residuo_emulsao.resultado >= 6.5 && acomp.residuo_emulsao.resultado <= 12.0;
+    if (acomp.espessura_camada.realizado && acomp.espessura_camada.resultado !== null)
+      acomp.espessura_camada.conforme = acomp.espessura_camada.resultado >= 6 && acomp.espessura_camada.resultado <= 20;
+    const dataToSave = { ...formData, acompanhamento_aplicacao: acomp, status: saveStatus, laboratorista_name: user?.laboratorista_name || user?.full_name };
+    if (editingChecklist?.id) {
+      const updateData = { ...dataToSave };
+      let msg = saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist atualizado com sucesso!";
+      if (editingChecklist.approved === false && saveStatus === 'finalizado') {
+        updateData.approved = null; updateData.rejection_reason = null; updateData.approved_by = null; updateData.approved_date = null; updateData.was_rejected = true;
+        msg = "Checklist atualizado com sucesso! O registro voltará para análise do administrador.";
+      }
+      await base44.entities.ChecklistMRAF.update(editingChecklist.id, updateData);
+      alert(msg);
+    } else {
+      await base44.entities.ChecklistMRAF.create(dataToSave);
+      alert(saveStatus === 'rascunho' ? "Progresso salvo com sucesso!" : "Checklist criado com sucesso!");
+    }
+    clearSavedData();
+    navigate(createPageUrl('MeusEnsaios'));
+  };
+
   const SectionTitle = ({ children }) => (
     <h3 className="text-lg font-semibold text-slate-700 mb-4">{children}</h3>
   );
@@ -1526,39 +1267,14 @@ export default function ChecklistMRAFPage() {
                 </div>
               </div>
 
-              {/* BOTÕES */}
-              <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-200">
-                <Button type="button" variant="outline" onClick={() => {
-                  clearSavedData();
-                  navigate(createPageUrl('MeusEnsaios'));
-                }} className="h-11 px-6 text-base">
-                  Cancelar
-                </Button>
-                {isEditable && !isApproved && (
-                  <>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      disabled={loadingUpload}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handleSubmit(e, 'rascunho');
-                      }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50 h-11 px-6 text-base"
-                    >
-                      <Save className="mr-2 h-5 w-5" /> Salvar Progresso
-                    </Button>
-                    <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700 h-11 px-6 text-base">
-                      <Save className="mr-2 h-5 w-5" /> Finalizar
-                    </Button>
-                  </>
-                )}
-                {isApproved && (
-                  <Badge className="bg-green-500 hover:bg-green-500 px-6 py-3 text-base">
-                    <CheckCircle className="mr-2 h-5 w-5" /> Aprovado
-                  </Badge>
-                )}
-              </div>
+              <ChecklistFooter
+                isEditable={isEditable}
+                isApproved={isApproved}
+                loadingUpload={loadingUpload}
+                onCancel={() => { clearSavedData(); navigate(createPageUrl('MeusEnsaios')); }}
+                onSaveProgress={async (e) => { e.preventDefault(); await handleSubmit(e, 'rascunho'); }}
+                onFinalize={() => {}}
+              />
             </form>
           </CardContent>
         </Card>
