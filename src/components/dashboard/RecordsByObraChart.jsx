@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const TOOLTIP_STYLE = {
@@ -9,39 +9,36 @@ const TOOLTIP_STYLE = {
   color: '#00233B',
 };
 
-export default function RecordsByObraChart({ data, activeObraId, onSliceClick }) {
-  if (!data.length) return null;
+export default function RecordsByObraChart({ data }) {
+  if (!data?.rows?.length || !data?.lines?.length) return null;
+
   return (
     <Card className="bg-white/20 backdrop-blur-lg border border-white/20 text-[#00233B]">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-[#00233B]">
-          Registros por Obra
-          <span className="text-xs font-normal text-[#00233B]/60 ml-2">(clique para filtrar)</span>
+          Registros por Obra ao Longo do Tempo
         </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              dataKey="value"
-              onClick={onSliceClick}
-              style={{ cursor: 'pointer' }}
-            >
-              {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={entry.color}
-                  opacity={activeObraId && entry.obraId !== activeObraId ? 0.3 : 1}
-                />
-              ))}
-            </Pie>
+          <LineChart data={data.rows}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" />
+            <XAxis dataKey="name" stroke="#00233B" />
+            <YAxis stroke="#00233B" allowDecimals={false} />
             <Tooltip contentStyle={TOOLTIP_STYLE} />
             <Legend wrapperStyle={{ color: '#00233B' }} />
-          </PieChart>
+            {data.lines.map(line => (
+              <Line
+                key={line.obraId}
+                type="monotone"
+                dataKey={line.key}
+                stroke={line.color}
+                strokeWidth={2}
+                dot={{ r: 4, fill: line.color }}
+                activeDot={{ r: 6 }}
+              />
+            ))}
+          </LineChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

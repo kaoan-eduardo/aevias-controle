@@ -82,11 +82,7 @@ export default function Dashboard() {
         {/* Gráficos adicionais para Admin e Cliente */}
         {showObraChart && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <RecordsByObraChart
-              data={charts.porObra}
-              activeObraId={filters.obraId}
-              onSliceClick={data => handlePieClick(data, 'obra')}
-            />
+            <RecordsByObraChart data={charts.porObra} />
             <RecordsByTypeChart
               data={charts.porTipo}
               activeTipoRegistro={filters.tipoRegistro}
