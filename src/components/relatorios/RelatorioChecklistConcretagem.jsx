@@ -319,7 +319,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             max-width: 210mm !important;
             min-height: 297mm;
             margin: 0 auto !important;
-            padding: 10mm 12mm !important;
+            padding: 12mm 12mm !important;
             box-sizing: border-box !important;
             page-break-after: always;
           }
