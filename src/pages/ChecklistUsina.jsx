@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -8,15 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Save, AlertTriangle, Loader2, XCircle, CheckCircle, Plus, Trash2 } from "lucide-react";
 import { ChecklistUsina as ChecklistUsinaEntity } from "@/entities/ChecklistUsina";
-import { Obra } from "@/entities/Obra";
-import { Regional } from "@/entities/Regional";
-import { User } from "@/entities/User";
-import { Project } from "@/entities/Project";
-import { FaixaGranulometrica } from "@/entities/FaixaGranulometrica";
 import { uploadMultipleFiles } from "@/utils/imageUpload";
-import { useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import { useChecklistForm } from "@/hooks/useChecklistForm";
+import { validateChecklistForm, validateDecimalInput } from "@/utils/checklistValidation";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 import MedicaoUsina from "@/components/checklists/MedicaoUsina";
 
@@ -122,23 +117,15 @@ const getInitialFormData = () => ({
 });
 
 export default function ChecklistUsinaPage() {
-  const [obras, setObras] = useState([]);
-  const [regionais, setRegionais] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [faixas, setFaixas] = useState([]);
-  const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState([]);
-  const [editingChecklist, setEditingChecklist] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState(getInitialFormData());
+  const {
+    obras, regionais, projects, faixas, user, allUsers, editingChecklist,
+    loading, formData, setFormData, obraSelecionada, regionalSelecionada,
+    projetosDisponiveis, isApproved, userCanEdit, isEditable, clearSavedData, navigate,
+  } = useChecklistForm(getInitialFormData, 'ChecklistUsina', 'checklist_usina');
+
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [selectedFileNames, setSelectedFileNames] = useState("Nenhum ficheiro selecionado");
   const [uploadProgress, setUploadProgress] = useState([]);
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { clearSavedData } = useFormPersistence('checklist_usina', formData, setFormData, !!editingChecklist);
 
   const selectedProject = useMemo(() =>
     projects.find(p => p.id === formData.project_id),
@@ -150,100 +137,32 @@ export default function ChecklistUsinaPage() {
   }, []);
 
   const handleObraChange = useCallback((obraId) => {
-    const obra = obras.find(o => o.id === obraId);
-    const regional = obra ? regionais.find(r => r.id === obra.regional_id) : null;
-    const gestorEmail = regional?.gestor_contrato_responsavel;
-    const gestor = gestorEmail && allUsers.length > 0 ? allUsers.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase()) : null;
-
     setFormData(prev => ({
       ...prev,
       obra_id: obraId,
-      project_id: "", // Reset project on obra change
+      project_id: "",
     }));
-  }, [obras, regionais, allUsers]);
+  }, []);
 
   const checkConformidadeAutomatica = useCallback((testKey, resultado, project) => {
     if (!project || resultado === null || resultado === undefined || resultado === '') return null;
-
-    // Granulometria sempre manual
     if (testKey === 'granulometria') return null;
 
     const num = parseFloat(resultado);
     if (isNaN(num)) return null;
 
-    // Verificar conformidade baseada nos limites do projeto
-    switch (testKey) {
-      case 'extracao_ligante_rotarex':
-      case 'extracao_ligante_soxhlet':
-        if (project.teor_ligante && project.teor_ligante.min !== null && project.teor_ligante.max !== null) {
-          return num >= project.teor_ligante.min && num <= project.teor_ligante.max;
-        }
-        break;
-      
-      case 'volume_vazios':
-        if (project.volume_vazios && project.volume_vazios.min !== null && project.volume_vazios.max !== null) {
-          return num >= project.volume_vazios.min && num <= project.volume_vazios.max;
-        }
-        break;
-      
-      case 'vam_marshall':
-        if (project.vam && project.vam.min !== null) {
-          return num > project.vam.min;
-        }
-        break;
-      
-      case 'rbv':
-        if (project.rbv && project.rbv.min !== null && project.rbv.max !== null) {
-          return num >= project.rbv.min && num <= project.rbv.max;
-        }
-        break;
-      
-      case 'rtcd_25c':
-        if (project.rtcd && project.rtcd.min !== null) {
-          return num > project.rtcd.min;
-        }
-        break;
-      
-      case 'estabilidade':
-        if (project.estabilidade && project.estabilidade.min !== null) {
-          return num > project.estabilidade.min;
-        }
-        break;
-      
-      case 'fluencia':
-        if (project.fluencia && project.fluencia.min !== null && project.fluencia.max !== null) {
-          return num >= project.fluencia.min && num <= project.fluencia.max;
-        }
-        break;
-    }
+    const checks = {
+      extracao_ligante_rotarex: () => project.teor_ligante && num >= project.teor_ligante.min && num <= project.teor_ligante.max,
+      extracao_ligante_soxhlet: () => project.teor_ligante && num >= project.teor_ligante.min && num <= project.teor_ligante.max,
+      volume_vazios: () => project.volume_vazios && num >= project.volume_vazios.min && num <= project.volume_vazios.max,
+      vam_marshall: () => project.vam && num > project.vam.min,
+      rbv: () => project.rbv && num >= project.rbv.min && num <= project.rbv.max,
+      rtcd_25c: () => project.rtcd && num > project.rtcd.min,
+      estabilidade: () => project.estabilidade && num > project.estabilidade.min,
+      fluencia: () => project.fluencia && num >= project.fluencia.min && num <= project.fluencia.max,
+    };
 
-    return null;
-  }, []);
-
-  const validateDecimalInput = useCallback((value, maxDecimals) => {
-    // Permitir vazio
-    if (value === '') return true;
-    
-    // Regex para validar número com casas decimais específicas
-    let regex;
-    switch (maxDecimals) {
-      case 0:
-        regex = /^\d+$/; // Apenas números inteiros
-        break;
-      case 1:
-        regex = /^\d*\.?\d{0,1}$/; // até 1 casa decimal
-        break;
-      case 2:
-        regex = /^\d*\.?\d{0,2}$/; // até 2 casas decimais
-        break;
-      case 3:
-        regex = /^\d*\.?\d{0,3}$/; // até 3 casas decimais
-        break;
-      default:
-        regex = /^\d*\.?\d*$/; // qualquer número de casas decimais
-    }
-    
-    return regex.test(value);
+    return checks[testKey]?.() ?? null;
   }, []);
 
   // For controle_cauq paths (3+ levels), pass path string + value + maxDecimals.
@@ -530,34 +449,10 @@ export default function ChecklistUsinaPage() {
   const handleSubmit = async (e, saveStatus = 'finalizado') => {
     e.preventDefault();
 
-    // Validações obrigatórias apenas quando finalizando
-    if (saveStatus === 'finalizado') {
-      if (!formData.obra_id || !formData.usina) {
-        alert("Por favor, preencha a obra e a usina.");
-        return;
-      }
-      if (!formData.project_id) {
-        alert("Por favor, selecione o projeto vinculado.");
-        return;
-      }
-      if (!formData.pedreira) {
-        alert("Por favor, preencha a pedreira.");
-        return;
-      }
-      if (!formData.faixa_especificada) {
-        alert("Por favor, preencha a faixa especificada.");
-        return;
-      }
-      if (!formData.ligante) {
-        alert("Por favor, preencha o ligante asfáltico.");
-        return;
-      }
-    } else {
-      // Para salvar progresso, apenas obra é obrigatória
-      if (!formData.obra_id) {
-        alert("Por favor, selecione uma obra.");
-        return;
-      }
+    const validation = validateChecklistForm(formData, saveStatus);
+    if (!validation.valid) {
+      alert(validation.message);
+      return;
     }
 
     const dataToSave = {
@@ -593,206 +488,7 @@ export default function ChecklistUsinaPage() {
     }
   };
 
-  const obraSelecionada = useMemo(() => obras.find(o => o.id === formData.obra_id), [obras, formData.obra_id]);
-  const regionalSelecionada = useMemo(() => obraSelecionada ? regionais.find(r => r.id === obraSelecionada.regional_id) : null, [obraSelecionada, regionais]);
-  const projetosDisponiveis = useMemo(() => {
-    if (!regionalSelecionada || !projects) return [];
-    const regionalProjectIds = regionalSelecionada.project_ids || [];
-    return projects.filter(p => 
-      regionalProjectIds.includes(p.id) && 
-      p.status === 'ativo' &&
-      p.tipo_projeto === 'CAUQ'
-    );
-  }, [regionalSelecionada, projects]);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const userData = await User.me();
-        setUser(userData);
-
-        const currentUserAccessLevel = userData?.access_level || (userData?.role === 'admin' ? 'admin' : 'user');
-        const isAdmin = currentUserAccessLevel === 'admin';
-
-        // Carregar dados em paralelo - Obra, Regional, Project são essenciais
-        const dataPromises = [
-          Obra.list(),
-          Regional.list(),
-          Project.list()
-        ];
-
-        // Tentar carregar FaixaGranulometrica separadamente com tratamento de erro
-        let faixasData = [];
-        try {
-          faixasData = await FaixaGranulometrica.list();
-        } catch (faixasError) {
-          console.warn("[ChecklistUsina] Faixas granulométricas indisponíveis, continuando sem elas:", faixasError?.message || faixasError);
-          // Continuar sem as faixas - não é crítico para o funcionamento
-        }
-
-        // Adicionar User.list() apenas se for admin
-        if (isAdmin) {
-          dataPromises.push(User.list());
-        }
-
-        const loadedData = await Promise.all(dataPromises);
-        
-        // Destructure based on the order pushed into dataPromises
-        const [obrasData, regionaisData, projectsData, allUsersDataFetchedIfAdmin] = loadedData;
-        
-        setRegionais(regionaisData);
-        setProjects(projectsData);
-        setFaixas(faixasData);
-        
-        // Se não for admin, usar apenas o usuário atual na lista
-        setAllUsers(isAdmin ? allUsersDataFetchedIfAdmin : [userData]);
-
-        let availableObras = obrasData;
-        
-        if (currentUserAccessLevel === 'user') {
-          const regionalDoLaboratorista = regionaisData.find(regional => {
-            const laboratoristas = regional.laboratoristas_responsaveis || [];
-            return laboratoristas.some(email => email.toLowerCase() === userData.email.toLowerCase());
-          });
-          
-          if (regionalDoLaboratorista) {
-            availableObras = obrasData.filter(obra => 
-              obra.regional_id === regionalDoLaboratorista.id &&
-              obra.status === 'em_andamento'
-            );
-          } else {
-            availableObras = [];
-          }
-        }
-        setObras(availableObras);
-
-        const params = new URLSearchParams(location.search);
-        const editId = params.get('editId');
-        
-        if (editId) {
-          const checklistToEdit = await ChecklistUsinaEntity.get(editId); // Corrected entity name
-          setEditingChecklist(checklistToEdit);
-
-          if (userData.role === 'admin' || (checklistToEdit.created_by === userData.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false || checklistToEdit.approved === null))) {
-            const initialForm = getInitialFormData();
-            let loadedFormData = {
-              ...initialForm,
-              ...checklistToEdit,
-              data: checklistToEdit.data ? new Date(checklistToEdit.data).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-              fotos: Array.isArray(checklistToEdit.fotos) ? checklistToEdit.fotos : [],
-              controle_agregados: Array.isArray(checklistToEdit.controle_agregados) ? checklistToEdit.controle_agregados : [],
-              controle_cauq: { // Initialize with initial form's cauq structure
-                ...initialForm.controle_cauq
-              }
-            };
-
-            // Processar controle_cauq com segurança
-            if (checklistToEdit.controle_cauq && typeof checklistToEdit.controle_cauq === 'object') {
-              Object.keys(initialForm.controle_cauq).forEach(testKey => {
-                const existingTest = checklistToEdit.controle_cauq[testKey];
-                const initialTest = initialForm.controle_cauq[testKey];
-
-                // Ensure the test object in loadedFormData starts with initial structure
-                loadedFormData.controle_cauq[testKey] = { ...initialTest };
-
-                if (existingTest && typeof existingTest === 'object') {
-                  // Copy basic properties from existing, overwriting initial ones
-                  // This will correctly load existing 'conforme: false' or 'conforme: true' or 'conforme: null'
-                  Object.assign(loadedFormData.controle_cauq[testKey], existingTest);
-
-                  // CRÍTICO: Garantir que resultados seja SEMPRE um array
-                  if (('resultado' in existingTest) && !Array.isArray(existingTest.resultados)) {
-                    // Converter resultado único legado para array
-                    const resultadoLegado = existingTest.resultado;
-                    if (resultadoLegado !== null && resultadoLegado !== undefined && resultadoLegado !== '') {
-                      loadedFormData.controle_cauq[testKey].resultados = [resultadoLegado];
-                      loadedFormData.controle_cauq[testKey].quantidade = 1;
-                    } else {
-                      loadedFormData.controle_cauq[testKey].resultados = [];
-                      loadedFormData.controle_cauq[testKey].quantidade = 0;
-                    }
-                  } else if (Array.isArray(existingTest.resultados)) {
-                    // Já é array, usar como está (create a new array to prevent direct mutation)
-                    loadedFormData.controle_cauq[testKey].resultados = [...existingTest.resultados];
-                    loadedFormData.controle_cauq[testKey].quantidade = existingTest.resultados.length;
-                  } else if (existingTest.resultados !== null && existingTest.resultados !== undefined && existingTest.resultados !== '') {
-                    // resultados existe mas não é array, converter
-                    loadedFormData.controle_cauq[testKey].resultados = [existingTest.resultados];
-                    loadedFormData.controle_cauq[testKey].quantidade = 1;
-                  } else {
-                    // Sem resultados, inicializar array vazio, but respect existing quantity if available
-                    loadedFormData.controle_cauq[testKey].resultados = [];
-                    loadedFormData.controle_cauq[testKey].quantidade = existingTest.quantidade || 0;
-                  }
-                  
-                  // Limpar campo legado
-                  delete loadedFormData.controle_cauq[testKey].resultado;
-                } else {
-                    // If existingTest is not an object or null/undefined, ensure default empty array for results and quantity 0
-                    // This is largely covered by { ...initialTest } but explicitly setting it again for clarity if initialTest itself was problematic
-                    if (!loadedFormData.controle_cauq[testKey].resultados) {
-                        loadedFormData.controle_cauq[testKey].resultados = [];
-                    }
-                    if (!loadedFormData.controle_cauq[testKey].quantidade) {
-                        loadedFormData.controle_cauq[testKey].quantidade = 0;
-                    }
-                }
-              });
-            }
-
-            // Modernizar equivalente_areia
-            let equivalenteAreiaStatus = checklistToEdit.equivalente_areia_status || null;
-            let equivalenteAreiaResultados = Array.isArray(checklistToEdit.equivalente_areia_resultados) ? checklistToEdit.equivalente_areia_resultados : [];
-
-            if (('equivalente_areia_realizado' in checklistToEdit) && equivalenteAreiaStatus === null) {
-                equivalenteAreiaStatus = checklistToEdit.equivalente_areia_realizado ? 'realizado' : 'nao_realizado';
-                if (equivalenteAreiaStatus === 'realizado' && equivalenteAreiaResultados.length === 0) {
-                    if (('equivalente_areia_quantidade' in checklistToEdit) && checklistToEdit.equivalente_areia_quantidade > 0) {
-                        equivalenteAreiaResultados = Array(checklistToEdit.equivalente_areia_quantidade).fill(null);
-                    }
-                }
-            }
-
-            if (equivalenteAreiaStatus !== 'realizado') {
-                equivalenteAreiaResultados = [];
-            }
-
-            loadedFormData.equivalente_areia_status = equivalenteAreiaStatus;
-            loadedFormData.equivalente_areia_resultados = equivalenteAreiaResultados;
-            loadedFormData.equivalente_areia_quantidade = equivalenteAreiaResultados.length;
-
-            setFormData(loadedFormData);
-          } else {
-            alert("Você não tem permissão para editar este registro.");
-            navigate(createPageUrl('MeusEnsaios'));
-            return;
-          }
-        } else {
-          const initialNewFormData = getInitialFormData();
-          initialNewFormData.inspetor_campo = userData.laboratorista_name || userData.full_name;
-          if (availableObras.length > 0) {
-            initialNewFormData.obra_id = availableObras[0].id;
-          }
-          setFormData(initialNewFormData);
-          setEditingChecklist(null);
-        }
-      } catch (error) {
-        console.error("[ChecklistUsina] Erro ao carregar dados:", error?.message || error);
-        alert("Não foi possível carregar os dados. Erro: " + (error.message || error));
-        navigate(createPageUrl('MeusEnsaios'));
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [location.search]); // eslint-disable-line react-hooks/exhaustive-deps
-  
-
-
-  const isApproved = formData.approved === true && formData.status !== 'rascunho';
-  const userCanEdit = user?.role === 'admin' || (formData.created_by === user?.email && (formData.status === 'rascunho' || formData.approved === false || formData.approved === null));
-  const isEditable = !editingChecklist?.id || userCanEdit;
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="w-8 h-8 animate-spin" /></div>;
