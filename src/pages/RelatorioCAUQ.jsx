@@ -1124,7 +1124,7 @@ export default function RelatorioCAUQ() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 5mm 6mm 4mm 6mm;
+            margin: 0;
           }
           body {
             print-color-adjust: exact;

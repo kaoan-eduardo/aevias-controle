@@ -77,9 +77,7 @@ export default function RelatorioManchaPenduloPage() {
           }
           @page { 
             size: A4 portrait;
-            margin: 10mm 12mm;
-            orphans: 0;
-            widows: 0;
+            margin: 0;
           }
           table {
             width: 100% !important;

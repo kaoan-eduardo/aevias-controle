@@ -308,7 +308,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
           @page {
             size: A4;
-            margin: 20mm !important;
+            margin: 0;
           }
 
           .print-page { 

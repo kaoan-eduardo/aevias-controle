@@ -565,7 +565,7 @@ export default function RelatorioMRAF({ ensaio, obra, project, user, regional, f
         @media print {
           @page {
             size: A4 portrait;
-            margin: 10mm 8mm 10mm 8mm;
+            margin: 0;
           }
           body {
             print-color-adjust: exact;
