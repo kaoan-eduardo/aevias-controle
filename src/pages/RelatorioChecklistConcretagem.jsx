@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useReportMode } from "@/hooks/useReportMode";
 import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
@@ -13,35 +13,6 @@ export default function RelatorioChecklistConcretagemPage() {
   const [checklist, setChecklist] = useState(null);
   const [creatorUser, setCreatorUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const reportRef = useRef(null);
-
-  // Scale the report to fit A4 width before printing, restore after
-  useEffect(() => {
-    const beforePrint = () => {
-      const el = reportRef.current;
-      if (!el) return;
-      const a4Px = 794; // 210mm at 96dpi
-      const scale = a4Px / el.scrollWidth;
-      if (scale < 1) {
-        el.style.transformOrigin = 'top left';
-        el.style.transform = `scale(${scale})`;
-        el.style.width = `${100 / scale}%`;
-      }
-    };
-    const afterPrint = () => {
-      const el = reportRef.current;
-      if (!el) return;
-      el.style.transform = '';
-      el.style.transformOrigin = '';
-      el.style.width = '';
-    };
-    window.addEventListener('beforeprint', beforePrint);
-    window.addEventListener('afterprint', afterPrint);
-    return () => {
-      window.removeEventListener('beforeprint', beforePrint);
-      window.removeEventListener('afterprint', afterPrint);
-    };
-  }, []);
 
   const loadChecklist = useCallback(async () => {
     try {
@@ -105,7 +76,7 @@ export default function RelatorioChecklistConcretagemPage() {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
-          aside, nav, [data-sidebar], [role="navigation"], .print\\:hidden {
+          aside, nav, [data-sidebar], [role="navigation"] {
             display: none !important;
           }
         }
@@ -125,9 +96,7 @@ export default function RelatorioChecklistConcretagemPage() {
         </div>
       </div>
 
-      <div ref={reportRef} style={{width:'210mm', margin:'0 auto', overflowX:'hidden'}}>
-        <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
-      </div>
+      <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
     </div>
   );
 }
