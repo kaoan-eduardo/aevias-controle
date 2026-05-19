@@ -91,6 +91,10 @@ export default function RelatorioGranulometriaIndividual({ ensaio, obra, project
             border-radius: 0 !important;
             background: white;
           }
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
         }
       `}</style>
         {/* Conteúdo Principal */}
