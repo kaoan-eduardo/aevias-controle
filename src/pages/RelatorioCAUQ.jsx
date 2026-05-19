@@ -1097,7 +1097,7 @@ export default function RelatorioCAUQ() {
           </main>
 
           {/* Footer com assinaturas */}
-          <footer className={`px-1.5 print:break-inside-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-[150px]'}`}>
+          <footer className={`px-1.5 print:break-inside-avoid print:break-before-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-[150px]'}`}>
             <SignatureFooter 
               labName={ensaio.laboratorista_name}
               labEmail={ensaio.created_by}
@@ -1141,6 +1141,11 @@ export default function RelatorioCAUQ() {
             position: relative !important;
             margin-top: 0 !important;
           }
+          footer {
+            page-break-before: avoid !important;
+            break-before: avoid !important;
+          }
+
           /* Ocultar sidebar e elementos de navegação */
           aside, nav, [data-sidebar], [role="navigation"] {
             display: none !important;
