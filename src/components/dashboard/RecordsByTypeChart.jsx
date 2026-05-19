@@ -27,7 +27,7 @@ export default function RecordsByTypeChart({ data, activeTipoRegistro, onSliceCl
             onClick={e => e?.activePayload && onSliceClick(e.activePayload[0].payload)}
             margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" horizontal={false} />
+            <CartesianGrid stroke="none" />
             <XAxis type="number" stroke="#00233B" allowDecimals={false} domain={[0, dataMax => Math.ceil(dataMax * 1.2)]} />
             <YAxis type="category" dataKey="name" stroke="#00233B" width={140} tick={{ fontSize: 12 }} />
             <Tooltip contentStyle={TOOLTIP_STYLE} />
