@@ -1,80 +1,54 @@
 // Interface de tabela para admin/gestor/sala técnica
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, CheckCircle, XCircle, Trash2, PlusCircle, FlaskConical, Gauge, ClipboardList, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { FileText, PlusCircle, FlaskConical, Gauge, ClipboardList, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { getEnsaioTypeInfo, getReportLink, getDataFormatted, getDataEnsaio, typeOptions } from "@/components/ensaios/ensaioMappers";
-import { getLocalInfo, getLaboratoristaInfo, getEmpireiteiraInfo, getNaoConformidades, getStatusInfo } from "@/components/ensaios/utils";
+import { typeOptions } from "@/components/ensaios/ensaioMappers";
 import { Pagination } from "@/components/ensaios/Pagination";
 import { ReprovacaoModal } from "@/components/ensaios/ReprovacaoModal";
 import { ExclusaoModal } from "@/components/ensaios/ExclusaoModal";
-import { CopyIdButton, DateRangePicker, TextColumnFilter, SelectColumnFilter } from "@/components/ensaios/TableFilters";
+import { DateRangePicker, TextColumnFilter, SelectColumnFilter } from "@/components/ensaios/TableFilters";
+import { useTableFilters } from "@/hooks/useTableFilters";
+import TableRowAdmin from "@/components/ensaios/TableRowAdmin";
 
 const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReject, onDelete, user, canApprove, canCreate, allUsers }) => {
-  const [nomeFilter, setNomeFilter] = useState('');
-  const [obraFilter, setObraFilter] = useState('');
-  const [projetoFilter, setProjetoFilter] = useState('');
-  const [localFilter, setLocalFilter] = useState('');
-  const [empreiteiraFilter, setEmpreiteiraFilter] = useState('');
-  const [dataInicioFilter, setDataInicioFilter] = useState('');
-  const [dataFimFilter, setDataFimFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
   const [statusObraFilter, setStatusObraFilter] = useState('all');
   const [reprovingEnsaio, setReprovingEnsaio] = useState(null);
   const [deletingEnsaio, setDeletingEnsaio] = useState(null);
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
 
-  const toggleSortOrder = useCallback(() => {
-    setSortOrder((prev) => prev === 'desc' ? 'asc' : prev === 'asc' ? null : 'desc');
-  }, []);
-
-  const filteredEnsaios = useMemo(() => {
-    let filtered = ensaios;
-    if (nomeFilter) filtered = filtered.filter((e) => getLaboratoristaInfo(e, allUsers).toLowerCase().includes(nomeFilter.toLowerCase()));
-    if (obraFilter) filtered = filtered.filter((e) => { const o = obras.find((ob) => ob.id === e.obra_id); return o?.name?.toLowerCase().includes(obraFilter.toLowerCase()) || o?.code?.toLowerCase().includes(obraFilter.toLowerCase()); });
-    if (projetoFilter) filtered = filtered.filter((e) => { if (!e.project_id) return false; const p = projects.find((pr) => pr.id === e.project_id); return p?.name?.toLowerCase().includes(projetoFilter.toLowerCase()); });
-    if (localFilter) filtered = filtered.filter((e) => { const li = getLocalInfo(e); return li.tipo?.toLowerCase().includes(localFilter.toLowerCase()) || li.detalhes?.toLowerCase().includes(localFilter.toLowerCase()); });
-    if (empreiteiraFilter) filtered = filtered.filter((e) => getEmpireiteiraInfo(e)?.toLowerCase().includes(empreiteiraFilter.toLowerCase()) ?? false);
-    if (dataInicioFilter) { const d = new Date(dataInicioFilter); d.setHours(0,0,0,0); filtered = filtered.filter((e) => { const de = getDataEnsaio(e); if (!de) return false; const ed = new Date(de); ed.setHours(0,0,0,0); return ed >= d; }); }
-    if (dataFimFilter) { const d = new Date(dataFimFilter); d.setHours(23,59,59,999); filtered = filtered.filter((e) => { const de = getDataEnsaio(e); if (!de) return false; const ed = new Date(de); ed.setHours(0,0,0,0); return ed <= d; }); }
-    if (statusFilter !== 'all') filtered = filtered.filter((e) => {
-      if (statusFilter === 'approved') return e.approved === true && !e.client_signature?.signed_by;
-      if (statusFilter === 'pending') return e.approved === null;
-      if (statusFilter === 'rejected') return e.approved === false;
-      if (statusFilter === 'signed') return e.client_signature?.signed_by;
-      return true;
-    });
-    if (typeFilter && typeFilter !== 'all') filtered = filtered.filter((e) => e.entityType === typeFilter);
+  const applyCustomFilters = useCallback((filtered) => {
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'approved') filtered = filtered.filter((e) => e.approved === true && !e.client_signature?.signed_by);
+      else if (statusFilter === 'pending') filtered = filtered.filter((e) => e.approved === null);
+      else if (statusFilter === 'rejected') filtered = filtered.filter((e) => e.approved === false);
+      else if (statusFilter === 'signed') filtered = filtered.filter((e) => e.client_signature?.signed_by);
+    }
     if (statusObraFilter !== 'all') filtered = filtered.filter((e) => obras.find((o) => o.id === e.obra_id)?.status === statusObraFilter);
-    if (sortOrder) filtered = [...filtered].sort((a, b) => {
-      const dA = new Date(getDataEnsaio(a)), dB = new Date(getDataEnsaio(b));
-      if (isNaN(dA) || isNaN(dB)) return 0;
-      return sortOrder === 'asc' ? dA - dB : dB - dA;
-    });
     return filtered;
-  }, [ensaios, nomeFilter, obraFilter, projetoFilter, localFilter, empreiteiraFilter, dataInicioFilter, dataFimFilter, statusFilter, typeFilter, statusObraFilter, obras, projects, sortOrder, allUsers]);
+  }, [statusFilter, statusObraFilter, obras]);
 
-  const clearFilters = useCallback(() => {
-    setNomeFilter(''); setObraFilter(''); setProjetoFilter(''); setLocalFilter(''); setEmpreiteiraFilter('');
-    setDataInicioFilter(''); setDataFimFilter(''); setStatusFilter('all'); setTypeFilter('all');
-    setStatusObraFilter('all'); setSortOrder('desc'); setCurrentPage(1);
-  }, []);
-
-  const isAnyFilterActive = nomeFilter || obraFilter || projetoFilter || localFilter || empreiteiraFilter ||
-    dataInicioFilter || dataFimFilter || statusFilter !== 'all' || typeFilter !== 'all' || statusObraFilter !== 'all';
-
-  const totalPages = Math.ceil(filteredEnsaios.length / itemsPerPage);
-  const paginatedEnsaios = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredEnsaios.slice(start, start + itemsPerPage);
-  }, [filteredEnsaios, currentPage]);
+  const {
+    nomeFilter, setNomeFilter,
+    obraFilter, setObraFilter,
+    projetoFilter, setProjetoFilter,
+    localFilter, setLocalFilter,
+    empreiteiraFilter, setEmpreiteiraFilter,
+    dataInicioFilter, setDataInicioFilter,
+    dataFimFilter, setDataFimFilter,
+    typeFilter, setTypeFilter,
+    sortOrder,
+    currentPage, setCurrentPage,
+    filteredEnsaios,
+    paginatedEnsaios,
+    totalPages,
+    isAnyFilterActive,
+    toggleSortOrder,
+    clearFilters,
+  } = useTableFilters(ensaios, obras, projects, allUsers, applyCustomFilters);
 
   const handleReject = useCallback(async (ensaio, motivo) => {
     await onReject(ensaio, motivo);
@@ -158,76 +132,21 @@ const AdminInterface = React.memo(({ ensaios, obras, projects, onApprove, onReje
                 </tr>
               </thead>
               <tbody>
-                {paginatedEnsaios.map((ensaio, index) => {
-                  const obra = obras.find((o) => o.id === ensaio.obra_id);
-                  const status = getStatusInfo(ensaio);
-                  const { name, icon: TypeIcon } = getEnsaioTypeInfo(ensaio);
-                  const reportUrl = getReportLink(ensaio);
-                  const localInfo = getLocalInfo(ensaio);
-                  const laboratorista = getLaboratoristaInfo(ensaio, allUsers);
-                  const dataFormatted = getDataFormatted(ensaio);
-                  const projeto = ensaio.project_id ? projects.find((p) => p.id === ensaio.project_id) : null;
-                  const naoConformidades = getNaoConformidades(ensaio);
-                  const temAcoesCorretivas = ensaio.acoes_corretivas_realizado === true;
-                  const temDeflexaoExcessiva = ensaio.tem_deflexao_excessiva === true;
-
-                  return (
-                    <tr key={ensaio.id} className={`border-b border-white/10 hover:bg-black/5 ${index % 2 === 0 ? 'bg-transparent' : 'bg-black/[0.02]'}`}>
-                      <td className="px-2 py-2">
-                        <div className="font-medium text-[#00233B] flex items-center gap-1 text-xs">
-                          <TypeIcon className="w-3 h-3 text-[#BFCF99]" />
-                          <span className="truncate max-w-[120px]" title={name}>{name}</span>
-                          <CopyIdButton id={ensaio.id} />
-                          {naoConformidades.length > 0 && <span className="text-red-600 cursor-help" title={`Não conformidades:\n${naoConformidades.join('\n')}`}>⚠️</span>}
-                          {!naoConformidades.length && temDeflexaoExcessiva && <span className="cursor-help" title="Pontos com deflexão acima do limite admissível">🟡</span>}
-                          {!naoConformidades.length && !temDeflexaoExcessiva && temAcoesCorretivas && <span className="text-orange-500 cursor-help" title="Ações corretivas realizadas">⚠️</span>}
-                        </div>
-                      </td>
-                      <td className="px-2 py-2 text-[#00233B]/90 text-xs whitespace-nowrap">{dataFormatted}</td>
-                      <td className="px-2 py-2">
-                        <div className="font-medium text-[#00233B] text-xs truncate max-w-[140px]" title={obra?.name}>{obra?.name || 'N/A'}</div>
-                        <div className="text-[10px] text-[#00233B]/70">{obra?.code}</div>
-                      </td>
-                      <td className="px-2 py-2 text-[#00233B]/90 text-xs truncate max-w-[100px]" title={laboratorista}>{laboratorista}</td>
-                      <td className="px-2 py-2">
-                        <div className="text-[#00233B]/90 text-xs">{localInfo.tipo}</div>
-                        <div className="text-[10px] text-[#00233B]/70 truncate max-w-[120px]" title={localInfo.detalhes}>{localInfo.detalhes}</div>
-                      </td>
-                      <td className="px-2 py-2">{getEmpireiteiraInfo(ensaio) ? <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]">{getEmpireiteiraInfo(ensaio)}</div> : <div className="text-[#00233B]/50 text-center text-xs">-</div>}</td>
-                      <td className="px-2 py-2">{projeto ? <div className="text-[#00233B]/90 text-xs truncate max-w-[100px]" title={projeto.name}>{projeto.name}</div> : <div className="text-[#00233B]/50 text-center text-xs">-</div>}</td>
-                      <td className="px-2 py-2 text-center">
-                        <Badge className={`${status.className} text-[10px] px-2 py-0.5 gap-1`}><status.icon className="w-3 h-3" />{status.text}</Badge>
-                      </td>
-                      <td className="px-2 py-2">
-                        <div className="flex items-center gap-1">
-                          <Button asChild variant="outline" size="sm" className="text-[#00233B] hover:bg-[#00233B]/10 border-white/20 h-7 px-2">
-                            <Link to={reportUrl} target="_blank"><FileText className="w-3 h-3" /></Link>
-                          </Button>
-                          {canApprove && ensaio.status !== 'rascunho' && (
-                            <div className="flex gap-1">
-                              {(ensaio.approved === null || ensaio.approved === false) && (
-                                <Button size="sm" style={{ backgroundColor: '#566E3D' }} className="text-white hover:opacity-90 h-7 px-2" onClick={() => onApprove(ensaio)} title="Aprovar">
-                                  <CheckCircle className="w-3 h-3" />
-                                </Button>
-                              )}
-                              {ensaio.approved === null && (
-                                <Button size="sm" style={{ backgroundColor: '#800020' }} className="text-white hover:opacity-90 h-7 px-2" onClick={() => setReprovingEnsaio(ensaio)} title="Reprovar">
-                                  <XCircle className="w-3 h-3" />
-                                </Button>
-                              )}
-                            </div>
-                          )}
-                          {canApprove && ensaio.status === 'rascunho' && <span className="text-xs italic text-[#00233B]/60 ml-2">Em execução</span>}
-                          {canApprove && (
-                            <Button size="sm" variant="destructive" className="h-7 px-2" onClick={() => setDeletingEnsaio(ensaio)} title="Excluir">
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {paginatedEnsaios.map((ensaio, index) => (
+                  <TableRowAdmin
+                    key={ensaio.id}
+                    ensaio={ensaio}
+                    obra={obras.find((o) => o.id === ensaio.obra_id)}
+                    projeto={ensaio.project_id ? projects.find((p) => p.id === ensaio.project_id) : null}
+                    index={index}
+                    canApprove={canApprove}
+                    allUsers={allUsers}
+                    obras={obras}
+                    onApprove={onApprove}
+                    onReject={() => setReprovingEnsaio(ensaio)}
+                    onDelete={() => setDeletingEnsaio(ensaio)}
+                  />
+                ))}
               </tbody>
             </table>
             {filteredEnsaios.length === 0 && (
