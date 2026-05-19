@@ -16,6 +16,7 @@ import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 import MedicaoUsina from "@/components/checklists/MedicaoUsina";
 import ChecklistUsinaHeader from "@/components/checklists/ChecklistUsinaHeader";
 import ChecklistFooter from "@/components/checklists/ChecklistFooter";
+import ControleCauqSection from "@/components/checklists/ControleCauqSection";
 
 const getInitialFormData = () => ({
   obra_id: "",
