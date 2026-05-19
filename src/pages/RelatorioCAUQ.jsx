@@ -1097,7 +1097,7 @@ export default function RelatorioCAUQ() {
           </main>
 
           {/* Footer com assinaturas */}
-          <footer className={`px-1.5 print:break-inside-avoid print:break-before-avoid print:px-0.5 ${ensaio.realizar_marshall ? 'mt-0 print:mt-0' : 'mt-[150px]'}`}>
+          <footer className="px-1.5 print:break-inside-avoid print:break-before-avoid print:px-0.5 mt-2 print:mt-1">
             <SignatureFooter 
               labName={ensaio.laboratorista_name}
               labEmail={ensaio.created_by}
