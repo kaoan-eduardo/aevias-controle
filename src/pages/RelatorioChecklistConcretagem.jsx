@@ -63,6 +63,33 @@ export default function RelatorioChecklistConcretagemPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <style>{`
+        @media print {
+          @page {
+            size: A4;
+            margin: 0;
+          }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 210mm !important;
+            background: white !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          body > * {
+            max-width: 210mm !important;
+            margin: 0 auto !important;
+          }
+          .print-page {
+            width: 210mm !important;
+            max-width: 210mm !important;
+            margin: 0 auto !important;
+            padding: 8mm !important;
+            box-sizing: border-box !important;
+          }
+        }
+      `}</style>
       <div className="print:hidden sticky top-0 bg-white border-b border-slate-200 p-4 shadow-sm z-10">
         <div className="max-w-[210mm] mx-auto flex justify-between items-center">
           <h2 className="text-lg font-semibold text-slate-800">
