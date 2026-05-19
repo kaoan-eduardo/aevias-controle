@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const TOOLTIP_STYLE = {
@@ -25,16 +25,12 @@ export default function StatusPieChart({ data, activeStatus, isClienteUser, onSl
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              dataKey="value"
-              onClick={onSliceClick}
-              style={{ cursor: 'pointer' }}
-            >
+          <BarChart data={data} onClick={e => e?.activePayload && onSliceClick(e.activePayload[0].payload)}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 35, 59, 0.1)" />
+            <XAxis dataKey="name" stroke="#00233B" />
+            <YAxis stroke="#00233B" />
+            <Tooltip contentStyle={TOOLTIP_STYLE} />
+            <Bar dataKey="value" name="Registros" style={{ cursor: 'pointer' }} radius={[4, 4, 0, 0]}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
@@ -42,10 +38,8 @@ export default function StatusPieChart({ data, activeStatus, isClienteUser, onSl
                   opacity={activeStatus && STATUS_MAP[entry.name] !== activeStatus ? 0.3 : 1}
                 />
               ))}
-            </Pie>
-            <Tooltip contentStyle={TOOLTIP_STYLE} />
-            <Legend wrapperStyle={{ color: '#00233B' }} />
-          </PieChart>
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
