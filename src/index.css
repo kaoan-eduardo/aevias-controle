@@ -1,3 +1,9 @@
+@media print {
+  @page {
+    margin: 1cm;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
