@@ -42,7 +42,14 @@ export default function RelatorioChecklistConcretagemPage() {
   useEffect(() => { loadChecklist(); }, [loadChecklist]);
 
   const handlePrint = () => {
+    // Force the body to A4 width before printing so browser scales correctly
+    const originalWidth = document.body.style.width;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.width = '210mm';
+    document.body.style.overflow = 'visible';
     window.print();
+    document.body.style.width = originalWidth;
+    document.body.style.overflow = originalOverflow;
   };
 
   if (loading) {
@@ -69,14 +76,18 @@ export default function RelatorioChecklistConcretagemPage() {
             size: A4 portrait;
             margin: 0;
           }
+          html {
+            width: 210mm !important;
+          }
           html, body {
             margin: 0 !important;
             padding: 0 !important;
+            width: 210mm !important;
             background: white !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
-          aside, nav, [data-sidebar], [role="navigation"] {
+          aside, nav, [data-sidebar], [role="navigation"], .print\\:hidden {
             display: none !important;
           }
         }
@@ -96,7 +107,9 @@ export default function RelatorioChecklistConcretagemPage() {
         </div>
       </div>
 
-      <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
+      <div style={{width:'210mm', margin:'0 auto'}}>
+        <RelatorioChecklistConcretagemComponent checklist={checklist} creatorUser={creatorUser} />
+      </div>
     </div>
   );
 }

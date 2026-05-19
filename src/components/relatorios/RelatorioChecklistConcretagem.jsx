@@ -294,7 +294,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
   };
 
   return (
-    <div className="bg-white font-sans">
+    <div className="bg-white font-sans" style={{width:'100%', boxSizing:'border-box'}}>
       <style>{`
         @media print {
           @page {
@@ -347,7 +347,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
       {/* CASO 1: UMA ÚNICA CARGA - TUDO NA PRIMEIRA PÁGINA */}
       {!temMultiplasCargas && cargas.length === 1 && (
-        <div className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+        <div className="print-page w-full bg-white min-h-[297mm]">
           {/* Header */}
           <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
             <div className="w-16">
@@ -477,7 +477,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         const isPrimeiraCarga = cargaIndex === 0;
         
         return (
-          <div key={cargaIndex} className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+          <div key={cargaIndex} className="print-page w-full bg-white min-h-[297mm]">
             {/* Header */}
             <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
               <div className="w-16">
@@ -609,7 +609,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
       {/* PÁGINA DE AÇÕES CORRETIVAS E/OU NÃO CONFORMIDADES */}
       {(temAcoesCorretivas || (checklist.nao_conformidades && checklist.nao_conformidades.length > 0)) && (
-        <div className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+        <div className="print-page w-full bg-white min-h-[297mm]">
           {/* Header */}
           <div className="flex justify-between items-start mb-4 pb-4 border-b-2 border-slate-900">
             <div className="w-16">
@@ -699,7 +699,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
 
       {/* Páginas de Fotos */}
       {photoChunks.map((chunk, pageIndex) => (
-        <div key={pageIndex} className="print-page w-full max-w-[210mm] mx-auto bg-white min-h-[297mm]">
+        <div key={pageIndex} className="print-page w-full bg-white min-h-[297mm]">
           {/* Header */}
           <div className="flex justify-between items-start mb-2 pb-2 border-b-2 border-slate-900">
             <div className="w-12">
