@@ -299,7 +299,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 10;
           }
 
           html, body { 
