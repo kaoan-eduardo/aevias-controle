@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Loader2 } from "lucide-react";
 import { useEnsaiosList } from "@/hooks/useEnsaiosList";
-import { aprovarEnsaio, reprovarEnsaio, excluirEnsaio } from "@/services/ensaiosService";
+import { useEnsaiosActions } from "@/hooks/useEnsaiosActions";
 import { isAdmin, isCliente as isClienteUser, isGestorContrato, isSalaTecnica } from "@/utils/accessControl";
 import AdminInterface from "@/components/ensaios/AdminInterface";
 import ClienteInterface from "@/components/ensaios/ClienteInterface";
@@ -9,6 +9,7 @@ import LaboratoristaInterface from "@/components/ensaios/LaboratoristaInterface"
 
 export default function MeusEnsaios() {
   const { ensaios, obras, projects, allUsers, user, loading, reload } = useEnsaiosList();
+  const { handleApprove, handleReject, handleDelete } = useEnsaiosActions(user, obras, reload);
 
   const _isAdmin = isAdmin(user);
   const _isSalaTecnica = isSalaTecnica(user);
@@ -16,40 +17,6 @@ export default function MeusEnsaios() {
   const _isCliente = isClienteUser(user);
   const canApprove = _isAdmin || _isSalaTecnica || _isGestorContrato;
   const canCreate = _isAdmin || (!_isSalaTecnica && !_isGestorContrato && !_isCliente);
-
-  const handleApprove = useCallback(async (ensaio) => {
-    if (!window.confirm(`Confirma a aprovação do registro "${ensaio.sample_id || ensaio.id}"?`)) return;
-    try {
-      await aprovarEnsaio(ensaio, user, obras);
-      alert('Registro aprovado com sucesso!');
-      reload();
-    } catch (e) {
-      console.error('[MeusEnsaios] Erro ao aprovar ensaio:', e?.message || e);
-      alert('Erro ao aprovar ensaio. Tente novamente.');
-    }
-  }, [user, obras, reload]);
-
-  const handleReject = useCallback(async (ensaio, motivo) => {
-    try {
-      await reprovarEnsaio(ensaio, user, motivo);
-      reload();
-      alert('Registro reprovado com sucesso!');
-    } catch (e) {
-      console.error('[MeusEnsaios] Erro ao reprovar registro:', e?.message || e);
-      alert('Erro ao reprovar registro. Tente novamente.');
-    }
-  }, [user, reload]);
-
-  const handleDelete = useCallback(async (ensaio) => {
-    try {
-      await excluirEnsaio(ensaio);
-      reload();
-      alert('Registro excluído com sucesso!');
-    } catch (e) {
-      console.error('[MeusEnsaios] Erro ao excluir registro:', e?.message || e);
-      alert('Erro ao excluir registro. Tente novamente.');
-    }
-  }, [reload]);
 
   const subtitle = _isAdmin || _isSalaTecnica || _isGestorContrato
     ? "Gerencie e aprove todos os registros de suas obras."
