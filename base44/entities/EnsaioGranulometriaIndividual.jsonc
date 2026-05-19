@@ -1,0 +1,401 @@
+{
+  "name": "EnsaioGranulometriaIndividual",
+  "type": "object",
+  "properties": {
+    "obra_id": {
+      "type": "string",
+      "description": "ID da obra"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "ID do Projeto vinculado"
+    },
+    "tipo_material": {
+      "type": "string",
+      "enum": [
+        "CAUQ",
+        "MRAF",
+        "BGS",
+        "CAMADAS_GRANULARES"
+      ],
+      "description": "Tipo de material do ensaio"
+    },
+    "data_ensaio": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do ensaio"
+    },
+    "horario": {
+      "type": "string",
+      "description": "Hor\u00e1rio do ensaio"
+    },
+    "laboratorista_name": {
+      "type": "string"
+    },
+    "engenheiro_responsavel": {
+      "type": "string"
+    },
+    "rodovia": {
+      "type": "string"
+    },
+    "pedreira": {
+      "type": "string"
+    },
+    "faixa": {
+      "type": "string"
+    },
+    "local_coleta": {
+      "type": "string"
+    },
+    "agregados": {
+      "type": "array",
+      "description": "At\u00e9 4 agregados",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "peso_umido": {
+            "type": "number"
+          },
+          "peso_seco": {
+            "type": "number"
+          },
+          "agua": {
+            "type": "number"
+          },
+          "umidade": {
+            "type": "number"
+          },
+          "granulometria": {
+            "type": "object",
+            "properties": {
+              "peneira_75_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_63_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_50_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_38_1mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_37_5mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_25_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_19_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_16_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_12_5mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_9_5mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_6_3mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_4_75mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_2_36mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_2_0mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_1_18mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_6mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_42mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_3mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_18mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_15mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              },
+              "peneira_0_075mm": {
+                "type": "object",
+                "properties": {
+                  "retido": {
+                    "type": "number"
+                  },
+                  "passante": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "equivalente_areia": {
+      "type": "object",
+      "properties": {
+        "medicoes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topo_argila": {
+                "type": "number"
+              },
+              "topo_areia": {
+                "type": "number"
+              },
+              "equivalente": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "media": {
+          "type": "number"
+        }
+      }
+    },
+    "observacoes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "finalizado"
+      ],
+      "default": "rascunho"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": null
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approver_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "was_rejected": {
+      "type": "boolean",
+      "default": false
+    },
+    "client_signature": {
+      "type": "object",
+      "properties": {
+        "signed_by": {
+          "type": "string"
+        },
+        "signed_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "engineer_name": {
+          "type": "string"
+        },
+        "crea_number": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "obra_id",
+    "tipo_material"
+  ]
+}

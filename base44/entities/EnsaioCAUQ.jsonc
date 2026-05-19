@@ -78,49 +78,38 @@
       "description": "Dados da extra\u00e7\u00e3o de ligante (Rotarex)",
       "properties": {
         "peso_amostra": {
-          "type": "number",
-          "description": "Peso da amostra (g)"
+          "type": "number"
         },
         "amostra_umida": {
-          "type": "number",
-          "description": "Amostra \u00famida (g)"
+          "type": "number"
         },
         "amostra_seca": {
-          "type": "number",
-          "description": "Amostra seca (g)"
+          "type": "number"
         },
         "umidade": {
-          "type": "number",
-          "description": "Umidade calculada (%)"
+          "type": "number"
         },
         "amostra_com_ligante": {
-          "type": "number",
-          "description": "Amostra com ligante (g)"
+          "type": "number"
         },
         "amostra_sem_ligante": {
-          "type": "number",
-          "description": "Amostra sem ligante (g)"
+          "type": "number"
         },
         "fator_correcao": {
           "type": "number",
-          "description": "Fator de corre\u00e7\u00e3o",
           "default": 1
         },
         "peso_ligante": {
-          "type": "number",
-          "description": "Peso do ligante calculado (g)"
+          "type": "number"
         },
         "teor_ligante": {
-          "type": "number",
-          "description": "Teor de ligante calculado (%)"
+          "type": "number"
         },
         "filler_betume": {
-          "type": "number",
-          "description": "Rela\u00e7\u00e3o Filler/Betume"
+          "type": "number"
         },
         "teor_ligante_real": {
-          "type": "number",
-          "description": "Teor de ligante real (%)"
+          "type": "number"
         }
       }
     },
@@ -159,6 +148,9 @@
             "peneira_9_5mm": {
               "type": "number"
             },
+            "peneira_6_3mm": {
+              "type": "number"
+            },
             "peneira_4_75mm": {
               "type": "number"
             },
@@ -195,141 +187,110 @@
     },
     "realizar_densidade_rice": {
       "type": "boolean",
-      "default": false,
-      "description": "Se deve realizar ensaio de densidade Rice"
+      "default": false
     },
     "densidade_rice": {
       "type": "object",
-      "description": "Ensaio de densidade Rice (DMT)",
       "properties": {
         "frasco_agua": {
-          "type": "number",
-          "description": "FR+\u00c1GUA (g)"
+          "type": "number"
         },
         "amostra": {
-          "type": "number",
-          "description": "AMOSTRA (g)"
+          "type": "number"
         },
         "frasco_agua_amostra": {
-          "type": "number",
-          "description": "FR+\u00c1GUA+AMOSTRA (g)"
+          "type": "number"
         },
         "temperatura_agua": {
-          "type": "number",
-          "description": "Temperatura da \u00e1gua (\u00b0C)"
+          "type": "number"
         },
         "densidade_agua": {
-          "type": "number",
-          "description": "Densidade da \u00e1gua (g/cm\u00b3)"
+          "type": "number"
         },
         "densidade_rice": {
-          "type": "number",
-          "description": "Densidade Rice calculada (g/cm\u00b3)"
+          "type": "number"
         }
       }
     },
     "realizar_marshall": {
       "type": "boolean",
-      "default": false,
-      "description": "Se deve realizar ensaio Marshall"
+      "default": false
     },
     "corpos_prova_marshall": {
       "type": "array",
-      "description": "Corpos de prova Marshall (opcional, at\u00e9 6 CPs)",
       "items": {
         "type": "object",
         "properties": {
           "numero": {
-            "type": "number",
-            "description": "N\u00famero do CP"
+            "type": "number"
           },
           "metodo_rompimento": {
             "type": "string",
             "enum": [
               "diametral",
               "estabilidade_fluencia"
-            ],
-            "description": "M\u00e9todo de rompimento escolhido"
+            ]
           },
           "peso_ar": {
-            "type": "number",
-            "description": "Peso ao ar (g)"
+            "type": "number"
           },
           "peso_imerso": {
-            "type": "number",
-            "description": "Peso imerso (g)"
+            "type": "number"
           },
           "peso_sss": {
-            "type": "number",
-            "description": "Peso saturado superf\u00edcie seca (g)"
+            "type": "number"
           },
           "volume": {
-            "type": "number",
-            "description": "Volume calculado (cm\u00b3)"
+            "type": "number"
           },
           "densidade_aparente": {
-            "type": "number",
-            "description": "Densidade aparente calculada (g/cm\u00b3)"
+            "type": "number"
           },
           "volume_vazios": {
-            "type": "number",
-            "description": "Volume de vazios calculado (%)"
+            "type": "number"
           },
           "vcb": {
-            "type": "number",
-            "description": "V.C.B. calculado (%)"
+            "type": "number"
           },
           "vam": {
-            "type": "number",
-            "description": "V.A.M. calculado (%)"
+            "type": "number"
           },
           "rbv": {
-            "type": "number",
-            "description": "R.B.V. calculado (%)"
+            "type": "number"
           },
           "altura": {
-            "type": "number",
-            "description": "Altura do CP (cm)"
+            "type": "number"
           },
           "const_prensa": {
             "type": "number",
-            "description": "Constante da prensa",
             "default": 1
           },
           "rtcd_leitura": {
-            "type": "number",
-            "description": "Leitura RTCD (Kgf/cm\u00b2) - para diametral"
+            "type": "number"
           },
           "rtcd_valor": {
-            "type": "number",
-            "description": "RTCD calculado (MPa) - para diametral"
+            "type": "number"
           },
           "estabilidade_leitura": {
-            "type": "number",
-            "description": "Leitura estabilidade (Kgf/cm\u00b2) - para estabilidade/flu\u00eancia"
+            "type": "number"
           },
           "estabilidade_corrigida": {
-            "type": "number",
-            "description": "Estabilidade corrigida (Kgf/cm\u00b2)"
+            "type": "number"
           },
           "fluencia_leitura_inicial": {
-            "type": "number",
-            "description": "Flu\u00eancia leitura inicial (mm)"
+            "type": "number"
           },
           "fluencia_leitura_final": {
-            "type": "number",
-            "description": "Flu\u00eancia leitura final (mm)"
+            "type": "number"
           },
           "fluencia": {
-            "type": "number",
-            "description": "Flu\u00eancia calculada (mm)"
+            "type": "number"
           }
         }
       }
     },
     "observacoes": {
-      "type": "string",
-      "description": "Observa\u00e7\u00f5es gerais"
+      "type": "string"
     },
     "status": {
       "type": "string",
@@ -337,17 +298,14 @@
         "rascunho",
         "finalizado"
       ],
-      "default": "rascunho",
-      "description": "Status do registro: rascunho (em edi\u00e7\u00e3o) ou finalizado (pronto para revis\u00e3o)"
+      "default": "rascunho"
     },
     "approved": {
       "type": "boolean",
-      "default": null,
-      "description": "Status de aprova\u00e7\u00e3o"
+      "default": null
     },
     "approved_by": {
-      "type": "string",
-      "description": "Email do usu\u00e1rio que aprovou/reprovou"
+      "type": "string"
     },
     "approved_date": {
       "type": "string",
@@ -372,8 +330,7 @@
     },
     "was_rejected": {
       "type": "boolean",
-      "default": false,
-      "description": "Indica se o registro foi reprovado e editado novamente"
+      "default": false
     },
     "client_signature": {
       "type": "object",
