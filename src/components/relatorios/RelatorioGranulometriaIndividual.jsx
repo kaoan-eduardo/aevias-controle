@@ -1,7 +1,5 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 const PENEIRAS_MAP = {
   "peneira_75_0mm": { astm: "3\"", mm: "75,0" },
