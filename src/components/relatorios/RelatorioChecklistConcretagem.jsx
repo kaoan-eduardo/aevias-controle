@@ -59,14 +59,21 @@ const CargaContent = ({ carga }) => (
       </div>
     </div>
     <h3 className="font-bold text-xs mb-0.5 bg-slate-50 p-0.5">Ensaios de Qualidade</h3>
-    <table className="w-full border-collapse border border-slate-300 text-xs mb-1">
+    <table className="w-full border-collapse border border-slate-300 text-xs mb-1" style={{tableLayout:'fixed'}}>
+      <colgroup>
+        <col style={{width:'28%'}} />
+        <col style={{width:'16%'}} />
+        <col style={{width:'18%'}} />
+        <col style={{width:'24%'}} />
+        <col style={{width:'14%'}} />
+      </colgroup>
       <thead className="bg-slate-100">
         <tr>
           <th className="border border-slate-300 px-1 py-0.5 font-medium text-left">Ensaio</th>
-          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-16">Realizado</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Realizado</th>
           <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Resultado (cm)</th>
           <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Padrão do Projeto</th>
-          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center w-20">Conformidade</th>
+          <th className="border border-slate-300 px-1 py-0.5 font-medium text-center">Conform.</th>
         </tr>
       </thead>
       <tbody>
@@ -316,6 +323,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
             padding: 8mm 10mm !important;
             box-sizing: border-box !important;
             page-break-after: always;
+            overflow: hidden !important;
           }
 
           img {
@@ -325,7 +333,14 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           table {
-            width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
+            table-layout: fixed !important;
+          }
+
+          td, th {
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
           }
         }
       `}</style>
