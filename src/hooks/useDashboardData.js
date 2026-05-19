@@ -80,7 +80,7 @@ export function useDashboardData() {
   const charts = useMemo(() => ({
     monthly: calcularGraficoMensal(filteredEnsaios, filters.periodo, isClienteUser),
     status: calcularGraficoStatus(filteredEnsaios, isClienteUser, isEngenheiroUser),
-    porObra: calcularGraficoPorObra(filteredEnsaios, rawData.obras, filters.periodo),
+    porObra: calcularGraficoPorObra(filteredEnsaios, rawData.obras),
     porTipo: calcularGraficoPorTipo(filteredEnsaios),
   }), [filteredEnsaios, filters.periodo, rawData.obras, isClienteUser, isEngenheiroUser]);
 

@@ -83,46 +83,21 @@ export function calcularGraficoStatus(ensaios, isClienteUser, isEngenheiroUser) 
   ].filter(item => item.value > 0);
 }
 
-export function calcularGraficoPorObra(ensaios, obras, periodo) {
-  const now = new Date();
-  const monthsToShow = periodo === '1mes' ? 1 : periodo === '3meses' ? 3 : 6;
-  const months = Array.from({ length: monthsToShow }, (_, i) =>
-    subMonths(now, monthsToShow - 1 - i)
-  );
-
-  // Encontrar as top obras com mais registros no período
-  const obraCount = {};
+export function calcularGraficoPorObra(ensaios, obras) {
+  const count = {};
   ensaios.forEach(e => {
-    if (e.obra_id) obraCount[e.obra_id] = (obraCount[e.obra_id] || 0) + 1;
-  });
-  const topObraIds = Object.entries(obraCount)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([id]) => id);
-
-  // Montar dados mensais por obra
-  const monthLabels = months.map(m => format(m, 'MMM', { locale: ptBR }));
-  const rows = months.map((month, i) => {
-    const start = startOfMonth(month);
-    const end = endOfMonth(month);
-    const row = { name: monthLabels[i] };
-    topObraIds.forEach(obraId => {
-      const obra = obras.find(o => o.id === obraId);
-      const key = obra?.name ?? 'Desconhecida';
-      row[key] = ensaios.filter(
-        e => e.obra_id === obraId && isWithinInterval(new Date(e.created_date), { start, end })
-      ).length;
-    });
-    return row;
+    if (e.obra_id) count[e.obra_id] = (count[e.obra_id] || 0) + 1;
   });
 
-  const lines = topObraIds.map((obraId, index) => ({
-    key: obras.find(o => o.id === obraId)?.name ?? 'Desconhecida',
-    obraId,
-    color: PIE_COLORS[index % PIE_COLORS.length],
-  }));
-
-  return { rows, lines };
+  return Object.entries(count)
+    .map(([obraId, value], index) => ({
+      name: obras.find(o => o.id === obraId)?.name ?? 'Desconhecida',
+      value,
+      obraId,
+      color: PIE_COLORS[index % PIE_COLORS.length],
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 10);
 }
 
 export function calcularGraficoPorTipo(ensaios) {
