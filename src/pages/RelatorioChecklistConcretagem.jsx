@@ -66,27 +66,18 @@ export default function RelatorioChecklistConcretagemPage() {
       <style>{`
         @media print {
           @page {
-            size: A4;
+            size: A4 portrait;
             margin: 0;
           }
           html, body {
             margin: 0 !important;
             padding: 0 !important;
-            width: 210mm !important;
             background: white !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
-          body > * {
-            max-width: 210mm !important;
-            margin: 0 auto !important;
-          }
-          .print-page {
-            width: 210mm !important;
-            max-width: 210mm !important;
-            margin: 0 auto !important;
-            padding: 8mm !important;
-            box-sizing: border-box !important;
+          aside, nav, [data-sidebar], [role="navigation"] {
+            display: none !important;
           }
         }
       `}</style>
