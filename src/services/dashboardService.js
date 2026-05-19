@@ -36,14 +36,14 @@ export async function loadDashboardData(user) {
 
   // Carregar entidades em paralelo
   const entityPromises = ENTITY_LISTS.map(([entityType]) =>
-    base44.entities[entityType].list('-created_date', 200)
+    base44.entities[entityType].list('-created_date', 5000)
   );
 
   const needsRegionais = ['cliente', 'sala_tecnica_afirmaevias', 'gestor_contrato'].includes(userAccessLevel);
 
   const [obrasRaw, projectsRaw, ...entityResults] = await Promise.all([
-    base44.entities.Obra.list('-created_date', 200),
-    base44.entities.Project.list('-created_date', 200),
+    base44.entities.Obra.list('-created_date', 500),
+    base44.entities.Project.list('-created_date', 500),
     ...entityPromises,
     needsRegionais
       ? base44.entities.Regional.list()
