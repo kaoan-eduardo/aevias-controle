@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { AlertTriangle, Save, Eye, Upload, X, Loader2 } from "lucide-react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { uploadMultipleFiles } from "@/utils/imageUpload";
-import { useFormPersistence } from "@/components/hooks/useFormPersistence";
+import { useChecklistForm } from "@/hooks/useChecklistForm";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
+import ChecklistFooter from "@/components/checklists/ChecklistFooter";
 
 function getInitialFormData() {
   const today = new Date().toISOString().split('T')[0];
@@ -81,306 +82,45 @@ function getInitialFormData() {
 }
 
 export default function ChecklistAplicacaoPage() {
-  const [formData, setFormData] = useState(getInitialFormData());
-  const [obras, setObras] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [faixas, setFaixas] = useState([]);
-  const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState([]); // NEW STATE for all users
-  const [loading, setLoading] = useState(true);
+  const {
+    obras, regionais, projects, faixas, user, editingChecklist,
+    loading, formData, setFormData, obraSelecionada, regionalSelecionada,
+    projetosDisponiveis, isApproved, isEditable, clearSavedData, navigate,
+  } = useChecklistForm(getInitialFormData, 'ChecklistAplicacao', 'checklist_aplicacao');
+
   const [saving, setSaving] = useState(false);
-  const [editingChecklist, setEditingChecklist] = useState(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [regional, setRegional] = useState(null);
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { clearSavedData } = useFormPersistence('checklist_aplicacao', formData, setFormData, !!editingChecklist);
-
-  const isApproved = editingChecklist?.approved === true;
-  const isEditable = !isApproved;
-
-  const obraSelecionada = useMemo(() => obras.find(o => o.id === formData.obra_id), [obras, formData.obra_id]);
-
-  useEffect(() => {
-    if (obraSelecionada) {
-      base44.entities.Regional.list().then(regionaisData => {
-        const reg = regionaisData.find(r => r.id === obraSelecionada.regional_id);
-        setRegional(reg);
-      }).catch(error => {
-        console.error("[ChecklistAplicacao] Erro ao carregar regional:", error?.message || error);
-        setRegional(null);
-      });
-    } else {
-      setRegional(null);
-    }
-  }, [obraSelecionada]);
-
-  const projetosDisponiveis = useMemo(() => {
-    if (!regional || !projects) return [];
-    const regionalProjectIds = regional.project_ids || [];
-    return projects.filter(p => 
-      regionalProjectIds.includes(p.id) && 
-      p.status === 'ativo' && 
-      p.tipo_projeto === 'CAUQ'
-    );
-  }, [regional, projects]);
-
-  useEffect(() => {
-    const loadInitialData = async () => {
-      setLoading(true);
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-
-        let obrasData = await base44.entities.Obra.list();
-        const projectsData = await base44.entities.Project.list();
-        const regionaisData = await base44.entities.Regional.list();
-        
-        let allUsersData = [];
-        try {
-          allUsersData = await base44.entities.User.list();
-          setAllUsers(allUsersData);
-        } catch (userError) {
-          console.warn("[ChecklistAplicacao] Sem permissão para listar usuários:", userError?.message || userError);
-          setAllUsers([]);
-        }
-
-        let faixasData = [];
-        try {
-          faixasData = await base44.entities.FaixaGranulometrica.list();
-        } catch (faixasError) {
-          console.warn("[ChecklistAplicacao] Faixas granulométricas indisponíveis:", faixasError?.message || faixasError);
-        }
-        
-        const currentUserAccessLevel = currentUser.access_level || (currentUser.role === 'admin' ? 'admin' : 'user');
-        if (currentUserAccessLevel === 'user') {
-          const regionalDoLaboratorista = regionaisData.find(regional => {
-            const laboratoristas = regional.laboratoristas_responsaveis || [];
-            return laboratoristas.some(email => email.toLowerCase() === currentUser.email.toLowerCase());
-          });
-          
-          if (regionalDoLaboratorista) {
-            obrasData = obrasData.filter(obra => 
-              obra.regional_id === regionalDoLaboratorista.id &&
-              obra.status === 'em_andamento' &&
-              (obra.tipo_obra === 'supervisao' || obra.tipo_obra === 'implantacao')
-            );
-          } else {
-            obrasData = [];
-          }
-        } else {
-          obrasData = obrasData.filter(obra => 
-            obra.tipo_obra === 'supervisao' || obra.tipo_obra === 'implantacao'
-          );
-        }
-        
-        setObras(obrasData);
-        setProjects(projectsData);
-        setFaixas(faixasData);
-        
-        const params = new URLSearchParams(location.search);
-        const editId = params.get('editId');
-
-        if (editId) {
-          const checklistToEdit = await base44.entities.ChecklistAplicacao.get(editId);
-          if (currentUser.role === 'admin' || (checklistToEdit.created_by === currentUser.email && (checklistToEdit.status === 'rascunho' || checklistToEdit.approved === false))) {
-            setEditingChecklist(checklistToEdit);
-            setFormData(checklistToEdit);
-            
-            if (checklistToEdit.project_id) {
-              const proj = projectsData.find(p => p.id === checklistToEdit.project_id);
-              setSelectedProject(proj);
-            }
-          } else {
-            alert("Você não tem permissão para editar este registro.");
-            navigate(createPageUrl('MeusEnsaios'));
-          }
-        } else {
-          // Se for novo checklist e houver obras disponíveis, pré-selecionar a primeira obra
-          // e preencher campos dependentes, incluindo o engenheiro responsável.
-          if (obrasData.length > 0) {
-            const primeiraObra = obrasData[0];
-            const regional = regionaisData.find(r => r.id === primeiraObra.regional_id);
-            
-            // Lógica para encontrar o projeto vinculado à obra e regional
-            const projectsFromCurrentRegional = projectsData.filter(p => regional?.project_ids?.includes(p.id) && p.status === 'ativo');
-            let chosenProject = projectsFromCurrentRegional.length > 0 ? projectsFromCurrentRegional[0] : null;
-
-            let faixaName = "";
-            let pedreiras = "";
-            let liganteTipo = "";
-
-            if (chosenProject) {
-              const faixa = faixasData.find(f => f.id === chosenProject.faixa_granulometrica_id);
-              faixaName = faixa ? faixa.nome : "Não definida";
-              if (chosenProject.agregados && Array.isArray(chosenProject.agregados) && chosenProject.agregados.length > 0) {
-                const pedreirasList = chosenProject.agregados
-                  .map(ag => ag.pedreira)
-                  .filter(p => p && p.trim() !== '');
-                pedreiras = [...new Set(pedreirasList)].join(' + ');
-              }
-              liganteTipo = chosenProject.ligante?.tipo || "";
-            }
-
-            // Encontrar o engenheiro responsável
-            const gestorEmail = regional?.gestor_contrato_responsavel;
-            let gestorName = "";
-            if (gestorEmail && allUsersData.length > 0) {
-              const gestor = allUsersData.find(u => u.email.toLowerCase() === gestorEmail.toLowerCase());
-              gestorName = gestor ? (gestor.laboratorista_name || gestor.full_name) : "";
-            }
-
-            setFormData(prev => ({
-              ...prev,
-              obra_id: primeiraObra.id,
-              project_id: chosenProject?.id || "",
-              projeto_utilizado: chosenProject?.name || "",
-              faixa_especificada: faixaName,
-              ligante: liganteTipo,
-              pedreira: pedreiras
-            }));
-            setSelectedProject(chosenProject);
-          }
-        }
-      } catch (error) {
-        console.error("[ChecklistAplicacao] Erro ao carregar dados:", error?.message || error);
-        const errorMessage = error.message || "Erro desconhecido";
-        alert(`Erro ao carregar dados: ${errorMessage}. Verifique sua conexão e tente novamente.`);
-        navigate(createPageUrl('MeusEnsaios'));
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadInitialData();
-  }, [location.search, navigate]); // Removed allUsers from dependency array as it's set here
+  const selectedProject = useMemo(() =>
+    projects.find(p => p.id === formData.project_id),
+    [projects, formData.project_id]
+  );
 
   const handleInputChange = useCallback((field, value) => {
     if (field === 'obra_id') {
-      const obra = obras.find(o => o.id === value);
-      
-      if (obra) {
-        base44.entities.Regional.list().then(regionaisData => {
-          const currentRegional = regionaisData.find(r => r.id === obra.regional_id);
-            
-          if (currentRegional) {
-            const projectsFromCurrentRegional = projects.filter(p => currentRegional.project_ids?.includes(p.id));
-            
-            let chosenProject = null;
-
-            if (formData.project_id) {
-              chosenProject = projectsFromCurrentRegional.find(p => p.id === formData.project_id);
-            }
-            
-            if (!chosenProject && editingChecklist?.project_id) {
-              chosenProject = projectsFromCurrentRegional.find(p => p.id === editingChecklist.project_id);
-            }
-
-            if (!chosenProject && projectsFromCurrentRegional.length > 0) {
-              chosenProject = projectsFromCurrentRegional[0];
-            }
-
-            let faixaName = "";
-            let pedreiras = "";
-            let liganteTipo = "";
-
-            if (chosenProject) {
-              const faixa = faixas.find(f => f.id === chosenProject.faixa_granulometrica_id);
-              faixaName = faixa ? faixa.nome : "Não definida";
-              
-              if (chosenProject.agregados && Array.isArray(chosenProject.agregados) && chosenProject.agregados.length > 0) {
-                const pedreirasList = chosenProject.agregados
-                  .map(ag => ag.pedreira)
-                  .filter(p => p && p.trim() !== '');
-                pedreiras = [...new Set(pedreirasList)].join(' + ');
-              }
-              
-              liganteTipo = chosenProject.ligante?.tipo || "";
-            }
-              
-            setFormData(current => ({
-              ...current,
-              obra_id: value,
-              project_id: chosenProject?.id || "",
-              projeto_utilizado: chosenProject?.name || "",
-              faixa_especificada: faixaName,
-              ligante: liganteTipo,
-              pedreira: pedreiras,
-            }));
-            setSelectedProject(chosenProject);
-          } else {
-            setFormData(current => ({
-              ...current,
-              obra_id: value,
-              project_id: "",
-              projeto_utilizado: "",
-              faixa_especificada: "",
-              ligante: "",
-              pedreira: "",
-              engenheiro_responsavel: ""
-            }));
-            setSelectedProject(null);
-          }
-        }).catch(error => console.error("[ChecklistAplicacao] Erro ao carregar regional para obra:", error?.message || error));
-      } else {
-        setFormData(current => ({
-          ...current,
-          obra_id: value,
-          project_id: "",
-          projeto_utilizado: "",
-          faixa_especificada: "",
-          ligante: "",
-          pedreira: "",
-          engenheiro_responsavel: ""
-        }));
-        setSelectedProject(null);
-      }
+      setFormData(prev => ({ ...prev, obra_id: value, project_id: "" }));
       return;
     }
-    
     if (field === 'project_id') {
       const proj = projects.find(p => p.id === value);
-      
       if (proj) {
         const faixa = faixas.find(f => f.id === proj.faixa_granulometrica_id);
-        
-        let pedreiras = "";
-        if (proj.agregados && Array.isArray(proj.agregados) && proj.agregados.length > 0) {
-          const pedreirasList = proj.agregados
-            .map(ag => ag.pedreira)
-            .filter(p => p && p.trim() !== '');
-          pedreiras = [...new Set(pedreirasList)].join(' + ');
-        }
-        
-        const liganteTipo = proj.ligante?.tipo || "";
-        
-        setSelectedProject(proj);
-        setFormData(current => ({
-          ...current,
+        const pedreiras = (proj.agregados || []).map(ag => ag.pedreira).filter(Boolean);
+        setFormData(prev => ({
+          ...prev,
           project_id: value,
           projeto_utilizado: proj.name,
           faixa_especificada: faixa ? faixa.nome : "Não definida",
-          ligante: liganteTipo,
-          pedreira: pedreiras
+          ligante: proj.ligante?.tipo || "",
+          pedreira: [...new Set(pedreiras)].join(' + ')
         }));
       } else {
-        setFormData(current => ({
-          ...current,
-          project_id: "",
-          projeto_utilizado: "",
-          faixa_especificada: "",
-          ligante: "",
-          pedreira: ""
-        }));
-        setSelectedProject(null);
+        setFormData(prev => ({ ...prev, project_id: "", projeto_utilizado: "", faixa_especificada: "", ligante: "", pedreira: "" }));
       }
       return;
     }
-    
     setFormData(prev => ({ ...prev, [field]: value }));
-  }, [obras, projects, faixas, editingChecklist, formData.project_id]);
+  }, [projects, faixas]);
 
   // Atualiza campo em objeto aninhado de 2 níveis: formData[s1][field]
   const handleNestedChange = useCallback((s1, field, value) => {
@@ -1653,53 +1393,14 @@ export default function ChecklistAplicacaoPage() {
                 </div>
               </div>
 
-              {/* Botões de ação */}
-              <div className="flex justify-end gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    clearSavedData();
-                    navigate(createPageUrl('MeusEnsaios'));
-                  }}
-                  className="hover:bg-black/10"
-                >
-                  Cancelar
-                </Button>
-                {isEditable && (
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={saving}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handleSubmit(e, 'rascunho');
-                      }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={saving}
-                      className="bg-[#00233B] text-[#F2F1EF] hover:bg-[#00233B]/90"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Salvando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4 mr-2 text-[#BFCF99]" />
-                          Finalizar
-                        </>
-                      )}
-                    </Button>
-                  </>
-                )}
-              </div>
+              <ChecklistFooter
+                isEditable={isEditable}
+                isApproved={isApproved}
+                loadingUpload={saving || uploadingPhoto}
+                onCancel={() => { clearSavedData(); navigate(createPageUrl('MeusEnsaios')); }}
+                onSaveProgress={async (e) => { e.preventDefault(); await handleSubmit(e, 'rascunho'); }}
+                onFinalize={() => {}}
+              />
             </form>
           </CardContent>
         </Card>
