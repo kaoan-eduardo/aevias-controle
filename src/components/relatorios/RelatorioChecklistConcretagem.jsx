@@ -299,7 +299,7 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0;
+            margin: 12mm 14mm;
           }
 
           html, body { 
@@ -316,10 +316,8 @@ export default function RelatorioChecklistConcretagem({ checklist, creatorUser, 
           }
 
           .print-page { 
-            width: 210mm !important;
-            min-height: 297mm;
-            margin: 0 auto !important;
-            padding: 12mm 14mm !important;
+            width: 100% !important;
+            min-height: 100vh;
             box-sizing: border-box !important;
             page-break-after: always;
           }
