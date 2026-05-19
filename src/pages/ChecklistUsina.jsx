@@ -14,6 +14,8 @@ import { useChecklistForm } from "@/hooks/useChecklistForm";
 import { validateChecklistForm, validateDecimalInput } from "@/utils/checklistValidation";
 import AcoesCorretivasNC from "@/components/checklists/AcoesCorretivasNC";
 import MedicaoUsina from "@/components/checklists/MedicaoUsina";
+import ChecklistUsinaHeader from "@/components/checklists/ChecklistUsinaHeader";
+import ChecklistFooter from "@/components/checklists/ChecklistFooter";
 
 const getInitialFormData = () => ({
   obra_id: "",
@@ -528,152 +530,19 @@ export default function ChecklistUsinaPage() {
                 e.preventDefault();
               }
             }} className="space-y-6">
-              {/* DADOS DA OBRA */}
-              <Card className="bg-slate-50">
-                <CardHeader>
-                  <CardTitle className="text-lg">Dados da Obra e Projeto</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="obra_id">Obra *</Label>
-                      <Select value={formData.obra_id || ""} onValueChange={(v) => handleObraChange(v)} disabled={!isEditable || isApproved || editingChecklist?.id}>
-                        <SelectTrigger><SelectValue placeholder="Selecione a obra" /></SelectTrigger>
-                        <SelectContent>
-                          {obras.map(obra => { const regional = regionais.find(r => r.id === obra.regional_id); return (<SelectItem key={obra.id} value={obra.id}>{obra.name} - {obra.code} {regional && `(${regional.nome})`}</SelectItem>); })}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="project_id">Projeto Vinculado</Label>
-                      <Select value={formData.project_id || ""} onValueChange={(v) => handleProjectChange(v)} disabled={!isEditable || isApproved || !formData.obra_id}>
-                        <SelectTrigger><SelectValue placeholder="Selecione um projeto" /></SelectTrigger>
-                        <SelectContent>
-                          {projetosDisponiveis.map(proj => (<SelectItem key={proj.id} value={proj.id}>{proj.name}</SelectItem>))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {regionalSelecionada && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                        <div className="space-y-1 text-sm">
-                          <p className="text-blue-800"><strong>📍 Regional:</strong> {regionalSelecionada.nome}</p>
-                          {regionalSelecionada.cliente && (
-                            <p className="text-blue-800"><strong>👤 Cliente:</strong> {regionalSelecionada.cliente}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="data">Data *</Label>
-                      <Input
-                        id="data"
-                        type="date"
-                        value={formData.data}
-                        onChange={(e) => handleChange('data', e.target.value)}
-                        required
-                        disabled={!isEditable || isApproved}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="horario_inicio">Horário Início *</Label>
-                      <Input
-                        id="horario_inicio"
-                        type="time"
-                        value={formData.jornada?.horario_inicio || ""}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          jornada: { ...prev.jornada, horario_inicio: e.target.value } 
-                        }))}
-                        disabled={!isEditable || isApproved}
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="horario_fim">Horário Fim *</Label>
-                      <Input
-                        id="horario_fim"
-                        type="time"
-                        value={formData.jornada?.horario_fim || ""}
-                        onChange={(e) => setFormData(prev => ({ 
-                          ...prev, 
-                          jornada: { ...prev.jornada, horario_fim: e.target.value } 
-                        }))}
-                        disabled={!isEditable || isApproved}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="usina">Usina *</Label>
-                      <Select value={formData.usina || ""} onValueChange={(v) => handleChange('usina', v)} disabled={!isEditable || isApproved || !obraSelecionada}>
-                        <SelectTrigger><SelectValue placeholder="Selecione a usina" /></SelectTrigger>
-                        <SelectContent>
-                          {(obraSelecionada?.usinas || []).map((usina) => (<SelectItem key={usina} value={usina}>{usina}</SelectItem>))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="pedreira">Pedreira</Label>
-                      <Input
-                        id="pedreira"
-                        value={formData.pedreira}
-                        onChange={(e) => handleChange('pedreira', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        readOnly={!!selectedProject}
-                        className={selectedProject ? "bg-slate-100" : ""}
-                        placeholder="Nome da pedreira"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ensaio_realizado_por">Ensaio realizado por:</Label>
-                      <Select value={formData.ensaio_realizado_por || "Afirma Evias"} onValueChange={(v) => handleChange('ensaio_realizado_por', v)} disabled={!isEditable || isApproved}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Afirma Evias">Afirma Evias</SelectItem>
-                          <SelectItem value="Empreiteira">Empreiteira</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="faixa_especificada">Faixa Especificada</Label>
-                      <Input
-                        id="faixa_especificada"
-                        value={formData.faixa_especificada}
-                        onChange={(e) => handleChange('faixa_especificada', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        readOnly={true}
-                        className="bg-slate-100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="ligante">Ligante Asfáltico</Label>
-                      <Input
-                        id="ligante"
-                        value={formData.ligante}
-                        onChange={(e) => handleChange('ligante', e.target.value)}
-                        disabled={!isEditable || isApproved}
-                        readOnly={!!selectedProject}
-                        className={selectedProject ? "bg-slate-100" : ""}
-                        placeholder="Ex: CAP 50/70"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <ChecklistUsinaHeader
+                formData={formData}
+                setFormData={setFormData}
+                obras={obras}
+                regionais={regionais}
+                projects={projects}
+                projetosDisponiveis={projetosDisponiveis}
+                obraSelecionada={obraSelecionada}
+                regionalSelecionada={regionalSelecionada}
+                isEditable={isEditable}
+                isApproved={isApproved}
+                editingChecklist={editingChecklist}
+              />
 
               {/* CONTROLE DE AGREGADOS */}
               <Card className="bg-slate-50">
@@ -1591,38 +1460,20 @@ export default function ChecklistUsinaPage() {
                 empreiteiras={obraSelecionada?.empreiteiras || []}
               />
 
-              <div className="flex justify-end gap-4 mt-6">
-                <Button type="button" variant="outline" onClick={() => {
+              <ChecklistFooter
+                isEditable={isEditable}
+                isApproved={isApproved}
+                loadingUpload={loadingUpload}
+                onCancel={() => {
                   clearSavedData();
                   navigate(createPageUrl('MeusEnsaios'));
-                }}>
-                  Cancelar
-                </Button>
-                {isEditable && !isApproved && (
-                  <>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      disabled={loadingUpload}
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handleSubmit(e, 'rascunho');
-                      }}
-                      className="border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Save className="mr-2 h-4 w-4" /> Salvar Progresso
-                    </Button>
-                    <Button type="submit" disabled={loadingUpload} className="bg-blue-600 hover:bg-blue-700">
-                      <Save className="mr-2 h-4 w-4" /> Finalizar
-                    </Button>
-                  </>
-                )}
-                {isApproved && (
-                  <Badge className="bg-green-500 hover:bg-green-500 px-4 py-2 text-md">
-                    <CheckCircle className="mr-2 h-4 w-4" /> Aprovado
-                  </Badge>
-                )}
-              </div>
+                }}
+                onSaveProgress={async (e) => {
+                  e.preventDefault();
+                  await handleSubmit(e, 'rascunho');
+                }}
+                onFinalize={() => {}}
+              />
             </form>
           </CardContent>
         </Card>
