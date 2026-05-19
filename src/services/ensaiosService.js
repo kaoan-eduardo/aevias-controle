@@ -71,43 +71,33 @@ export async function obterSchemaEnsaio(entityName) {
   return base44.entities[entityName].schema();
 }
 
-export async function aprovarEnsaio(ensaio, user, obras) {
-  const obra = obras?.find(o => o.id === ensaio.obra_id);
+export async function assinarEnsaio(ensaio, user) {
+  if (!ensaio?.id) {
+    throw new Error('Ensaio inválido');
+  }
   
-  await atualizarEnsaio(
-    ensaio.constructor?.name || Object.keys(ENSAIO_ENTITIES)[0],
-    ensaio.id,
-    {
-      approved: true,
-      approved_by: user.email,
-      approved_date: new Date().toISOString(),
-      approver_details: {
-        name: user.full_name || user.laboratorista_name,
-        position: user.position || '',
-        crea_number: user.crea_number || '',
-      },
+  const entityName = Object.keys(ENSAIO_ENTITIES).find(key => 
+    ENSAIO_ENTITIES[key] === ensaio.constructor?.name || key === ensaio.tipo_ensaio
+  ) || detectEntityName(ensaio);
+
+  const signatureData = {
+    client_signature: {
+      signed_by: user.email,
+      signed_date: new Date().toISOString(),
+      engineer_name: user.full_name || user.laboratorista_name,
+      crea_number: user.crea_number || ''
     }
-  );
+  };
+
+  return base44.entities[entityName].update(ensaio.id, signatureData);
 }
 
-export async function reprovarEnsaio(ensaio, user, motivo) {
-  const entityName = Object.keys(ENSAIO_ENTITIES).find(
-    key => ENSAIO_ENTITIES[key] === ensaio.constructor?.name
-  ) || 'EnsaioCAUQ';
-
-  await atualizarEnsaio(entityName, ensaio.id, {
-    approved: false,
-    approved_by: user.email,
-    approved_date: new Date().toISOString(),
-    rejection_reason: motivo,
-    was_rejected: true,
-  });
-}
-
-export async function excluirEnsaio(ensaio) {
-  const entityName = Object.keys(ENSAIO_ENTITIES).find(
-    key => ENSAIO_ENTITIES[key] === ensaio.constructor?.name
-  ) || 'EnsaioCAUQ';
-
-  return deletarEnsaio(entityName, ensaio.id);
+function detectEntityName(ensaio) {
+  // Detectar tipo de entidade baseado nas propriedades presentes
+  if (ensaio.faixa_trabalho) return 'EnsaioCAUQ';
+  if (ensaio.teor_ligante_residual) return 'EnsaioMRAF';
+  if (ensaio.peneiras) return 'EnsaioGranulometriaIndividual';
+  if (ensaio.pesos) return 'EnsaioDensidade';
+  if (ensaio.corpos_prova_marshall) return 'EnsaioCAUQ';
+  throw new Error('Não foi possível determinar o tipo de ensaio');
 }
